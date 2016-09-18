@@ -215,7 +215,8 @@ dtb-$(CONFIG_MACH_MESON8B_ODROIDC) += meson8b_odroidc.dtb \
 	meson8b_m201.dtb \
 	meson8b_mxq.dtb \
 	meson8b_hd180.dtb \
-	meson8b_mk808.dtb
+	meson8b_mk808.dtb \
+	meson8b_i5.dtb
 
 DTB_NAMES := $(subst $\",,$(CONFIG_BUILD_ARM_APPENDED_DTB_IMAGE_NAMES))
 ifneq ($(DTB_NAMES),)
