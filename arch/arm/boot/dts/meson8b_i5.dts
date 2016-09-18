@@ -958,14 +958,20 @@
 		};
 	};
 
-	ethernet@0xc9410000 {
-		compatible = "amlogic,meson-eth", "snps,dwmac";
-		reg = <0xc9410000 0x10000 0xc1108108 0x4>;
-		interrupts = <0x0 0x8 0x1>;
-		interrupt-names = "macirq";
-		clocks = "clk81";
-		clock-names = "stmmaceth";
-	};
+    meson-eth{
+                compatible = "amlogic,meson-eth";
+                dev_name = "meson-eth";
+                status = "okay";
+                ethbaseaddr = <0xfe0c0000>;
+                interruptnum = <40>;
+                savepowermode = <0>;
+                phy_interface = <0>;
+                new_maclogic = <1>;
+                reset_pin_enable = <0>;
+                reset_pin = "GPI0H_4";
+                reset_delay = <100>;
+                disable_phyrefclk;
+        };
 
 	meson-rng {
 		compatible = "amlogic,meson-rng";
