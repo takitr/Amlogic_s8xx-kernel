@@ -57,10 +57,9 @@
 	memory{
 		device_type = "memory";
 		aml_reserved_start = <0x06000000>; /**reserved memory start */
-		aml_reserved_end = <0x05000000>;/**reserved memory end */
+		aml_reserved_end = <0x05000000>;/**reserved memory end : dtb start for uboot*/
 		phys_offset = <0x00200000>;
 		linux,total-memory = <0x1fe00000>;
-
         #address-cells = <1>;
         #size-cells = <1>;
 
@@ -139,48 +138,6 @@
 		reserve-iomap = "true";
 	};
 
-//    amvdec_656in{
-//		compatible = "amlogic,amvdec_656in";
-//		dev_name = "amvdec_656in";
-//		status = "ok";
-//		reg = <0x1e400000 0x00100000>;
-//	};
-//	
-//    vdin0{
-//       compatible = "amlogic,vdin";
-//        dev_name = "vdin0";
-//        status = "ok";
-//	 reserve-memory = <0x04000000>;
-//        irq = <115>;
-//        vdin_id = <0>;
-//	};
-	
-//    vdin1{
-//        compatible = "amlogic,vdin";
-//       dev_name = "vdin1";
-//        status = "ok";
-//        reserve-memory = <0x01000000>;
-//	  miracast_size = <1920 1080>;//1920x1080x2x4=17M
-//	  reserve-iomap = "true";
-//        irq = <117>;
-//        vdin_id = <1>;
-//	};
-
-//    amlvideo2{
-//		compatible = "amlogic,amlvideo2";
-//		dev_name = "amlvideo2.0";
-//		status = "okay";
-//		reserve-memory = <0x01800000>;
-//		reserve-iomap = "true";
-//	};
-
-//    vm{
-//		compatible = "amlogic,vm";
-//		dev_name = "vm.0";
-//		status = "okay";
-//		reserve-memory = <0x01800000>;
-//		reserve-iomap = "true";
-//	};
 
     ion_dev{
         compatible = "amlogic,ion_dev";
@@ -302,19 +259,6 @@
             card_type = <5>; /* 0:unknown, 1:mmc card(include eMMC), 2:sd card(include tSD), 3:sdio device(ie:sdio-wifi), 4:SD combo (IO+mem) card, 5:NON sdio device(means sd/mmc card), other:reserved */
         };
 
-//        emmc{
-//            status = "ok";
-//            port = <2>;          /**0:sdio_a, 1:sdio_b, 2:sdio_c, 3:sdhc_a, 4:sdhc_b, 5:sdhc_c */
-//            pinname = "emmc";
-//            ocr_avail = <0x200000>;          /**VDD voltage 3.3 ~ 3.4 */
-//            caps = "MMC_CAP_4_BIT_DATA","MMC_CAP_MMC_HIGHSPEED","MMC_CAP_SD_HIGHSPEED", "MMC_CAP_NONREMOVABLE","MMC_CAP_ERASE", "MMC_CAP_HW_RESET"; // MMC_CAP_NEEDS_POLL -- for detect, MMC_CAP_NONREMOVABLE -- for eMMC/TSD
-//            f_min = <300000>;
-//            f_max = <50000000>;
-//            f_max_w = <50000000>;
-//            max_req_size = <0x20000>;          /**128KB*/
-//            gpio_dat3 = "BOOT_3";
-//            card_type = <1>; /* 0:unknown, 1:mmc card(include eMMC), 2:sd card(include tSD), 3:sdio device(ie:sdio-wifi), 4:SD combo (IO+mem) card, 5:NON sdio device(means sd/mmc card), other:reserved */
-//        };
 
         sdio{
             status = "ok";
@@ -1004,10 +948,6 @@
 			amlogic,pins="GPIOAO_0", "GPIOAO_1";
 		};
 		
-//		a_uart_pins:a_uart{
-//			amlogic,setmask=<4 0x3c00>;
-//			amlogic,pins="GPIOX_12", "GPIOX_13", "GPIOX_14", "GPIOX_15";
-//		};
 
 		b_uart_pins:b_uart{
 			amlogic,setmask=<4 0x03c0>;
