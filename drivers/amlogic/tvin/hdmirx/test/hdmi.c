@@ -5,17 +5,17 @@
 void hdmi_wr_only_reg(unsigned long addr, unsigned long data)
 {
   *((volatile unsigned long *) HDMI_ADDR_PORT) = addr;
-  *((volatile unsigned long *) HDMI_DATA_PORT) = data; 
+  *((volatile unsigned long *) HDMI_DATA_PORT) = data;
 }
 
 void hdmi_wr_reg(unsigned long addr, unsigned long data)
 {
     unsigned long rd_data;
     *((volatile unsigned long *) HDMI_ADDR_PORT) = addr;
-    *((volatile unsigned long *) HDMI_DATA_PORT) = data; 
+    *((volatile unsigned long *) HDMI_DATA_PORT) = data;
     if (addr < EXT_HDMI_TRX_ADDR_OFFSET) {  // only read back if it's chip internal device
         rd_data = hdmi_rd_reg (addr);
-        if (rd_data != data) 
+        if (rd_data != data)
         {
             stimulus_print("Error: (addr) ");
             stimulus_print_num_hex(addr);
@@ -33,7 +33,7 @@ unsigned long hdmi_rd_reg(unsigned long addr)
 {
   unsigned long data;
   *((volatile unsigned long *) HDMI_ADDR_PORT) = addr;
-  data = *((volatile unsigned long *) HDMI_DATA_PORT); 
+  data = *((volatile unsigned long *) HDMI_DATA_PORT);
   return (data);
 }
 
@@ -41,7 +41,7 @@ void hdmi_rd_check_reg(unsigned long addr, unsigned long exp_data, unsigned long
 {
     unsigned long rd_data;
     rd_data = hdmi_rd_reg(addr);
-    if ((rd_data | mask) != (exp_data | mask)) 
+    if ((rd_data | mask) != (exp_data | mask))
     {
         stimulus_print("Error: (addr) ");
         stimulus_print_num_hex(addr);
@@ -110,7 +110,7 @@ void set_hdmi_audio_source (unsigned int src)
 {
     unsigned long data32;
     unsigned int i;
-    
+
     // Disable HDMI audio clock input and its I2S input
     data32  = 0;
     data32 |= 0     << 4;   // [5:4]    hdmi_data_sel: 00=disable hdmi i2s input; 01=Select pcm data; 10=Select AIU I2S data; 11=Not allowed.
@@ -122,7 +122,7 @@ void set_hdmi_audio_source (unsigned int src)
     data32 |= 0      << 4;  // [5:4]    hdmi_data_sel: 00=disable hdmi i2s input; 01=Select pcm data; 10=Select AIU I2S data; 11=Not allowed.
     data32 |= src   << 0;   // [1:0]    hdmi_clk_sel: 00=Disable hdmi audio clock input; 01=Select pcm clock; 10=Select AIU aoclk; 11=Not allowed.
     Wr(AIU_HDMI_CLK_DATA_CTRL, data32);
-    
+
     // Wait until clock change is settled
     i = 0;
     while ( (((Rd(AIU_HDMI_CLK_DATA_CTRL))>>8)&0x3) != src ) {
@@ -426,29 +426,29 @@ void hdmi_tx_key_setting (unsigned long   tx_dev_offset)  // 0x00000: Internal T
                                     0x73,
                                     0x25,
                                     // ksv
-                                    0x14,  
-                                    0xf7,  
-                                    0x61,  
-                                    0x03,  
-                                    0xb7,  
-                                    // km   
-                                    0xcc,  
-                                    0xce,  
-                                    0x2f,  
-                                    0xd2,  
-                                    0xc7,  
-                                    0x09,  
-                                    0x53};  
+                                    0x14,
+                                    0xf7,
+                                    0x61,
+                                    0x03,
+                                    0xb7,
+                                    // km
+                                    0xcc,
+                                    0xce,
+                                    0x2f,
+                                    0xd2,
+                                    0xc7,
+                                    0x09,
+                                    0x53};
 
     int i, j, ram_addr, byte_num;
     unsigned int value;
-    
+
     byte_num = sizeof(a1_keys)/sizeof(unsigned char);
-    
+
     j = 0;
     for (i = 0; i < byte_num; i++)
     {
-        value = a1_keys[i]; 
+        value = a1_keys[i];
         ram_addr = TX_HDCP_DKEY_OFFSET+j;
         //printf("Tx Key value=%x was writen to address %x\n",value,ram_addr);
         //stimulus_display2("Tx Key value=%h was writen to address %h\n",value,ram_addr);
@@ -473,7 +473,7 @@ void hdmitx_test_function ( unsigned long   tx_dev_offset,          // 0x00000: 
                             unsigned char   audio_packet_type)      // 0=audio sample packet; 1=one bit audio; 2=HBR audio packet; 3=DST audio packet.
 {
     unsigned int tmp_add_data;
-    
+
     stimulus_print("[TEST.C] Configure HDMITX\n");
 
     // Enable APB3 fail on error
@@ -511,25 +511,25 @@ void hdmitx_test_function ( unsigned long   tx_dev_offset,          // 0x00000: 
     tmp_add_data |= 0   << 1; // [1] edid_int_forced_clear
     tmp_add_data |= 0   << 0; // [0] edid_int_auto_clear
     hdmi_wr_reg(tx_dev_offset+TX_HDCP_EDID_CONFIG, tmp_add_data); // 0x0e
-    
+
     // Setting HDCP keys
     stimulus_print("[TEST.C] Setting HDMI TX HDCP keys with encryption\n");
     hdmi_tx_key_setting(tx_dev_offset);
     stimulus_print("[TEST.C] HDMI TX Key Setting is done\n");
-    
+
     tmp_add_data  = 0;
     tmp_add_data |= 0   << 7; // [7]   Force DTV timing (Auto)
     tmp_add_data |= 0   << 6; // [6]   Force Video Scan, only if [7]is set
     tmp_add_data |= 0   << 5; // [5]   Force Video field, only if [7]is set
     tmp_add_data |= 0   << 0; // [4:0] Rsrv
     hdmi_wr_reg(tx_dev_offset+TX_VIDEO_DTV_TIMING, tmp_add_data); // 0x00
-    
+
     tmp_add_data  = 0;
     tmp_add_data |= 0                       << 7; // [7]   forced_default_phase
     tmp_add_data |= 0                       << 2; // [6:2] Rsrv
     tmp_add_data |= tx_output_color_depth   << 0; // [1:0] Color_depth:0=24-bit pixel; 1=30-bit pixel; 2=36-bit pixel; 3=48-bit pixel
     hdmi_wr_reg(tx_dev_offset+TX_VIDEO_DTV_MODE, tmp_add_data);
-    
+
     tmp_add_data  = 0;
     tmp_add_data |= 1                       << 7; // [7]   gc_pack_mode: 0=clear color_depth and pixel_phase when GC packet is transmitting AV_mute/clear info;
                                                   //                     1=do not clear.
@@ -542,7 +542,7 @@ void hdmitx_test_function ( unsigned long   tx_dev_offset,          // 0x00000: 
     //tmp_add_data |= 47  << 0; // [5:0] PACKET_START_LATENCY
     tmp_add_data |= 58  << 0; // [5:0] PACKET_START_LATENCY
     hdmi_wr_reg(tx_dev_offset+TX_PACKET_CONTROL_1, tmp_add_data);
-    
+
     tmp_add_data  = 0;
     tmp_add_data |= 0   << 6; // [7:6] audio_source_select[1:0]
     tmp_add_data |= 0   << 5; // [5]   external_packet_enable
@@ -550,19 +550,19 @@ void hdmitx_test_function ( unsigned long   tx_dev_offset,          // 0x00000: 
     tmp_add_data |= 0   << 2; // [3:2] afe_fifo_source_select_lane_1[1:0]
     tmp_add_data |= 0   << 0; // [1:0] afe_fifo_source_select_lane_0[1:0]
     hdmi_wr_reg(tx_dev_offset+TX_CORE_DATA_CAPTURE_2, tmp_add_data); // 0x10
-    
+
     tmp_add_data  = 0;
     tmp_add_data |= 0   << 7; // [7]   monitor_lane_1
     tmp_add_data |= 0   << 4; // [6:4] monitor_select_lane_1[2:0]
     tmp_add_data |= 1   << 3; // [3]   monitor_lane_0
     tmp_add_data |= 7   << 0; // [2:0] monitor_select_lane_0[2:0]
     hdmi_wr_reg(tx_dev_offset+TX_CORE_DATA_MONITOR_1, tmp_add_data); // 0x0f
-    
+
     tmp_add_data  = 0;
     tmp_add_data |= 0   << 3; // [7:3] Rsrv
     tmp_add_data |= 2   << 0; // [2:0] monitor_select[2:0]
     hdmi_wr_reg(tx_dev_offset+TX_CORE_DATA_MONITOR_2, tmp_add_data); // 0x02
-    
+
     tmp_add_data  = 0;
     tmp_add_data |= 1   << 7; // [7]   forced_hdmi
     tmp_add_data |= 1   << 6; // [6]   hdmi_config
@@ -570,19 +570,19 @@ void hdmitx_test_function ( unsigned long   tx_dev_offset,          // 0x00000: 
     tmp_add_data |= 0   << 3; // [3]   bit_swap.
     tmp_add_data |= 0   << 0; // [2:0] channel_swap[2:0]
     hdmi_wr_reg(tx_dev_offset+TX_TMDS_MODE, tmp_add_data); // 0xc0
-    
+
     tmp_add_data  = 0;
     tmp_add_data |= 0   << 7; // [7]   Rsrv
     tmp_add_data |= 0   << 6; // [6]   TX_CONNECT_SEL: 0=use lower channel data[29:0]; 1=use upper channel data[59:30]
     tmp_add_data |= 0   << 0; // [5:0] Rsrv
     hdmi_wr_reg(tx_dev_offset+TX_SYS4_CONNECT_SEL_1, tmp_add_data); // 0x00
-    
+
     // Normally it makes sense to synch 3 channel output with clock channel's rising edge,
     // as HDMI's serializer is LSB out first, invert tmds_clk pattern from "1111100000" to
     // "0000011111" actually enable data synch with clock rising edge.
     tmp_add_data = 1 << 4; // Set tmds_clk pattern to be "0000011111" before being sent to AFE clock channel
     hdmi_wr_reg(tx_dev_offset+TX_SYS4_CK_INV_VIDEO, tmp_add_data);
-    
+
     tmp_add_data  = 0;
     tmp_add_data |= 0   << 7; // [7] Rsrv
     tmp_add_data |= 0   << 6; // [6] TX_AFE_FIFO channel 2 bypass=0
@@ -593,14 +593,14 @@ void hdmitx_test_function ( unsigned long   tx_dev_offset,          // 0x00000: 
     tmp_add_data |= 1   << 1; // [1] TX_AFE_FIFO channel 1 enable
     tmp_add_data |= 1   << 0; // [0] TX_AFE_FIFO channel 0 enable
     hdmi_wr_reg(tx_dev_offset+TX_SYS5_FIFO_CONFIG, tmp_add_data); // 0x0f
-    
+
     tmp_add_data  = 0;
     tmp_add_data |= tx_output_color_format  << 6; // [7:6] output_color_format: 0=RGB444; 1=YCbCr444; 2=Rsrv; 3=YCbCr422.
     tmp_add_data |= tx_input_color_format   << 4; // [5:4] input_color_format:  0=RGB444; 1=YCbCr444; 2=Rsrv; 3=YCbCr422.
     tmp_add_data |= tx_output_color_depth   << 2; // [3:2] output_color_depth:  0=24-b; 1=30-b; 2=36-b; 3=48-b.
     tmp_add_data |= tx_input_color_depth    << 0; // [1:0] input_color_depth:   0=24-b; 1=30-b; 2=36-b; 3=48-b.
     hdmi_wr_reg(tx_dev_offset+TX_VIDEO_DTV_OPTION_L, tmp_add_data);
-    
+
     tmp_add_data  = 0;
     tmp_add_data |= 0                       << 4; // [7:4] Rsrv
     tmp_add_data |= tx_output_color_range   << 2; // [3:2] output_color_range:  0=16-235/240; 1=16-240; 2=1-254; 3=0-255.
@@ -652,13 +652,13 @@ void hdmitx_test_function ( unsigned long   tx_dev_offset,          // 0x00000: 
 
     hdmi_wr_reg(tx_dev_offset+TX_SYS0_ACR_CTS_0, 0x0a);
     hdmi_wr_reg(tx_dev_offset+TX_SYS0_ACR_CTS_1, 0x22);
-    
+
     tmp_add_data  = 0;
     tmp_add_data |= 0   << 7;    // [7]   Force ACR
     tmp_add_data |= 0   << 6;    // [6]   Force ACR Ready
     tmp_add_data |= 0x1 << 0;    // [3:0] CTS
     hdmi_wr_reg(tx_dev_offset+TX_SYS0_ACR_CTS_2, tmp_add_data); // 0x01
-    
+
     // Set N = 4096 (N is not measured, N must be configured so as to be a reference to clock_meter)
     hdmi_wr_reg(tx_dev_offset+TX_SYS1_ACR_N_0, 0x00); // N[7:0]
     hdmi_wr_reg(tx_dev_offset+TX_SYS1_ACR_N_1, 0x10); // N[15:8]
@@ -686,7 +686,7 @@ void hdmitx_test_function ( unsigned long   tx_dev_offset,          // 0x00000: 
     hdmi_wr_reg(tx_dev_offset+TX_PKT_REG_AUDIO_INFO_BASE_ADDR+0x1C, 0x84); // HB0: Packet Type = 0x84
     hdmi_wr_reg(tx_dev_offset+TX_PKT_REG_AUDIO_INFO_BASE_ADDR+0x1E, 0x0a); // HB2: Payload length in bytes
     hdmi_wr_reg(tx_dev_offset+TX_PKT_REG_AUDIO_INFO_BASE_ADDR+0x1F, 0x80); // Enable audio info frame
-   
+
     // TX Channel Status
     //0xB0 - 00000000;     //0xC8 - 00000000;
     //0xB1 - 00000000;     //0xC9 - 00000000;
@@ -736,20 +736,19 @@ void hdmitx_test_function ( unsigned long   tx_dev_offset,          // 0x00000: 
 
     tmp_add_data = 0xa; // time_divider[7:0] for DDC I2C bus clock
     hdmi_wr_reg(tx_dev_offset+TX_HDCP_CONFIG3, tmp_add_data);
-    
+
     tmp_add_data  = 0;
-    tmp_add_data |= hdcp_on << 7; // [7] cp_desired 
-    tmp_add_data |= 1       << 6; // [6] ess_config 
-    tmp_add_data |= 0       << 5; // [5] set_avmute 
-    tmp_add_data |= 0       << 4; // [4] clear_avmute 
-    tmp_add_data |= 1       << 3; // [3] hdcp_1_1 
-    tmp_add_data |= 0       << 2; // [2] forced_polarity 
-    tmp_add_data |= 0       << 1; // [1] forced_vsync_polarity 
+    tmp_add_data |= hdcp_on << 7; // [7] cp_desired
+    tmp_add_data |= 1       << 6; // [6] ess_config
+    tmp_add_data |= 0       << 5; // [5] set_avmute
+    tmp_add_data |= 0       << 4; // [4] clear_avmute
+    tmp_add_data |= 1       << 3; // [3] hdcp_1_1
+    tmp_add_data |= 0       << 2; // [2] forced_polarity
+    tmp_add_data |= 0       << 1; // [1] forced_vsync_polarity
     tmp_add_data |= 0       << 0; // [0] forced_hsync_polarity
     hdmi_wr_reg(tx_dev_offset+TX_HDCP_MODE, tmp_add_data); // 0xc8
-    
+
     // Release TX out of reset
     hdmi_wr_reg(tx_dev_offset+TX_SYS5_TX_SOFT_RESET_1, 0x0);
     hdmi_wr_reg(tx_dev_offset+TX_SYS5_TX_SOFT_RESET_2, 0x0);
 } /* hdmitx_test_function */
-

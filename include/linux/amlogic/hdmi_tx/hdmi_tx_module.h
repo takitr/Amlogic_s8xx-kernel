@@ -3,11 +3,10 @@
 #include "hdmi_info_global.h"
 #include <plat/hdmi_config.h>
 #include <linux/wait.h>
-#include <linux/cdev.h>
 //#include <linux/amlogic/aml_gpio_consumer.h>
 
 /*****************************
-*    hdmitx attr management 
+*    hdmitx attr management
 ******************************/
 
 /************************************
@@ -19,7 +18,7 @@ typedef struct
 {
     unsigned char audio_format_code;
     unsigned char channel_num_max;
-    unsigned char freq_cc;        
+    unsigned char freq_cc;
     unsigned char cc3;
 } rx_audio_cap_t;
 
@@ -45,12 +44,12 @@ typedef struct rx_cap_
     rx_audio_cap_t RxAudioCap[AUD_MAX_NUM];
     unsigned char AUD_count;
     unsigned char RxSpeakerAllocation;
-    /*vendor*/    
+    /*vendor*/
     unsigned int IEEEOUI;
     unsigned char ReceiverBrandName[4];
     unsigned char ReceiverProductName[16];
     unsigned int ColorDeepSupport;
-    unsigned int Max_TMDS_Clock; 
+    unsigned int Max_TMDS_Clock;
     unsigned int Video_Latency;
     unsigned int Audio_Latency;
     unsigned int Interlaced_Video_Latency;
@@ -66,6 +65,8 @@ typedef struct rx_cap_
         unsigned char top_and_bottom;
         unsigned char side_by_side;
     } support_3d_format[VIC_MAX_NUM];
+    /*blk0 check sum*/
+    unsigned char blk0_chksum;
 }rx_cap_t;
 
 typedef struct Cts_conf_tab_ {
@@ -79,6 +80,13 @@ typedef struct Vic_attr_map_ {
     unsigned int tmds_clk;
 }Vic_attr_map;
 
+enum hdmi_event_t {
+    HDMI_TX_NONE = 0,
+    HDMI_TX_HPD_PLUGIN = 1,
+    HDMI_TX_HPD_PLUGOUT = 2,
+    HDMI_TX_INTERNAL_INTR = 4,
+};
+
 #define EDID_MAX_BLOCK              4
 #define HDMI_TMP_BUF_SIZE           1024
 typedef struct hdmi_tx_dev_s {
@@ -88,12 +96,18 @@ typedef struct hdmi_tx_dev_s {
     struct task_struct *task_monitor;
     struct task_struct *task_hdcp;
     struct task_struct *task_cec;
+    struct workqueue_struct *hdmi_wq;
+    struct delayed_work work_hpd_plugin;
+    struct delayed_work work_hpd_plugout;
+    struct work_struct work_internal_intr;
+	struct work_struct cec_work;
     wait_queue_head_t cec_wait_rx;
     struct {
         void (*SetPacket)(int type, unsigned char* DB, unsigned char* HB);
         void (*SetAudioInfoFrame)(unsigned char* AUD_DB, unsigned char* CHAN_STAT_BUF);
         int (*SetDispMode)(struct hdmi_tx_dev_s* hdmitx_device, Hdmi_tx_video_para_t *param);
         int (*SetAudMode)(struct hdmi_tx_dev_s* hdmitx_device, Hdmi_tx_audio_para_t* audio_param);
+        void (*SetAudN)(void);
         void (*SetupIRQ)(struct hdmi_tx_dev_s* hdmitx_device);
         void (*DebugFun)(struct hdmi_tx_dev_s* hdmitx_device, const char * buf);
         void (*UnInit)(struct hdmi_tx_dev_s* hdmitx_device);
@@ -107,7 +121,7 @@ typedef struct hdmi_tx_dev_s {
     }HWOp;
 
     struct hdmi_config_platform_data config_data;
-    
+    enum hdmi_event_t hdmitx_event;
     //wait_queue_head_t   wait_queue;            /* wait queues */
     /*EDID*/
     unsigned cur_edid_block;
@@ -123,7 +137,7 @@ typedef struct hdmi_tx_dev_s {
     int audio_param_update_flag;
     /*status*/
 #define DISP_SWITCH_FORCE       0
-#define DISP_SWITCH_EDID        1    
+#define DISP_SWITCH_EDID        1
     unsigned char disp_switch_config; /* 0, force; 1,edid */
     unsigned char cur_VIC;
     unsigned char unplug_powerdown;
@@ -131,7 +145,7 @@ typedef struct hdmi_tx_dev_s {
     unsigned char hpd_event; /* 1, plugin; 2, plugout */
     unsigned char hpd_state; /* 1, connect; 0, disconnect */
     unsigned char force_audio_flag;
-    unsigned char mux_hpd_if_pin_high_flag; 
+    unsigned char mux_hpd_if_pin_high_flag;
 	unsigned char cec_func_flag;
     int  auth_process_timer;
     HDMI_TX_INFO_t hdmi_info;
@@ -144,6 +158,7 @@ typedef struct hdmi_tx_dev_s {
     unsigned int  tx_aud_cfg; /* 0, off; 1, on */
     unsigned int  tv_no_edid;           // For some un-well-known TVs, no edid at all
     unsigned int  hpd_lock;
+    unsigned int  mode420;
     unsigned int  output_blank_flag;    // if equals to 1, means current video & audio output are blank
     unsigned int  audio_notify_flag;
     unsigned int  audio_step;
@@ -209,6 +224,14 @@ typedef struct hdmi_tx_dev_s {
     #define TMDS_PHY_ENABLE     0x1
     #define TMDS_PHY_DISABLE    0x2
 #define MISC_VIID_IS_USING      (CMD_MISC_OFFSET + 0x05)
+#define MISC_CONF_MODE420       (CMD_MISC_OFFSET + 0x06)
+#define MISC_TMDS_CLK_DIV40     (CMD_MISC_OFFSET + 0x07)
+#define MISC_COMP_HPLL         (CMD_MISC_OFFSET + 0x08)
+    #define COMP_HPLL_SET_OPTIMISE_HPLL1    0x1
+    #define COMP_HPLL_SET_OPTIMISE_HPLL2    0x2
+#define MISC_COMP_AUDIO         (CMD_MISC_OFFSET + 0x09)
+    #define COMP_AUDIO_SET_N_6144x2          0x1
+    #define COMP_AUDIO_SET_N_6144x3          0x2
 
 /***********************************************************************
  *                          Get State //GetState
@@ -279,6 +302,9 @@ extern unsigned char hdmi_pll_mode; /* 1, use external clk as hdmi pll source */
 
 extern void HDMITX_Meson_Init(hdmitx_dev_t* hdmitx_device);
 
+extern void hdmitx_hpd_plugin_handler(struct work_struct *work);
+extern void hdmitx_hpd_plugout_handler(struct work_struct *work);
+extern void hdmitx_internal_intr_handler(struct work_struct *work);
 extern unsigned char hdmi_audio_off_flag;
 
 #define HDMITX_HWCMD_MUX_HPD_IF_PIN_HIGH       0x3
@@ -345,32 +371,9 @@ typedef struct {
 
 extern void hdmi_print(int level, const char *fmt, ...);
 
-#define VOUTMODE_HDMI		0x00
-#define VOUTMODE_DVI		0x01
-#define VOUTMODE_VGA		0x02
-#define VOUTMODE_NONHDMI	(VOUTMODE_DVI | VOUTMODE_VGA)
-
-extern int odroidc_voutmode(void);
-
-static inline int voutmode_hdmi(void)
-{
-	return odroidc_voutmode() == VOUTMODE_HDMI;
-}
-
-static inline int voutmode_dvi(void)
-{
-	return !!(odroidc_voutmode() & VOUTMODE_DVI);
-}
-
-static inline int voutmode_vga(void)
-{
-	return !!(odroidc_voutmode() & VOUTMODE_VGA);
-}
-
-static inline int voutmode_dvi_vga(void)
-{
-	return voutmode_dvi() || voutmode_vga();
-}
-
+#define dd()
+#ifndef dd
+#error delete debug information
 #endif
 
+#endif

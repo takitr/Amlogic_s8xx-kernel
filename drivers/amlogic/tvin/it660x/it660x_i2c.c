@@ -40,13 +40,13 @@ BYTE HDMIRX_ReadI2C_Byte(BYTE RegAddr)
     struct i2c_msg msg[] = {
 	    {
 			.addr	= HDMIRXADR,
-			.flags	= 0,    
+			.flags	= 0,
 			.len	= 1,
 			.buf	= &offset,
 		},
 	    {
 			.addr	= HDMIRXADR,
-			.flags	= I2C_M_RD,    
+			.flags	= I2C_M_RD,
 			.len	= 1,
 			.buf	= &uc,
 		}
@@ -70,7 +70,7 @@ repeat:
 
 SYS_STATUS HDMIRX_WriteI2C_Byte(BYTE RegAddr,BYTE val)
 {
-    
+
     int  i2c_flag = -1;
     int i = 0;
     unsigned int i2c_try_cnt = I2C_TRY_MAX_CNT;
@@ -78,13 +78,13 @@ SYS_STATUS HDMIRX_WriteI2C_Byte(BYTE RegAddr,BYTE val)
     struct i2c_msg msg[] = {
 	    {
 			.addr	= HDMIRXADR,
-			.flags	= 0,    
+			.flags	= 0,
 			.len	= 1,
 			.buf	= &offset,
 		},
 	    {
 			.addr	= HDMIRXADR,
-			.flags	= I2C_M_NOSTART,    
+			.flags	= I2C_M_NOSTART,
 			.len	= 1,
 			.buf	= &val,
 		}
@@ -106,7 +106,7 @@ repeat:
         }
         return ER_SUCCESS;
     }
-    
+
 }
 
 
@@ -119,13 +119,13 @@ SYS_STATUS HDMIRX_ReadI2C_ByteN(BYTE RegAddr,BYTE *pData,int N)
     struct i2c_msg msg[] = {
 	    {
 			.addr	= HDMIRXADR,
-			.flags	= 0,    
+			.flags	= 0,
 			.len	= 1,
 			.buf	= &offset,
 		},
 	    {
 			.addr	= HDMIRXADR,
-			.flags	= I2C_M_RD,    
+			.flags	= I2C_M_RD,
 			.len	= N,
 			.buf	= pData,
 		}
@@ -165,13 +165,13 @@ SYS_STATUS HDMIRX_WriteI2C_ByteN(BYTE RegAddr,BYTE *pData,int N)
     struct i2c_msg msg[] = {
 	    {
 			.addr	= HDMIRXADR,
-			.flags	= 0,    
+			.flags	= 0,
 			.len	= 1,
 			.buf	= &offset,
 		},
 	    {
 			.addr	= HDMIRXADR,
-			.flags	= I2C_M_NOSTART,    
+			.flags	= I2C_M_NOSTART,
 			.len	= N,
 			.buf	= pData,
 		}
@@ -281,4 +281,3 @@ MODULE_LICENSE("GPL");
 
 module_init(it660x_i2c_init);
 module_exit(it660x_i2c_exit);
-

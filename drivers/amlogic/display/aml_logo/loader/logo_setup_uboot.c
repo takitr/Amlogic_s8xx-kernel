@@ -43,7 +43,7 @@ static inline int install_logo_info(logo_object_t *plogo,char *para)
 //head
 	{"head",INVALID_INFO,		PARA_END+1,		1,	0,	PARA_END+1},
 
-//dev		
+//dev
 	{"osd0",LOGO_DEV_OSD0,	PARA_FIRST_GROUP_START-1,	PARA_FIRST_GROUP_START+1,	PARA_FIRST_GROUP_START,	PARA_SECOND_GROUP_START-1},
 	{"osd1",LOGO_DEV_OSD1,	PARA_FIRST_GROUP_START,		PARA_FIRST_GROUP_START+2,	PARA_FIRST_GROUP_START,	PARA_SECOND_GROUP_START-1},
 	{"vid",LOGO_DEV_VID,		PARA_FIRST_GROUP_START+1,	PARA_FIRST_GROUP_START+3,	PARA_FIRST_GROUP_START,	PARA_SECOND_GROUP_START-1},  // 3
@@ -66,28 +66,32 @@ static inline int install_logo_info(logo_object_t *plogo,char *para)
 	{"4k2k24hz",VMODE_4K2K_24HZ,			PARA_SECOND_GROUP_START+13,	PARA_SECOND_GROUP_START+15,	PARA_SECOND_GROUP_START,	PARA_THIRD_GROUP_START-1},
 	{"4k2k25hz",VMODE_4K2K_25HZ,			PARA_SECOND_GROUP_START+14,	PARA_SECOND_GROUP_START+16,	PARA_SECOND_GROUP_START,	PARA_THIRD_GROUP_START-1},
 	{"4k2k30hz",VMODE_4K2K_30HZ,			PARA_SECOND_GROUP_START+15,	PARA_SECOND_GROUP_START+17,	PARA_SECOND_GROUP_START,	PARA_THIRD_GROUP_START-1},
-	{"4k2ksmpte",VMODE_4K2K_SMPTE,			PARA_SECOND_GROUP_START+16,	PARA_SECOND_GROUP_START+18,	PARA_SECOND_GROUP_START,	PARA_THIRD_GROUP_START-1},
-	{"lvds1080p",VMODE_LVDS_1080P,			PARA_SECOND_GROUP_START+17,	PARA_SECOND_GROUP_START+19,	PARA_SECOND_GROUP_START,	PARA_THIRD_GROUP_START-1},
-	{"lvds1080p50hz",VMODE_LVDS_1080P_50HZ,			PARA_SECOND_GROUP_START+18,	PARA_SECOND_GROUP_START+20,	PARA_SECOND_GROUP_START,	PARA_THIRD_GROUP_START-1},
+	{"4k2k60hz",VMODE_4K2K_60HZ,	        PARA_SECOND_GROUP_START+16,	PARA_SECOND_GROUP_START+18,	PARA_SECOND_GROUP_START,	PARA_THIRD_GROUP_START-1},
+	{"4k2k60hz420",VMODE_4K2K_60HZ_Y420,	PARA_SECOND_GROUP_START+17,	PARA_SECOND_GROUP_START+19,	PARA_SECOND_GROUP_START,	PARA_THIRD_GROUP_START-1},
+	{"4k2k5g",VMODE_4K2K_5G,	            PARA_SECOND_GROUP_START+18,	PARA_SECOND_GROUP_START+20,	PARA_SECOND_GROUP_START,	PARA_THIRD_GROUP_START-1},
+	{"4k2k50hz420",VMODE_4K2K_50HZ_Y420,	            PARA_SECOND_GROUP_START+19,	PARA_SECOND_GROUP_START+21,	PARA_SECOND_GROUP_START,	PARA_THIRD_GROUP_START-1},
+	{"4k2ksmpte",VMODE_4K2K_SMPTE,			PARA_SECOND_GROUP_START+20,	PARA_SECOND_GROUP_START+22,	PARA_SECOND_GROUP_START,	PARA_THIRD_GROUP_START-1},
+	{"lvds1080p",VMODE_LVDS_1080P,			PARA_SECOND_GROUP_START+21,	PARA_SECOND_GROUP_START+23,	PARA_SECOND_GROUP_START,	PARA_THIRD_GROUP_START-1},
+	{"lvds1080p50hz",VMODE_LVDS_1080P_50HZ, PARA_SECOND_GROUP_START+22,	PARA_SECOND_GROUP_START+24,	PARA_SECOND_GROUP_START,	PARA_THIRD_GROUP_START-1},
 //display mode
 	{"origin",DISP_MODE_ORIGIN,	PARA_THIRD_GROUP_START-1,	PARA_THIRD_GROUP_START+1,	PARA_THIRD_GROUP_START,PARA_FOURTH_GROUP_START-1},  //15
 	{"center",DISP_MODE_CENTER,	PARA_THIRD_GROUP_START,		PARA_THIRD_GROUP_START+2,	PARA_THIRD_GROUP_START,PARA_FOURTH_GROUP_START-1},
 	{"full",DISP_MODE_FULL_SCREEN,	PARA_THIRD_GROUP_START+1,	PARA_THIRD_GROUP_START+3,	PARA_THIRD_GROUP_START,PARA_FOURTH_GROUP_START-1},
 //dbg
 	{"dbg",LOGO_DBG_ENABLE,	PARA_FOURTH_GROUP_START-1,	PARA_FOURTH_GROUP_START+1,	PARA_FOURTH_GROUP_START,PARA_FIFTH_GROUP_START-1},  //18
-//progress	
+//progress
 	{"progress",LOGO_PROGRESS_ENABLE,PARA_FIFTH_GROUP_START-1,PARA_FIFTH_GROUP_START+1,PARA_FIFTH_GROUP_START,PARA_SIXTH_GROUP_START-1},
 //loaded
 	{"loaded",LOGO_LOADED,PARA_SIXTH_GROUP_START-1,PARA_SIXTH_GROUP_START+1,PARA_SIXTH_GROUP_START,PARA_END},
 
-//tail	
+//tail
 	{"tail",INVALID_INFO,PARA_END,0,0,PARA_END+1},
 	};
 
 	static u32 tail=PARA_END+1;
-	u32 first=para_info_pair[0].next_idx ; 
+	u32 first=para_info_pair[0].next_idx ;
 	u32 i,addr;
-	
+
 	for(i=first;i<tail;i=para_info_pair[i].next_idx)
 	{
 		if(strcmp(para_info_pair[i].name,para)==0)
@@ -109,25 +113,25 @@ static inline int install_logo_info(logo_object_t *plogo,char *para)
 				plogo->para.dis_mode=(logo_display_mode_t)para_info_pair[i].info;
 				break;
 				case PARA_FOURTH_GROUP_START:
-				amlog_level(LOG_LEVEL_MAX,"select debug mode\n");	
+				amlog_level(LOG_LEVEL_MAX,"select debug mode\n");
 				amlog_level_logo=AMLOG_DEFAULT_LEVEL;
 				amlog_mask_logo=AMLOG_DEFAULT_MASK;
 				break;
 				case PARA_FIFTH_GROUP_START:
 				plogo->para.progress=1;
-				break;	
+				break;
 				case PARA_SIXTH_GROUP_START:
 				plogo->para.loaded=1;
 				amlog_level(LOG_LEVEL_MAX,"logo has been loaded\n");
-				break;	
+				break;
 			}
 			para_info_pair[prev].next_idx=next;
 			para_info_pair[next].prev_idx=prev;
 			return 0;
-		}//addr we will deal with it specially. 
+		}//addr we will deal with it specially.
 	}
 	addr=simple_strtoul(para, NULL,16);
-	//addr we will deal with it specially. 
+	//addr we will deal with it specially.
 	if(addr >=PHYS_OFFSET)
 	{
 		plogo->para.mem_addr=(char*)phys_to_virt(addr);
@@ -148,7 +152,7 @@ logo_object_t*	 get_current_logo_obj(void)
 
 vmode_t get_resolution_vmode(void)
 {
-	logo_object_t *plogo=&aml_logo;
+    logo_object_t *plogo=&aml_logo;
 
 	if (plogo != NULL)
 		return plogo->para.vout_mode;
@@ -184,7 +188,7 @@ int  __init  logo_setup(char *str)
 	plogo=&aml_logo;
 	memset(plogo,0,sizeof(logo_object_t));
 	sprintf(plogo->name,LOGO_NAME);
-	
+
 	do
 	{
 		if(!isalpha(*ptr)&&!isdigit(*ptr))

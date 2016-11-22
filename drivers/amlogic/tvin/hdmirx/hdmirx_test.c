@@ -75,7 +75,7 @@
 
 #define AUD_CLK_DELTA   2000
 
-#define INTERLACE_MODE 1    
+#define INTERLACE_MODE 1
 
 
 #define Wr_reg_bits(reg, val, start, len) \
@@ -95,7 +95,7 @@ void hdmirx_wr_dwc_check(uint16_t addr, uint32_t data)
    rd_back = hdmirx_rd_dwc(addr);
    if(rd_back!=data){
         printk("%s error (%x,%x) read back is %x\n", __func__, addr, data, rd_back);
-        while(1); 
+        while(1);
    }
 }
 
@@ -106,7 +106,7 @@ void hdmirx_wr_phy_check(uint16_t addr, uint32_t data)
    rd_back = hdmirx_rd_phy(addr);
    if(rd_back!=data){
         printk("%s error (%x,%x) read back is %x\n", __func__, addr, data, rd_back);
-        while(1); 
+        while(1);
    }
 }
 
@@ -119,7 +119,7 @@ void hdmirx_wr_top_check(uint16_t addr, uint32_t data)
    rd_back = hdmirx_rd_top(addr);
    if(rd_back!=data){
         printk("%s error (%x,%x) read back is %x\n", __func__, addr, data, rd_back);
-        while(1); 
+        while(1);
    }
 }
 
@@ -154,7 +154,7 @@ static void hdmi_rx_ctrl_hdcp_config( const struct hdmi_rx_ctrl_hdcp *hdcp)
 	hdmirx_wr_dwc(RA_HDCP_RPT_BSTATUS, 0);	/* nothing attached downstream */
 
   hdmirx_wr_bits_dwc( RA_HDCP_CTRL, HDCP_ENABLE, 1);
-	
+
 }
 
 void hdmirx_rd_check_reg (unsigned char dev_id, unsigned long addr, unsigned long exp_data, unsigned long mask)
@@ -167,12 +167,12 @@ void hdmirx_rd_check_reg (unsigned char dev_id, unsigned long addr, unsigned lon
     } else if (dev_id == HDMIRX_DEV_ID_PHY) {
         rd_data = hdmirx_rd_phy(addr);
     }
-    if ((rd_data | mask) != (exp_data | mask)) 
+    if ((rd_data | mask) != (exp_data | mask))
     {
         printk("Error: %s(%d) addr=0x%lx, rd_data=0x%lx, exp_data=0x%lx, mask=0x%lx\n",
             __func__, dev_id, addr, rd_data, exp_data, mask);
     }
-    
+
 } /* hdmirx_rd_check_reg */
 
 void hdmirx_poll_dwc (unsigned long addr, unsigned long exp_data, unsigned long mask, unsigned long max_try)
@@ -180,7 +180,7 @@ void hdmirx_poll_dwc (unsigned long addr, unsigned long exp_data, unsigned long 
     unsigned long rd_data;
     unsigned long cnt   = 0;
     unsigned char done  = 0;
-    
+
     rd_data = hdmirx_rd_dwc(addr);
     while (((cnt < max_try) || (max_try == 0)) && (done != 1)) {
         if ((rd_data | mask) == (exp_data | mask)) {
@@ -218,14 +218,14 @@ void hdmirx_hw_config_ori(int rx_port_sel)
     // [1]      edid_addr_intr
     // [0]      core_intr_rise: sub-interrupts will be configured later
     hdmirx_wr_top_check( HDMIRX_TOP_INTR_MASKN, 0x00001fff);
-    
+
     //--------------------------------------------------------------------------
     // Step 1-13: RX_INITIAL_CONFIG
     //--------------------------------------------------------------------------
 
     // 1. DWC reset default to be active, until reg HDMIRX_TOP_SW_RESET[0] is set to 0.
     hdmirx_rd_check_reg(HDMIRX_DEV_ID_TOP, HDMIRX_TOP_SW_RESET, 0x1, 0x0);
-    
+
     // 2. turn on clocks: md, cfg...
 
     data32  = 0;
@@ -255,9 +255,9 @@ void hdmirx_hw_config_ori(int rx_port_sel)
     hdmirx_wr_top_check( HDMIRX_TOP_CLK_CNTL, data32);    // DEFAULT: {32'h0}
 
     // 3. wait for TX PHY clock up
-    
+
     // 4. wait for rx sense
-    
+
     // 5. Release IP reset
     hdmirx_wr_top_check( HDMIRX_TOP_SW_RESET, 0x0);
 
@@ -282,7 +282,7 @@ void hdmirx_hw_config_ori(int rx_port_sel)
     //WRITE_MPEG_REG(ISA_TIMERE, 0); while( Rd(ISA_TIMERE) < 10 ) {} // delay 10uS
             mdelay(1);
     hdmirx_rd_check_reg(HDMIRX_DEV_ID_DWC, RA_DMI_SW_RST,   0, 0);
-    
+
     // 8. If defined, force manual N & CTS to speed up simulation
 
     data32  = 0;
@@ -308,7 +308,7 @@ void hdmirx_hw_config_ori(int rx_port_sel)
     data32 |= 0 << 28;  // [28]     pll_lock_filter_byp
     data32 |= 0 << 24;  // [27:24]  pll_lock_toggle_div
     hdmirx_wr_dwc_check( RA_AUD_PLL_CTRL,   data32);    // DEFAULT: {1'b0, 3'd0, 4'd6, 4'd3, 4'd8, 1'b0, 1'b0, 1'b1, 1'b0, 12'd0}
-    
+
     // 9. Set EDID data at RX
 #if 1
     hdmi_rx_ctrl_edid_update();
@@ -341,7 +341,7 @@ void hdmirx_hw_config_ori(int rx_port_sel)
     data32 |= 1                         << 8;   // [    8]  scl_stretch_enable
     data32 |= edid_clk_divide_m1 << 0;   // [ 7: 0]  clk_divide_m1
     hdmirx_wr_top( HDMIRX_TOP_EDID_GEN_CNTL,  data32);
-    
+
     if (edid_cec_id_addr != 0x00990098) {
         hdmirx_wr_top( HDMIRX_TOP_EDID_ADDR_CEC,  edid_cec_id_addr);
     }
@@ -355,7 +355,7 @@ void hdmirx_hw_config_ori(int rx_port_sel)
     } else { // rx_port_sel == 3
         hdmirx_wr_top( HDMIRX_TOP_EDID_DATA_CEC_PORT23,  (((edid_cec_id_data&0xff)<<8) | (edid_cec_id_data>>8))<<16);
     }
-    
+
     // 10. HDCP
     if (hdcp_on) {
         data32  = 0;
@@ -366,7 +366,7 @@ void hdmirx_hw_config_ori(int rx_port_sel)
         data32 |= hdcp_key_decrypt_en   << 1;   // [1]      key_decrypt_enable
         data32 |= hdcp_on               << 0;   // [0]      hdcp_enable
         hdmirx_wr_dwc( RA_HDCP_CTRL,  data32);
-    
+
         data32  = 0;
         data32 |= 1                     << 16;  // [17:16]  i2c_spike_suppr
         data32 |= 1                     << 13;  // [13]     hdmi_reserved. 0=No HDMI capabilities.
@@ -439,7 +439,7 @@ void hdmirx_hw_config_ori(int rx_port_sel)
     data32 |= 0     << 9;   // [9]      sck_disable
     data32 |= 0     << 5;   // [8:5]    i2s_disable
     data32 |= 0     << 1;   // [4:1]    spdif_disable
-    data32 |= 1     << 0;   // [0]      i2s_32_16 
+    data32 |= 1     << 0;   // [0]      i2s_32_16
     hdmirx_wr_dwc_check( RA_AUD_SAO_CTRL,   data32); // DEFAULT: {21'd0, 1'b1, 1'b1, 4'd15, 4'd15, 1'b1}
 
     // Manual de-repeat to speed up simulation
@@ -493,7 +493,7 @@ void hdmirx_hw_config_ori(int rx_port_sel)
     data32 |= 1     << 5;   // [6:5]    aud_mute_sel
     data32 |= 1     << 3;   // [4:3]    aud_mute_mode
     data32 |= 0     << 1;   // [2:1]    aud_ttone_fs_sel
-    data32 |= 0     << 0;   // [0]      testtone_en 
+    data32 |= 0     << 0;   // [0]      testtone_en
     hdmirx_wr_dwc_check( RA_AUD_MUTE_CTRL,  data32); // DEFAULT: {9'd0, 2'd0, 2'd0, 2'd0, 7'd48, 2'd0, 1'b1, 2'd3, 2'd3, 2'd0, 1'b0}
 
     data32  = 0;
@@ -522,7 +522,7 @@ void hdmirx_hw_config_ori(int rx_port_sel)
     data32 |= 0     << 8;   // [9:8]    hs_filt_sens
     data32 |= 2     << 6;   // [7:6]    de_measure_mode
     data32 |= 0     << 5;   // [5]      de_regen
-    data32 |= 3     << 3;   // [4:3]    de_filter_sens 
+    data32 |= 3     << 3;   // [4:3]    de_filter_sens
     hdmirx_wr_dwc_check( RA_HDMI_ERRORA_PROTECT, data32); // DEFAULT: {11'd0, 1'b0, 1'b0, 3'd0, 2'd0, 2'd0, 2'd0, 2'd0, 2'd0, 1'b0, 2'd0, 3'd0}
 
     data32  = 0;
@@ -547,7 +547,7 @@ void hdmirx_hw_config_ori(int rx_port_sel)
 
     data32  = 0;
     data32 |= 1 << 10;  // [11:10]  vofs_lin_ith
-    data32 |= 3 << 8;   // [9:8]    vact_lin_ith 
+    data32 |= 3 << 8;   // [9:8]    vact_lin_ith
     data32 |= 0 << 6;   // [7:6]    vtot_lin_ith
     data32 |= 7 << 3;   // [5:3]    vs_clk_ith
     data32 |= 2 << 0;   // [2:0]    vtot_clk_ith
@@ -677,7 +677,7 @@ void hdmirx_hw_config_ori(int rx_port_sel)
                         total_lines);       // Number of total lines per frame
     */
     // 14.  RX_FINAL_CONFIG
-    
+
     // RX PHY PLL configuration
     //get config for CMU
     /*stimulus_event(31, STIMULUS_HDMI_UTIL_CALC_PLL_CONFIG   |
@@ -730,7 +730,7 @@ void hdmirx_hw_config_ori(int rx_port_sel)
     //--------------------------------------------------------------------------
     // Enable HDMIRX-DWC interrupts:
     //--------------------------------------------------------------------------
-    
+
     hdmirx_wr_dwc( RA_PDEC_ICLR,         0xffffffff);
     hdmirx_wr_dwc( RA_AUD_CLK_ICLR,      0xffffffff);
     hdmirx_wr_dwc( RA_AUD_FIFO_ICLR,     0xffffffff);
@@ -753,7 +753,7 @@ void hdmirx_hw_config_ori(int rx_port_sel)
     hdmirx_rd_check_reg(HDMIRX_DEV_ID_DWC, RA_AUD_FIFO_ISTS,    0, 0);
     hdmirx_rd_check_reg(HDMIRX_DEV_ID_DWC, RA_MD_ISTS,          0, 0);
     //hdmirx_rd_check_reg(HDMIRX_DEV_ID_DWC, RA_HDMI_ISTS,        0, 0);
-#endif    
+#endif
     //--------------------------------------------------------------------------
     // Bring up RX
     //--------------------------------------------------------------------------
@@ -780,7 +780,7 @@ void hdmirx_hw_config_ori(int rx_port_sel)
         data32 |= HDMI_ARCTX_MODE   << 1;   // [1]      arctx_mode
         data32 |= 0                 << 0;   // [0]      arctx_en
         hdmirx_wr_top_check( HDMIRX_TOP_ARCTX_CNTL, data32);
-        
+
         data32  = 0;
         data32 |= HDMI_ARCTX_MODE   << 1;   // [1]      arctx_mode
         data32 |= HDMI_ARCTX_EN     << 0;   // [0]      arctx_en
@@ -824,7 +824,7 @@ void hdmirx_hw_config_ori(int rx_port_sel)
 //    register_read(  `RX_MD_VTL      , { supportreg[15:0], vtot_lin     }  , "VERBOSE_MODE");
 //      register_read(  `RX_AUD_FIFO_STS    , supportreg  , "VERBOSE_MODE");
  if(rx.ctrl.acr_mode == 0){
-	WRITE_MPEG_REG(HHI_AUDCLK_PLL_CNTL,  0x60010000); 
+	WRITE_MPEG_REG(HHI_AUDCLK_PLL_CNTL,  0x60010000);
 	WRITE_MPEG_REG(HHI_AUDCLK_PLL_CNTL2, 0x814d3928);
 	WRITE_MPEG_REG(HHI_AUDCLK_PLL_CNTL3, 0x6b425012);
 	WRITE_MPEG_REG(HHI_AUDCLK_PLL_CNTL4, 0x101);
@@ -848,4 +848,3 @@ void hdmirx_hw_config_ori(int rx_port_sel)
 }
 
 }
-

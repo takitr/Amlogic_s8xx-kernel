@@ -78,4 +78,3 @@ void SiiRxFormatDetect(void);
 void RX_ConfigureGpioAs3dFrameIndicator(void);
 
 #endif //SII_VIDEOMODEDETECTION_H
-

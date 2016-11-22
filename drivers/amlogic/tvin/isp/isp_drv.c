@@ -551,7 +551,7 @@ static ssize_t gamma_debug_store(struct device *dev,struct device_attribute *att
 	unsigned int curve_ratio,r,g,b;
 	if(buf){
 		curve_ratio = simple_strtol(buf,NULL,16);
-    	        r = (curve_ratio >> 8) & 15;
+	        r = (curve_ratio >> 8) & 15;
 		g = (curve_ratio >> 4) & 15;
 		b = (curve_ratio >> 0) & 15;
 		pr_info("curve ratio r:%u,g:%u,b:%u.\n",r,g,b);
@@ -986,7 +986,7 @@ static int isp_fe_ioctl(struct tvin_frontend_s *fe, void *arg)
 	cmd = param->cam_command;
 	devp->cam_param = param;
 	if(ioctl_debug)
-	 	pr_info("[%s..]%s:cmd: %s run mode %u.\n",DEVICE_NAME,__func__,cam_cmd_to_str(cmd),devp->cam_param->cam_mode);
+		pr_info("[%s..]%s:cmd: %s run mode %u.\n",DEVICE_NAME,__func__,cam_cmd_to_str(cmd),devp->cam_param->cam_mode);
 	switch(cmd) {
                 case CAM_COMMAND_INIT:
 		        break;
@@ -1007,7 +1007,7 @@ static int isp_fe_ioctl(struct tvin_frontend_s *fe, void *arg)
 			if(!(devp->flag & ISP_FLAG_CAPTURE)){
 				wb = devp->cam_param->xml_wb_manual;
 				isp_set_manual_wb(wb);
-	               	        devp->flag |= ISP_FLAG_AWB;
+			        devp->flag |= ISP_FLAG_AWB;
 			}
 		        break;
 		case CAM_COMMAND_MWB:
@@ -1025,8 +1025,8 @@ static int isp_fe_ioctl(struct tvin_frontend_s *fe, void *arg)
                 // ae related
                 case CAM_COMMAND_AE_ON:
 			if(!(devp->flag & ISP_FLAG_CAPTURE)){
-		        	isp_sm_init(devp);
-		        	devp->flag |= ISP_FLAG_AE;
+				isp_sm_init(devp);
+				devp->flag |= ISP_FLAG_AE;
 			}
 		        break;
                 case CAM_COMMAND_AE_OFF:
@@ -1188,10 +1188,10 @@ static void isp_tasklet(unsigned long arg)
 {
 	isp_dev_t *devp = (isp_dev_t *)arg;
         if((devp->flag & ISP_FLAG_AE)&&(ae_enable)){
-	    	isp_ae_sm(devp);
+		isp_ae_sm(devp);
         }
 	if((devp->flag&ISP_FLAG_AWB)&&(awb_enable)){
-    		isp_awb_sm(devp);
+		isp_awb_sm(devp);
 	}
 	if((devp->flag&ISP_AF_SM_MASK)&&(af_enable)){
 		isp_af_detect(devp);

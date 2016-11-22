@@ -78,13 +78,13 @@ static uint8_t SkAppCbusProcessRapMessage ( uint8_t rapData )
 		break;
 	case MHL_RAP_CONTENT_ON:
 		DEBUG_PRINT( MSG_DBG, "Change TO CONTENT_ON STATE received\n", (int)rapData );
-    	SiiDrvRxMuteVideo(OFF);   // switch on
-    	RxAudio_ReStart();
+	SiiDrvRxMuteVideo(OFF);   // switch on
+	RxAudio_ReStart();
 		break;
 	case MHL_RAP_CONTENT_OFF:
 		DEBUG_PRINT( MSG_DBG, "Change TO CONTENT_OFF STATE received\n", (int)rapData );
-    	SiiDrvRxMuteVideo(ON);   // switch off
-    	RxAudio_Stop();
+	SiiDrvRxMuteVideo(ON);   // switch off
+	RxAudio_Stop();
 		break;
 	default:
 		rapkStatus = MHL_MSC_MSG_RAP_UNRECOGNIZED_ACT_CODE;
@@ -107,7 +107,7 @@ static uint8_t SkAppCbusProcessRapMessage ( uint8_t rapData )
 static uint8_t SkAppCbusProcessUcpMessage ( uint8_t ucpData )
 {
     uint8_t ucpkStatus = MHL_MSC_MSG_UCP_NO_ERROR;
-	
+
     ucpData = ucpData;
 
     return( ucpkStatus );
@@ -169,7 +169,7 @@ void SiiMhlRxRcpRapRcvdNtfy( uint8_t cmd, uint8_t rcvdCode )
             sysfs_notify(&devinfo->mhl->device->kobj, "rcp", "in");
             send_sii5293_uevent(devinfo->mhl->device, MHL_EVENT,
 				    MHL_RCP_RECEIVED_EVENT, char_report_data_str);
-// if rcp is setting for process by sysfs interface, break it. 
+// if rcp is setting for process by sysfs interface, break it.
             if (!input_dev_rcp)
                 break;
 #endif
@@ -188,7 +188,7 @@ void SiiMhlRxRcpRapRcvdNtfy( uint8_t cmd, uint8_t rcvdCode )
             sysfs_notify(&devinfo->mhl->device->kobj, "rap", "in");
             send_sii5293_uevent(devinfo->mhl->device, MHL_EVENT,
 				    MHL_RAP_RECEIVED_EVENT, char_report_data_str);
-// if rap is setting for process by sysfs interface, break it. 
+// if rap is setting for process by sysfs interface, break it.
             if (!input_dev_rap)
                 break;
 #endif
@@ -203,7 +203,7 @@ void SiiMhlRxRcpRapRcvdNtfy( uint8_t cmd, uint8_t rcvdCode )
             sysfs_notify(&devinfo->mhl->device->kobj, "ucp", "in");
             send_sii5293_uevent(devinfo->mhl->device, MHL_EVENT,
 				    MHL_UCP_RECEIVED_EVENT, char_report_data_str);
-// if ucp is setting for process by sysfs interface, break it. 
+// if ucp is setting for process by sysfs interface, break it.
             if (!input_dev_ucp)
                 break;
 #endif
@@ -236,7 +236,7 @@ void SiiMhlRxRcpRapRcvdNtfy( uint8_t cmd, uint8_t rcvdCode )
 #endif
             break;
         case MHL_MSC_MSG_RAPK:
-        	DEBUG_PRINT( MSG_DBG, "RAPK Error Code: 0x%02X\n", (int)rcvdCode );
+		DEBUG_PRINT( MSG_DBG, "RAPK Error Code: 0x%02X\n", (int)rcvdCode );
 #if defined(__KERNEL__)
             gDriverContext.rap_out_statecode = rcvdCode;
             sysfs_notify(&devinfo->mhl->device->kobj, "rap", "out_status");
@@ -252,7 +252,7 @@ void SiiMhlRxRcpRapRcvdNtfy( uint8_t cmd, uint8_t rcvdCode )
             {
                 sysfs_notify(&devinfo->mhl->device->kobj, "ucp", "out_status");
                 send_sii5293_uevent(devinfo->mhl->device, MHL_EVENT,
-    			        MHL_UCP_ACKED_EVENT, char_report_data_str);
+			        MHL_UCP_ACKED_EVENT, char_report_data_str);
             }
 #endif
             break;
@@ -265,9 +265,8 @@ void SiiMhlRxRcpRapRcvdNtfy( uint8_t cmd, uint8_t rcvdCode )
 #endif
             break;
         default:
-        	DEBUG_PRINT( MSG_DBG, "\nApplication layer:: MSC_MSG sub-command not recognized!! Sending back MSGE code !!\n" );
-        	SiiMhlRxSendMsge(MHL_MSC_INVALID_SUBCMD);
-        	break;
+		DEBUG_PRINT( MSG_DBG, "\nApplication layer:: MSC_MSG sub-command not recognized!! Sending back MSGE code !!\n" );
+		SiiMhlRxSendMsge(MHL_MSC_INVALID_SUBCMD);
+		break;
     }
 }
-

@@ -56,7 +56,7 @@ static int time_count = 0;
 typedef struct vdin_ops_privdata_s {
     int                  dev_id;
     int                  vdin_num;
-	
+
     am_csi2_hw_t hw_info;
 
     am_csi2_input_t input;
@@ -64,7 +64,7 @@ typedef struct vdin_ops_privdata_s {
 
     struct mutex              buf_lock; /* lock for buff */
     unsigned                     watchdog_cnt;
-	
+
     mipi_buf_t                  out_buff;
 
     unsigned                    reset_flag;
@@ -101,7 +101,7 @@ extern void swap_vdin_uv(unsigned char* src, unsigned char* dst, unsigned int si
 static struct vdin_ops_privdata_s csi2_vdin_data[]=
 {
     {
-        .dev_id = -1,        
+        .dev_id = -1,
         .vdin_num = -1,
         .hw_info = {0},
         .input = {0},
@@ -134,7 +134,7 @@ const struct am_csi2_ops_s am_csi2_vdin =
 };
 
 
-static const struct am_csi2_pixel_fmt am_csi2_input_pix_formats_vdin[] = 
+static const struct am_csi2_pixel_fmt am_csi2_input_pix_formats_vdin[] =
 {
     {
         .name = "4:2:2, packed, UYVY",
@@ -231,7 +231,7 @@ static int mipi_vdin_receiver_event_fun(int type, void* data, void* private_data
         case VFRAME_EVENT_PROVIDER_UNREG:
             break;
         default:
-            break;     
+            break;
     }
     return 0;
 }
@@ -256,8 +256,8 @@ static int get_input_format(int v4l2_format)
             format = GE2D_FORMAT_M24_NV12;
             break;
         default:
-            break;            
-    }   
+            break;
+    }
     return format;
 }
 
@@ -284,8 +284,8 @@ static int get_output_format(int v4l2_format)
             format = GE2D_FORMAT_S8_Y;
             break;
         default:
-            break;            
-    }   
+            break;
+    }
     return format;
 }
 
@@ -298,14 +298,14 @@ static int config_canvas_index(unsigned address,int v4l2_format,unsigned w,unsig
         case V4L2_PIX_FMT_UYVY:
             canvas = AML_MIPI_DST_Y_CANVAS+(id*3);
             canvas_config(AML_MIPI_DST_Y_CANVAS+(id*3),(unsigned long)address,w*2, h, CANVAS_ADDR_NOWRAP, CANVAS_BLKMODE_LINEAR);
-            break; 
+            break;
         case V4L2_PIX_FMT_BGR24:
         case V4L2_PIX_FMT_RGB24:
             canvas = AML_MIPI_DST_Y_CANVAS+(id*3);
             canvas_config(AML_MIPI_DST_Y_CANVAS+(id*3),(unsigned long)address,w*3, h, CANVAS_ADDR_NOWRAP, CANVAS_BLKMODE_LINEAR);
-            break; 
+            break;
         case V4L2_PIX_FMT_NV12:
-        case V4L2_PIX_FMT_NV21: 
+        case V4L2_PIX_FMT_NV21:
             canvas_y = AML_MIPI_DST_Y_CANVAS+(id*3);
             canvas = (canvas_y | ((canvas_y+1)<<8));
             canvas_config(canvas_y,(unsigned long)address,w, h, CANVAS_ADDR_NOWRAP, CANVAS_BLKMODE_LINEAR);
@@ -420,7 +420,7 @@ static int ge2d_process(vdin_ops_privdata_t* data, vframe_t* in, am_csi2_frame_t
     }
 
     cur_angle = (360 - cur_angle%360);
-    /* data operating. */ 
+    /* data operating. */
     ge2d_config->alu_const_color= 0;//0x000000ff;
     ge2d_config->bitmask_en  = 0;
     ge2d_config->src1_gb_alpha = 0;//0xff;
@@ -669,7 +669,7 @@ static int sw_process(vdin_ops_privdata_t* data, vframe_t* in)
             canvas_read((in->canvas0Addr>>8)&0xff,&cs1);
             buffer_src_uv = ioremap_wc(cs1.addr,cs1.width*cs1.height);
             poss = 0;
-            for(i=uv_height; i > 0; i--){ 
+            for(i=uv_height; i > 0; i--){
                 swap_vdin_uv((unsigned char *)(data->output.vaddr+posd), (unsigned char *)(buffer_src_uv+poss), uv_width);
                 poss += cs1.width;
                 posd += uv_width;
@@ -741,7 +741,7 @@ static int fill_buff_from_canvas(am_csi2_frame_t* frame, am_csi2_output_t* outpu
         mipi_error("[mipi_vdin]:fill_buff_from_canvas---pionter error\n");
         return ret;
     }
-	
+
     canvas_read(frame->index&0xff,&canvas_work_y);
     buffer_y_start = ioremap_wc(frame->ddr_address,output->frame_size);
     //buffer_y_start = ioremap_wc(canvas_work_y.addr,canvas_work_y.width*canvas_work_y.height);
@@ -860,7 +860,7 @@ static int am_csi2_vdin_streamon(am_csi2_t* dev)
     csi_parm_t  csi_para;
     int i = 0;
     data = &data[dev->id];
-    
+
     data->hw_info.active_line = dev->input.active_line;
     data->hw_info.active_pixel= dev->input.active_pixel;
     data->hw_info.frame_size = dev->input.frame_size;
@@ -911,7 +911,7 @@ static int am_csi2_vdin_streamon(am_csi2_t* dev)
     para.hsync_phase = 0;
     para.vsync_phase = 0;
     para.frame_rate = dev->frame_rate;
-    para.scan_mode = TVIN_SCAN_MODE_PROGRESSIVE;	
+    para.scan_mode = TVIN_SCAN_MODE_PROGRESSIVE;
     para.h_active = data->input.active_pixel;
     para.v_active = data->input.active_line;
     para.reserved = &csi_para;
@@ -1000,4 +1000,3 @@ static int am_csi2_vdin_uninit(am_csi2_t* dev)
     mipi_dbg("[mipi_vdin]:am_csi2_vdin_uninit ok.\n");
     return 0;
 }
-

@@ -71,7 +71,7 @@ extern int gpio_flag;
 //#define debug
 #ifdef debug
 	#define gpio_print(...) printk(__VA_ARGS__)
-#else 
+#else
 	#define gpio_print(...)
 #endif
 //gpio subsystem set pictrl subsystem gpio owner
@@ -159,7 +159,7 @@ static unsigned int gpio_to_pin[][5]={
 	[BOOT_15]={P_PIN_MUX_REG(2,27),NONE,NONE,NONE,NONE,},
 	[BOOT_16]={P_PIN_MUX_REG(6,25),P_PIN_MUX_REG(2,23),P_PIN_MUX_REG(4,27),NONE,NONE,},
 	[BOOT_17]={P_PIN_MUX_REG(2,22),P_PIN_MUX_REG(4,26),P_PIN_MUX_REG(6,24),NONE,NONE,},
-	[BOOT_18]={P_PIN_MUX_REG(5,0),NONE,NONE,NONE,NONE,},	
+	[BOOT_18]={P_PIN_MUX_REG(5,0),NONE,NONE,NONE,NONE,},
 	[CARD_0]={P_PIN_MUX_REG(2,14),P_PIN_MUX_REG(2,6),NONE,NONE,NONE,},
 	[CARD_1]={P_PIN_MUX_REG(2,7),P_PIN_MUX_REG(2,15),NONE,NONE,NONE,},
 	[CARD_2]={P_PIN_MUX_REG(2,11),P_PIN_MUX_REG(2,5),NONE,NONE,NONE,},
@@ -244,7 +244,7 @@ static unsigned int gpio_to_pin_m8m2[][5]={
 	[GPIOZ_1]={P_PIN_MUX_REG(9,15),P_PIN_MUX_REG(5,30),P_PIN_MUX_REG(7,24),P_PIN_MUX_REG(6,1),NONE},
 	[GPIOZ_2]={P_PIN_MUX_REG(5,27),P_PIN_MUX_REG(6,2),NONE,NONE,NONE},
 	[GPIOZ_3]={P_PIN_MUX_REG(5,26),P_PIN_MUX_REG(6,3),NONE,NONE,NONE},
-	[GPIOH_9]={P_PIN_MUX_REG(4,1),P_PIN_MUX_REG(3,19),NONE,NONE,NONE},	
+	[GPIOH_9]={P_PIN_MUX_REG(4,1),P_PIN_MUX_REG(3,19),NONE,NONE,NONE},
 	[CARD_4]={P_PIN_MUX_REG(2,6),P_PIN_MUX_REG(2,12),P_PIN_MUX_REG(8,10),P_PIN_MUX_REG(8,8),NONE},
 	[CARD_5]={P_PIN_MUX_REG(2,13),P_PIN_MUX_REG(8,9),P_PIN_MUX_REG(2,6),P_PIN_MUX_REG(8,7),NONE},
 	[GPIODV_24]={P_PIN_MUX_REG(0,9),P_PIN_MUX_REG(0,19),P_PIN_MUX_REG(6,23),P_PIN_MUX_REG(8,24),NONE},
@@ -430,7 +430,7 @@ int gpio_amlogic_requst_force(struct gpio_chip *chip,unsigned offset)
 #endif /* CONFIG_GPIO_TEST */
 
 void	 gpio_amlogic_free(struct gpio_chip *chip,unsigned offset)
-{	
+{
 	 pinctrl_free_gpio(offset);
 	return;
 }
@@ -492,9 +492,15 @@ int gpio_amlogic_direction_output(struct gpio_chip *chip,unsigned offset, int va
 		meson_secure_reg_write(P_AO_SECURE_REG0, meson_secure_reg_read(P_AO_SECURE_REG0) | (1<<0));
 #endif
 		if(value)
-			aml_set_reg32_mask(P_PREG_PAD_GPIO0_O,1<<31);//out put high
+			if (IS_MESON_M8_CPU)
+				aml_set_reg32_mask(P_PREG_PAD_GPIO0_O,1<<31);//out put high
+			else
+				aml_set_reg32_mask(P_PAD_PULL_UP_REG2,1<<0);//out put high
 		else
-			aml_clr_reg32_mask(P_PREG_PAD_GPIO0_O,1<<31);//out put low
+			if (IS_MESON_M8_CPU)
+				aml_clr_reg32_mask(P_PREG_PAD_GPIO0_O,1<<31);//out put low
+			else
+				aml_clr_reg32_mask(P_PAD_PULL_UP_REG2,1<<0);//out put high
 		aml_clr_reg32_mask(P_PREG_PAD_GPIO0_O,1<<30);//out put enable
 		return 0;
 	}
@@ -562,7 +568,7 @@ int gpio_amlogic_name_to_num(const char *name)
 		return -1;
 	}
 	p=strcpy(p,name);
-	for(i=0;i<len;p++,i++){		
+	for(i=0;i<len;p++,i++){
 		if(*p=='_'){
 			*p='\0';
 			tmp=i;
@@ -588,7 +594,7 @@ int gpio_amlogic_name_to_num(const char *name)
 	else if(!strcmp(p,"GPIOX"))
 		num=num+112;
 	else
-		num= -1;	
+		num= -1;
 	kzfree(start);
 	return num;
 }
@@ -604,7 +610,7 @@ static struct gpio_chip amlogic_gpio_chip={
 };
 
 
-static const struct of_device_id amlogic_gpio_match[] = 
+static const struct of_device_id amlogic_gpio_match[] =
 {
 	{
 	.compatible = "amlogic,m8-gpio",
@@ -697,7 +703,7 @@ static int amlogic_gpio_probe(struct platform_device *pdev)
 		gpio_flag=AML_GPIO_IRQ(GPIO_IRQ0,FILTER_NUM7,i);
 		gpio_amlogic_to_irq(NULL,50);
 	}
-	
+
 #endif
 #ifdef pull_dump
 

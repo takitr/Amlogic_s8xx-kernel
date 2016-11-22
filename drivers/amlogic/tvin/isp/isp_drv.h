@@ -216,4 +216,3 @@ extern void set_cap_parm(struct xml_capture_s * cap_sw,char * * parm);
 extern void set_wave_parm(struct wave_s * wave,char * * parm);
 extern bool set_gamma_table_with_curve_ratio(unsigned int r,unsigned int g,unsigned int b);
 #endif
-

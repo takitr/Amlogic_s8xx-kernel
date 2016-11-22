@@ -30,7 +30,7 @@ typedef struct tvin_sm_s {
     unsigned int back_nosig_counter; // STATE_UNSTABLE
     unsigned int back_stable_counter; // STATE_UNSTABLE
     unsigned int exit_prestable_counter; // STATE_PRESTABLE
-    //thresholds of state switchted  
+    //thresholds of state switchted
     int back_nosig_max_cnt ;
     int atv_unstable_in_cnt ;
     int atv_unstable_out_cnt;
@@ -43,4 +43,3 @@ void tvin_smr_init(int index);
 enum tvin_sm_status_e tvin_get_sm_status(int index);
 
 #endif
-

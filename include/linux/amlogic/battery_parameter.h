@@ -58,13 +58,13 @@ struct battery_parameter {
     int     pmu_ntc_ts_current;
     int     pmu_ntc_lowtempvol;
     int     pmu_ntc_hightempvol;
-    
+
     int     pmu_charge_efficiency;
     struct  battery_curve pmu_bat_curve[16];
 };
 
 /*
- * tell driver if we have got battery parameters from uboot 
+ * tell driver if we have got battery parameters from uboot
  */
 extern int get_uboot_battery_para_status(void);
 

@@ -441,7 +441,7 @@ static void vdin_vf_init(struct vdin_dev_s *devp)
 	//const struct tvin_format_s *fmt_info = tvin_get_fmt_info(fmt);
 	if(vdin_dbg_en)
 		pr_info("vdin.%d vframe initial infomation table: (%d of %d)\n",
-	 		 devp->index, p->size, p->max_size);
+			 devp->index, p->size, p->max_size);
 
 	for (i = 0; i < p->size; ++i)
 	{
@@ -824,7 +824,7 @@ static int vdin_func(int no, vdin_arg_t *arg)
 		        pr_err("[vdin..]%s vdin%d has't registered,please register.\n",__func__,no);
                 return -1;
         }else if(!(devp->flags&VDIN_FLAG_DEC_STARTED)&&(parm->cmd != VDIN_CMD_MPEGIN_START)){
-        	if(vdin_dbg_en)
+		if(vdin_dbg_en)
 			;//pr_err("[vdin..]%s vdin%d has't started.\n",__func__,no);
 		return -1;
 	}
@@ -860,7 +860,7 @@ static int vdin_func(int no, vdin_arg_t *arg)
 			}
 			vdin_set_vframe_prop_info(&devp->curr_wr_vfe->vf, devp);
 			vdin_backup_histgram(&devp->curr_wr_vfe->vf, devp);
-			vf = parm->private;
+			vf = (struct vframe_s *)parm->private;
 			if(vf && devp->curr_wr_vfe)
 				memcpy(&vf->prop,&devp->curr_wr_vfe->vf.prop,sizeof(vframe_prop_t));
 			break;
@@ -1379,7 +1379,7 @@ irqreturn_t vdin_v4l2_isr(int irq, void *dev_id)
 		decops = devp->frontend->dec_ops;
                 /*pass the histogram information to viuin frontend*/
 		devp->frontend->private_data = &curr_wr_vf->prop;
-          	ret = decops->decode_isr(devp->frontend, devp->hcnt64);
+		ret = decops->decode_isr(devp->frontend, devp->hcnt64);
 		if (ret == TVIN_BUF_SKIP) {
 			if(vdin_dbg_en)
 				pr_info("%s bufffer(%u) skiped.\n",__func__,curr_wr_vf->index);
@@ -1963,7 +1963,7 @@ static int vdin_drv_probe(struct platform_device *pdev)
 	                goto fail_get_resource_mem;
 	        }
 	        else {
-	                ret= find_reserve_block_by_name(name);
+	                ret= find_reserve_block_by_name((char *)name);
 	                if(ret<0) {
 	                        pr_err("\nvdin memory resource undefined2.\n");
 	                        ret = -EFAULT;

@@ -37,14 +37,13 @@ enum am656_status_e{
 };
 typedef struct am656in_dev_s{
         int                     index;
-        dev_t                   devt;           
+        dev_t                   devt;
         struct cdev             cdev;
         struct device          *dev;
         unsigned int            overflow_cnt;
         unsigned int            skip_vdin_frame_count;
         enum am656_status_e     dec_status;
         struct vdin_parm_s      para;
-        struct tvin_frontend_s  frontend; 
+        struct tvin_frontend_s  frontend;
 }am656in_dev_t;
 #endif
-

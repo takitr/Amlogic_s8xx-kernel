@@ -850,8 +850,7 @@ static ssize_t environ_read(struct file *file, char __user *buf,
 	int ret = 0;
 	struct mm_struct *mm = file->private_data;
 
-	/* Ensure the process spawned far enough to have an environment. */
-	if (!mm || !mm->env_end)
+	if (!mm)
 		return 0;
 
 	page = (char *)__get_free_page(GFP_TEMPORARY);
@@ -1014,15 +1013,15 @@ static int oom_adjust_permission(struct inode *inode, int mask)
 
 	p = get_proc_task(inode);
 	if(p) {
-		uid = __kuid_val(task_uid(p));
+		uid = task_uid(p);
 		put_task_struct(p);
 	}
 
 	/*
-	 * System Server (uid == 1000) is granted access to oom_adj of all 
+	 * System Server (uid == 1000) is granted access to oom_adj of all
 	 * android applications (uid > 10000) as and services (uid >= 1000)
 	 */
-	if (p && (__kuid_val(current_fsuid()) == 1000) && (uid >= 1000)) {
+	if (p && (current_fsuid() == 1000) && (uid >= 1000)) {
 		if (inode->i_mode >> 6 & mask) {
 			return 0;
 		}
@@ -1865,7 +1864,7 @@ static int proc_map_files_get_link(struct dentry *dentry, struct path *path)
 	down_read(&mm->mmap_sem);
 	vma = find_exact_vma(mm, vm_start, vm_end);
 	if (vma && vma->vm_file) {
-		*path = vma_pr_or_file(vma)->f_path;
+		*path = vma->vm_file->f_path;
 		path_get(path);
 		rc = 0;
 	}

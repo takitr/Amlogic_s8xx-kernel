@@ -58,11 +58,26 @@
 #define PARSER_BUSY         (ES_PARSER_BUSY)
 
 #define PARSER_PARAMETER_LENGTH_BIT     16
+#define PARSER_PARAMETER_LOOP_BIT       24
 
 #define PARSER_POP      READ_MPEG_REG(PFIFO_DATA)
 #define SET_BLOCK(size) \
 WRITE_MPEG_REG_BITS(PARSER_CONTROL, size, ES_PACK_SIZE_BIT, ES_PACK_SIZE_WID)
 #define SET_DISCARD_SIZE(size) WRITE_MPEG_REG(PARSER_PARAMETER, size)
+
+#define VIDEO_AUTO_FLUSH
+#ifdef VIDEO_AUTO_FLUSH
+static u32 video_auto_flush_state;
+#define VIDEO_AUTO_FLUSH_IDLE          0
+#define VIDEO_AUTO_FLUSH_MONITOR       1
+#define VIDEO_AUTO_FLUSH_TRIGGER       2
+#define VIDEO_AUTO_FLUSH_DONE          3
+#define VIDEO_AUTO_FLUSH_PTS_THRESHOLD 90000
+#define VIDEO_AUTO_FLUSH_BYTE_COUNT    1024
+
+static s32 audio_last_pts;
+static s32 audio_monitor_pts;
+#endif
 
 enum {
     SEARCH_START_CODE = 0,
@@ -71,6 +86,10 @@ enum {
     SEND_SUBPIC_SEARCH,
     DISCARD_SEARCH,
     DISCARD_ONLY
+#ifdef VIDEO_AUTO_FLUSH
+    ,
+    SEARCH_START_CODE_VIDEO_FLUSH
+#endif
 };
 
 enum {
@@ -119,9 +138,7 @@ static void ptsmgr_vpts_checkin(u32 pts)
         first_vpts = pts;
     }
 
-    //    vpts_checkin(pts);
     pts_checkin_offset(PTS_TYPE_VIDEO, video_data_parsed, pts);
-
 }
 
 static void ptsmgr_apts_checkin(u32 pts)
@@ -133,6 +150,21 @@ static void ptsmgr_apts_checkin(u32 pts)
 
     //    apts_checkin(pts);
     pts_checkin_offset(PTS_TYPE_AUDIO, audio_data_parsed, pts);
+
+#ifdef VIDEO_AUTO_FLUSH
+    audio_last_pts = pts;
+
+    if ((video_auto_flush_state == VIDEO_AUTO_FLUSH_IDLE) && ptsmgr_first_vpts_ready()) {
+        video_auto_flush_state = VIDEO_AUTO_FLUSH_MONITOR;
+        audio_monitor_pts = pts;
+    }
+
+    if (video_auto_flush_state == VIDEO_AUTO_FLUSH_MONITOR) {
+        if ((audio_last_pts - audio_monitor_pts) > VIDEO_AUTO_FLUSH_PTS_THRESHOLD) {
+            video_auto_flush_state = VIDEO_AUTO_FLUSH_TRIGGER;
+        }
+    }
+#endif
 }
 
 static u32 parser_process(s32 type, s32 packet_len)
@@ -141,7 +173,7 @@ static u32 parser_process(s32 type, s32 packet_len)
     u32 pts = 0, dts = 0;
     u32 pts_dts_flag = 0;
 	u16 invalid_pts = 0;
-	
+
     temp = PARSER_POP;
     packet_len--;
 
@@ -306,12 +338,18 @@ static u32 parser_process(s32 type, s32 packet_len)
 		printk("invalid pts \n");
 	}
 
-	
+
 
     if (!packet_len) {
         return SEARCH_START_CODE;
 
     } else if (type == 0) {
+#ifdef VIDEO_AUTO_FLUSH
+        if (video_auto_flush_state == VIDEO_AUTO_FLUSH_MONITOR) {
+            audio_monitor_pts = audio_last_pts;
+        }
+#endif
+
         if ((pts_dts_flag) && (!invalid_pts)) {
 #if TIMESTAMP_IONLY
             if (!ptsmgr_first_vpts_ready()) {
@@ -501,24 +539,24 @@ static u32 parser_process(s32 type, s32 packet_len)
                 sub_id_max = temp;
             }
 
-			#ifdef DEBUG_VOB_SUB				
+			#ifdef DEBUG_VOB_SUB
 			for (i = 0; i < sub_found_num; i ++) {
 				if(!sub_info[i])
 					break;
 				if(temp == sub_info[i]->id)
 					break;
-			}				
-			if (i == sub_found_num && i < MAX_SUB_NUM) {				
+			}
+			if (i == sub_found_num && i < MAX_SUB_NUM) {
 				if (sub_info[sub_found_num]) {
 					sub_info[sub_found_num]->id = temp;
 					sub_found_num ++;
 					printk("[psparser_process]found new sub_id=0x%x (num %d)\n", temp, sub_found_num);
 				} else {
 					printk("[psparser_process]sub info NULL!\n");
-				}	
+				}
 			}
 			#endif
-			
+
             if (temp == sub_id) {
                 /* DVD sub-picture data */
                 if (!packet_len) {
@@ -653,6 +691,13 @@ static void on_start_code_found(int start_code)
 #endif
         }
 
+#ifdef VIDEO_AUTO_FLUSH
+        if (video_auto_flush_state == VIDEO_AUTO_FLUSH_TRIGGER) {
+            next_action = SEARCH_START_CODE_VIDEO_FLUSH;
+            video_auto_flush_state = VIDEO_AUTO_FLUSH_DONE;
+        } else
+#endif
+
         next_action = SEARCH_START_CODE;
 
     } else {
@@ -715,6 +760,15 @@ static void on_start_code_found(int start_code)
     case DISCARD_ONLY:
         WRITE_MPEG_REG_BITS(PARSER_CONTROL, PARSER_DISCARD, ES_CTRL_BIT, ES_CTRL_WID);
         break;
+
+#ifdef VIDEO_AUTO_FLUSH
+    case SEARCH_START_CODE_VIDEO_FLUSH:
+        WRITE_MPEG_REG(PARSER_INSERT_DATA, 0xffffffff);
+        WRITE_MPEG_REG(PARSER_INSERT_DATA, 0xffffffff);
+        WRITE_MPEG_REG(PARSER_PARAMETER, ((VIDEO_AUTO_FLUSH_BYTE_COUNT/8) << PARSER_PARAMETER_LOOP_BIT) | (8 << PARSER_PARAMETER_LENGTH_BIT));
+        WRITE_MPEG_REG(PARSER_CONTROL, PARSER_AUTOSEARCH | PARSER_VIDEO | PARSER_WRITE | ES_INSERT_BEFORE_ES_WRITE);
+        break;
+#endif
     }
 }
 
@@ -767,7 +821,7 @@ static ssize_t _psparser_write(const char __user *buf, size_t count)
         wmb();
 
         WRITE_MPEG_REG(PARSER_FETCH_ADDR, virt_to_phys((u8 *)fetchbuf));
-        
+
         WRITE_MPEG_REG(PARSER_FETCH_CMD,
                        (7 << FETCH_ENDIAN) | len);
 
@@ -823,6 +877,10 @@ s32 psparser_init(u32 vid, u32 aid, u32 sid)
     first_apts = 0;
     first_vpts = 0;
     pts_equ_dts_flag = 0;
+
+#ifdef VIDEO_AUTO_FLUSH
+    video_auto_flush_state = VIDEO_AUTO_FLUSH_IDLE;
+#endif
 
     printk("video 0x%x, audio 0x%x, sub 0x%x\n", video_id, audio_id, sub_id);
     if (fetchbuf == 0) {
@@ -1060,7 +1118,7 @@ u8 psparser_get_sub_info(struct subtitle_info **sub_infos)
 #ifdef DEBUG_VOB_SUB
 	u8 i = 0;
 	int ret = 0;
-	u8 size = sizeof(struct subtitle_info);	
+	u8 size = sizeof(struct subtitle_info);
 	for (i = 0; i < sub_found_num; i ++) {
 		if (!sub_info[i]){
 			printk("[psparser_get_sub_info:%d]  sub_info[%d] NULL\n", __LINE__, i);
@@ -1071,9 +1129,9 @@ u8 psparser_get_sub_info(struct subtitle_info **sub_infos)
 			printk("[psparser_get_sub_info:%d]  sub_infos[%d] NULL\n", __LINE__, i);
 			ret = -2;
 			break;
-		}		
-		memcpy(sub_infos[i], sub_info[i], size);		
-	}	
+		}
+		memcpy(sub_infos[i], sub_info[i], size);
+	}
 	return ret;
 #else
 	return 0;

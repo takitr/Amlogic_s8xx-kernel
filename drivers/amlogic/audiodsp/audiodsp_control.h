@@ -4,9 +4,9 @@
 
 #ifndef AUDIODSP_CONTROL_H
 #define AUDIODSP_CONTROL_H
- 
 
-struct audiodsp_cmd 
+
+struct audiodsp_cmd
 {
 int cmd;
 int fmt;
@@ -70,4 +70,3 @@ char *data;
 #define AUDIOINFO_FROM_AUDIODSP(format)  ((format == MCODEC_FMT_AAC) || \
 										  (format ==MCODEC_FMT_AAC_LATM))
 #endif
-

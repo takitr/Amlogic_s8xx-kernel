@@ -34,6 +34,11 @@
 #include <asm/mach/arch.h>
 #include <asm/mach/map.h>
 
+#ifdef CONFIG_HIBERNATION
+#include <linux/suspend.h>
+#include <asm/xen/page.h>
+#endif
+
 #include "mm.h"
 
 static unsigned long phys_initrd_start __initdata = 0;
@@ -377,9 +382,10 @@ void __init arm_memblock_init(struct meminfo *mi, struct machine_desc *mdesc)
 		mdesc->reserve();
 
 	/*
-	 * reserve memory for DMA contigouos allocations
+	 * reserve memory for DMA contigouos allocations,
+	 * must come from DMA area inside low memory
 	 */
-	dma_contiguous_reserve(arm_dma_limit);
+	dma_contiguous_reserve(min(arm_dma_limit, arm_lowmem_limit));
 
 	arm_memblock_steal_permitted = false;
 	memblock_allow_resize();
@@ -697,6 +703,11 @@ void __init mem_init(void)
 #undef MLK
 #undef MLM
 #undef MLK_ROUNDUP
+
+#ifdef CONFIG_HIBERNATION
+	register_nosave_region((unsigned long)virt_to_pfn(_text),
+		 (unsigned long)virt_to_pfn(_etext));
+#endif
 
 	/*
 	 * Check boundaries twice: Some fundamental inconsistencies can

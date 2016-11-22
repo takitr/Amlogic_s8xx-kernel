@@ -20,7 +20,7 @@ void root_func(){
 	interrupt-parent = <&gic>;
 	#address-cells = <1>;
 	#size-cells = <1>;
-	
+
 /// ***************************************************************************************
 ///	-	CPU
 //$$ MODULE="CPU"
@@ -76,7 +76,7 @@ void root_func(){
 /// ***************************************************************************************
 ///	-	GIC
 //$$ MODULE="GIC"
-//$$ DEVICE="gic"	
+//$$ DEVICE="gic"
 	gic:interrupt-controller{
         compatible = "arm,cortex-a9-gic";
         reg = <0xc4301000 0x1000
@@ -99,9 +99,9 @@ void root_func(){
         reserve-iomap = "true";
     };
 
-/// **************************************************************************************	
+/// **************************************************************************************
 /// -   DISP&MM-FB
-//$$ MODULE = "DISP&MM-FB"	
+//$$ MODULE = "DISP&MM-FB"
 //$$ DEVICE = "mesonfb"
 //$$ L2 PROP_STR = "status"
 //$$ L3 PROP_U32 2 ="reserve-memory"
@@ -113,10 +113,10 @@ void root_func(){
 		status = "okay";
         reserve-memory = <0x0800000  0x00100000>;//8M+1M=9M
 		reserve-iomap = "true";
- 		vmode = <1>; /**0:VMODE_720P 1:VMODE_LCD  2:VMODE_LVDS_1080P*/
- 		display_size_default = <1024 600 1024 1800 32>;//1024x768x4x3==0x708000,8MB
+		vmode = <1>; /**0:VMODE_720P 1:VMODE_LCD  2:VMODE_LVDS_1080P*/
+		display_size_default = <1024 600 1024 1800 32>;//1024x768x4x3==0x708000,8MB
 	};
-	
+
 //$$ DEVICE = "mesonfb-ext"
 //$$ L2 PROP_STR = "status"
 //$$ L3 PROP_U32 2 ="reserve-memory"
@@ -168,7 +168,7 @@ void root_func(){
 		compatible = "amlogic,ppmgr";
 		dev_name = "ppmgr";
 		status = "okay";
-		reserve-memory = <0x00d00000>;		
+		reserve-memory = <0x00d00000>;
 		reserve-iomap = "true";
 	};
 
@@ -216,14 +216,14 @@ void root_func(){
 		dev_name = "mesonvout";
 		status = "okay";
 	};
-	
+
 //$$ DEVICE = "mesonvout2"
 //$$ L2 PROP_STR = "status"
 	mesonvout2{
 		compatible = "amlogic,mesonvout2";
 		dev_name = "mesonvout2";
 		status = "okay";
-	};	
+	};
 /// ***************************************************************************************
 ///	-	RTC
 //$$ MODULE="RTC"
@@ -249,7 +249,7 @@ void root_func(){
 		pinctrl-names = "default";
 		pinctrl-0 = <&ao_uart_pins>;
 	};
-	
+
 //$$ DEVICE="uart_0"
 //$$ L2 PROP_STR = "status"
 //$$ L2 PROP_STR = "pinctrl-names"
@@ -262,7 +262,7 @@ void root_func(){
         pinctrl-names = "default";
         pinctrl-0 = <&a_uart_pins>;
 	};
-	
+
 //$$ DEVICE="uart_1"
 //$$ L2 PROP_STR = "status"
 	uart_1{
@@ -271,7 +271,7 @@ void root_func(){
 		status = "disabled";
 		dev_name = "uart_1";
 	};
-	
+
 //$$ DEVICE="uart_2"
 //$$ L2 PROP_STR = "status"
 	uart_2{
@@ -280,9 +280,9 @@ void root_func(){
 		status = "disabled";
 		dev_name = "uart_2";
 	};
-	
+
 //$$ DEVICE="uart_3"
-//$$ L2 PROP_STR = "status"	
+//$$ L2 PROP_STR = "status"
 	uart_3{
 		compatible = "amlogic,aml_uart";
 		port_name = "uart_d";
@@ -388,7 +388,7 @@ void root_func(){
             #irq_out_edge = "GPIO_IRQ_RISING";
             card_type = <5>; /* 0:unknown, 1:mmc card(include eMMC), 2:sd card(include tSD), 3:sdio device(ie:sdio-wifi), 4:SD combo (IO+mem) card, 5:NON sdio device(means sd/mmc card), other:reserved */
         };
-        	
+
 //$$ DEVICE="emmc"
 //$$ L2 PROP_STR = "status"
 //$$ L3 PROP_U32 = "port"
@@ -417,7 +417,7 @@ void root_func(){
             #power_level = <0>;
             card_type = <5>; /* 0:unknown, 1:mmc card(include eMMC), 2:sd card(include tSD), 3:sdio device(ie:sdio-wifi), 4:SD combo (IO+mem) card, 5:NON sdio device(means sd/mmc card), other:reserved */
         };
-        
+
 //$$ DEVICE="sdio"
 //$$ L2 PROP_STR = "status"
 //$$ L3 PROP_U32 = "port"
@@ -426,8 +426,8 @@ void root_func(){
 //$$ L2 PROP_STR 4 = "caps"
 //$$ L3 PROP_U32 = "f_min"
 //$$ L3 PROP_U32 = "f_max"
-//$$ L3 PROP_U32 = "max_req_size"    
-//$$ L2 PROP_U32 = "card_type"    
+//$$ L3 PROP_U32 = "max_req_size"
+//$$ L2 PROP_U32 = "card_type"
          sdio{
              status = "okay";
              port = <0>;          /**0:sdio_a, 1:sdio_b, 2:sdio_c, 3:sdhc_a, 4:sdhc_b, 5:sdhc_c */
@@ -449,7 +449,7 @@ void root_func(){
 //$$ L2 PROP_STR = "status"
 //$$ L3 PROP_U32 2 ="reg"
 //$$ L3 PROP_STR = "pinctrl-names"
-//$$ L2 PROP_CHOICE "I2C_AO_pin_match" = "pinctrl-0"	
+//$$ L2 PROP_CHOICE "I2C_AO_pin_match" = "pinctrl-0"
 	i2c@c8100500{ /*I2C-AO*/
 		compatible = "amlogic,aml_i2c";
 		dev_name = "i2c-AO";
@@ -463,7 +463,7 @@ void root_func(){
 		use_pio = <0>;
 		master_i2c_speed = <100000>;
 	};
-	
+
 //$$ DEVICE = "I2C_A"
 //$$ L2 PROP_STR = "status"
 //$$ L3 PROP_U32 2 ="reg"
@@ -482,12 +482,12 @@ void root_func(){
 		use_pio = <0>;
 		master_i2c_speed = <300000>;
 	};
-	
+
 //$$ DEVICE="I2C_B"
 //$$ L2 PROP_STR = "status"
 //$$ L3 PROP_U32 2="reg"
 //$$ L3 PROP_STR = "pinctrl-names"
-//$$ L2 PROP_CHOICE "I2C_B_pin_match" = "pinctrl-0"	
+//$$ L2 PROP_CHOICE "I2C_B_pin_match" = "pinctrl-0"
 	i2c@c11087c0{ /*I2C-B*/
 		compatible = "amlogic,aml_i2c";
 		dev_name = "i2c-B";
@@ -500,7 +500,7 @@ void root_func(){
 		#size-cells = <0>;
 		use_pio = <0>;
 		master_i2c_speed = <300000>;
- 	};
+	};
 
 /// ***************************************************************************************
 ///	-	Power
@@ -549,21 +549,21 @@ void root_func(){
         status = "ok";
         pinctrl-names = "default";
         pinctrl-0 = <&aml_pwm_pins>;
-        use_pwm = <1>; 
+        use_pwm = <1>;
         pmw_controller = "PWM_C";
         table_count = <16>;
         cs_voltage_table = <
-        /*   
+        /*
          * Note: This table is hardware depended, If your hardware use PWM method,
          * then first line in this table is PWM register value, second line is
          * voltage of VCCK according this PWM register value. If your platform use
-         * constant-current source to adjust vcck voltage, then the first line should 
+         * constant-current source to adjust vcck voltage, then the first line should
          * set to 0, means not valid, member 'use_pwm' in this node should set to 0.
          *
          *  ---- This table must be in ascending order by voltage ----
-         *    
-         *  PWM value       VCCK voltage 
-         */   
+         *
+         *  PWM value       VCCK voltage
+         */
             0x130009        1079000
             0x12000a        1096000
             0x11000b        1113000
@@ -580,8 +580,8 @@ void root_func(){
             0x060016        1300000
             0x050017        1317000
             0x040018        1334000
-        >;   
-    };   
+        >;
+    };
 //$$ DEVICE="Battery_parameter"
 //$$ MATCH "battery_parameter_match" = <&battery_parameter>
 //$$ L2 PROP_STR = "status"
@@ -619,7 +619,7 @@ void root_func(){
 //$$ L2 PROP_U32 = "pmu_charge_efficiency"
 //$$ L2 PROP_U32 16*3 ="pmu_bat_curve"
     battery_parameter:battery_parameter{
-    	status = "okay";
+	status = "okay";
         pmu_twi_id = <2>;                   /* AXP20_I2CBUS                         */
         pmu_irq_id = <0>;                   /* INT_WATCHDOG                         */
         pmu_twi_addr = <0x34>;              /* AXP20_ADDR                           */
@@ -657,13 +657,13 @@ void root_func(){
             3132      0       0
             3273      0       0
             3414      0       0
-            3555      0       0  
-            3625      7       9  
-            3660     11      14  
-            3696     16      18 
-            3731     20      22 
-            3766     22      28 
-            3801     29      50 
+            3555      0       0
+            3625      7       9
+            3660     11      14
+            3696     16      18
+            3731     20      22
+            3766     22      28
+            3801     29      50
             3836     47      62
             3872     57      64
             3942     72      75
@@ -744,9 +744,9 @@ void root_func(){
 //$$ MODULE="USB Controller"
 	usb_con {
 		lm-compatible = "logicmodule-bus";
-					
+
 //$$ DEVICE="usb_b"
-//$$ L2 PROP_U32 = "lm-periph-id" 
+//$$ L2 PROP_U32 = "lm-periph-id"
 //$$ L2 PROP_STR = "clock-src"
 //$$ L2 PROP_U32 = "port-id"
 //$$ L2 PROP_U32 = "port-type"
@@ -796,7 +796,7 @@ void root_func(){
 			status = "okay";
 		};
 	};
-	
+
 /// ***************************************************************************************
 ///	-	LCD
 //$$ MODULE="LCD"
@@ -806,7 +806,7 @@ void root_func(){
 //$$ L2 PROP_U32 = "bl_level_default"
 //$$ L2 PROP_U32 = "bl_power_on_delay"
 //$$ L2 PROP_U32 = "bl_ctrl_method"
-//$$ L2 PROP_STR = "bl_gpio_port"
+//$$ L2 PROP_STR = "bl_gpio_port_on_off"
 //$$ L2 PROP_U32 2 = "bl_gpio_dim_max_min"
 //$$ L2 PROP_STR 2 = "bl_pwm_port_gpio_used"
 //$$ L2 PROP_U32 = "bl_pwm_freq"
@@ -817,16 +817,16 @@ void root_func(){
 		status = "okay";
 		pinctrl-names = "default";
 		pinctrl-0 = <&lcd_backlight_pins>;	/** pwm pinmux */
-		
+
 		bl_level_default_uboot_kernel=<20 128>;	/** default brightness level for uboot & kernel */
 		bl_level_middle_mapping=<102 70>;	/** brightness middle level mapping to a new level*/
 		bl_level_max_min=<255 10>;	/** brightness level max & min, must match the rootfs setting*/
-		
+
 		/* backlight power ctrl */
 		bl_power_on_delay=<200>; /** delay time before backlight power on(unit: ms) */
 		bl_ctrl_method=<0>;	/** backlight control method(0=gpio, 1=pwm_negative, 2=pwm_positive. decided by hardware design) */
-		
-		bl_gpio_port="GPIOD_1";	/** backlight control gpio port */
+
+		bl_gpio_port_on_off="GPIOD_1","1","0";	/** backlight control gpio port (on/off:1=output high, 0=output low, 2=input)*/
 		bl_gpio_dim_max_min=<0x0 0xf>;	/** brightness diming level_max, level_min : (0x0~0xf, negative logic, only for gpio control method) */
 		bl_pwm_port_gpio_used="PWM_D","0";	/** pwm_port_name(for pwm control method), pwm_gpio_used(0=use pwm_port only, 1=use bl_gpio_port to control on/off) */
 		bl_pwm_freq=<400>;	/** backlight control pwm frequency(unit: Hz, only for pwm control method) */
@@ -910,34 +910,34 @@ void root_func(){
 		pinctrl-5 = <&lcd_ttl_rgb_8bit_pins_on &lcd_ttl_clk_pins_on &lcd_ttl_hvsync_pins_off &lcd_ttl_de_pins_on>;
 		pinctrl-6 = <&lcd_ttl_rgb_6bit_pins_off &lcd_ttl_clk_pins_off &lcd_ttl_hvsync_pins_off &lcd_ttl_de_pins_off>;
 		pinctrl-7 = <&lcd_ttl_rgb_8bit_pins_off &lcd_ttl_clk_pins_off &lcd_ttl_hvsync_pins_off &lcd_ttl_de_pins_off>;
-		
+
 		lcd_model_name ="lcd_CLAP070NJ02";	/** lcd model name for uboot driver */
 		lcd_model_config = <&lcd_CLAP070NJ02>;	/** choose panel model config */
 		lcd_bits_user=<6>;	/** user defined lcd bits(6 or 8, decided by hardware design; only valid when lcd_bits_option=1) */
-		
+
 		/* below configs are decided by hardware design, you can modify them if needed. */
 		ttl_rb_bit_swap=<0 0>;	/** ttl rb_swap, bit_swap : (0=normal, 1=swap) */
 		lvds_channel_pn_swap=<0>;	/** lvds channel pn swap(0=normal, 1=swap) */
-		
+
 		/* recommend settings, you can modify them if needed. */
 		valid_hvsync_de=<0 1>;	/** hvsync_signal_valid, DE_signal_valid : (0=disable signal, 1=enable signal) */
 		hsign_hoffset_vsign_voffset=<0 0 0 0>;	/** hsign, hoffset, vsign, voffset :("sign-offset" is a pair. sign: 0=positive, 1=negative) */
-		
+
 		dither_user_ctrl=<0 0x600>;	/**  dither_user(0=auto setting, 1=user define), dither_ctrl(user defined dither control, only valid when user_define=1) */
 		vadj_brightness_contrast_saturation=<0x0 0x80 0x100>;	/** video adjust brightness, contrast, saturation */
-		
+
 		gamma_en_reverse=<1 0>;	/** gamma_en(0=disable gamma table, 1=enable gamma table), gamma_table_revert(0=normal, 1=reverse) */
 		gamma_multi_rgb_coeff=<0 100 100 100>;	/** gamma_multi(0=single gamma, RGB are same, 1=multi gamma, RGB are different), gamma_r_coeff(%), gamma_g_coeff(%), gamma_b_coeff(%) */
 		/** if gamma_multi=1, there must be 3 gamma tables, named as gamma_table_r, gamma_table_g, gamma_table_b */
-		gamma_table=<0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 
-				32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 
-				64 65 66 67 68 69 70 71 72 73 74 75 76 77 78 79 80 81 82 83 84 85 86 87 88 89 90 91 92 93 94 95 
-				96 97 98 99 100 101 102 103 104 105 106 107 108 109 110 111 112 113 114 115 116 117 118 119 120 121 122 123 124 125 126 127 
-				128 129 130 131 132 133 134 135 136 137 138 139 140 141 142 143 144 145 146 147 148 149 150 151 152 153 154 155 156 157 158 159 
-				160 161 162 163 164 165 166 167 168 169 170 171 172 173 174 175 176 177 178 179 180 181 182 183 184 185 186 187 188 189 190 191 
-				192 193 194 195 196 197 198 199 200 201 202 203 204 205 206 207 208 209 210 211 212 213 214 215 216 217 218 219 220 221 222 223 
+		gamma_table=<0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31
+				32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63
+				64 65 66 67 68 69 70 71 72 73 74 75 76 77 78 79 80 81 82 83 84 85 86 87 88 89 90 91 92 93 94 95
+				96 97 98 99 100 101 102 103 104 105 106 107 108 109 110 111 112 113 114 115 116 117 118 119 120 121 122 123 124 125 126 127
+				128 129 130 131 132 133 134 135 136 137 138 139 140 141 142 143 144 145 146 147 148 149 150 151 152 153 154 155 156 157 158 159
+				160 161 162 163 164 165 166 167 168 169 170 171 172 173 174 175 176 177 178 179 180 181 182 183 184 185 186 187 188 189 190 191
+				192 193 194 195 196 197 198 199 200 201 202 203 204 205 206 207 208 209 210 211 212 213 214 215 216 217 218 219 220 221 222 223
 				224 225 226 227 228 229 230 231 232 233 234 235 236 237 238 239 240 241 242 243 244 245 246 247 248 249 250 251 252 253 254 255>;
-		
+
 		/* default settings, don't modify them unless there is display problem */
 		clock_spread_spectrum=<0>;	/** ss_level(0=disable, 1=0.5%, 2=1%, 3=2%, 4=3%, 5=4%, 6=5%) */
 		clock_auto_generation=<1>;	/** clk_auto_generation(0=use customer clock parameters, as clk_pll_div_clk_ctrl defined, 1=auto generate clock parameters by lcd_clock) */
@@ -999,16 +999,16 @@ void root_func(){
 		interface="ttl";			/** lcd_interface(mipi, lvds, edp, ttl) */
 		active_area=<154 86>;		/** lcd active_area or display_area horizontal size, vertical size : (unit in mm, you can find them on the home page of lcd spec) */
 		lcd_bits_option=<8 1>;		/** lcd_bits(6,8), bits_option(0=only support one mode as lcd_bits define, 1=both support 6/8bit) */
-		
+
 		resolution=<1024 600>;	/** horizontal resolution, vertical resolution */
 		period=<1344 635>;		/** horizontal period(htotal), vertical period(vtotal) */
-		
+
 		clock_hz_pol=<42700000 0>;	/** clock_hz(unit in Hz, both support clk and frame_rate, >200 regard as clk, <200 regard as frame_rate), clk_pol(only valid for TTL) */
-		hsync_width_backporch=<10 160>;	/** hsync_width, hsync_backporch(include hsync_width) */
-		vsync_width_backporch=<5 23>;	/** vsync_width, vsync_backporch(include vsync_width) */
+		hsync_width_backporch=<10 150>;	/** hsync_width, hsync_backporch(without hsync_width) */
+		vsync_width_backporch=<5 18>;	/** vsync_width, vsync_backporch(without vsync_width) */
 		pol_hsync_vsync=<0 0>;	/** hsync_polarity, vsync_polarity : (0=negative, 1=positive) */
 	};
-	
+
 //$$ MATCH "lcd_model_config_match" = <&lcd_TN070TN92>
 //$$ L2 PROP_STR = "model_name"
 //$$ L2 PROP_STR = "interface"
@@ -1025,16 +1025,16 @@ void root_func(){
 		interface="ttl";		/** lcd_interface(mipi, lvds, edp, ttl) */
 		active_area=<154 86>;	/** lcd active_area or display_area horizontal size, vertical size : (unit in mm, you can find them on the home page of lcd spec) */
 		lcd_bits_option=<8 1>;	/** lcd_bits(6,8), bits_option(0=only support one mode as lcd_bits define, 1=both support 6/8bit) */
-		
+
 		resolution=<800 480>;	/** horizontal resolution, vertical resolution */
 		period=<1056 525>;		/** horizontal period(htotal), vertical period(vtotal) */
-		
+
 		clock_hz_pol=<33300000 0>;	/** clock_hz(unit in Hz, both support clk and frame_rate, >200 regard as clk, <200 regard as frame_rate), clk_pol(only valid for TTL) */
-		hsync_width_backporch=<10 46>;	/** hsync_width, hsync_backporch(include hsync_width) */
-		vsync_width_backporch=<5 23>;	/** vsync_width, vsync_backporch(include vsync_width) */
+		hsync_width_backporch=<10 36>;	/** hsync_width, hsync_backporch(without hsync_width) */
+		vsync_width_backporch=<5 18>;	/** vsync_width, vsync_backporch(without vsync_width) */
 		pol_hsync_vsync=<0 0>;	/** hsync_polarity, vsync_polarity : (0=negative, 1=positive) */
 	};
-	
+
 //$$ MATCH "lcd_model_config_match" = <&lcd_LP097X02>
 //$$ L2 PROP_STR = "model_name"
 //$$ L2 PROP_STR = "interface"
@@ -1045,22 +1045,22 @@ void root_func(){
 //$$ L2 PROP_U32 2 = "clock_hz_pol"
 //$$ L2 PROP_U32 2 = "hsync_width_backporch"
 //$$ L2 PROP_U32 2 = "vsync_width_backporch"
-//$$ L2 PROP_U32 2 = "pol_hsync_vsync"	
+//$$ L2 PROP_U32 2 = "pol_hsync_vsync"
 	lcd_LP097X02:lcd_LP097X02{	//g24
 		model_name="LP097X02";	/** lcd model name */
 		interface="lvds";		/** lcd_interface(mipi, lvds, edp, ttl) */
 		active_area=<197 147>;	/** lcd active_area or display_area horizontal size, vertical size : (unit in mm, you can find them on the home page of lcd spec) */
 		lcd_bits_option=<6 0>;	/** lcd_bits(6,8), bits_option(0=only support one mode as lcd_bits define, 1=both support 6/8bit) */
-		
+
 		resolution=<1024 768>;	/** horizontal resolution, vertical resolution */
 		period=<2084 810>;		/** horizontal period(htotal), vertical period(vtotal) */
-		
+
 		clock_hz_pol=<85700000 0>;	/** clock_hz(unit in Hz, both support clk and frame_rate, >200 regard as clk, <200 regard as frame_rate), clk_pol(only valid for TTL) */
-		hsync_width_backporch=<10 70>;	/** hsync_width, hsync_backporch(include hsync_width) */
-		vsync_width_backporch=<3 30>;	/** vsync_width, vsync_backporch(include vsync_width) */
+		hsync_width_backporch=<10 60>;	/** hsync_width, hsync_backporch(without hsync_width) */
+		vsync_width_backporch=<3 27>;	/** vsync_width, vsync_backporch(without vsync_width) */
 		pol_hsync_vsync=<0 0>;	/** hsync_polarity, vsync_polarity : (0=negative, 1=positive) */
 	};
-	
+
 /// ***************************************************************************************
 ///     -       Sensors
 //$$ MODULE="Sensors"
@@ -1122,8 +1122,8 @@ void root_func(){
             i2c_addr = <0x1A>;
             i2c_bus = "i2c_bus_b";
             capless = <0>;
-            status = "disabled";    
-        };  
+            status = "disabled";
+        };
         codec_wm8960:wm8960{
             codec_name = "wm8960";
             i2c_addr = <0x1A>;
@@ -1132,7 +1132,7 @@ void root_func(){
             status = "okay";
         };
     };
-    
+
     wm8960_sound_card{
         compatible = "sound_card,wm8960";
         aml,sound_card = "AML-WM8960";
@@ -1150,8 +1150,8 @@ void root_func(){
             "LINPUT2","MICB",
             "RINPUT1","MICB",
             "RINPUT2","MICB";
-            
-        capless = <1>; 
+
+        capless = <1>;
         dres = <2>; /*WM8960_DRES_600R*/
         dis_hp_det = <0>;
         pinctrl-names = "wm8960_audio";
@@ -1173,7 +1173,7 @@ void root_func(){
             "HP","HPOR",
             "MIC1","MIC Bias1",
             "MIC Bias1","MAIN MIC";
-        
+
         /*dev_name = "aml_sound_card";*/
         /*reg = <0 0>;*/
         capless = <0>;
@@ -1238,11 +1238,11 @@ void root_func(){
 			gpio_rst = "GPIOZ_0";
 			mirror_flip = <0>;
 			vertical_flip = <0>;
-			status = "okay";	
+			status = "okay";
 		};
-	
+
 	};
-	
+
 
 
 /// ***************************************************************************************
@@ -1304,7 +1304,7 @@ void root_func(){
 		pinctrl-0=<&remote_pins>;
 	};
 
-    
+
 
 /// ***************************************************************************************
 ///	-	Nand
@@ -1325,13 +1325,13 @@ void root_func(){
 		status = "okay";
 		reg = <0xc1108600 0x24>;
 		pinctrl-names = "nand_rb_mod","nand_norb_mod";
-		pinctrl-0 = <&nand_input_state &conf_nand_state &nand_base 
-									&nand_ce0 &nand_rb0 
+		pinctrl-0 = <&nand_input_state &conf_nand_state &nand_base
+									&nand_ce0 &nand_rb0
 									&nand_rb1 &nand_ce1>;
-		pinctrl-1 = <&nand_input_state &conf_nand_state &nand_base 
-									&nand_ce0 &nand_ce1 
-									&nand_ce2 &nand_ce3>;							
-		device_id = <0>;			
+		pinctrl-1 = <&nand_input_state &conf_nand_state &nand_base
+									&nand_ce0 &nand_ce1
+									&nand_ce2 &nand_ce3>;
+		device_id = <0>;
 		plat-names = "bootloader","nandnormal";
 		plat-num = <2>;
 		plat-part-0 = <&bootload>;
@@ -1382,7 +1382,7 @@ void root_func(){
 			partition = <&nand_partitions>;
 			rb_detect = <1>;
 		};
-				
+
 		nand_partitions:nand_partition{
 			logo{
 				offset=<0x0 0x4800000>;
@@ -1413,7 +1413,7 @@ void root_func(){
 				size=<0x0 0x0>;
 			};
 		};
-	};	
+	};
 
 /// ***************************************************************************************
 ///	-	Efuse
@@ -1433,7 +1433,7 @@ void root_func(){
 		usid-min = <8>; /*reserved*/
 		usid-max = <31>; /*reserved*/
 	};
-	
+
 /// ***************************************************************************************
 ///	-	HDMI
 //$$ MODULE="HDMI"
@@ -1450,16 +1450,16 @@ void root_func(){
 				 148  0x16  0x40   /* 1080p */
 				>;
 	};
-	
+
 /// ***************************************************************************************
 ///	-	Securitykey
 //$$ MODULE="Securitykey"
 //$$ DEVICE="securitykey"
 //$$ L2 PROP_STR = "status"
-	securitykey{ 
-        compatible = "amlogic,aml_keys"; 
+	securitykey{
+        compatible = "amlogic,aml_keys";
 	status = "ok";
-    }; 
+    };
 /// ***************************************************************************************
 ///	-	PowerManager
 //$$ MODULE="PowerManager"
@@ -1480,7 +1480,7 @@ void root_func(){
         status = "okay";
         #address-cells = <1>;
         #size-cells = <0>;
-	
+
 //$$ DEVICE = "touch_ft5x06"
 //$$ L2 PROP_STR = "status"
 //$$ L3 PROP_STR = "i2c_bus"
@@ -1548,8 +1548,8 @@ void root_func(){
         compatible = "amlogic,cpufreq-meson";
         status = "okay";
     };
-    
-    
+
+
 	card{
 		compatible = "amlogic,aml_card";
 		dev_name = "aml_sd_mmc.0";
@@ -1591,7 +1591,7 @@ void root_func(){
 			amlogic,setmask=<4 0x3c00>;
 			amlogic,pins="GPIOX_13", "GPIOX_14", "GPIOX_15", "GPIOX_16";
 		};
-		
+
 //$$ MATCH "meson_vcck_dvfs_pin_0_match" = "&aml_pwm_pins"
 //$$ L2 PROP_U32 2 = "amlogic,setmask"
 //$$ L2 PROP_U32 2 = "amlogic,clrmask"
@@ -1611,7 +1611,7 @@ void root_func(){
 			amlogic,clrmask=<10 0x1800006>;
 			amlogic,pins="GPIOAO_4","GPIOAO_5";
 		};
-		
+
 //$$ MATCH "I2C_A_pin_match" = "&a_i2c_master"
 //$$ L2 PROP_U32 2 = "amlogic,setmask"
 //$$ L2 PROP_U32 2 = "amlogic,clrmask"
@@ -1621,7 +1621,7 @@ void root_func(){
 			amlogic,clrmask=<5 0x3000000>;
 			amlogic,pins="GPIOX_25","GPIOX_26";
 		};
-		
+
 //$$ MATCH "I2C_B_pin_match" = "&b_i2c_master"
 //$$ L2 PROP_U32 2 = "amlogic,setmask"
 //$$ L2 PROP_U32 2 = "amlogic,clrmask"
@@ -1631,7 +1631,7 @@ void root_func(){
 			amlogic,clrmask=<5 0x30000000>;
 			amlogic,pins="GPIOX_27","GPIOX_28";
 		};
-		
+
 //$$ MATCH "Nand_pin_0_match" = "&nand_input_state"
 //$$ MATCH "Nand_pin_1_match" = "&nand_input_state"
 //$$ L2 PROP_STR 17 = "amlogic,pins"
@@ -1643,7 +1643,7 @@ void root_func(){
 						"BOOT_14","BOOT_15","BOOT_16";
 			amlogic,enable-output=<1>;
 		};
-		
+
 //$$ MATCH "Nand_pin_0_match" = "&conf_nand_state"
 //$$ MATCH "Nand_pin_1_match" = "&conf_nand_state"
 //$$ L2 PROP_STR 9 = "amlogic,pins"
@@ -1653,7 +1653,7 @@ void root_func(){
 						"BOOT_5","BOOT_6","BOOT_7","BOOT_16";
 			amlogic,pullup=<1>;
 		};
-		
+
 //$$ MATCH "Nand_pin_0_match" = "&nand_base"
 //$$ MATCH "Nand_pin_1_match" = "&nand_base"
 //$$ L2 PROP_U32 2 = "amlogic,setmask"
@@ -1669,7 +1669,7 @@ void root_func(){
 						"BOOT_5","BOOT_6","BOOT_7","BOOT_12","BOOT_13",
 						"BOOT_14","BOOT_15","BOOT_16";
 		};
-		
+
 //$$ MATCH "Nand_pin_0_match" = "&nand_ce0"
 //$$ MATCH "Nand_pin_1_match" = "&nand_ce0"
 //$$ L2 PROP_U32 2 = "amlogic,setmask"
@@ -1678,7 +1678,7 @@ void root_func(){
 			amlogic,setmask=<2 0x2000000>;
 			amlogic,pins = "BOOT_8";
 		};
-		
+
 //$$ MATCH "Nand_pin_0_match" = "&nand_ce1"
 //$$ MATCH "Nand_pin_1_match" = "&nand_ce1"
 //$$ L2 PROP_U32 2 = "amlogic,setmask"
@@ -1687,7 +1687,7 @@ void root_func(){
 			amlogic,setmask=<2 0x1000000>;
 			amlogic,pins = "BOOT_9";
 		};
-		
+
 //$$ MATCH "Nand_pin_1_match" = "&nand_ce2"
 //$$ L2 PROP_U32 2 = "amlogic,setmask"
 //$$ L2 PROP_STR = "amlogic,pins"
@@ -1695,7 +1695,7 @@ void root_func(){
 			amlogic,setmask=<2 0x800000>;
 			amlogic,pins = "BOOT_10";
 		};
-		
+
 //$$ MATCH "Nand_pin_1_match" = "&nand_ce3"
 //$$ L2 PROP_U32 2 = "amlogic,setmask"
 //$$ L2 PROP_STR = "amlogic,pins"
@@ -1703,7 +1703,7 @@ void root_func(){
 			amlogic,setmask=<2 0x400000>;
 			amlogic,pins = "BOOT_11";
 		};
-		
+
 //$$ MATCH "Nand_pin_0_match" = "&nand_rb0"
 //$$ L2 PROP_U32 2 = "amlogic,setmask"
 //$$ L2 PROP_U32 2 = "amlogic,clrmask"
@@ -1713,7 +1713,7 @@ void root_func(){
 			amlogic,clrmask=<2 0x800000>;
 			amlogic,pins = "BOOT_10";
 		};
-		
+
 //$$ MATCH "Nand_pin_0_match" = "&nand_rb1"
 //$$ L2 PROP_U32 2 = "amlogic,setmask"
 //$$ L2 PROP_U32 2 = "amlogic,clrmask"
@@ -1723,7 +1723,7 @@ void root_func(){
 			amlogic,clrmask=<2 0x400000>;
 			amlogic,pins = "BOOT_11";
 		};
-		
+
 
         sdio_all_pins:sdio_all_pins{
             amlogic,setmask=<8 0x0000003f>;         /*sdio a*/
@@ -1784,17 +1784,17 @@ void root_func(){
 //$$ MATCH "Card_pin_0_match" = "&sdhc_b_pins"
 //$$ L2 PROP_U32 2 = "amlogic,setmask"
 //$$ L2 PROP_U32 2 = "amlogic,clrmask"
-//$$ L2 PROP_STR 6 = "amlogic,pins"    
+//$$ L2 PROP_STR 6 = "amlogic,pins"
                sdhc_b_pins:sdhc_b_pin{
                        amlogic,setmask=<2 0xfc00>;
                        amlogic,clrmask=<2 0xf0>;
                        amlogic,pins="CARD_0","CARD_1","CARD_2","CARD_3","CARD_4","CARD_5";
                };
- 
+
 //$$ MATCH "Card_pin_1_match" = "&sdhc_c_pins"
 //$$ L2 PROP_U32 2 = "amlogic,setmask"
 //$$ L2 PROP_U32 2 = "amlogic,clrmask"
-//$$ L2 PROP_STR 6 = "amlogic,pins"    
+//$$ L2 PROP_STR 6 = "amlogic,pins"
                sdhc_c_pins:sdhc_c_pin{
                        amlogic,setmask=<6 0x3f000000>;
                        amlogic,clrmask=<4 0x6c000000 2 0x4c30000 3 0x80000000>;
@@ -1804,13 +1804,13 @@ void root_func(){
 //$$ MATCH "Card_pin_2_match" = "&sdhc_a_pins"
 //$$ L2 PROP_U32 2 = "amlogic,setmask"
 //$$ L2 PROP_U32 2 = "amlogic,clrmask"
-//$$ L2 PROP_STR 6 = "amlogic,pins"    
+//$$ L2 PROP_STR 6 = "amlogic,pins"
                sdhc_a_pins:sdhc_a_pin{
                        amlogic,setmask=<8 0x3f>;
                        amlogic,clrmask=<5 0x6c00 >;
                        amlogic,pins="GPIOX_0","GPIOX_1","GPIOX_2","GPIOX_3","GPIOX_8","GPIOX_9";
                };
-		
+
 //$$ MATCH "Remote_pin_match" = "&remote_pins"
 //$$ L2 PROP_U32 2 = "amlogic,setmask"
 //$$ L2 PROP_STR= "amlogic,pins"
@@ -1818,20 +1818,20 @@ void root_func(){
 			amlogic,setmask=<10 0x1>;
 			amlogic,pins="GPIOAO_7";
 		};
-		
+
 //$$ MATCH "wm8960_pin_match" = "&aml_i2s_pins"
 //$$ L2 PROP_U32 2 = "amlogic,setmask"
 //$$ L2 PROP_U32 2 = "amlogic,clrmask"
-//$$ L2 PROP_STR 4 = "amlogic,pins"	
+//$$ L2 PROP_STR 4 = "amlogic,pins"
 		aml_i2s_pins: aml_i2s_pins{
 			amlogic,setmask=<9 0xAB0>;
 			amlogic,clrmask=<9 0x440>;
 			amlogic,pins = "GPIOE_0","GPIOE_1","GPIOE_2","GPIOE_3";
 		};
-		
+
 //$$ MATCH "wm8960_pin_match" = "&config_aml_hp_det_pins"
-//$$ L2 PROP_STR= "amlogic,pins"	
-//$$ L2 PROP_U32 = "amlogic,pullup"	
+//$$ L2 PROP_STR= "amlogic,pins"
+//$$ L2 PROP_U32 = "amlogic,pullup"
 		config_aml_hp_det_pins: config_aml_hp_det_pins{
 			amlogic,pins = "GPIOA_19";
 			amlogic,pullup=<1>;
@@ -1850,7 +1850,7 @@ void root_func(){
 //$$ MATCH "Bl_pin_0_match" = "&lcd_backlight_pins"
 //$$ L2 PROP_U32 2 = "amlogic,setmask"
 //$$ L2 PROP_U32 2 = "amlogic,clrmask"
-//$$ L2 PROP_STR = "amlogic,pins"	
+//$$ L2 PROP_STR = "amlogic,pins"
 		lcd_backlight_pins:lcd_backlight{
 			amlogic,setmask=<2 0x8>;
 			amlogic,clrmask=<1 0x10000000>;
@@ -1934,4 +1934,3 @@ void root_func(){
 	};
 
 }; /* end of / */
-

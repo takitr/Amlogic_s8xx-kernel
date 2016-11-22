@@ -641,10 +641,10 @@ static const struct snd_kcontrol_new rt5616_lout_mix[] = {
 
 static int rt5616_adc_event(struct snd_soc_dapm_widget *w,
     struct snd_kcontrol *kcontrol, int event)
-{ 
+{
     struct snd_soc_codec *codec = w->codec;
     //unsigned int val, mask;
-   printk(KERN_INFO"enter %s : event=0x%x\n",__func__,event); 
+   printk(KERN_INFO"enter %s : event=0x%x\n",__func__,event);
     switch (event) {
     case SND_SOC_DAPM_POST_PMU:
         msleep(20);   // mute po sound in record begin
@@ -678,7 +678,7 @@ void hp_amp_power(struct snd_soc_codec *codec, int on)
             /* headphone amp power on */
             snd_soc_update_bits(codec, RT5616_PWR_ANLG1,
                 RT5616_PWR_FV1 | RT5616_PWR_FV2 , 0);
-            
+
             snd_soc_update_bits(codec, RT5616_PWR_VOL,
                 RT5616_PWR_HV_L | RT5616_PWR_HV_R,
                 RT5616_PWR_HV_L | RT5616_PWR_HV_R);
@@ -768,7 +768,7 @@ static void rt5616_pmd_depop(struct snd_soc_codec *codec)
         RT5616_RSTP_MASK | RT5616_HP_L_SMT_MASK |
         RT5616_HP_R_SMT_MASK, RT5616_RSTP_DIS |
         RT5616_HP_L_SMT_EN | RT5616_HP_R_SMT_EN);
-    /*snd_soc_update_bits(codec, RT5616_LOUT_CTRL1, 
+    /*snd_soc_update_bits(codec, RT5616_LOUT_CTRL1,
         RT5616_L_MUTE | RT5616_R_MUTE,
         RT5616_L_MUTE | RT5616_R_MUTE);*/
 	/*snd_soc_update_bits(codec, RT5616_HP_CALIB_AMP_DET,
@@ -913,7 +913,7 @@ static const struct snd_soc_dapm_widget rt5616_dapm_widgets[] = {
 //          RT5616_PWR_MB1_BIT, 0, NULL, 0),
     SND_SOC_DAPM_SUPPLY("micbias1", SND_SOC_NOPM,
             RT5616_PWR_MB1_BIT, 0, mic_bias_event, 0),
-  
+
 #else
     SND_SOC_DAPM_MICBIAS("micbias1", RT5616_PWR_ANLG2,
             RT5616_PWR_MB1_BIT, 0),
@@ -1163,7 +1163,7 @@ static int rt5616_codec_mute_stream(struct snd_soc_dai *dai, int mute, int strea
 //    int ret;
  //   unsigned int reg_value;
     struct snd_soc_codec *codec = dai->codec;
-    
+
     printk(KERN_DEBUG "enter:%s, stream=%d, mute=%d \n",__func__,stream,mute);
     if(stream == SNDRV_PCM_STREAM_PLAYBACK){
         if(mute){
@@ -1185,17 +1185,17 @@ static int rt5616_codec_mute_stream(struct snd_soc_dai *dai, int mute, int strea
 
     if(stream == SNDRV_PCM_STREAM_CAPTURE){
         if (mute){
-            snd_soc_update_bits(codec,RT5616_ADC_DIG_VOL, 
+            snd_soc_update_bits(codec,RT5616_ADC_DIG_VOL,
                 RT5616_L_MUTE | RT5616_R_MUTE,
-                RT5616_L_MUTE | RT5616_R_MUTE);       
+                RT5616_L_MUTE | RT5616_R_MUTE);
         }else{
             msleep(200);
-            snd_soc_update_bits(codec,RT5616_ADC_DIG_VOL, 
+            snd_soc_update_bits(codec,RT5616_ADC_DIG_VOL,
                 RT5616_L_MUTE | RT5616_R_MUTE,0);
         }
-            
+
     }
-    
+
     return 0;
 }
 static int rt5616_codec_digital_mute(struct snd_soc_dai *dai, int mute)
@@ -1203,7 +1203,7 @@ static int rt5616_codec_digital_mute(struct snd_soc_dai *dai, int mute)
    // int ret;
    // unsigned int reg_value;
     struct snd_soc_codec *codec = dai->codec;
-    
+
     if(mute){
         msleep(20);
         snd_soc_update_bits(codec, RT5616_LOUT_CTRL1,
@@ -1219,7 +1219,7 @@ static int rt5616_codec_digital_mute(struct snd_soc_dai *dai, int mute)
         snd_soc_update_bits(codec, RT5616_HP_VOL,
             RT5616_L_MUTE | RT5616_R_MUTE, 0);
     }
-    
+
     return 0;
 }
 
@@ -1580,7 +1580,7 @@ static int rt5616_set_bias_level(struct snd_soc_codec *codec,
                 RT5616_PWR_FV1 | RT5616_PWR_FV2,
                 RT5616_PWR_FV1 | RT5616_PWR_FV2);
 			snd_soc_update_bits(codec, RT5616_PWR_ANLG1,
-		        RT5616_PWR_LDO_DVO_MASK, 
+		        RT5616_PWR_LDO_DVO_MASK,
 		        RT5616_PWR_LDO_DVO_1_3V);//set LDO after resume
             codec->cache_only = false;
             codec->cache_sync = 1;

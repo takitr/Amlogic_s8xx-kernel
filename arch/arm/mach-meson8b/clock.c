@@ -61,7 +61,7 @@ static int measure_cpu_clock = 0;
 #define SYS_PLL_TABLE_MIN	 24000000
 #define SYS_PLL_TABLE_MAX	2112000000
 
-#define CPU_FREQ_LIMIT 1728000000
+#define CPU_FREQ_LIMIT 1536000000
 
 struct sys_pll_s {
     unsigned int freq;
@@ -200,7 +200,7 @@ static unsigned int clk_util_clk_msr(unsigned int clk_mux)
     clrbits_le32(P_MSR_CLK_REG0,((1 << 18) | (1 << 17)));
 	clrsetbits_le32(P_MSR_CLK_REG0,(0x1f<<20),(clk_mux<<20)|(1<<19)|(1<<16));
 
-	aml_read_reg32(P_MSR_CLK_REG0); 
+	aml_read_reg32(P_MSR_CLK_REG0);
     // Wait for the measurement to be done
       do {
         regval = aml_read_reg32(P_MSR_CLK_REG0);
@@ -218,7 +218,7 @@ static  unsigned int clk_util_clk_msr(unsigned int clk_mux)
     unsigned int regval = 0;
     /// Set the measurement gate to 64uS
     clrsetbits_le32(P_MSR_CLK_REG0,0xffff,121);///122us
-    
+
     // Disable continuous measurement
     // disable interrupts
     clrsetbits_le32(P_MSR_CLK_REG0,
@@ -258,11 +258,11 @@ int    clk_measure(char  index )
 	" Reserved(53)",
 	" Reserved(52)",
 	" Reserved(51)",
-	" Reserved(50)",	
-	" CTS_PWM_E_CLK(49)",	
-	" CTS_PWM_F_CLK(48)",	
-	" DDR_DPLL_PT_CLK(47)",	
-	" CTS_PCM2_SCLK(46)",		
+	" Reserved(50)",
+	" CTS_PWM_E_CLK(49)",
+	" CTS_PWM_F_CLK(48)",
+	" DDR_DPLL_PT_CLK(47)",
+	" CTS_PCM2_SCLK(46)",
 	" CTS_PWM_A_CLK(45)",
 	" CTS_PWM_B_CLK(44)",
 	" CTS_PWM_C_CLK(43)",
@@ -309,17 +309,17 @@ int    clk_measure(char  index )
 	" AM_RING_OSC_CLK_OUT_EE2(2)",
 	" AM_RING_OSC_CLK_OUT_EE1(1)",
 	" AM_RING_OSC_CLK_OUT_EE0(0)",
-	};   
+	};
 	int  i;
 	int len = sizeof(clk_table)/sizeof(char*) - 1;
 	if (index  == 0xff)
 	{
-	 	for(i = 0;i < len;i++)
+		for(i = 0;i < len;i++)
 		{
 			printk("[%10d]%s\n",clk_util_clk_msr(i),clk_table[len-i]);
 		}
 		return 0;
-	}	
+	}
 	printk("[%10d]%s\n",clk_util_clk_msr(index),clk_table[len-index]);
 	return 0;
 }
@@ -329,23 +329,23 @@ long clk_round_rate_sys(struct clk *clk, unsigned long rate)
 	int idx,dst;
 	if (clk == NULL || IS_ERR(clk))
 		return -EINVAL;
-	
+
 	dst = rate;
-	if (rate < SYS_PLL_TABLE_MIN) 
+	if (rate < SYS_PLL_TABLE_MIN)
 		dst = SYS_PLL_TABLE_MIN;
-	else if (rate > SYS_PLL_TABLE_MAX) 
+	else if (rate > SYS_PLL_TABLE_MAX)
 		dst = SYS_PLL_TABLE_MAX;
 
 	if(dst < setup_a9_clk_min)
 		dst = setup_a9_clk_min;
 	else if(dst > setup_a9_clk_max)
 		dst = setup_a9_clk_max;
- 	if ((rate != 1250000000)) {
+	if ((rate != 1250000000)) {
 	    idx = ((dst - SYS_PLL_TABLE_MIN) / 1000000) / 24;
         //printk("sys round rate: %ld -- %d\n",rate,sys_pll_settings[idx][0]);
         rate = sys_pll_settings[idx][0] * 1000000;
-    } 
-	
+    }
+
 	return rate;
 }
 long clk_round_rate(struct clk *clk, unsigned long rate)
@@ -387,7 +387,7 @@ int on_parent_changed(struct clk *clk, int rate, int before,int failed)
 		}
 		else{
 				if(pops->clk_ratechange_after)
-					pops->clk_ratechange_after(rate,pops->privdata,failed);			
+					pops->clk_ratechange_after(rate,pops->privdata,failed);
 		}
 		pops = pops->next;
 	}
@@ -431,14 +431,14 @@ int meson_clk_set_rate(struct clk *clk, unsigned long rate)
 	int ret;
 	int ops_run_count;
 	struct clk_ops *p;
-	
+
 	if(clk->set_rate == NULL || IS_CLK_ERR(clk))
 			return 0;
 	//post message before clk change.
 	{
 			ret = 0;
 			ops_run_count = 0;
-			p = clk->clk_ops;	
+			p = clk->clk_ops;
 			while(p){
 				ops_run_count++;
 				if(p->clk_ratechange_before)
@@ -448,17 +448,17 @@ int meson_clk_set_rate(struct clk *clk, unsigned long rate)
 				p = p->next;
 			}
 			meson_notify_childs_changed(clk,1,ret);
-	}		
-	
+	}
 
-	if(ret == 0){		
+
+	if(ret == 0){
 	  if (!clk->open_irq)
 	      spin_lock_irqsave(&clockfw_lock, flags);
 	  else
 	      spin_lock(&clockfw_lock);
 //		printk(KERN_INFO "%s() clk=%p rate=%lu\n", __FUNCTION__, clk, rate);
 	  if(clk->set_rate)
-	  	ret = clk->set_rate(clk, rate) ;
+		ret = clk->set_rate(clk, rate) ;
 	  if (!clk->open_irq)
 	      spin_unlock_irqrestore(&clockfw_lock, flags);
 	  else
@@ -476,11 +476,11 @@ int meson_clk_set_rate(struct clk *clk, unsigned long rate)
 				if(p->clk_ratechange_after)
 						p->clk_ratechange_after(rate, p->privdata,ret);
 				p = p->next;
-			}			
-	}		
-	
+			}
+	}
+
 	meson_notify_childs_changed(clk,0,ret);
- 
+
   return ret;
 }
 
@@ -491,23 +491,23 @@ int clk_set_rate(struct clk *clk, unsigned long rate)
 	if(IS_CLK_ERR(clk))
 		return 0;
 	if(clk_get_rate(clk) == rate){
-			return 0;			
+			return 0;
 	}
-		
+
 	if(clk->need_parent_changed){
 		unsigned long flags;
-	  spin_lock_irqsave(&clockfw_lock, flags);	
+	  spin_lock_irqsave(&clockfw_lock, flags);
 		parent_rate = clk->need_parent_changed(clk, rate);
 	  spin_unlock_irqrestore(&clockfw_lock, flags);
 	}
-		
+
 	if(parent_rate != 0)
 		clk_set_rate(clk->parent,parent_rate);
 	else{
 		mutex_lock(&clock_ops_lock);
 		//printk(KERN_INFO "%s() clk=%p rate=%lu\n", __FUNCTION__, clk, rate);
 		ret = meson_clk_set_rate(clk,rate);
-	 	mutex_unlock(&clock_ops_lock);
+		mutex_unlock(&clock_ops_lock);
 	}
 	return ret;
 }
@@ -563,8 +563,8 @@ int meson_enable(struct clk *clk)
 						break;
 					p = p->next;
 			}
-	
-			if(ret == 0){	
+
+			if(ret == 0){
 				if(clk->enable)
 					ret = clk->enable(clk);
 				else if(clk->clk_gate_reg_adr != 0){
@@ -572,7 +572,7 @@ int meson_enable(struct clk *clk)
 					ret = 0;
 				}
 			}
-				
+
 			p = clk->clk_ops;
 			idx = 0;
 			while(p){
@@ -583,7 +583,7 @@ int meson_enable(struct clk *clk)
 					 p->clk_enable_after(p->privdata,ret);
 				p = p->next;
 			}
-			
+
 			return ret;
 		}
 		else
@@ -635,7 +635,7 @@ int  meson_clk_disable(struct clk *clk)
 				p = p->next;
 			}
 		}
-		
+
 		//do clock gate disable
 		if(ret == 0){
 			if(clk->disable)
@@ -645,7 +645,7 @@ int  meson_clk_disable(struct clk *clk)
 					ret = 0;
 			}
 		}
-		
+
 		//post message after clk disable.
 		{
 			struct clk_ops *p;
@@ -656,11 +656,11 @@ int  meson_clk_disable(struct clk *clk)
 				if(idx > ops_run_count)
 					break;
 				if(p->clk_disable_after)
-						p->clk_disable_after(p->privdata,ret);																	
+						p->clk_disable_after(p->privdata,ret);
 				p = p->next;
 			}
 		}
-		
+
 		return ret;
 }
 
@@ -679,7 +679,7 @@ static unsigned long clk_msr_get(struct clk * clk)
 {
 	uint32_t temp;
 	uint32_t cnt = 0;
-	
+
 	if(clk->rate > 0)
 	{
 		return clk->rate;
@@ -747,8 +747,8 @@ static unsigned long clk_get_rate_a9(struct clk * clkdev)
 		else if(pll_sel == 1)
 			parent_clk = clk_get_rate_sys(clkdev->parent);
 	    else if (pll_sel == 2) {
-            clk = 1250000000;   // from MPLL / 2 
-        } else { 
+            clk = 1250000000;   // from MPLL / 2
+        } else {
 			printk(KERN_INFO "Error : A9 parent pll selection incorrect!\n");
         }
 		if(parent_clk > 0){
@@ -798,12 +798,12 @@ static int _clk_set_rate_cpu(struct clk *clk, unsigned long cpu, unsigned long g
 	unsigned long oldcpu = clk_get_rate_a9(clk);
 	unsigned int cpu_clk_cntl = aml_read_reg32(P_HHI_SYS_CPU_CLK_CNTL);
 	int test_n = 0;
-	
+
 //	if ((cpu_clk_cntl & 3) == 1) {
 	{
 		unsigned long real_cpu;
 		parent = clk_get_rate_sys(clk->parent);
-		// CPU switch to xtal 
+		// CPU switch to xtal
 
 		aml_write_reg32(P_HHI_SYS_CPU_CLK_CNTL, cpu_clk_cntl & ~(1 << 7));
 		if (oldcpu <= cpu) {
@@ -816,15 +816,15 @@ static int _clk_set_rate_cpu(struct clk *clk, unsigned long cpu, unsigned long g
 
 	    aml_set_reg32_bits(P_HHI_SYS_CPU_CLK_CNTL, 1, 0, 2);    // path select to syspll
         if (cpu == 1250000000) {
-	    	aml_set_reg32_bits(P_HHI_MPLL_CNTL6, 1, 27, 1);
-	    	aml_set_reg32_bits(P_HHI_SYS_CPU_CLK_CNTL, 2, 0, 2);    // select to mpll
+		aml_set_reg32_bits(P_HHI_MPLL_CNTL6, 1, 27, 1);
+		aml_set_reg32_bits(P_HHI_SYS_CPU_CLK_CNTL, 2, 0, 2);    // select to mpll
 			aml_set_reg32_bits(P_HHI_SYS_CPU_CLK_CNTL, 0, 2, 2);    // cancel external od
 		    udelay_scaled(500, oldcpu / 1000000, 24 /*clk_get_rate_xtal*/);
-	        printk(KERN_DEBUG"CTS_CPU_CLK %4ld --> %4ld (MHz)\n",
-									clk->rate / 1000000, cpu / 1000000);
+	        /*printk(KERN_DEBUG"CTS_CPU_CLK %4ld --> %4ld (MHz)\n",
+									clk->rate / 1000000, cpu / 1000000);*/
             clk->parent->rate = cpu;
         } else {
-    		set_sys_pll(clk->parent, cpu);
+		set_sys_pll(clk->parent, cpu);
         }
 
 		// Read CBUS for short delay, then CPU switch to sys pll
@@ -842,8 +842,8 @@ static int _clk_set_rate_cpu(struct clk *clk, unsigned long cpu, unsigned long g
             while (test_n < 5) {
 	            real_cpu = clk_util_clk_msr(18) << 4;
 	            if ((real_cpu < cpu && (cpu - real_cpu) > 48000000) ||
-	            	(real_cpu > cpu && (real_cpu - cpu) > 48000000)) {
-	            	pr_info("hope to set cpu clk as %ld, real value is %ld, time %d\n", cpu, real_cpu, test_n);
+			(real_cpu > cpu && (real_cpu - cpu) > 48000000)) {
+			pr_info("hope to set cpu clk as %ld, real value is %ld, time %d\n", cpu, real_cpu, test_n);
 	            }
                 test_n++;
             }
@@ -851,10 +851,10 @@ static int _clk_set_rate_cpu(struct clk *clk, unsigned long cpu, unsigned long g
 		// CPU switch to sys pll
 		//cpu_clk_cntl = aml_read_reg32(P_HHI_SYS_CPU_CLK_CNTL);
 		//aml_set_reg32_mask(P_HHI_SYS_CPU_CLK_CNTL, (1 << 7));
- 	}
+	}
 
-	clk->rate = cpu; 
- 
+	clk->rate = cpu;
+
 #ifdef CONFIG_CPU_FREQ_DEBUG
 	pr_debug("(CTS_CPU_CLK) CPU %ld.%ldMHz\n", clk_get_rate_a9(clk) / 1000000, clk_get_rate_a9(clk)%1000000);
 #endif /* CONFIG_CPU_FREQ_DEBUG */
@@ -879,7 +879,7 @@ void meson_set_cpu_power_ctrl(uint32_t cpu,int is_power_on)
 	BUG_ON(cpu == 0);
 
 	if(is_power_on){
-		/* SCU Power on CPU & CPU PWR_A9_CNTL0 CTRL_MODE bit. 
+		/* SCU Power on CPU & CPU PWR_A9_CNTL0 CTRL_MODE bit.
 		    CTRL_MODE bit may write forward to SCU when cpu reset. So, we need clean it here to avoid the forward write happen.*/
 		aml_set_reg32_bits(MESON_CPU_POWER_CTRL_REG, 0x0 ,(cpu << 3),2);
 		aml_set_reg32_bits(P_AO_RTI_PWR_A9_CNTL0, 0x0, 2*cpu + 16, 2);
@@ -930,12 +930,14 @@ void meson_set_cpu_power_ctrl(uint32_t cpu,int is_power_on)
 
 void meson_set_cpu_ctrl_reg(int cpu,int is_on)
 {
+#ifdef CONFIG_MESON_TRUSTZONE
+	uint32_t value = 0;
+#endif
 	spin_lock(&clockfw_lock);
 
 #ifdef CONFIG_MESON_TRUSTZONE
-	uint32_t value = 0;
 	value = meson_read_corectrl();
-	value = value & ~(1U << cpu) | (is_on << cpu);
+	value = (value & ~(1U << cpu)) | (is_on << cpu);
 	value |= 1;
 	meson_modify_corectrl(value);
 #else
@@ -956,14 +958,14 @@ void meson_set_cpu_ctrl_addr(uint32_t cpu, const uint32_t addr)
 	aml_write_reg32((MESON_CPU1_CONTROL_ADDR_REG + ((cpu-1) << 2)), addr);
 #endif
 
-	spin_unlock(&clockfw_lock);	
+	spin_unlock(&clockfw_lock);
 }
 
 int meson_get_cpu_ctrl_addr(int cpu)
 {
-
 #ifdef CONFIG_MESON_TRUSTZONE
 //	meson_auxcoreboot_addr(cpu, addr);
+	return 0;
 #else
 //printk("sram=0x%x addr=0x%x\n",(MESON_CPU1_CONTROL_ADDR_REG + ((cpu-1) << 2)),addr);
 	return aml_read_reg32(MESON_CPU1_CONTROL_ADDR_REG + ((cpu-1) << 2));
@@ -1012,7 +1014,7 @@ static inline void meson_smp_init_transaction(void)
 
 static int clk_set_rate_a9(struct clk *clk, unsigned long rate)
 {
-	int ret;	
+	int ret;
 	unsigned long irq_flags;
 
 	//printk("clk_set_rate_a9() clk: %d\n",rate);
@@ -1134,8 +1136,8 @@ static unsigned long clk_get_rate_clk81(struct clk * clkdev)
 	}
 
 	parent_clk/=((aml_read_reg32(P_HHI_MPEG_CLK_CNTL) & 0x3f))+1;
-	
-	return parent_clk;	
+
+	return parent_clk;
 }
 #define CLK_DEFINE(devid,conid,msr_id,setrate,getrate,en,dis,privdata)  \
     static struct clk clk_##devid={                                     \
@@ -1191,10 +1193,15 @@ static int set_sys_pll(struct clk *clk,  unsigned long dst)
 
 	if (dst < SYS_PLL_TABLE_MIN) dst = SYS_PLL_TABLE_MIN;
 	if (dst > SYS_PLL_TABLE_MAX) dst = SYS_PLL_TABLE_MAX;
- 
+
 	idx = ((dst - SYS_PLL_TABLE_MIN) / 1000000) / 24;
 	cpu_clk_cntl = sys_pll_settings[idx][1];
 	latency.d32 =  sys_pll_settings[idx][2];
+
+	/*printk(KERN_DEBUG"CTS_CPU_CLK %4ld --> %4ld (MHz)\n",
+									clk->rate / 1000000, dst / 1000000);*/
+	pr_debug("CTS_CPU_CLK old_cntl=0x%x new_cntl=0x%x, latency: %x\n",
+									curr_cntl, cpu_clk_cntl, latency.d32);
 
 	if (cpu_clk_cntl != curr_cntl) {
 SETPLL:
@@ -1230,17 +1237,17 @@ SETPLL:
 				printk(KERN_ERR"CPU freq: %ld MHz, syspll (%x) can't lock: \n",dst/1000000,cntl);
 				printk(KERN_ERR"  [10c0..10c4]%08x, %08x, %08x, %08x, %08x: [10a5]%08x, [10c7]%08x \n",
 					aml_read_reg32(P_HHI_SYS_PLL_CNTL),
-					aml_read_reg32(P_HHI_SYS_PLL_CNTL2),	
+					aml_read_reg32(P_HHI_SYS_PLL_CNTL2),
 					aml_read_reg32(P_HHI_SYS_PLL_CNTL3),
-					aml_read_reg32(P_HHI_SYS_PLL_CNTL4),	
-					aml_read_reg32(P_HHI_SYS_PLL_CNTL5),	
+					aml_read_reg32(P_HHI_SYS_PLL_CNTL4),
+					aml_read_reg32(P_HHI_SYS_PLL_CNTL5),
 					aml_read_reg32(P_HHI_MPLL_CNTL6),
 					aml_read_reg32(P_HHI_DPLL_TOP_1)
 				);
 				if(!(aml_read_reg32(P_HHI_DPLL_TOP_1) & 0x2)){
 					printk(KERN_ERR"  SYS_TDC_CAL_DONE triggered, disable TDC_CAL_EN\n");
 					aml_set_reg32_bits(P_HHI_SYS_PLL_CNTL4, 0, 10, 1);
-					printk(KERN_ERR"  HHI_SYS_PLL_CNTL4: %08x\n", 
+					printk(KERN_ERR"  HHI_SYS_PLL_CNTL4: %08x\n",
 						aml_read_reg32(P_HHI_SYS_PLL_CNTL4));
 				}else{
 					latency.b.afc_dsel_bp_in = !latency.b.afc_dsel_bp_in;
@@ -1380,7 +1387,7 @@ void clk_unregister(struct clk *clk)
 					((struct clk*)(clk->sibling.prev))->sibling.next = (struct list_head*)pnext;
 				else
 					clk->parent->child.next = (struct list_head*)pnext;
-				
+
 		}
 		else if(clk->sibling.prev){
 				struct clk* prev = (struct clk*)(clk->sibling.prev);
@@ -1459,9 +1466,9 @@ int clk_ops_unregister(struct clk *clk, struct clk_ops *ops)
 {
 	if(ops == NULL || IS_CLK_ERR(clk))
 		return 0;
-		
+
 	mutex_lock(&clock_ops_lock);
-	
+
 	if(clk->clk_ops == ops){
 		if(clk->clk_ops->next == NULL)
 			clk->clk_ops = NULL;
@@ -1489,7 +1496,7 @@ EXPORT_SYMBOL(clk_ops_unregister);
 #define PLL_CLK_DEFINE(name,msr)    		\
 	static unsigned pll_##name##_data[10];	\
     CLK_DEFINE(pll_##name,xtal,msr,set_##name##_pll, \
-    		clk_msr_get,NULL,NULL,&pll_##name##_data)
+		clk_msr_get,NULL,NULL,&pll_##name##_data)
 _Pragma("GCC diagnostic ignored \"-Wdeclaration-after-statement\"");
 #define PLL_RELATION_DEF(child,parent) meson_clk_register(&clk_pll_##child,&clk_##parent)
 #define CLK_PLL_CHILD_DEF(child,parent) meson_clk_register(&clk_##child,&clk_pll_##parent)
@@ -1525,7 +1532,7 @@ void dump_child(int nlevel, struct clk* clk)
 					dump_child(nlevel+6,(struct clk*)(p->child.next));
 					p = (struct clk*)(p->sibling.prev);
 				}
-				
+
 				p = (struct clk*)(clk->sibling.next);
 				while(p){
 					for(i = 0; i < nlevel; i++)
@@ -1556,7 +1563,7 @@ void dump_clock_tree(struct clk* clk)
 					dump_child(nlevel+6,(struct clk*)(p->child.next));
 					p = (struct clk*)clk->sibling.prev;
 				}
-				
+
 				p = (struct clk*)clk->sibling.next;
 				while(p){
 					for(i = 0; i < nlevel; i++)
@@ -1584,7 +1591,7 @@ static ssize_t  clock_tree_store(struct class *cla, struct class_attribute *attr
 		 p++;
 		 idx++;
 	}
-	
+
 	if(idx <= count){
 		int i;
 		cmd = *p;
@@ -1598,7 +1605,7 @@ static ssize_t  clock_tree_store(struct class *cla, struct class_attribute *attr
 			name[i++] = *p;
 			p++;
 			idx++;
-		}	
+		}
 		name[i] = '\0';
 		p++;
 		while((idx < count) && ((*p == ' ') || (*p == '\t')|| (*p == '\r') || (*p == '\n'))){
@@ -1610,7 +1617,7 @@ static ssize_t  clock_tree_store(struct class *cla, struct class_attribute *attr
 			sscanf(p, "%d", &val);
 			rate = val;
 		}
-				
+
 		if(cmd == 'r'){
 			if(strcmp(name,"tree") == 0){
 				struct clk* clk = clk_get_sys("xtal",NULL);
@@ -1620,14 +1627,14 @@ static ssize_t  clock_tree_store(struct class *cla, struct class_attribute *attr
 			else{
 				struct clk* clk = clk_get_sys(name,NULL);
 				if(!IS_CLK_ERR(clk)){
-					clk->rate = 0; //enforce update rate 
+					clk->rate = 0; //enforce update rate
 					printk("%s : %lu\n",name,clk_get_rate(clk));
 				}
 				else
 					printk("no %s in tree.\n",name);
 			}
-		}	
-		else if(cmd == 'w'){		
+		}
+		else if(cmd == 'w'){
 				struct clk* clk = clk_get_sys(name,NULL);
 				if(!IS_CLK_ERR(clk)){
 					if(rate < 1000000 || rate >1512000000)
@@ -1640,8 +1647,8 @@ static ssize_t  clock_tree_store(struct class *cla, struct class_attribute *attr
 					}
 				}
 				else
-					printk("no %s in tree.\n",name);			
-		}	
+					printk("no %s in tree.\n",name);
+		}
 		else if(cmd == 'o'){
 				struct clk* clk = clk_get_sys(name,NULL);
 				if(!IS_CLK_ERR(clk)){
@@ -1651,8 +1658,8 @@ static ssize_t  clock_tree_store(struct class *cla, struct class_attribute *attr
 							printk("gate on %s failed.\n",name);
 				}
 				else
-					printk("no %s in tree.\n",name);			
-			
+					printk("no %s in tree.\n",name);
+
 		}
 		else if(cmd == 'f'){
 				struct clk* clk = clk_get_sys(name,NULL);
@@ -1661,7 +1668,7 @@ static ssize_t  clock_tree_store(struct class *cla, struct class_attribute *attr
 						printk("gate off %s.\n",name);
 				}
 				else
-					printk("no %s in tree.\n",name);						
+					printk("no %s in tree.\n",name);
 		}
 		else
 			printk("command:%c invalid.\n",cmd);
@@ -1678,7 +1685,7 @@ static ssize_t  clock_tree_show(struct class *cla, struct class_attribute *attr,
 	printk("3. echo w clockname rate >clkTree  ,modify the clock rate.\n");
 	printk("4. echo o clockname >clkTree  ,gate on clock.\n");
 	printk("5. echo f clockname >clkTree  ,gate off clock.\n");
-	
+
 	printk("Example:\n");
 	printk("1. display the clock tree.\n");
 	printk("   echo r tree >clkTree\n");
@@ -1696,7 +1703,7 @@ static struct class_attribute clktree_class_attrs[] = {
 	__ATTR_NULL,
 };
 
-static struct class meson_clktree_class = {    
+static struct class meson_clktree_class = {
 	.name = "meson_clocktree",
 	.class_attrs = clktree_class_attrs,
 };
@@ -1810,17 +1817,17 @@ static int __init meson_clock_init(void)
     meson_clk_register(&clk_usb0,&clk_xtal);
     //clk_usb0.clk_gate_reg_adr = P_USB_ADDR0;
     //clk_usb0.clk_gate_reg_mask = (1<<0);
-    
+
     // Add clk usb1
     CLK_DEFINE(usb1,xtal,5,NULL,clk_msr_get,clk_enable_usb,clk_disable_usb,"usb1");
     meson_clk_register(&clk_usb1,&clk_xtal);
     //clk_usb1.clk_gate_reg_adr = P_USB_ADDR8;
     //clk_usb1.clk_gate_reg_mask = (1<<0);
 #endif
-		
+
 	{
 		// Dump clocks
-		char *clks[] = { 
+		char *clks[] = {
 				"xtal",
 				"pll_sys",
 				"pll_fixed",
@@ -1841,7 +1848,7 @@ static int __init meson_clock_init(void)
 				printk("clkrate [ %s \t] : %lu\n", clk_name, clk_get_rate(clk));
 		}
 	}
-		
+
 #ifdef CONFIG_CLKTREE_DEBUG
 	class_register(&meson_clktree_class);
 #endif

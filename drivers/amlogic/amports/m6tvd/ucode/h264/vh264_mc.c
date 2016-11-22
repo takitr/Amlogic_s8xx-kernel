@@ -43,4 +43,3 @@
 #undef MicroCode
 #define MicroCode vh264_slice_mc
 #include "h264slice_linux.h"
-

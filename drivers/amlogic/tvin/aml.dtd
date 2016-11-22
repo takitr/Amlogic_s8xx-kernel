@@ -12,7 +12,7 @@
         irq = <115>;
         vdin_id = <0>;
 	};
-	
+
 //$$ DEVICE="vdin1"
 //$$ L2 PROP_STR = "status"
 //$$ L2 PROP_U32 2 = "reg"

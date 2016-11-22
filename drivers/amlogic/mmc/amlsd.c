@@ -344,7 +344,7 @@ static bool aml_sg_miter_next(struct sg_mapping_iter *miter)
     if (PageHighMem(miter->page)){
 		printk(KERN_DEBUG "AML_SDHC miter_next highmem\n");
 		local_irq_save(flags);
-    	miter->addr = kmap_atomic(miter->page) + miter->__offset;
+	miter->addr = kmap_atomic(miter->page) + miter->__offset;
 		local_irq_restore(flags);
     }
 	else
@@ -411,7 +411,7 @@ bool is_emmc_exist (struct amlsd_host* host) // is eMMC/tSD exist
 {
     print_tmp("host->storage_flag=%d, POR_BOOT_VALUE=%d\n", host->storage_flag, POR_BOOT_VALUE);
     if ((host->storage_flag == EMMC_BOOT_FLAG) || (host->storage_flag == SPI_EMMC_FLAG)
-            || (((host->storage_flag == 0)  || (host->storage_flag == -1)) && (POR_CARD_BOOT() || POR_EMMC_BOOT() || POR_SPI_BOOT()))) {
+            || (((host->storage_flag == 0)  || (host->storage_flag == -1)) && (POR_EMMC_BOOT() || POR_SPI_BOOT()))) {
         return true;
     }
 
@@ -720,16 +720,6 @@ int of_amlsd_init(struct amlsd_platform* pdata)
             CHECK_RET(ret);
         }
 	}
-#if defined(CONFIG_MACH_MESON8B_ODROIDC)
-	if(pdata->gpio_volsw) {
-        ret = amlogic_gpio_request_one(pdata->gpio_volsw, GPIOF_OUT_INIT_LOW, MODULE_NAME);
-        CHECK_RET(ret);
-        if (ret == 0) {
-            ret = amlogic_gpio_direction_output(pdata->gpio_volsw, 0, MODULE_NAME); // output low default 3.3V
-            CHECK_RET(ret);
-        }
-    }
-#endif
 
 	// if(pdata->port == MESON_SDIO_PORT_A)
 		// wifi_setup_dt();
@@ -923,11 +913,6 @@ static int aml_is_card_insert (struct amlsd_platform * pdata)
 {
 	int ret=0;
 
-#if defined(CONFIG_MACH_MESON8B_ODROIDC)
-        if (pdata->caps & MMC_CAP_NONREMOVABLE)
-                return 1;
-#endif
-
 	if(pdata->gpio_cd)
 		ret = amlogic_get_value(pdata->gpio_cd, MODULE_NAME); // 1: no inserted  0: inserted
     // sdio_err("card %s\n", ret?"OUT":"IN");
@@ -942,7 +927,11 @@ static int aml_is_card_insert (struct amlsd_platform * pdata)
 static int aml_is_sdjtag(struct amlsd_platform * pdata)
 {
     int card0;
-    card0 = aml_get_reg32_bits(P_PREG_PAD_GPIO0_I, 22, 1);
+#if (defined(CONFIG_ARCH_MESONG9TV) || defined(CONFIG_ARCH_MESONG9BB))
+	card0 = aml_get_reg32_bits(P_PREG_PAD_GPIO2_I, 20, 1);
+#else
+       card0 = aml_get_reg32_bits(P_PREG_PAD_GPIO0_I, 22, 1);
+#endif
     if(card0 == 1){
         return 1;
     }
@@ -964,12 +953,6 @@ static int aml_is_sdjtag(struct amlsd_platform * pdata)
     return 0;
 }
 
-#if defined(CONFIG_MACH_MESON8B_ODROIDC)
-static int aml_is_sduart(struct amlsd_platform * pdata)
-{
-        return 0;
-}
-#else
 static int aml_is_sduart(struct amlsd_platform * pdata)
 {
 #ifdef CONFIG_MESON_CPU_EMULATOR
@@ -977,12 +960,17 @@ static int aml_is_sduart(struct amlsd_platform * pdata)
 #else
     int dat3, i;
     int cnt=0;
-
     if(pdata->is_sduart)
         return 1;
-
     for (i = 0; i < 10; i++) {
-        dat3 = aml_get_reg32_bits(P_PREG_PAD_GPIO0_I,26,1);
+#if (defined(CONFIG_ARCH_MESONG9TV) || defined(CONFIG_ARCH_MESONG9BB))
+	dat3 = aml_get_reg32_bits(P_PREG_PAD_GPIO2_I,24,1);
+#else
+       dat3 = aml_get_reg32_bits(P_PREG_PAD_GPIO0_I,26,1);
+#endif
+#if defined(CONFIG_ARCH_MESONG9BB)
+    return 0;
+#endif
         if(dat3 == 1){
             // if (cnt)
                 // sdhc_err("cnt=%d\n", cnt);
@@ -1016,7 +1004,6 @@ static int aml_is_sduart(struct amlsd_platform * pdata)
     // return 0;
 #endif
 }
-#endif
 
 // int n=0;
 static int aml_uart_switch(struct amlsd_platform* pdata, bool on)
@@ -1178,12 +1165,18 @@ irqreturn_t aml_irq_cd_thread(int irq, void *data)
     mdelay(20);
     aml_sd_uart_detect(pdata);
 
-    if((pdata->is_in == 0) && aml_card_type_sd(pdata)) {
+    if((pdata->is_in == 0) && aml_card_type_non_sdio(pdata)) {
         pdata->host->init_flag = 0;
     }
 
     //mdelay(500);
-    mmc_detect_change(pdata->mmc, msecs_to_jiffies(200));
+    if(pdata->is_in == 0){
+	mmc_detect_change(pdata->mmc, msecs_to_jiffies(2));
+
+    }
+    else{
+	mmc_detect_change(pdata->mmc, msecs_to_jiffies(500));
+    }
 
 	return IRQ_HANDLED;
 }
@@ -1278,40 +1271,6 @@ int aml_check_unsupport_cmd(struct mmc_host* mmc, struct mmc_request* mrq)
 
 int aml_sd_voltage_switch (struct amlsd_platform* pdata, char signal_voltage)
 {
-#if defined(CONFIG_MACH_MESON8B_ODROIDC)
-    char *str;
-    int delay_ms = 0;
-    int volsw = 0;
-    int ret=0;
-
-    switch (signal_voltage) {
-        case MMC_SIGNAL_VOLTAGE_180:
-            delay_ms = 10;
-            volsw = 1;
-            str = "1.80 V";
-            if (!mmc_host_uhs(pdata->mmc)) {
-                sdhc_err("switch to 1.8V for a non-uhs device.\n");
-            }
-            break;
-        case MMC_SIGNAL_VOLTAGE_330:
-            delay_ms = 20;
-            volsw = 0;
-            str = "3.30 V";
-            break;
-        default:
-            str = "invalid";
-            break;
-    }
-
-	if(pdata->gpio_volsw) {
-        ret = amlogic_set_value(pdata->gpio_volsw, volsw, MODULE_NAME);
-        CHECK_RET(ret);
-        printk("%s[%d] : Switched to voltage -> %s\n",__func__,__LINE__,str);
-	}
-    pdata->signal_voltage = signal_voltage;
-    mdelay(delay_ms); // wait for voltage to be stable
-#else
-
 #if ((defined CONFIG_ARCH_MESON8))
 #ifdef CONFIG_AMLOGIC_BOARD_HAS_PMU
     int vol = LDO4DAC_REG_3_3_V;
@@ -1363,7 +1322,7 @@ int aml_sd_voltage_switch (struct amlsd_platform* pdata, char signal_voltage)
     }
 #endif
 #endif
-#endif
+
     return 0;
 }
 
@@ -1397,6 +1356,16 @@ void aml_emmc_hw_reset(struct mmc_host *mmc)
 
     //high
     aml_set_reg32_mask(P_PREG_PAD_GPIO3_O, (1<<9));
+    mdelay(1);
+#elif ((defined CONFIG_ARCH_MESONG9TV) || defined(CONFIG_ARCH_MESONG9BB))
+     aml_clr_reg32_mask(P_PREG_PAD_GPIO2_EN_N, (1<<9));  //high+
+     aml_set_reg32_mask(P_PREG_PAD_GPIO2_O, (1<<9));
+     mdelay(1);
+    //low
+    aml_clr_reg32_mask(P_PREG_PAD_GPIO2_O, (1<<9));
+    mdelay(2);
+    //high
+    aml_set_reg32_mask(P_PREG_PAD_GPIO2_O, (1<<9));
     mdelay(1);
  #endif
 
@@ -1553,4 +1522,3 @@ int aml_dbg_verify_pinmux (struct amlsd_platform * pdata)
     // return;
 // }
 // #endif
-

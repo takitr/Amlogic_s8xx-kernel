@@ -782,5 +782,3 @@ enum tvin_sm_status_e tvin_get_sm_status(int index)
 {
         return sm_dev[index].state;
 }
-
-

@@ -98,4 +98,3 @@ extern void tvin_vdin_bbar_init(enum tvin_sig_fmt_e fmt);
 extern void get_adc_version(char **ver,char **last_ver);
 
 #endif // _TVAFE_ADC_H
-

@@ -56,7 +56,7 @@ static int dbg_printk(const char *fmt, ...)
 	return 0;
 }
 
-int checkKeyCode(unsigned int key, unsigned int bits) 
+int checkKeyCode(unsigned int key, unsigned int bits)
 {
 	int checksum = 0;
 	unsigned int base = (1<<bits);
@@ -81,7 +81,7 @@ static int get_pulse_width(unsigned long data)
 	        remote_data->step == REMOTE_STATUS_LEADER ? "leader" :
 	        remote_data->step == REMOTE_STATUS_DATA ? "data" :
 	        remote_data->step == REMOTE_STATUS_SYNC ? "sync" : NULL;
-	dbg_printk("%02d:pulse_wdith:%d==>%s\r\n",
+	dbg_printk("%02d:pulse_wdith:%d==>%s\n",
 	           remote_data->bit_count - remote_data->bit_num, pulse_width, state);
 	//sometimes we found remote  pulse width==0.        in order to sync machine state we modify it .
 	if (pulse_width == 0) {
@@ -264,7 +264,7 @@ static inline void kbd_software_mode_remote_data(unsigned long data)
 			fiq_bridge_pulse_trigger(&remote_data->fiq_handle_item);
 		}
 		break;
-	case REMOTE_WORK_MODE_COMCAST: 
+	case REMOTE_WORK_MODE_COMCAST:
 	{
 		int i;
 		int base = (1<<remote_data->time_window[0]);
@@ -282,7 +282,7 @@ static inline void kbd_software_mode_remote_data(unsigned long data)
 		}
 		if (remote_data->bit_num == 0) {
 			if(remote_data->send_data == 1)  {
-				if(i >= base) 
+				if(i >= base)
 					remote_data->step = REMOTE_STATUS_DATA;
 				else
 					remote_data->step = REMOTE_STATUS_LEADER;

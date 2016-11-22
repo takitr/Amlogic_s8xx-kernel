@@ -1,6 +1,6 @@
 /**
- * this file is automatic generate by genregs.awk , Please do not edit it 
- * base files are ../ucode/register.h ../ucode/c_always_on_pointer.h ../ucode/pctl.h 
+ * this file is automatic generate by genregs.awk , Please do not edit it
+ * base files are ../ucode/register.h ../ucode/c_always_on_pointer.h ../ucode/pctl.h
  * ../ucode/c_stb_define.h ../ucode/secure_apb.h from VLSI team
  */
 #ifndef __MACH_MESON6_REG_ADDR_H_
@@ -823,7 +823,7 @@
 #define P_WATCHDOG_TC 		CBUS_REG_ADDR(WATCHDOG_TC) 	///../ucode/register.h
 #define WATCHDOG_RESET 0x2641 	///../ucode/register.h
 #define P_WATCHDOG_RESET 		CBUS_REG_ADDR(WATCHDOG_RESET) 	///../ucode/register.h
-#define WATCHDOG_ENABLE_BIT    22	
+#define WATCHDOG_ENABLE_BIT    22
 #define AHB_ARBITER_REG 0x2642 	///../ucode/register.h
 #define P_AHB_ARBITER_REG 		CBUS_REG_ADDR(AHB_ARBITER_REG) 	///../ucode/register.h
 #define AHB_ARBDEC_REG 0x2643 	///../ucode/register.h

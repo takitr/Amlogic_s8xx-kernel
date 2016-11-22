@@ -30,4 +30,3 @@ extern void vdin_canvas_start_config(struct vdin_dev_s *devp);
 extern void vdin_canvas_auto_config(struct vdin_dev_s *devp);
 
 #endif /* __VDIN_CANVAS_H */
-

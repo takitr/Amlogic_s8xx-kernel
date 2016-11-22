@@ -6,7 +6,7 @@ typedef  struct {
 	int  (*init)(logo_object_t *logo);
 	int  (*decode)(logo_object_t *logo);
 	int  (*deinit)(logo_object_t *logo);
-	
+
 }logo_parser_op_t;
 
 typedef  struct{

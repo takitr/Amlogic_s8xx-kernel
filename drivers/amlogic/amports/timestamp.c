@@ -11,7 +11,10 @@ u32 acc_pcrscr_inc = 0;
 u32 acc_pcrscr_dec = 0;
 /*need match to libplayer resample lib*/
 #define DEFALT_NUMSAMPS_PERCH   128
+
+#ifdef CONFIG_AMAUDIO
 extern int resample_delta;
+#endif
 
 static s32 system_time_inc_adj = 0;
 static u32 system_time = 0;
@@ -19,6 +22,7 @@ static u32 system_time_up = 0;
 static u32 audio_pts_up = 0;
 static u32 audio_pts_started = 0;
 static u32 first_vpts = 0;
+static u32 first_checkin_vpts = 0;
 static u32 first_apts = 0;
 
 static u32 system_time_scale_base = 1;
@@ -76,22 +80,26 @@ void timestamp_apts_inc(s32 inc)
 	inc = inc*timestamp_inc_factor/PLL_FACTOR;
 #endif
     if(tsync_get_mode()!=TSYNC_MODE_PCRMASTER){//timestamp_enable_resample_flag){
-		if(timestamp_resample_type_flag==0){      
+		if(timestamp_resample_type_flag==0){
 			//0-->no resample  processing
 		}else if(timestamp_resample_type_flag==1){//1-->down resample processing
+			#ifdef CONFIG_AMAUDIO
 				inc += inc*resample_delta / DEFALT_NUMSAMPS_PERCH;
 				acc_apts_inc += inc*resample_delta % DEFALT_NUMSAMPS_PERCH;
 				if(acc_apts_inc*resample_delta >= DEFALT_NUMSAMPS_PERCH){
 					inc += acc_apts_inc*resample_delta / DEFALT_NUMSAMPS_PERCH;
 					acc_apts_inc = acc_apts_inc*resample_delta % DEFALT_NUMSAMPS_PERCH;
-				}			
+				}
+			#endif
 		}else if(timestamp_resample_type_flag==2){//2-->up resample processing
+			#ifdef CONFIG_AMAUDIO
 				inc -= inc*resample_delta / DEFALT_NUMSAMPS_PERCH;
 				acc_apts_dec += inc*resample_delta % DEFALT_NUMSAMPS_PERCH;
 				if(acc_apts_dec*resample_delta >= DEFALT_NUMSAMPS_PERCH){
 					inc -= acc_apts_dec*resample_delta / DEFALT_NUMSAMPS_PERCH;
 					acc_apts_dec = acc_apts_dec*resample_delta % DEFALT_NUMSAMPS_PERCH;
-				}			
+				}
+			#endif
 		}
 	}
     WRITE_MPEG_REG(AUDIO_PTS, READ_MPEG_REG(AUDIO_PTS) + inc);
@@ -150,6 +158,21 @@ u32 timestamp_firstvpts_get(void)
 }
 EXPORT_SYMBOL(timestamp_firstvpts_get);
 
+
+void timestamp_checkin_firstvpts_set(u32 pts)
+{
+    first_checkin_vpts = pts;
+    printk("video first checkin pts = %x\n", first_checkin_vpts);
+}
+EXPORT_SYMBOL(timestamp_checkin_firstvpts_set);
+
+u32 timestamp_checkin_firstvpts_get(void)
+{
+    return first_checkin_vpts;
+}
+EXPORT_SYMBOL(timestamp_checkin_firstvpts_get);
+
+
 void timestamp_firstapts_set(u32 pts)
 {
     first_apts = pts;
@@ -172,23 +195,27 @@ void timestamp_pcrscr_inc(s32 inc)
 #endif
 		if(tsync_get_mode()!=TSYNC_MODE_PCRMASTER){//timestamp_enable_resample_flag){
 			if(timestamp_resample_type_flag==0){	  //0-->no resample  processing
-				
+
 			}else if(timestamp_resample_type_flag==1){//1-->down resample processing
+				#ifdef CONFIG_AMAUDIO
 				inc += inc*resample_delta / DEFALT_NUMSAMPS_PERCH;
-		 		acc_pcrscr_inc += inc*resample_delta % DEFALT_NUMSAMPS_PERCH;
+				acc_pcrscr_inc += inc*resample_delta % DEFALT_NUMSAMPS_PERCH;
 				if(acc_pcrscr_inc*resample_delta >= DEFALT_NUMSAMPS_PERCH){
 					inc += acc_pcrscr_inc*resample_delta / DEFALT_NUMSAMPS_PERCH;
 					acc_pcrscr_inc = acc_pcrscr_inc*resample_delta % DEFALT_NUMSAMPS_PERCH;
 				}
+				#endif
 			}else if(timestamp_resample_type_flag==2){//2-->up resample processing
+				#ifdef CONFIG_AMAUDIO
 				inc -= inc*resample_delta / DEFALT_NUMSAMPS_PERCH;
-		 		acc_pcrscr_dec += inc*resample_delta % DEFALT_NUMSAMPS_PERCH;
+				acc_pcrscr_dec += inc*resample_delta % DEFALT_NUMSAMPS_PERCH;
 				if(acc_pcrscr_dec*resample_delta >= DEFALT_NUMSAMPS_PERCH){
 					inc -= acc_pcrscr_dec*resample_delta / DEFALT_NUMSAMPS_PERCH;
 					acc_pcrscr_dec = acc_pcrscr_dec*resample_delta % DEFALT_NUMSAMPS_PERCH;
 				}
+				#endif
 			}
-		}  
+		}
         system_time += inc + system_time_inc_adj;
     }
 }

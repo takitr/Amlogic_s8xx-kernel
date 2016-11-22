@@ -42,4 +42,3 @@ am_csi2_frame_t *bufq_pop_free(mipi_buf_t* buff);
 am_csi2_frame_t *bufq_pop_available(mipi_buf_t* buff);
 
 void bufq_init(mipi_buf_t* buff, am_csi2_frame_t* frame, unsigned count);
-

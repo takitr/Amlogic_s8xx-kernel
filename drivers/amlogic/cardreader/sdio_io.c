@@ -563,7 +563,7 @@ static int sdio_io_rw_ext_helper(struct sdio_func *func, int write,
 	unsigned remainder = size;
 	unsigned max_blocks;
 	int ret;
-	//printk("sdio rw ext addr %x at fun %d cnt: %d read_or_write %d\n", 
+	//printk("sdio rw ext addr %x at fun %d cnt: %d read_or_write %d\n",
 			//addr, func->num, size, write);
 
 	/* Do the bulk of the transfer using block mode (if supported). */

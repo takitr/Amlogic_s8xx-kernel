@@ -8,4 +8,3 @@ config TVIN_CSI
 	default y
 	help
 	  CSI device driver.
-

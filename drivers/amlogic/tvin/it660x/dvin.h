@@ -3,26 +3,26 @@
 
 #define DEBUG_DVIN
 
-#ifdef DEBUG_DVIN  
-extern int hs_pol_inv;           
-extern int vs_pol_inv;           
-extern int de_pol_inv;           
-extern int field_pol_inv;        
-extern int ext_field_sel;        
-extern int de_mode;              
-extern int data_comp_map;        
-extern int mode_422to444;        
-extern int dvin_clk_inv;         
-extern int vs_hs_tim_ctrl;       
-extern int hs_lead_vs_odd_min;   
-extern int hs_lead_vs_odd_max;   
-extern int active_start_pix_fe;  
-extern int active_start_pix_fo;  
-extern int active_start_line_fe; 
-extern int active_start_line_fo; 
-extern int line_width;           
-extern int field_height; 
-#endif       
+#ifdef DEBUG_DVIN
+extern int hs_pol_inv;
+extern int vs_pol_inv;
+extern int de_pol_inv;
+extern int field_pol_inv;
+extern int ext_field_sel;
+extern int de_mode;
+extern int data_comp_map;
+extern int mode_422to444;
+extern int dvin_clk_inv;
+extern int vs_hs_tim_ctrl;
+extern int hs_lead_vs_odd_min;
+extern int hs_lead_vs_odd_max;
+extern int active_start_pix_fe;
+extern int active_start_pix_fo;
+extern int active_start_line_fe;
+extern int active_start_line_fo;
+extern int line_width;
+extern int field_height;
+#endif
 
 extern void config_dvin (unsigned long hs_pol_inv,             // Invert HS polarity, for HW regards HS active high.
                          unsigned long vs_pol_inv,             // Invert VS polarity, for HW regards VS active high.
@@ -67,5 +67,5 @@ extern void config_dvin (unsigned long hs_pol_inv,             // Invert HS pola
                          unsigned long line_width,             // Number_of_pixels_per_line
                          unsigned long field_height);          // Number_of_lines_per_field
 
-                                              
+
 #endif /*DVIN_H*/

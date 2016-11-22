@@ -725,13 +725,6 @@ L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
 S:	Maintained
 F:	arch/arm/mach-sunxi/
 
-ARM/Amlogic MesonX SoC support
-M:	Carlo Caione <carlo@caione.org>
-L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
-S:	Maintained
-F:	drivers/media/rc/meson-ir.c
-N:	meson[x68]
-
 ARM/ATMEL AT91RM9200 AND AT91SAM ARM ARCHITECTURES
 M:	Andrew Victor <linux@maxim.org.za>
 M:	Nicolas Ferre <nicolas.ferre@atmel.com>
@@ -1539,20 +1532,6 @@ S:	Maintained
 F:	include/linux/audit.h
 F:	include/uapi/linux/audit.h
 F:	kernel/audit*
-
-AUFS (advanced multi layered unification filesystem) FILESYSTEM
-M:	"J. R. Okajima" <hooanon05g@gmail.com>
-L:	linux-unionfs@vger.kernel.org
-L:	aufs-users@lists.sourceforge.net (members only)
-W:	http://aufs.sourceforge.net
-T:	git://git.code.sf.net/p/aufs/aufs3-linux
-T:	git://github.com/sfjro/aufs3-linux.git
-S:	Supported
-F:	Documentation/filesystems/aufs/
-F:	Documentation/ABI/testing/debugfs-aufs
-F:	Documentation/ABI/testing/sysfs-aufs
-F:	fs/aufs/
-F:	include/uapi/linux/aufs_type.h
 
 AUXILIARY DISPLAY DRIVERS
 M:	Miguel Ojeda Sandonis <miguel.ojeda.sandonis@gmail.com>
@@ -3053,8 +3032,8 @@ F:	Documentation/x86/efi-stub.txt
 F:	arch/ia64/kernel/efi.c
 F:	arch/x86/boot/compressed/eboot.[ch]
 F:	arch/x86/include/asm/efi.h
-F:	arch/x86/platform/efi/
-F:	drivers/firmware/efi/
+F:	arch/x86/platform/efi/*
+F:	drivers/firmware/efi/*
 F:	include/linux/efi*.h
 
 EFI VARIABLE FILESYSTEM
@@ -6039,13 +6018,6 @@ S:	Maintained
 F:	drivers/scsi/osd/
 F:	include/scsi/osd_*
 F:	fs/exofs/
-
-OVERLAYFS FILESYSTEM
-M:	Miklos Szeredi <miklos@szeredi.hu>
-L:	linux-fsdevel@vger.kernel.org
-S:	Supported
-F:	fs/overlayfs/*
-F:	Documentation/filesystems/overlayfs.txt
 
 P54 WIRELESS DRIVER
 M:	Christian Lamparter <chunkeey@googlemail.com>

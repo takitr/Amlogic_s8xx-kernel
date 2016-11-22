@@ -57,7 +57,7 @@ const char *tvin_color_fmt_str(enum tvin_color_fmt_e color_fmt)
 		case TVIN_GBRG:
 			return "COLOR_FMT_TVIN_GBRG";
 			break;
-        	case TVIN_GRBG:
+		case TVIN_GRBG:
 			return "COLOR_FMT_TVIN_GRBG";
 			break;
                 default:
@@ -338,4 +338,3 @@ EXPORT_SYMBOL(tvin_trans_fmt_str);
 
 
 MODULE_LICENSE("GPL");
-

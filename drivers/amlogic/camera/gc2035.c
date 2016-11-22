@@ -210,36 +210,36 @@ struct v4l2_querymenu gc2035_qmenu_wbmode[] = {
 			},{
 				.id 		= V4L2_CID_DO_WHITE_BALANCE,
 				.index		= CAM_WB_FLUORESCENT,
-				.name		= "fluorescent", 
+				.name		= "fluorescent",
 				.reserved	= 0,
 			},{
 				.id 		= V4L2_CID_DO_WHITE_BALANCE,
 				.index		= CAM_WB_FLUORESCENT,
-				.name		= "warm-fluorescent", 
+				.name		= "warm-fluorescent",
 				.reserved	= 0,
 			},
 		};
-	
+
 struct v4l2_querymenu gc2035_qmenu_anti_banding_mode[] = {
 		{
 			.id 		= V4L2_CID_POWER_LINE_FREQUENCY,
-			.index		= CAM_BANDING_50HZ, 
+			.index		= CAM_BANDING_50HZ,
 			.name		= "50hz",
 			.reserved	= 0,
 		},{
 			.id 		= V4L2_CID_POWER_LINE_FREQUENCY,
-			.index		= CAM_BANDING_60HZ, 
+			.index		= CAM_BANDING_60HZ,
 			.name		= "60hz",
 			.reserved	= 0,
 		},
 	};
-	
+
 	typedef struct {
 		__u32	id;
 		int 	num;
 		struct v4l2_querymenu* gc2035_qmenu;
 	}gc2035_qmenu_set_t;
-	
+
 	gc2035_qmenu_set_t gc2035_qmenu_set[] = {
 		{
 			.id 			= V4L2_CID_DO_WHITE_BALANCE,
@@ -251,12 +251,12 @@ struct v4l2_querymenu gc2035_qmenu_anti_banding_mode[] = {
 			.gc2035_qmenu	= gc2035_qmenu_anti_banding_mode,
 		},
 	};
-	
+
 	static int vidioc_querymenu(struct file *file, void *priv,
 					struct v4l2_querymenu *a)
 	{
 		int i, j;
-	
+
 		for (i = 0; i < ARRAY_SIZE(gc2035_qmenu_set); i++)
 		if (a->id && a->id == gc2035_qmenu_set[i].id) {
 			for(j = 0; j < gc2035_qmenu_set[i].num; j++)
@@ -266,7 +266,7 @@ struct v4l2_querymenu gc2035_qmenu_anti_banding_mode[] = {
 				return (0);
 			}
 		}
-	
+
 		return -EINVAL;
 	}
 
@@ -383,7 +383,7 @@ struct gc2035_device {
 
 	/* platform device data from board initting. */
 	aml_cam_info_t  cam_info;
-	
+
 	/* wake lock */
 	struct wake_lock	wake_lock;
 
@@ -437,10 +437,10 @@ static int get_total_pic_size(resolution_size_t max_size)
 	if (max_size >= SIZE_2592X1944)
 		ret = 4;
 	else if (max_size >= SIZE_2048X1536)
-		ret = 3;    
-		
+		ret = 3;
+
 	//printk("total_pic_size is %d\n", ret);
-	
+
 	return ret;
 }
 
@@ -481,18 +481,18 @@ struct aml_camera_i2c_fig_s gc2035_script[] = {
 	#endif
 	//////////measure window  ///////////
 	{0xfe, 0x00},
-	{0xec, 0x06},//04 
-	{0xed, 0x06},//04 
-	{0xee, 0x62},//60 
-	{0xef, 0x92},//90 
-	
+	{0xec, 0x06},//04
+	{0xed, 0x06},//04
+	{0xee, 0x62},//60
+	{0xef, 0x92},//90
+
 	///////////analog/////////////
 	{0x0a, 0x00}, //row start
 	{0x0c, 0x00}, //col start
 	{0x0d, 0x04},
 	{0x0e, 0xc0},
 	{0x0f, 0x06}, //Window setting
-	{0x10, 0x58}, 
+	{0x10, 0x58},
 	{0x17, 0x14}, //[0]mirror [1]flip
 
 
@@ -504,7 +504,7 @@ struct aml_camera_i2c_fig_s gc2035_script[] = {
 	{0x18,0x0a}, //sdark 4 row in even frame??
 	{0x19,0x0a}, //AD pipe number
 	*/
-	
+
 	{0x1a , 0x01}, //CISCTL mode4
 	{0x1b , 0x8b},
 	{0x1c , 0x05},
@@ -544,27 +544,27 @@ struct aml_camera_i2c_fig_s gc2035_script[] = {
 	{0x30 , 0x00},
 	{0x3e , 0x40},
 #else
-	{0xfe , 0x00},  
+	{0xfe , 0x00},
 	{0x05 , 0x01},
-	{0x06 , 0x0d},  
+	{0x06 , 0x0d},
 	{0x07 , 0x00},
-	{0x08 , 0x40},  
-	{0xfe , 0x01},  
+	{0x08 , 0x40},
+	{0xfe , 0x01},
 	{0x27 , 0x00},
-	{0x28 , 0xa0},  
+	{0x28 , 0xa0},
 	{0x29 , 0x05},//  level 0 12.5
-	{0x2a , 0x00},  
+	{0x2a , 0x00},
 	{0x2b , 0x05},//  level 1 12.5
-	{0x2c , 0x00},  
+	{0x2c , 0x00},
 	{0x2d , 0x05},//  level 2 12.5 640/10fps
-	{0x2e , 0x00},  
+	{0x2e , 0x00},
 	{0x2f , 0x08},//  level 3 7.5
-	{0x30 , 0x20},  
+	{0x30 , 0x20},
 
 
 #endif
 	{0xfe , 0x00},
-	{0xfe , 0x00},  //0x , 0x , 0x , 0x , 0x 
+	{0xfe , 0x00},  //0x , 0x , 0x , 0x , 0x
 	{0xb6 , 0x03}, //AEC enable
 	{0xfe , 0x00},
 
@@ -582,17 +582,17 @@ struct aml_camera_i2c_fig_s gc2035_script[] = {
 	{0x63, 0x20},
 	{0x64, 0x20},
 	{0x65, 0x20},
-	
+
 	///block////////////
 	{0x80, 0xff},
 	{0x81, 0x26},//38 , 0x//skin_Y 8c_debug
-	{0x87, 0x90}, //[7]middle gamma 
+	{0x87, 0x90}, //[7]middle gamma
 	{0x84, 0x03}, //output put foramat
 	{0x86, 0x07}, ////sync plority  02 86
 	{0x8b, 0xbc},
 	{0xb0, 0x80}, //globle gain
 	{0xc0, 0x40},//Yuv bypass
-	
+
 	//////lsc/////////////
 	#if 0
 	{0xfe, 0x01},
@@ -653,10 +653,10 @@ struct aml_camera_i2c_fig_s gc2035_script[] = {
 	{0xa1, 0x80},
 	{0xa2, 0x80},
 	#else
-	
+
 	//gc2035 Alight lsc reg setting list
 	////Record date: 2013-11-29 13:30:15
-	
+
 	{0xfe,0x01},
 	{0xc2,0x21},
 	{0xc3,0x1a},
@@ -725,7 +725,7 @@ struct aml_camera_i2c_fig_s gc2035_script[] = {
 	{0xc4, 0xec},
 	{0xc5, 0x42},
 	{0xc6, 0xf8},
-	{0xc7, 0x40},//for cwf 
+	{0xc7, 0x40},//for cwf
 	{0xc8, 0xf8},
 	{0xc9, 0x06},
 	{0xca, 0xfd},
@@ -742,7 +742,7 @@ struct aml_camera_i2c_fig_s gc2035_script[] = {
 	///////awb start ////////////////
 	//AWB clear
 	{0xfe, 0x01},
-	{0x4f, 0x00}, 
+	{0x4f, 0x00},
 	{0x4d, 0x00},
 	{0x4e, 0x00},
 	{0x4e, 0x00},
@@ -781,7 +781,7 @@ struct aml_camera_i2c_fig_s gc2035_script[] = {
 	{0x4e, 0x00},
 	{0x4e, 0x00},
 	{0x4e, 0x00},
-	{0x4e, 0x00},   
+	{0x4e, 0x00},
 	{0x4e, 0x00},
 	{0x4e, 0x00},
 	{0x4e, 0x00},
@@ -807,9 +807,9 @@ struct aml_camera_i2c_fig_s gc2035_script[] = {
 	{0x4e, 0x00},
 	{0x4e, 0x00},
 	{0x4e, 0x00},
-	{0x4e, 0x00},  
 	{0x4e, 0x00},
-	{0x4e, 0x00},  
+	{0x4e, 0x00},
+	{0x4e, 0x00},
 	{0x4e, 0x00},
 	{0x4d, 0x40}, // 40
 	{0x4e, 0x00},
@@ -823,9 +823,9 @@ struct aml_camera_i2c_fig_s gc2035_script[] = {
 	{0x4e, 0x00},
 	{0x4e, 0x00},
 	{0x4e, 0x00},
-	{0x4e, 0x00},    
-	{0x4e, 0x00},      
-	{0x4e, 0x00},  
+	{0x4e, 0x00},
+	{0x4e, 0x00},
+	{0x4e, 0x00},
 	{0x4e, 0x00},
 	{0x4e, 0x00},
 	{0x4d, 0x50}, // 50
@@ -840,8 +840,8 @@ struct aml_camera_i2c_fig_s gc2035_script[] = {
 	{0x4e, 0x00},
 	{0x4e, 0x00},
 	{0x4e, 0x00},
-	{0x4e, 0x00},  
-	{0x4e, 0x00},  
+	{0x4e, 0x00},
+	{0x4e, 0x00},
 	{0x4e, 0x00},
 	{0x4e, 0x00},
 	{0x4e, 0x00},
@@ -856,8 +856,8 @@ struct aml_camera_i2c_fig_s gc2035_script[] = {
 	{0x4e, 0x00},
 	{0x4e, 0x00},
 	{0x4e, 0x00},
-	{0x4e, 0x00}, 
-	{0x4e, 0x00}, 
+	{0x4e, 0x00},
+	{0x4e, 0x00},
 	{0x4e, 0x00},
 	{0x4e, 0x00},
 	{0x4e, 0x00},
@@ -906,7 +906,7 @@ struct aml_camera_i2c_fig_s gc2035_script[] = {
 	{0x4e, 0x00},
 	{0x4e, 0x00},
 	{0x4e, 0x00},
-	{0x4e, 0x00}, 
+	{0x4e, 0x00},
 	{0x4e, 0x00},
 	{0x4e, 0x00},
 	{0x4e, 0x00},
@@ -922,8 +922,8 @@ struct aml_camera_i2c_fig_s gc2035_script[] = {
 	{0x4e, 0x00},
 	{0x4e, 0x00},
 	{0x4e, 0x00},
-	{0x4e, 0x00}, 
-	{0x4e, 0x00}, 
+	{0x4e, 0x00},
+	{0x4e, 0x00},
 	{0x4e, 0x00},
 	{0x4e, 0x00},
 	{0x4e, 0x00},
@@ -939,7 +939,7 @@ struct aml_camera_i2c_fig_s gc2035_script[] = {
 	{0x4e, 0x00},
 	{0x4e, 0x00},
 	{0x4e, 0x00},
-	{0x4e, 0x00}, 
+	{0x4e, 0x00},
 	{0x4e, 0x00},
 	{0x4e, 0x00},
 	{0x4e, 0x00},
@@ -953,11 +953,11 @@ struct aml_camera_i2c_fig_s gc2035_script[] = {
 	{0x4e, 0x00},
 	{0x4e, 0x00},
 	{0x4e, 0x00},
-	{0x4e, 0x00}, 
 	{0x4e, 0x00},
 	{0x4e, 0x00},
-	{0x4e, 0x00}, 
-	{0x4e, 0x00}, 
+	{0x4e, 0x00},
+	{0x4e, 0x00},
+	{0x4e, 0x00},
 	{0x4e, 0x00},
 	{0x4e, 0x00},
 	{0x4e, 0x00},
@@ -1014,7 +1014,7 @@ struct aml_camera_i2c_fig_s gc2035_script[] = {
 	{0x54, 0x60},
 	{0x56, 0x06},
 	{0x57, 0x20}, //pre adjust
-	{0x58, 0x01}, 
+	{0x58, 0x01},
 	{0x5b, 0x02}, //AWB_gain_delta
 	{0x61, 0xaa},//R/G stand
 	{0x62, 0xaa},//R/G stand
@@ -1029,13 +1029,13 @@ struct aml_camera_i2c_fig_s gc2035_script[] = {
 	{0x89, 0x75},
 	{0x84, 0x08},  //0x//auto_window
 	{0x8b, 0x00}, // 0x//awb compare luma
-	{0x8d, 0x70}, //awb gain limit R 
+	{0x8d, 0x70}, //awb gain limit R
 	{0x8e, 0x70},//G
 	{0x8f, 0xf4},//B
 	{0xfe, 0x00},
 	{0x82, 0x02},//awb_en
        /////////awb end /////////////
-	
+
 	///==========asde
 	{0xfe, 0x01},
 	{0x21, 0xbf},
@@ -1043,9 +1043,9 @@ struct aml_camera_i2c_fig_s gc2035_script[] = {
 	{0xa4, 0x00},//
 	{0xa5, 0x40}, //lsc_th
 	{0xa2, 0xa0}, //lsc_dec_slope
-	{0x86, 0x27},//add for DPC travis 20140505   
-	{0x8a, 0x33},//add for DPC travis 20140505 
-	{0x8d, 0x85},//add for DPC travis 20140505 
+	{0x86, 0x27},//add for DPC travis 20140505
+	{0x8a, 0x33},//add for DPC travis 20140505
+	{0x8d, 0x85},//add for DPC travis 20140505
 	{0xa6, 0xf0},//80//change for DPC travis 20140505
 	{0xa7, 0x80}, //ot_th
 	{0xab, 0x31}, //
@@ -1054,7 +1054,7 @@ struct aml_camera_i2c_fig_s gc2035_script[] = {
 	{0xb1, 0x34},//edge effect slope low
 	{0xb3, 0x80}, //saturation dec slope
 	{0xde, 0xb6},  //
-	{0x38, 0x0f}, // 
+	{0x38, 0x0f}, //
 	{0x39, 0x60}, //
 	{0xfe, 0x00},
 	{0x81, 0x26},
@@ -1065,22 +1065,22 @@ struct aml_camera_i2c_fig_s gc2035_script[] = {
 	{0xd1, 0x38},//saturation_cb
 	{0xd2, 0x38},//saturation_Cr
 	{0xd3, 0x40},//contrast ?
-	{0xd4, 0x80},//contrast center 
-	{0xd5, 0x00},//luma_offset 
+	{0xd4, 0x80},//contrast center
+	{0xd5, 0x00},//luma_offset
 	{0xdc, 0x30},
 	{0xdd, 0xb8},  //edge_sa_g,b
-	{0xfe, 0x00}, 
+	{0xfe, 0x00},
 	///////dndd///////////
-	{0xfe, 0x02},  
+	{0xfe, 0x02},
 	{0x88, 0x15},//dn_b_base
 	{0x8c, 0xf6}, //[2]b_in_dark_inc
 	{0x89, 0x03}, //dn_c_weight
 	////////EE ///////////
-	{0xfe, 0x02}, 
+	{0xfe, 0x02},
 	{0x90, 0x6c},// EEINTP mode1
 	{0x97, 0x45},// edge effect
-	////==============RGB Gamma 
-	{0xfe, 0x02},  
+	////==============RGB Gamma
+	{0xfe, 0x02},
 	{0x15, 0x0a},
 	{0x16, 0x12},
 	{0x17, 0x19},
@@ -1101,8 +1101,8 @@ struct aml_camera_i2c_fig_s gc2035_script[] = {
 	{0x26, 0xf0},
 	{0x27, 0xf8},
 	{0x28, 0xfd},
-	{0x29, 0xff},  
-	
+	{0x29, 0xff},
+
 	///=================y gamma
 	{0xfe, 0x02},
 	{0x2b, 0x00},
@@ -1118,20 +1118,20 @@ struct aml_camera_i2c_fig_s gc2035_script[] = {
 	{0x35, 0xc0},
 	{0x36, 0xe0},
 	{0x37, 0xff},
-	/////1600x1200size// 
+	/////1600x1200size//
 	{0xfe, 0x00},//
 	{0x90, 0x01}, //0x//crop enable
 	{0x95, 0x04},  //0x//1600x1200
 	{0x96, 0xb0},
 	{0x97, 0x06},
 	{0x98, 0x40},
-	
+
 	{0xfe, 0x03},
-	{0x42, 0x40}, 
+	{0x42, 0x40},
 	{0x43, 0x06}, //output buf width
 	{0x41, 0x02}, // Pclk_polarity
-	{0x40, 0x40},  //00  
-	{0x17, 0x00}, //widv 
+	{0x40, 0x40},  //00
+	{0x17, 0x00}, //widv
 	{0xfe, 0x00},
 	////output DVP/////
 	{0xfe , 0x00},
@@ -1146,10 +1146,10 @@ struct aml_camera_i2c_fig_s gc2035_script[] = {
 	{0x9d, 0x00},
 	{0x9e, 0x00},
 	{0x9f, 0x00},
-	{0xa0, 0x00},  
+	{0xa0, 0x00},
 	{0xa1, 0x00},
 	{0xa2, 0x00},
-	
+
 	{0x90, 0x01},  //crop enable
 	{0x94, 0x02},
 	{0x95, 0x02},
@@ -1162,26 +1162,26 @@ struct aml_camera_i2c_fig_s gc2035_script[] = {
 	{0xf3, 0xff},
 	{0xf4, 0x00},
 	{0xf5, 0x30},
-	
-	  #if 0   
+
+	  #if 0
         /////////  re zao///
 	{0xfe,0x00},
 	{0x22,0xf0},
 	{0xfe,0x01},
 	{0x21,0xff},
-	{0xfe,0x02},  
+	{0xfe,0x02},
 	{0x8a,0x33},
 	{0x8c,0x76},
 	{0x8d,0x85},
-	{0xa6,0xf0},	
+	{0xa6,0xf0},
 	{0xae,0x9f},
 	{0xa2,0x90},
-	{0xa5,0x40},  
+	{0xa5,0x40},
 	{0xa7,0x30},
 	{0xb0,0x88},
 	{0x38,0x0b},
 	{0x39,0x30},
-	{0xfe,0x00},  
+	{0xfe,0x00},
 	{0x87,0xb0},
 
        //// small  RGB gamma////
@@ -1207,8 +1207,8 @@ struct aml_camera_i2c_fig_s gc2035_script[] = {
 	{0x27, 0xee},
 	{0x28, 0xf7},
 	{0x29, 0xff},
-	
- 	////dark sun/////
+
+	////dark sun/////
 	{0xfe, 0x02},
 	{0x40, 0x06},
 	{0x41, 0x23},
@@ -1252,32 +1252,32 @@ struct aml_camera_i2c_fig_s gc2035_script[] = {
   {0xfe , 0x00},
 #endif
 
-	{0xff,0xff}, 
+	{0xff,0xff},
 };
 
-//load gc2035 parameters 
+//load gc2035 parameters
 static void gc2035_init_regs(struct gc2035_device *dev)
 {
 	int i=0;//,j;
 	unsigned char buf[2];
 	struct i2c_client *client = v4l2_get_subdevdata(&dev->sd);
-	
+
 	while(1)
 	{
 		buf[0] = gc2035_script[i].addr;//(unsigned char)((gc2035_script[i].addr >> 8) & 0xff);
 		//buf[1] = (unsigned char)(gc2035_script[i].addr & 0xff);
 		buf[1] = gc2035_script[i].val;
-		if (gc2035_script[i].val==0xff&&gc2035_script[i].addr==0xff) 
-	 	{
-	    		printk("gc2035_write_regs success in initial gc2035.\n");
-	 		break;
-	 	}
+		if (gc2035_script[i].val==0xff&&gc2035_script[i].addr==0xff)
+		{
+			printk("gc2035_write_regs success in initial gc2035.\n");
+			break;
+		}
 		if((i2c_put_byte_add8(client,buf, 2)) < 0)
-	    	{
+		{
 			printk("fail in initial gc2035. \n");
 			return;
-	    	}
-		i++;	
+		}
+		i++;
 	}
 	msleep(20);
 	return;
@@ -1371,8 +1371,8 @@ void gc2035_set_param_wb(struct gc2035_device *dev,enum  camera_wb_flip_e para)/
 	      return 0;
    #endif
 
-		
-		buf[0]=0x82;  //0x00			
+
+		buf[0]=0x82;  //0x00
        temp=i2c_get_byte_add8(client, 0x82);
     switch (para)
 	{
@@ -1380,31 +1380,31 @@ void gc2035_set_param_wb(struct gc2035_device *dev,enum  camera_wb_flip_e para)/
 		case CAM_WB_AUTO://auto
 			buf[0]=0xfe;
 			buf[1]=0x00;
-			i2c_put_byte_add8(client,buf,2);	
-		    	printk("CAM_WB_AUTO       \n");
+			i2c_put_byte_add8(client,buf,2);
+			printk("CAM_WB_AUTO       \n");
 			buf[0]=0xb3;
 			buf[1]=0x61;
-			i2c_put_byte_add8(client,buf,2);		
+			i2c_put_byte_add8(client,buf,2);
 
 			buf[0]=0xb4;
 			buf[1]=0x40;
-			i2c_put_byte_add8(client,buf,2);	
+			i2c_put_byte_add8(client,buf,2);
 
 			buf[0]=0xb5;
 			buf[1]=0x61;
-			i2c_put_byte_add8(client,buf,2);	
+			i2c_put_byte_add8(client,buf,2);
 
 		    buf[0]=0x82;
 			buf[1]=temp | 0x02;
-			i2c_put_byte_add8(client,buf,2);	
+			i2c_put_byte_add8(client,buf,2);
 			break;
 
 		case CAM_WB_CLOUD: //cloud
 
 			buf[0]=0xfe;
 			buf[1]=0x00;
-			i2c_put_byte_add8(client,buf,2);	
-			
+			i2c_put_byte_add8(client,buf,2);
+
 			printk("CAM_WB_CLOUD       \n");
 			buf[0]=0x82;
 			buf[1]=temp & (~0x02);
@@ -1412,21 +1412,21 @@ void gc2035_set_param_wb(struct gc2035_device *dev,enum  camera_wb_flip_e para)/
 
 			buf[0]=0xb3;
 			buf[1]=0x58;
-			i2c_put_byte_add8(client,buf,2);		
+			i2c_put_byte_add8(client,buf,2);
 
 			buf[0]=0xb4;
 			buf[1]=0x40;
-			i2c_put_byte_add8(client,buf,2);	
+			i2c_put_byte_add8(client,buf,2);
 
 			buf[0]=0xb5;
 			buf[1]=0x50;
-			i2c_put_byte_add8(client,buf,2);			
+			i2c_put_byte_add8(client,buf,2);
 			break;
 
 		case CAM_WB_DAYLIGHT: //
 			buf[0]=0xfe;
 			buf[1]=0x00;
-			i2c_put_byte_add8(client,buf,2);	
+			i2c_put_byte_add8(client,buf,2);
 			printk("CAM_WB_DAYLIGHT       \n");
 			buf[0]=0x82;
 			buf[1]=temp & (~0x02);
@@ -1434,11 +1434,11 @@ void gc2035_set_param_wb(struct gc2035_device *dev,enum  camera_wb_flip_e para)/
 
 			buf[0]=0xb3;
 			buf[1]=0x78;
-			i2c_put_byte_add8(client,buf,2);		
+			i2c_put_byte_add8(client,buf,2);
 
 			buf[0]=0xb4;
 			buf[1]=0x40;
-			i2c_put_byte_add8(client,buf,2);	
+			i2c_put_byte_add8(client,buf,2);
 
 			buf[0]=0xb5;
 			buf[1]=0x50;
@@ -1448,8 +1448,8 @@ void gc2035_set_param_wb(struct gc2035_device *dev,enum  camera_wb_flip_e para)/
 		case CAM_WB_INCANDESCENCE:
 			buf[0]=0xfe;
 			buf[1]=0x00;
-			i2c_put_byte_add8(client,buf,2);	
-			
+			i2c_put_byte_add8(client,buf,2);
+
 			printk("CAM_WB_INCANDESCENCE       \n");
 			buf[0]=0x82;
 			buf[1]=temp & (~0x02);
@@ -1457,11 +1457,11 @@ void gc2035_set_param_wb(struct gc2035_device *dev,enum  camera_wb_flip_e para)/
 
 			buf[0]=0xb3;
 			buf[1]=0x50;
-			i2c_put_byte_add8(client,buf,2);		
+			i2c_put_byte_add8(client,buf,2);
 
 			buf[0]=0xb4;
 			buf[1]=0x40;
-			i2c_put_byte_add8(client,buf,2);	
+			i2c_put_byte_add8(client,buf,2);
 
 			buf[0]=0xb5;
 			buf[1]=0xa8;
@@ -1471,7 +1471,7 @@ void gc2035_set_param_wb(struct gc2035_device *dev,enum  camera_wb_flip_e para)/
 		case CAM_WB_TUNGSTEN:
 			buf[0]=0xfe;
 			buf[1]=0x00;
-			i2c_put_byte_add8(client,buf,2);	
+			i2c_put_byte_add8(client,buf,2);
                      printk("CAM_WB_TUNGSTEN       \n");
 			buf[0]=0x82;
 			buf[1]=temp & (~0x02);
@@ -1479,34 +1479,34 @@ void gc2035_set_param_wb(struct gc2035_device *dev,enum  camera_wb_flip_e para)/
 
 			buf[0]=0xb3;
 			buf[1]=0xa0;
-			i2c_put_byte_add8(client,buf,2);		
+			i2c_put_byte_add8(client,buf,2);
 
 			buf[0]=0xb4;
 			buf[1]=0x45;
-			i2c_put_byte_add8(client,buf,2);	
+			i2c_put_byte_add8(client,buf,2);
 
 			buf[0]=0xb5;
 			buf[1]=0x40;
-			i2c_put_byte_add8(client,buf,2);	
+			i2c_put_byte_add8(client,buf,2);
 			break;
 
-      	case CAM_WB_FLUORESCENT:
+	case CAM_WB_FLUORESCENT:
 
 			buf[0]=0xfe;
 			buf[1]=0x00;
-			i2c_put_byte_add8(client,buf,2);	
+			i2c_put_byte_add8(client,buf,2);
 			printk("CAM_WB_FLUORESCENT       \n");
- 			buf[0]=0x82;
+			buf[0]=0x82;
 			buf[1]=temp & (~0x02);
 			i2c_put_byte_add8(client,buf,2);
 
 			buf[0]=0xb3;
 			buf[1]=0x72;
-			i2c_put_byte_add8(client,buf,2);		
+			i2c_put_byte_add8(client,buf,2);
 
 			buf[0]=0xb4;
 			buf[1]=0x40;
-			i2c_put_byte_add8(client,buf,2);	
+			i2c_put_byte_add8(client,buf,2);
 
 			buf[0]=0xb5;
 			buf[1]=0x5b;
@@ -1514,9 +1514,9 @@ void gc2035_set_param_wb(struct gc2035_device *dev,enum  camera_wb_flip_e para)/
 			break;
 #endif
 		case CAM_WB_MANUAL:
-		    	                      // TODO
+			                      // TODO
 			break;
-			
+
 		default:
 			break;
 	}
@@ -1544,8 +1544,8 @@ void gc2035_set_param_exposure(struct gc2035_device *dev,enum camera_exposure_e 
         unsigned char buf[4];
     switch (para)
 	{
-		
-		case EXPOSURE_N4_STEP:	
+
+		case EXPOSURE_N4_STEP:
 			buf[0]=0xfe;
 			buf[1]=0x01;
 			i2c_put_byte_add8(client,buf,2);
@@ -1569,7 +1569,7 @@ void gc2035_set_param_exposure(struct gc2035_device *dev,enum camera_exposure_e 
 
 
 
-		case EXPOSURE_N3_STEP:	
+		case EXPOSURE_N3_STEP:
 			buf[0]=0xfe;
 			buf[1]=0x01;
 			i2c_put_byte_add8(client,buf,2);
@@ -1593,7 +1593,7 @@ void gc2035_set_param_exposure(struct gc2035_device *dev,enum camera_exposure_e 
 			break;
 
 
-		case EXPOSURE_N2_STEP:	
+		case EXPOSURE_N2_STEP:
 			buf[0]=0xfe;
 			buf[1]=0x01;
 			i2c_put_byte_add8(client,buf,2);
@@ -1617,7 +1617,7 @@ void gc2035_set_param_exposure(struct gc2035_device *dev,enum camera_exposure_e 
 			break;
 
 
-		case EXPOSURE_N1_STEP:	
+		case EXPOSURE_N1_STEP:
 			printk("EXPOSURE_N1_STEP       \n");
 			buf[0]=0xfe;
 			buf[1]=0x01;
@@ -1657,7 +1657,7 @@ void gc2035_set_param_exposure(struct gc2035_device *dev,enum camera_exposure_e 
 
 			buf[0]=0xd5;
 			buf[1]=0x00; //luma_offset
-			i2c_put_byte_add8(client,buf,2);	
+			i2c_put_byte_add8(client,buf,2);
 
 			buf[0]=0xfe;
 			buf[1]=0x00;
@@ -1666,7 +1666,7 @@ void gc2035_set_param_exposure(struct gc2035_device *dev,enum camera_exposure_e 
 			break;
 
 		case EXPOSURE_P1_STEP:
-                     printk("EXPOSURE_P1_STEP       \n");	
+                     printk("EXPOSURE_P1_STEP       \n");
 			buf[0]=0xfe;
 			buf[1]=0x01;
 			i2c_put_byte_add8(client,buf,2);
@@ -1689,7 +1689,7 @@ void gc2035_set_param_exposure(struct gc2035_device *dev,enum camera_exposure_e 
 
 			break;
 
-		case EXPOSURE_P2_STEP:			
+		case EXPOSURE_P2_STEP:
 			buf[0]=0xfe;
 			buf[1]=0x01;
 			i2c_put_byte_add8(client,buf,2);
@@ -1730,7 +1730,7 @@ void gc2035_set_param_exposure(struct gc2035_device *dev,enum camera_exposure_e 
 
 			break;
 
-		case EXPOSURE_P4_STEP:			
+		case EXPOSURE_P4_STEP:
 			buf[0]=0xfe;
 			buf[1]=0x01;
 			i2c_put_byte_add8(client,buf,2);
@@ -1752,7 +1752,7 @@ void gc2035_set_param_exposure(struct gc2035_device *dev,enum camera_exposure_e 
 			i2c_put_byte_add8(client,buf,2);
 			break;
 
-		default:			
+		default:
 			buf[0]=0xfe;
 			buf[1]=0x01;
 			i2c_put_byte_add8(client,buf,2);
@@ -1779,7 +1779,7 @@ void gc2035_set_param_exposure(struct gc2035_device *dev,enum camera_exposure_e 
 
 
 	}
-	
+
 	mdelay(20);
 
 } /* gc2035_set_param_exposure */
@@ -1816,7 +1816,7 @@ void gc2035_set_param_effect(struct gc2035_device *dev,enum camera_effect_flip_e
 			buf[0]=0x43;
 			buf[1]=0x00;
 			i2c_put_byte_add8(client,buf,2);
-				
+
 			break;
 
 		case CAM_EFFECT_ENC_GRAYSCALE:
@@ -1829,17 +1829,17 @@ void gc2035_set_param_effect(struct gc2035_device *dev,enum camera_effect_flip_e
 			buf[1]=0x02;
 			i2c_put_byte_add8(client,buf,2);
 
-			
+
 			buf[0]=0xda;
 			buf[1]=0x00;
 			i2c_put_byte_add8(client,buf,2);
 
-			
+
 			buf[0]=0xdb;
 			buf[1]=0x00;
 			i2c_put_byte_add8(client,buf,2);
 			break;
-			
+
 		case CAM_EFFECT_ENC_SEPIA:
 
 			buf[0]=0xfe;
@@ -1850,16 +1850,16 @@ void gc2035_set_param_effect(struct gc2035_device *dev,enum camera_effect_flip_e
 			buf[1]=0x02;
 			i2c_put_byte_add8(client,buf,2);
 
-			
+
 			buf[0]=0xda;
 			buf[1]=0xd0;
 			i2c_put_byte_add8(client,buf,2);
 
-			
+
 			buf[0]=0xdb;
 			buf[1]=0x28;
 			i2c_put_byte_add8(client,buf,2);
-		
+
 			break;
 
 		case CAM_EFFECT_ENC_SEPIAGREEN:
@@ -1872,16 +1872,16 @@ void gc2035_set_param_effect(struct gc2035_device *dev,enum camera_effect_flip_e
 			buf[1]=0x02;
 			i2c_put_byte_add8(client,buf,2);
 
-			
+
 			buf[0]=0xda;
 			buf[1]=0xc0;
 			i2c_put_byte_add8(client,buf,2);
 
-			
+
 			buf[0]=0xdb;
 			buf[1]=0xc0;
 			i2c_put_byte_add8(client,buf,2);
-			
+
 			break;
 
 		case CAM_EFFECT_ENC_SEPIABLUE:
@@ -1894,16 +1894,16 @@ void gc2035_set_param_effect(struct gc2035_device *dev,enum camera_effect_flip_e
 			buf[1]=0x02;
 			i2c_put_byte_add8(client,buf,2);
 
-			
+
 			buf[0]=0xda;
 			buf[1]=0x50;
 			i2c_put_byte_add8(client,buf,2);
 
-			
+
 			buf[0]=0xdb;
 			buf[1]=0xe0;
 			i2c_put_byte_add8(client,buf,2);
-		
+
 			break;
 
 		case CAM_EFFECT_ENC_COLORINV:
@@ -1915,8 +1915,8 @@ void gc2035_set_param_effect(struct gc2035_device *dev,enum camera_effect_flip_e
 			buf[1]=0x01;
 			i2c_put_byte_add8(client,buf,2);
 
-			
-			break;		
+
+			break;
 
 		default:
 			buf[0]=0xfe;
@@ -1993,7 +1993,7 @@ void gc2035_set_param_banding(struct gc2035_device *dev,enum  camera_banding_fli
 			return 0;
 #endif
 
-	
+
 	#if 1
 	switch(banding)
 		{
@@ -2015,7 +2015,7 @@ void gc2035_set_param_banding(struct gc2035_device *dev,enum  camera_banding_fli
 			buf[0]=0x07;
 			buf[1]=0x00;
 			i2c_put_byte_add8(client,buf,2);
-			
+
 			buf[0]=0x08;
 			buf[1]=0x50;  //vb
 			i2c_put_byte_add8(client,buf,2);
@@ -2033,9 +2033,9 @@ void gc2035_set_param_banding(struct gc2035_device *dev,enum  camera_banding_fli
 			i2c_put_byte_add8(client,buf,2);
 
 			buf[0]=0x29;
-			buf[1]=0x05;  
+			buf[1]=0x05;
 			i2c_put_byte_add8(client,buf,2);
-			
+
 			buf[0]=0x2a;
 			buf[1]=0x00;  //level 1  16fps
 			i2c_put_byte_add8(client,buf,2);
@@ -2064,7 +2064,7 @@ void gc2035_set_param_banding(struct gc2035_device *dev,enum  camera_banding_fli
 			buf[1]=0x40;//  //level 4//00
 			i2c_put_byte_add8(client,buf,2);
 
-			
+
 			buf[0]=0xfe;
 			buf[1]=0x00;
 			i2c_put_byte_add8(client,buf,2);
@@ -2084,7 +2084,7 @@ void gc2035_set_param_banding(struct gc2035_device *dev,enum  camera_banding_fli
 			buf[0]=0x07;
 			buf[1]=0x00;
 			i2c_put_byte_add8(client,buf,2);
-			
+
 			buf[0]=0x08;
 			buf[1]=0x40;  //vb
 			i2c_put_byte_add8(client,buf,2);
@@ -2102,9 +2102,9 @@ void gc2035_set_param_banding(struct gc2035_device *dev,enum  camera_banding_fli
 			i2c_put_byte_add8(client,buf,2);
 
 			buf[0]=0x29;
-			buf[1]=0x05;  
+			buf[1]=0x05;
 			i2c_put_byte_add8(client,buf,2);
-			
+
 			buf[0]=0x2a;
 			buf[1]=0x00;  //level 1  16fps
 			i2c_put_byte_add8(client,buf,2);
@@ -2130,10 +2130,10 @@ void gc2035_set_param_banding(struct gc2035_device *dev,enum  camera_banding_fli
 			i2c_put_byte_add8(client,buf,2);
 
 			buf[0]=0x30;
-			buf[1]=0x20;// 
+			buf[1]=0x20;//
 			i2c_put_byte_add8(client,buf,2);
 
-			
+
 			buf[0]=0xfe;
 			buf[1]=0x00;
 			i2c_put_byte_add8(client,buf,2);
@@ -2156,7 +2156,7 @@ void gc2035_set_param_banding(struct gc2035_device *dev,enum  camera_banding_fli
 			buf[0]=0x07;
 			buf[1]=0x00;
 			i2c_put_byte_add8(client,buf,2);
-			
+
 			buf[0]=0x08;
 			buf[1]=0x5e;  //vb
 			i2c_put_byte_add8(client,buf,2);
@@ -2204,17 +2204,17 @@ void gc2035_set_param_banding(struct gc2035_device *dev,enum  camera_banding_fli
 			buf[0]=0x30;
 			buf[1]=0xb9;//  //level 4
 			i2c_put_byte_add8(client,buf,2);
-			
+
 			buf[0]=0xfe;
 			buf[1]=0x00;
 			i2c_put_byte_add8(client,buf,2);
-	             			
+
 			break;
 		    default:
-		    	break;
+			break;
 
 		}
-	#endif	
+	#endif
 }
 
 
@@ -2232,16 +2232,16 @@ static int set_flip(struct gc2035_device *dev)
 	buf[0]=0xfe;
 	buf[1]= ps_reg & 0xfc;
 	i2c_put_byte_add8(client, buf, 2);
-	
+
 	temp = i2c_get_byte_add8(client, 0x17);
-	
+
 	temp |= dev->cam_info.m_flip << 0;
 	temp |= dev->cam_info.v_flip << 1;
 	buf[0] = 0x17;
 	buf[1] = temp;
 	if((i2c_put_byte_add8(client, buf, 2)) < 0) {
-        	printk("fail in setting sensor orientation\n");
-        	return -1;
+		printk("fail in setting sensor orientation\n");
+		return -1;
         }
 
         buf[0]=0xfe;
@@ -2262,216 +2262,216 @@ void gc2035_set_resolution(struct gc2035_device *dev,int height,int width)
 //	static unsigned int shutter_l = 0;
 //	static unsigned int shutter_h = 0;
 	struct i2c_client *client = v4l2_get_subdevdata(&dev->sd);
-	
+
 	//printk( KERN_INFO" set camera  GC2035_set_resolution=width =0x%d \n ",width);
 	//printk( KERN_INFO" set camera  GC2035_set_resolution=height =0x%d \n ",height);
 
 	if((width*height<1600*1200))
 	{
-		//800*600 
+		//800*600
 #if 0//scaler
 		buf[0]=0xfe;
 		buf[1]=0x01;
 		i2c_put_byte_add8(client,buf,2);
-				
+
 		buf[0]=0x21;
-		buf[1]=0xbf;  
-		i2c_put_byte_add8(client,buf,2);		
-		
+		buf[1]=0xbf;
+		i2c_put_byte_add8(client,buf,2);
+
 		buf[0]=0xfe;
 		buf[1]=0x00;
 		i2c_put_byte_add8(client,buf,2);
-		
+
 		/* rewrite shutter : 0x03, 0x04*/
 		#if 1
 		buf[0]=0x03;
 		buf[1]=(unsigned char)shutter_l;
 		i2c_put_byte_add8(client,buf,2);
-		
+
 		buf[0]=0x04;
 		buf[1]=(unsigned char)shutter_h;
 		i2c_put_byte_add8(client,buf,2);
 		#endif
-		
+
 		buf[0]=0xb6;
 		buf[1]=0x03;   //aec on
 		i2c_put_byte_add8(client,buf,2);
-		
+
 		buf[0]=0xfa;
-		buf[1]=0x00;  
+		buf[1]=0x00;
 		i2c_put_byte_add8(client,buf,2);
-		
-		
+
+
 		buf[0]=0xc8;
-		buf[1]=0x54;  
+		buf[1]=0x54;
 		i2c_put_byte_add8(client,buf,2);
-		
+
 		buf[0]=0x99;
-		buf[1]=0x11;  
+		buf[1]=0x11;
 		i2c_put_byte_add8(client,buf,2);
-		
+
 		buf[0]=0x9a;
-		buf[1]=0x06;  
+		buf[1]=0x06;
 		i2c_put_byte_add8(client,buf,2);
-		
+
 		buf[0]=0x9b;
 		buf[1]=0x00;
 		i2c_put_byte_add8(client,buf,2);
-		
-		
+
+
 		buf[0]=0x9c;
 		buf[1]=0x00;
 		i2c_put_byte_add8(client,buf,2);
-		
+
 		buf[0]=0x9d;
 		buf[1]=0x00;
 		i2c_put_byte_add8(client,buf,2);
-		
+
 		buf[0]=0x9e;
 		buf[1]=0x00;
 		i2c_put_byte_add8(client,buf,2);
-		
+
 		buf[0]=0x9f;
 		buf[1]=0x00;
 		i2c_put_byte_add8(client,buf,2);
-		
+
 		buf[0]=0xa0;
 		buf[1]=0x00;
 		i2c_put_byte_add8(client,buf,2);
-		
+
 		buf[0]=0xa1;
 		buf[1]=0x00;
 		i2c_put_byte_add8(client,buf,2);
-		
+
 		buf[0]=0xa2;
 		buf[1]=0x00;
 		i2c_put_byte_add8(client,buf,2);
-		
-		
+
+
 		buf[0]=0x90;
 		buf[1]=0x01;  //crop enable
 		i2c_put_byte_add8(client,buf,2);
-		
+
 		buf[0]=0x94;
-		buf[1]=0x02; 
-		i2c_put_byte_add8(client,buf,2);		
-		
+		buf[1]=0x02;
+		i2c_put_byte_add8(client,buf,2);
+
 		buf[0]=0x95;
 		buf[1]=0x02;
 		i2c_put_byte_add8(client,buf,2);
-		
+
 		buf[0]=0x96;
 		buf[1]=0x5a;  //0x58
 		i2c_put_byte_add8(client,buf,2);
-		
+
 		buf[0]=0x97;
-		buf[1]=0x03;  
+		buf[1]=0x03;
 		i2c_put_byte_add8(client,buf,2);
-		
+
 		buf[0]=0x98;
 		buf[1]=0x22;
 #else//subsample
 		buf[0]=0xfe;
 		buf[1]=0x01;
 		i2c_put_byte_add8(client,buf,2);
-				
+
 		buf[0]=0x21;
-		buf[1]=0xbf;  
-		i2c_put_byte_add8(client,buf,2);		
-		
+		buf[1]=0xbf;
+		i2c_put_byte_add8(client,buf,2);
+
 		buf[0]=0xfe;
 		buf[1]=0x00;
 		i2c_put_byte_add8(client,buf,2);
-		
+
 		/* rewrite shutter : 0x03, 0x04*/
 		#if 1
 		buf[0]=0x03;
 		buf[1]=(unsigned char)shutter_l;
 		i2c_put_byte_add8(client,buf,2);
-		
+
 		buf[0]=0x04;
 		buf[1]=(unsigned char)shutter_h;
 		i2c_put_byte_add8(client,buf,2);
 		#endif
-		
+
 		buf[0]=0xb6;
 		buf[1]=0x03;   //aec on
 		i2c_put_byte_add8(client,buf,2);
-		
+
 		buf[0]=0xfa;
-		buf[1]=0x00;  
+		buf[1]=0x00;
 		i2c_put_byte_add8(client,buf,2);
-		
-		
+
+
 		buf[0]=0xc8;
-		buf[1]=0x00;  
+		buf[1]=0x00;
 		i2c_put_byte_add8(client,buf,2);
-		
+
 		buf[0]=0x99;
-		buf[1]=0x22;  
+		buf[1]=0x22;
 		i2c_put_byte_add8(client,buf,2);
-		
+
 		buf[0]=0x9a;
-		buf[1]=0x07;  
+		buf[1]=0x07;
 		i2c_put_byte_add8(client,buf,2);
-		
+
 		buf[0]=0x9b;
 		buf[1]=0x00;
 		i2c_put_byte_add8(client,buf,2);
-		
-		
+
+
 		buf[0]=0x9c;
 		buf[1]=0x00;
 		i2c_put_byte_add8(client,buf,2);
-		
+
 		buf[0]=0x9d;
 		buf[1]=0x00;
 		i2c_put_byte_add8(client,buf,2);
-		
+
 		buf[0]=0x9e;
 		buf[1]=0x00;
 		i2c_put_byte_add8(client,buf,2);
-		
+
 		buf[0]=0x9f;
 		buf[1]=0x00;
 		i2c_put_byte_add8(client,buf,2);
-		
+
 		buf[0]=0xa0;
 		buf[1]=0x00;
 		i2c_put_byte_add8(client,buf,2);
-		
+
 		buf[0]=0xa1;
 		buf[1]=0x00;
 		i2c_put_byte_add8(client,buf,2);
-		
+
 		buf[0]=0xa2;
 		buf[1]=0x00;
 		i2c_put_byte_add8(client,buf,2);
-		
-		
+
+
 		buf[0]=0x90;
 		buf[1]=0x01;  //crop enable
 		i2c_put_byte_add8(client,buf,2);
-		
+
 		buf[0]=0x94;
-		buf[1]=0x02; 
-		i2c_put_byte_add8(client,buf,2);		
-		
+		buf[1]=0x02;
+		i2c_put_byte_add8(client,buf,2);
+
 		buf[0]=0x95;
 		buf[1]=0x02;
 		i2c_put_byte_add8(client,buf,2);
-		
+
 		buf[0]=0x96;
 		buf[1]=0x5a;  //0x58
 		i2c_put_byte_add8(client,buf,2);
-		
+
 		buf[0]=0x97;
-		buf[1]=0x03;  
+		buf[1]=0x03;
 		i2c_put_byte_add8(client,buf,2);
-		
+
 		buf[0]=0x98;
 		buf[1]=0x22;
-#endif		
+#endif
 		i2c_put_byte_add8(client,buf,2);
 		gc2035_frmintervals_active.numerator = 1;
 		gc2035_frmintervals_active.denominator = 15;
@@ -2483,128 +2483,128 @@ void gc2035_set_resolution(struct gc2035_device *dev,int height,int width)
 		buf[0]=0xfe;
 		buf[1]=0x01;
 		i2c_put_byte_add8(client,buf,2);
-				
+
 		buf[0]=0x21;
-		buf[1]=0xdf;  
+		buf[1]=0xdf;
 		i2c_put_byte_add8(client,buf,2);
-				
+
 		buf[0]=0xfe;
 		buf[1]=0x00;
 		i2c_put_byte_add8(client,buf,2);
-		
+
 		buf[0]=0xb6;
 		buf[1]=0x00;   //aec off
 		i2c_put_byte_add8(client,buf,2);
-		
-		
+
+
 		buf[0]=0x03;  //0x00
 		value=i2c_get_byte_add8(client, 0x03);
 		shutter_l = value;
 		printk( KERN_INFO" set camera  GC2035_set_resolution=0x03=0x%x \n ",value);
-		
+
 		pid |= (value << 8);
 		buf[0]=0x04; //0x00
 		value=i2c_get_byte_add8(client, 0x04);
 		shutter_h = value;
-		printk( KERN_INFO" set camera  GC2035_set_resolution=0x04=0x%x \n ",value);			
+		printk( KERN_INFO" set camera  GC2035_set_resolution=0x04=0x%x \n ",value);
 		pid |= (value & 0xff);
-		
+
 		shutter=pid;
 		printk( KERN_INFO" set camera  GC2035_set_resolution=shutter=0x%x \n ",shutter);
-		#endif		
+		#endif
 		buf[0]=0xfe;
 		buf[1]=0x00;
 		i2c_put_byte_add8(client,buf,2);
-		
+
 		buf[0]=0xc8;
-		buf[1]=0x00;   
+		buf[1]=0x00;
 		i2c_put_byte_add8(client,buf,2);
-		
+
 		buf[0]=0xfa;
 		buf[1]=0x11;
 		i2c_put_byte_add8(client,buf,2);
-		
-		
+
+
 		buf[0]=0x90;
 		buf[1]=0x01;
 		i2c_put_byte_add8(client,buf,2);
-		
+
 		buf[0]=0x95;
 		buf[1]=0x04;
 		i2c_put_byte_add8(client,buf,2);
-		
+
 		buf[0]=0x96;
 		buf[1]=0xb2;  //0x58
 		i2c_put_byte_add8(client,buf,2);
-		
+
 		buf[0]=0x97;
-		buf[1]=0x06;  
+		buf[1]=0x06;
 		i2c_put_byte_add8(client,buf,2);
-		
+
 		buf[0]=0x98;
 		buf[1]=0x40;
 		i2c_put_byte_add8(client,buf,2);
-		
+
 		buf[0]=0x99;
 		buf[1]=0x11;
 		i2c_put_byte_add8(client,buf,2);
-		
+
 		buf[0]=0x9a;
-		buf[1]=0x06;  
+		buf[1]=0x06;
 		i2c_put_byte_add8(client,buf,2);
-		
+
 		buf[0]=0x9b;
 		buf[1]=0x00;
 		i2c_put_byte_add8(client,buf,2);
-		
-		
+
+
 		buf[0]=0x9c;
 		buf[1]=0x00;
 		i2c_put_byte_add8(client,buf,2);
-		
+
 		buf[0]=0x9d;
 		buf[1]=0x00;
 		i2c_put_byte_add8(client,buf,2);
-		
+
 		buf[0]=0x9e;
 		buf[1]=0x00;
-		i2c_put_byte_add8(client,buf,2);		
-		
+		i2c_put_byte_add8(client,buf,2);
+
 		buf[0]=0x9f;
 		buf[1]=0x00;
 		i2c_put_byte_add8(client,buf,2);
-		
+
 		buf[0]=0xa0;
-		buf[1]=0x00; 
+		buf[1]=0x00;
 		i2c_put_byte_add8(client,buf,2);
-		
+
 		buf[0]=0xa1;
 		buf[1]=0x00;
 		i2c_put_byte_add8(client,buf,2);
-		
+
 		buf[0]=0xa2;
 		buf[1]=0x00;
 		i2c_put_byte_add8(client,buf,2);
-		
+
 		//mdelay(20);
-		
+
 		#if  1
 		shutter= shutter /2;
-		
+
 		if(shutter < 1) shutter = 1;
-		
+
 		printk( KERN_INFO" set camera  GC2035_set_resolution=temp_ret=0x%x \n ",shutter);
 		buf[0]=0x03;
 		buf[1]= ((shutter>>8)&0xff);
 		i2c_put_byte_add8(client,buf,2);
-		
-		
+
+
 		buf[0]=0x04;
 		buf[1]= (shutter&0xff);
 		i2c_put_byte_add8(client,buf,2);
-		
-		#endif	
-			
+
+		#endif
+
 		gc2035_frmintervals_active.denominator 	= 5;
 		gc2035_frmintervals_active.numerator	= 1;
 		GC2035_h_active=1600;
@@ -2613,7 +2613,7 @@ void gc2035_set_resolution(struct gc2035_device *dev,int height,int width)
 		mdelay(130);
 	}
 	printk(KERN_INFO " set camera  GC2035_set_resolution=w=%d,h=%d. \n ",width,height);
-	set_flip(dev);	
+	set_flip(dev);
 
 }    /* GC2035_set_resolution */
 
@@ -2638,9 +2638,9 @@ static int convert_canvas_index(unsigned int v4l2_format, unsigned int start_can
 	case V4L2_PIX_FMT_BGR24:
 	case V4L2_PIX_FMT_RGB24:
 		canvas = start_canvas;
-		break; 
+		break;
 	case V4L2_PIX_FMT_NV12:
-	case V4L2_PIX_FMT_NV21: 
+	case V4L2_PIX_FMT_NV21:
 		canvas = start_canvas | ((start_canvas+1)<<8);
 		break;
 	case V4L2_PIX_FMT_YVU420:
@@ -2665,7 +2665,7 @@ static int gc2035_setting(struct gc2035_device *dev,int PROP_ID,int value )
 	//unsigned char cur_val;
 	//struct i2c_client *client = v4l2_get_subdevdata(&dev->sd);
 
-	
+
 	switch(PROP_ID)  {
 	case V4L2_CID_BRIGHTNESS:
 		dprintk(dev, 1, "setting brightned:%d\n",v4l_2_gc2035(value));
@@ -2687,37 +2687,37 @@ static int gc2035_setting(struct gc2035_device *dev,int PROP_ID,int value )
 			gc2035_qctrl[0].default_value=value;
 			gc2035_set_param_wb(dev,value);
 			printk(KERN_INFO " set camera  white_balance=%d. \n ",value);
-        	}
+		}
 		break;
 	case V4L2_CID_EXPOSURE:
         if(gc2035_qctrl[1].default_value!=value){
 			gc2035_qctrl[1].default_value=value;
 			gc2035_set_param_exposure(dev,value);
 			printk(KERN_INFO " set camera  exposure=%d. \n ",value);
-        	}
+		}
 		break;
 	case V4L2_CID_COLORFX:
         if(gc2035_qctrl[2].default_value!=value){
 			gc2035_qctrl[2].default_value=value;
 			gc2035_set_param_effect(dev,value);
 			printk(KERN_INFO " set camera  effect=%d. \n ",value);
-        	}
+		}
 		break;
 	case V4L2_CID_WHITENESS:
 		 if(gc2035_qctrl[3].default_value!=value){
 			gc2035_qctrl[3].default_value=value;
 			gc2035_set_param_banding(dev,value);
 			printk(KERN_INFO " set camera  banding=%d. \n ",value);
-        	}
+		}
 		break;
 	case V4L2_CID_BLUE_BALANCE:
 		 if(gc2035_qctrl[4].default_value!=value){
 			gc2035_qctrl[4].default_value=value;
 			gc2035_set_night_mode(dev,value);
 			printk(KERN_INFO " set camera  scene mode=%d. \n ",value);
-        	}
+		}
 		break;
-	case V4L2_CID_HFLIP:    /* set flip on H. */          
+	case V4L2_CID_HFLIP:    /* set flip on H. */
 		value = value & 0x3;
 		if(gc2035_qctrl[5].default_value!=value){
 			gc2035_qctrl[5].default_value=value;
@@ -2730,7 +2730,7 @@ static int gc2035_setting(struct gc2035_device *dev,int PROP_ID,int value )
 		if(gc2035_qctrl[7].default_value!=value){
 			gc2035_qctrl[7].default_value=value;
 			//printk(KERN_INFO " set camera  zoom mode=%d. \n ",value);
-        	}
+		}
 		break;
 	case V4L2_CID_ROTATE:
 	    printk(" set camera111  rotate =%d. \n ",value);
@@ -2745,7 +2745,7 @@ static int gc2035_setting(struct gc2035_device *dev,int PROP_ID,int value )
 	}
 	return ret;
 
-	
+
 
 }
 
@@ -3247,7 +3247,7 @@ static int vidioc_s_fmt_vid_cap(struct file *file, void *priv,
 		gc2035_set_resolution(dev,fh->height,fh->width);
 	}
 	#endif
-	
+
 	ret = 0;
 out:
 	mutex_unlock(&q->vb_lock);
@@ -3316,12 +3316,12 @@ static int vidioc_streamon(struct file *file, void *priv, enum v4l2_buf_type i)
 	struct gc2035_device *dev = fh->dev;
 	vdin_parm_t para;
 	int ret = 0 ;
-	
+
 	if (fh->type != V4L2_BUF_TYPE_VIDEO_CAPTURE)
 		return -EINVAL;
 	if (i != fh->type)
 		return -EINVAL;
-	
+
 	memset( &para, 0, sizeof( para ));
 	para.port  = TVIN_PORT_CAMERA;
 	para.fmt = TVIN_SIG_FMT_MAX;
@@ -3333,8 +3333,8 @@ static int vidioc_streamon(struct file *file, void *priv, enum v4l2_buf_type i)
 	para.hs_bp = 0;
 	para.vs_bp = 2;
 	para.cfmt = TVIN_YUV422;
-        para.dfmt = TVIN_NV21;
-	para.scan_mode = TVIN_SCAN_MODE_PROGRESSIVE;	
+        para.dfmt = TVIN_YUV422;
+	para.scan_mode = TVIN_SCAN_MODE_PROGRESSIVE;
 	para.skip_count = gc2035_skip_fn; //skip_num
 	gc2035_skip_fn = NORMAL_SKIP_NUM;
 	para.bt_path = dev->cam_info.bt_path;
@@ -3531,7 +3531,7 @@ static int gc2035_open(struct file *file)
 
 #if MESON_CPU_TYPE >= MESON_CPU_TYPE_MESON6
 	switch_mod_gate_by_name("ge2d", 1);
-#endif	
+#endif
 	aml_cam_init(&dev->cam_info);
 	gc2035_init_regs(dev);
 	mutex_lock(&dev->mutex);
@@ -3546,7 +3546,7 @@ static int gc2035_open(struct file *file)
 		video_device_node_name(dev->vdev),
 		v4l2_type_names[V4L2_BUF_TYPE_VIDEO_CAPTURE], dev->users);
 
-    	/* init video dma queues */
+	/* init video dma queues */
 	INIT_LIST_HEAD(&dev->vidq.active);
 	init_waitqueue_head(&dev->vidq.wq);
 	spin_lock_init(&dev->slock);
@@ -3662,7 +3662,7 @@ static int gc2035_close(struct file *file)
 	aml_cam_uninit(&dev->cam_info);
 #if MESON_CPU_TYPE >= MESON_CPU_TYPE_MESON6
 	switch_mod_gate_by_name("ge2d", 0);
-#endif	
+#endif
 	wake_unlock(&(dev->wake_lock));
 
 #ifdef CONFIG_CMA
@@ -3786,18 +3786,18 @@ static int gc2035_probe(struct i2c_client *client,
 	plat_dat= (aml_cam_info_t*)client->dev.platform_data;
 	if (plat_dat) {
 		memcpy(&t->cam_info, plat_dat, sizeof(aml_cam_info_t));
-		if (plat_dat->front_back >=0)  
+		if (plat_dat->front_back >=0)
 			video_nr = plat_dat->front_back;
 	} else {
 		printk("camera gc2035: have no platform data\n");
 		kfree(t);
 		return -1;
 	}
-	
+
 	t->cam_info.version = GC2035_DRIVER_VERSION;
 	if (aml_cam_info_reg(&t->cam_info) < 0)
 		printk("reg caminfo error\n");
-		
+
 	err = video_register_device(t->vdev, VFL_TYPE_GRABBER, video_nr);
 	if (err < 0) {
 		video_device_release(t->vdev);
@@ -3837,5 +3837,3 @@ static struct i2c_driver gc2035_i2c_driver = {
 };
 
 module_i2c_driver(gc2035_i2c_driver);
-
-

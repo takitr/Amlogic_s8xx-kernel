@@ -14,6 +14,7 @@ obj-$(CONFIG_SND_AML_M6_SOC) += snd-soc-aml-platform.o
 obj-$(CONFIG_SND_AML_M6_SOC) += snd-soc-aml-platform-pcm2bt.o
 obj-$(CONFIG_SND_AML_M6_SOC) += snd-soc-aml-hw-pcm2bt.o
 obj-$(CONFIG_SND_AML_M6_SOC) += aml_audio_codec_probe.o
+obj-$(CONFIG_SND_AML_M6_SOC) += aml_mixer.o
 
 #AML M6 Machine support
 snd-soc-aml-m6-rt5631-objs := aml_m6_rt5631.o
@@ -38,4 +39,3 @@ snd-soc-aml-syno9629-codec-objs := aml_syno9629_codec.o
 snd-soc-aml-m6tv-audio-objs := aml_m6tv_audio.o
 obj-$(CONFIG_SND_AML_M6TV_SYNOPSYS9629_CODEC) += snd-soc-aml-syno9629-codec.o
 obj-$(CONFIG_SND_AML_M6TV_AUDIO_CODEC) += snd-soc-aml-m6tv-audio.o
-

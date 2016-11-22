@@ -71,7 +71,7 @@ unsigned long hdmirx_rd_TOP (unsigned long addr)
     unsigned long data;
     /*
     *((volatile unsigned long *) (HDMIRX_ADDR_PORT+dev_offset)) = addr;
-    data = *((volatile unsigned long *) (HDMIRX_DATA_PORT+dev_offset)); 
+    data = *((volatile unsigned long *) (HDMIRX_DATA_PORT+dev_offset));
     */
     data = hdmirx_rd_top(addr);
     return (data);
@@ -83,7 +83,7 @@ unsigned long hdmirx_rd_DWC (unsigned long addr)
     unsigned long data;
     /*
     *((volatile unsigned long *) (HDMIRX_ADDR_PORT+dev_offset)) = addr;
-    data = *((volatile unsigned long *) (HDMIRX_DATA_PORT+dev_offset)); 
+    data = *((volatile unsigned long *) (HDMIRX_DATA_PORT+dev_offset));
     */
     data = hdmi_rx_ctrl_read(addr);
     return (data);
@@ -126,9 +126,9 @@ void hdmirx_rd_check_TOP (unsigned long addr, unsigned long exp_data, unsigned l
 {
     unsigned long rd_data;
     rd_data = hdmirx_rd_TOP(addr);
-    if ((rd_data | mask) != (exp_data | mask)) 
+    if ((rd_data | mask) != (exp_data | mask))
     {
-        printk("Error: HDMIRX-TOP addr=0x%x, rd_data=0x%x, exp_data=0x%x, mask=0x%x\n", 
+        printk("Error: HDMIRX-TOP addr=0x%x, rd_data=0x%x, exp_data=0x%x, mask=0x%x\n",
             addr, rd_data, exp_data, mask);
         /*
         stimulus_print("Error: HDMIRX-TOP addr=0x");
@@ -149,9 +149,9 @@ void hdmirx_rd_check_DWC (unsigned long addr, unsigned long exp_data, unsigned l
 {
     unsigned long rd_data;
     rd_data = hdmirx_rd_DWC(addr);
-    if ((rd_data | mask) != (exp_data | mask)) 
+    if ((rd_data | mask) != (exp_data | mask))
     {
-        printk("Error: HDMIRX-DWC addr=0x%x, rd_data=0x%x, exp_data=0x%x, mask=0x%x\n", 
+        printk("Error: HDMIRX-DWC addr=0x%x, rd_data=0x%x, exp_data=0x%x, mask=0x%x\n",
             addr, rd_data, exp_data, mask);
 
         /*
@@ -172,9 +172,9 @@ void hdmirx_rd_check_PHY (unsigned long addr, unsigned long exp_data, unsigned l
 {
     unsigned long rd_data;
     rd_data = hdmirx_rd_PHY(addr);
-    if ((rd_data | mask) != (exp_data | mask)) 
+    if ((rd_data | mask) != (exp_data | mask))
     {
-        printk("Error: HDMIRX-PHY addr=0x%x, rd_data=0x%x, exp_data=0x%x, mask=0x%x\n", 
+        printk("Error: HDMIRX-PHY addr=0x%x, rd_data=0x%x, exp_data=0x%x, mask=0x%x\n",
             addr, rd_data, exp_data, mask);
         /*
         stimulus_print("Error: HDMIRX-PHY addr=0x");
@@ -251,7 +251,7 @@ void hdmirx_poll_DWC (unsigned long addr, unsigned long exp_data, unsigned long 
     unsigned long rd_data;
     unsigned long cnt   = 0;
     unsigned char done  = 0;
-    
+
     rd_data = hdmirx_rd_DWC(addr);
     while (((cnt < max_try) || (max_try == 0)) && (done != 1)) {
         if ((rd_data | mask) == (exp_data | mask)) {
@@ -296,13 +296,13 @@ void hdmirx_edid_setting (unsigned char edid_extension_flag)
     const unsigned char rx_edid[] = {
         // Block 0:
         0,                  // BLK_0_0   Reserved
-        255,                // BLK_0_1   
-        255,                // BLK_0_2   
-        255,                // BLK_0_3   
-        255,                // BLK_0_4   
-        255,                // BLK_0_5   
-        255,                // BLK_0_6   
-        0,                  // BLK_0_7   
+        255,                // BLK_0_1
+        255,                // BLK_0_2
+        255,                // BLK_0_3
+        255,                // BLK_0_4
+        255,                // BLK_0_5
+        255,                // BLK_0_6
+        0,                  // BLK_0_7
         83,                 // BLK_0_8   ID_MAN_NAME_7_0
         3,                  // BLK_0_9   ID_MAN_NAME_15_8
         65,                 // BLK_0_10  ID_PRO_CODE_7_0
@@ -466,64 +466,64 @@ void hdmirx_edid_setting (unsigned char edid_extension_flag)
         34,                 // BLK_1_39
         35,                 // BLK_1_40
         36,                 // BLK_1_41
-        37,                 // BLK_1_42 
-        38,                 // BLK_1_43 
-        39,                 // BLK_1_44 
-        40,                 // BLK_1_45 
-        41,                 // BLK_1_46 
-        42,                 // BLK_1_47 
-        43,                 // BLK_1_48 
-        44,                 // BLK_1_49 
-        45,                 // BLK_1_50 
-        46,                 // BLK_1_51 
-        47,                 // BLK_1_52 
-        48,                 // BLK_1_53 
-        49,                 // BLK_1_54 
-        50,                 // BLK_1_55 
-        51,                 // BLK_1_56 
-        52,                 // BLK_1_57 
-        53,                 // BLK_1_58 
-        54,                 // BLK_1_59 
-        55,                 // BLK_1_60 
-        56,                 // BLK_1_61 
-        57,                 // BLK_1_62 
-        58,                 // BLK_1_63 
-        59,                 // BLK_1_64 
-        35,                 // BLK_1_65 
-        9,                  // BLK_1_66 
-        31,                 // BLK_1_67 
-        7,                  // BLK_1_68 
-        131,                // BLK_1_69 
-        1,                  // BLK_1_70 
-        0,                  // BLK_1_71 
-        0,                  // BLK_1_72 
-        103,                // BLK_1_73 
-        3,                  // BLK_1_74 
-        12,                 // BLK_1_75 
-        0,                  // BLK_1_76 
-        16,                 // BLK_1_77 
-        0,                  // BLK_1_78 
-        8,                  // BLK_1_79 
-        30,                 // BLK_1_80 
-        0,                  // BLK_1_81 
-        0,                  // BLK_1_82 
-        0,                  // BLK_1_83 
-        0,                  // BLK_1_84 
-        0,                  // BLK_1_85 
-        0,                  // BLK_1_86 
-        0,                  // BLK_1_87 
-        0,                  // BLK_1_88 
-        0,                  // BLK_1_89 
-        0,                  // BLK_1_90 
-        0,                  // BLK_1_91 
-        0,                  // BLK_1_92 
-        0,                  // BLK_1_93 
-        0,                  // BLK_1_94 
-        0,                  // BLK_1_95 
-        0,                  // BLK_1_96 
-        0,                  // BLK_1_97 
-        0,                  // BLK_1_98 
-        0,                  // BLK_1_99 
+        37,                 // BLK_1_42
+        38,                 // BLK_1_43
+        39,                 // BLK_1_44
+        40,                 // BLK_1_45
+        41,                 // BLK_1_46
+        42,                 // BLK_1_47
+        43,                 // BLK_1_48
+        44,                 // BLK_1_49
+        45,                 // BLK_1_50
+        46,                 // BLK_1_51
+        47,                 // BLK_1_52
+        48,                 // BLK_1_53
+        49,                 // BLK_1_54
+        50,                 // BLK_1_55
+        51,                 // BLK_1_56
+        52,                 // BLK_1_57
+        53,                 // BLK_1_58
+        54,                 // BLK_1_59
+        55,                 // BLK_1_60
+        56,                 // BLK_1_61
+        57,                 // BLK_1_62
+        58,                 // BLK_1_63
+        59,                 // BLK_1_64
+        35,                 // BLK_1_65
+        9,                  // BLK_1_66
+        31,                 // BLK_1_67
+        7,                  // BLK_1_68
+        131,                // BLK_1_69
+        1,                  // BLK_1_70
+        0,                  // BLK_1_71
+        0,                  // BLK_1_72
+        103,                // BLK_1_73
+        3,                  // BLK_1_74
+        12,                 // BLK_1_75
+        0,                  // BLK_1_76
+        16,                 // BLK_1_77
+        0,                  // BLK_1_78
+        8,                  // BLK_1_79
+        30,                 // BLK_1_80
+        0,                  // BLK_1_81
+        0,                  // BLK_1_82
+        0,                  // BLK_1_83
+        0,                  // BLK_1_84
+        0,                  // BLK_1_85
+        0,                  // BLK_1_86
+        0,                  // BLK_1_87
+        0,                  // BLK_1_88
+        0,                  // BLK_1_89
+        0,                  // BLK_1_90
+        0,                  // BLK_1_91
+        0,                  // BLK_1_92
+        0,                  // BLK_1_93
+        0,                  // BLK_1_94
+        0,                  // BLK_1_95
+        0,                  // BLK_1_96
+        0,                  // BLK_1_97
+        0,                  // BLK_1_98
+        0,                  // BLK_1_99
         0,                  // BLK_1_100
         0,                  // BLK_1_101
         0,                  // BLK_1_102
@@ -553,106 +553,106 @@ void hdmirx_edid_setting (unsigned char edid_extension_flag)
         0,                  // BLK_1_126
         146,                // BLK_1_127 CHECKSUM_7_0
         // Block 2:
-        22,                 // BLK_2_0  
-        23,                 // BLK_2_1  
-        24,                 // BLK_2_2  
-        25,                 // BLK_2_3  
-        26,                 // BLK_2_4  
-        27,                 // BLK_2_5  
-        28,                 // BLK_2_6  
-        29,                 // BLK_2_7  
-        30,                 // BLK_2_8  
-        31,                 // BLK_2_9  
-        32,                 // BLK_2_10 
-        33,                 // BLK_2_11 
-        34,                 // BLK_2_12 
-        35,                 // BLK_2_13 
-        36,                 // BLK_2_14 
-        37,                 // BLK_2_15 
-        38,                 // BLK_2_16 
-        39,                 // BLK_2_17 
-        40,                 // BLK_2_18 
-        41,                 // BLK_2_19 
-        42,                 // BLK_2_20 
-        43,                 // BLK_2_21 
-        44,                 // BLK_2_22 
-        45,                 // BLK_2_23 
-        46,                 // BLK_2_24 
-        47,                 // BLK_2_25 
-        48,                 // BLK_2_26 
-        49,                 // BLK_2_27 
-        50,                 // BLK_2_28 
-        51,                 // BLK_2_29 
-        52,                 // BLK_2_30 
-        53,                 // BLK_2_31 
-        54,                 // BLK_2_32 
-        55,                 // BLK_2_33 
-        56,                 // BLK_2_34 
-        57,                 // BLK_2_35 
-        58,                 // BLK_2_36 
-        59,                 // BLK_2_37 
-        60,                 // BLK_2_38 
-        61,                 // BLK_2_39 
-        62,                 // BLK_2_40 
-        63,                 // BLK_2_41 
-        64,                 // BLK_2_42 
-        65,                 // BLK_2_43 
-        66,                 // BLK_2_44 
-        67,                 // BLK_2_45 
-        68,                 // BLK_2_46 
-        69,                 // BLK_2_47 
-        70,                 // BLK_2_48 
-        71,                 // BLK_2_49 
-        72,                 // BLK_2_50 
-        73,                 // BLK_2_51 
-        74,                 // BLK_2_52 
-        75,                 // BLK_2_53 
-        76,                 // BLK_2_54 
-        77,                 // BLK_2_55 
-        78,                 // BLK_2_56 
-        79,                 // BLK_2_57 
-        80,                 // BLK_2_58 
-        81,                 // BLK_2_59 
-        82,                 // BLK_2_60 
-        83,                 // BLK_2_61 
-        84,                 // BLK_2_62 
-        85,                 // BLK_2_63 
-        86,                 // BLK_2_64 
-        87,                 // BLK_2_65 
-        88,                 // BLK_2_66 
-        89,                 // BLK_2_67 
-        90,                 // BLK_2_68 
-        91,                 // BLK_2_69 
-        92,                 // BLK_2_70 
-        93,                 // BLK_2_71 
-        94,                 // BLK_2_72 
-        95,                 // BLK_2_73 
-        96,                 // BLK_2_74 
-        97,                 // BLK_2_75 
-        98,                 // BLK_2_76 
-        99,                 // BLK_2_77 
-        100,                // BLK_2_78 
-        101,                // BLK_2_79 
-        102,                // BLK_2_80 
-        103,                // BLK_2_81 
-        104,                // BLK_2_82 
-        105,                // BLK_2_83 
-        106,                // BLK_2_84 
-        107,                // BLK_2_85 
-        108,                // BLK_2_86 
-        109,                // BLK_2_87 
-        110,                // BLK_2_88 
-        111,                // BLK_2_89 
-        112,                // BLK_2_90 
-        113,                // BLK_2_91 
-        114,                // BLK_2_92 
-        115,                // BLK_2_93 
-        116,                // BLK_2_94 
-        117,                // BLK_2_95 
-        118,                // BLK_2_96 
-        119,                // BLK_2_97 
-        120,                // BLK_2_98 
-        121,                // BLK_2_99 
+        22,                 // BLK_2_0
+        23,                 // BLK_2_1
+        24,                 // BLK_2_2
+        25,                 // BLK_2_3
+        26,                 // BLK_2_4
+        27,                 // BLK_2_5
+        28,                 // BLK_2_6
+        29,                 // BLK_2_7
+        30,                 // BLK_2_8
+        31,                 // BLK_2_9
+        32,                 // BLK_2_10
+        33,                 // BLK_2_11
+        34,                 // BLK_2_12
+        35,                 // BLK_2_13
+        36,                 // BLK_2_14
+        37,                 // BLK_2_15
+        38,                 // BLK_2_16
+        39,                 // BLK_2_17
+        40,                 // BLK_2_18
+        41,                 // BLK_2_19
+        42,                 // BLK_2_20
+        43,                 // BLK_2_21
+        44,                 // BLK_2_22
+        45,                 // BLK_2_23
+        46,                 // BLK_2_24
+        47,                 // BLK_2_25
+        48,                 // BLK_2_26
+        49,                 // BLK_2_27
+        50,                 // BLK_2_28
+        51,                 // BLK_2_29
+        52,                 // BLK_2_30
+        53,                 // BLK_2_31
+        54,                 // BLK_2_32
+        55,                 // BLK_2_33
+        56,                 // BLK_2_34
+        57,                 // BLK_2_35
+        58,                 // BLK_2_36
+        59,                 // BLK_2_37
+        60,                 // BLK_2_38
+        61,                 // BLK_2_39
+        62,                 // BLK_2_40
+        63,                 // BLK_2_41
+        64,                 // BLK_2_42
+        65,                 // BLK_2_43
+        66,                 // BLK_2_44
+        67,                 // BLK_2_45
+        68,                 // BLK_2_46
+        69,                 // BLK_2_47
+        70,                 // BLK_2_48
+        71,                 // BLK_2_49
+        72,                 // BLK_2_50
+        73,                 // BLK_2_51
+        74,                 // BLK_2_52
+        75,                 // BLK_2_53
+        76,                 // BLK_2_54
+        77,                 // BLK_2_55
+        78,                 // BLK_2_56
+        79,                 // BLK_2_57
+        80,                 // BLK_2_58
+        81,                 // BLK_2_59
+        82,                 // BLK_2_60
+        83,                 // BLK_2_61
+        84,                 // BLK_2_62
+        85,                 // BLK_2_63
+        86,                 // BLK_2_64
+        87,                 // BLK_2_65
+        88,                 // BLK_2_66
+        89,                 // BLK_2_67
+        90,                 // BLK_2_68
+        91,                 // BLK_2_69
+        92,                 // BLK_2_70
+        93,                 // BLK_2_71
+        94,                 // BLK_2_72
+        95,                 // BLK_2_73
+        96,                 // BLK_2_74
+        97,                 // BLK_2_75
+        98,                 // BLK_2_76
+        99,                 // BLK_2_77
+        100,                // BLK_2_78
+        101,                // BLK_2_79
+        102,                // BLK_2_80
+        103,                // BLK_2_81
+        104,                // BLK_2_82
+        105,                // BLK_2_83
+        106,                // BLK_2_84
+        107,                // BLK_2_85
+        108,                // BLK_2_86
+        109,                // BLK_2_87
+        110,                // BLK_2_88
+        111,                // BLK_2_89
+        112,                // BLK_2_90
+        113,                // BLK_2_91
+        114,                // BLK_2_92
+        115,                // BLK_2_93
+        116,                // BLK_2_94
+        117,                // BLK_2_95
+        118,                // BLK_2_96
+        119,                // BLK_2_97
+        120,                // BLK_2_98
+        121,                // BLK_2_99
         122,                // BLK_2_100
         123,                // BLK_2_101
         124,                // BLK_2_102
@@ -684,13 +684,13 @@ void hdmirx_edid_setting (unsigned char edid_extension_flag)
 
     int i, ram_addr, byte_num;
     unsigned int value;
-    
+
     //byte_num = sizeof(rx_edid)/sizeof(unsigned char);
-    
+
     byte_num = (edid_extension_flag<=2)? (1+edid_extension_flag)*128 : 3*128;
     for (i = 0; i < byte_num; i++)
     {
-        value = rx_edid[i]; 
+        value = rx_edid[i];
         ram_addr = HDMIRX_TOP_EDID_OFFSET+i;
         hdmirx_wr_reg(HDMIRX_DEV_ID_TOP, ram_addr, value);
     }
@@ -787,7 +787,7 @@ void hdmirx_key_setting (unsigned char encrypt_en)
     }; /* hdmirx_hdcp_encrypt_keys */
 
     int i;
-    
+
     if (encrypt_en) {
         hdmirx_wr_only_reg(HDMIRX_DEV_ID_DWC, HDMIRX_DWC_HDCP_SEED,  hdmirx_hdcp_key_decrypt_seed);
     }
@@ -798,7 +798,7 @@ void hdmirx_key_setting (unsigned char encrypt_en)
         hdmirx_wr_only_reg(HDMIRX_DEV_ID_DWC, HDMIRX_DWC_HDCP_KEY1,  encrypt_en? hdmirx_hdcp_encrypt_keys[i*2]   : hdmirx_hdcp_keys[i*2]);
         hdmirx_wr_only_reg(HDMIRX_DEV_ID_DWC, HDMIRX_DWC_HDCP_KEY0,  encrypt_en? hdmirx_hdcp_encrypt_keys[i*2+1] : hdmirx_hdcp_keys[i*2+1]);
     }
-    
+
     hdmirx_wr_reg(HDMIRX_DEV_ID_DWC, HDMIRX_DWC_HDCP_BKSV1, hdmirx_hdcp_bksvs[0]);
     hdmirx_wr_reg(HDMIRX_DEV_ID_DWC, HDMIRX_DWC_HDCP_BKSV0, hdmirx_hdcp_bksvs[1]);
 } /* hdmirx_key_setting */
@@ -818,26 +818,26 @@ void start_video_gen_ana (  unsigned char   vic,                // Video format 
                             unsigned long   total_lines)        // Number of total lines per frame
 {
     unsigned long data32;
-    
+
     stimulus_print("[TEST.C] Configure external video data generator\n");
-    
+
     data32  = vic               << 0;
     data32 |= pixel_repeat_hdmi << 8;
     data32 |= interlace_mode    << 12;
     //stimulus_event(31, STIMULUS_HDMI_UTIL_SET_VIC | data32);
-    
+
     data32  = front_porch       << 0;
     data32 |= back_porch        << 12;
     //stimulus_event(31, STIMULUS_HDMI_UTIL_SET_HSYNC_0 | data32);
-    
+
     data32  = hsync_pixels      << 0;
     data32 |= hsync_polarity    << 12;
     //stimulus_event(31, STIMULUS_HDMI_UTIL_SET_HSYNC_1 | data32);
-    
+
     data32  = sof_lines << 0;
     data32 |= eof_lines << 12;
     //stimulus_event(31, STIMULUS_HDMI_UTIL_SET_VSYNC_0 | data32);
-    
+
     data32  = vsync_lines       << 0;
     data32 |= vsync_polarity    << 12;
     //stimulus_event(31, STIMULUS_HDMI_UTIL_SET_VSYNC_1 | data32);
@@ -913,14 +913,14 @@ void hdmirx_test_function ( unsigned char   acr_mode,                   // Selec
     // [1]      edid_addr_intr
     // [0]      core_intr_rise: sub-interrupts will be configured later
     hdmirx_wr_reg(HDMIRX_DEV_ID_TOP, HDMIRX_TOP_INTR_MASKN, 0x00001fff);
-    
+
     //--------------------------------------------------------------------------
     // Step 1-13: RX_INITIAL_CONFIG
     //--------------------------------------------------------------------------
 
     // 1. DWC reset default to be active, until reg HDMIRX_TOP_SW_RESET[0] is set to 0.
     hdmirx_rd_check_reg(HDMIRX_DEV_ID_TOP, HDMIRX_TOP_SW_RESET, 0x1, 0x0);
-    
+
     // 2. turn on clocks: md, cfg...
 
     data32  = 0;
@@ -950,9 +950,9 @@ void hdmirx_test_function ( unsigned char   acr_mode,                   // Selec
     hdmirx_wr_reg(HDMIRX_DEV_ID_TOP, HDMIRX_TOP_CLK_CNTL, data32);    // DEFAULT: {32'h0}
 
     // 3. wait for TX PHY clock up
-    
+
     // 4. wait for rx sense
-    
+
     // 5. Release IP reset
     hdmirx_wr_reg(HDMIRX_DEV_ID_TOP, HDMIRX_TOP_SW_RESET, 0x0);
 
@@ -973,7 +973,7 @@ void hdmirx_test_function ( unsigned char   acr_mode,                   // Selec
     //Wr(ISA_TIMERE, 0); while( Rd(ISA_TIMERE) < 10 ) {} // delay 10uS
             mdelay(1);
     hdmirx_rd_check_reg(HDMIRX_DEV_ID_DWC, HDMIRX_DWC_DMI_SW_RST,   0, 0);
-    
+
     // 8. If defined, force manual N & CTS to speed up simulation
 
     data32  = 0;
@@ -999,7 +999,7 @@ void hdmirx_test_function ( unsigned char   acr_mode,                   // Selec
     data32 |= 0 << 28;  // [28]     pll_lock_filter_byp
     data32 |= 0 << 24;  // [27:24]  pll_lock_toggle_div
     hdmirx_wr_reg(HDMIRX_DEV_ID_DWC, HDMIRX_DWC_AUD_PLL_CTRL,   data32);    // DEFAULT: {1'b0, 3'd0, 4'd6, 4'd3, 4'd8, 1'b0, 1'b0, 1'b1, 1'b0, 12'd0}
-    
+
     // 9. Set EDID data at RX
 
     hdmirx_edid_setting(edid_extension_flag);
@@ -1013,7 +1013,7 @@ void hdmirx_test_function ( unsigned char   acr_mode,                   // Selec
     data32 |= 1                         << 8;   // [    8]  scl_stretch_enable
     data32 |= edid_clk_divide_m1 << 0;   // [ 7: 0]  clk_divide_m1
     hdmirx_wr_reg(HDMIRX_DEV_ID_TOP, HDMIRX_TOP_EDID_GEN_CNTL,  data32);
-    
+
     if (edid_cec_id_addr != 0x00990098) {
         hdmirx_wr_reg(HDMIRX_DEV_ID_TOP, HDMIRX_TOP_EDID_ADDR_CEC,  edid_cec_id_addr);
     }
@@ -1027,7 +1027,7 @@ void hdmirx_test_function ( unsigned char   acr_mode,                   // Selec
     } else { // rx_port_sel == 3
         hdmirx_wr_reg(HDMIRX_DEV_ID_TOP, HDMIRX_TOP_EDID_DATA_CEC_PORT23,  (((edid_cec_id_data&0xff)<<8) | (edid_cec_id_data>>8))<<16);
     }
-    
+
     // 10. HDCP
     if (hdcp_on) {
         data32  = 0;
@@ -1038,7 +1038,7 @@ void hdmirx_test_function ( unsigned char   acr_mode,                   // Selec
         data32 |= hdcp_key_decrypt_en   << 1;   // [1]      key_decrypt_enable
         data32 |= hdcp_on               << 0;   // [0]      hdcp_enable
         hdmirx_wr_reg(HDMIRX_DEV_ID_DWC, HDMIRX_DWC_HDCP_CTRL,  data32);
-    
+
         data32  = 0;
         data32 |= 1                     << 16;  // [17:16]  i2c_spike_suppr
         data32 |= 1                     << 13;  // [13]     hdmi_reserved. 0=No HDMI capabilities.
@@ -1111,7 +1111,7 @@ void hdmirx_test_function ( unsigned char   acr_mode,                   // Selec
     data32 |= 0     << 9;   // [9]      sck_disable
     data32 |= 0     << 5;   // [8:5]    i2s_disable
     data32 |= 0     << 1;   // [4:1]    spdif_disable
-    data32 |= 1     << 0;   // [0]      i2s_32_16 
+    data32 |= 1     << 0;   // [0]      i2s_32_16
     hdmirx_wr_reg(HDMIRX_DEV_ID_DWC, HDMIRX_DWC_AUD_SAO_CTRL,   data32); // DEFAULT: {21'd0, 1'b1, 1'b1, 4'd15, 4'd15, 1'b1}
 
     // Manual de-repeat to speed up simulation
@@ -1163,7 +1163,7 @@ void hdmirx_test_function ( unsigned char   acr_mode,                   // Selec
     data32 |= 1     << 5;   // [6:5]    aud_mute_sel
     data32 |= 1     << 3;   // [4:3]    aud_mute_mode
     data32 |= 0     << 1;   // [2:1]    aud_ttone_fs_sel
-    data32 |= 0     << 0;   // [0]      testtone_en 
+    data32 |= 0     << 0;   // [0]      testtone_en
     hdmirx_wr_reg(HDMIRX_DEV_ID_DWC, HDMIRX_DWC_AUD_MUTE_CTRL,  data32); // DEFAULT: {9'd0, 2'd0, 2'd0, 2'd0, 7'd48, 2'd0, 1'b1, 2'd3, 2'd3, 2'd0, 1'b0}
 
     data32  = 0;
@@ -1192,7 +1192,7 @@ void hdmirx_test_function ( unsigned char   acr_mode,                   // Selec
     data32 |= 0     << 8;   // [9:8]    hs_filt_sens
     data32 |= 2     << 6;   // [7:6]    de_measure_mode
     data32 |= 0     << 5;   // [5]      de_regen
-    data32 |= 3     << 3;   // [4:3]    de_filter_sens 
+    data32 |= 3     << 3;   // [4:3]    de_filter_sens
     hdmirx_wr_reg(HDMIRX_DEV_ID_DWC, HDMIRX_DWC_HDMI_ERROR_PROTECT, data32); // DEFAULT: {11'd0, 1'b0, 1'b0, 3'd0, 2'd0, 2'd0, 2'd0, 2'd0, 2'd0, 1'b0, 2'd0, 3'd0}
 
     data32  = 0;
@@ -1217,7 +1217,7 @@ void hdmirx_test_function ( unsigned char   acr_mode,                   // Selec
 
     data32  = 0;
     data32 |= 1 << 10;  // [11:10]  vofs_lin_ith
-    data32 |= 3 << 8;   // [9:8]    vact_lin_ith 
+    data32 |= 3 << 8;   // [9:8]    vact_lin_ith
     data32 |= 0 << 6;   // [7:6]    vtot_lin_ith
     data32 |= 7 << 3;   // [5:3]    vs_clk_ith
     data32 |= 2 << 0;   // [2:0]    vtot_clk_ith
@@ -1346,7 +1346,7 @@ void hdmirx_test_function ( unsigned char   acr_mode,                   // Selec
                         total_lines);       // Number of total lines per frame
     */
     // 14.  RX_FINAL_CONFIG
-    
+
     // RX PHY PLL configuration
     //get config for CMU
     /*stimulus_event(31, STIMULUS_HDMI_UTIL_CALC_PLL_CONFIG   |
@@ -1399,7 +1399,7 @@ void hdmirx_test_function ( unsigned char   acr_mode,                   // Selec
     //--------------------------------------------------------------------------
     // Enable HDMIRX-DWC interrupts:
     //--------------------------------------------------------------------------
-    
+
     hdmirx_wr_only_reg(HDMIRX_DEV_ID_DWC, HDMIRX_DWC_PDEC_ICLR,         0xffffffff);
     hdmirx_wr_only_reg(HDMIRX_DEV_ID_DWC, HDMIRX_DWC_AUD_CLK_ICLR,      0xffffffff);
     hdmirx_wr_only_reg(HDMIRX_DEV_ID_DWC, HDMIRX_DWC_AUD_FIFO_ICLR,     0xffffffff);
@@ -1422,7 +1422,7 @@ void hdmirx_test_function ( unsigned char   acr_mode,                   // Selec
     hdmirx_rd_check_reg(HDMIRX_DEV_ID_DWC, HDMIRX_DWC_AUD_FIFO_ISTS,    0, 0);
     hdmirx_rd_check_reg(HDMIRX_DEV_ID_DWC, HDMIRX_DWC_MD_ISTS,          0, 0);
     //hdmirx_rd_check_reg(HDMIRX_DEV_ID_DWC, HDMIRX_DWC_HDMI_ISTS,        0, 0);
-    
+
     //--------------------------------------------------------------------------
     // Bring up RX
     //--------------------------------------------------------------------------
@@ -1449,7 +1449,7 @@ void hdmirx_test_function ( unsigned char   acr_mode,                   // Selec
         data32 |= hdmi_arctx_mode   << 1;   // [1]      arctx_mode
         data32 |= 0                 << 0;   // [0]      arctx_en
         hdmirx_wr_reg(HDMIRX_DEV_ID_TOP, HDMIRX_TOP_ARCTX_CNTL, data32);
-        
+
         data32  = 0;
         data32 |= hdmi_arctx_mode   << 1;   // [1]      arctx_mode
         data32 |= hdmi_arctx_en     << 0;   // [0]      arctx_en
@@ -1511,9 +1511,9 @@ void aocec_poll_reg_busy (unsigned char reg_busy)
 void aocec_wr_only_reg (unsigned long addr, unsigned long data)
 {
     unsigned long data32;
-    
+
     aocec_poll_reg_busy(0);
-    
+
     data32  = 0;
     data32 |= 1     << 16;  // [16]     cec_reg_wr
     data32 |= data  << 8;   // [15:8]   cec_reg_wrdata
@@ -1524,9 +1524,9 @@ void aocec_wr_only_reg (unsigned long addr, unsigned long data)
 unsigned long aocec_rd_reg (unsigned long addr)
 {
     unsigned long data32;
-    
+
     aocec_poll_reg_busy(0);
-    
+
     data32  = 0;
     data32 |= 0     << 16;  // [16]     cec_reg_wr
     data32 |= 0     << 8;   // [15:8]   cec_reg_wrdata
@@ -1535,9 +1535,9 @@ unsigned long aocec_rd_reg (unsigned long addr)
 
     aocec_poll_reg_busy(1);
     aocec_poll_reg_busy(0);
-    
+
     data32 = ((*P_AO_CEC_RW_REG) >> 24) & 0xff;
-    
+
     return (data32);
 } /* aocec_rd_reg */
 
@@ -1545,7 +1545,7 @@ void aocec_rd_check_reg (unsigned long addr, unsigned long exp_data, unsigned lo
 {
     unsigned long rd_data;
     rd_data = aocec_rd_reg(addr);
-    if ((rd_data | mask) != (exp_data | mask)) 
+    if ((rd_data | mask) != (exp_data | mask))
     {
         stimulus_print("Error: AO-CEC addr=0x");
         stimulus_print_num_hex(addr);
@@ -1567,4 +1567,3 @@ void aocec_wr_reg (unsigned long addr, unsigned long data)
 } /* aocec_wr_reg */
 
 #endif
-

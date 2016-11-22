@@ -38,7 +38,7 @@
 #define KEYS_DEVICE_NAME    "aml_keys"
 #define KEYS_CLASS_NAME     "aml_keys"
 
-#define EFUSE_READ_ONLY     
+#define EFUSE_READ_ONLY
 static unsigned long efuse_status;
 #define EFUSE_IS_OPEN           (0x01)
 
@@ -263,7 +263,7 @@ static void test_aes(void)
 #ifdef TEST_NAND_KEY_WR
 #define PRINT_HASH(hash) {int __i;printk("%s:%d ",__func__,__LINE__);for(__i=0;__i<32;__i++)printk("%02x,",hash[__i]);printk("\n");}
 #else
-#define PRINT_HASH(hash) 
+#define PRINT_HASH(hash)
 #endif
 
 static int aml_key_hash(unsigned char *hash, const char *data, unsigned int len)
@@ -352,7 +352,7 @@ static int aml_key_encrypt(void *dst, size_t * dst_len, const void *src,
 	keydatalen = src_len + 4;
 	buf_len = ((keydatalen+15)>>4)<<4;
 	dstlen = buf_len;
-	
+
 	data = kzalloc(buf_len, GFP_KERNEL);
 	if(data == NULL){
 		printk("malloc mem fail,%s:%d\n",__func__,__LINE__);
@@ -381,7 +381,7 @@ static int aml_key_decrypt(void *dst, size_t *dst_len, const void *src,
 	if(src_len != ((src_len+15)>>4)<<4)
 	{
 		printk("data len is not 16 byte aligned  error!\n");
-		return -ENOMEM; 
+		return -ENOMEM;
 	}
 	data = kzalloc(srclen, GFP_KERNEL);
 	if(data == NULL){
@@ -395,7 +395,7 @@ static int aml_key_decrypt(void *dst, size_t *dst_len, const void *src,
 	memcpy(&keydatalen,data,4);
 	memcpy(dst,&data[4],keydatalen);
 	*dst_len = keydatalen;
-	
+
 	kfree(data);
 	return ret;
 }
@@ -443,7 +443,7 @@ static int aml_keysafety_decrypt(void *dst, size_t *dst_len, const void *src,
 	if(src_len != ((src_len+15)>>4)<<4)
 	{
 		printk("data len is not 16 byte aligned error!\n");
-		return -ENOMEM; 
+		return -ENOMEM;
 	}
 	data = kzalloc(srclen, GFP_KERNEL);
 	if(data == NULL){
@@ -810,7 +810,7 @@ static ssize_t aml_key_store(aml_key_t * key, const char *buf, size_t count)
     }
     memset(data,0,i);
     memset(enc_data,0,i);
-    
+
     /**
      * if key is not
      */
@@ -854,7 +854,7 @@ static ssize_t aml_key_store(aml_key_t * key, const char *buf, size_t count)
     }
     key->valid_size = in_key_len;
 #ifdef TEST_NAND_KEY_WR
-   	printk("key:valid_size:%d,storage_size:%d,%s:%d\n",key->valid_size,key->storage_size,__func__,__LINE__);
+	printk("key:valid_size:%d,storage_size:%d,%s:%d\n",key->valid_size,key->storage_size,__func__,__LINE__);
 #endif
 
 #ifdef CRYPTO_DEPEND_ON_KERENL
@@ -864,7 +864,7 @@ static ssize_t aml_key_store(aml_key_t * key, const char *buf, size_t count)
     if (key_is_not_installed(*key))
     {
         aml_key_write_hash(key, enc_data);
-    } 
+    }
 	else
     { ///key is inval
     #ifndef TEST_NAND_KEY_WR
@@ -918,9 +918,9 @@ static ssize_t aml_key_store(aml_key_t * key, const char *buf, size_t count)
     err = count;
 
 	if(!postpone_write){
-	 	key_schematic[keys_version]->flush(key_schematic[keys_version]);
+		key_schematic[keys_version]->flush(key_schematic[keys_version]);
 	 }
-store_error_return: 
+store_error_return:
 	if (!IS_ERR_OR_NULL(data))
         kfree(data);
     if (!IS_ERR_OR_NULL(enc_data))
@@ -947,7 +947,7 @@ static ssize_t key_core_store(struct device *dev, struct device_attribute *attr,
     {
 #ifdef KEY_NODE_CREATE
 		#ifndef TEST_NAND_KEY_WR
-		attr->attr.mode &= (~KEY_WRITE_ATTR);  
+		attr->attr.mode &= (~KEY_WRITE_ATTR);
 		sysfs_chmod_file(&dev->kobj,attr,KEY_READ_ATTR);
 		#endif
 #endif
@@ -1005,11 +1005,11 @@ int32_t aml_keys_set_version(struct device *dev, uint8_t version, int storer)
 
     if(storer < 0)
 	return -EINVAL;
-	
+
 	if(version_dirty == 1){
 		return 0;//done once init
 	}
-	
+
     keyfile_index = storer;
 //    printk("keyfile:%s\n",keyfile[0]);
 //    printk("keyfile:%s\n",keyfile[1]);
@@ -1024,7 +1024,7 @@ int32_t aml_keys_set_version(struct device *dev, uint8_t version, int storer)
     keys_version = version;
 
     keys = key_schematic[keys_version]->keys;
-    
+
     ret = key_node_set(dev);
     if (ret < 0){
 		printk("creat key dev fail,%s:%d\n",__func__,__LINE__);
@@ -1313,7 +1313,7 @@ static ssize_t key_name_store(struct device *dev, struct device_attribute *attr,
 		return -EINVAL;
 	}
 	memcpy(name,buf,count+1);
-	
+
 	//cmd = (char*)&buf[0];
 	cmd = name;
 	newname = cmd;
@@ -1501,7 +1501,7 @@ static ssize_t key_usid_show(struct device *dev, struct device_attribute *attr,
 		}
 		err = j;
 	}
-	
+
 	if(data){
 		kfree(data);
 	}
@@ -1701,12 +1701,12 @@ static ssize_t install_key(struct device *dev, struct device_attribute *attr,
 DEVICE_ATTR(install_key, 0220, NULL, install_key);
 static struct device_attribute keys_class_attrs[] ={
 	__ATTR_RO(version_available),
-	__ATTR_RO(installed_keys), 
-	__ATTR_NULL 
+	__ATTR_RO(installed_keys),
+	__ATTR_NULL
 };
 static struct class keys_class ={
 	.name = KEYS_CLASS_NAME,
-	.dev_attrs = keys_class_attrs, 
+	.dev_attrs = keys_class_attrs,
 };
 #include <linux/reboot.h>
 static int aml_keys_notify_reboot(struct notifier_block *this,
@@ -1730,7 +1730,7 @@ static int aml_keys_notify_reboot(struct notifier_block *this,
 //key_is_installed(key_schematic[keys_version]->keys[i])&&
             if (key_is_efuse_dirty(key_schematic[keys_version]->keys[i]))
             {
-           		int slot= AML_KEY_GETSLOT(key);
+			int slot= AML_KEY_GETSLOT(key);
                 key_schematic[keys_version]->hash.read(key,slot,
                                                        (char*) &key_hash);
                 __v3_write_hash(slot, (char*) &key_hash);
@@ -1741,10 +1741,10 @@ static int aml_keys_notify_reboot(struct notifier_block *this,
     return NOTIFY_DONE;
 }
 static struct notifier_block aml_keys_notify =
-{ 
-	.notifier_call = aml_keys_notify_reboot, 
-	.next = NULL, 
-	.priority = 0, 
+{
+	.notifier_call = aml_keys_notify_reboot,
+	.next = NULL,
+	.priority = 0,
 };
 static struct device * key_device= NULL;
 void trigger_key_init(void)
@@ -1767,7 +1767,7 @@ char asc_to_i(char para)
         para = para-'a'+0xa;
     else if(para>='A' && para<='F')
         para = para-'A'+0xa;
-        
+
         return para;
 }
 
@@ -2029,15 +2029,15 @@ static const struct of_device_id meson6_keys_dt_match[]={
 #endif
 
 static struct platform_driver aml_keys_driver =
-{ 
-	.probe = aml_keys_probe, 
-	.remove = aml_keys_remove, 
+{
+	.probe = aml_keys_probe,
+	.remove = aml_keys_remove,
 	.driver =
-     { 
-     	.name = KEYS_DEVICE_NAME, 
-        .owner = THIS_MODULE, 
+     {
+	.name = KEYS_DEVICE_NAME,
+        .owner = THIS_MODULE,
         .of_match_table = meson6_keys_dt_match,
-     }, 
+     },
 };
 
 /* function: extenal_api_key_set_version
@@ -2080,7 +2080,7 @@ int extenal_api_key_write(char *keyname,char *keydata,int dsize,int hexascii_fla
 		printk("sysfs don't init success,%s:%d\n",__func__,__LINE__);
 		return -EINVAL;
 	}
-	
+
 	buf = kmalloc(KEYBUF_MAX_LEN, GFP_KERNEL);
 	if(!buf){
 		printk("no memory\n");
@@ -2239,4 +2239,3 @@ module_exit(aml_keys_exit);
 MODULE_DESCRIPTION("Amlogic keys driver");
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("Jerry Yu<jerry.yu@amlogic.com>");
-

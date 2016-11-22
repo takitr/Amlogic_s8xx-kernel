@@ -76,4 +76,3 @@ typedef struct tvafe_dev_s {
 
 
 #endif  // _TVAFE_H
-

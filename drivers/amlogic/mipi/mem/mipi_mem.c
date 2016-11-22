@@ -67,7 +67,7 @@ typedef struct mem_ops_privdata_s {
     struct tasklet_struct    isr_tasklet;
     unsigned long              pre_irq_time;
     unsigned                     watchdog_cnt;
-	
+
     mipi_buf_t                  in_buff;
     mipi_buf_t                  out_buff;
 
@@ -98,7 +98,7 @@ static struct mem_ops_privdata_s csi2_mem_data[]=
         .task = NULL,
 #endif
         .irq = -1,
-        .dev_id = -1,        
+        .dev_id = -1,
         .hw_info = {0},
         .frame_rate = 0,
         .mirror = 0,
@@ -128,7 +128,7 @@ const struct am_csi2_ops_s am_csi2_mem =
     .data_num  = ARRAY_SIZE(csi2_mem_data),
 };
 
-static const struct am_csi2_pixel_fmt am_csi2_input_pix_formats_mem[] = 
+static const struct am_csi2_pixel_fmt am_csi2_input_pix_formats_mem[] =
 {
     {
         .name = "RGB565",
@@ -187,8 +187,8 @@ static int get_input_format(int v4l2_format)
             format = GE2D_FORMAT_S16_YUV422;
             break;
         default:
-            break;            
-    }   
+            break;
+    }
     return format;
 }
 
@@ -215,8 +215,8 @@ static int get_output_format(int v4l2_format)
             format = GE2D_FORMAT_S8_Y;
             break;
         default:
-            break;            
-    }   
+            break;
+    }
     return format;
 }
 
@@ -229,14 +229,14 @@ static int config_canvas_index(unsigned address,int v4l2_format,unsigned w,unsig
         case V4L2_PIX_FMT_YVYU:
             canvas = AML_MIPI_DST_Y_CANVAS+(id*3);
             canvas_config(AML_MIPI_DST_Y_CANVAS+(id*3),(unsigned long)address,w*2, h, CANVAS_ADDR_NOWRAP, CANVAS_BLKMODE_LINEAR);
-            break; 
+            break;
         case V4L2_PIX_FMT_BGR24:
         case V4L2_PIX_FMT_RGB24:
             canvas = AML_MIPI_DST_Y_CANVAS+(id*3);
             canvas_config(AML_MIPI_DST_Y_CANVAS+(id*3),(unsigned long)address,w*3, h, CANVAS_ADDR_NOWRAP, CANVAS_BLKMODE_LINEAR);
-            break; 
+            break;
         case V4L2_PIX_FMT_NV12:
-        case V4L2_PIX_FMT_NV21: 
+        case V4L2_PIX_FMT_NV21:
             canvas_y = AML_MIPI_DST_Y_CANVAS+(id*3);
             canvas = (canvas_y | ((canvas_y+1)<<8));
             canvas_config(canvas_y,(unsigned long)address,w, h, CANVAS_ADDR_NOWRAP, CANVAS_BLKMODE_LINEAR);
@@ -362,14 +362,14 @@ static int ge2d_process(mem_ops_privdata_t* data,am_csi2_frame_t* in, am_csi2_fr
         (unsigned long)in->ddr_address,
         in->w, in->h,
         CANVAS_ADDR_NOWRAP, CANVAS_BLKMODE_LINEAR);
-    
+
     dst_canvas = out->index;
     if(dst_canvas<0){
         mipi_error("[mipi_mem]:ge2d_process-- dst canvas invaild !!!!\n");
         return ret;
     }
     cur_angle = (360 - cur_angle%360);
-    /* data operating. */ 
+    /* data operating. */
     ge2d_config->alu_const_color= 0;//0x000000ff;
     ge2d_config->bitmask_en  = 0;
     ge2d_config->src1_gb_alpha = 0;//0xff;
@@ -628,14 +628,14 @@ static struct am_csi2_pixel_fmt* getPixelFormat(u32 fourcc, bool input)
             if(am_csi2_input_pix_formats_mem[i].fourcc == fourcc){
                 r = (struct am_csi2_pixel_fmt*)&am_csi2_input_pix_formats_mem[i];
                 break;
-            }       
+            }
         }
     }else{     //mipi output format support, can be converted by ge2d
         for(i =0;i<ARRAY_SIZE(am_csi2_output_pix_formats_mem);i++){
             if(am_csi2_output_pix_formats_mem[i].fourcc == fourcc){
                 r = (struct am_csi2_pixel_fmt*)&am_csi2_output_pix_formats_mem[i];
                 break;
-            }       
+            }
         }
     }
     return r;
@@ -666,7 +666,7 @@ static bool checkframe(am_csi2_frame_t *frame, am_csi2_input_t* input)
         mipi_dbg("[mipi_mem]:checkframe---pixel byte cnt:%d, line cnt:%d. address 0x%x, size:0x%x. mem type:0x%x, status:0x%x\n",
                       frame->w,frame->h,data1,frame->read_cnt,data2,data3);
         ret = true;
-    } 
+    }
     return ret;
 }
 
@@ -733,7 +733,7 @@ static void csi2_mem_isr_tasklet(unsigned long arg)
     if(data->wr_frame){
         if(data->mipi_mem_skip>0){
             data->mipi_mem_skip--;
-            bufq_push_free(&data->in_buff, data->wr_frame);			
+            bufq_push_free(&data->in_buff, data->wr_frame);
         }else if(checkframe(data->wr_frame,&data->input) == true){
             bufq_push_available(&data->in_buff, data->wr_frame);
             new_frame = 1;
@@ -826,11 +826,11 @@ static int fill_buff_from_canvas(am_csi2_frame_t* frame, am_csi2_output_t* outpu
         mipi_error("[mipi_mem]:fill_buff_from_canvas---pionter error\n");
         return ret;
     }
-	
+
     canvas_read(frame->index&0xff,&canvas_work_y);
     buffer_y_start = ioremap_wc(frame->ddr_address,output->frame_size);
     //buffer_y_start = ioremap_wc(canvas_work_y.addr,canvas_work_y.width*canvas_work_y.height);
-	
+
     if(buffer_y_start == NULL) {
         mipi_error("[mipi_mem]:fill_buff_from_canvas---mapping buffer error\n");
         return ret;
@@ -887,13 +887,13 @@ static int fill_buff_from_canvas(am_csi2_frame_t* frame, am_csi2_output_t* outpu
         for(i=uv_height; i > 0; i--){
             memcpy((void *)(output->vaddr+posd), (void *)(buffer_v_start+poss), uv_width);
             poss += canvas_work_v.width;
-            posd += uv_width;		
+            posd += uv_width;
         }
         iounmap(buffer_u_start);
         iounmap(buffer_v_start);
         ret = 0;
     }
-    iounmap(buffer_y_start);   
+    iounmap(buffer_y_start);
     return ret;
 }
 
@@ -938,7 +938,7 @@ Again:
             }
         }
     }
-    
+
     while(!kthread_should_stop()){
         msleep(10);
     }
@@ -1068,8 +1068,8 @@ static int am_csi2_mem_streamon(am_csi2_t* dev)
     data->watchdog_cnt = 0;
     tasklet_enable(&data->isr_tasklet);
     data->pre_irq_time = jiffies;
-    add_timer(&data->timer);    
-    enable_irq(data->irq); 
+    add_timer(&data->timer);
+    enable_irq(data->irq);
     msleep(100);
     mipi_dbg("[mipi_mem]:am_csi2_mem_streamon ok.\n");
     return 0;
@@ -1090,7 +1090,7 @@ static int am_csi2_mem_streamoff(am_csi2_t* dev)
         data->task = NULL;
     }
 #endif
-    disable_irq_nosync(data->irq); 
+    disable_irq_nosync(data->irq);
     tasklet_disable_nosync(&data->isr_tasklet);
     del_timer(&data->timer);
     am_mipi_csi2_uninit();
@@ -1156,7 +1156,7 @@ static int am_csi2_mem_fillbuff(am_csi2_t* dev)
 #endif
 
 #ifdef ENABLE_CACHE_MODE
-    up(&data->start_sem); 
+    up(&data->start_sem);
 #endif
     mutex_unlock(&data->buf_lock);
     return ret;
@@ -1185,4 +1185,3 @@ static int am_csi2_mem_uninit(am_csi2_t* dev)
     mipi_dbg("[mipi_mem]:am_csi2_mem_uninit ok.\n");
     return 0;
 }
-

@@ -72,7 +72,7 @@ static int NEC_REMOTE_IRQ_NO = INT_REMOTE;
 unsigned int g_remote_base;
 static int repeat_flag;
 DECLARE_TASKLET_DISABLED(tasklet, remote_tasklet, 0);
-	 
+
 static struct remote *gp_remote = NULL;
 char *remote_log_buf;
 static __u16 key_map[512];
@@ -264,14 +264,14 @@ static void remote_repeat_sr(unsigned long data)
 	struct remote *remote_data = (struct remote *)data;
 	u32 status;
 	u32 timer_period;
- 
+
 	status = am_remote_read_reg(AM_IR_DEC_STATUS);
 	switch (status & REMOTE_HW_DECODER_STATUS_MASK) {
 	case REMOTE_HW_DECODER_STATUS_OK:
 		remote_send_key(remote_data->input, (remote_data->cur_keycode >> 16) & 0xff, 0);
 		repeat_flag = 0;
 		break;
-	default: 
+	default:
 		am_remote_set_mask(AM_IR_DEC_REG1, 1);	//reset ir deocoder
 		am_remote_clear_mask(AM_IR_DEC_REG1, 1);
 
@@ -316,7 +316,7 @@ static void remote_timer_sr(unsigned long data)
 static irqreturn_t remote_interrupt(int irq, void *dev_id)
 {
 	/* disable keyboard interrupt and schedule for handling */
-	//  input_dbg("===trigger one  remoteads interupt \r\n");
+	//  input_dbg("===trigger one  remoteads interupt\n");
 	tasklet_schedule(&tasklet);
 
 	return IRQ_HANDLED;
@@ -399,7 +399,7 @@ static inline int remote_hw_reprot_key(struct remote *remote_data)
 		    mdelay(20);
 		}
 		if(((scan_code >> 16) & 0xff) == 0x1a)
- 		    cec_repeat--;
+		    cec_repeat--;
 #endif
 #endif
 #endif
@@ -526,15 +526,15 @@ void remote_comcast_config(int baserate)
 	float basetime = 1.085*(195.0+699.0);
 	float factor = 1.085*126.0;
 	int i;
-	
+
 	gp_remote->time_window[0] = 4;
 	for(i=0; i<=16; i++) {
 		gp_remote->time_window[i+1] = (unsigned int)((basetime-0.5*factor+factor*i)/(1.0+baserate));
 	//	input_dbg("time_window[%d]=%d,  %f.\n", i+1, gp_remote->time_window[i+1],  pulse);
-	}	
+	}
 #endif
-	gp_remote->repeat_delay = 200;  
-	if(baserate == 0x04) 
+	gp_remote->repeat_delay = 200;
+	if(baserate == 0x04)
 	{
 		gp_remote->time_window[0] = 4;
 		gp_remote->time_window[1] = 179;
@@ -555,7 +555,7 @@ void remote_comcast_config(int baserate)
 		gp_remote->time_window[16] = 590;
 		gp_remote->time_window[17] = 618;
 	}
-	else  //	if(baserate == 0x13) 
+	else  //	if(baserate == 0x13)
 	{
 		gp_remote->time_window[0] = 4;
 		gp_remote->time_window[1] = 44;
@@ -599,7 +599,7 @@ static int work_mode_config(unsigned int cur_mode)
 		control_value = am_remote_read_reg(AM_IR_DEC_REG0)&0xfff;
 		remote_comcast_config(control_value);
 	}
-	
+
 	switch (cur_mode & REMOTE_WORK_MODE_MASK) {
 	case REMOTE_WORK_MODE_HW:
 	case REMOTE_WORK_MODE_SW:
@@ -802,7 +802,7 @@ static long remote_config_ioctl(struct file *filp, unsigned int cmd, unsigned lo
 		break;
 
 	case REMOTE_IOC_SET_FN_KEY_SCANCODE:
-        	FN_KEY_SCANCODE = val;
+		FN_KEY_SCANCODE = val;
                 break;
 
         case REMOTE_IOC_SET_LEFT_KEY_SCANCODE:
@@ -885,11 +885,11 @@ static int register_remote_dev(struct remote *remote)
 	strcpy(remote->config_name, "amremote");
 	ret = register_chrdev(0, remote->config_name, &remote_fops);
 	if (ret <= 0) {
-		printk("register char dev tv error\r\n");
+		printk("register char dev tv error\n");
 		return ret;
 	}
 	remote->config_major = ret;
-	printk("remote config major:%d\r\n", ret);
+	printk("remote config major:%d\n", ret);
 	remote->config_class = class_create(THIS_MODULE, remote->config_name);
 	remote->config_dev = device_create(remote->config_class, NULL, MKDEV(remote->config_major, 0), NULL, remote->config_name);
 	return ret;
@@ -920,7 +920,7 @@ static int remote_probe(struct platform_device *pdev)
 
 	g_remote_base = ao_baseaddr;
 	printk("Remote platform_data g_remote_base=%x\n",ao_baseaddr);
-	
+
 	remote_enable = 1;
 	remote = kzalloc(sizeof(struct remote), GFP_KERNEL);
 	input_dev = input_allocate_device();
@@ -952,18 +952,16 @@ static int remote_probe(struct platform_device *pdev)
 	remote->time_window[6] = 0x1;
 	remote->time_window[7] = 0x1;
 
-	/* Disable the interrupt for the MPUIO keyboard */
-	for (i = 0; i < ARRAY_SIZE(key_map); i++) {
-		key_map[i] = KEY_RESERVED;
-	}
-	for (i = 0; i < ARRAY_SIZE(mouse_map); i++) {
-		mouse_map[i] = 0xffff;
-	}
+	/* Disable the interrupt for the MPUIO keyboard
+	init the default key map table ,and mouse map table.
+	note KEY_RESERVED==0*/
+	memset(key_map, 0x0, sizeof(key_map));
+	memset(mouse_map, 0xff, sizeof(mouse_map));
 	remote->repeat_delay = 250;
 	remote->repeat_peroid = 33;
 
 	/* get the irq and init timer */
-	input_dbg("set drvdata completed\r\n");
+	input_dbg("set drvdata completed\n");
 	tasklet_enable(&tasklet);
 	tasklet.data = (unsigned long)remote;
 	setup_timer(&remote->timer, remote_timer_sr, 0);
@@ -978,7 +976,7 @@ static int remote_probe(struct platform_device *pdev)
 		goto err1;
 	}
 
-	input_dbg("device_create_file completed \r\n");
+	input_dbg("device_create_file completed\n");
 	input_dev->evbit[0] = BIT_MASK(EV_KEY) | BIT_MASK(EV_REL);
 	input_dev->keybit[BIT_WORD(BTN_MOUSE)] = BIT_MASK(BTN_LEFT) | BIT_MASK(BTN_RIGHT) | BIT_MASK(BTN_MIDDLE);
 	input_dev->relbit[0] = BIT_MASK(REL_X) | BIT_MASK(REL_Y) | BIT_MASK(REL_WHEEL);
@@ -1011,7 +1009,7 @@ static int remote_probe(struct platform_device *pdev)
 		printk(KERN_ERR "Unable to register keypad input device\n");
 		goto err2;
 	}
-	input_dbg("input_register_device completed \r\n");
+	input_dbg("input_register_device completed\n");
 	if (hardware_init(pdev)) {
 		goto err3;
 	}
@@ -1041,7 +1039,7 @@ static int remote_remove(struct platform_device *pdev)
 	struct remote *remote = platform_get_drvdata(pdev);
 
 	/* disable keypad interrupt handling */
-	input_dbg("remove remoteads \r\n");
+	input_dbg("remove remoteads\n");
 	tasklet_disable(&tasklet);
 	tasklet_kill(&tasklet);
 
@@ -1089,12 +1087,12 @@ static int remote_resume(struct platform_device *pdev)
 		input_sync(gp_remote->input);
 		input_event(gp_remote->input, EV_KEY, KEY_POWER, 0);
 		input_sync(gp_remote->input);
-		
+
 		//aml_write_reg32(P_AO_RTC_ADDR0, (aml_read_reg32(P_AO_RTC_ADDR0) | (0x0000f000)));
 		WRITE_AOBUS_REG(AO_RTI_STATUS_REG2, 0);
     }
 #endif
-	
+
 	return 0;
 }
 static struct platform_driver remote_driver = {
@@ -1104,7 +1102,7 @@ static struct platform_driver remote_driver = {
 	.resume = remote_resume,
 	.driver = {
 		.name = "meson-remote",
-		.of_match_table = remote_dt_match,	
+		.of_match_table = remote_dt_match,
 	},
 };
 

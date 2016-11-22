@@ -15,12 +15,12 @@ static inline void _set_src1_format(ge2d_src1_data_t *src1_data_cfg,
 
 	src1_data_cfg->endian      = (format_src & GE2D_ENDIAN_MASK) >> GE2D_ENDIAN_SHIFT;
 	src1_data_cfg->color_map   = (format_src & GE2D_COLOR_MAP_MASK) >> GE2D_COLOR_MAP_SHIFT;
-   
+
 
     src1_gen_cfg->pic_struct   = (format_src >> 3) & 3;
     src1_data_cfg->x_yc_ratio  = (format_src >> 1) & 1;
     src1_data_cfg->y_yc_ratio  = (format_src >> 0) & 1;
-    
+
     if ((format_src & GE2D_FORMAT_YUV) &&
         ((format_dst & GE2D_FORMAT_YUV) == 0)) {
         dp_gen_cfg->use_matrix_default = (format_src & GE2D_FORMAT_COMP_RANGE) ? MATRIX_FULL_RANGE_YCC_TO_RGB : MATRIX_YCC_TO_RGB;
@@ -45,7 +45,7 @@ static inline void _set_src2_format(ge2d_src2_dst_data_t *src2_dst_data_cfg,
     src2_dst_data_cfg->src2_format      = (format >> 8) & 3;
 	src2_dst_data_cfg->src2_endian      = (format & GE2D_ENDIAN_MASK) >> GE2D_ENDIAN_SHIFT;
 	src2_dst_data_cfg->src2_color_map   = (format & GE2D_COLOR_MAP_MASK) >> GE2D_COLOR_MAP_SHIFT;
-   
+
     src2_dst_data_cfg->src2_mode_8b_sel = (format >> 6) & 3;
 
     src2_dst_gen_cfg->src2_pic_struct   = (format >> 3) & 3;
@@ -68,7 +68,7 @@ static inline void _set_dst_format(ge2d_src2_dst_data_t *src2_dst_data_cfg,
 
 	src2_dst_gen_cfg->dst_pic_struct   = (format_dst >> 3) & 3;
 
-	if ((format_src & GE2D_FORMAT_YUV) && 
+	if ((format_src & GE2D_FORMAT_YUV) &&
 				((format_dst & GE2D_FORMAT_YUV) == 0)) {
 		dp_gen_cfg->use_matrix_default = (format_src & GE2D_FORMAT_COMP_RANGE) ? MATRIX_FULL_RANGE_YCC_TO_RGB : MATRIX_YCC_TO_RGB;
 		dp_gen_cfg->conv_matrix_en = 1;
@@ -91,7 +91,7 @@ static inline void _set_dst_format(ge2d_src2_dst_data_t *src2_dst_data_cfg,
 		src2_dst_data_cfg->dst2_discard_mode = 0xf;
 		src2_dst_data_cfg->dst2_enable = 1;
 		src2_dst_data_cfg->dst2_color_map = src2_dst_data_cfg->dst_color_map - 5;
-	} else 
+	} else
 		src2_dst_data_cfg->dst2_enable = 0;
 #endif
 }
@@ -120,7 +120,7 @@ void ge2dgen_antiflicker(ge2d_context_t *wq,unsigned long enable)
 {
 	ge2d_dp_gen_t *dp_gen_cfg = ge2d_wq_get_dp_gen(wq);
 
-	enable = enable?1:0;  
+	enable = enable?1:0;
 
 	if(dp_gen_cfg->antiflick_en != enable)
 	{
@@ -198,36 +198,36 @@ void ge2dgen_dst(ge2d_context_t *wq,
         (canvas_addr != src2_dst_data_cfg->dst_canaddr)) {
         src2_dst_data_cfg->dst_canaddr = canvas_addr;
 
-      	_set_dst_format(src2_dst_data_cfg, src2_dst_gen_cfg, dp_gen_cfg,
+	_set_dst_format(src2_dst_data_cfg, src2_dst_gen_cfg, dp_gen_cfg,
             src1_data_cfg->format_all, format);
 	wq->config.update_flag |= UPDATE_DST_DATA;
-      	wq->config.update_flag |= UPDATE_DST_GEN;
-	wq->config.update_flag |= UPDATE_DP_GEN;  
+	wq->config.update_flag |= UPDATE_DST_GEN;
+	wq->config.update_flag |= UPDATE_DP_GEN;
     }
 }
 
 void ge2dgen_src_clip(ge2d_context_t *wq,
                       int x, int y, int w, int h)
 {
-    	ge2d_src1_gen_t *src1_gen_cfg = ge2d_wq_get_src_gen(wq);
+	ge2d_src1_gen_t *src1_gen_cfg = ge2d_wq_get_src_gen(wq);
 	//adjust w->x_end h->y_end
 	w=x+w-1 ;
 	h=y+h-1 ;
 	if(src1_gen_cfg->clipx_start != x || src1_gen_cfg->clipx_end   != w||
 			src1_gen_cfg->clipy_start != y ||src1_gen_cfg->clipy_end   != h)
 	{
-    		src1_gen_cfg->clipx_start = x;
-    		src1_gen_cfg->clipx_end   = w;
-    		src1_gen_cfg->clipy_start = y;
-    		src1_gen_cfg->clipy_end   = h;
-		wq->config.update_flag |= UPDATE_SRC_GEN;	
+		src1_gen_cfg->clipx_start = x;
+		src1_gen_cfg->clipx_end   = w;
+		src1_gen_cfg->clipy_start = y;
+		src1_gen_cfg->clipy_end   = h;
+		wq->config.update_flag |= UPDATE_SRC_GEN;
 	}
 }
 
 void ge2dgen_src2_clip(ge2d_context_t *wq,
                       int x, int y, int w, int h)
 {
-    	ge2d_src2_dst_gen_t *src2_dst_gen_cfg = ge2d_wq_get_dst_gen(wq);
+	ge2d_src2_dst_gen_t *src2_dst_gen_cfg = ge2d_wq_get_dst_gen(wq);
 
 	//adjust w->x_end h->y_end
 	w=x+w-1 ;
@@ -235,10 +235,10 @@ void ge2dgen_src2_clip(ge2d_context_t *wq,
 	if(src2_dst_gen_cfg->src2_clipx_start != x || src2_dst_gen_cfg->src2_clipx_end   != w ||
 			src2_dst_gen_cfg->src2_clipy_start != y || src2_dst_gen_cfg->src2_clipy_end   != h)
 	{
-    		src2_dst_gen_cfg->src2_clipx_start = x;
-    		src2_dst_gen_cfg->src2_clipx_end   = w;
-    		src2_dst_gen_cfg->src2_clipy_start = y;
-    		src2_dst_gen_cfg->src2_clipy_end   = h;
+		src2_dst_gen_cfg->src2_clipx_start = x;
+		src2_dst_gen_cfg->src2_clipx_end   = w;
+		src2_dst_gen_cfg->src2_clipy_start = y;
+		src2_dst_gen_cfg->src2_clipy_end   = h;
 		wq->config.update_flag |= UPDATE_DST_GEN;
 	}
 }
@@ -246,28 +246,28 @@ void ge2dgen_src2_clip(ge2d_context_t *wq,
 void ge2dgen_src_key(ge2d_context_t *wq,
                      int en, int key, int keymask,int keymode)
 {
-    	ge2d_dp_gen_t *dp_gen_cfg = ge2d_wq_get_dp_gen(wq);
+	ge2d_dp_gen_t *dp_gen_cfg = ge2d_wq_get_dp_gen(wq);
 	if(dp_gen_cfg->src1_key_en != en || dp_gen_cfg->src1_key != key || dp_gen_cfg->src1_key_mask != keymask ||
-		dp_gen_cfg->src1_key_mode != keymode)      
+		dp_gen_cfg->src1_key_mode != keymode)
 	{
-    		dp_gen_cfg->src1_key_en = en&0x1;
-    		dp_gen_cfg->src1_key = key;
-    		dp_gen_cfg->src1_key_mask = keymask;
-		dp_gen_cfg->src1_key_mode=keymode&0x1;	
+		dp_gen_cfg->src1_key_en = en&0x1;
+		dp_gen_cfg->src1_key = key;
+		dp_gen_cfg->src1_key_mask = keymask;
+		dp_gen_cfg->src1_key_mode=keymode&0x1;
 
 		dp_gen_cfg->src1_vsc_bank_length = 4;
-    		dp_gen_cfg->src1_hsc_bank_length = 4;
-		wq->config.update_flag |= UPDATE_DP_GEN;	
+		dp_gen_cfg->src1_hsc_bank_length = 4;
+		wq->config.update_flag |= UPDATE_DP_GEN;
 	}
 }
 EXPORT_SYMBOL(ge2dgen_src_key);
 void ge2dgent_src_gbalpha(ge2d_context_t *wq,
                           unsigned char alpha)
 {
-    	ge2d_dp_gen_t *dp_gen_cfg = ge2d_wq_get_dp_gen(wq);
+	ge2d_dp_gen_t *dp_gen_cfg = ge2d_wq_get_dp_gen(wq);
 	if(dp_gen_cfg->src1_gb_alpha != alpha)
 	{
-    		dp_gen_cfg->src1_gb_alpha = alpha;
+		dp_gen_cfg->src1_gb_alpha = alpha;
 		wq->config.update_flag |= UPDATE_DP_GEN;
 	}
 }
@@ -275,13 +275,13 @@ void ge2dgent_src_gbalpha(ge2d_context_t *wq,
 void ge2dgen_src_color(ge2d_context_t *wq,
                        unsigned color)
 {
-    	ge2d_src1_data_t *src1_data_cfg = ge2d_wq_get_src_data(wq);
+	ge2d_src1_data_t *src1_data_cfg = ge2d_wq_get_src_data(wq);
 
-    	if(src1_data_cfg->def_color != color)	
-    	{
-    		src1_data_cfg->def_color = color;
-    		wq->config.update_flag |= UPDATE_SRC_DATA;	
-    	}
+	if(src1_data_cfg->def_color != color)
+	{
+		src1_data_cfg->def_color = color;
+		wq->config.update_flag |= UPDATE_SRC_DATA;
+	}
 
 }
 
@@ -302,7 +302,7 @@ void ge2dgen_rendering_dir(ge2d_context_t *wq,
 void ge2dgen_dst_clip(ge2d_context_t *wq,
                       int x, int y, int w, int h, int mode)
 {
-    	ge2d_src2_dst_gen_t *src2_dst_gen_cfg = ge2d_wq_get_dst_gen(wq);
+	ge2d_src2_dst_gen_t *src2_dst_gen_cfg = ge2d_wq_get_dst_gen(wq);
 	//adjust w->x_end h->y_end
 	w=x+w-1 ;
 	h=y+h-1 ;
@@ -310,29 +310,29 @@ void ge2dgen_dst_clip(ge2d_context_t *wq,
 		src2_dst_gen_cfg->dst_clipy_start != y || src2_dst_gen_cfg->dst_clipy_end   != h ||
 		src2_dst_gen_cfg->dst_clip_mode   != mode)
 	{
-    		src2_dst_gen_cfg->dst_clipx_start = x;
-    		src2_dst_gen_cfg->dst_clipx_end   = w;
-    		src2_dst_gen_cfg->dst_clipy_start = y;
-    		src2_dst_gen_cfg->dst_clipy_end   = h;
-    		src2_dst_gen_cfg->dst_clip_mode   = mode;
-		wq->config.update_flag |= UPDATE_DST_GEN;	
+		src2_dst_gen_cfg->dst_clipx_start = x;
+		src2_dst_gen_cfg->dst_clipx_end   = w;
+		src2_dst_gen_cfg->dst_clipy_start = y;
+		src2_dst_gen_cfg->dst_clipy_end   = h;
+		src2_dst_gen_cfg->dst_clip_mode   = mode;
+		wq->config.update_flag |= UPDATE_DST_GEN;
 	}
 }
 
 void ge2dgent_src2_clip(ge2d_context_t *wq,
                         int x, int y, int w, int h)
 {
-    	ge2d_src2_dst_gen_t *src2_dst_gen_cfg = ge2d_wq_get_dst_gen(wq);
+	ge2d_src2_dst_gen_t *src2_dst_gen_cfg = ge2d_wq_get_dst_gen(wq);
 	//adjust w->x_end h->y_end
 	w=x+w-1 ;
 	h=y+h-1 ;
 	if(src2_dst_gen_cfg->src2_clipx_start != x||src2_dst_gen_cfg->src2_clipx_end   != w||
 		src2_dst_gen_cfg->src2_clipy_start != y || src2_dst_gen_cfg->src2_clipy_end   != h)
 	{
-    		src2_dst_gen_cfg->src2_clipx_start = x;
-    		src2_dst_gen_cfg->src2_clipx_end   = w;
-    		src2_dst_gen_cfg->src2_clipy_start = y;
-    		src2_dst_gen_cfg->src2_clipy_end   = h;
+		src2_dst_gen_cfg->src2_clipx_start = x;
+		src2_dst_gen_cfg->src2_clipx_end   = w;
+		src2_dst_gen_cfg->src2_clipy_start = y;
+		src2_dst_gen_cfg->src2_clipy_end   = h;
 		wq->config.update_flag |= UPDATE_DST_GEN;
 	}
 }
@@ -340,10 +340,10 @@ void ge2dgent_src2_clip(ge2d_context_t *wq,
 void ge2dgen_const_color(ge2d_context_t *wq,
                        unsigned color)
 {
-    	ge2d_dp_gen_t *dp_gen_cfg = ge2d_wq_get_dp_gen(wq);
+	ge2d_dp_gen_t *dp_gen_cfg = ge2d_wq_get_dp_gen(wq);
 	if(dp_gen_cfg->alu_const_color != color)
 	{
-    		dp_gen_cfg->alu_const_color = color;
-		wq->config.update_flag |= UPDATE_DP_GEN;	
+		dp_gen_cfg->alu_const_color = color;
+		wq->config.update_flag |= UPDATE_DP_GEN;
 	}
 }

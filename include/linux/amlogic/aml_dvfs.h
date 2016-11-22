@@ -45,12 +45,12 @@ inline int aml_dvfs_unregister_driver(struct aml_dvfs_driver *driver)
 
 inline int aml_dvfs_freq_change(uint32_t id, uint32_t new_freq, uint32_t old_freq, uint32_t flags)
 {
-    return 0;    
+    return 0;
 }
 
-inline struct cpufreq_frequency_table *aml_dvfs_get_freq_table(unsigned int id) 
+inline struct cpufreq_frequency_table *aml_dvfs_get_freq_table(unsigned int id)
 {
-    return NULL;    
+    return NULL;
 }
 #endif
 

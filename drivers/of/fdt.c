@@ -655,7 +655,6 @@ struct reserve_mgr{
 struct reserve_mgr Reserve_Manager;
 struct reserve_mgr * pReserve_Manager;
 
-
 int init_reserve_mgr(void)
 {
 	pReserve_Manager = &Reserve_Manager;
@@ -665,10 +664,22 @@ int init_reserve_mgr(void)
 	return 0;
 }
 
+struct reserve_mgr *get_reserve_mgr(void)
+{
+	return pReserve_Manager;
+}
+EXPORT_SYMBOL(get_reserve_mgr);
+
 unsigned long long get_reserve_end(void)
 {
 	return pReserve_Manager->current_addr_from_low+aml_reserved_start+EARLY_RESERVED_MEM_SIZE-1;
 }
+
+unsigned long long get_reserve_base(void)
+{
+	return aml_reserved_start+EARLY_RESERVED_MEM_SIZE;
+}
+EXPORT_SYMBOL(get_reserve_base);
 
 unsigned long long get_high_reserve_size(void)
 {
@@ -746,6 +757,7 @@ int __init early_init_dt_scan_reserve_memory(unsigned long node, const char *una
 {
 	__be32 *mem, *endp;
 	char * need_iomap=NULL;
+	char * hib_use=NULL;
 	unsigned int iomap_flag = 0;
 	unsigned long l;
 	int idx=0;
@@ -768,6 +780,12 @@ int __init early_init_dt_scan_reserve_memory(unsigned long node, const char *una
 		if(need_iomap&&(strcmp(need_iomap,"true")==0))
 		{
 			iomap_flag = 1;
+		}
+
+		hib_use = of_get_flat_dt_prop(node,"mem-usable",&l);
+		if (hib_use && (strcmp(hib_use,"false") == 0))
+		{
+			iomap_flag |= 2;
 		}
 
 		prm = &pReserve_Manager->reserve[pReserve_Manager->count];
@@ -901,6 +919,7 @@ int __init early_init_dt_scan_memory(unsigned long node, const char *uname,
 				prm->startaddr + aml_reserved_start+EARLY_RESERVED_MEM_SIZE ,
 				prm->startaddr + prm->size + aml_reserved_start+EARLY_RESERVED_MEM_SIZE,
 				(unsigned long)(prm->size >> 20));
+
 		}
 		else
 		{
@@ -960,16 +979,13 @@ int __init early_init_dt_scan_chosen(unsigned long node, const char *uname,
 	if (p != NULL && l > 0)
 		strlcpy(data, p, min((int)l, COMMAND_LINE_SIZE));
 
-	/*
-	 * CONFIG_CMDLINE is meant to be a default in case nothing else
-	 * managed to set the command line, unless CONFIG_CMDLINE_FORCE
-	 * is set in which case we override whatever was found earlier.
-	 */
 #ifdef CONFIG_CMDLINE
-#ifndef CONFIG_CMDLINE_FORCE
-	if (!((char *)data)[0])
+#if defined(CONFIG_CMDLINE_FORCE)
+	strlcpy(data, CONFIG_CMDLINE, COMMAND_LINE_SIZE);
+#elif defined(CONFIG_CMDLINE_APPEND)
+	strlcat(data, " ", COMMAND_LINE_SIZE);
+	strlcat(data, CONFIG_CMDLINE, COMMAND_LINE_SIZE);
 #endif
-		strlcpy(data, CONFIG_CMDLINE, COMMAND_LINE_SIZE);
 #endif /* CONFIG_CMDLINE */
 
 	pr_debug("Command line is: %s\n", (char*)data);

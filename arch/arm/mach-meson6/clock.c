@@ -51,7 +51,7 @@ static DEFINE_SPINLOCK(mali_clk_lock);
 static DEFINE_SPINLOCK(clockfw_lock);
 static DEFINE_MUTEX(clock_ops_lock);
 
-static unsigned int mali_max = 333000;
+static unsigned int mali_max = 400000;
 static unsigned int freq_limit = 1;
 
 static int set_sys_pll(struct clk *clk,  unsigned long dst);
@@ -93,7 +93,7 @@ static unsigned long clk_get_rate_a9(struct clk * clkdev);
                                     cts_vdin_meas_clk,          // [38]
                                     cts_vdac_clk[1],            // [37]
                                     cts_hdmi_tx_pixel_clk,      // [36]
-                                    cts_mali_clk,               // [35] 
+                                    cts_mali_clk,               // [35]
                                     cts_sdhc_clk1,              // [34]
                                     cts_sdhc_clk0,              // [33]
                                     cts_vdec_clk,               // [32]
@@ -129,21 +129,21 @@ static unsigned long clk_get_rate_a9(struct clk * clkdev);
                                     1'b0,                       // [2]
                                     am_ring_osc_clk_out_ee[1],     // [1]
                                     am_ring_osc_clk_out_ee[0]} ),  // [0]
-*/ 
+*/
 //
 // For Example
 //
 // unsigend long    clk81_clk   = clk_util_clk_msr( 2,      // mux select 2
 //                                                  50 );   // measure for 50uS
 //
-// returns a value in "clk81_clk" in Hz 
+// returns a value in "clk81_clk" in Hz
 //
 // The "uS_gate_time" can be anything between 1uS and 65535 uS, but the limitation is
 // the circuit will only count 65536 clocks.  Therefore the uS_gate_time is limited by
 //
-//   uS_gate_time <= 65535/(expect clock frequency in MHz) 
+//   uS_gate_time <= 65535/(expect clock frequency in MHz)
 //
-// For example, if the expected frequency is 400Mhz, then the uS_gate_time should 
+// For example, if the expected frequency is 400Mhz, then the uS_gate_time should
 // be less than 163.
 //
 // Your measurement resolution is:
@@ -164,13 +164,13 @@ unsigned long    clk_util_clk_msr(   unsigned long   clk_mux, unsigned long   uS
     // Disable continuous measurement
     // disable interrupts
     Wr(MSR_CLK_REG0, (Rd(MSR_CLK_REG0) & ~((1 << 18) | (1 << 17))) );
-    Wr(MSR_CLK_REG0, (Rd(MSR_CLK_REG0) & ~(0x1f << 20)) | ((clk_mux << 20) |  // Select MUX 
+    Wr(MSR_CLK_REG0, (Rd(MSR_CLK_REG0) & ~(0x1f << 20)) | ((clk_mux << 20) |  // Select MUX
                                                           (1 << 19) |     // enable the clock
                                                           (1 << 16)) );    // enable measuring
     // Delay
-    Rd(MSR_CLK_REG0); 
+    Rd(MSR_CLK_REG0);
     // Wait for the measurement to be done
-    while( (Rd(MSR_CLK_REG0) & (1 << 31)) ) {} 
+    while( (Rd(MSR_CLK_REG0) & (1 << 31)) ) {}
     // disable measuring
     Wr(MSR_CLK_REG0, (Rd(MSR_CLK_REG0) & ~(1 << 16)) | (0 << 16) );
 
@@ -198,7 +198,7 @@ static unsigned int clk_util_clk_msr(unsigned int clk_mux)
     clrbits_le32(P_MSR_CLK_REG0,((1 << 18) | (1 << 17)));
 	clrsetbits_le32(P_MSR_CLK_REG0,(0x1f<<20),(clk_mux<<20)|(1<<19)|(1<<16));
 
-	aml_read_reg32(P_MSR_CLK_REG0); 
+	aml_read_reg32(P_MSR_CLK_REG0);
     // Wait for the measurement to be done
       do {
         regval = aml_read_reg32(P_MSR_CLK_REG0);
@@ -215,7 +215,7 @@ static unsigned int clk_util_clk_msr(unsigned int clk_mux)
     unsigned int regval = 0;
     /// Set the measurement gate to 64uS
     clrsetbits_le32(P_MSR_CLK_REG0,0xffff,63);
-    
+
     // Disable continuous measurement
     // disable interrupts
     clrsetbits_le32(P_MSR_CLK_REG0,
@@ -242,7 +242,7 @@ static  unsigned int clk_util_clk_msr(unsigned int clk_mux)
     unsigned int regval = 0;
     /// Set the measurement gate to 64uS
     clrsetbits_le32(P_MSR_CLK_REG0,0xffff,121);///122us
-    
+
     // Disable continuous measurement
     // disable interrupts
     clrsetbits_le32(P_MSR_CLK_REG0,
@@ -302,12 +302,12 @@ static struct core_clock_info *aml_core_clock_info = NULL;
 
 static int core_freq_track_open(struct inode *inode, struct file *file)
 {
-    return 0;    
+    return 0;
 }
 
 static int core_freq_track_release(struct inode *inode, struct file *file)
 {
-    return 0;    
+    return 0;
 }
 
 extern u64 sched_clock_cpu(int cpu);
@@ -331,7 +331,7 @@ static void do_core_freq_track(unsigned long freq)
 
     ker_time = cpu_clock(smp_processor_id());
     if (!core_freq_track_cnt) {                     // first record
-        start_time = ker_time;    
+        start_time = ker_time;
         prev_freq  = freq;
         prev_time  = ker_time;
         if (core_freq_track_detail && aml_core_clock_info) {
@@ -392,14 +392,14 @@ static ssize_t core_freq_track_read(struct file *file, char __user *buf, size_t 
                "     2 > /dev/core_freq     start track, with details\n");
         return 0;
     }
-    // first , sprintf total statistics 
+    // first , sprintf total statistics
     if (!read_step) {
         if (!read_idx) {
             size += sprintf(rbuf + size, "freq,      time,     %\n");
         }
         while (read_idx < ARRAY_SIZE(core_clock_total)) {
             if (!core_clock_total[read_idx].kernel_time) {
-                read_idx++;    
+                read_idx++;
             } else {
                 if (core_clock_total[read_idx].kernel_time) {
                     t  = core_clock_total[read_idx].kernel_time;
@@ -411,11 +411,11 @@ static ssize_t core_freq_track_read(struct file *file, char __user *buf, size_t 
                     percent = tmp1 / tmp2;
                     ns = do_div(t, 1000000000);
                     size += sprintf(rbuf + size, "%4d, %6u.%06u, %2d.%01d\n",
-                                    read_idx * 24, (unsigned long)t, ns / 1000, 
+                                    read_idx * 24, (unsigned long)t, ns / 1000,
                                     percent / 10, percent % 10);
                 }
                 read_idx++;
-                break;    
+                break;
             }
         }
         if (read_idx >= ARRAY_SIZE(core_clock_total)) {
@@ -433,8 +433,8 @@ static ssize_t core_freq_track_read(struct file *file, char __user *buf, size_t 
             size += sprintf(rbuf + size, "%6u.%06u\n", (unsigned long)t, ns / 1000);
             if (core_freq_track_detail) {
                 size += sprintf(rbuf + size, "\ndetails:\n");
-                next = aml_core_clock_info; 
-            } 
+                next = aml_core_clock_info;
+            }
         }
         copy_to_user(buf, rbuf, size);
         return size;
@@ -464,7 +464,7 @@ static ssize_t core_freq_track_read(struct file *file, char __user *buf, size_t 
             copy_to_user(buf, rbuf, size);
             return size;
         }
-    }            
+    }
 
     read_step = 0;
     read_idx  = 0;
@@ -562,7 +562,7 @@ static int __init core_freq_track_init(void)
     res = register_chrdev(CORE_FREQ_MAJOR, "core_freq", &core_freq_ops);
     core_freq_class = class_create(THIS_MODULE, "core_freq");
     if (res < 0 || !core_freq_class) {
-        printk("register dev failed\n");    
+        printk("register dev failed\n");
         return -1;
     }
     device_create(core_freq_class, NULL, MKDEV(CORE_FREQ_MAJOR, 2), NULL, "core_freq");
@@ -571,7 +571,7 @@ static int __init core_freq_track_init(void)
 
 static void __exit core_freq_track_exit(void)
 {
-    unregister_chrdev(CORE_FREQ_MAJOR, "core_freq");    
+    unregister_chrdev(CORE_FREQ_MAJOR, "core_freq");
 }
 
 module_init(core_freq_track_init);
@@ -600,11 +600,11 @@ EXPORT_SYMBOL(mali_clock_gating_unlock);
 int    clk_measure(char  index )
 {
 	const char* clk_table[]={
-	" CTS_MIPI_PHY_CLK(50)",	
-	" AM_RING_OSC_OUT_MALI[1](49)",	
-	" AM_RING_OSC_OUT_MALI[0](48)",	
-	" AM_RING_OSC_OUT_A9[1](47)",	
-	" AM_RING_OSC_OUT_A9[0](46)",		
+	" CTS_MIPI_PHY_CLK(50)",
+	" AM_RING_OSC_OUT_MALI[1](49)",
+	" AM_RING_OSC_OUT_MALI[0](48)",
+	" AM_RING_OSC_OUT_A9[1](47)",
+	" AM_RING_OSC_OUT_A9[0](46)",
 	" CTS_PWM_A_CLK(45)",
 	" CTS_PWM_B_CLK(44)",
 	" CTS_PWM_C_CLK(43)",
@@ -651,17 +651,17 @@ int    clk_measure(char  index )
 	" Reserved(2)",
 	" AM_RING_OSC_CLK_OUT1(1)",
 	" AM_RING_OSC_CLK_OUT0(0)",
-	};   
+	};
 	int  i;
 	int len = sizeof(clk_table)/sizeof(char*) - 1;
 	if (index  == 0xff)
 	{
-	 	for(i = 0;i < len;i++)
+		for(i = 0;i < len;i++)
 		{
 			printk("[%10d]%s\n",clk_util_clk_msr(i),clk_table[len-i]);
 		}
 		return 0;
-	}	
+	}
 	printk("[%10d]%s\n",clk_util_clk_msr(index),clk_table[len-index]);
 	return 0;
 }
@@ -703,7 +703,7 @@ int on_parent_changed(struct clk *clk, int rate, int before,int failed)
 		}
 		else{
 				if(pops->clk_ratechange_after)
-					pops->clk_ratechange_after(rate,pops->privdata,failed);			
+					pops->clk_ratechange_after(rate,pops->privdata,failed);
 		}
 		pops = pops->next;
 	}
@@ -747,14 +747,14 @@ int meson_clk_set_rate(struct clk *clk, unsigned long rate)
 	int ret;
 	int ops_run_count;
 	struct clk_ops *p;
-	
+
 	if(clk->set_rate == NULL || IS_CLK_ERR(clk))
 			return 0;
 	//post message before clk change.
 	{
 			ret = 0;
 			ops_run_count = 0;
-			p = clk->clk_ops;	
+			p = clk->clk_ops;
 			while(p){
 				ops_run_count++;
 				if(p->clk_ratechange_before)
@@ -764,17 +764,17 @@ int meson_clk_set_rate(struct clk *clk, unsigned long rate)
 				p = p->next;
 			}
 			meson_notify_childs_changed(clk,1,ret);
-	}		
-	
+	}
 
-	if(ret == 0){		
+
+	if(ret == 0){
 	  if (!clk->open_irq)
 	      spin_lock_irqsave(&clockfw_lock, flags);
 	  else
 	      spin_lock(&clockfw_lock);
 //		printk(KERN_INFO "%s() clk=%p rate=%lu\n", __FUNCTION__, clk, rate);
 	  if(clk->set_rate)
-	  	ret = clk->set_rate(clk, rate) ;
+		ret = clk->set_rate(clk, rate) ;
 	  if (!clk->open_irq)
 	      spin_unlock_irqrestore(&clockfw_lock, flags);
 	  else
@@ -792,11 +792,11 @@ int meson_clk_set_rate(struct clk *clk, unsigned long rate)
 				if(p->clk_ratechange_after)
 						p->clk_ratechange_after(rate, p->privdata,ret);
 				p = p->next;
-			}			
-	}		
-	
+			}
+	}
+
 	meson_notify_childs_changed(clk,0,ret);
- 
+
   return ret;
 }
 
@@ -807,23 +807,23 @@ int clk_set_rate(struct clk *clk, unsigned long rate)
 	if(IS_CLK_ERR(clk))
 		return 0;
 	if(clk_get_rate(clk) == rate){
-			return 0;			
+			return 0;
 	}
-		
+
 	if(clk->need_parent_changed){
 		unsigned long flags;
-	  spin_lock_irqsave(&clockfw_lock, flags);	
+	  spin_lock_irqsave(&clockfw_lock, flags);
 		parent_rate = clk->need_parent_changed(clk, rate);
 	  spin_unlock_irqrestore(&clockfw_lock, flags);
 	}
-		
+
 	if(parent_rate != 0)
 		clk_set_rate(clk->parent,parent_rate);
 	else{
 		mutex_lock(&clock_ops_lock);
 		//printk(KERN_INFO "%s() clk=%p rate=%lu\n", __FUNCTION__, clk, rate);
 		ret = meson_clk_set_rate(clk,rate);
-	 	mutex_unlock(&clock_ops_lock);
+		mutex_unlock(&clock_ops_lock);
 	}
 	return ret;
 }
@@ -879,15 +879,15 @@ int meson_enable(struct clk *clk)
 						break;
 					p = p->next;
 			}
-	
-			if(ret == 0){	
+
+			if(ret == 0){
 				if(clk->enable)
 					ret = clk->enable(clk);
 				else if(clk->clk_gate_reg_adr != 0)
 					aml_set_reg32_mask(clk->clk_gate_reg_adr,clk->clk_gate_reg_mask);
 					ret = 0;
 			}
-				
+
 			p = clk->clk_ops;
 			idx = 0;
 			while(p){
@@ -898,7 +898,7 @@ int meson_enable(struct clk *clk)
 					 p->clk_enable_after(p->privdata,ret);
 				p = p->next;
 			}
-			
+
 			return ret;
 		}
 		else
@@ -950,7 +950,7 @@ int  meson_clk_disable(struct clk *clk)
 				p = p->next;
 			}
 		}
-		
+
 		//do clock gate disable
 		if(ret == 0){
 			if(clk->disable)
@@ -960,7 +960,7 @@ int  meson_clk_disable(struct clk *clk)
 					ret = 0;
 			}
 		}
-		
+
 		//post message after clk disable.
 		{
 			struct clk_ops *p;
@@ -971,11 +971,11 @@ int  meson_clk_disable(struct clk *clk)
 				if(idx > ops_run_count)
 					break;
 				if(p->clk_disable_after)
-						p->clk_disable_after(p->privdata,ret);																	
+						p->clk_disable_after(p->privdata,ret);
 				p = p->next;
 			}
 		}
-		
+
 		return ret;
 }
 
@@ -1141,7 +1141,7 @@ static int _clk_set_rate_cpu(struct clk *clk, unsigned long cpu, unsigned long g
 				cpu = min_cpu;
 		}
 		else if(cpu < gpu + 24000000)
-    			cpu += 24000000;
+			cpu += 24000000;
 	}
 	if ((cpu_clk_cntl & 3) == 1) {
 		unsigned int n = 0;
@@ -1149,7 +1149,7 @@ static int _clk_set_rate_cpu(struct clk *clk, unsigned long cpu, unsigned long g
 		unsigned int scale_out = 0;
 
 		parent = clk_get_rate_sys(clk->parent);
-		// CPU switch to xtal 
+		// CPU switch to xtal
 		aml_write_reg32(P_HHI_SYS_CPU_CLK_CNTL, cpu_clk_cntl & ~(1 << 7));
 		if (oldcpu <= cpu) {
 			// when increasing frequency, lpj has already been adjusted
@@ -1229,10 +1229,10 @@ static int _clk_set_rate_cpu(struct clk *clk, unsigned long cpu, unsigned long g
 		// CPU switch to sys pll
 		//cpu_clk_cntl = aml_read_reg32(P_HHI_SYS_CPU_CLK_CNTL);
 		//aml_set_reg32_mask(P_HHI_SYS_CPU_CLK_CNTL, (1 << 7));
- 	}
+	}
 
-	clk->rate = cpu; 
- 
+	clk->rate = cpu;
+
 #ifdef CONFIG_CPU_FREQ_DEBUG
 	pr_debug("(CTS_CPU_CLK) CPU %ld.%ldMHz\n", clk_get_rate_a9(clk) / 1000000, clk_get_rate_a9(clk)%1000000);
 #endif /* CONFIG_CPU_FREQ_DEBUG */
@@ -1419,7 +1419,7 @@ static int clk_set_rate_a9(struct clk *clk, unsigned long rate)
 #endif /* CONFIG_SMP */
 	int error = 0;
 
-	int cpu_freq_limit = 1200000000;
+	int cpu_freq_limit = 1512000000;
 	if (rate < 1000)
 		rate *= 1000000;
 
@@ -1430,7 +1430,7 @@ static int clk_set_rate_a9(struct clk *clk, unsigned long rate)
 	{
 		rate = cpu_freq_limit;
 		//printk("cpu freq limited to %ld \n", rate);
-	}		
+	}
 #ifdef CONFIG_SMP
 #if USE_ON_EACH_CPU
 	if (meson_get_cpu_ctrl_reg()) {
@@ -1495,7 +1495,7 @@ int check_and_set_clk81(void)
 		clk81_target_rate = 0;
 	}
 	return 0;
-}	
+}
 
 static int cal_final_clk81_clk(int rate)
 {
@@ -1522,14 +1522,14 @@ static int clk_set_rate_clk81(struct clk *clk, unsigned long rate)
         return 0;
     printk("pre clk81 rate is %d\n", clk81_rate);
     printk("new clk81 rate is %d\n", rate);
-    
+
     clk81_target_rate = rate;
-    
+
     while(clk81_target_rate >0)
         msleep(2);
-    
+
     clk->rate = clk_util_clk_msr(7); //mesure current clk81 clock
-    
+
     clk81_rate = clk_get_rate(clk);
     aml_clr_reg32_mask(P_UART0_CONTROL, (1 << 19) | 0xFFF);
     aml_set_reg32_mask(P_UART0_CONTROL, (((clk81_rate / (115200 * 4)) - 1) & 0xfff));
@@ -1545,7 +1545,7 @@ static int clk_set_rate_clk81(struct clk *clk, unsigned long rate)
 static unsigned long clk_get_rate_gpu(struct clk * clkdev)
 {
 	unsigned long clk = 0;
-	unsigned int gpu_clk_cntl = aml_read_reg32(P_HHI_MALI_CLK_CNTL); 
+	unsigned int gpu_clk_cntl = aml_read_reg32(P_HHI_MALI_CLK_CNTL);
 	int src = (gpu_clk_cntl >> 9) & 7;
 	int N = (gpu_clk_cntl & 0x7F) + 1;
 
@@ -1929,10 +1929,10 @@ static int set_sys_pll(struct clk *clk,  unsigned long dst)
 	int idx;
 	unsigned int curr_cntl = aml_read_reg32(P_HHI_SYS_PLL_CNTL);
 	unsigned int cpu_clk_cntl = 0;
- 
+
 	if (dst < SYS_PLL_TABLE_MIN) dst = SYS_PLL_TABLE_MIN;
 	if (dst > SYS_PLL_TABLE_MAX) dst = SYS_PLL_TABLE_MAX;
- 
+
 	idx = ((dst - SYS_PLL_TABLE_MIN) / 1000000) / 24;
 	cpu_clk_cntl = sys_pll_settings[idx][0];
 
@@ -1947,7 +1947,7 @@ static int set_sys_pll(struct clk *clk,  unsigned long dst)
 		aml_write_reg32(P_HHI_SYS_PLL_CNTL3, sys_pll_settings[idx][2]);
 		aml_write_reg32(P_HHI_SYS_PLL_CNTL4, sys_pll_settings[idx][3]);
 		aml_write_reg32(P_HHI_SYS_PLL_CNTL,  sys_pll_settings[idx][0]);
-#if 1 
+#if 1
 		if (clk->old_rate <= dst) {
 			// when increasing frequency, lpj has already been adjusted
 			do {
@@ -2049,7 +2049,7 @@ static int set_sys_pll(struct clk *clk, unsigned long src, unsigned long dst)
 			aml_write_reg32(P_HHI_SYS_PLL_CNTL3, M6_SYS_PLL_CNTL_3);
 			aml_write_reg32(P_HHI_SYS_PLL_CNTL4, M6_SYS_PLL_CNTL_4);
 			aml_write_reg32(P_HHI_SYS_PLL_CNTL, sys_clk_cntl);
-#if 1 
+#if 1
 			do {
 				udelay(100);
 			} while ((aml_read_reg32(P_HHI_SYS_PLL_CNTL) & 0x80000000) == 0);
@@ -2059,7 +2059,7 @@ static int set_sys_pll(struct clk *clk, unsigned long src, unsigned long dst)
 			pr_debug("(CTS_CPU_CLK) M=%d N=%d OD=%d sys_clk_cntl=0x%x\n", M, N, od, sys_clk_cntl);
 		}
 		else
-		{	
+		{
 			printk(KERN_ERR "sys pll: no clock setting matched.\n");
 			return -1;
 		}
@@ -2098,7 +2098,7 @@ static int set_hpll_pll(struct clk * clk, unsigned long dst)
 		vco = dst * od;
 
 		//vco 750M ~1.5G
-		for(N = 1; N < 0x1F; N++){		
+		for(N = 1; N < 0x1F; N++){
 				for(M = 0x1FF * 4; M > 0; M--){
 					rate = parent_clk * M / N;
 					if(rate == vco){
@@ -2130,8 +2130,8 @@ static int set_hpll_pll(struct clk * clk, unsigned long dst)
 				if(found)
 					break;
 		}
-		
-		if(found){		
+
+		if(found){
 			unsigned vid_cntl = 0;
 			if(od == 4)
 				od = 2;
@@ -2145,9 +2145,9 @@ static int set_hpll_pll(struct clk * clk, unsigned long dst)
 				od_fb = 1;
 			else
 				od_fb = 0;
-				
+
 			vid_cntl = (M) | (N <<10) | (od << 18) | (od_fb <<20);
-	
+
 			//VID PLL
 			M6_PLL_RESET(P_HHI_VID_PLL_CNTL);
 			aml_write_reg32(P_HHI_VID_PLL_CNTL2, M6_VID_PLL_CNTL_2 );
@@ -2155,14 +2155,14 @@ static int set_hpll_pll(struct clk * clk, unsigned long dst)
 			aml_write_reg32(P_HHI_VID_PLL_CNTL4, M6_VID_PLL_CNTL_4 );
 			aml_write_reg32(P_HHI_VID_PLL_CNTL,  vid_cntl );
 			M6_PLL_WAIT_FOR_LOCK(P_HHI_VID_PLL_CNTL);
-		}	
+		}
 		else
-		{	
-			printk("vid pll: no clock setting matched.\n");		
+		{
+			printk("vid pll: no clock setting matched.\n");
 			return -1;
 		}
 	}
-	
+
 	return 1;
 }
 static int set_fixed_pll(struct clk * clk, unsigned long dst)
@@ -2233,7 +2233,7 @@ static int set_vid2_pll(struct clk * clk, unsigned long dst)
 		vco = dst * od;
 
 		//vco 750M ~1.5G
-		for(N = 1; N < 0x1F; N++){		
+		for(N = 1; N < 0x1F; N++){
 				for(M = 0x1FF; M > 0; M--){
 					rate = parent_clk * M / N;
 					if(rate == vco){
@@ -2249,7 +2249,7 @@ static int set_vid2_pll(struct clk * clk, unsigned long dst)
 				if(found)
 					break;
 		}
-		
+
 		if(found){
 			unsigned viid_cntl = 0;
 			if(od == 4)
@@ -2258,7 +2258,7 @@ static int set_vid2_pll(struct clk * clk, unsigned long dst)
 				od = 1;
 			else
 				od = 0;
-								
+
 			viid_cntl = (M) | (N <<9) | (od << 16);
 			//VIID PLL
 			M6_PLL_RESET(P_HHI_VIID_PLL_CNTL);
@@ -2266,15 +2266,15 @@ static int set_vid2_pll(struct clk * clk, unsigned long dst)
 			aml_write_reg32(P_HHI_VIID_PLL_CNTL3, M6_VIID_PLL_CNTL_3 );
 			aml_write_reg32(P_HHI_VIID_PLL_CNTL4, M6_VIID_PLL_CNTL_4 );
 			aml_write_reg32(P_HHI_VIID_PLL_CNTL,  viid_cntl);
-			M6_PLL_WAIT_FOR_LOCK(P_HHI_VIID_PLL_CNTL);	
-		}	
+			M6_PLL_WAIT_FOR_LOCK(P_HHI_VIID_PLL_CNTL);
+		}
 		else
-		{	
-			printk("vid2 pll: no clock setting matched.\n");		
+		{
+			printk("vid2 pll: no clock setting matched.\n");
 			return -1;
 		}
 	}
-	
+
 	return 1;
 }
 //------------------------------------
@@ -2345,7 +2345,7 @@ void clk_unregister(struct clk *clk)
 					((struct clk*)(clk->sibling.prev))->sibling.next = (struct list_head*)pnext;
 				else
 					clk->parent->child.next = (struct list_head*)pnext;
-				
+
 		}
 		else if(clk->sibling.prev){
 				struct clk* prev = (struct clk*)(clk->sibling.prev);
@@ -2424,9 +2424,9 @@ int clk_ops_unregister(struct clk *clk, struct clk_ops *ops)
 {
 	if(ops == NULL || IS_CLK_ERR(clk))
 		return 0;
-		
+
 	mutex_lock(&clock_ops_lock);
-	
+
 	if(clk->clk_ops == ops){
 		if(clk->clk_ops->next == NULL)
 			clk->clk_ops = NULL;
@@ -2454,7 +2454,7 @@ EXPORT_SYMBOL(clk_ops_unregister);
 #define PLL_CLK_DEFINE(name,msr)    		\
 	static unsigned pll_##name##_data[10];	\
     CLK_DEFINE(pll_##name,xtal,msr,set_##name##_pll, \
-    		clk_msr_get,NULL,NULL,&pll_##name##_data)
+		clk_msr_get,NULL,NULL,&pll_##name##_data)
 _Pragma("GCC diagnostic ignored \"-Wdeclaration-after-statement\"");
 #define PLL_RELATION_DEF(child,parent) meson_clk_register(&clk_pll_##child,&clk_##parent)
 #define CLK_PLL_CHILD_DEF(child,parent) meson_clk_register(&clk_##child,&clk_pll_##parent)
@@ -2474,7 +2474,7 @@ static int A9_ratechange_before(unsigned long newrate,void* privdata)
        aml_clr_reg32_mask(P_HHI_MALI_CLK_CNTL,(7<<9));//mali switch to crystal
 	pdata->a9_clk_cntl = aml_read_reg32(P_HHI_SYS_CPU_CLK_CNTL);
 	aml_clr_reg32_mask(P_HHI_SYS_CPU_CLK_CNTL,(1<<7));
-	
+
 	return 0;
 }
 static int A9_ratechange_after(unsigned long newrate,void* privdata,int failed)
@@ -2483,7 +2483,7 @@ static int A9_ratechange_after(unsigned long newrate,void* privdata,int failed)
 	clk_cntl_t * pdata = (clk_cntl_t *)privdata;
 	if((pdata->a9_clk_cntl & (1<<7)) != 0)
 		aml_set_reg32_mask(P_HHI_SYS_CPU_CLK_CNTL,(1<<7));
-       aml_set_reg32_mask(P_HHI_MALI_CLK_CNTL,(7<<9));//mali switch to fclk_div5   
+       aml_set_reg32_mask(P_HHI_MALI_CLK_CNTL,(7<<9));//mali switch to fclk_div5
 	return 0;
 }
 static int Mali_ratechange_before(unsigned long newrate,void* privdata)
@@ -2498,14 +2498,14 @@ static int Mali_ratechange_after(unsigned long newrate,void* privdata,int failed
 	//recovery input pll.
 	clk_cntl_t * pdata = (clk_cntl_t *)privdata;
 
-#if  defined(CONFIG_MALI_CLK_333M)       
-       aml_set_reg32_mask(P_HHI_MALI_CLK_CNTL,(1<<8)|(6<<9));//mali switch to fclk_div3 
+#if  defined(CONFIG_MALI_CLK_333M)
+       aml_set_reg32_mask(P_HHI_MALI_CLK_CNTL,(1<<8)|(6<<9));//mali switch to fclk_div3
 #elif  defined(CONFIG_MALI_CLK_400M)
-       aml_set_reg32_mask(P_HHI_MALI_CLK_CNTL,(1<<8)|(7<<9));//mali switch to fclk_div5  
-#elif  defined(CONFIG_MALI_CLK_250M) 
+       aml_set_reg32_mask(P_HHI_MALI_CLK_CNTL,(1<<8)|(7<<9));//mali switch to fclk_div5
+#elif  defined(CONFIG_MALI_CLK_250M)
         aml_set_reg32_mask(P_HHI_MALI_CLK_CNTL,(1<<8)|(5<<9));//mali switch to fclk_div2
-#endif        
-       
+#endif
+
 	return 0;
 }
 
@@ -2554,7 +2554,7 @@ void dump_child(int nlevel, struct clk* clk)
 					dump_child(nlevel+6,(struct clk*)(p->child.next));
 					p = (struct clk*)(p->sibling.prev);
 				}
-				
+
 				p = (struct clk*)(clk->sibling.next);
 				while(p){
 					for(i = 0; i < nlevel; i++)
@@ -2585,7 +2585,7 @@ void dump_clock_tree(struct clk* clk)
 					dump_child(nlevel+6,(struct clk*)(p->child.next));
 					p = (struct clk*)clk->sibling.prev;
 				}
-				
+
 				p = (struct clk*)clk->sibling.next;
 				while(p){
 					for(i = 0; i < nlevel; i++)
@@ -2613,7 +2613,7 @@ static ssize_t  clock_tree_store(struct class *cla, struct class_attribute *attr
 		 p++;
 		 idx++;
 	}
-	
+
 	if(idx <= count){
 		int i;
 		cmd = *p;
@@ -2627,7 +2627,7 @@ static ssize_t  clock_tree_store(struct class *cla, struct class_attribute *attr
 			name[i++] = *p;
 			p++;
 			idx++;
-		}	
+		}
 		name[i] = '\0';
 		p++;
 		while((idx < count) && ((*p == ' ') || (*p == '\t')|| (*p == '\r') || (*p == '\n'))){
@@ -2639,7 +2639,7 @@ static ssize_t  clock_tree_store(struct class *cla, struct class_attribute *attr
 			sscanf(p, "%d", &val);
 			rate = val;
 		}
-				
+
 		if(cmd == 'r'){
 			if(strcmp(name,"tree") == 0){
 				struct clk* clk = clk_get_sys("xtal",NULL);
@@ -2649,14 +2649,14 @@ static ssize_t  clock_tree_store(struct class *cla, struct class_attribute *attr
 			else{
 				struct clk* clk = clk_get_sys(name,NULL);
 				if(!IS_CLK_ERR(clk)){
-					clk->rate = 0; //enforce update rate 
+					clk->rate = 0; //enforce update rate
 					printk("%s : %lu\n",name,clk_get_rate(clk));
 				}
 				else
 					printk("no %s in tree.\n",name);
 			}
-		}	
-		else if(cmd == 'w'){		
+		}
+		else if(cmd == 'w'){
 				struct clk* clk = clk_get_sys(name,NULL);
 				if(!IS_CLK_ERR(clk)){
 					if(rate < 1000000 || rate >1512000000)
@@ -2669,8 +2669,8 @@ static ssize_t  clock_tree_store(struct class *cla, struct class_attribute *attr
 					}
 				}
 				else
-					printk("no %s in tree.\n",name);			
-		}	
+					printk("no %s in tree.\n",name);
+		}
 		else if(cmd == 'o'){
 				struct clk* clk = clk_get_sys(name,NULL);
 				if(!IS_CLK_ERR(clk)){
@@ -2680,8 +2680,8 @@ static ssize_t  clock_tree_store(struct class *cla, struct class_attribute *attr
 							printk("gate on %s failed.\n",name);
 				}
 				else
-					printk("no %s in tree.\n",name);			
-			
+					printk("no %s in tree.\n",name);
+
 		}
 		else if(cmd == 'f'){
 				struct clk* clk = clk_get_sys(name,NULL);
@@ -2690,7 +2690,7 @@ static ssize_t  clock_tree_store(struct class *cla, struct class_attribute *attr
 						printk("gate off %s.\n",name);
 				}
 				else
-					printk("no %s in tree.\n",name);						
+					printk("no %s in tree.\n",name);
 		}
 		else
 			printk("command:%c invalid.\n",cmd);
@@ -2707,7 +2707,7 @@ static ssize_t  clock_tree_show(struct class *cla, struct class_attribute *attr,
 	printk("3. echo w clockname rate >clkTree  ,modify the clock rate.\n");
 	printk("4. echo o clockname >clkTree  ,gate on clock.\n");
 	printk("5. echo f clockname >clkTree  ,gate off clock.\n");
-	
+
 	printk("Example:\n");
 	printk("1. display the clock tree.\n");
 	printk("   echo r tree >clkTree\n");
@@ -2725,7 +2725,7 @@ static struct class_attribute clktree_class_attrs[] = {
 	__ATTR_NULL,
 };
 
-static struct class meson_clktree_class = {    
+static struct class meson_clktree_class = {
 	.name = "meson_clocktree",
 	.class_attrs = clktree_class_attrs,
 };
@@ -2817,13 +2817,13 @@ static int __init meson_clock_init(void)
     PLL_RELATION_DEF(vid2,xtal);
     PLL_RELATION_DEF(fixed,xtal);
     PLL_RELATION_DEF(hpll,xtal);
-    
+
     // Add clk81
 #ifdef CONFIG_CLK81_DFS
     CLK_DEFINE(clk81, pll_fixed, 7, clk_set_rate_clk81, clk_msr_get, NULL, NULL, NULL);
 #else
     CLK_DEFINE(clk81, pll_fixed, 7, NULL, clk_msr_get, NULL, NULL, NULL);
-#endif 
+#endif
 
 	// Add clk81 as pll_fixed's child
     CLK_PLL_CHILD_DEF(clk81, fixed);
@@ -2858,7 +2858,7 @@ static int __init meson_clock_init(void)
 
 	clkdev_add(&clk_lookup_smp_twd);
 #endif /* CONFIG_HAVE_ARM_TWD */
-	
+
 	// Add GPU clock
 	CLK_DEFINE(mali, pll_fixed, 35, clk_set_rate_mali, clk_msr_get, NULL, NULL, &clk_a9_clk);
 	clk_mali.min = 111000000;
@@ -2874,16 +2874,16 @@ static int __init meson_clock_init(void)
     meson_clk_register(&clk_usb0,&clk_xtal);
     //clk_usb0.clk_gate_reg_adr = P_USB_ADDR0;
     //clk_usb0.clk_gate_reg_mask = (1<<0);
-    
+
     // Add clk usb1
     CLK_DEFINE(usb1,xtal,5,NULL,clk_msr_get,clk_enable_usb,clk_disable_usb,"usb1");
     meson_clk_register(&clk_usb1,&clk_xtal);
     //clk_usb1.clk_gate_reg_adr = P_USB_ADDR8;
     //clk_usb1.clk_gate_reg_mask = (1<<0);
-		
+
 	{
 		// Dump clocks
-		char *clks[] = { 
+		char *clks[] = {
 				"xtal",
 				"pll_sys",
 				"pll_fixed",
@@ -2906,7 +2906,7 @@ static int __init meson_clock_init(void)
 				printk("clkrate [ %s \t] : %lu\n", clk_name, clk_get_rate(clk));
 		}
 	}
-		
+
 #ifdef CONFIG_CLKTREE_DEBUG
 	class_register(&meson_clktree_class);
 #endif

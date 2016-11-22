@@ -12,6 +12,7 @@
 #include <linux/kconfig.h>
 #include <linux/kernel.h>
 #include <linux/pci.h>
+#include <linux/init.h>
 #include <linux/delay.h>
 #include <linux/export.h>
 #include <linux/acpi.h>

@@ -4715,7 +4715,7 @@ struct aml_camera_i2c_fig_s OV5642_AF_firmware[] = {
 	{0x3026, 0x00},
 	{0x3027, 0x7F},
 	{0x3000, 0x00},
-#endif /* CONFIG_AD5820 */	
+#endif /* CONFIG_AD5820 */
 
 #ifdef CONFIG_DW9714
 	{0x3000, 0x20},
@@ -8456,7 +8456,7 @@ struct aml_camera_i2c_fig_s OV5642_AF_firmware[] = {
 	{0x8e96, 0x09},
 	{0x8e97, 0x05},
 	{0x8e98, 0x07},
-	{0x8e99, 0x01},  
+	{0x8e99, 0x01},
 	{0x8e9a, 0x01},  //max current 60mA   0x3FF = 120mA
 	{0x8e9b, 0xff},
 	{0x8e9c, 0x00},  //min current 12mA   0X3FF = 120mA
@@ -9788,7 +9788,7 @@ struct aml_camera_i2c_fig_s OV5642_AF_firmware[] = {
 	{0x3027, 0x7F},
 	{0x3000, 0x00},
 #endif /* CONFIG_DW9714 */
-	
+
 	{0xffff, 0xff}
 };
 

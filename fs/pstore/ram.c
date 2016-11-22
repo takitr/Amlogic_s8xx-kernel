@@ -456,7 +456,7 @@ static ssize_t ram_console_read_old(struct file *file, char __user *buf,
 		kfree(buf_f);
 		buf_f = NULL;
 		record_size += size;
-		
+
 //		printk("size=0x%x old_log_size=0x%x record_size=0x%x\n",size,cxt->cprz->old_log_size,record_size);
 	}
 
@@ -467,7 +467,7 @@ static ssize_t ram_console_read_old(struct file *file, char __user *buf,
 
 	if(record_size > cxt->cprz->old_log_size)
 		record_size = cxt->cprz->old_log_size;
-	
+
 	count = min(len, (size_t)(record_size - pos));
 //	printk("old_log_size = 0x%x count=0x%x len=0x%x record_size=0x%x\n",cxt->cprz->old_log_size,count, len,record_size);
 	if (copy_to_user(buf, cxt->cprz->old_log + pos, count))
@@ -586,10 +586,10 @@ static int ramoops_probe(struct platform_device *pdev)
 
 	if(cxt->cprz->old_log){
 	//	pstore_iomap = ioremap(cxt->cprz->old_log,cxt->cprz->old_log_size);
-		printk("cprz old_log=0x%x\n",(unsigned int *)cxt->cprz->old_log);
+		printk("cprz old_log=0x%x\n",(unsigned int )cxt->cprz->old_log);
 		entry = proc_create_data("last_kmsg", S_IFREG | S_IRUGO, NULL,&ram_console_file_ops,NULL);
 	}
-	
+
 	if (!entry) {
 		printk(KERN_ERR "ram_console: failed to create proc entry\n");
 		return 0;

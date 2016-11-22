@@ -62,4 +62,3 @@ void ge2dgen_cb(ge2d_context_t *wq, int (*cmd_cb)(unsigned), unsigned param);
 void ge2dgen_const_color(ge2d_context_t *wq, unsigned color);
 
 #endif /* GE2DGEN_H */
-

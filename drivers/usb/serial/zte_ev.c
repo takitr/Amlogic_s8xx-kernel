@@ -13,6 +13,7 @@
  * show the commands used to talk to the device, but I am not sure.
  */
 #include <linux/kernel.h>
+#include <linux/init.h>
 #include <linux/tty.h>
 #include <linux/slab.h>
 #include <linux/module.h>

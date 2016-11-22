@@ -33,7 +33,7 @@ static int subtitle_width = 0;
 static int subtitle_height = 0;
 static int subtitle_type = -1;
 static int subtitle_current = 0; // no subtitle
-//sub_index node will be modified by libplayer; amlogicplayer will use 
+//sub_index node will be modified by libplayer; amlogicplayer will use
 //it to detect wheather libplayer switch sub finished or not
 static int subtitle_index = 0; // no subtitle
 //static int subtitle_size = 0;
@@ -145,7 +145,7 @@ static ssize_t store_reset(struct class *class,
     ssize_t r;
 
     r = sscanf(buf, "%d", &reset);
-	
+
     printk("reset is %d\n", reset);
     //if ((r != 1))
     //return -EINVAL;
@@ -448,33 +448,33 @@ static struct class subtitle_class = {
  * /dev/amvideo APIs
  *********************************************************/
 static int amsubtitle_open(struct inode *inode, struct file *file)
-{	
+{
     mutex_lock(&amsubtitle_mutex);
-	
+
     if (subdevice_open) {
         mutex_unlock(&amsubtitle_mutex);
         return -EBUSY;
     }
-	
+
 	subdevice_open = 1;
 
     try_module_get(THIS_MODULE);
-	
+
     mutex_unlock(&amsubtitle_mutex);
-	
+
     return 0;
 }
 
 static int amsubtitle_release(struct inode *inode, struct file *file)
 {
     mutex_lock(&amsubtitle_mutex);
-	
+
     subdevice_open = 0;
-	
+
     module_put(THIS_MODULE);
-	
+
     mutex_unlock(&amsubtitle_mutex);
-	
+
     return 0;
 }
 
@@ -603,7 +603,7 @@ static long amsubtitle_ioctl(struct file *file,
             default:
 		        break;
             }
-			
+
         }
 
         break;
@@ -660,7 +660,7 @@ static int __init subtitle_init(void)
         ret = PTR_ERR(amsub_clsp);
         goto err1;
     }
-	
+
     create_amsub_attrs(amsub_clsp);
 
     amsub_cdevp = kmalloc(sizeof(struct cdev), GFP_KERNEL);
@@ -677,7 +677,7 @@ static int __init subtitle_init(void)
     if(ret){
         printk("amsub:failed to add cdev\n");
         goto err3;
-    } 
+    }
 
     amsubtitle_dev = device_create(amsub_clsp, NULL,
                                 MKDEV(MAJOR(amsub_devno),0), NULL,
@@ -708,7 +708,7 @@ static void __exit subtitle_exit(void)
     unregister_chrdev_region(amsub_devno, 1);
     device_destroy(amsub_clsp, MKDEV(MAJOR(amsub_devno),0));
     cdev_del(amsub_cdevp);
-    kfree(amsub_cdevp);  
+    kfree(amsub_cdevp);
     remove_amsub_attrs(amsub_clsp);
     class_destroy(amsub_clsp);
 }

@@ -494,17 +494,17 @@ static struct flash_info * jedec_probe(struct spi_device *spi)
 	 * we use here.  Supporting some chips might require using it.
 	 */
 	tmp = spi_write_then_read(spi, &code, 1, id, 3);
-	if (tmp < 0) {		
+	if (tmp < 0) {
 		pr_debug("%s: error %d reading JEDEC ID\n",
 			dev_name(&spi->dev), tmp);
 		return NULL;
-	}	
+	}
 	jedec = id[0];
 	jedec = jedec << 8;
 	jedec |= id[1];
 	jedec = jedec << 8;
 	jedec |= id[2];
-	
+
 	for (tmp = 0, info = spi_nor_data;
 			tmp < ARRAY_SIZE(spi_nor_data);
 			tmp++, info++) {
@@ -519,15 +519,19 @@ static struct flash_info * jedec_probe(struct spi_device *spi)
 //boot_flag
 #define R_BOOT_DEVICE_FLAG  READ_CBUS_REG(ASSIST_POR_CONFIG)
 
-#ifdef CONFIG_ARCH_MESON8
+#if MESON_CPU_TYPE >= MESON_CPU_TYPE_MESON8
 #define POR_BOOT_VALUE 	((((R_BOOT_DEVICE_FLAG>>9)&1)<<2)|((R_BOOT_DEVICE_FLAG>>6)&3))
+//#define POR_SPI_BOOT()  		((POR_BOOT_VALUE == 5) || (POR_BOOT_VALUE == 4))
+#define POR_SPI_BOOT()	((IS_MESON_M8_CPU)?((POR_BOOT_VALUE == 5)||(POR_BOOT_VALUE == 4)) : (POR_BOOT_VALUE == 5))
+//#define POR_EMMC_BOOT()	 (POR_BOOT_VALUE == 3)
+#define POR_EMMC_BOOT()	((IS_MESON_M8_CPU)?(POR_BOOT_VALUE == 3):((POR_BOOT_VALUE == 3)||(POR_BOOT_VALUE == 1)))
 #else
 #define POR_BOOT_VALUE 	(R_BOOT_DEVICE_FLAG & 7)
+#define POR_SPI_BOOT()  		((POR_BOOT_VALUE == 5) || (POR_BOOT_VALUE == 4))
+#define POR_EMMC_BOOT()	 (POR_BOOT_VALUE == 3)
 #endif
 
 #define POR_NAND_BOOT()	 ((POR_BOOT_VALUE == 7) || (POR_BOOT_VALUE == 6))
-#define POR_SPI_BOOT()  		((POR_BOOT_VALUE == 5) || (POR_BOOT_VALUE == 4))
-#define POR_EMMC_BOOT()	 (POR_BOOT_VALUE == 3)
 #define POR_CARD_BOOT() 	(POR_BOOT_VALUE == 0)
 
 #define SPI_BOOT_FLAG 			0
@@ -540,15 +544,15 @@ static struct flash_info * jedec_probe(struct spi_device *spi)
 static int boot_device_flag = -1;
 /***
 *boot_device_flag = 0 ; indicate spi+nand /spi+emmc boot
-*boot_device_flag = 1;  indicate no spi  
+*boot_device_flag = 1;  indicate no spi
 ***/
 static int check_storage_device(void)
 {
 	int value  = -1;
 	value = boot_device_flag;
-	
+
 	if((value == -1)||(value == 0)||(value == SPI_NAND_FLAG) ||(value == SPI_EMMC_FLAG) ){
-				if((value == 0) ||(value == -1)){ 	
+				if((value == 0) ||(value == -1)){
 					if(POR_NAND_BOOT()){
 						boot_device_flag = -1;
 					}else if(POR_EMMC_BOOT()){
@@ -564,7 +568,7 @@ static int check_storage_device(void)
 		}else {
 			boot_device_flag = -1;
 		}
- 	printk("%s : spi boot_device_flag : %d\n",__func__,boot_device_flag);
+	printk("%s : spi boot_device_flag : %d\n",__func__,boot_device_flag);
 
 	if((boot_device_flag == 0)){
 		return 0;
@@ -582,7 +586,7 @@ static int  __init get_storage_device(char *str)
 	printk("%s : get storage device: storage %s\n",__func__,str);
 	printk("%s : value=%d\n",__func__,value);
 	boot_device_flag = value;
-	
+
 	return 0;
 }
 
@@ -607,7 +611,7 @@ early_param("storage",get_storage_device);
 	 * a chip ID, try the JEDEC id commands; they'll work for most
 	 * newer chips, even if we don't recognize the particular chip.
 	 */
-		
+
 #ifdef CONFIG_OF
 	int index;
 	int val = 0;
@@ -625,7 +629,7 @@ early_param("storage",get_storage_device);
 		printk("%s %d boot_device_flag %d : do not init spi\n",__func__,__LINE__,boot_device_flag);
 		return  -ENOMEM;
 	}
-	
+
 #ifdef CONFIG_OF
 
 	if(spi->dev.of_node){
@@ -634,7 +638,7 @@ early_param("storage",get_storage_device);
 				printk("%s amlogic_spi_platform alloc err\n",__func__);
 				return -1;
 		}
-		
+
 		ret = of_property_read_u32(np,"nr-parts",&data->nr_parts);
 		if(ret){
 			printk("%s:%d,please config nr-parts item\n",__func__,__LINE__);
@@ -651,7 +655,7 @@ early_param("storage",get_storage_device);
 			}
 			data->parts = spi_parts;
 		}
-		
+
 		for(index = 0; index < data->nr_parts; index++)
 		{
 			propname = kasprintf(GFP_KERNEL, "nr-part-%d", index);
@@ -684,12 +688,12 @@ early_param("storage",get_storage_device);
 				goto err;
 			}
 		}
-		spi->dev.platform_data = data;		
+		spi->dev.platform_data = data;
 	}
 #else
 	data = spi->dev.platform_data;
 #endif
-	if (data && data->type) {		
+	if (data && data->type) {
 		for (i = 0, info = spi_nor_data;
 				i < ARRAY_SIZE(spi_nor_data);
 				i++, info++) {
@@ -698,7 +702,7 @@ early_param("storage",get_storage_device);
 		}
 
 		/* unrecognized chip? */
-		if (i == ARRAY_SIZE(spi_nor_data)) {			
+		if (i == ARRAY_SIZE(spi_nor_data)) {
 			info = jedec_probe(spi);
 			if (!info) {
 				pr_debug("%s: unrecognized id %s\n",
@@ -707,7 +711,7 @@ early_param("storage",get_storage_device);
 			}
 
 		/* recognized; is that chip really what's there? */
-		} else if ((i == ARRAY_SIZE(spi_nor_data)) && (info->jedec_id)) {			
+		} else if ((i == ARRAY_SIZE(spi_nor_data)) && (info->jedec_id)) {
 			struct flash_info	*chip = jedec_probe(spi);
 
 			if (!chip || chip != info) {
@@ -717,8 +721,8 @@ early_param("storage",get_storage_device);
 				info = NULL;
 			}
 		}
-	} else		
-		info = jedec_probe(spi);	
+	} else
+		info = jedec_probe(spi);
 
 	if (!info)
 		return -ENODEV;
@@ -750,13 +754,13 @@ early_param("storage",get_storage_device);
 	spi_nor->mtd._write = spi_nor_write;
 
 	/* prefer "small sector" erase if possible */
-	if (data) {		
+	if (data) {
 		spi_nor->mtd.writesize = info->block_size;
-		
+
 		spi_nor->mtd.erasesize = 4096;
 		if(!(info->flags & SECT_4K) && !(info->flags & BLOCK_64K))
-			spi_nor->mtd.erasesize = info->block_size;		
-	
+			spi_nor->mtd.erasesize = info->block_size;
+
 		if (spi_nor->mtd.erasesize == 0x1000)
 			spi_nor->erase_opcode = OPCODE_SE_4K;
 		else if (spi_nor->mtd.erasesize == 0x10000)
@@ -765,16 +769,16 @@ early_param("storage",get_storage_device);
 			spi_nor->erase_opcode = OPCODE_BE;
 	}
 	else {
-		if (info->flags & SECT_4K) {			
+		if (info->flags & SECT_4K) {
 			spi_nor->mtd.writesize = 1;
 			spi_nor->erase_opcode = OPCODE_SE_4K;
 			spi_nor->mtd.erasesize = 4096;
-		} else if (info->flags & BLOCK_64K) {			
+		} else if (info->flags & BLOCK_64K) {
 			spi_nor->mtd.writesize = 4096;
 			spi_nor->erase_opcode = OPCODE_BE;
 			spi_nor->mtd.erasesize = info->block_size;
 		}
-		else {			
+		else {
 			spi_nor->mtd.writesize = 1;
 			spi_nor->erase_opcode = OPCODE_BE;
 			spi_nor->mtd.erasesize = info->block_size;

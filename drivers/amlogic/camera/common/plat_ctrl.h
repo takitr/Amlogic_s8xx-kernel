@@ -5,15 +5,15 @@
 #define ADDR16_DATA8		1
 #define ADDR16_DATA16 		2
 #define ADDR8_DATA16		3
-#define TIME_DELAY		0xfe   
-#define END_OF_SCRIPT			0xff   
+#define TIME_DELAY		0xfe
+#define END_OF_SCRIPT			0xff
 
 typedef struct cam_i2c_msg_s {
 	unsigned char type;
 	unsigned short addr;
 	unsigned short data;
 } cam_i2c_msg_t;
-	
+
 
 extern int i2c_get_byte(struct i2c_client *client,unsigned short addr);
 extern int i2c_get_word(struct i2c_client *client,unsigned short addr);

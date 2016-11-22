@@ -321,7 +321,7 @@ static struct v4l2_queryctrl hm5065_qctrl[] = {
 		.step		= 1,
 		.default_value	= (1000 << 16) | 1000,
 		.flags         = V4L2_CTRL_FLAG_SLIDER,
- 	}
+	}
 };
 
 struct v4l2_querymenu hm5065_qmenu_autofocus[] = {
@@ -391,12 +391,12 @@ struct v4l2_querymenu hm5065_qmenu_wbmode[] = {
     },{
         .id         = V4L2_CID_DO_WHITE_BALANCE,
         .index      = CAM_WB_FLUORESCENT,
-        .name       = "fluorescent", 
+        .name       = "fluorescent",
         .reserved   = 0,
     },{
         .id         = V4L2_CID_DO_WHITE_BALANCE,
         .index      = CAM_WB_FLUORESCENT,
-        .name       = "warm-fluorescent", 
+        .name       = "warm-fluorescent",
         .reserved   = 0,
     },
 };
@@ -452,11 +452,11 @@ static struct hm5065_fmt formats[] = {
 	}, {
 		.name     = "12  Y/CbCr 4:2:0SP",
 		.fourcc   = V4L2_PIX_FMT_NV12,
-		.depth    = 12,    
+		.depth    = 12,
 	}, {
 		.name     = "12  Y/CbCr 4:2:0SP",
 		.fourcc   = V4L2_PIX_FMT_NV21,
-		.depth    = 12,    
+		.depth    = 12,
 	}, {
 		.name     = "YUV420P",
 		.fourcc   = V4L2_PIX_FMT_YUV420,
@@ -480,7 +480,7 @@ static struct hm5065_fmt *get_format(struct v4l2_format *f)
 	}
 
 	if (k == ARRAY_SIZE(formats))
-    	return NULL;
+	return NULL;
 
 	return &formats[k];
 }
@@ -544,19 +544,19 @@ struct hm5065_device {
 
 	/* platform device data from board initting. */
 	aml_cam_info_t  cam_info;
-    
+
 	/* Control 'registers' */
 	int                qctl_regs[ARRAY_SIZE(hm5065_qctrl)];
-	
+
 	/* current resolution param for preview and capture */
 	resolution_param_t* cur_resolution_param;
-	
+
 	/* wake lock */
 	struct wake_lock	wake_lock;
-	
+
 	/* for down load firmware */
 	struct work_struct dl_work;
-	
+
 	int firmware_ready;
 };
 
@@ -594,14 +594,14 @@ struct hm5065_fh {
 static struct aml_camera_i2c_fig_s HM5065_script[] = {
 		{0x0083,0x00},   //	; HFlip disable
 		{0x0084,0x00},   //	; VFlip	disable
-		{0x0040,0x01},//	binning mode and subsampling mode for frame rate   
+		{0x0040,0x01},//	binning mode and subsampling mode for frame rate
 		{0x0041,0x04},//	04 : VGA mode : 0A : self define , 00 : 5M ,03:SVGA
 		{0xffff,0xff},
 };
 
 #define FPS_15_HZ_960P
 static struct aml_camera_i2c_fig_s HM5065_preview_960P_script[] ={
-    
+
 	  {0x0010,0x02},
 	  {0x00b2,0x50},//713M P£º89M
 	  {0x00b3,0xca},
@@ -636,17 +636,17 @@ static struct aml_camera_i2c_fig_s HM5065_preview_QVGA_script[] ={
 
 static struct aml_camera_i2c_fig_s HM5065_capture_5M_script[] ={
 		{0x0030,0x11},
-		{0x0040,0x00},//Full size                    
-		{0x0041,0x0A},//00:full size                 
-		{0x0042,0x0A},//X:2048                       
-		{0x0043,0x20},                               
-		{0x0044,0x07},//Y:1536                       
-		{0x0045,0x98},   	
+		{0x0040,0x00},//Full size
+		{0x0041,0x0A},//00:full size
+		{0x0042,0x0A},//X:2048
+		{0x0043,0x20},
+		{0x0044,0x07},//Y:1536
+		{0x0045,0x98},
 		{0xffff,0xff}
 } ;
 
 static struct aml_camera_i2c_fig_s HM5065_capture_3M_script[] = {
- 		{0x0030,0x11},
+		{0x0030,0x11},
 		{0x0040,0x00},
 		{0x0041,0x0a},
 		{0x0042,0x08},
@@ -654,14 +654,14 @@ static struct aml_camera_i2c_fig_s HM5065_capture_3M_script[] = {
 		{0x0044,0x06},
 		{0x0045,0x00},
 		{0x0010,0x01},
-	  	{0xffff, 0xff}
+		{0xffff, 0xff}
 };
 
 static struct aml_camera_i2c_fig_s HM5065_capture_2M_script[] ={
-    	{0x0030,0x11},
+	{0x0030,0x11},
 		{0x0040,0x00},
 		{0x0041,0x01},
-	  	{0xffff,0xff}
+		{0xffff,0xff}
 } ;
 
 static resolution_param_t  prev_resolution_array[] = {
@@ -711,7 +711,7 @@ static resolution_param_t  capture_resolution_array[] = {
 		.active_fps			= 5,
 		.size_type			= SIZE_2592X1944,
 		.reg_script			= HM5065_capture_5M_script,
-	}, 
+	},
 	{
 		.frmsize			= {1600, 1200},
 		.active_frmsize			= {1600, 1198},
@@ -772,56 +772,56 @@ void HM5065_init_regs(struct hm5065_device *dev)
 void HM5065_set_param_wb(struct hm5065_device *dev,enum  camera_wb_flip_e para)//°×Æ½ºâ
 	{
 		struct i2c_client *client = v4l2_get_subdevdata(&dev->sd);
-	
-		switch (para) { 	 
+
+		switch (para) {
 			case CAM_WB_AUTO://×Ô¶¯
-			   // i2c_put_byte(client, 0x0085, 0x02);	
-				i2c_put_byte(client, 0x01a0, 0x01); 		   
+			   // i2c_put_byte(client, 0x0085, 0x02);
+				i2c_put_byte(client, 0x01a0, 0x01);
 				break;
-	
+
 			case CAM_WB_CLOUD: //ÒõÌì
 				i2c_put_byte(client, 0x01a0, 0x03);
 				i2c_put_byte(client, 0x01a1, 0x62);
 				i2c_put_byte(client, 0x01a2, 0x08);
-				i2c_put_byte(client, 0x01a3, 0x00); 		
+				i2c_put_byte(client, 0x01a3, 0x00);
 				break;
-	
+
 			case CAM_WB_DAYLIGHT: //
-				//i2c_put_byte(client, 0x0085, 0x03); 
+				//i2c_put_byte(client, 0x0085, 0x03);
 				i2c_put_byte(client, 0x01a0, 0x03);
 				i2c_put_byte(client, 0x01a1, 0x7F);
 				i2c_put_byte(client, 0x01a2, 0x3F);
 				i2c_put_byte(client, 0x01a3, 0x01);
 				break;
-	
-			case CAM_WB_INCANDESCENCE: 
+
+			case CAM_WB_INCANDESCENCE:
 				i2c_put_byte(client, 0x01a0, 0x03);
 				i2c_put_byte(client, 0x01a1, 0x39);
 				i2c_put_byte(client, 0x01a2, 0x00);
 				i2c_put_byte(client, 0x01a3, 0x59);
 				break;
-				
-			case CAM_WB_TUNGSTEN: 
+
+			case CAM_WB_TUNGSTEN:
 				i2c_put_byte(client, 0x01a0, 0x03);
 				i2c_put_byte(client, 0x01a1, 0x05);
 				i2c_put_byte(client, 0x01a2, 0x00);
 				i2c_put_byte(client, 0x01a3, 0x7f);
 				break;
-	
+
 			case CAM_WB_FLUORESCENT:
 				i2c_put_byte(client, 0x01a0, 0x03);
 				i2c_put_byte(client, 0x01a1, 0x1F);
 				i2c_put_byte(client, 0x01a2, 0x00);
 				i2c_put_byte(client, 0x01a3, 0x4D);
 				break;
-	
+
 			case CAM_WB_MANUAL:
 			default:
 					// TODO
 				break;
 		}
-		
-	
+
+
 	}
 
  /* HM5065_set_param_wb */
@@ -846,45 +846,45 @@ void HM5065_set_param_exposure(struct hm5065_device *dev,enum camera_exposure_e 
 	struct i2c_client *client = v4l2_get_subdevdata(&dev->sd);
 
     switch (para) {
-    	case EXPOSURE_N4_STEP:  //¸º4µµ  
-            i2c_put_byte(client, 0x0130, 0xfc);       	
-        	break;
-            
-    	case EXPOSURE_N3_STEP:
-            i2c_put_byte(client, 0x0130, 0xfd); 
-        	break;
-            
-    	case EXPOSURE_N2_STEP:
-            i2c_put_byte(client, 0x0130, 0xfe); 
-        	break;
-            
-    	case EXPOSURE_N1_STEP:
-            i2c_put_byte(client, 0x0130, 0xff); 
-        	break;
-            
-    	case EXPOSURE_0_STEP://Ä¬ÈÏÁãµµ
-            i2c_put_byte(client, 0x0130, 0x00); 
-        	break;
-            
-    	case EXPOSURE_P1_STEP://ÕýÒ»µµ
-            i2c_put_byte(client, 0x0130, 0x01); 
-        	break;
-            
-    	case EXPOSURE_P2_STEP:
-            i2c_put_byte(client, 0x0130, 0x02); 
-        	break;
-            
-    	case EXPOSURE_P3_STEP:
-            i2c_put_byte(client, 0x0130, 0x03); 
-        	break;
-            
-    	case EXPOSURE_P4_STEP:    
-            i2c_put_byte(client, 0x0130, 0x04); 
-        	break;
-            
-    	default:
-            i2c_put_byte(client, 0x0130, 0x00); 
-        	break;
+	case EXPOSURE_N4_STEP:  //¸º4µµ
+            i2c_put_byte(client, 0x0130, 0xfc);
+		break;
+
+	case EXPOSURE_N3_STEP:
+            i2c_put_byte(client, 0x0130, 0xfd);
+		break;
+
+	case EXPOSURE_N2_STEP:
+            i2c_put_byte(client, 0x0130, 0xfe);
+		break;
+
+	case EXPOSURE_N1_STEP:
+            i2c_put_byte(client, 0x0130, 0xff);
+		break;
+
+	case EXPOSURE_0_STEP://Ä¬ÈÏÁãµµ
+            i2c_put_byte(client, 0x0130, 0x00);
+		break;
+
+	case EXPOSURE_P1_STEP://ÕýÒ»µµ
+            i2c_put_byte(client, 0x0130, 0x01);
+		break;
+
+	case EXPOSURE_P2_STEP:
+            i2c_put_byte(client, 0x0130, 0x02);
+		break;
+
+	case EXPOSURE_P3_STEP:
+            i2c_put_byte(client, 0x0130, 0x03);
+		break;
+
+	case EXPOSURE_P4_STEP:
+            i2c_put_byte(client, 0x0130, 0x04);
+		break;
+
+	default:
+            i2c_put_byte(client, 0x0130, 0x00);
+		break;
     }
 } /* HM5065_set_param_exposure */
 /*************************************************************************
@@ -906,9 +906,9 @@ void HM5065_set_param_exposure(struct hm5065_device *dev,enum camera_exposure_e 
 void HM5065_set_param_effect(struct hm5065_device *dev,enum camera_effect_flip_e para)//ÌØÐ§ÉèÖÃ
 {
 	struct i2c_client *client = v4l2_get_subdevdata(&dev->sd);
-  
+
     switch (para) {
-    	case CAM_EFFECT_ENC_NORMAL://Õý³£
+	case CAM_EFFECT_ENC_NORMAL://Õý³£
       i2c_put_byte(client, 0x0380, 0x00);
 			i2c_put_byte(client, 0x0381, 0x00);
 			i2c_put_byte(client, 0x0382, 0x00);
@@ -921,9 +921,9 @@ void HM5065_set_param_effect(struct hm5065_device *dev,enum camera_effect_flip_e
 			i2c_put_byte(client, 0x01a6, 0x00);
 			i2c_put_byte(client, 0x01a7, 0x3e);
 			i2c_put_byte(client, 0x01a8, 0x00);
-        	break;        
+		break;
 
-    	case CAM_EFFECT_ENC_GRAYSCALE://»Ò½×
+	case CAM_EFFECT_ENC_GRAYSCALE://»Ò½×
       i2c_put_byte(client, 0x0380, 0x00);
 			i2c_put_byte(client, 0x0381, 0x00);
 			i2c_put_byte(client, 0x0382, 0x00);
@@ -936,9 +936,9 @@ void HM5065_set_param_effect(struct hm5065_device *dev,enum camera_effect_flip_e
 			i2c_put_byte(client, 0x01a6, 0x00);
 			i2c_put_byte(client, 0x01a7, 0x3e);
 			i2c_put_byte(client, 0x01a8, 0x00);
-        	break;
+		break;
 
-    	case CAM_EFFECT_ENC_SEPIA://¸´¹Å
+	case CAM_EFFECT_ENC_SEPIA://¸´¹Å
       i2c_put_byte(client, 0x0380, 0x00);
 			i2c_put_byte(client, 0x0381, 0x00);
 			i2c_put_byte(client, 0x0382, 0x00);
@@ -951,9 +951,9 @@ void HM5065_set_param_effect(struct hm5065_device *dev,enum camera_effect_flip_e
 			i2c_put_byte(client, 0x01a6, 0x00);
 			i2c_put_byte(client, 0x01a7, 0x3e);
 			i2c_put_byte(client, 0x01a8, 0x00);
-        	break;        
-                
-    	case CAM_EFFECT_ENC_SEPIAGREEN://¸´¹ÅÂÌ
+		break;
+
+	case CAM_EFFECT_ENC_SEPIAGREEN://¸´¹ÅÂÌ
       i2c_put_byte(client, 0x0380, 0x00);
 			i2c_put_byte(client, 0x0381, 0x00);
 			i2c_put_byte(client, 0x0382, 0x00);
@@ -966,9 +966,9 @@ void HM5065_set_param_effect(struct hm5065_device *dev,enum camera_effect_flip_e
 			i2c_put_byte(client, 0x01a6, 0x00);
 			i2c_put_byte(client, 0x01a7, 0x3e);
 			i2c_put_byte(client, 0x01a8, 0x00);
-        	break;                    
+		break;
 
-    	case CAM_EFFECT_ENC_SEPIABLUE://¸´¹ÅÀ¶
+	case CAM_EFFECT_ENC_SEPIABLUE://¸´¹ÅÀ¶
       i2c_put_byte(client, 0x0380, 0x00);
 			i2c_put_byte(client, 0x0381, 0x00);
 			i2c_put_byte(client, 0x0382, 0x00);
@@ -981,9 +981,9 @@ void HM5065_set_param_effect(struct hm5065_device *dev,enum camera_effect_flip_e
 			i2c_put_byte(client, 0x01a6, 0x00);
 			i2c_put_byte(client, 0x01a7, 0x3e);
 			i2c_put_byte(client, 0x01a8, 0x00);
-        	break;                                
+		break;
 
-    	case CAM_EFFECT_ENC_COLORINV://µ×Æ¬
+	case CAM_EFFECT_ENC_COLORINV://µ×Æ¬
       i2c_put_byte(client, 0x0380, 0x01);
 			i2c_put_byte(client, 0x0381, 0x00);
 			i2c_put_byte(client, 0x0382, 0x00);
@@ -996,10 +996,10 @@ void HM5065_set_param_effect(struct hm5065_device *dev,enum camera_effect_flip_e
 			i2c_put_byte(client, 0x01a6, 0x00);
 			i2c_put_byte(client, 0x01a7, 0x3e);
 			i2c_put_byte(client, 0x01a8, 0x00);
-        	break;        
+		break;
 
-    	default:
-        	break;
+	default:
+		break;
     }
 } /* HM5065_set_param_effect */
 
@@ -1046,12 +1046,12 @@ static int HM5065_AutoFocus(struct hm5065_device *dev, int focus_mode)
 	struct i2c_client *client = v4l2_get_subdevdata(&dev->sd);
 	int ret = 0;
     //int i = 0;
-    
+
 	switch (focus_mode) {
 					case CAM_FOCUS_MODE_AUTO:
-					i2c_put_byte(client, 0x070a , 0x03);			
+					i2c_put_byte(client, 0x070a , 0x03);
 					//msleep(100);
-					i2c_put_byte(client, 0x070b , 0x01);			
+					i2c_put_byte(client, 0x070b , 0x01);
 					msleep(200);
 					i2c_put_byte(client, 0x070b , 0x02);
 					bDoingAutoFocusMode = true;
@@ -1059,7 +1059,7 @@ static int HM5065_AutoFocus(struct hm5065_device *dev, int focus_mode)
 					break;
 					case CAM_FOCUS_MODE_CONTI_VID:
 					case CAM_FOCUS_MODE_CONTI_PIC:
-					i2c_put_byte(client, 0x070a , 0x01); //start to continous focus            
+					i2c_put_byte(client, 0x070a , 0x01); //start to continous focus
 					printk("start continous focus\n");
 					break;
 					case CAM_FOCUS_MODE_RELEASE:
@@ -1067,7 +1067,7 @@ static int HM5065_AutoFocus(struct hm5065_device *dev, int focus_mode)
 					default:
 					//i2c_put_byte(client, 0x070a , 0x00);
 					//i2c_put_byte(client, 0x070c , 0x00);
-					//i2c_put_byte(client, 0x070c , 0x03);			
+					//i2c_put_byte(client, 0x070c , 0x03);
 					printk("release focus to infinit\n");
 					break;
     }
@@ -1079,7 +1079,7 @@ static int HM5065_FlashCtrl(struct hm5065_device *dev, int flash_mode)
 {
 	//struct i2c_client *client = v4l2_get_subdevdata(&dev->sd);
 	int ret = 0;
-    
+
 	switch (flash_mode) {
 	case FLASHLIGHT_ON:
 	case FLASHLIGHT_AUTO:
@@ -1091,7 +1091,7 @@ static int HM5065_FlashCtrl(struct hm5065_device *dev, int flash_mode)
 		if (dev->cam_info.torch_support) {
 			aml_cam_torch(&dev->cam_info, 1);
 			aml_cam_flash(&dev->cam_info, 0);
-		} else 
+		} else
 			aml_cam_torch(&dev->cam_info, 1);
 		break;
 	case FLASHLIGHT_OFF:
@@ -1150,7 +1150,7 @@ static int set_flip(struct hm5065_device *dev)
 		printk("fail in setting sensor orientation\n");
 		return -1;
         }
-        
+
         return 0;
 }
 
@@ -1172,7 +1172,7 @@ static resolution_param_t* get_resolution_param(struct hm5065_device *dev, int i
 		hm5065_frmintervals_active.denominator = 23;
 		hm5065_frmintervals_active.numerator = 1;
 	}
-	
+
 	for (i = 0; i < arry_size; i++) {
 		if (tmp_resolution_param[i].size_type == res_type) {
 			hm5065_frmintervals_active.denominator = tmp_resolution_param[i].active_fps;
@@ -1209,7 +1209,7 @@ static int set_resolution_param(struct hm5065_device *dev, resolution_param_t* r
 }
 
 static int set_focus_zone(struct hm5065_device *dev, int value)
-	{	  
+	{
 			int xc, yc;
 			struct i2c_client *client =v4l2_get_subdevdata(&dev->sd);
 			int retry_count = 9;
@@ -1217,45 +1217,45 @@ static int set_focus_zone(struct hm5065_device *dev, int value)
 			int ret = -1;
 			xc = ((value >> 16) & 0xffff) * 80 / 2000;
 			yc = (value & 0xffff) * 60 / 2000;
-			printk("xc1 = %d, yc1 = %d\n", xc, yc); 	
+			printk("xc1 = %d, yc1 = %d\n", xc, yc);
 			if(-1==ret)
 		   {
 			i2c_put_byte(client,0x0808,0x01);
-			i2c_put_byte(client,0x0809,0x00); 
+			i2c_put_byte(client,0x0809,0x00);
 			i2c_put_byte(client,0x080a,0x00);
-			i2c_put_byte(client,0x080b,0x00);  
+			i2c_put_byte(client,0x080b,0x00);
 			i2c_put_byte(client,0x080c,0x00);
 			i2c_put_byte(client,0x080d,0x00);
-			i2c_put_byte(client,0x080e,0x00); 
+			i2c_put_byte(client,0x080e,0x00);
 		#if 1
-		  i2c_put_byte(client,FACE_LC,0x01);//enable	
+		  i2c_put_byte(client,FACE_LC,0x01);//enable
 			i2c_put_byte(client,FACE_START_XH, xc>>8);
-			i2c_put_byte(client,FACE_START_XL, xc&0xFF);		
+			i2c_put_byte(client,FACE_START_XL, xc&0xFF);
 			i2c_put_byte(client,FACE_START_YH, yc>>8);
 			i2c_put_byte(client,FACE_START_YL, yc&0xFF);
 			i2c_put_byte(client,FACE_SIZE_XH, 0x00);
 			i2c_put_byte(client,FACE_SIZE_XL, 80);
 			i2c_put_byte(client,FACE_SIZE_YH, 0x00);
 			i2c_put_byte(client,FACE_SIZE_YL, 60);
-			printk("SENSOR: _hm5065_Foucs_stareX: %d, %d\n",(xc>>8),(xc&0xFF)); 
-			printk("SENSOR: _hm5065_Foucs_stareY: %d, %d\n",(yc>>8),(yc&0xFF)); 
+			printk("SENSOR: _hm5065_Foucs_stareX: %d, %d\n",(xc>>8),(xc&0xFF));
+			printk("SENSOR: _hm5065_Foucs_stareY: %d, %d\n",(yc>>8),(yc&0xFF));
 		#endif
-			i2c_put_byte(client, 0x070a , 0x03);			
+			i2c_put_byte(client, 0x070a , 0x03);
 			//msleep(100);
-			i2c_put_byte(client, 0x070b , 0x01);			
+			i2c_put_byte(client, 0x070b , 0x01);
 			msleep(200);
 			i2c_put_byte(client, 0x070b , 0x02);
 			do
 			{
 				if(0x00==retry_count)
 				{
-					printk("SENSOR: _hm5065_AutoFocusZone error!\n"); 
+					printk("SENSOR: _hm5065_AutoFocusZone error!\n");
 					ret=-1;
 					i2c_put_byte(client,0x0700, 0x01);
 				   i2c_put_byte(client,0x0701, 0xFD);
 					break ;
 				}
-				msleep(1);		  
+				msleep(1);
 				reg_value=i2c_get_byte(client,AF_STATUS);
 				retry_count--;
 			}while(0x01!=reg_value);
@@ -1264,9 +1264,9 @@ static int set_focus_zone(struct hm5065_device *dev, int value)
 			focus_position_lo = i2c_get_byte(client,0x06F1);
 			i2c_put_byte(client,0x0700, focus_position_hi&0xFF);// target position H
 			i2c_put_byte(client,0x0701, focus_position_lo&0xFF);// target position L
-			printk("SENSOR: _hm5065_AF status %d\n",i2c_get_byte(client,AF_STATUS)); 
+			printk("SENSOR: _hm5065_AF status %d\n",i2c_get_byte(client,AF_STATUS));
 		}
-		return ret; 		
+		return ret;
 		}
 
 
@@ -1291,9 +1291,9 @@ static int convert_canvas_index(unsigned int v4l2_format, unsigned int start_can
 	case V4L2_PIX_FMT_BGR24:
 	case V4L2_PIX_FMT_RGB24:
 		canvas = start_canvas;
-		break; 
+		break;
 	case V4L2_PIX_FMT_NV12:
-	case V4L2_PIX_FMT_NV21: 
+	case V4L2_PIX_FMT_NV21:
 		canvas = start_canvas | ((start_canvas+1)<<8);
 		break;
 	case V4L2_PIX_FMT_YVU420:
@@ -1310,7 +1310,7 @@ static int convert_canvas_index(unsigned int v4l2_format, unsigned int start_can
 	return canvas;
 }
 
-static int hm5065_setting(struct hm5065_device *dev,int PROP_ID,int value ) 
+static int hm5065_setting(struct hm5065_device *dev,int PROP_ID,int value )
 {
 	int ret=0;
 	//unsigned char cur_val;
@@ -1326,7 +1326,7 @@ static int hm5065_setting(struct hm5065_device *dev,int PROP_ID,int value )
 		mutex_lock(&firmware_mutex);
 		ret=i2c_put_byte(client,0x0200, value);
 		mutex_unlock(&firmware_mutex);
-		break;    
+		break;
 	case V4L2_CID_SATURATION:
 		mutex_lock(&firmware_mutex);
 		ret=i2c_put_byte(client,0x0202, value);
@@ -1340,7 +1340,7 @@ static int hm5065_setting(struct hm5065_device *dev,int PROP_ID,int value )
 		}
 		break;
 	case V4L2_CID_VFLIP:    /* set flip on V. */
-		break;    
+		break;
 	case V4L2_CID_DO_WHITE_BALANCE:
 		mutex_lock(&firmware_mutex);
 		if(hm5065_qctrl[4].default_value!=value){
@@ -1380,10 +1380,10 @@ static int hm5065_setting(struct hm5065_device *dev,int PROP_ID,int value )
 	case V4L2_CID_FOCUS_AUTO:
 		mutex_lock(&firmware_mutex);
 		if (hm5065_have_opened) {
-			if (dev->firmware_ready) 
+			if (dev->firmware_ready)
 				ret = HM5065_AutoFocus(dev,value);
 			else if (value == CAM_FOCUS_MODE_CONTI_VID ||
-        				value == CAM_FOCUS_MODE_CONTI_PIC)
+					value == CAM_FOCUS_MODE_CONTI_PIC)
 				start_focus_mode = value;
 			else
 				ret = -1;
@@ -1391,7 +1391,7 @@ static int hm5065_setting(struct hm5065_device *dev,int PROP_ID,int value )
 		mutex_unlock(&firmware_mutex);
 		break;
 	case V4L2_CID_BACKLIGHT_COMPENSATION:
-		if (dev->cam_info.flash_support) 
+		if (dev->cam_info.flash_support)
 			ret = HM5065_FlashCtrl(dev,value);
 		else
 			ret = -1;
@@ -1420,7 +1420,7 @@ static int hm5065_setting(struct hm5065_device *dev,int PROP_ID,int value )
 		break;
 	}
 	return ret;
-    
+
 }
 
 static void power_down_hm5065(struct hm5065_device *dev)
@@ -1445,9 +1445,9 @@ static void hm5065_fillbuff(struct hm5065_fh *fh, struct hm5065_buffer *buf)
 	//void *vbuf = videobuf_to_vmalloc(&buf->vb);
 	void *vbuf = (void *)videobuf_to_res(&buf->vb);
 	vm_output_para_t para = {0};
-	dprintk(dev,1,"%s\n", __func__);    
+	dprintk(dev,1,"%s\n", __func__);
 	if (!vbuf)
-    	return;
+	return;
 	/*  0x18221223 indicate the memory type is MAGIC_VMAL_MEM*/
 	if(buf->canvas_id == 0)
            buf->canvas_id = convert_canvas_index(fh->fmt->fourcc, HM5065_RES0_CANVAS_INDEX+buf->vb.i*3);
@@ -1485,7 +1485,7 @@ static void hm5065_thread_tick(struct hm5065_fh *fh)
 	}
 
 	buf = list_entry(dma_q->active.next,
- 			struct hm5065_buffer, vb.queue);
+			struct hm5065_buffer, vb.queue);
 	dprintk(dev, 1, "%s\n", __func__);
 	dprintk(dev, 1, "list entry get buf is %x\n", (unsigned)buf);
 
@@ -1527,7 +1527,7 @@ static void hm5065_sleep(struct hm5065_fh *fh)
 
 	add_wait_queue(&dma_q->wq, &wait);
 	if (kthread_should_stop())
-    	goto stop_task;
+	goto stop_task;
 
 	/* Calculate time to wake up */
 	//timeout = msecs_to_jiffies(1);
@@ -1552,7 +1552,7 @@ static int hm5065_thread(void *data)
 
 	for (;;) {
 		hm5065_sleep(fh);
-		
+
 		if (kthread_should_stop())
 			break;
 	}
@@ -1608,7 +1608,7 @@ buffer_setup(struct videobuf_queue *vq, unsigned int *count, unsigned int *size)
 	int height = fh->height;
 	if(height==1080)
            height = 1088;
-	*size = (fh->width*height*fh->fmt->depth)>>3;    
+	*size = (fh->width*height*fh->fmt->depth)>>3;
 	if (0 == *count)
         *count = 32;
 
@@ -1631,7 +1631,7 @@ static void free_buffer(struct videobuf_queue *vq, struct hm5065_buffer *buf)
 	videobuf_waiton(vq, &buf->vb, 0, 0);
 
 	if (in_interrupt())
-    		BUG();
+		BUG();
 
 	videobuf_res_free(vq, &buf->vb);
 	dprintk(dev, 1, "free_buffer: freed\n");
@@ -1642,7 +1642,7 @@ static void free_buffer(struct videobuf_queue *vq, struct hm5065_buffer *buf)
 #define norm_maxh() 3000
 static int
 buffer_prepare(struct videobuf_queue *vq, struct videobuf_buffer *vb,
-                    	enum v4l2_field field)
+			enum v4l2_field field)
 {
 	struct videobuf_res_privdata *res = vq->priv_data;
 	struct hm5065_fh *fh  = container_of(res, struct hm5065_fh, res);
@@ -1660,7 +1660,7 @@ buffer_prepare(struct videobuf_queue *vq, struct videobuf_buffer *vb,
 
 	buf->vb.size = (fh->width*fh->height*fh->fmt->depth)>>3;
 	if (0 != buf->vb.baddr  &&  buf->vb.bsize < buf->vb.size)
-    	return -EINVAL;
+	return -EINVAL;
 
 	/* These properties only change when queue is idle, see s_fmt */
 	buf->fmt       = fh->fmt;
@@ -1671,7 +1671,7 @@ buffer_prepare(struct videobuf_queue *vq, struct videobuf_buffer *vb,
 	//precalculate_bars(fh);
 
 	if (VIDEOBUF_NEEDS_INIT == buf->vb.state) {
-    	rc = videobuf_iolock(vq, &buf->vb, NULL);
+	rc = videobuf_iolock(vq, &buf->vb, NULL);
 		if (rc < 0)
 			goto fail;
 	}
@@ -1723,7 +1723,7 @@ static struct videobuf_queue_ops hm5065_video_qops = {
 	IOCTL vidioc handling
    ------------------------------------------------------------------*/
 static int vidioc_querycap(struct file *file, void  *priv,
-                	struct v4l2_capability *cap)
+			struct v4l2_capability *cap)
 {
 	struct hm5065_fh  *fh  = priv;
 	struct hm5065_device *dev = fh->dev;
@@ -1733,18 +1733,18 @@ static int vidioc_querycap(struct file *file, void  *priv,
 	strlcpy(cap->bus_info, dev->v4l2_dev.name, sizeof(cap->bus_info));
 	cap->version = HM5065_CAMERA_VERSION;
 	cap->capabilities =	V4L2_CAP_VIDEO_CAPTURE |
-        			V4L2_CAP_STREAMING     |
-        			V4L2_CAP_READWRITE;
+				V4L2_CAP_STREAMING     |
+				V4L2_CAP_READWRITE;
 	return 0;
 }
 
 static int vidioc_enum_fmt_vid_cap(struct file *file, void  *priv,
-                	struct v4l2_fmtdesc *f)
+			struct v4l2_fmtdesc *f)
 {
 	struct hm5065_fmt *fmt;
 
 	if (f->index >= ARRAY_SIZE(formats))
-    	return -EINVAL;
+	return -EINVAL;
 
 	fmt = &formats[f->index];
 
@@ -1754,7 +1754,7 @@ static int vidioc_enum_fmt_vid_cap(struct file *file, void  *priv,
 }
 
 static int vidioc_g_fmt_vid_cap(struct file *file, void *priv,
-                	struct v4l2_format *f)
+			struct v4l2_format *f)
 {
 	struct hm5065_fh *fh = priv;
 
@@ -1766,7 +1766,7 @@ static int vidioc_g_fmt_vid_cap(struct file *file, void *priv,
 	f->fmt.pix.bytesperline =
 		(f->fmt.pix.width * fh->fmt->depth) >> 3;
 	f->fmt.pix.sizeimage =
-    	f->fmt.pix.height * f->fmt.pix.bytesperline;
+	f->fmt.pix.height * f->fmt.pix.bytesperline;
 
 	return (0);
 }
@@ -1775,10 +1775,10 @@ static int vidioc_enum_frameintervals(struct file *file, void *priv,
 					struct v4l2_frmivalenum *fival)
 {
 	unsigned int k;
-	
+
 	if(fival->index > ARRAY_SIZE(hm5065_frmivalenum))
 	return -EINVAL;
-	
+
 	for(k =0; k< ARRAY_SIZE(hm5065_frmivalenum); k++) {
 		if( (fival->index==hm5065_frmivalenum[k].index)&&
 				(fival->pixel_format ==hm5065_frmivalenum[k].pixel_format )&&
@@ -1788,12 +1788,12 @@ static int vidioc_enum_frameintervals(struct file *file, void *priv,
 			return 0;
 		}
 	}
-	
+
 	return -EINVAL;
 }
 
 static int vidioc_try_fmt_vid_cap(struct file *file, void *priv,
-        	struct v4l2_format *f)
+		struct v4l2_format *f)
 {
 	struct hm5065_fh  *fh  = priv;
 	struct hm5065_device *dev = fh->dev;
@@ -1809,7 +1809,7 @@ static int vidioc_try_fmt_vid_cap(struct file *file, void *priv,
 	}
 
 	field = f->fmt.pix.field;
-	
+
 	if (field == V4L2_FIELD_ANY) {
 		field = V4L2_FIELD_INTERLACED;
 	} else if (V4L2_FIELD_INTERLACED != field) {
@@ -1824,9 +1824,9 @@ static int vidioc_try_fmt_vid_cap(struct file *file, void *priv,
 	v4l_bound_align_image(&f->fmt.pix.width, 48, maxw, 2,
                   &f->fmt.pix.height, 32, maxh, 0, 0);
 	f->fmt.pix.bytesperline =
-        	(f->fmt.pix.width * fmt->depth) >> 3;
+		(f->fmt.pix.width * fmt->depth) >> 3;
 	f->fmt.pix.sizeimage =
-    		f->fmt.pix.height * f->fmt.pix.bytesperline;
+		f->fmt.pix.height * f->fmt.pix.bytesperline;
 
 	return 0;
 }
@@ -1835,7 +1835,7 @@ static resolution_param_t* prev_res = NULL;
 
 /*FIXME: This seems to be generic enough to be at videodev2 */
 static int vidioc_s_fmt_vid_cap(struct file *file, void *priv,
-                	struct v4l2_format *f)
+			struct v4l2_format *f)
 {
 	struct hm5065_fh *fh = priv;
 	struct videobuf_queue *q = &fh->vb_vidq;
@@ -1845,14 +1845,15 @@ static int vidioc_s_fmt_vid_cap(struct file *file, void *priv,
 	//unsigned char gain = 0, exposurelow = 0, exposuremid = 0, exposurehigh = 0;
 	int cap_fps, pre_fps;
 
-	int ret = vidioc_try_fmt_vid_cap(file, fh, f);
+	int ret = 0;
         f->fmt.pix.width = (f->fmt.pix.width + (CANVAS_WIDTH_ALIGN-1) ) & (~(CANVAS_WIDTH_ALIGN-1));
 	if ((f->fmt.pix.pixelformat==V4L2_PIX_FMT_YVU420) ||
             (f->fmt.pix.pixelformat==V4L2_PIX_FMT_YUV420)){
                 f->fmt.pix.width = (f->fmt.pix.width + (CANVAS_WIDTH_ALIGN*2-1) ) & (~(CANVAS_WIDTH_ALIGN*2-1));
         }
+	ret = vidioc_try_fmt_vid_cap(file, fh, f);
 	if (ret < 0)
-    	return ret;
+	return ret;
 
 	mutex_lock(&q->vb_lock);
 
@@ -1881,20 +1882,20 @@ static int vidioc_s_fmt_vid_cap(struct file *file, void *priv,
 		*/
 		set_resolution_param(dev, res_param);
 		//set_exposure_param_500m(dev, gain, exposurelow, exposuremid, exposurehigh);
-		if (prev_res && (prev_res->size_type == SIZE_1280X960 
+		if (prev_res && (prev_res->size_type == SIZE_1280X960
 				|| prev_res->size_type == SIZE_1024X768)) {
 			pre_fps = 1500;
 		} else if (prev_res && prev_res->size_type == SIZE_1280X720 ) {
 			pre_fps = 3000;
 		} else {
 			pre_fps = 1500;
-		} 
+		}
 		if (res_param && res_param->size_type == SIZE_2592X1944 ) {
 			//cap_fps = 750;
 			cap_fps = 500;
 		} else {
 			cap_fps = 750;
-		} 
+		}
 		printk("pre_fps=%d,cap_fps=%d\n", pre_fps, cap_fps);
 	} else {
 		res_param = get_resolution_param(dev, 0, fh->width,fh->height);
@@ -1905,29 +1906,29 @@ static int vidioc_s_fmt_vid_cap(struct file *file, void *priv,
 		set_resolution_param(dev, res_param);
 		prev_res = res_param;
 	}
-    
+
 #endif
 	ret = 0;
 out:
 	mutex_unlock(&q->vb_lock);
-	
+
 	return ret;
 }
 
 static int vidioc_g_parm(struct file *file, void *priv,
- 				struct v4l2_streamparm *parms)
+				struct v4l2_streamparm *parms)
 {
 	struct hm5065_fh *fh = priv;
 	struct hm5065_device *dev = fh->dev;
 	struct v4l2_captureparm *cp = &parms->parm.capture;
-	
+
 	dprintk(dev,3,"vidioc_g_parm\n");
 	if (parms->type != V4L2_BUF_TYPE_VIDEO_CAPTURE)
 		return -EINVAL;
-	
+
 	memset(cp, 0, sizeof(struct v4l2_captureparm));
 	cp->capability = V4L2_CAP_TIMEPERFRAME;
-	
+
 	cp->timeperframe = hm5065_frmintervals_active;
 	printk("g_parm,deno=%d, numerator=%d\n", cp->timeperframe.denominator,
 	cp->timeperframe.numerator );
@@ -1968,7 +1969,7 @@ static int vidioc_dqbuf(struct file *file, void *priv, struct v4l2_buffer *p)
 	struct hm5065_fh  *fh = priv;
 
 	return (videobuf_dqbuf(&fh->vb_vidq, p,
-            	file->f_flags & O_NONBLOCK));
+		file->f_flags & O_NONBLOCK));
 }
 
 #ifdef CONFIG_VIDEO_V4L1_COMPAT
@@ -2000,7 +2001,7 @@ static int vidioc_streamon(struct file *file, void *priv, enum v4l2_buf_type i)
                 para.v_active = fh->dev->cur_resolution_param->active_frmsize.height;
                 para.hs_bp = 0;
                 para.vs_bp = 2;
-                para.scan_mode = TVIN_SCAN_MODE_PROGRESSIVE;	
+                para.scan_mode = TVIN_SCAN_MODE_PROGRESSIVE;
         } else {
                 para.frame_rate = hm5065_frmintervals_active.denominator;;
                 para.h_active = fh->dev->cur_resolution_param->active_frmsize.width;
@@ -2015,7 +2016,7 @@ static int vidioc_streamon(struct file *file, void *priv, enum v4l2_buf_type i)
         para.cfmt = TVIN_YUV422;
         para.dfmt = TVIN_NV21;
         para.hsync_phase = 1;
-        para.vsync_phase  = 1;    
+        para.vsync_phase  = 1;
         para.skip_count =  2;
         para.bt_path = dev->cam_info.bt_path;
         ret =  videobuf_streamon(&fh->vb_vidq);
@@ -2033,9 +2034,9 @@ static int vidioc_streamoff(struct file *file, void *priv, enum v4l2_buf_type i)
 
         int ret = 0 ;
 	if (fh->type != V4L2_BUF_TYPE_VIDEO_CAPTURE)
-    	return -EINVAL;
+	return -EINVAL;
 	if (i != fh->type)
-    	return -EINVAL;
+	return -EINVAL;
 	ret = videobuf_streamoff(&fh->vb_vidq);
 	if(ret == 0 ){
 		vops->stop_tvin_service(0);
@@ -2093,7 +2094,7 @@ static int vidioc_s_std(struct file *file, void *priv, v4l2_std_id i)
 
 /* only one input in this sample driver */
 static int vidioc_enum_input(struct file *file, void *priv,
-            	struct v4l2_input *inp)
+		struct v4l2_input *inp)
 {
     //if (inp->index >= NUM_INPUTS)
         //return -EINVAL;
@@ -2136,8 +2137,8 @@ static int vidioc_queryctrl(struct file *file, void *priv,
 	int i;
 	struct hm5065_fh *fh = priv;
 	struct hm5065_device *dev = fh->dev;
-	
-	if (!dev->cam_info.flash_support 
+
+	if (!dev->cam_info.flash_support
 			&& qc->id == V4L2_CID_BACKLIGHT_COMPENSATION)
 		return -EINVAL;
 
@@ -2160,14 +2161,14 @@ static int vidioc_querymenu(struct file *file, void *priv,
 	int i, j;
 
 	for (i = 0; i < ARRAY_SIZE(hm5065_qmenu_set); i++)
- 		if (a->id && a->id == hm5065_qmenu_set[i].id) {
- 			for(j = 0; j < hm5065_qmenu_set[i].num; j++)
- 				if (a->index == hm5065_qmenu_set[i].hm5065_qmenu[j].index) {
- 					memcpy(a, &( hm5065_qmenu_set[i].hm5065_qmenu[j]),
- 		    			sizeof(*a));
- 					return (0);
- 				}
- 		}
+		if (a->id && a->id == hm5065_qmenu_set[i].id) {
+			for(j = 0; j < hm5065_qmenu_set[i].num; j++)
+				if (a->index == hm5065_qmenu_set[i].hm5065_qmenu[j].index) {
+					memcpy(a, &( hm5065_qmenu_set[i].hm5065_qmenu[j]),
+					sizeof(*a));
+					return (0);
+				}
+		}
 
 	return -EINVAL;
 }
@@ -2210,7 +2211,7 @@ static int vidioc_g_ctrl(struct file *file, void *priv,
 					printk("should resart focus\n");
 					ctrl->value = V4L2_AUTO_FOCUS_STATUS_FAILED;
 				}
-		        	
+
 				return 0;
 			}
 			ctrl->value = dev->qctl_regs[i];
@@ -2221,21 +2222,21 @@ static int vidioc_g_ctrl(struct file *file, void *priv,
 }
 
 static int vidioc_s_ctrl(struct file *file, void *priv,
-            	struct v4l2_control *ctrl)
+		struct v4l2_control *ctrl)
 {
 	struct hm5065_fh *fh = priv;
 	struct hm5065_device *dev = fh->dev;
 	int i;
 
 	for (i = 0; i < ARRAY_SIZE(hm5065_qctrl); i++)
-    	if (ctrl->id == hm5065_qctrl[i].id) {
-        	if (ctrl->value < hm5065_qctrl[i].minimum ||
+	if (ctrl->id == hm5065_qctrl[i].id) {
+		if (ctrl->value < hm5065_qctrl[i].minimum ||
 			ctrl->value > hm5065_qctrl[i].maximum ||
 			hm5065_setting(dev,ctrl->id,ctrl->value)<0) {
 			return -ERANGE;
 		}
-        	dev->qctl_regs[i] = ctrl->value;
-        	return 0;
+		dev->qctl_regs[i] = ctrl->value;
+		return 0;
         }
 	return -EINVAL;
 }
@@ -2257,7 +2258,7 @@ static int hm5065_open(struct file *file)
 #if CONFIG_CMA
     retval = vm_init_buf(32*SZ_1M);
     if(retval <0) {
-    	printk("error: no cma memory\n");
+	printk("error: no cma memory\n");
         return -1;
     }
 #endif
@@ -2266,21 +2267,21 @@ static int hm5065_open(struct file *file)
 	mutex_unlock(&firmware_mutex);
 #if MESON_CPU_TYPE >= MESON_CPU_TYPE_MESON6
 	switch_mod_gate_by_name("ge2d", 1);
-#endif	
+#endif
 	aml_cam_init(&dev->cam_info);
-	
+
 	HM5065_init_regs(dev);
-	
+
 	msleep(10);
-	
+
 	/*if(HM5065_download_firmware(dev) >= 0) {
-		while(i2c_get_byte(client, 0x3029) != 0x70 && i < 10) { //wait for the mcu ready 
-        	msleep(5);
-        	i++;
-    	}
-    	dev->firmware_ready = 1;
+		while(i2c_get_byte(client, 0x3029) != 0x70 && i < 10) { //wait for the mcu ready
+		msleep(5);
+		i++;
+	}
+	dev->firmware_ready = 1;
 	}*/
-	
+
 	schedule_work(&(dev->dl_work));
 
 	mutex_lock(&dev->mutex);
@@ -2292,8 +2293,8 @@ static int hm5065_open(struct file *file)
 	}
 
 	dprintk(dev, 1, "open %s type=%s users=%d\n",
-    	video_device_node_name(dev->vdev),
-    	v4l2_type_names[V4L2_BUF_TYPE_VIDEO_CAPTURE], dev->users);
+	video_device_node_name(dev->vdev),
+	v4l2_type_names[V4L2_BUF_TYPE_VIDEO_CAPTURE], dev->users);
 
         /* init video dma queues */
 	INIT_LIST_HEAD(&dev->vidq.active);
@@ -2308,7 +2309,7 @@ static int hm5065_open(struct file *file)
 	mutex_unlock(&dev->mutex);
 
 	if (retval)
-    	return retval;
+	return retval;
 
 	wake_lock(&(dev->wake_lock));
 	file->private_data = fh;
@@ -2327,7 +2328,7 @@ static int hm5065_open(struct file *file)
 	fh->res.start = mem_start;
 	fh->res.end = mem_start+mem_size-1;
 	fh->res.magic = MAGIC_RE_MEM;
-	fh->res.priv = NULL;		
+	fh->res.priv = NULL;
 	videobuf_queue_res_init(&fh->vb_vidq, &hm5065_video_qops,
 					NULL, &dev->slock, fh->type, V4L2_FIELD_INTERLACED,
 					sizeof(struct hm5065_buffer), (void*)&fh->res, NULL);
@@ -2344,7 +2345,7 @@ hm5065_read(struct file *file, char __user *data, size_t count, loff_t *ppos)
 
 	if (fh->type == V4L2_BUF_TYPE_VIDEO_CAPTURE) {
 		return videobuf_read_stream(&fh->vb_vidq, data, count, ppos, 0,
-                	file->f_flags & O_NONBLOCK);
+			file->f_flags & O_NONBLOCK);
 	}
 	return 0;
 }
@@ -2359,7 +2360,7 @@ hm5065_poll(struct file *file, struct poll_table_struct *wait)
 	dprintk(dev, 1, "%s\n", __func__);
 
 	if (V4L2_BUF_TYPE_VIDEO_CAPTURE != fh->type)
-    	return POLLERR;
+	return POLLERR;
 
 	return videobuf_poll_stream(file, q, wait);
 }
@@ -2377,7 +2378,7 @@ static int hm5065_close(struct file *file)
 	hm5065_stop_thread(vidq);
 	videobuf_stop(&fh->vb_vidq);
 	if(fh->stream_on){
-		vops->stop_tvin_service(0);     
+		vops->stop_tvin_service(0);
 	}
 	videobuf_mmap_free(&fh->vb_vidq);
 
@@ -2388,12 +2389,12 @@ static int hm5065_close(struct file *file)
 	mutex_unlock(&dev->mutex);
 
 	dprintk(dev, 1, "close called (dev=%s, users=%d)\n",
-    	video_device_node_name(vdev), dev->users);
-#if 1	    
+	video_device_node_name(vdev), dev->users);
+#if 1
 	hm5065_qctrl[4].default_value=0;
 	hm5065_qctrl[5].default_value=4;
 	hm5065_qctrl[6].default_value=0;
-	
+
 	hm5065_qctrl[2].default_value=0;
 	hm5065_qctrl[10].default_value=100;
 	hm5065_qctrl[11].default_value=0;
@@ -2401,11 +2402,11 @@ static int hm5065_close(struct file *file)
 #endif
 	hm5065_frmintervals_active.numerator = 1;
 	hm5065_frmintervals_active.denominator = 25;
-	
+
 	aml_cam_uninit(&dev->cam_info);
 #if MESON_CPU_TYPE >= MESON_CPU_TYPE_MESON6
 	switch_mod_gate_by_name("ge2d", 0);
-#endif	
+#endif
 	wake_unlock(&(dev->wake_lock));
 #ifdef CONFIG_CMA
     vm_deinit_buf();
@@ -2474,7 +2475,7 @@ static struct video_device hm5065_template = {
 	.fops           = &hm5065_fops,
 	.ioctl_ops      = &hm5065_ioctl_ops,
 	.release	    = video_device_release,
-	
+
 	.tvnorms        = V4L2_STD_525_60,
 	.current_norm   = V4L2_STD_NTSC_M,
 };
@@ -2495,7 +2496,7 @@ static const struct v4l2_subdev_ops hm5065_ops = {
 };
 
 static int hm5065_probe(struct i2c_client *client,
-        	const struct i2c_device_id *id)
+		const struct i2c_device_id *id)
 {
 	aml_cam_info_t* plat_dat;
 	int err;
@@ -2503,10 +2504,10 @@ static int hm5065_probe(struct i2c_client *client,
 	struct v4l2_subdev *sd;
 	vops = get_vdin_v4l2_ops();
 	v4l_info(client, "chip found @ 0x%x (%s)\n",
-        	client->addr << 1, client->adapter->name);
+		client->addr << 1, client->adapter->name);
 	t = kzalloc(sizeof(*t), GFP_KERNEL);
 	if (t == NULL)
-    		return -ENOMEM;
+		return -ENOMEM;
 	sd = &t->sd;
 	v4l2_i2c_subdev_init(sd, client, &hm5065_ops);
 	mutex_init(&t->mutex);
@@ -2519,15 +2520,15 @@ static int hm5065_probe(struct i2c_client *client,
 		return -ENOMEM;
 	}
 	memcpy(t->vdev, &hm5065_template, sizeof(*t->vdev));
-	
+
 	video_set_drvdata(t->vdev, t);
-	
+
 	wake_lock_init(&(t->wake_lock),WAKE_LOCK_SUSPEND, "hm5065");
 	/* Register it */
 	plat_dat= (aml_cam_info_t*)client->dev.platform_data;
 	if (plat_dat) {
 		memcpy(&t->cam_info, plat_dat, sizeof(aml_cam_info_t));
-		if (plat_dat->front_back >=0)  
+		if (plat_dat->front_back >=0)
 			video_nr = plat_dat->front_back;
 	} else {
 		printk("camera hm5065: have no platform data\n");
@@ -2535,11 +2536,11 @@ static int hm5065_probe(struct i2c_client *client,
 		kfree(client);
 		return -1;
 	}
-	
+
 	t->cam_info.version = HM5065_DRIVER_VERSION;
 	if (aml_cam_info_reg(&t->cam_info) < 0)
 		printk("reg caminfo error\n");
-	
+
 	err = video_register_device(t->vdev, VFL_TYPE_GRABBER, video_nr);
 	if (err < 0) {
 		video_device_release(t->vdev);
@@ -2578,4 +2579,3 @@ static struct i2c_driver hm5065_i2c_driver = {
 };
 
 module_i2c_driver(hm5065_i2c_driver);
-

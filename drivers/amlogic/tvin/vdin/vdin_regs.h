@@ -14,7 +14,7 @@
 
 #ifndef __VDIN_REGS_H
 #define __VDIN_REGS_H
- 
+
 #if ((MESON_CPU_TYPE == MESON_CPU_TYPE_MESON6TV)|| \
      (MESON_CPU_TYPE == MESON_CPU_TYPE_MESON6TVD))
     #define VDIN_V1  //for m6tv

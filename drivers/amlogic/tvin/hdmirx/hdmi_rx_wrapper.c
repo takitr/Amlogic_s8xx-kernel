@@ -489,13 +489,13 @@ static int hdmi_rx_ctrl_irq_handler(struct hdmi_rx_ctrl *ctx)
 	// EOM irq
 	if(hdmirx_rd_dwc(RA_AUD_CLK_ISTS) & (1 << 17)) {
 		hdmirx_wr_dwc(RA_AUD_CLK_ICLR , hdmirx_rd_dwc(RA_AUD_CLK_ISTS)|(1<<17));  //clr irq status
-    	//hdmirx_print("\nEOM \n");
+	//hdmirx_print("\nEOM \n");
 		cec_get_msg_flag = true;
 	}
 	// ACK irq
 	if(hdmirx_rd_dwc(RA_AUD_CLK_ISTS) & (1 << 16)) {
 		hdmirx_wr_dwc(RA_AUD_CLK_ICLR , hdmirx_rd_dwc(RA_AUD_CLK_ISTS)|(1<<16));  //clr irq status
-    	//hdmirx_print("\nACK \n");
+	//hdmirx_print("\nACK \n");
 		cec_get_ack_flag = true;
 	}
 #endif
@@ -1461,10 +1461,10 @@ static bool doublecheck_repetition(int size)
     {
         if(repeat_buf[i] > 10)
 			continue;
-    	if((++buf[repeat_buf[i]]) > size/2) {
+	if((++buf[repeat_buf[i]]) > size/2) {
 			rx.pre_video_params.pixel_repetition = repeat_buf[i];
             return true;
-    	}
+	}
     }
     return false;
 }
@@ -1512,7 +1512,7 @@ void hdmirx_hw_monitor(void)
 			hdmirx_print("\n[HDMIRX State] 5v low->5v high\n");
 		} else {
 			if ((hdmirx_rd_dwc(RA_HDMI_PLL_LCK_STS) & 0x01)
-		    		&& (hdmirx_get_tmds_clock() > 0)) {
+				&& (hdmirx_get_tmds_clock() > 0)) {
 		        if (sw_pwr_cnt++ > HDMIRX_SW_PWR_CNT) {
 		            rx.state = HDMIRX_HWSTATE_5V_HIGH;
 		            sw_pwr_cnt = 0;
@@ -1596,7 +1596,7 @@ void hdmirx_hw_monitor(void)
 					hdmirx_print("[HDMIRX State] unstable->stable\n");
 				}
 		    } else {
-		    	if((reset_sw)&&(!sig_unstable_reset_hpd_flag)){
+			if((reset_sw)&&(!sig_unstable_reset_hpd_flag)){
 					sig_unlock_reset_cnt++;
 					if(sig_unlock_reset_cnt == sig_unlock_reset_max){
 						phy_init(rx.port, 0);
@@ -1666,7 +1666,7 @@ void hdmirx_hw_monitor(void)
 					sig_unstable_reset_hpd_flag = false;
 		            reset_bits &= ~(1<<0);
 		            memcpy(&rx.video_params, &rx.pre_video_params,
-			    	sizeof(struct hdmi_rx_ctrl_video));
+				sizeof(struct hdmi_rx_ctrl_video));
 		            memset(&rx.aud_info, 0, sizeof(struct aud_info_s));
 		            hdmirx_config_video(&rx.video_params);
 		            hdmirx_print("[HDMIRX State] stable->ready\n");
@@ -2138,7 +2138,7 @@ int hdmi_rx_ctrl_edid_update(void)
 				}
 				value = (0x100-check_sum)&0xff;
 				check_sum = 0;
-		 	}
+			}
 		    ram_addr = HDMIRX_TOP_EDID_OFFSET+i;
 		    hdmirx_wr_top(ram_addr, value);
 		}
@@ -2147,14 +2147,14 @@ int hdmi_rx_ctrl_edid_update(void)
        unsigned char * p_edid_array;
 	   int array_offset = 0;
 	   if (rx.port>=1)
-	   	array_offset = 256*(rx.port - 1);
+		array_offset = 256*(rx.port - 1);
 	   p_edid_array = pEdid_buffer;
 
 	   printk("\n\n BSP EDID \n\n\n\n");
 	   /*recalculate check sum*/
 	   for(check_sum = 0,i=0;i<127;i++){
-	   	check_sum += p_edid_array[i+array_offset];
-	   	check_sum &= 0xff;
+		check_sum += p_edid_array[i+array_offset];
+		check_sum &= 0xff;
 	   }
 	   p_edid_array[127+array_offset] = (0x100-check_sum)&0xff;
 
@@ -2327,34 +2327,34 @@ static void dump_state(unsigned char enable)
 	int error = 0;
 	//int i = 0;
 	struct hdmi_rx_ctrl_video v;
-  	static struct aud_info_s a;
+	static struct aud_info_s a;
 	struct vendor_specific_info_s vsi;
-  	if(enable&1){
-    		hdmirx_get_video_info(&rx.ctrl, &v);
-      		printk("[HDMI info]error %d video_format %d VIC %d dvi %d interlace %d\nhtotal %d vtotal %d hactive %d vactive %d pixel_repetition %d\npixel_clk %ld deep_color %d refresh_rate %ld\n",
-        		error,
-        		v.video_format, v.video_mode, v.dvi, v.interlaced,
-        		v.htotal, v.vtotal, v.hactive, v.vactive, v.pixel_repetition,
-        		v.pixel_clk, v.deep_color_mode, v.refresh_rate);
-     		hdmirx_read_vendor_specific_info_frame(&vsi);
-      		printk("Vendor Specific Info ID=%x, hdmi_video_format=%x, 3d_struct=%x, 3d_ext=%x\n",
-       		vsi.identifier, vsi.hdmi_video_format, vsi._3d_structure, vsi._3d_ext_data);
-  	}
-  	if(enable&2){
-      		hdmirx_read_audio_info(&a);
-    		printk("AudioInfo: CT=%u CC=%u SF=%u SS=%u CA=%u",
-    			a.coding_type, a.channel_count, a.sample_frequency,
-    			a.sample_size, a.channel_allocation);
+	if(enable&1){
+		hdmirx_get_video_info(&rx.ctrl, &v);
+		printk("[HDMI info]error %d video_format %d VIC %d dvi %d interlace %d\nhtotal %d vtotal %d hactive %d vactive %d pixel_repetition %d\npixel_clk %ld deep_color %d refresh_rate %ld\n",
+			error,
+			v.video_format, v.video_mode, v.dvi, v.interlaced,
+			v.htotal, v.vtotal, v.hactive, v.vactive, v.pixel_repetition,
+			v.pixel_clk, v.deep_color_mode, v.refresh_rate);
+		hdmirx_read_vendor_specific_info_frame(&vsi);
+		printk("Vendor Specific Info ID=%x, hdmi_video_format=%x, 3d_struct=%x, 3d_ext=%x\n",
+		vsi.identifier, vsi.hdmi_video_format, vsi._3d_structure, vsi._3d_ext_data);
+	}
+	if(enable&2){
+		hdmirx_read_audio_info(&a);
+		printk("AudioInfo: CT=%u CC=%u SF=%u SS=%u CA=%u",
+			a.coding_type, a.channel_count, a.sample_frequency,
+			a.sample_size, a.channel_allocation);
 
-      		printk("CTS=%d, N=%d, recovery clock is %d\n", a.cts, a.n, a.audio_recovery_clock);
-  	}
- 	printk("TMDS clock = %d, Pixel clock = %d\n", hdmirx_get_tmds_clock(), hdmirx_get_pixel_clock());
+		printk("CTS=%d, N=%d, recovery clock is %d\n", a.cts, a.n, a.audio_recovery_clock);
+	}
+	printk("TMDS clock = %d, Pixel clock = %d\n", hdmirx_get_tmds_clock(), hdmirx_get_pixel_clock());
 
-  	printk("rx.no_signal=%d, rx.state=%d, fmt=0x%x, sw_vic:%d, sw_dvi:%d, sw_fp:%d,, sw_alternative:%d\n",
-  	        rx.no_signal, rx.state, hdmirx_hw_get_fmt(),rx.video_params.sw_vic,rx.video_params.sw_dvi,rx.video_params.sw_fp\
-  	      ,rx.video_params.sw_alternative);
+	printk("rx.no_signal=%d, rx.state=%d, fmt=0x%x, sw_vic:%d, sw_dvi:%d, sw_fp:%d,, sw_alternative:%d\n",
+	        rx.no_signal, rx.state, hdmirx_hw_get_fmt(),rx.video_params.sw_vic,rx.video_params.sw_dvi,rx.video_params.sw_fp\
+	      ,rx.video_params.sw_alternative);
 
-  	printk("HDCP debug value=0x%x\n", hdmirx_rd_dwc(RA_HDCP_DBG));
+	printk("HDCP debug value=0x%x\n", hdmirx_rd_dwc(RA_HDCP_DBG));
 }
 
 static void dump_audio_info(unsigned char enable)
@@ -2570,17 +2570,17 @@ int hdmirx_debug(const char* buf, int size)
 		adr = simple_strtoul(tmpbuf + 2, NULL, 16);
 		value = simple_strtoul(buf + i + 1, NULL, 16);
 		if(buf[1] == 'h') {
-    	adr = simple_strtoul(tmpbuf + 3, NULL, 16);
+	adr = simple_strtoul(tmpbuf + 3, NULL, 16);
 			if(buf[2] == 't') {
-		    		hdmirx_wr_top(adr, value);
+				hdmirx_wr_top(adr, value);
 				pr_info("write %x to hdmirx TOP reg[%x]\n",value,adr);
 			} else if (buf[2] == 'd') {
-		    		hdmirx_wr_dwc(adr, value);
+				hdmirx_wr_dwc(adr, value);
 				pr_info("write %x to hdmirx DWC reg[%x]\n",value,adr);
-		    	} else if(buf[2] == 'p') {
-		    		hdmirx_wr_phy(adr, value);
+			} else if(buf[2] == 'p') {
+				hdmirx_wr_phy(adr, value);
 				pr_info("write %x to hdmirx PHY reg[%x]\n",value,adr);
-		    	}
+			}
 		} else if (buf[1] == 'c') {
 			WRITE_MPEG_REG(adr, value);
 			pr_info("write %x to CBUS reg[%x]\n",value,adr);
@@ -2606,10 +2606,10 @@ int hdmirx_debug(const char* buf, int size)
 				value = hdmirx_rd_top(adr);
 				pr_info("hdmirx TOP reg[%x]=%x\n",adr, value);
 			} else if (buf[2] == 'd') {
-			    	value = hdmirx_rd_dwc(adr);
+				value = hdmirx_rd_dwc(adr);
 				pr_info("hdmirx DWC reg[%x]=%x\n",adr, value);
 			} else if(buf[2] == 'p') {
-			    	value = hdmirx_rd_phy(adr);
+				value = hdmirx_rd_phy(adr);
 				pr_info("hdmirx PHY reg[%x]=%x\n",adr, value);
 			    }
 		}
@@ -2775,7 +2775,7 @@ void hdmirx_default_hpd(bool high)
 void hdmirx_irq_init(void)
 {
     if(request_irq(AM_IRQ1(HDMIRX_IRQ), &irq_handler, IRQF_SHARED, "hdmirx", (void *)&rx)){
-    	hdmirx_print(__func__, "RX IRQ request");
+	hdmirx_print(__func__, "RX IRQ request");
     }
 }
 

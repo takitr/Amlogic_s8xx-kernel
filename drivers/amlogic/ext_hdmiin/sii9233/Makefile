@@ -9,5 +9,3 @@ sii9233-objs := sii9233_drv.o platform_interface.o sii9233_interface.o vdin_inte
 obj-$(CONFIG_AML_SII9233)	+= __sii9233/
 
 #EXTRA_CFLAGS += -O2
-
-

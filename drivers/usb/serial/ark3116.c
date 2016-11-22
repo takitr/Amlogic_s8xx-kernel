@@ -23,6 +23,7 @@
  */
 
 #include <linux/kernel.h>
+#include <linux/init.h>
 #include <linux/ioctl.h>
 #include <linux/tty.h>
 #include <linux/slab.h>

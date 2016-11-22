@@ -93,6 +93,7 @@
 #include <linux/kernel.h>
 #include <linux/sched.h>
 #include <linux/slab.h>
+#include <linux/init.h>
 #include <linux/list.h>
 #include <linux/kobject.h>
 #include <linux/prefetch.h>

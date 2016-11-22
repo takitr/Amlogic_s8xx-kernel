@@ -7,7 +7,7 @@
 // 1060 East Arques Avenue, Sunnyvale, California 94085
 //------------------------------------------------------------------------------
 
-// Turn down the warning level for this C file to prevent the compiler 
+// Turn down the warning level for this C file to prevent the compiler
 // from complaining about the unused parameters in the stub functions below
 #pragma WARNINGLEVEL (1)
 
@@ -718,5 +718,3 @@ void CEC_Event_Handler( void )
 
 #endif	//#if(CONF__CEC_ENABLE == ENABLE)
 }//e.o. void SiI_918x_Event_Handler( void )
-
-

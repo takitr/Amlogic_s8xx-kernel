@@ -12,15 +12,15 @@
 
 #define  	PARA_FIRST_GROUP_START   	1
 #define  	PARA_SECOND_GROUP_START 	5
-#define	    PARA_THIRD_GROUP_START	18+7
-#define    PARA_FOURTH_GROUP_START  21+7
-#define    PARA_FIFTH_GROUP_START  	22+7
-#define    PARA_SIXTH_GROUP_START	23+7
-#define    PARA_END					23+7
+#define    PARA_THIRD_GROUP_START	22+7
+#define    PARA_FOURTH_GROUP_START  25+7
+#define    PARA_FIFTH_GROUP_START  	26+7
+#define    PARA_SIXTH_GROUP_START	27+7
+#define    PARA_END					27+7
 
 typedef  struct {
 	char *name;
-	int   info;	
+	int   info;
 	u32   prev_idx;
 	u32   next_idx;
 	u32   cur_group_start;

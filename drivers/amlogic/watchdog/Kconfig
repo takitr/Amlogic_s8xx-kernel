@@ -10,4 +10,3 @@ config AML_WDT
 	default y
 	help
 	  say y to enable Amlogic watchdog driver.
-

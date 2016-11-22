@@ -266,7 +266,7 @@ static int amlogic_pin_to_pullup(unsigned int pin ,unsigned int *reg,unsigned in
 	else if(pin<=GPIOX_35)
 	{
 		*reg=5;
-		*bit=pin-GPIOX_32;	
+		*bit=pin-GPIOX_32;
 	}
 	else if(pin<=BOOT_17)
 	{
@@ -327,7 +327,7 @@ static int amlogic_pin_map_to_direction(unsigned int pin,unsigned int *reg,unsig
 	else if(pin<=GPIOX_35)
 	{
 		*reg=3;
-		*bit=pin-GPIOX_32+20;	
+		*bit=pin-GPIOX_32+20;
 	}
 	else if(pin<=BOOT_17)
 	{
@@ -362,7 +362,7 @@ static int amlogic_pin_map_to_direction(unsigned int pin,unsigned int *reg,unsig
 	else if(pin<=GPIOAO_11)
 	{
 		*reg=7;
-		*bit=pin-GPIOA_0;	
+		*bit=pin-GPIOA_0;
 	}
 	else
 		return -1;

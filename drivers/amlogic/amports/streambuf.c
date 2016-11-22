@@ -195,7 +195,7 @@ u32 stbuf_space(struct stream_buf_s *buf)
 #if MESON_CPU_TYPE >= MESON_CPU_TYPE_MESON8
     if (HAS_HEVC_VDEC && buf->type == BUF_TYPE_HEVC)
         size = buf->canusebuf_size - READ_VREG(HEVC_STREAM_LEVEL);
-    else 
+    else
 #endif
         size = (buf->canusebuf_size - _READ_ST_REG(LEVEL)) ;
 
@@ -318,7 +318,7 @@ void stbuf_vdec2_init(struct stream_buf_s *buf)
     _WRITE_VDEC2_ST_REG(BUF_CTRL, MEM_BUFCTRL_INIT);
     _WRITE_VDEC2_ST_REG(BUF_CTRL, 0);
 
-    _WRITE_VDEC2_ST_REG(CONTROL, (0x11 << 16) | MEM_FILL_ON_LEVEL | MEM_CTRL_FILL_EN | MEM_CTRL_EMPTY_EN); 
+    _WRITE_VDEC2_ST_REG(CONTROL, (0x11 << 16) | MEM_FILL_ON_LEVEL | MEM_CTRL_FILL_EN | MEM_CTRL_EMPTY_EN);
 }
 #endif
 
@@ -332,7 +332,7 @@ s32 stbuf_wait_space(struct stream_buf_s *stream_buf, size_t count)
     setup_timer(&p->timer, _stbuf_timer_func, (ulong)p);
 
     mod_timer(&p->timer, jiffies + STBUF_WAIT_INTERVAL);
-    
+
     if (wait_event_interruptible_timeout(p->wq, stbuf_space(p) >= count, time_out) == 0) {
         del_timer_sync(&p->timer);
 
@@ -347,7 +347,7 @@ s32 stbuf_wait_space(struct stream_buf_s *stream_buf, size_t count)
 void stbuf_release(struct stream_buf_s *buf)
 {
     buf->first_tstamp = INVALID_PTS;
-	stbuf_init(buf);	//reinit buffer 
+	stbuf_init(buf);	//reinit buffer
     if (buf->flag & BUF_FLAG_IOMEM) {
         buf->flag = BUF_FLAG_IOMEM;
     } else {

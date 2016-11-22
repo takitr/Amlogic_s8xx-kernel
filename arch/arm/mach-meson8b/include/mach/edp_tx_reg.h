@@ -98,8 +98,8 @@
 #define EDP_DPCD_RX_PORT0_CAPS_1					0x0009
 #define EDP_DPCD_RX_PORT1_CAPS_0					0x000A
 #define EDP_DPCD_RX_PORT1_CAPS_1					0x000B
-#define EDP_DPCD_I2C_SPEED_CAP						0x000C	//v1.2? 
-#define EDP_DPCD_CONFIGURATION_CAP					0x000D	//v1.2? 
+#define EDP_DPCD_I2C_SPEED_CAP						0x000C	//v1.2?
+#define EDP_DPCD_CONFIGURATION_CAP					0x000D	//v1.2?
 #define EDP_DPCD_TRAINING_AUX_RD_INTERVAL			0x000E	//v1.2?
 #define EDP_DPCD_MUTI_STREAM_TRANSPORT_CAP			0x0021	//v1.2
 #define EDP_DPCD_PSR_SUPPORT						0x0070	//v1.2?
@@ -131,7 +131,7 @@
 #define EDP_DPCD_TRAINING_SCORE_LANE_3				0x020B
 
 #define EDP_DPCD_SYMBOL_ERROR_COUNT_LANE_0			0x0210
-#define EDP_DPCD_SYMBOL_ERROR_COUNT_LANE_1			0x0212 
+#define EDP_DPCD_SYMBOL_ERROR_COUNT_LANE_1			0x0212
 #define EDP_DPCD_SYMBOL_ERROR_COUNT_LANE_2			0x0214
 #define EDP_DPCD_SYMBOL_ERROR_COUNT_LANE_3			0x0216
 
@@ -150,7 +150,7 @@
 // Sink Device-Specific Field    0x0403 - 0x004FF : Reserved for vendor-specific usage
 #define EDP_DPCD_SINK_IEEE_OUT_0					0x0400 // Sink IEEE OUI 7:0
 #define EDP_DPCD_SINK_IEEE_OUT_1					0x0401 // Sink IEEE OUI 15:8
-#define EDP_DPCD_SINK_IEEE_OUT_2					0x0402 // Sink IEEE OUI 23:16 
+#define EDP_DPCD_SINK_IEEE_OUT_2					0x0402 // Sink IEEE OUI 23:16
 
 // Branch Device-Specific Field  0x0503 - 0x005FF : Reserved for vendor-specific usage
 #define EDP_DPCD_BRANCH_DEVICE_IEEE_OUI_0			0x0500 // Branch Device IEEE OUI 7:0

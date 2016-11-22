@@ -6,4 +6,3 @@ static int vid_deinit(void);
 static  int  vid_transfer(logo_object_t *plogo);
 
 #endif
-

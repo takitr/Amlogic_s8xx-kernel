@@ -34,7 +34,7 @@ struct ts_chip hx8520_chip = {
 
 
 static int hx8520_write_block(struct i2c_client *client, u8 addr, u8 *buf, int len)
-{ 
+{
     struct i2c_msg msg[2] = {
         [0] = {
             .addr = client->addr,
@@ -55,7 +55,7 @@ static int hx8520_write_block(struct i2c_client *client, u8 addr, u8 *buf, int l
 
 
 static int hx8520_read_block(struct i2c_client *client, u8 addr, u8 *buf, int len)
-{ 
+{
     struct i2c_msg msg[2] = {
         [0] = {
             .addr = client->addr,
@@ -70,7 +70,7 @@ static int hx8520_read_block(struct i2c_client *client, u8 addr, u8 *buf, int le
             .buf = buf
         },
     };
-    
+
     return i2c_transfer(client->adapter, msg, ARRAY_SIZE(msg));
 }
 
@@ -81,7 +81,7 @@ int hx8520_reset(struct device *dev)
     struct i2c_client *client = container_of(dev, struct i2c_client, dev);
     struct ts_platform_data *pdata = dev->platform_data;
     u8 buf[4];
-    
+
     if (pdata->data) {
         int reset_gpio = (int)pdata->data - 1;
         gpio_direction_output(reset_gpio, 0);
@@ -89,17 +89,17 @@ int hx8520_reset(struct device *dev)
         gpio_direction_output(reset_gpio, 1);
         msleep(20);
     }
-    
+
     /* 1. IC internal power on */
     ret = hx8520_write_block(client, 0x81, 0, 0);
     if(ret < 0) return ret;
 
-    /* 2. MCU power on */ 
+    /* 2. MCU power on */
     msleep(120);
     buf[0] = 0x02;
     ret = hx8520_write_block(client, 0x35, buf, 1);
     if(ret < 0) return ret;
-    
+
     /* 3. flash power on */
     msleep(120);
     buf[0] = 0x01;
@@ -110,20 +110,20 @@ int hx8520_reset(struct device *dev)
     msleep(120);
     ret = hx8520_write_block(client, 0x83, 0, 0);
     if(ret < 0) return ret;
-    
+
     /*dummy read */
     msleep(200);
     hx8520_read_block(client, 0x31, buf, 3);
 
     return 0;
 }
-    
+
 
 int hx8520_calibration(struct device *dev)
 {
     int ret = -1;
     struct i2c_client *client = container_of(dev, struct i2c_client, dev);
-    
+
     return ret;
 }
 
@@ -139,7 +139,7 @@ int hx8520_get_event (struct device *dev, struct ts_event *event)
 
     memset(buf, 0, ARRAY_SIZE(buf));
     if (hx8520_read_block(client, HX8520_CMD_START,
-            buf, HX8520_PACKET_SIZE) < 0) {    
+            buf, HX8520_PACKET_SIZE) < 0) {
         /* i2c read failed */
         hx8520_debug_info("hx8520 read i2c failed!\n");
         return -1;
@@ -149,7 +149,7 @@ int hx8520_get_event (struct device *dev, struct ts_event *event)
     hx8520_debug_info("%d, %d, %d, %d\n", buf[8], buf[9], buf[10], buf[11]);
     hx8520_debug_info("%d, %d, %d, %d\n", buf[12], buf[13], buf[14], buf[15]);
     hx8520_debug_info("%d, %d, %d, %d\n", buf[16], buf[17], buf[18], buf[19]);
-     
+
     event_num = 0;
     int zero_num = 0;
     for(i=0; i<4; i++) {
@@ -174,12 +174,12 @@ int hx8520_get_event (struct device *dev, struct ts_event *event)
             event_num++;
         }
         else if ((event->x != -1) || (event->y != -1)) {
-            hx8520_debug_info("hx8520 data%d error, %d, %d\n", i, event->x, event->y);            
+            hx8520_debug_info("hx8520 data%d error, %d, %d\n", i, event->x, event->y);
             event_num = -1;
             break;
         }
     }
-    
+
     if ((zero_num == 4) && (buf[16] == 0)) {
         return 0;
     }
@@ -189,7 +189,7 @@ int hx8520_get_event (struct device *dev, struct ts_event *event)
         hx8520_read_block(client, HX8520_CMD_START, buf, HX8520_PACKET_SIZE);
         return -2;
     }
-    
+
     return event_num;
 }
 

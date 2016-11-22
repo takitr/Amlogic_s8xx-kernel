@@ -9,7 +9,7 @@ config VIDEO_AMLOGIC_CAPTURE
 	select VIDEO_V4L2
 	default n
 	---help---
-	  Amlogic capture driver interface in v4l style. it can not work well together with 
+	  Amlogic capture driver interface in v4l style. it can not work well together with
 	  AMLOGIC_CAMERA_ENABLE
 	  Say Y here if you want this driver.
 
@@ -32,7 +32,7 @@ config VIDEO_AMLOGIC_CAPTURE_PROBE
 	depends on VIDEO_AMLOGIC_CAPTURE
 	default n
 	---help---
-	  Probe wether the camera devices exist by trying to read its 
+	  Probe wether the camera devices exist by trying to read its
 	  i2c port. It may cost some time, say Y here if you want it.
 
 config AMLCAP_LOG_TIME_USEFORFRAMES
@@ -66,7 +66,7 @@ config VIDEO_AMLOGIC_CAPTURE_GC0307
 	---help---
 	  Amlogic capture driver.
 	  Say Y here if you want this driver.
-	  
+
 config VIDEO_AMLOGIC_CAPTURE_GC0308
 	tristate "Amlogic Platform Capture Driver for GC0308"
 	depends on VIDEO_AMLOGIC_CAPTURE
@@ -91,7 +91,7 @@ config VIDEO_AMLOGIC_CAPTURE_GC0328
 	---help---
 	  Amlogic capture driver.
 	  Say Y here if you want this driver.
-	  
+
 config VIDEO_AMLOGIC_CAPTURE_GC0329
 	tristate "Amlogic Platform Capture Driver for GC0329"
 	depends on VIDEO_AMLOGIC_CAPTURE
@@ -129,7 +129,7 @@ config VIDEO_AMLOGIC_CAPTURE_GC2035
 	---help---
 	  Amlogic capture driver.
 	  Say Y here if you want this driver.
-	  
+
 config VIDEO_AMLOGIC_CAPTURE_GC2155
 	tristate "Amlogic Platform Capture Driver for GC2155"
 	depends on VIDEO_AMLOGIC_CAPTURE
@@ -141,7 +141,7 @@ config VIDEO_AMLOGIC_CAPTURE_GC2155
 	---help---
 	  Amlogic capture driver.
 	  Say Y here if you want this driver.
-	  
+
 config VIDEO_AMLOGIC_CAPTURE_OV5640
 	tristate "Amlogic Platform Capture Driver for OV5640"
 	depends on VIDEO_AMLOGIC_CAPTURE
@@ -153,8 +153,8 @@ config VIDEO_AMLOGIC_CAPTURE_OV5640
 	default n
 	---help---
 	  Amlogic capture driver.
-	  Say Y here if you want this driver.	  
-	  
+	  Say Y here if you want this driver.
+
 config VIDEO_AMLOGIC_CAPTURE_OV5642
 	tristate "Amlogic Platform Capture Driver for OV5642"
 	depends on VIDEO_AMLOGIC_CAPTURE
@@ -166,13 +166,13 @@ config VIDEO_AMLOGIC_CAPTURE_OV5642
 	default n
 	---help---
 	  Amlogic capture driver.
-	  Say Y here if you want this driver.	  
+	  Say Y here if you want this driver.
 
 choice
 	prompt "OV5642 AUTO FOCUS FIRMWARE"
 	depends on VIDEO_AMLOGIC_CAPTURE_OV5642
 	default NO_AUTO_FUCOS
-	
+
 config NO_AUTO_FUCOS
 	bool "NONE"
 	---help---
@@ -207,7 +207,7 @@ config VIDEO_AMLOGIC_CAPTURE_OV7675
 	---help---
 	  Amlogic capture driver.
 	  Say Y here if you want this driver.
-	  
+
 config VIDEO_AMLOGIC_CAPTURE_OV2655
 	tristate "Amlogic Platform Capture Driver for OV2655"
 	depends on VIDEO_AMLOGIC_CAPTURE
@@ -220,7 +220,7 @@ config VIDEO_AMLOGIC_CAPTURE_OV2655
 	---help---
 	  Amlogic capture driver.
 	  Say Y here if you want this driver.
-	  
+
 config VIDEO_AMLOGIC_CAPTURE_SP0838
 	tristate "Amlogic Platform Capture Driver for SP0838"
 	depends on VIDEO_AMLOGIC_CAPTURE
@@ -233,7 +233,7 @@ config VIDEO_AMLOGIC_CAPTURE_SP0838
 	---help---
 	  Amlogic capture driver.
 	  Say Y here if you want this driver.
-	  
+
 config VIDEO_AMLOGIC_CAPTURE_SP2518
 	tristate "Amlogic Platform Capture Driver for SP2518"
 	depends on VIDEO_AMLOGIC_CAPTURE
@@ -285,7 +285,7 @@ config VIDEO_AMLOGIC_CAPTURE_HI253
 	---help---
 	  Amlogic capture driver.
 	  Say Y here if you want this driver.
-	  
+
 config VIDEO_AMLOGIC_CAPTURE_HI704
 	tristate "Amlogic Platform Capture Driver for HI704"
 	depends on VIDEO_AMLOGIC_CAPTURE
@@ -297,7 +297,7 @@ config VIDEO_AMLOGIC_CAPTURE_HI704
 	default n
 	---help---
 	  Amlogic capture driver.
-	  Say Y here if you want this driver. 
+	  Say Y here if you want this driver.
 
 config VIDEO_AMLOGIC_CAPTURE_HM2057
 	tristate "Amlogic Platform Capture Driver for HM2057"
@@ -310,7 +310,7 @@ config VIDEO_AMLOGIC_CAPTURE_HM2057
 	default n
 	---help---
 	  Amlogic capture driver.
-	  Say Y here if you want this driver. 
+	  Say Y here if you want this driver.
 
 config VIDEO_AMLOGIC_CAPTURE_HM5065
 	tristate "Amlogic Platform Capture Driver for HM5065"
@@ -323,7 +323,20 @@ config VIDEO_AMLOGIC_CAPTURE_HM5065
 	default n
 	---help---
 	  Amlogic capture driver.
-	  Say Y here if you want this driver. 
+	  Say Y here if you want this driver.
+
+config VIDEO_AMLOGIC_CAPTURE_HM1375
+	tristate "Amlogic Platform Capture Driver for HM1375"
+	depends on VIDEO_AMLOGIC_CAPTURE
+	select VIDEOBUF_VMALLOC
+	select AMLOGIC_VIDEOIN_MANAGER
+	select TVIN
+	select TVIN_BT656
+	select TVIN_VDIN
+	default n
+	---help---
+	  Amlogic capture driver.
+	  Say Y here if you want this driver.
 
 config VIDEO_AMLOGIC_CAPTURE_OV3660
 	tristate "Amlogic Platform Capture Driver for OV3660"
@@ -337,7 +350,7 @@ config VIDEO_AMLOGIC_CAPTURE_OV3660
 	---help---
 	  Amlogic capture driver.
 	  Say Y here if you want this driver.
-	  
+
 config VIDEO_AMLOGIC_CAPTURE_OV5647
 	tristate "Amlogic Platform Capture Driver for OV5647"
 	depends on VIDEO_AMLOGIC_CAPTURE
@@ -374,7 +387,7 @@ config VIDEO_AMLOGIC_CAPTURE_NT99250
 	---help---
 	  Amlogic capture driver.
 	  Say Y here if you want this driver.
-	  
+
 config VIDEO_AMLOGIC_CAPTURE_NT99252
 	tristate "Amlogic Platform Capture Driver for NT99252"
 	depends on VIDEO_AMLOGIC_CAPTURE
@@ -399,7 +412,7 @@ config VIDEO_AMLOGIC_CAPTURE_NT99340
 	default n
 	---help---
 	  Amlogic capture driver.
-	  Say Y here if you want this driver.	
+	  Say Y here if you want this driver.
 
 config VIDEO_AMLOGIC_CAPTURE_AR0543
 	tristate "Amlogic Platform Capture Driver for AR0543"
@@ -409,8 +422,8 @@ config VIDEO_AMLOGIC_CAPTURE_AR0543
 	default n
 	---help---
 	  Amlogic capture driver.
-	  Say Y here if you want this driver.	
-	  
+	  Say Y here if you want this driver.
+
 config VIDEO_AMLOGIC_CAPTURE_AR0833
 	tristate "Amlogic Platform Capture Driver for AR0833"
 	depends on VIDEO_AMLOGIC_CAPTURE
@@ -419,7 +432,7 @@ config VIDEO_AMLOGIC_CAPTURE_AR0833
 	default n
 	---help---
 	  Amlogic capture driver.
-	  Say Y here if you want this driver.	
+	  Say Y here if you want this driver.
 
 
 config VIDEO_AMLOGIC_CAPTURE_BF3720

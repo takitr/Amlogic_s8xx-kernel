@@ -809,11 +809,11 @@ void mmc_set_data_timeout(struct mmc_data *data, const struct mmc_card *card)
 	/*
 	 * Some cards require longer data read timeout than indicated in CSD.
 	 * Address this by setting the read timeout to a "reasonably high"
-	 * value. For the cards tested, 600ms has proven enough. If necessary,
+	 * value. For the cards tested, 300ms has proven enough. If necessary,
 	 * this value can be increased if other problematic cards require this.
 	 */
 	if (mmc_card_long_read_time(card) && data->flags & MMC_DATA_READ) {
-		data->timeout_ns = 600000000;
+		data->timeout_ns = 300000000;
 		data->timeout_clks = 0;
 	}
 
@@ -2043,9 +2043,9 @@ int mmc_can_erase(struct mmc_card *card)
 	    (card->csd.cmdclass & CCC_ERASE) && card->erase_size)
 		return 1;
 
-    pr_debug("%s, card->host->caps:%d,card->csd.cmdclass:%d card->erase_size:0x%x\n", 
+    pr_debug("%s, card->host->caps:%d,card->csd.cmdclass:%d card->erase_size:0x%x\n",
         __func__, (card->host->caps & MMC_CAP_ERASE), (card->csd.cmdclass & CCC_ERASE), card->erase_size);
-    
+
 	return 0;
 }
 EXPORT_SYMBOL(mmc_can_erase);
@@ -2218,7 +2218,7 @@ int mmc_can_reset(struct mmc_card *card)
 
 	if (!mmc_card_mmc(card))
 		return 0;
-    
+
 	rst_n_function = card->ext_csd.rst_n_function;
 	if ((rst_n_function & EXT_CSD_RST_N_EN_MASK) != EXT_CSD_RST_N_ENABLED){
         pr_err("###Detect hw reset function disabled here, rst_n_function:%d\n", rst_n_function);

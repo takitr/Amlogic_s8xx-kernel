@@ -110,9 +110,12 @@ void on_vsif_receiving(uint8_t packet[IF_BUFFER_LENGTH])
 
 			if(packet_new)
 			{
-				DEBUG_PRINT(MSG_STAT, ("Got NEW VSIF\n"));	
+				DEBUG_PRINT(MSG_STAT, ("Got NEW VSIF\n"));
 				VMD_VsifProcessing(&packet[IF_HEADER_LENGTH], packet[IF_LENGTH_INDEX]);
 			}
+			break;
+		default:
+			break;
 		}
 	}
 }

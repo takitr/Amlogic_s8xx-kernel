@@ -14,11 +14,11 @@
 
 #include <linux/amlogic/hdmi_tx/hdmi_info_global.h>
 #include <linux/amlogic/hdmi_tx/hdmi_tx_module.h>
+#include <linux/amlogic/hdmi_tx/hdmi_tx_compliance.h>
 
 static unsigned char hdmi_output_rgb = 0;
 static void hdmitx_set_spd_info(hdmitx_dev_t* hdmitx_device);
 static void hdmi_set_vend_spec_infofram(hdmitx_dev_t* hdmitx_device, HDMI_Video_Codes_t VideoCode);
-extern int dvi_mode;
 
 static Hdmi_tx_video_para_t hdmi_tx_video_params[] =
 {
@@ -76,116 +76,6 @@ static Hdmi_tx_video_para_t hdmi_tx_video_params[] =
 #else
         .repeat_time    = NO_REPEAT,
 #endif
-        .aspect_ratio   = TV_ASPECT_RATIO_16_9,
-        .cc             = CC_ITU709,
-        .ss             = SS_SCAN_UNDER,
-        .sc             = SC_SCALE_HORIZ_VERT,
-    },
-	{
-		.VIC			= HDMI_800p,
-		.color_prefer	= COLOR_SPACE_RGB444,
-		.color_depth 	= COLOR_24BIT,
-		.bar_info		= B_BAR_VERT_HORIZ,
-		.repeat_time	= NO_REPEAT,
-		.aspect_ratio 	= TV_ASPECT_RATIO_16_9,
-		.cc				= CC_ITU709,
-		.ss				= SS_SCAN_UNDER,
-		.sc				= SC_SCALE_HORIZ_VERT,
-	},
-    {
-        .VIC            = HDMI_800x480p60hz,
-        .color_prefer   = COLOR_SPACE_RGB444,
-        .color_depth    = COLOR_24BIT,
-        .bar_info       = B_BAR_VERT_HORIZ,
-        .repeat_time    = NO_REPEAT,
-        .aspect_ratio   = TV_ASPECT_RATIO_16_9,
-        .cc             = CC_ITU709,
-        .ss             = SS_SCAN_UNDER,
-        .sc             = SC_SCALE_HORIZ_VERT,
-    },
-    {
-        .VIC            = HDMI_1366x768p60hz,
-        .color_prefer   = COLOR_SPACE_RGB444,
-        .color_depth    = COLOR_24BIT,
-        .bar_info       = B_BAR_VERT_HORIZ,
-        .repeat_time    = NO_REPEAT,
-        .aspect_ratio   = TV_ASPECT_RATIO_16_9,
-        .cc             = CC_ITU709,
-        .ss             = SS_SCAN_UNDER,
-        .sc             = SC_SCALE_HORIZ_VERT,
-    },
-    {
-        .VIC            = HDMI_1600x900p60hz,
-        .color_prefer   = COLOR_SPACE_RGB444,
-        .color_depth    = COLOR_24BIT,
-        .bar_info       = B_BAR_VERT_HORIZ,
-        .repeat_time    = NO_REPEAT,
-        .aspect_ratio   = TV_ASPECT_RATIO_16_9,
-        .cc             = CC_ITU709,
-        .ss             = SS_SCAN_UNDER,
-        .sc             = SC_SCALE_HORIZ_VERT,
-    },
-    {
-        .VIC            = HDMI_800x600p60hz,
-        .color_prefer   = COLOR_SPACE_RGB444,
-        .color_depth    = COLOR_24BIT,
-        .bar_info       = B_BAR_VERT_HORIZ,
-        .repeat_time    = NO_REPEAT,
-        .aspect_ratio   = TV_ASPECT_RATIO_16_9,
-        .cc             = CC_ITU709,
-        .ss             = SS_SCAN_UNDER,
-        .sc             = SC_SCALE_HORIZ_VERT,
-    },
-    {
-        .VIC            = HDMI_1024x600p60hz,
-        .color_prefer   = COLOR_SPACE_RGB444,
-        .color_depth    = COLOR_24BIT,
-        .bar_info       = B_BAR_VERT_HORIZ,
-        .repeat_time    = NO_REPEAT,
-        .aspect_ratio   = TV_ASPECT_RATIO_16_9,
-        .cc             = CC_ITU709,
-        .ss             = SS_SCAN_UNDER,
-        .sc             = SC_SCALE_HORIZ_VERT,
-    },
-    {
-        .VIC            = HDMI_1024x768p60hz,
-        .color_prefer   = COLOR_SPACE_RGB444,
-        .color_depth    = COLOR_24BIT,
-        .bar_info       = B_BAR_VERT_HORIZ,
-        .repeat_time    = NO_REPEAT,
-        .aspect_ratio   = TV_ASPECT_RATIO_16_9,
-        .cc             = CC_ITU709,
-        .ss             = SS_SCAN_UNDER,
-        .sc             = SC_SCALE_HORIZ_VERT,
-    },
-    {
-        .VIC            = HDMI_1360x768p60hz,
-        .color_prefer   = COLOR_SPACE_RGB444,
-        .color_depth    = COLOR_24BIT,
-        .bar_info       = B_BAR_VERT_HORIZ,
-        .repeat_time    = NO_REPEAT,
-        .aspect_ratio   = TV_ASPECT_RATIO_16_9,
-        .cc             = CC_ITU709,
-        .ss             = SS_SCAN_UNDER,
-        .sc             = SC_SCALE_HORIZ_VERT,
-    },
-    {
-        .VIC            = HDMI_1440x900p60hz,
-        .color_prefer   = COLOR_SPACE_RGB444,
-        .color_depth    = COLOR_24BIT,
-        .bar_info       = B_BAR_VERT_HORIZ,
-        .repeat_time    = NO_REPEAT,
-        .aspect_ratio   = TV_ASPECT_RATIO_16_9,
-        .cc             = CC_ITU709,
-        .ss             = SS_SCAN_UNDER,
-        .sc             = SC_SCALE_HORIZ_VERT,
-    },
-    {
-        .VIC            = HDMI_1680x1050p60hz,
-        .color_prefer   = COLOR_SPACE_RGB444,
-        .color_depth    = COLOR_24BIT,
-        .bar_info       = B_BAR_VERT_HORIZ,
-        .repeat_time    = NO_REPEAT,
         .aspect_ratio   = TV_ASPECT_RATIO_16_9,
         .cc             = CC_ITU709,
         .ss             = SS_SCAN_UNDER,
@@ -303,28 +193,6 @@ static Hdmi_tx_video_para_t hdmi_tx_video_params[] =
         .aspect_ratio   = TV_ASPECT_RATIO_16_9,
         .cc             = CC_ITU709,
         .ss             = SS_SCAN_UNDER,
-        .sc             = SC_SCALE_HORIZ_VERT,
-    },
-     { 
-        .VIC            = HDMI_1280x1024,
-        .color_prefer   = COLOR_SPACE_RGB444,
-        .color_depth    = COLOR_24BIT,
-        .bar_info       = B_BAR_VERT_HORIZ,
-        .repeat_time    = NO_REPEAT,
-        .aspect_ratio   = TV_ASPECT_RATIO_4_3,
-        .cc             = CC_ITU709,
-        .ss             = SS_SCAN_UNDER,   
-        .sc             = SC_SCALE_HORIZ_VERT,
-    },
-     { 
-        .VIC            = HDMI_1920x1200,
-        .color_prefer   = COLOR_SPACE_RGB444,
-        .color_depth    = COLOR_24BIT,
-        .bar_info       = B_BAR_VERT_HORIZ,
-        .repeat_time    = NO_REPEAT,
-        .aspect_ratio   = TV_ASPECT_RATIO_4_3,
-        .cc             = CC_ITU709,
-        .ss             = SS_SCAN_UNDER,   
         .sc             = SC_SCALE_HORIZ_VERT,
     },
     {
@@ -543,14 +411,10 @@ void hdmitx_init_parameters(HDMI_TX_INFO_t *info)
 //If not, treated as a DVI Device
 static int is_dvi_device(rx_cap_t* pRXCap)
 {
-	if (voutmode_hdmi()) {
-		pr_emerg("hdmi: Fixing to HDMI Mode\n");
-		return 0;
-	}
-
-	pr_emerg("hdmi: fixing to %s mode\n",
-			voutmode_dvi() ? "DVI" : "VGA");
-	return 1;
+    if(pRXCap->IEEEOUI != 0x000c03)
+        return 1;
+    else
+        return 0;
 }
 
 void hdmitx_output_rgb(void)
@@ -576,9 +440,9 @@ int hdmitx_set_display(hdmitx_dev_t* hdmitx_device, HDMI_Video_Codes_t VideoCode
     hdmi_print(IMP, SYS "already init VIC = %d  Now VIC = %d\n", vic, VideoCode);
     if((vic != HDMI_Unkown) && (vic == VideoCode)) {
         hdmitx_device->cur_VIC = vic;
-        return 1;
+        return 1;;
     }
-
+    hdmitx_special_handler_video(hdmitx_device);
     param = hdmi_get_video_param(VideoCode);
     hdmitx_device->cur_video_param = param;
     if(param){
@@ -607,30 +471,30 @@ int hdmitx_set_display(hdmitx_dev_t* hdmitx_device, HDMI_Video_Codes_t VideoCode
 //0: DVI Mode       1: HDMI Mode
             //if(hdmitx_device->hdmi_info.output_state==CABLE_PLUGIN_DVI_OUT)
             if(is_dvi_device(&hdmitx_device->RXCap)) {
-                pr_emerg("hdmi: Sink is DVI device\n");
+                hdmi_print(1,"Sink is DVI device\n");
                 hdmitx_device->HWOp.CntlConfig(hdmitx_device, CONF_HDMI_DVI_MODE, DVI_MODE);        //todo ColorFormat
             }
             else {
-                pr_emerg("hdmi: Sink is HDMI device\n");
+                hdmi_print(1,"Sink is HDMI device\n");
                 hdmitx_device->HWOp.CntlConfig(hdmitx_device, CONF_HDMI_DVI_MODE, HDMI_MODE);
             }
 //check system status by reading EDID_STATUS
             switch(hdmitx_device->HWOp.CntlConfig(hdmitx_device, CONF_SYSTEM_ST, 0))
             {
                 case 0:
-                    pr_emerg("hdmi: No sink attached\n");
+                    hdmi_print(1,"No sink attached\n");
                     break;
                 case 1:
-                    pr_emerg("hdmi: Source reading EDID\n");
+                    hdmi_print(1,"Source reading EDID\n");
                     break;
                 case 2:
-                    pr_emerg("hdmi: Source in DVI Mode\n");
+                    hdmi_print(1,"Source in DVI Mode\n");
                     break;
                 case 3:
-                    pr_emerg("hdmi: Source in HDMI Mode\n");
+                    hdmi_print(1,"Source in HDMI Mode\n");
                     break;
                 default:
-                    pr_emerg("hdmi: EDID Status error\n");
+                    hdmi_print(1,"EDID Status error\n");
             }
 
             hdmi_tx_construct_avi_packet(param, (char*)AVI_DB);

@@ -565,8 +565,8 @@ static void vbi_slicer_task(unsigned long arg)
 	vbi_skip_bytes(rptr, bytes_buffer, devp, sliced_data.nbytes)  //go to next package
 	if (data_print_en) {
 		printk("[vbi..]: cnt:%4d, line:%3x; ", bytes_buffer, sliced_data.line_num);
-	    	for(i=0; i<sliced_data.nbytes ; i++) {
-	        	printk("%2x ", sliced_data.b[i]);
+		for(i=0; i<sliced_data.nbytes ; i++) {
+			printk("%2x ", sliced_data.b[i]);
 		}
 		printk("\n" );
 	}
@@ -1247,4 +1247,3 @@ module_exit(vbi_exit);
 MODULE_DESCRIPTION("AMLOGIC vbi driver");
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("frank  <frank.zhao@amlogic.com>");
-

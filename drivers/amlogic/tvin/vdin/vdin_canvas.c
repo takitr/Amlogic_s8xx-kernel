@@ -20,6 +20,7 @@
 #include "vdin_drv.h"
 #include "vdin_canvas.h"
 #ifndef VDIN_DEBUG
+#undef  pr_info
 #define pr_info(fmt, ...)
 #endif
 
@@ -176,4 +177,3 @@ void vdin_canvas_auto_config(struct vdin_dev_s *devp)
 #endif
 	}
 }
-

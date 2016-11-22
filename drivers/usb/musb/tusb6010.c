@@ -18,6 +18,7 @@
 #include <linux/kernel.h>
 #include <linux/errno.h>
 #include <linux/err.h>
+#include <linux/init.h>
 #include <linux/prefetch.h>
 #include <linux/usb.h>
 #include <linux/irq.h>

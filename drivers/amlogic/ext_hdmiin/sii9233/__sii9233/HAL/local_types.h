@@ -22,7 +22,7 @@ typedef unsigned char  bool_t;	/* this type can be used in structures */
 #define FALSE     0
 
 #define ROM
-#define IRAM	
+#define IRAM
 //#define ROM   code       // 8051 type of ROM memory
 //#define IRAM  idata      // 8051 type of RAM memory
 

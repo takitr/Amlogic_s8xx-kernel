@@ -77,5 +77,3 @@ config MESON_L2CC_STANDBY
 		enable PL310 dynamic gating & standby mode
 
 endif # ARCH_MESON36
-
-

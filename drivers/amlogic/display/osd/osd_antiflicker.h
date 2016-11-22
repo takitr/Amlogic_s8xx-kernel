@@ -48,4 +48,3 @@ static inline void osd_antiflicker_task_stop(void)
 #endif
 
 #endif
-

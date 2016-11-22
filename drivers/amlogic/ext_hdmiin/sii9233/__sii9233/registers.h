@@ -209,7 +209,7 @@
 #define REG__INTR2          0x072
 #define BIT__HDMIMODE       0x80
 #define BIT__CKDT_CHG       0x10
-#define BIT__SCDT_CHG       0x08	 
+#define BIT__SCDT_CHG       0x08
 #define BIT__GOTAUD         0x02
 #define BIT__GOTCTS         0x04
 #define BIT__VCLK_CHG		0x01
@@ -350,8 +350,8 @@
 #define BIT__CLR_GBD		   0x40
 #define BIT__CLR_ACP		   0x20
 
-				 
-// Auto Audio Unmute Control 
+
+// Auto Audio Unmute Control
 #define REG__AEC1_CTL		0x0B4
 #define BIT__ASC2_EN		0x01
 
@@ -366,13 +366,13 @@
 // AEC Exception Enable Registers (3 uint8_ts total)
 #define REG__AEC_EN1                0x0B6
 #define BIT__CABLE_UNPLUG           0x01
-#define BIT__CKDT_DETECT            0x80   
+#define BIT__CKDT_DETECT            0x80
 #define BIT__SYNC_DETECT            0x40
 
 #define BIT__HDMI_MODE_CHANGED      0x01
 #define BIT__AUDIO_FIFO_UNDERUN     0x02
 #define BIT__AUDIO_FIFO_OVERRUN     0x04
-#define BIT__CTS_REUSED             0x08   
+#define BIT__CTS_REUSED             0x08
 #define BIT__FS_CHANGED             0x10
 #define BIT__H_RES_CHANGED          0x80
 
@@ -393,7 +393,7 @@
 
 // ACR Control Register #1
 #define REG__ACR_CTRL1      0x100
-#define BIT__FS_SEL		    0x02  
+#define BIT__FS_SEL		    0x02
 #define BIT__ACR_INIT       0x01
 
 // ACR Audio Frequency Register
@@ -402,7 +402,7 @@
 #define VAL__SWMCLK_256     0x50
 #define VAL__SWMCLK_384     0xA0
 #define VAL__SWMCLK_512     0xF0
-#define MSK__SWMCLK         0xF0  
+#define MSK__SWMCLK         0xF0
 #define MSK__SWFS           0x0F
 
 #define VAL__FS_48K     	0x02
@@ -413,13 +413,13 @@
 // ACR PLL Lock Value Registers
 #define REG__LKTHRESH1      0x114
 
-#define REG__TCLK_FS          0x117 
+#define REG__TCLK_FS          0x117
 #define MSK__TCLKFS           0x0F
 
 
 // ACR Control #3 Register
 #define REG__ACR_CTRL3          0x118
-#define MSK__CTS_THRESH			0xF0    
+#define MSK__CTS_THRESH			0xF0
 #define VAL__CTS_THRESH(x)      ((x) << 3)  // CTS change threshold
 
 // Audio Output Formatting Registers
@@ -558,7 +558,7 @@
 
 
 #define REG__EN_EDID			0x901
-#define VAL__EN_EDID_NONE		0x00 
+#define VAL__EN_EDID_NONE		0x00
 #define VAL__EN_EDID_ALL		0x0F
 
 #define REG__EDID_FIFO_ADDR		0x902
@@ -620,7 +620,7 @@
 #define VAL__ODCK_STRENGTH		0x60
 
 //------------------------------------------------------------------------------
-// Factory Configuration Registers 
+// Factory Configuration Registers
 //------------------------------------------------------------------------------
 #define REG__FACTORY_00E		0x00E
 
@@ -628,9 +628,9 @@
 
 #define REG__FACTORY_A81		0xA81
 #define REG__FACTORY_A87		0xA87
-#define REG__FACTORY_A88		0xA88 
+#define REG__FACTORY_A88		0xA88
 #define REG__FACTORY_A89		0xA89
-#define REG__FACTORY_A92		0xA92 
+#define REG__FACTORY_A92		0xA92
 
 #define REG__FACTORY_AB5		0xAB5
 #define REG__FACTORY_ABB		0xABB

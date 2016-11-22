@@ -58,9 +58,9 @@ static const char * usage_str =
 "    echo clkmsr {<index>} > debug ; Output clk source value, no index then all\n"
 "    echo thread {<pid>} > debug; Show thread infomation, no pid then all\n"
 "    echo stack <pid> > debug; Show thread's stack\n"
-#ifdef CONFIG_GPIO_TEST	
+#ifdef CONFIG_GPIO_TEST
 "    echo gpiotest [name] <-m mask> <-t times> <-d delay_us>\n"
-#endif // CONFIG_GPIO_TEST	
+#endif // CONFIG_GPIO_TEST
 "\n"
 "Address format:\n"
 "    addrmem : 0xXXXXXXXX, 32 bits physical address\n"
@@ -187,6 +187,7 @@ static int  do_read_work(char argn ,char **argv)
 		printk("%s[0x%04x]=0x%08x\n", type, address, value);
 	return 0;
 }
+
 static int  do_dump_work(char argn ,char **argv)
 {
 	char base;
@@ -210,6 +211,36 @@ static int  do_dump_work(char argn ,char **argv)
 		else	{
 			value = aml_read_reg32(vstart);
 			printk("%s[0x%04x]=0x%08x\n", type, start, value);
+		}
+		start++;
+	} while (start <= end);
+	return 0;
+}
+
+static int  do_dumpn_work(char argn ,char **argv)
+{
+	char base;
+	char *type = NULL;
+	unsigned int start, end, vstart, value;
+
+	if (argn < 4){
+		printk("%s",syntax_error_str);
+		return -1;
+	}
+
+	base = argv[1][0];
+	type = base_addr_type(base);
+	start = simple_strtol(argv[2], NULL, 16);
+	end = simple_strtol(argv[3], NULL, 16);
+
+	do {
+		vstart = base_addr_convert(base, start);
+		if (vstart == -1)
+			printk("%s[0x%04x] Invalid Address\n", type, start);
+		else	{
+			value = aml_read_reg32(vstart);
+            if(value)
+                printk("%s[0x%04x]=0x%08x\n", type, start, value);
 		}
 		start++;
 	} while (start <= end);
@@ -276,7 +307,7 @@ int do_thread_show_work(char argn ,char **argv )
 		for_each_process(p) {
 			pid = pid_vnr(get_task_pid(p,PIDTYPE_PID));
 			printk("%4d: \t%ld\t%p\t%s\n",pid,p->state,p,p->comm);
-		} 
+		}
 	}else{
 		pid = simple_strtol(argv[1],NULL,10);
 		p = pid_task(find_vpid(pid), PIDTYPE_PID);
@@ -288,7 +319,7 @@ int do_stack_show_work(char argn ,char **argv )
 {
 	pid_t pid;
 	struct task_struct *task;
-		
+
 	if(argn != 2){
 		printk("%s",syntax_error_str);
 	}else{
@@ -324,7 +355,7 @@ int do_gpio_test_work(char argn ,char **argv )
 	}
 	return 0;
 }
-#else 
+#else
 
 #define MAX_ARG_NUM 4
 
@@ -376,7 +407,10 @@ static ssize_t dbg_do_command(struct class *class,
 	case 'd':
 	case 'D':
 		work_mode=WORK_MODE_DUMP;
-		do_dump_work(argn,argv);
+        if((argv[0][1] == 'n') || (argv[0][1] == 'N') || (argv[0][4] == 'n') || (argv[0][4] == 'N'))
+            do_dumpn_work(argn,argv);
+        else
+            do_dump_work(argn,argv);
 		break;
 	case 't':
 	case 'T':
@@ -389,7 +423,7 @@ static ssize_t dbg_do_command(struct class *class,
 		do_stack_show_work(argn,argv);
 		break;
 
-#ifdef CONFIG_GPIO_TEST	
+#ifdef CONFIG_GPIO_TEST
 	case 'g':
 	case 'G':
 		work_mode=WORK_MODE_GPIOTEST;
@@ -400,7 +434,7 @@ static ssize_t dbg_do_command(struct class *class,
 	default:
 		goto end;
 	}
-	
+
 	kfree(buf_work);
 	return count;
 end:
@@ -423,8 +457,8 @@ static int __init aml_debug_init(void)
 
 	ret = class_create_file(aml_sys_class,&class_attr_debug);
 	ret = class_create_file(aml_sys_class,&class_attr_help);
-	
-#ifdef CONFIG_GPIO_TEST		
+
+#ifdef CONFIG_GPIO_TEST
 	wake_lock_init(&debug_lock, WAKE_LOCK_SUSPEND, "gpiotest");
 #endif /* CONFIG_GPIO_TEST */
 
@@ -433,7 +467,7 @@ static int __init aml_debug_init(void)
 
 static void __exit aml_debug_exit(void)
 {
-#ifdef CONFIG_GPIO_TEST		
+#ifdef CONFIG_GPIO_TEST
 	wake_lock_destroy(&debug_lock);
 #endif /* CONFIG_GPIO_TEST */
 
@@ -447,4 +481,3 @@ module_exit(aml_debug_exit);
 MODULE_DESCRIPTION("Amlogic debug module");
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("Victor Wan <victor.wan@amlogic.com>");
-

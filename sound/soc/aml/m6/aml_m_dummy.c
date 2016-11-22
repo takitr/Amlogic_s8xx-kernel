@@ -33,6 +33,7 @@
 #include "aml_dai.h"
 #include "aml_pcm.h"
 #include "aml_audio_hw.h"
+#include "aml_alsa_common.h"
 
 #ifdef CONFIG_USE_OF
 #include <linux/of.h>
@@ -91,10 +92,10 @@ static int dummy_codec_hw_params(struct snd_pcm_substream *substream,
     /* set cpu DAI configuration */
 	if(substream->stream == SNDRV_PCM_STREAM_PLAYBACK)
 	{
-    	ret = snd_soc_dai_set_fmt(cpu_dai, SND_SOC_DAIFMT_I2S | SND_SOC_DAIFMT_NB_NF | SND_SOC_DAIFMT_CBM_CFM);
+	ret = snd_soc_dai_set_fmt(cpu_dai, SND_SOC_DAIFMT_I2S | SND_SOC_DAIFMT_NB_NF | SND_SOC_DAIFMT_CBM_CFM);
 	}
 	else
-    	ret = snd_soc_dai_set_fmt(cpu_dai, SND_SOC_DAIFMT_I2S | SND_SOC_DAIFMT_NB_NF | SND_SOC_DAIFMT_CBS_CFS);
+	ret = snd_soc_dai_set_fmt(cpu_dai, SND_SOC_DAIFMT_I2S | SND_SOC_DAIFMT_NB_NF | SND_SOC_DAIFMT_CBS_CFS);
     if (ret < 0) {
         printk(KERN_ERR "%s: set cpu dai fmt failed!\n", __func__);
         return ret;
@@ -130,11 +131,11 @@ static int dummy_codec_set_bias_level(struct snd_soc_card *card,
     case SND_SOC_BIAS_ON:
         break;
     case SND_SOC_BIAS_PREPARE:
-    	dummy_codec_mute_speaker(0);
+	dummy_codec_mute_speaker(0);
         break;
 
     case SND_SOC_BIAS_OFF:
-    	break;
+	break;
     case SND_SOC_BIAS_STANDBY:
         dummy_codec_mute_speaker(1);
         break;
@@ -191,13 +192,13 @@ static void dummy_codec_device_init(void)
 
 	if (IS_ERR(p))
 		return;
-			
+
 	s = pinctrl_lookup_state(p, "dummy_codec_audio");
 	if (IS_ERR(s)) {
 		pinctrl_put(p);
 		return;
 	}
-		
+
 	ret = pinctrl_select_state(p, s);
 	if (ret < 0) {
 		pinctrl_put(p);
@@ -230,7 +231,7 @@ static int dummy_codec_audio_probe(struct platform_device *pdev)
 
     //printk(KERN_DEBUG "enter %s\n", __func__);
     printk("enter %s\n", __func__);
-#ifdef CONFIG_USE_OF		
+#ifdef CONFIG_USE_OF
 		dummy_codec_pdata = kzalloc(sizeof(struct dummy_codec_platform_data), GFP_KERNEL);
 		if(!dummy_codec_pdata){
            // kfree(dummy_codec_pdata);
@@ -245,10 +246,10 @@ static int dummy_codec_audio_probe(struct platform_device *pdev)
 				goto err1;
             }
 		}
-		dummy_codec_dev=&pdev->dev;		
+		dummy_codec_dev=&pdev->dev;
     dummy_codec_pdata->device_init = &dummy_codec_device_init;
     dummy_codec_pdata->device_uninit = &dummy_codec_device_deinit;
-         
+
 		pdev->dev.platform_data = dummy_codec_pdata;
 #endif
 
@@ -269,6 +270,7 @@ static int dummy_codec_audio_probe(struct platform_device *pdev)
         goto err_device_add;
     }
 
+    aml_alsa_create_ctrl(snd_soc_dummy_codec.snd_card, NULL);
 
     dummy_codec_dev_init();
 

@@ -272,7 +272,9 @@ static int usb_probe_interface(struct device *dev)
 	dev_dbg(dev, "%s\n", __func__);
 
 	intf->needs_binding = 0;
-	
+
+	intf->auto_suspend = driver->supports_autosuspend;
+
 	if (usb_device_is_owned(udev))
 		return error;
 
@@ -461,15 +463,11 @@ static int usb_unbind_interface(struct device *dev)
 int usb_driver_claim_interface(struct usb_driver *driver,
 				struct usb_interface *iface, void *priv)
 {
-	struct device *dev;
+	struct device *dev = &iface->dev;
 	struct usb_device *udev;
 	int retval = 0;
 	int lpm_disable_error;
 
-	if (!iface)
-		return -ENODEV;
-
-	dev = &iface->dev;
 	if (dev->driver)
 		return -EBUSY;
 

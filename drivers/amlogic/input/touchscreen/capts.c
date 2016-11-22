@@ -66,11 +66,11 @@ static inline int capts_get_fingdown_state(struct capts *ts)
 static struct input_dev* capts_register_input(const char *name, struct ts_info *info)
 {
     struct input_dev *input;
-    
+
     input = input_allocate_device();
-    if (input) { 
+    if (input) {
         input->name = name;
-    
+
 #ifdef MULTI_TOUCH
         /* multi touch need only EV_ABS */
         set_bit(EV_ABS, input->evbit);
@@ -82,23 +82,23 @@ static struct input_dev* capts_register_input(const char *name, struct ts_info *
         set_bit(ABS_MT_WIDTH_MAJOR, input->absbit);
         input_set_abs_params(input, ABS_MT_POSITION_X, info->xmin, info->xmax, 0, 0);
         input_set_abs_params(input, ABS_MT_POSITION_Y, info->ymin, info->ymax, 0, 0);
-        input_set_abs_params(input, ABS_MT_TOUCH_MAJOR, info->zmin, info->zmax, 0, 0); 
-        input_set_abs_params(input, ABS_MT_WIDTH_MAJOR, info->wmin, info->wmax, 0, 0);   
+        input_set_abs_params(input, ABS_MT_TOUCH_MAJOR, info->zmin, info->zmax, 0, 0);
+        input_set_abs_params(input, ABS_MT_WIDTH_MAJOR, info->wmin, info->wmax, 0, 0);
 #else /*single touch */
         set_bit(EV_ABS | EV_SYN | EV_KEY, input->evbit);
-        set_bit(BTN_TOUCH, input->keybit); 
+        set_bit(BTN_TOUCH, input->keybit);
         input_set_abs_params(input, ABS_X, info->xmin, info->xmax, 0, 0);
         input_set_abs_params(input, ABS_Y, info->ymin, info->ymax, 0, 0);
         input_set_abs_params(input, ABS_PRESSURE, info->zmin, info->zmax, 0, 0);
         input_set_abs_params(input, ABS_TOOL_WIDTH, info->wmin, info->wmax, 0, 0);
 #endif
-    
+
         if (input_register_device(input) < 0) {
             input_free_device(input);
             input = 0;
         }
     }
-    
+
     return input;
 }
 
@@ -106,7 +106,7 @@ static struct input_dev* capts_register_input(const char *name, struct ts_info *
 static void capts_report_down(struct input_dev *input, struct ts_event *event, int event_num)
 {
     int i;
-    
+
 #ifdef MULTI_TOUCH
     for (i=0; i<event_num; i++) {
         capts_debug_info("point_%d: x=%d, y=%d, z=%d, w=%d\n",
@@ -167,7 +167,7 @@ static void capts_report(struct capts *ts, struct ts_event *event, int event_num
 static ssize_t capts_read(struct device *dev, struct device_attribute *attr, char *buf)
 {
     struct capts *ts = (struct capts *)dev_get_drvdata(dev);
-    
+
     if (!strcmp(attr->attr.name, "version")) {
         strcpy(buf, ts->chip->version);
         return strlen(ts->chip->version);
@@ -175,8 +175,8 @@ static ssize_t capts_read(struct device *dev, struct device_attribute *attr, cha
     else if (!strcmp(attr->attr.name, "information")) {
         memcpy(buf, &ts->pdata->info, sizeof(struct ts_info));
         return sizeof(struct ts_info);
-    } 
- 
+    }
+
     return 0;
 }
 
@@ -196,7 +196,7 @@ static ssize_t capts_write(struct device *dev, struct device_attribute *attr, co
             spin_unlock_irq(&ts->lock);
             msleep(1);
             spin_lock_irq(&ts->lock);
-        }        
+        }
         if (ts->irq) {
             disable_irq(ts->irq);
         }
@@ -215,7 +215,7 @@ static ssize_t capts_write(struct device *dev, struct device_attribute *attr, co
         }
         spin_unlock_irq(&ts->lock);
     }
-    
+
     return count;
 }
 
@@ -254,7 +254,7 @@ static void capts_work(struct work_struct *work)
         capts_report(ts, &event[0], event_num);
         hrtimer_start(&ts->timer, ktime_set(0, period), HRTIMER_MODE_REL);
         break;
-    
+
     case TS_MODE_TIMER_LOW:
     case TS_MODE_TIMER_HIGH:
         event_num = 0;
@@ -273,7 +273,7 @@ static void capts_work(struct work_struct *work)
             event_num = ts->chip->get_event(ts->dev, &event[0]);
         }
         capts_report(ts, &event[0], event_num);
-        
+
         if (event_num) {
             hrtimer_start(&ts->timer, ktime_set(0, period), HRTIMER_MODE_REL);
         }
@@ -298,7 +298,7 @@ static void capts_work(struct work_struct *work)
             }
         }
         break;
-        
+
     default:
         break;
     }
@@ -308,8 +308,8 @@ static void capts_work(struct work_struct *work)
 static enum hrtimer_restart capts_timer(struct hrtimer *timer)
 {
     struct capts *ts = container_of(timer, struct capts, timer);
-    
-    queue_work(ts->workqueue, &ts->work);	
+
+    queue_work(ts->workqueue, &ts->work);
 
     return HRTIMER_NORESTART;
 }
@@ -335,34 +335,34 @@ static irqreturn_t capts_interrupt(int irq, void *context)
         queue_work(ts->workqueue, &ts->work);
     }
     spin_unlock_irqrestore(&ts->lock, flags);
-    
+
     return IRQ_HANDLED;
 }
 
 /**
  * capts_probe()
  * @dev:    device to initialize
- * @chip:   chip interface    
+ * @chip:   chip interface
  */
 int capts_probe(struct device *dev, struct ts_chip *chip)
 {
     struct capts *ts = 0;
     struct ts_platform_data *pdata = dev->platform_data;
     int err = 0;
-   
+
     if (!dev || !chip || !pdata) {
         err = -ENODEV;
         printk("capacitive touch screen: no chip registered\n");
         return err;
     }
-     
+
     ts = kzalloc(sizeof(struct capts), GFP_KERNEL);
     if (!ts) {
         err = -ENOMEM;
         printk("%s: allocate ts failed\n", ts->chip->name);
         return err;
     }
-    
+
     ts->dev = dev;
     ts->pdata = pdata;
     ts->chip = chip;
@@ -382,7 +382,7 @@ int capts_probe(struct device *dev, struct ts_chip *chip)
         printk("%s: can't create work queue\n", ts->chip->name);
         goto fail;
     }
-    
+
     if (ts->chip->reset) {
         err = ts->chip->reset(dev);
         if (err) {
@@ -412,23 +412,23 @@ int capts_probe(struct device *dev, struct ts_chip *chip)
             goto fail;
         }
     }
-    
+
     ts->input = capts_register_input(dev->driver->name, &ts->pdata->info);
     if (!ts->input) {
         err = -ENOMEM;
         goto fail;
     }
-    
+
     err = sysfs_create_group(&dev->kobj, &capts_attr_group);
     if (err) {
         printk("%s: create device attribute group failed\n", ts->chip->name);
         goto fail;
     }
     ts->use_attr_group = 1;
-    
+
     printk("%s: init ok\n", ts->chip->name);
     return 0;
-    
+
 fail:
     capts_remove(dev);
     return err;
@@ -439,9 +439,9 @@ fail:
  * @dev:    device to clean up
  */
 int capts_remove(struct device *dev)
-{  
+{
     struct capts *ts = dev_get_drvdata(dev);
-    
+
     dev_set_drvdata(dev, NULL);
     if (ts) {
         if (ts->irq) {
@@ -461,14 +461,14 @@ int capts_remove(struct device *dev)
         }
         kfree(ts);
     }
-    
+
     return 0;
 }
 
 int capts_suspend(struct device *dev, pm_message_t msg)
 {
     struct capts *ts = dev_get_drvdata(dev);
-    
+
     spin_lock_irq(&ts->lock);
 
     ts->is_suspended = 1;
@@ -477,7 +477,7 @@ int capts_suspend(struct device *dev, pm_message_t msg)
         msleep(1);
         spin_lock_irq(&ts->lock);
     }
-    
+
     if (ts->irq) {
         disable_irq(ts->irq);
         if (device_may_wakeup(dev)) {
@@ -507,6 +507,6 @@ int capts_resume(struct device *dev)
     }
 
     spin_unlock_irq(&ts->lock);
-    
+
     return 0;
 }

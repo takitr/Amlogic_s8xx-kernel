@@ -170,8 +170,4 @@ source "drivers/ipack/Kconfig"
 
 source "drivers/reset/Kconfig"
 
-source "drivers/gpu/arm/Kconfig"
-
-source "drivers/hardkernel/Kconfig"
-
 endmenu

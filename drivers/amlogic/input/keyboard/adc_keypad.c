@@ -43,6 +43,9 @@
 #include <linux/amlogic/saradc.h>
 #include <linux/amlogic/input/adc_keypad.h>
 #include <linux/of.h>
+#ifdef CONFIG_HAS_EARLYSUSPEND
+#include <linux/earlysuspend.h>
+#endif
 
 #define POLL_PERIOD_WHEN_KEY_DOWN 10 /* unit msec */
 #define POLL_PERIOD_WHEN_KEY_UP   50
@@ -54,7 +57,7 @@ struct kp {
 	unsigned int report_code;
 	unsigned int code;
 	unsigned int poll_period;
-	int count;	
+	int count;
 	int config_major;
 	char config_name[20];
 	struct class *config_class;
@@ -64,6 +67,9 @@ struct kp {
 	struct adc_key *key;
 	int key_num;
 	struct work_struct work_update;
+#ifdef CONFIG_HAS_EARLYSUSPEND
+	struct early_suspend early_suspend;
+#endif
 };
 
 #ifndef CONFIG_OF
@@ -78,14 +84,14 @@ static int kp_search_key(struct kp *kp)
 {
 	struct adc_key *key;
 	int value, i, j;
-	
+
 	for (i=0; i<kp->chan_num; i++) {
 		value = get_adc_sample(kp->chan[i]);
 		if (value < 0) {
 			continue;
 		}
 		key = kp->key;
-	 	for (j=0; j<kp->key_num; j++) {
+		for (j=0; j<kp->key_num; j++) {
 			if ((key->chan == kp->chan[i])
 			&& (value >= key->value - key->tolerance)
 			&& (value <= key->value + key->tolerance)) {
@@ -94,7 +100,7 @@ static int kp_search_key(struct kp *kp)
 			key++;
 		}
 	}
-	
+
 	return 0;
 }
 
@@ -132,7 +138,7 @@ static void kp_work(struct kp *kp)
 				printk("key %d up(f)\n", kp->report_code);
 				input_report_key(kp->input, kp->report_code, 0);
 				printk("key %d down(f)\n", code);
-				input_report_key(kp->input, code, 1);		
+				input_report_key(kp->input, code, 1);
 				input_sync(kp->input);
 				}
 			kp->report_code = code;
@@ -180,16 +186,31 @@ static int register_keypad_dev(struct kp  *kp)
     ret=register_chrdev(0, kp->config_name, &keypad_fops);
     if(ret<=0)
     {
-        printk("register char device error\r\n");
+        printk("register char device error\n");
         return  ret ;
     }
     kp->config_major=ret;
-    printk("adc keypad major:%d\r\n",ret);
+    printk("adc keypad major:%d\n",ret);
     kp->config_class=class_create(THIS_MODULE,kp->config_name);
     kp->config_dev=device_create(kp->config_class,	NULL,
-    		MKDEV(kp->config_major,0),NULL,kp->config_name);
+		MKDEV(kp->config_major,0),NULL,kp->config_name);
     return ret;
 }
+
+#ifdef CONFIG_HAS_EARLYSUSPEND
+static void kp_early_suspend(struct early_suspend *h)
+{
+    struct kp *kp = container_of(h, struct kp, early_suspend);
+    del_timer_sync(&kp->timer);
+    cancel_work_sync(&kp->work_update);
+}
+
+static void kp_late_resume(struct early_suspend *h)
+{
+    struct kp *kp = container_of(h, struct kp, early_suspend);
+    mod_timer(&kp->timer,jiffies+msecs_to_jiffies(kp->poll_period));
+}
+#endif
 
 static int kp_probe(struct platform_device *pdev)
 {
@@ -227,7 +248,7 @@ static int kp_probe(struct platform_device *pdev)
         state = -EINVAL;
         goto get_key_node_fail;
     }
-   
+
 		pdata->key = kzalloc(sizeof(*(pdata->key))*key_size, GFP_KERNEL);
 		if (!(pdata->key)) {
 			dev_err(&pdev->dev, "platform key is required!\n");
@@ -295,16 +316,16 @@ static int kp_probe(struct platform_device *pdev)
 		kp->code = 0;
 		kp->poll_period = POLL_PERIOD_WHEN_KEY_UP;
 		kp->count = 0;
-     
+
     INIT_WORK(&(kp->work_update), update_work_func);
-     
+
     setup_timer(&kp->timer, kp_timer_sr, (unsigned int)kp) ;
     mod_timer(&kp->timer, jiffies+msecs_to_jiffies(100));
 
     /* setup input device */
     set_bit(EV_KEY, input_dev->evbit);
     set_bit(EV_REP, input_dev->evbit);
-        
+
     kp->key = pdata->key;
     kp->key_num = pdata->key_num;
 
@@ -324,11 +345,11 @@ static int kp_probe(struct platform_device *pdev)
             kp->chan[kp->chan_num] = key->chan;
             printk(KERN_INFO "chan #%d used for ADC key\n", key->chan);
             kp->chan_num++;
-        }    
+        }
         printk(KERN_INFO "%s key(%d) registed.\n", key->name, key->code);
         key++;
     }
-    
+
     input_dev->name = "adc_keypad";
     input_dev->phys = "adc_keypad/input0";
     input_dev->dev.parent = &pdev->dev;
@@ -352,9 +373,15 @@ static int kp_probe(struct platform_device *pdev)
 		    state = -EINVAL;
 		    goto get_key_param_failed;
     }
-    printk("adc keypad register input device completed.\r\n");
+    printk("adc keypad register input device completed.\n");
     register_keypad_dev(gp_kp);
     kfree(key_param);
+#ifdef CONFIG_HAS_EARLYSUSPEND
+    kp->early_suspend.level = EARLY_SUSPEND_LEVEL_BLANK_SCREEN;
+    kp->early_suspend.suspend = kp_early_suspend;
+    kp->early_suspend.resume = kp_late_resume;
+    register_early_suspend(&kp->early_suspend);
+#endif
     return 0;
 
     get_key_param_failed:
@@ -372,6 +399,11 @@ static int kp_remove(struct platform_device *pdev)
     struct adc_kp_platform_data *pdata = platform_get_drvdata(pdev);
     struct kp *kp = gp_kp;
 
+#ifdef CONFIG_HAS_EARLYSUSPEND
+    unregister_early_suspend(&kp->early_suspend);
+#endif
+    del_timer_sync(&kp->timer);
+    cancel_work_sync(&kp->work_update);
     input_unregister_device(kp->input);
     input_free_device(kp->input);
     unregister_chrdev(kp->config_major,kp->config_name);
@@ -429,7 +461,3 @@ module_exit(kp_exit);
 MODULE_AUTHOR("Robin Zhu");
 MODULE_DESCRIPTION("ADC Keypad Driver");
 MODULE_LICENSE("GPL");
-
-
-
-

@@ -204,4 +204,3 @@ extern irqreturn_t vdin_isr(int irq, void *dev_id);
 extern irqreturn_t vdin_v4l2_isr(int irq, void *dev_id);
 
 #endif /* __TVIN_VDIN_DRV_H */
-

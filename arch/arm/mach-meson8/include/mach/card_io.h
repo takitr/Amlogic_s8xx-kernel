@@ -35,7 +35,7 @@ typedef struct _Card_Config {
 } Card_Config_t;
 
 typedef enum _SDIO_Pad_Type {
-	
+
 	SDHC_CARD_0_5,	//SDHC-B
 	SDHC_BOOT_0_11,	//SDHC-C
 	SDHC_GPIOX_0_9,	//SDHC-A
@@ -244,4 +244,3 @@ struct card_partition {
 #define SDIO_TIMEOUT_INT              4
 
 #endif //__CARD_IO_H
-

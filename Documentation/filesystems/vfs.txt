@@ -359,9 +359,9 @@ struct inode_operations {
 	ssize_t (*listxattr) (struct dentry *, char *, size_t);
 	int (*removexattr) (struct dentry *, const char *);
 	void (*update_time)(struct inode *, struct timespec *, int);
-	int (*atomic_open)(struct inode *, struct dentry *,
-				struct file *, unsigned open_flag,
-				umode_t create_mode, int *opened);
+	int (*atomic_open)(struct inode *, struct dentry *, struct file *,
+			unsigned open_flag, umode_t create_mode, int *opened);
+	int (*tmpfile) (struct inode *, struct dentry *, umode_t);
 	int (*dentry_open)(struct dentry *, struct file *, const struct cred *);
 };
 

@@ -125,7 +125,7 @@ static long efuse_unlocked_ioctl(struct file *file, unsigned int cmd, unsigned l
 {
 	switch (cmd)
 	{
-#ifndef CONFIG_MESON_TRUSTZONE			
+#ifndef CONFIG_MESON_TRUSTZONE
 		case EFUSE_ENCRYPT_ENABLE:
 			aml_set_reg32_bits( P_EFUSE_CNTL4, CNTL4_ENCRYPT_ENABLE_ON,
 			CNTL4_ENCRYPT_ENABLE_BIT, CNTL4_ENCRYPT_ENABLE_SIZE);
@@ -239,69 +239,54 @@ static const struct file_operations efuse_fops = {
 	.unlocked_ioctl      = efuse_unlocked_ioctl,
 };
 
-#define MACCHAR(x)	(('A' <= (x) && (x) <= 'F') \
-				? (x) - 'A' + 'a' : (x))
-
-void aml_efuse_mac(unsigned char* hwmac)
+/* function: aml_efuse_get_item
+ * key_name: key name
+ * data: key data
+ * return : >=0 ok,  <0 error
+ * */
+int aml_efuse_get_item(unsigned char* key_name, unsigned char* data)
 {
-	char buf[80];
-        char mac_mask;
-	efuseinfo_item_t info;
-	if (efuse_getinfo_byID(EFUSE_MAC_ID, &info) < 0
-		|| efuse_read_item(buf, info.data_len, (loff_t*)&info.offset) < 0) {
-		hwmac[0] = '\0';
-		return;
-	}
-
-	sprintf(hwmac, "%02x:%02x:%02x:%02x:%02x:%02x",
-			buf[0], buf[1], buf[2], buf[3], buf[4], buf[5]);
-
-        mac_mask = buf[3] & 0xf0;
-        if ((0x30 == mac_mask)
-                || ((0xa0 <= mac_mask) && (mac_mask <= 0xc0))) {
-                info.data_len = 16;
-                info.offset = 4;
-                efuse_read_item(buf, info.data_len,
-                                (loff_t*)&info.offset);
-
-                if (0x30 == mac_mask) {
-                        hwmac[9] = MACCHAR(buf[5]);
-                }
-
-                sprintf(hwmac + 10, "%c:%c%c:%c%c",
-                        MACCHAR(buf[11]), MACCHAR(buf[12]), MACCHAR(buf[13]),
-                        MACCHAR(buf[14]), MACCHAR(buf[15]));
-        }
-}
-
-unsigned char *aml_efuse_get_item(unsigned char* key_name, unsigned char* value)
-{
-        unsigned char *ret = 0;
-	int id;
+        char dec_mac[50] = {0};
+        efuseinfo_item_t info;
+        unsigned id=0;
 
         if(strcmp(key_name,"mac")==0)           id = EFUSE_MAC_ID;
         else if(strcmp(key_name,"mac_bt")==0)   id = EFUSE_MAC_BT_ID;
         else if(strcmp(key_name,"mac_wifi")==0) id = EFUSE_MAC_WIFI_ID;
         else if(strcmp(key_name,"usid")==0)     id = EFUSE_USID_ID;
         else {
-                pr_info("%s: UNKNOWN key_name\n",	__func__);
-		return 0;
+                printk(KERN_INFO"%s : UNKNOWN key_name\n",__func__);
+                return -EFAULT;
         }
 
-	if (id == EFUSE_MAC_ID) {
-		aml_efuse_mac(value);
-	}
+        if(efuse_getinfo_byID(id, &info) < 0){
+                printk(KERN_INFO"ID is not found\n");
+                return -EFAULT;
+        }
+        if (efuse_read_item(dec_mac, info.data_len, (loff_t*)&info.offset) < 0)
+                return -EFAULT;
 
-        return ret;
+        memcpy(&data[0],dec_mac,info.data_len);
+
+        return 0;
 }
 EXPORT_SYMBOL(aml_efuse_get_item);
 
 /* Sysfs Files */
 static ssize_t mac_show(struct class *cla, struct class_attribute *attr, char *buf)
 {
-	char hwmac[20];
-	aml_efuse_mac(hwmac);
-	return sprintf(buf, "%s\n", hwmac);
+	char dec_mac[6] = {0};
+	efuseinfo_item_t info;
+	if(efuse_getinfo_byID(EFUSE_MAC_ID, &info) < 0){
+		printk(KERN_INFO"ID is not found\n");
+		return -EFAULT;
+	}
+
+	if (efuse_read_item(dec_mac, info.data_len, (loff_t*)&info.offset) < 0)
+		return -EFAULT;
+
+	return sprintf(buf, "%02x:%02x:%02x:%02x:%02x:%02x\n",
+			dec_mac[0],dec_mac[1],dec_mac[2],dec_mac[3],dec_mac[4],dec_mac[5]);
 }
 
 static ssize_t mac_wifi_show(struct class *cla, struct class_attribute *attr, char *buf)
@@ -337,23 +322,6 @@ static ssize_t mac_bt_show(struct class *cla, struct class_attribute *attr, char
 	return sprintf(buf, "%02x:%02x:%02x:%02x:%02x:%02x\n",
 			dec_mac[0],dec_mac[1],dec_mac[2],dec_mac[3],dec_mac[4],dec_mac[5]);
 }
-
-#if defined(CONFIG_MACH_MESON8B_ODROIDC)
-static ssize_t usid_show(struct class *cla, struct class_attribute *attr, char *buf)
-{
-        char usid[50] = {0};
-        efuseinfo_item_t info;
-        if(efuse_getinfo_byID(EFUSE_USID_ID, &info) < 0){
-                printk(KERN_INFO"ID is not found\n");
-                return -EFAULT;
-        }
-
-        if (efuse_read_item(usid, info.data_len, (loff_t*)&info.offset) < 0)
-                return -EFAULT;
-
-        return sprintf(buf, "%s\n",usid);
-}
-#endif
 
 static int efuse_device_match(struct device *dev, const void *data)
 {
@@ -424,10 +392,10 @@ static ssize_t userdata_show(struct class *cla, struct class_attribute *attr, ch
 	//	return -1;
 	//}
 	/*return sprintf(buf, "%01c%01c%01c%01c%01c%01c%01c%01c%01c%01c%01c%01c%01c%01c%01c%01c%01c%01c%01c%01c\n",
-    			   op[0],op[1],op[2],op[3],op[4],op[5],
-    			   op[6],op[7],op[8],op[9],op[10],op[11],
-    			   op[12],op[13],op[14],op[15],op[16],op[17],
-    			   op[18],op[19]);*/
+			   op[0],op[1],op[2],op[3],op[4],op[5],
+			   op[6],op[7],op[8],op[9],op[10],op[11],
+			   op[12],op[13],op[14],op[15],op[16],op[17],
+			   op[18],op[19]);*/
 
 	for(i = 0; i < info.data_len; i++) {
 	    memset(tmp, 0, 5);
@@ -492,8 +460,6 @@ static struct class_attribute efuse_class_attrs[] = {
 	__ATTR_RO(mac_wifi),
 
 	__ATTR_RO(mac_bt),
-
-	__ATTR_RO(usid),
 
 	#ifndef EFUSE_READ_ONLY		/*make the efuse can not be write through sysfs */
 	__ATTR(userdata, S_IRWXU, userdata_show, userdata_write),
@@ -598,9 +564,9 @@ int usid_min,usid_max;
 	 if(pdev->dev.platform_data)
 		 devp->platform_data = pdev->dev.platform_data;
 	 else
-	 	devp->platform_data = NULL;
+		devp->platform_data = NULL;
 #endif
-#ifndef CONFIG_MESON_TRUSTZONE	 	
+#ifndef CONFIG_MESON_TRUSTZONE
 	 /* disable efuse encryption */
 	 aml_set_reg32_bits( P_EFUSE_CNTL4, CNTL1_AUTO_WR_ENABLE_OFF,
 		 CNTL4_ENCRYPT_ENABLE_BIT, CNTL4_ENCRYPT_ENABLE_SIZE );
@@ -614,7 +580,7 @@ int usid_min,usid_max;
 	// clear power down bit
 	aml_set_reg32_bits(P_EFUSE_CNTL1, CNTL1_PD_ENABLE_OFF,
 			CNTL1_PD_ENABLE_BIT, CNTL1_PD_ENABLE_SIZE);
-#endif		
+#endif
 #endif
 	 return 0;
 
@@ -687,18 +653,3 @@ module_exit(efuse_exit);
 MODULE_DESCRIPTION("AMLOGIC eFuse driver");
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("Bo Yang <bo.yang@amlogic.com>");
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

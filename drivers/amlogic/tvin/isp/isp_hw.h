@@ -8,7 +8,7 @@
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
  * published by the Free Software Foundation.
- 
+
  */
 #ifndef __TVIN_ISP_HW_H
 #define __TVIN_ISP_HW_H
@@ -119,11 +119,10 @@ extern void isp_awb_get_gain(isp_awb_gain_t *awb_gain);
 extern void set_isp_gamma_table(unsigned short *gamma,unsigned int type);
 extern void get_isp_gamma_table(unsigned short *gamma,unsigned int type);
 extern void disable_gc_lns_pk(bool flag);
-extern void isp_ls_curve(unsigned int psize_v2h, unsigned int hactive, 
-        unsigned int vactive, unsigned int ocenter_c2l, 
-        unsigned int ocenter_c2t, unsigned int gain_0db, 
-        unsigned int curvature_gr, unsigned int curvature_r, 
+extern void isp_ls_curve(unsigned int psize_v2h, unsigned int hactive,
+        unsigned int vactive, unsigned int ocenter_c2l,
+        unsigned int ocenter_c2t, unsigned int gain_0db,
+        unsigned int curvature_gr, unsigned int curvature_r,
         unsigned int curvature_b, unsigned int curvature_gb, bool force_enable);
-                  
-#endif
 
+#endif

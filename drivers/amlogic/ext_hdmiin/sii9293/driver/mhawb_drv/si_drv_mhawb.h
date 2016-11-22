@@ -57,7 +57,7 @@
 #define 	MHAWB_ACCEL_LENGTH			1//up to 16 byte I2C block writes to FIFO
 #define 	MHAWB_ACCEL_ADOPTER_ID			2//up to 15 byte I2C block writes to FIFO
 #define 	MHAWB_ACCEL_ADOTPER_ID_AND_LENGTH	3//up to 14 byte I2C block writes to FIFO
-#define 	MHAWB_RUNTIME				4//configurable at runtime 
+#define 	MHAWB_RUNTIME				4//configurable at runtime
 
 //Set MDT_ACCEL_SETTING to one of the above 5 choices above
 #define 	MHAWB_ACCEL_SETTING														MHAWB_ACCEL_ADOTPER_ID_AND_LENGTH
@@ -135,7 +135,7 @@
  * This code does not decode or encode MDT.
  * As part of code reduction, this brige function requires minor data manipulation.
  *
- * MDT protocol support may be found inside the SiIMon SiI5293 plug-in. 
+ * MDT protocol support may be found inside the SiIMon SiI5293 plug-in.
  */
 
 #define		MDT_BYTE_LENGTH_MOUSE					3
@@ -189,7 +189,7 @@
 									MHAWB_GEN_2_WRITE_BURST_XMIT_FIXED_LENGTH | \
 									MHAWB_GEN_2_WRITE_BURST_XMIT_FIXED_ADOPTER_ID | \
 									MHAWB_GEN_2_WRITE_BURST_XFIFO_CLR_ALL | \
-									MHAWB_GEN_2_WRITE_BURST_CLR_ABORT_WAIT) 
+									MHAWB_GEN_2_WRITE_BURST_CLR_ABORT_WAIT)
 
 #define 	MHAWB_GEN_2_WRITE_BURST_XFIFO_DATA_OFFSET		0x89
 #define 	MHAWB_GEN_2_WRITE_BURST_XFIFO_DATA			( MHAWB_CBUS_PAGE | \
@@ -243,7 +243,7 @@
 #define		MHAWB_XFR_PROTO_ERR 					( 1 << 1 )
 #define		MHAWB_XFR_MAX_FAIL					( 1 << 0 )
 
-#define 	MHAWB_CBUS_DDC_ABORT					(CBUS_PAGE | 0x98)		
+#define 	MHAWB_CBUS_DDC_ABORT					(CBUS_PAGE | 0x98)
 
 
 // TIMER TIMEOUTS
@@ -264,18 +264,18 @@ struct mhawb_fifo_level_data_t {
  * PUBLIC CONSTANTS AND TYPES FOR MHAWB IMPLEMENTATION
  */
 
-enum 	mhawb_state_e {	  
+enum 	mhawb_state_e {
 	MHAWB_STATE_UNINITIALIZED
 	, MHAWB_STATE_TAKEOVER				//during disable HAWB process
 	, MHAWB_STATE_DISABLED				//state machine does nothign
 	, MHAWB_STATE_INIT				//ENTRY POINT... intializes global variables
 	, MHAWB_STATE_RESET				//resets global variables and HAWB registers
 	, MHAWB_STATE_WAIT_FOR_DATA			//variable polling state; waits for mhawb_circular_buffer changes
-	, MHAWB_STATE_WAIT_FOR_XFIFO_EMPTY		//MCP5293_INT_PIN polling state; waits for interrupt				
+	, MHAWB_STATE_WAIT_FOR_XFIFO_EMPTY		//MCP5293_INT_PIN polling state; waits for interrupt
 	, MHAWB_STATE_WAIT_FOR_XFIFO_EMPTY_AS_PROXY	//ENTRY POINT... workarounds to CP5293 FW + MHAWB_STATE_WAIT_FOR_XFIFO_EMPTY
 };
 
-enum 	mhawb_return_e {				  
+enum 	mhawb_return_e {
 	MHAWB_EVENT_HANDLER_FAILED  = ( 1 << 0)		//let all firmware run
 	, MHAWB_EVENT_HANDLER_SUCCESS = ( 1 << 1)	//let polling parts of firmware run
 	, MHAWB_EVENT_HANDLER_WAITING = ( 1 << 2)	//return to MHAWB after SiIMon handler runs
@@ -287,7 +287,7 @@ struct mhawb_level_data {
 };
 
 union mhawb_circular_level_buffer_t {
-		struct mhawb_level_data		fields;					
+		struct mhawb_level_data		fields;
 		uint8_t				raw_bytes[sizeof(struct mhawb_level_data)];
 };
 
@@ -304,7 +304,7 @@ struct mhawb_t {
 	#endif
 
 	uint8_t					max_packet_length;
-	uint8_t peer_adopter_id[MHAWB_FIELD_BYTE_MAX_LENGTH_FOR_ADOPTERID];									
+	uint8_t peer_adopter_id[MHAWB_FIELD_BYTE_MAX_LENGTH_FOR_ADOPTERID];
 	uint8_t					empty_levels;
 #if (MHAWB_ACCEL_SETTING == MHAWB_RUNTIME)
 	uint8_t					flags_accelerations;

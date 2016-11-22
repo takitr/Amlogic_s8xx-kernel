@@ -4,7 +4,7 @@
 
 #define PRESS_MAX       255
 
-#define FT5X0X_NAME	"ft5x06"//"synaptics_i2c_rmi"//"synaptics-rmi-ts"// 
+#define FT5X0X_NAME	"ft5x06"//"synaptics_i2c_rmi"//"synaptics-rmi-ts"//
 
 enum ft5x0x_ts_regs {
 	FT5X0X_REG_THGROUP					= 0x80,
@@ -12,7 +12,7 @@ enum ft5x0x_ts_regs {
 //	FT5X0X_REG_THCAL						= 0x82,
 //	FT5X0X_REG_THWATER					= 0x83,
 //	FT5X0X_REG_THTEMP					= 0x84,
-//	FT5X0X_REG_THDIFF						= 0x85,				
+//	FT5X0X_REG_THDIFF						= 0x85,
 //	FT5X0X_REG_CTRL						= 0x86,
 	FT5X0X_REG_TIMEENTERMONITOR			= 0x87,
 	FT5X0X_REG_PERIODACTIVE				= 0x88,
@@ -41,10 +41,10 @@ enum ft5x0x_ts_regs {
 //	FT5X0X_REG_K_Y_LOW             			= 0x9f,
 	FT5X0X_REG_AUTO_CLB_MODE			= 0xa0,
 //	FT5X0X_REG_LIB_VERSION_H 				= 0xa1,
-//	FT5X0X_REG_LIB_VERSION_L 				= 0xa2,		
+//	FT5X0X_REG_LIB_VERSION_L 				= 0xa2,
 //	FT5X0X_REG_CIPHER						= 0xa3,
 //	FT5X0X_REG_MODE						= 0xa4,
-	FT5X0X_REG_PMODE						= 0xa5,	/* Power Consume Mode		*/	
+	FT5X0X_REG_PMODE						= 0xa5,	/* Power Consume Mode		*/
 	FT5X0X_REG_FIRMID						= 0xa6,
 //	FT5X0X_REG_STATE						= 0xa7,
 //	FT5X0X_REG_FT5201ID					= 0xa8,

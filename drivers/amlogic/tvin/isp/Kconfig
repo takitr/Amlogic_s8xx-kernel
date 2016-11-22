@@ -1,4 +1,4 @@
-config  TVIN_ISP 
+config  TVIN_ISP
 	tristate "Amlogic ISP device driver"
 	default n
 	help

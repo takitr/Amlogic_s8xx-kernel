@@ -6,6 +6,6 @@
 		compatible = "amlogic,ppmgr";
 		dev_name = "ppmgr";
 		status = "okay";
-		reserve-memory = <0x03f00000>;		
+		reserve-memory = <0x03f00000>;
 	};
 #endif

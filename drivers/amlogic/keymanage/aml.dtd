@@ -27,7 +27,7 @@
 			key-dataformat = "hexdata";
 			key-permit = "read","write","del";
 		};
-		
+
 //$$ MATCH "Unifykey_1_match" = <&keysn_1>
 //$$ L2 PROP_STR = "key-name"
 //$$ L2 PROP_STR = "key-device"
@@ -39,7 +39,7 @@
 			key-dataformat = "hexdata";
 			key-permit = "read","write","del";
 		};
-		
+
 //$$ MATCH "Unifykey_2_match" = <&keysn_2>
 //$$ L2 PROP_STR = "key-name"
 //$$ L2 PROP_STR = "key-device"

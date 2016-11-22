@@ -56,7 +56,7 @@ config EMMC_SECURE_STORAGE
 	default n
 	help
 	  Support secure storage store in emmc device
-	  
+
 config MMC_BLOCK_DEFERRED_RESUME
 	bool "Deferr MMC layer resume until I/O is requested"
 	depends on MMC_BLOCK

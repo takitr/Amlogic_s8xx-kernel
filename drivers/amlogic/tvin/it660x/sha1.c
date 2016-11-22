@@ -38,7 +38,7 @@ void SHATransform(ULONG * h)
     for (t=0; t < 20; t++){
 		if(t>=16)
 		{
-        	tmp=w[(t - 3)% WCOUNT] ^ w[(t - 8)% WCOUNT] ^ w[(t - 14)% WCOUNT] ^ w[(t - 16)% WCOUNT];
+		tmp=w[(t - 3)% WCOUNT] ^ w[(t - 8)% WCOUNT] ^ w[(t - 14)% WCOUNT] ^ w[(t - 16)% WCOUNT];
 	        w[(t)% WCOUNT]=rol(tmp,1);
 		}
 		HDCP_DEBUG_PRINTF2(("w[%d]=%08lX\n",t,w[(t)% WCOUNT]));

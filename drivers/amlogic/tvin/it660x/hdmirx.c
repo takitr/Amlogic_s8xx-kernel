@@ -939,17 +939,17 @@ WORD getHDMIRXVertSyncWidth()
     // estamite value.
     if(vActive < 300)
     {
-    	return 3 ;
+	return 3 ;
     }
 
     if(hActive == 640 && hActive == 480)
     {
-    	if(HDMIRX_ReadI2C_Byte(REG_RX_VID_XTALCNT_128PEL)< 0x80)
-    	{
-    		return 3 ;
-    	}
+	if(HDMIRX_ReadI2C_Byte(REG_RX_VID_XTALCNT_128PEL)< 0x80)
+	{
+		return 3 ;
+	}
 
-    	return 2;
+	return 2;
     }
 
     return 5 ;
@@ -1198,7 +1198,7 @@ HWReset_HDMIRX()
 // 	// SwitchVideoState(VSTATE_SWReset);
 // 	SWReset_HDMIRX() ;
 // }
-#endif 
+#endif
 
 void
 Terminator_Off()
@@ -1773,7 +1773,7 @@ Interrupt_Handler()
     // ClearIntFlags(0);
     if(VState == VSTATE_SWReset || VState == VSTATE_Off )
     {
-    	return ; // if SWReset, ignore all interrupt.
+	return ; // if SWReset, ignore all interrupt.
     }
 
     sys_state = HDMIRX_ReadI2C_Byte(REG_RX_SYS_STATE);
@@ -1806,7 +1806,7 @@ Interrupt_Handler()
 
         if(VState == VSTATE_SWReset)
         {
-        	return ;
+		return ;
         }
 
         if(int1data & B_SCDTOFF)
@@ -1888,14 +1888,14 @@ Interrupt_Handler()
             RXINT_AVMute_Clear();
         }
 
-    	if(VState == VSTATE_VideoOn || VState == VSTATE_HDCP_Reset)
-    	{
+	if(VState == VSTATE_VideoOn || VState == VSTATE_HDCP_Reset)
+	{
 
             if(int4data & B_GENPKT_DET)
             {
                 RXINT_CheckVendorSpecInfo() ;
             }
-    	}
+	}
     }
 
     int3data = HDMIRX_ReadI2C_Byte(REG_RX_INTERRUPT3);
@@ -2037,7 +2037,7 @@ RXINT_SCDT_On()
         }
 			else
 			{
-            	SwitchVideoState(VSTATE_SyncChecking);
+		SwitchVideoState(VSTATE_SyncChecking);
 			}
 		//~jau-chih.tseng@ite.com.tw 2011/10/17
         #endif
@@ -2305,7 +2305,7 @@ RXINT_ResetHDCP()
 
         if(uc & B_ECCERR)
         {
-    		SwitchVideoState(VSTATE_HDCP_Reset);
+		SwitchVideoState(VSTATE_HDCP_Reset);
         }
 
         // HDCP_Reset();
@@ -2384,7 +2384,7 @@ VideoTimerHandler()
             SyncWaitCounter = 0;
             SyncCheckCounter = 0;
             SyncDetectFailCounter = 0;
-    		SWReset_HDMIRX();
+		SWReset_HDMIRX();
             return;
         }
     }
@@ -2536,9 +2536,9 @@ VideoTimerHandler()
         else
         {
 
-    		uc=HDMIRX_ReadI2C_Byte(REG_RX_SYS_STATE);
+		uc=HDMIRX_ReadI2C_Byte(REG_RX_SYS_STATE);
             HDMIRX_DEBUG_PRINTF(("REG_RX_SYS_STATE = %X\r",(int)uc));
-    		uc &=(B_RXPLL_LOCK|B_RXCK_VALID|B_SCDT|B_VCLK_DET);
+		uc &=(B_RXPLL_LOCK|B_RXCK_VALID|B_SCDT|B_VCLK_DET);
 
         #ifdef AUTO_SEARCH_EQ_SETTING
             if((uc &(B_RXPLL_LOCK|B_RXCK_VALID))==(B_RXPLL_LOCK|B_RXCK_VALID)) // locked
@@ -2555,21 +2555,21 @@ VideoTimerHandler()
             }
         #endif
 
-    		if(uc ==(B_RXPLL_LOCK|B_RXCK_VALID|B_SCDT|B_VCLK_DET))// for check SCDT !!
+		if(uc ==(B_RXPLL_LOCK|B_RXCK_VALID|B_SCDT|B_VCLK_DET))// for check SCDT !!
             {
                 #ifdef DISABLE_COLOR_DEPTH_RESET
                     SwitchVideoState(VSTATE_SyncChecking);
                 #else
-        		// 2011/10/17 added by jau-chih.tseng@ite.com.tw
-        			if( bDisableColorDepthResetState == FALSE )
-        			{
+			// 2011/10/17 added by jau-chih.tseng@ite.com.tw
+				if( bDisableColorDepthResetState == FALSE )
+				{
                 SwitchVideoState(VSTATE_ColorDetectReset);
-        			}
-        			else
-        			{
-                    	SwitchVideoState(VSTATE_SyncChecking);
-        			}
-        		//~jau-chih.tseng@ite.com.tw 2011/10/17
+				}
+				else
+				{
+			SwitchVideoState(VSTATE_SyncChecking);
+				}
+			//~jau-chih.tseng@ite.com.tw 2011/10/17
                 #endif
                 return ;
             }
@@ -2602,7 +2602,7 @@ VideoTimerHandler()
         // HDMIRX_DEBUG_PRINTF(("SyncChecking %d\n",VideoCountingTimer));
         if(VideoCountingTimer == 0)
         {
-        	HDMIRX_DEBUG_PRINTF(("HDCP timer reach, reset !!\n"));
+		HDMIRX_DEBUG_PRINTF(("HDCP timer reach, reset !!\n"));
             // SwitchVideoState(VSTATE_PwrOff);
             SWReset_HDMIRX();
             return ;
@@ -2611,22 +2611,22 @@ VideoTimerHandler()
         {
             HDMIRX_DEBUG_PRINTF(("VideoTimerHandler[VSTATE_HDCP_Reset](%d)\n",VideoCountingTimer));
             do {
-	        	ClearIntFlags(B_CLR_ECC_INT);
-	        	delay1ms(1);
-	        	uc = HDMIRX_ReadI2C_Byte(REG_RX_INTERRUPT3);
-	        	if(uc & B_ECCERR)
-	        	{
+			ClearIntFlags(B_CLR_ECC_INT);
+			delay1ms(1);
+			uc = HDMIRX_ReadI2C_Byte(REG_RX_INTERRUPT3);
+			if(uc & B_ECCERR)
+			{
 	                break ;
-	        	}
-	        	delay1ms(1);
-	        	ClearIntFlags(B_CLR_ECC_INT);
-	        	delay1ms(1);
-	        	uc = HDMIRX_ReadI2C_Byte(REG_RX_INTERRUPT3);
-	        	if(!(uc & B_ECCERR))
-	        	{
+			}
+			delay1ms(1);
+			ClearIntFlags(B_CLR_ECC_INT);
+			delay1ms(1);
+			uc = HDMIRX_ReadI2C_Byte(REG_RX_INTERRUPT3);
+			if(!(uc & B_ECCERR))
+			{
 	                SwitchVideoState(VSTATE_VideoOn);
 	                return ;
-	        	}
+			}
 	        }while(0);
         }
     }
@@ -2655,9 +2655,9 @@ VideoTimerHandler()
             if(VideoCountingTimer == 1)
             {
                 bGetSyncInfo();
-        		currHTotal = s_CurrentVM.HTotal ;
-        		currXcnt = s_CurrentVM.xCnt ;
-        		currScanMode = s_CurrentVM.ScanMode ;
+			currHTotal = s_CurrentVM.HTotal ;
+			currXcnt = s_CurrentVM.xCnt ;
+			currScanMode = s_CurrentVM.ScanMode ;
             }
         }
 
@@ -2671,17 +2671,17 @@ VideoTimerHandler()
                 // Only AVMUTE OFF the video mode can be detected.
 		HTotal =(unsigned short)HDMIRX_ReadI2C_Byte(REG_RX_VID_HTOTAL_L);
 		HTotal |=(unsigned short)(HDMIRX_ReadI2C_Byte(REG_RX_VID_HTOTAL_H)&M_HTOTAL_H)<< 8 ;
-        		// if(ABS((int)HTotal -(int)currHTotal)>4)
-        		if(HTotal > currHTotal)
-        		{
-        			HTotal -= currHTotal ;
-        		}
-        		else
-        		{
-        			HTotal = currHTotal - HTotal ;
-        		}
+			// if(ABS((int)HTotal -(int)currHTotal)>4)
+			if(HTotal > currHTotal)
+			{
+				HTotal -= currHTotal ;
+			}
+			else
+			{
+				HTotal = currHTotal - HTotal ;
+			}
 
-        		if(HTotal>4)
+			if(HTotal>4)
 		{
 			bVidModeChange = TRUE ;
 			HDMIRX_DEBUG_PRINTF(("HTotal changed.\n"));
@@ -2691,24 +2691,24 @@ VideoTimerHandler()
 		{
 			xCnt =(unsigned char)HDMIRX_ReadI2C_Byte(REG_RX_VID_XTALCNT_128PEL);
 
-        			// 2011/02/18 modified by jau-chih.tseng@ite.com.tw
-        			// to avoid the compiler calculation error. Change calculating
-        			// method.
+				// 2011/02/18 modified by jau-chih.tseng@ite.com.tw
+				// to avoid the compiler calculation error. Change calculating
+				// method.
 			//diff =(char)currXcnt -(char)xCnt ;
-        			if(currXcnt > xCnt )
-        			{
-        				diff = currXcnt - xCnt ;
+				if(currXcnt > xCnt )
+				{
+					diff = currXcnt - xCnt ;
       }
-        			else
-        			{
-        				diff = xCnt - currXcnt ;
-        			}
-        			//~jau-chih.tseng@ite.com.tw 2011/02/18
+				else
+				{
+					diff = xCnt - currXcnt ;
+				}
+				//~jau-chih.tseng@ite.com.tw 2011/02/18
 
 
 			if(xCnt > 0x80)
 			{
-        				if(diff> 6)
+					if(diff> 6)
 				{
 					HDMIRX_DEBUG_PRINTF(("Xcnt changed. %02x -> %02x ",(int)xCnt,(int)currXcnt));
 					HDMIRX_DEBUG_PRINTF(("diff = %d\r\n",(int)diff));
@@ -2717,7 +2717,7 @@ VideoTimerHandler()
 			}
 			else if(xCnt > 0x40)
 			{
-        				if(diff> 4)
+					if(diff> 4)
 				{
 					HDMIRX_DEBUG_PRINTF(("Xcnt changed. %02x -> %02x ",(int)xCnt,(int)currXcnt));
 					HDMIRX_DEBUG_PRINTF(("diff = %d\r\n",(int)diff));
@@ -2726,7 +2726,7 @@ VideoTimerHandler()
 			}
 			else if(xCnt > 0x20)
 			{
-        				if(diff> 2)
+					if(diff> 2)
 				{
 					HDMIRX_DEBUG_PRINTF(("Xcnt changed. %02x -> %02x ",(int)xCnt,(int)currXcnt));
 					HDMIRX_DEBUG_PRINTF(("diff = %d\n\r",(int)diff));
@@ -2735,7 +2735,7 @@ VideoTimerHandler()
 			}
 			else
 			{
-        				if(diff> 1)
+					if(diff> 1)
 				{
 					HDMIRX_DEBUG_PRINTF(("Xcnt changed. %02x -> %02x ",(int)xCnt,(int)currXcnt));
 					HDMIRX_DEBUG_PRINTF(("diff = %d\r\n",(int)diff));
@@ -2746,15 +2746,15 @@ VideoTimerHandler()
 
         if(s_CurrentVM.VActive < 300)
         {
-    		if(!bVidModeChange)
-    		{
-    			ScanMode =(HDMIRX_ReadI2C_Byte(REG_RX_VID_MODE)&B_INTERLACE)?INTERLACE:PROG ;
-    			if(ScanMode != currScanMode)
-    			{
-    				HDMIRX_DEBUG_PRINTF(("ScanMode change.\r\n"));
-    				bVidModeChange = TRUE ;
-    			}
-    		}
+		if(!bVidModeChange)
+		{
+			ScanMode =(HDMIRX_ReadI2C_Byte(REG_RX_VID_MODE)&B_INTERLACE)?INTERLACE:PROG ;
+			if(ScanMode != currScanMode)
+			{
+				HDMIRX_DEBUG_PRINTF(("ScanMode change.\r\n"));
+				bVidModeChange = TRUE ;
+			}
+		}
         }
             }
         }
@@ -3050,7 +3050,7 @@ void AudioTimerHandler()
             if(AudioCountingTimer == 0)
             {
                 ucHDMIAudioErrorCount=0 ;
-    			HDMIRX_DEBUG_PRINTF(("Audio On, clear Audio Error Count.\n"));
+			HDMIRX_DEBUG_PRINTF(("Audio On, clear Audio Error Count.\n"));
             }
         }
 
@@ -3275,7 +3275,7 @@ SwitchVideoState(Video_State_Type state)
 
     if(VState == VSTATE_VideoOn && state != VSTATE_VideoOn)
     {
-    	// SetALLMute();
+	// SetALLMute();
 
         SwitchAudioState(ASTATE_AudioOff);
     }
@@ -3329,7 +3329,7 @@ SwitchVideoState(Video_State_Type state)
     case VSTATE_SWReset:
         // HDMIRX_WriteI2C_Byte(REG_RX_GEN_PKT_TYPE, 0x03); // set default general control packet received in 0xA8
         AssignVideoTimerTimeout(VSTATE_SWRESET_COUNT);
-    	break ;
+	break ;
     case VSTATE_SyncWait:
         #ifdef AUTO_SEARCH_EQ_SETTING
         SyncWaitCounter++;
@@ -3411,12 +3411,12 @@ SwitchVideoState(Video_State_Type state)
             if(bHDCPMode & HDCP_REPEATER)
             {
                 SetIntMask3(0,B_ECCERR|B_R_AUTH_DONE|B_R_AUTH_START);
-        	}
-        	else
+		}
+		else
         #endif // SUPPORT_REPEATER
-        	{
+		{
                 SetIntMask3(~(B_R_AUTH_DONE|B_R_AUTH_START),B_ECCERR);
-        	}
+		}
             SetIntMask2(~(B_NEW_AVI_PKG|B_PKT_SET_MUTE|B_PKT_CLR_MUTE),(B_NEW_AVI_PKG|B_PKT_SET_MUTE|B_PKT_CLR_MUTE));
             SetIntMask1(~(B_SCDTOFF|B_PWR5VOFF),(B_SCDTOFF|B_PWR5VOFF));
             SetIntMask4(0,B_M_RXCKON_DET);
@@ -3442,7 +3442,7 @@ SwitchVideoState(Video_State_Type state)
 			#ifndef DISABLE_AUDIO_SUPPORT
 				EnableAudio();
 			#else
-            	SwitchAudioState(ASTATE_AudioOff);
+		SwitchAudioState(ASTATE_AudioOff);
 			#endif
         }
 
@@ -4033,7 +4033,7 @@ SetColorSpaceConvert()
             {
                 filter |= B_RX_EN_UDFILTER | B_RX_DNFREE_GO ;
             }
-	    	break ;
+		break ;
 	    case F_MODE_RGB24:
             // HDMIRX_DEBUG_PRINTF(("Input mode is RGB444\n"));
             if(bOutputVideoMode & F_MODE_EN_UDFILT)// RGB24 to YUV422 need up/dn filter.
@@ -4041,7 +4041,7 @@ SetColorSpaceConvert()
                 filter |= B_RX_EN_UDFILTER ;
             }
             csc = B_CSC_RGB2YUV ;
-	    	break ;
+		break ;
 	    }
 	    break ;
     #endif
@@ -4066,11 +4066,11 @@ SetColorSpaceConvert()
             {
                 filter |= B_RX_EN_UDFILTER | B_RX_DNFREE_GO ;
             }
-	    	break ;
+		break ;
 	    case F_MODE_RGB24:
             // HDMIRX_DEBUG_PRINTF(("Input mode is RGB444\n"));
             csc = B_CSC_BYPASS ;
-	    	break ;
+		break ;
 	    }
 	    break ;
     #endif
@@ -4329,23 +4329,23 @@ SetVideoMute(BOOL bMute)
                 uc &= ~B_VDO_MUTE_DISABLE ;
                 // HDMIRX_WriteI2C_Byte(REG_RX_TRISTATE_CTRL, uc);
 
-        		// enable video io gatting
-        		// uc = HDMIRX_ReadI2C_Byte(REG_RX_TRISTATE_CTRL);
-        		uc |= B_TRI_VDIO ;
-        		HDMIRX_WriteI2C_Byte(REG_RX_TRISTATE_CTRL, uc);
-        		HDMIRX_DEBUG_PRINTF(("reg %02X <- %02X = %02X\n",(int)REG_RX_TRISTATE_CTRL,(int)uc, (int)HDMIRX_ReadI2C_Byte(REG_RX_TRISTATE_CTRL)));
-        		uc &= ~(B_TRI_VDIO|B_TRI_VIDEO) ;
-        		HDMIRX_WriteI2C_Byte(REG_RX_TRISTATE_CTRL, uc);
-        		HDMIRX_DEBUG_PRINTF(("reg %02X <- %02X = %02X\n",(int)REG_RX_TRISTATE_CTRL,(int)uc, (int)HDMIRX_ReadI2C_Byte(REG_RX_TRISTATE_CTRL)));
+			// enable video io gatting
+			// uc = HDMIRX_ReadI2C_Byte(REG_RX_TRISTATE_CTRL);
+			uc |= B_TRI_VDIO ;
+			HDMIRX_WriteI2C_Byte(REG_RX_TRISTATE_CTRL, uc);
+			HDMIRX_DEBUG_PRINTF(("reg %02X <- %02X = %02X\n",(int)REG_RX_TRISTATE_CTRL,(int)uc, (int)HDMIRX_ReadI2C_Byte(REG_RX_TRISTATE_CTRL)));
+			uc &= ~(B_TRI_VDIO|B_TRI_VIDEO) ;
+			HDMIRX_WriteI2C_Byte(REG_RX_TRISTATE_CTRL, uc);
+			HDMIRX_DEBUG_PRINTF(("reg %02X <- %02X = %02X\n",(int)REG_RX_TRISTATE_CTRL,(int)uc, (int)HDMIRX_ReadI2C_Byte(REG_RX_TRISTATE_CTRL)));
 
-        		uc = HDMIRX_ReadI2C_Byte(REG_RX_CSC_CTRL);
-        		uc |= B_VDIO_GATTING|B_VIO_SEL ;
-        		HDMIRX_WriteI2C_Byte(REG_RX_CSC_CTRL, uc);
-        		HDMIRX_DEBUG_PRINTF(("reg %02X <- %02X = %02X\n",(int)REG_RX_CSC_CTRL,(int)uc,(int)HDMIRX_ReadI2C_Byte(REG_RX_CSC_CTRL)));
-        		uc &= ~B_VDIO_GATTING ;
-        		HDMIRX_WriteI2C_Byte(REG_RX_CSC_CTRL, uc);
-        		HDMIRX_DEBUG_PRINTF(("reg %02X <- %02X = %02X\n",(int)REG_RX_CSC_CTRL,(int)uc,(int)HDMIRX_ReadI2C_Byte(REG_RX_CSC_CTRL)));
-        	}
+			uc = HDMIRX_ReadI2C_Byte(REG_RX_CSC_CTRL);
+			uc |= B_VDIO_GATTING|B_VIO_SEL ;
+			HDMIRX_WriteI2C_Byte(REG_RX_CSC_CTRL, uc);
+			HDMIRX_DEBUG_PRINTF(("reg %02X <- %02X = %02X\n",(int)REG_RX_CSC_CTRL,(int)uc,(int)HDMIRX_ReadI2C_Byte(REG_RX_CSC_CTRL)));
+			uc &= ~B_VDIO_GATTING ;
+			HDMIRX_WriteI2C_Byte(REG_RX_CSC_CTRL, uc);
+			HDMIRX_DEBUG_PRINTF(("reg %02X <- %02X = %02X\n",(int)REG_RX_CSC_CTRL,(int)uc,(int)HDMIRX_ReadI2C_Byte(REG_RX_CSC_CTRL)));
+		}
 
         }
     }
@@ -4642,4 +4642,3 @@ DumpHDMIRXReg()
     Switch_HDMIRX_Bank(0);
 }
 #endif
-

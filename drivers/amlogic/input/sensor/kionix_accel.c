@@ -466,7 +466,7 @@ static void kionix_accel_grp1_report_accel_data(struct kionix_accel_driver *acce
                 acceld->accel_data[0] = x;
                 acceld->accel_data[1] = y;
                 acceld->accel_data[2] = z;
-                
+
                 #if 0
 				acceld->accel_data[acceld->axis_map_x] = (acceld->negate_x ? -x : x) + acceld->accel_cali[acceld->axis_map_x];
 				acceld->accel_data[acceld->axis_map_y] = (acceld->negate_y ? -y : y) + acceld->accel_cali[acceld->axis_map_y];
@@ -636,7 +636,7 @@ static void kionix_accel_grp2_report_accel_data(struct kionix_accel_driver *acce
                 acceld->accel_data[0] = x;
                 acceld->accel_data[1] = y;
                 acceld->accel_data[2] = z;
-                
+
 				if(atomic_read(&acceld->accel_input_event) > 0) {
                     aml_sensor_report_acc(acceld->client, acceld->input_dev, x, y, z);
                 #if 0
@@ -1818,9 +1818,9 @@ static int kionix_accel_probe(struct i2c_client *client,
 	atomic_set(&acceld->accel_enabled, 1);
 	err = kionix_accel_enable(acceld);
 	if(err<0)
-       	KMSGERR(&acceld->client->dev, "kionix_accel enable failed in driver !\n");
+	KMSGERR(&acceld->client->dev, "kionix_accel enable failed in driver !\n");
 	else
-       	KMSGERR(&acceld->client->dev, "kionix_accel enable successful in driver!\n");
+	KMSGERR(&acceld->client->dev, "kionix_accel enable successful in driver!\n");
 
 	atomic_set(&acceld->accel_suspend_continue, 1);
 

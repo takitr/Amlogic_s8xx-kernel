@@ -22,7 +22,7 @@
 struct rt5631_platform_data {
     int (*hp_detect)(void);
     void (*device_init)(void);
-    void (*device_uninit)(void); 
+    void (*device_uninit)(void);
 
     int  spk_watt;
     int  spk_output;

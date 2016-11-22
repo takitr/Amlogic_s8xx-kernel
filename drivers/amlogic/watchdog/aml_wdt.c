@@ -35,7 +35,7 @@ struct aml_wdt_dev *awdtv=NULL;
 static unsigned int read_watchdog_time(void)
 {
 	printk(KERN_INFO "** read watchdog time\n");
-	return aml_read_reg32(P_WATCHDOG_TC)&((1 << WATCHDOG_ENABLE_BIT)-1);	
+	return aml_read_reg32(P_WATCHDOG_TC)&((1 << WATCHDOG_ENABLE_BIT)-1);
 }
 
 static int aml_wdt_start(struct watchdog_device *wdog)
@@ -137,29 +137,29 @@ void aml_init_pdata(struct aml_wdt_dev *wdev)
 		dev_err(wdev->dev, "dt probe reset_watchdog_time failed: %d using default value\n", ret);
 		wdev->reset_watchdog_time=2;
 	}
-	
+
 	ret=of_property_read_u32(wdev->dev->of_node, "shutdown_timeout", &wdev->shutdown_timeout);
 	if(ret){
 		dev_err(wdev->dev, "dt probe shutdown_timeout failed: %d using default value\n", ret);
 		wdev->shutdown_timeout=10;
 	}
-	
+
 	ret=of_property_read_u32(wdev->dev->of_node, "firmware_timeout", &wdev->firmware_timeout);
 	if(ret){
 		dev_err(wdev->dev, "dt probe firmware_timeout failed: %d using default value\n", ret);
 		wdev->firmware_timeout=6;
 	}
-	
+
 	ret=of_property_read_u32(wdev->dev->of_node, "suspend_timeout", &wdev->suspend_timeout);
 	if(ret){
 		dev_err(wdev->dev, "dt probe suspend_timeout failed: %d using default value\n", ret);
 		wdev->suspend_timeout=6;
 	}
-	
+
 	wdev->one_second=WDT_ONE_SECOND;
 	wdev->max_timeout=MAX_TIMEOUT;
 	wdev->min_timeout=MIN_TIMEOUT;
-	
+
 	printk("one-secod=%d,min_timeout=%d,max_timeout=%d,default_timeout=%d,reset_watchdog_method=%d,reset_watchdog_time=%d,shutdown_timeout=%d,firmware_timeout=%d,suspend_timeout=%d\n",
 		wdev->one_second,wdev->min_timeout,wdev->max_timeout,
 		wdev->default_timeout,wdev->reset_watchdog_method,
@@ -171,11 +171,11 @@ void aml_init_pdata(struct aml_wdt_dev *wdev)
 static int aml_wtd_pm_notify(struct notifier_block *nb, unsigned long event,
 	void *dummy)
 {
-	
+
 	if (event == PM_SUSPEND_PREPARE) {
 		printk("set watch dog suspend timeout %d seconds\n",awdtv->suspend_timeout);
 		enable_watchdog(awdtv->suspend_timeout*awdtv->one_second);
-	} 
+	}
 	if (event == PM_POST_SUSPEND){
 		printk("resume watch dog finish\n");
 		if(awdtv->timeout==0xffffffff)
@@ -192,7 +192,7 @@ static int aml_wtd_reboot_notify(struct notifier_block *nb, unsigned long event,
 	if (event == SYS_POWER_OFF) {
 		printk("set watch dog shut down timeout %d seconds\n",awdtv->suspend_timeout);
 		aml_write_reg32(P_AO_RTI_STATUS_REG1, MESON_CHARGING_REBOOT);
-	} 
+	}
 	return NOTIFY_OK;
 }
 
@@ -238,7 +238,7 @@ static int aml_wdt_probe(struct platform_device *pdev)
 		printk("creat work queue for watch dog\n");
 	}
 	ret = watchdog_register_device(aml_wdt);
-	if (ret) 
+	if (ret)
 		return ret;
 	awdtv=wdev;
 	register_pm_notifier(&aml_wdt_pm_notifier);
@@ -301,12 +301,12 @@ static struct platform_driver aml_wdt_driver = {
 	},
 };
 
-static int __init aml_wdt_driver_init(void) 
+static int __init aml_wdt_driver_init(void)
 {
 	printk("%s,%d\n",__func__,__LINE__);
 	disable_watchdog();
-	return platform_driver_register(&(aml_wdt_driver)); 
-} 
+	return platform_driver_register(&(aml_wdt_driver));
+}
 module_init(aml_wdt_driver_init);
 
 static void __exit aml_wdt_driver_exit(void)

@@ -115,7 +115,7 @@ static int m6tv_audio_set_bias_level(struct snd_soc_card *card,
 						enum snd_soc_bias_level level)
 {
 	int ret = 0;
-    	CODEC_DEBUG( "enter %s level: %d\n", __func__, level);
+	CODEC_DEBUG( "enter %s level: %d\n", __func__, level);
 	return ret;
 }
 
@@ -322,4 +322,3 @@ module_exit(aml_m6tv_audio_exit);
 MODULE_AUTHOR("jian.xu@amlogic.com AMLogic, Inc.");
 MODULE_DESCRIPTION("AML SYNO9629 ALSA machine layer driver");
 MODULE_LICENSE("GPL");
-

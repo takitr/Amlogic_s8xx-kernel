@@ -6,4 +6,3 @@
 #define EFUSE_DWORDS            128  //(EFUSE_BITS/32)
 
 #endif
-

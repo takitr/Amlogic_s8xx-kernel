@@ -787,8 +787,8 @@
 		lcd_bl_pwm_a_pins:lcd_bl_pwm_a_pin {
 			amlogic,setmask=<2 0x1>;
 			amlogic,clrmask=<2 0x4
-					   	1 0x100000
-					   	9 0x10000000>;
+						1 0x100000
+						9 0x10000000>;
 			amlogic,pins = "GPIOP_6";
 		};
 
@@ -799,8 +799,8 @@
 		lcd_bl_pwm_vs_pins:lcd_bl_pwm_vs_pin {
 			amlogic,setmask=<2 0x4>;
 			amlogic,clrmask=<2 0x1
-					   	1 0x100000
-					   	9 0x10000000>;
+						1 0x100000
+						9 0x10000000>;
 			amlogic,pins = "GPIOP_6";
 		};
 
@@ -1086,4 +1086,3 @@
 		pinctrl-0 = <&dvb_fe_pins>;
 	};
 }; /* end of / */
-

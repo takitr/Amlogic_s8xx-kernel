@@ -70,14 +70,14 @@
 struct mxc622x_acc_data {
 	struct i2c_client *client;
 	struct input_dev *input_dev;
-    
+
 	struct mutex lock;
 	struct delayed_work input_work;
 
        int poll_interval;
        int min_interval;
        int max_interval;
-       
+
 	int hw_initialized;/* hw_initialized =1 meas init succefull */
 	/* hw_working=0 means not tested yet */
 	int hw_working;
@@ -441,12 +441,12 @@ static ssize_t mxc622x_enable_store(struct device *dev,
 	struct mxc622x_acc_data *acc = i2c_get_clientdata(client);
 
 	error = strict_strtoul(buf, 10, &data);
-    	if (error) {
+	if (error) {
             printk(KERN_ERR "%s: strict_strtoul failed, error=0x%x\n", __func__, error);
             return error;
 	}
        data = !!data;
-	if (data) 
+	if (data)
             mxc622x_acc_enable(acc);
        else
             mxc622x_acc_disable(acc);
@@ -480,7 +480,7 @@ static ssize_t mxc622x_delay_store(struct device *dev,
 
 	acc->poll_interval = (delay > acc->max_interval) ? acc->max_interval : delay;
        acc->poll_interval = max(acc->poll_interval, acc->min_interval);
-    
+
 	return count;
 }
 
@@ -679,7 +679,7 @@ static int mxc622x_acc_probe(struct i2c_client *client,
 
 	/* As default, do not report information */
 	atomic_set(&acc->enabled, 0);
-    
+
 	err = sysfs_create_group(&acc->input_dev->dev.kobj, &mxc622x_attribute_group);
 	if (err) {
 		printk(KERN_ERR "%s: sysfs_create_group failed\n", __func__);

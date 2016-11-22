@@ -217,7 +217,7 @@ static int d2d3_post_process_fun(void* arg, unsigned zoom_start_x_lines,
         zoom_start_y_lines = zoom_start_y_lines&0xffff;
         zoom_end_y_lines   = zoom_end_y_lines&0xffff;
         if(d2d3_devp->flag & D2D3_REG){
-        	vf_notify_receiver(VFM_NAME,VFRAME_EVENT_PROVIDER_VFRAME_READY,NULL);
+		vf_notify_receiver(VFM_NAME,VFRAME_EVENT_PROVIDER_VFRAME_READY,NULL);
                 /*d2d3 irq process*/
                 if(!(d2d3_devp->flag & D2D3_BYPASS)){
                         di_buf_p = p_d2d3_devnox->pre_private_data;
@@ -313,7 +313,7 @@ static int d2d3_receiver_event_fun(int type, void* data, void* arg)
            (type == VFRAME_EVENT_PROVIDER_LIGHT_UNREG)){
                 prov = NULL;
 		if(d2d3_devp->flag & D2D3_BYPASS){
-                	d2d3_enable_hw(false);
+			d2d3_enable_hw(false);
 			d2d3_enable_path(false, parm);
 		}
 
@@ -524,15 +524,15 @@ static int d2d3_probe(struct platform_device *pdev)
                 goto failed_create_device_file;
         }
       #ifdef CONFIG_USE_OF
-      	res = &memobj;
-       	ret = find_reserve_block(pdev->dev.of_node->name,0);
-      	if(ret < 0){
+	res = &memobj;
+	ret = find_reserve_block(pdev->dev.of_node->name,0);
+	if(ret < 0){
              pr_err("\nd2d3 memory resource undefined.\n");
              return -EFAULT;
-     	}
-      	printk("[d2d3]%s: hhhhhhhhhhhhhh[%d].\n",__func__,__LINE__);
-      	res->start = (phys_addr_t)get_reserve_block_addr(ret);
-      	res->end = res->start+ (phys_addr_t)get_reserve_block_size(ret)-1;
+	}
+	printk("[d2d3]%s: hhhhhhhhhhhhhh[%d].\n",__func__,__LINE__);
+	res->start = (phys_addr_t)get_reserve_block_addr(ret);
+	res->end = res->start+ (phys_addr_t)get_reserve_block_size(ret)-1;
       #else
         /* get device memory */
         res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
@@ -546,15 +546,15 @@ static int d2d3_probe(struct platform_device *pdev)
         devp->mem_size  = res->end - res->start + 1;
         printk("[d2d3]%s: mem_start = 0x%x, mem_size = 0x%x.\n",__func__, devp->mem_start,devp->mem_size);
 #ifdef CONFIG_USE_OF
-     	if (pdev->dev.of_node) {
-               	ret = of_property_read_u32(pdev->dev.of_node,"irq",&(res->start));
-              	if(ret) {
+	if (pdev->dev.of_node) {
+		ret = of_property_read_u32(pdev->dev.of_node,"irq",&(res->start));
+		if(ret) {
                        pr_err("don't find d2d3  match irq\n");
-                     	goto failed_get_resource;
-             	}
+			goto failed_get_resource;
+		}
               res->end = res->start;
               res->flags = IORESOURCE_IRQ;
-      	}
+	}
 #else
 	/*get d2d3's irq*/
         res = platform_get_resource(pdev,IORESOURCE_MEM,0);
@@ -615,10 +615,10 @@ static int d2d3_resume(struct platform_device *pdev)
         struct d2d3_dev_s *d2d3_devp;
         d2d3_devp = platform_get_drvdata(pdev);
 	if(d2d3_devp->flag & D2D3_BYPASS){
-        	d2d3_enable_hw(false);
+		d2d3_enable_hw(false);
 		d2d3_enable_path(false,&d2d3_devp->param);
 	} else {
-        	d2d3_enable_hw(true);
+		d2d3_enable_hw(true);
 		d2d3_enable_path(true,&d2d3_devp->param);
 	}
         return 0;
@@ -719,5 +719,3 @@ module_exit(d2d3_drv_exit);
 MODULE_DESCRIPTION("AMLOGIC D2D3 driver");
 MODULE_LICENSE("GPL");
 MODULE_VERSION("2013-7-23a");
-
-

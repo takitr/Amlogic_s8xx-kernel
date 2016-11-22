@@ -76,13 +76,13 @@
 static const char dwc_driver_name[] = "dwc_otg";
 
 static struct aml_usb_platform usb_platform_data = {
-	.port_name 	= {MESON_USB_NAMES},
-	.ctrl_regaddr 	= {MESON_USB_CTRL_ADDRS},
-	.ctrl_size 	= {MESON_USB_CTRL_SIZES},
-	.phy_regaddr 	= {MESON_USB_PHY_ADDRS},
-	.phy_size 	= {MESON_USB_PHY_SIZES},
-	.irq_no 		= {MESON_USB_IRQS},
-	.fifo_size 	= {MESON_USB_FIFOS},
+	.port_name	= {MESON_USB_NAMES},
+	.ctrl_regaddr	= {MESON_USB_CTRL_ADDRS},
+	.ctrl_size	= {MESON_USB_CTRL_SIZES},
+	.phy_regaddr	= {MESON_USB_PHY_ADDRS},
+	.phy_size	= {MESON_USB_PHY_SIZES},
+	.irq_no			= {MESON_USB_IRQS},
+	.fifo_size	= {MESON_USB_FIFOS},
 };
 
 extern int pcd_init(
@@ -511,7 +511,7 @@ static int set_parameters(dwc_otg_core_if_t * core_if)
 		    dwc_otg_set_param_lpm_enable(core_if,
 						 dwc_otg_module_params.
 						 lpm_enable);
-	}	
+	}
 	if (dwc_otg_module_params.besl_enable != -1) {
 		retval +=
 		    dwc_otg_set_param_besl_enable(core_if,
@@ -529,7 +529,7 @@ static int set_parameters(dwc_otg_core_if_t * core_if)
 		    dwc_otg_set_param_deep_besl(core_if,
 						 dwc_otg_module_params.
 						 deep_besl);
-	}		
+	}
 	if (dwc_otg_module_params.ic_usb_cap != -1) {
 		retval +=
 		    dwc_otg_set_param_ic_usb_cap(core_if,
@@ -689,7 +689,7 @@ void set_usb_vbus_power(int pin,char is_power_on)
 
         printk( "set usb port power on (board gpio %d)!\n",pin);
 	 if(pin!=-2)
-        	amlogic_gpio_direction_output(pin,is_power_on,VBUS_POWER_GPIO_OWNER);		//set vbus on by gpio	 
+		amlogic_gpio_direction_output(pin,is_power_on,VBUS_POWER_GPIO_OWNER);		//set vbus on by gpio
     }
     else    {
         printk("set usb port power off (board gpio %d)!\n",pin);
@@ -859,6 +859,20 @@ static const struct of_device_id dwc_otg_dt_match[]={
 	},
 	{},
 };
+
+bool force_device_mode = 0;
+static int __init force_otg_mode(char *str)
+{
+	force_device_mode = 1;
+	return 1;
+}
+__setup("otg_device", force_otg_mode);
+module_param_named(otg_device, force_device_mode,
+	bool, S_IRUGO | S_IWUSR);
+
+MODULE_PARM_DESC(otg_device, "set otg to force device mode"
+	" ");
+
 /**
  * This function is called when an lm_device is bound to a
  * dwc_otg_driver. It creates the driver components required to
@@ -888,8 +902,8 @@ static int dwc_otg_driver_probe(
 	int dma_config = USB_DMA_BURST_DEFAULT;
 	int gpio_work_mask =1;
 	int gpio_vbus_power_pin = -1;
-	int gpio_hub_reset = -1;
 	int charger_detect = 0;
+	int non_normal_usb_charger_detect_delay = 0;
 	int host_only_core = 0;
 	int pmu_apply_power = 0;
 	unsigned int phy_reg_addr = 0;
@@ -956,6 +970,10 @@ static int dwc_otg_driver_probe(
 			prop = of_get_property(of_node, "charger_detect", NULL);
 			if(prop)
 				charger_detect = of_read_ulong(prop,1);
+				
+			prop = of_get_property(of_node, "non_normal_usb_charger_detect_delay", NULL);
+      if(prop)
+				non_normal_usb_charger_detect_delay = of_read_ulong(prop,1);
 
 			gpio_name = of_get_property(of_node, "gpio-vbus-power", NULL);
 			if(gpio_name)
@@ -969,22 +987,9 @@ static int dwc_otg_driver_probe(
 				}
 				prop = of_get_property(of_node, "gpio-work-mask", NULL);
 				if(prop)
-					gpio_work_mask = of_read_ulong(prop,1);	
+					gpio_work_mask = of_read_ulong(prop,1);
 			}
 
-#if defined(CONFIG_MACH_MESON8B_ODROIDC)
-			gpio_name = of_get_property(of_node, "gpio-hub-rst", NULL);
-			if(gpio_name)
-			{
-				gpio_hub_reset= amlogic_gpio_name_map_num(gpio_name);
-                amlogic_gpio_request(gpio_hub_reset,VBUS_POWER_GPIO_OWNER);
-                amlogic_gpio_direction_output(gpio_hub_reset,0,VBUS_POWER_GPIO_OWNER);
-				mdelay(20);
-                amlogic_set_value(gpio_hub_reset, 1, VBUS_POWER_GPIO_OWNER);
-				mdelay(20);
-                amlogic_gpio_free(gpio_hub_reset, VBUS_POWER_GPIO_OWNER);
-			}
-#endif
 			prop = of_get_property(of_node, "host-only-core", NULL);
 			if(prop)
 				host_only_core = of_read_ulong(prop,1);
@@ -992,7 +997,7 @@ static int dwc_otg_driver_probe(
 			prop = of_get_property(of_node, "pmu-apply-power", NULL);
 			if(prop)
 				pmu_apply_power = of_read_ulong(prop,1);
-			
+
 			ctrl_reg_addr = (unsigned long)usb_platform_data.ctrl_regaddr[port_index];
 			phy_reg_addr = (unsigned long)usb_platform_data.phy_regaddr[port_index];
 			_dev->irq = usb_platform_data.irq_no[port_index];
@@ -1111,6 +1116,9 @@ static int dwc_otg_driver_probe(
 	dwc_otg_device->dev_name = dev_name(dwc_otg_device->gen_dev);
 
 	pcore_para = &dwc_otg_module_params;
+
+	if ( force_device_mode && ( port_index == 0 ))
+		port_type = USB_PORT_TYPE_SLAVE;
 
 	if(port_type == USB_PORT_TYPE_HOST)
 		pcore_para->host_only = 1;
@@ -1253,6 +1261,7 @@ static int dwc_otg_driver_probe(
 	dwc_otg_device->core_if->vbus_power_pin = gpio_vbus_power_pin;
 	dwc_otg_device->core_if->vbus_power_pin_work_mask= gpio_work_mask;
 	dwc_otg_device->core_if->charger_detect = charger_detect;
+	dwc_otg_device->core_if->non_normal_usb_charger_detect_delay = non_normal_usb_charger_detect_delay;
 	if(host_only_core&&pmu_apply_power)
 		dwc_otg_device->core_if->swicth_int_reg = 1;
 
@@ -1976,22 +1985,22 @@ MODULE_PARM_DESC(otg_ver, "OTG revision supported 0=OTG 1.3 1=OTG 2.0");
  - 0: LPM disabled
  - 1: LPM enable (default, if available)
  </td></tr>
-  
+
  <tr>
  <td>besl_enable</td>
  <td>Specifies whether to enable LPM Errata support.
  The driver will automatically detect the value for this parameter if none is
  specified.
  - 0: LPM Errata disabled (default)
- - 1: LPM Errata enable 
+ - 1: LPM Errata enable
  </td></tr>
- 
+
   <tr>
  <td>baseline_besl</td>
  <td>Specifies the baseline besl value.
  - Values: 0 to 15 (default 0)
  </td></tr>
- 
+
   <tr>
  <td>deep_besl</td>
  <td>Specifies the deep besl value.

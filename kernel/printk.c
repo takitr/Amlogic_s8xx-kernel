@@ -62,7 +62,7 @@ extern void printascii(char *);
 #define MINIMUM_CONSOLE_LOGLEVEL 1 /* Minimum loglevel we let people use */
 #define DEFAULT_CONSOLE_LOGLEVEL 7 /* anything MORE serious than KERN_DEBUG */
 
-int console_printk[4] = {
+int __nosavedata console_printk[4] = {
 	DEFAULT_CONSOLE_LOGLEVEL,	/* console_loglevel */
 	DEFAULT_MESSAGE_LOGLEVEL,	/* default_message_loglevel */
 	MINIMUM_CONSOLE_LOGLEVEL,	/* minimum_console_loglevel */
@@ -2912,7 +2912,7 @@ void dump_stack_print_info(const char *log_lvl)
 {
 	printk("%sCPU: %d PID: %d Comm: %.20s %s %s %.*s\n",
 	       log_lvl, raw_smp_processor_id(), current->pid, current->comm,
-	       print_tainted(), init_utsname()->release,
+	       print_tainted(), UTS_RELEASE_FULL /*init_utsname()->release*/,
 	       (int)strcspn(init_utsname()->version, " "),
 	       init_utsname()->version);
 

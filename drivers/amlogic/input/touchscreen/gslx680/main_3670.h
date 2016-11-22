@@ -1,7 +1,7 @@
 
 unsigned int gsl3670_config_data_id[] =
 {
-	0x762f3b,  
+	0x762f3b,
 	0x200,
 	0,0,
 	0,

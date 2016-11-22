@@ -190,7 +190,7 @@ void early_power_gate_switch(int flag)
     GATE_SWITCH(flag, VCLK2_OTHER);
     GATE_SWITCH(flag, VCLK2_ENCI);
     GATE_SWITCH(flag, VCLK2_ENCP);
-    
+
     GATE_SWITCH(flag, ENC480P);
     //GATE_SWITCH(flag, VCLK2_ENCT);
     //GATE_SWITCH(flag, VCLK2_ENCL);
@@ -199,8 +199,8 @@ void early_power_gate_switch(int flag)
     //GATE_SWITCH(flag, LED_PWM);
     //GATE_SWITCH(flag, GE2D);
     //GATE_SWITCH(flag, VIDEO_IN);
-    GATE_SWITCH(flag, VI_CORE);
-    
+    //GATE_SWITCH(flag, VI_CORE);
+
     GATE_SWITCH(flag, HDMI_INTR_SYNC);
     GATE_SWITCH(flag, HDMI_PCLK);
     GATE_SWITCH(flag, VCLK1_HDMI);
@@ -317,11 +317,11 @@ void clk_switch(int flag)
                 if ((clks[i] == P_HHI_VID_CLK_CNTL)||(clks[i] == P_HHI_VIID_CLK_CNTL)) {
                     aml_set_reg32_bits(clks[i],clk_flag[i],19,2);
                 } else if (clks[i] == P_HHI_MPEG_CLK_CNTL) {
-                		if(uart_rate_backup == 0){
-                		  struct clk* sys_clk = clk_get_sys("clk81", NULL);
-                		  //sys_clk->rate = 0;
-                		  uart_rate_backup = clk_get_rate(sys_clk);
-      							}
+				if(uart_rate_backup == 0){
+				  struct clk* sys_clk = clk_get_sys("clk81", NULL);
+				  //sys_clk->rate = 0;
+				  uart_rate_backup = clk_get_rate(sys_clk);
+							}
 					wait_uart_empty();
 					aml_set_reg32_mask(clks[i],(1<<7));//gate on pll
                     udelay(10);
@@ -330,20 +330,20 @@ void clk_switch(int flag)
 		aml_clr_reg32_mask(P_UART0_REG5, 0x7FFFFF);
 		aml_set_reg32_bits(P_UART0_REG5, ((uart_rate_backup / (115200 * 4)) - 1) & 0x7fffff, 0, 23);
 		aml_set_reg32_bits(P_UART0_REG5, 1, 23, 1);
-					
+
 		aml_clr_reg32_mask(P_UART1_REG5, 0x7FFFFF);
 		aml_set_reg32_bits(P_UART1_REG5, ((uart_rate_backup / (115200 * 4)) - 1) & 0x7fffff, 0, 23);
 		aml_set_reg32_bits(P_UART1_REG5, 1, 23, 1);
-					 
+
 		aml_clr_reg32_mask(P_AO_UART2_REG5, 0x7FFFFF);
 		aml_set_reg32_bits(P_AO_UART2_REG5, ((uart_rate_backup / (115200 * 4)) - 1) & 0x7fffff, 0, 23);
 		aml_set_reg32_bits(P_AO_UART2_REG5, 1, 23, 1);
-					 
+
 		aml_clr_reg32_mask(P_AO_UART_REG5, 0x7FFFFF);
 		aml_set_reg32_bits(P_AO_UART_REG5, ((uart_rate_backup / (115200 * 4)) - 1) & 0x7fffff, 0, 23);
 		aml_set_reg32_bits(P_AO_UART_REG5, 1, 23, 1);
- 	                } else {
- 	                	aml_set_reg32_mask(clks[i],(1<<8));
+	                } else {
+				aml_set_reg32_mask(clks[i],(1<<8));
                 }
                 clk_flag[i] = 0;
                 printk(KERN_INFO "clk %s(%x) on\n", clks_name[i], clks[i]);
@@ -358,11 +358,11 @@ void clk_switch(int flag)
                 }
             } else if (clks[i] == P_HHI_MPEG_CLK_CNTL) {
                 if (aml_read_reg32(clks[i]) & (1 << 8)) {
-	              		if(xtal_uart_rate_backup == 0){//if no early suspend supported
-           			        struct clk* sys_clk = clk_get_sys("xtal", NULL);
-  									    xtal_uart_rate_backup = clk_get_rate(sys_clk);
-                		}
-               		wait_uart_empty();
+				if(xtal_uart_rate_backup == 0){//if no early suspend supported
+				        struct clk* sys_clk = clk_get_sys("xtal", NULL);
+									    xtal_uart_rate_backup = clk_get_rate(sys_clk);
+				}
+			wait_uart_empty();
                     clk_flag[i] = 1;
                     aml_clr_reg32_mask(clks[i], (1 << 8)); // 24M
                     udelay(10);
@@ -371,15 +371,15 @@ void clk_switch(int flag)
 			aml_clr_reg32_mask(P_UART0_REG5, 0x7FFFFF);
 		aml_set_reg32_bits(P_UART0_REG5, ((xtal_uart_rate_backup / (115200 * 4)) - 1) & 0x7fffff, 0, 23);
 		aml_set_reg32_bits(P_UART0_REG5, 1, 23, 1);
-					
+
 		aml_clr_reg32_mask(P_UART1_REG5, 0x7FFFFF);
 		aml_set_reg32_bits(P_UART1_REG5, ((xtal_uart_rate_backup / (115200 * 4)) - 1) & 0x7fffff, 0, 23);
 		aml_set_reg32_bits(P_UART1_REG5, 1, 23, 1);
-					 
+
 		aml_clr_reg32_mask(P_AO_UART2_REG5, 0x7FFFFF);
 		aml_set_reg32_bits(P_AO_UART2_REG5, ((xtal_uart_rate_backup / (115200 * 4)) - 1) & 0x7fffff, 0, 23);
 		aml_set_reg32_bits(P_AO_UART2_REG5, 1, 23, 1);
-					 
+
 		aml_clr_reg32_mask(P_AO_UART_REG5, 0x7FFFFF);
 		aml_set_reg32_bits(P_AO_UART_REG5, ((xtal_uart_rate_backup / (115200 * 4)) - 1) & 0x7fffff, 0, 23);
 		aml_set_reg32_bits(P_AO_UART_REG5, 1, 23, 1);
@@ -393,7 +393,7 @@ void clk_switch(int flag)
             }
             if (clk_flag[i]) {
                 printk(KERN_INFO "clk %s(%x) off\n", clks_name[i], clks[i]);
-             		wait_uart_empty();
+			wait_uart_empty();
              }
         }
     }
@@ -414,24 +414,24 @@ void early_clk_switch(int flag)
                 else if (early_clks[i] == P_HHI_MPEG_CLK_CNTL) {
                     udelay(1000);
                     aml_set_reg32_mask(early_clks[i], (1 << 8)); // clk81 back to normal
- 
- 		aml_clr_reg32_mask(P_UART0_REG5, 0x7FFFFF);
+
+		aml_clr_reg32_mask(P_UART0_REG5, 0x7FFFFF);
 		 aml_set_reg32_bits(P_UART0_REG5, ((uart_rate_backup / (115200 * 4)) - 1) & 0x7fffff, 0, 23);
- 		aml_set_reg32_bits(P_UART0_REG5, 1, 23, 1);
-			 
- 		aml_clr_reg32_mask(P_UART1_REG5, 0x7FFFFF);
- 		aml_set_reg32_bits(P_UART1_REG5, ((uart_rate_backup / (115200 * 4)) - 1) & 0x7fffff, 0, 23);
- 		aml_set_reg32_bits(P_UART1_REG5, 1, 23, 1);
-			 
- 		aml_clr_reg32_mask(P_AO_UART2_REG5, 0x7FFFFF);
- 		aml_set_reg32_bits(P_AO_UART2_REG5, ((uart_rate_backup / (115200 * 4)) - 1) & 0x7fffff, 0, 23);
- 		aml_set_reg32_bits(P_AO_UART2_REG5, 1, 23, 1);
- 
-	 	aml_clr_reg32_mask(P_AO_UART_REG5, 0x7FFFFF);
+		aml_set_reg32_bits(P_UART0_REG5, 1, 23, 1);
+
+		aml_clr_reg32_mask(P_UART1_REG5, 0x7FFFFF);
+		aml_set_reg32_bits(P_UART1_REG5, ((uart_rate_backup / (115200 * 4)) - 1) & 0x7fffff, 0, 23);
+		aml_set_reg32_bits(P_UART1_REG5, 1, 23, 1);
+
+		aml_clr_reg32_mask(P_AO_UART2_REG5, 0x7FFFFF);
+		aml_set_reg32_bits(P_AO_UART2_REG5, ((uart_rate_backup / (115200 * 4)) - 1) & 0x7fffff, 0, 23);
+		aml_set_reg32_bits(P_AO_UART2_REG5, 1, 23, 1);
+
+		aml_clr_reg32_mask(P_AO_UART_REG5, 0x7FFFFF);
 		aml_set_reg32_bits(P_AO_UART_REG5, ((uart_rate_backup / (115200 * 4)) - 1) & 0x7fffff, 0, 23);
 		aml_set_reg32_bits(P_AO_UART_REG5, 1, 23, 1);
 
-                } 
+                }
 #endif
                 else {
                     aml_set_reg32_mask(early_clks[i], (1 << 8));
@@ -465,15 +465,15 @@ void early_clk_switch(int flag)
 		aml_clr_reg32_mask(P_UART0_REG5, 0x7FFFFF);
 		aml_set_reg32_bits(P_UART0_REG5, ((uart_rate_backup / (115200 * 4)) - 1) & 0x7fffff, 0, 23);
 		aml_set_reg32_bits(P_UART0_REG5, 1, 23, 1);
-							
+
 		aml_clr_reg32_mask(P_UART1_REG5, 0x7FFFFF);
 		aml_set_reg32_bits(P_UART1_REG5, ((uart_rate_backup / (115200 * 4)) - 1) & 0x7fffff, 0, 23);
 		aml_set_reg32_bits(P_UART1_REG5, 1, 23, 1);
-							
+
 		aml_clr_reg32_mask(P_AO_UART2_REG5, 0x7FFFFF);
 		aml_set_reg32_bits(P_AO_UART2_REG5, ((uart_rate_backup / (115200 * 4)) - 1) & 0x7fffff, 0, 23);
 		aml_set_reg32_bits(P_AO_UART2_REG5, 1, 23, 1);
-				
+
 		aml_clr_reg32_mask(P_AO_UART_REG5, 0x7FFFFF);
 		aml_set_reg32_bits(P_AO_UART_REG5, ((uart_rate_backup / (115200 * 4)) - 1) & 0x7fffff, 0, 23);
 		aml_set_reg32_bits(P_AO_UART_REG5, 1, 23, 1);
@@ -531,10 +531,10 @@ void pll_switch(int flag)
     if (flag) {
          for (i = PLL_COUNT - 1; i >= 0; i--) {
             if (pll_flag[i]) {
- 					   		if(default_console_loglevel >= 7){
-	       	        printk(KERN_INFO "pll %s(%x) on\n", plls_name[i], plls[i]);
-	       	        udelay(2000);
-	       	        udelay(2000);
+							if(default_console_loglevel >= 7){
+		        printk(KERN_INFO "pll %s(%x) on\n", plls_name[i], plls[i]);
+		        udelay(2000);
+		        udelay(2000);
 								}
                 if ((plls[i]==P_HHI_VID_PLL_CNTL)||(plls[i]==P_HHI_VIID_PLL_CNTL)||(plls[i]==P_HHI_MPLL_CNTL)){
                     aml_clr_reg32_mask(plls[i],(1<<30));
@@ -550,10 +550,10 @@ void pll_switch(int flag)
         udelay(1000);
 	     } else {
         for (i = 0; i < PLL_COUNT; i++) {
-        	  if ((plls[i]==P_HHI_VID_PLL_CNTL)||(plls[i]==P_HHI_VIID_PLL_CNTL)||(plls[i]==P_HHI_MPLL_CNTL))
-        	  	pll_flag[i]=aml_get_reg32_bits(plls[i],30,1) ? 0:1;
-        	  else
-        	  	pll_flag[i]=aml_get_reg32_bits(plls[i],15,1) ? 0:1;
+		  if ((plls[i]==P_HHI_VID_PLL_CNTL)||(plls[i]==P_HHI_VIID_PLL_CNTL)||(plls[i]==P_HHI_MPLL_CNTL))
+			pll_flag[i]=aml_get_reg32_bits(plls[i],30,1) ? 0:1;
+		  else
+			pll_flag[i]=aml_get_reg32_bits(plls[i],15,1) ? 0:1;
             if (pll_flag[i]) {
                 printk(KERN_INFO "pll %s(%x) off\n", plls_name[i], plls[i]);
                 if ((plls[i]==P_HHI_VID_PLL_CNTL)||(plls[i]==P_HHI_VIID_PLL_CNTL)){
@@ -613,7 +613,7 @@ void early_pll_switch(int flag)//for MX only
         for (i = 0; i < EARLY_PLL_COUNT; i++) {
             if (early_plls[i]==P_HHI_VID_PLL_CNTL)
             {
-            	early_pll_flag[i] = aml_get_reg32_bits(early_plls[i],30,1) ? 0 : 1;
+		early_pll_flag[i] = aml_get_reg32_bits(early_plls[i],30,1) ? 0 : 1;
 				early_pll_settings[i][0]=aml_read_reg32(P_HHI_VID_PLL_CNTL);
 				early_pll_settings[i][1]=aml_read_reg32(P_HHI_VID_PLL_CNTL2);
 				early_pll_settings[i][2]=aml_read_reg32(P_HHI_VID_PLL_CNTL3);
@@ -671,7 +671,7 @@ void analog_switch(int flag)
         for (i = 0; i < ANALOG_COUNT; i++) {
             if (analog_regs[i].enable && (analog_regs[i].set_bits || analog_regs[i].clear_bits)) {
                 if (analog_regs[i].enable == 1) {
-                		aml_write_reg32(analog_regs[i].reg_addr, analog_regs[i].reg_value);
+				aml_write_reg32(analog_regs[i].reg_addr, analog_regs[i].reg_value);
                 } else if (analog_regs[i].enable == 2) {
                     aml_write_reg32(analog_regs[i].reg_addr, analog_regs[i].reg_value);
                 } else if (analog_regs[i].enable == 3) {
@@ -700,11 +700,11 @@ void analog_switch(int flag)
                     analog_regs[i].reg_value = aml_read_reg32(analog_regs[i].reg_addr);
                     printk("%s(0x%x):0x%x", analog_regs[i].name, analog_regs[i].reg_addr, analog_regs[i].reg_value);
                     if (analog_regs[i].clear_bits) {
-                    		aml_clr_reg32_mask(analog_regs[i].reg_addr, analog_regs[i].clear_bits);
+				aml_clr_reg32_mask(analog_regs[i].reg_addr, analog_regs[i].clear_bits);
                         printk(" & ~0x%x", analog_regs[i].clear_bits);
                     }
                     if (analog_regs[i].set_bits) {
-                    		aml_set_reg32_mask(analog_regs[i].reg_addr, analog_regs[i].set_bits);
+				aml_set_reg32_mask(analog_regs[i].reg_addr, analog_regs[i].set_bits);
                         printk(" | 0x%x", analog_regs[i].set_bits);
                     }
                     reg_value = aml_read_reg32(analog_regs[i].reg_addr);
@@ -766,7 +766,7 @@ static void meson_system_early_suspend(struct early_suspend *h)
 static void meson_system_late_resume(struct early_suspend *h)
 {
     if (early_suspend_flag) {
-    	early_power_gate_switch(ON);
+	early_power_gate_switch(ON);
         //early_pll_switch(ON);
         early_clk_switch(ON);
         early_suspend_flag = 0;
@@ -821,7 +821,7 @@ static void meson_pm_suspend(void)
     printk(KERN_INFO "enter meson_pm_suspend!\n");
 #ifdef CONFIG_SUSPEND_WATCHDOG
 	ENABLE_SUSPEND_WATCHDOG;
-#endif    
+#endif
 
     // Disable MMC_LP_CTRL. Will be re-enabled at resume by kreboot.S
     //pr_debug("MMC_LP_CTRL1 before=%#x\n", aml_read_reg32(P_MMC_LP_CTRL1));

@@ -16,7 +16,7 @@ swap_16:
     sub        r2, r2, #16
     cmp        r2, #16
     bge        swap_16
-    
+
 swap_end:
     vpop       {q0,q1}
     ldmia      sp!, {pc}

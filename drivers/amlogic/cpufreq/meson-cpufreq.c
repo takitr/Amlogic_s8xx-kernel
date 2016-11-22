@@ -74,8 +74,8 @@ static int meson_cpufreq_verify(struct cpufreq_policy *policy)
     return 0;
 }
 
-static int early_suspend_flag = 0;
 #if (defined CONFIG_SMP) && (defined CONFIG_HAS_EARLYSUSPEND)
+static int early_suspend_flag = 0;
 #include <linux/earlysuspend.h>
 static void meson_system_early_suspend(struct early_suspend *h)
 {
@@ -133,15 +133,15 @@ static int meson_cpufreq_target_locked(struct cpufreq_policy *policy,
 
 #ifdef CONFIG_FIX_SYSPLL
     /*
-     * CPU frequent should only select from aviliable frequent table 
+     * CPU frequent should only select from aviliable frequent table
      * if under fix syspll mode
      */
     if (fix_syspll) {
         freq_table = cpufreq_frequency_get_table(policy->cpu);
         ret        = cpufreq_frequency_table_target(policy, freq_table, target_freq,
-        		                                    CPUFREQ_RELATION_H, &index);
+			                                    CPUFREQ_RELATION_H, &index);
         if(ret >= 0) {
-        	freq_new = freq_table[index].frequency;
+		freq_new = freq_table[index].frequency;
             target_freq = freq_new;
         } else {
             printk(KERN_ERR"input frequent :%d cannot found in frequent table, ret:%d\n", target_freq, ret);
@@ -271,7 +271,7 @@ static int meson_cpufreq_init(struct cpufreq_policy *policy)
 	index -= 1;
 
 	policy->min = freq_table[0].frequency;
-	policy->max = 1536000;
+	policy->max = freq_table[index].frequency;
 	policy->cpuinfo.min_freq = clk_round_rate(cpufreq.armclk, 0) / 1000;
     policy->cpuinfo.max_freq = clk_round_rate(cpufreq.armclk, 0xffffffff) / 1000;
 
@@ -462,7 +462,9 @@ static unsigned long global_l_p_j_ref_freq;
 
 static void adjust_jiffies(unsigned int freqOld, unsigned int freqNew)
 {
+#ifdef	CONFIG_SMP
     int i;
+#endif
 
     if (!global_l_p_j_ref) {
         global_l_p_j_ref = loops_per_jiffy;
@@ -485,7 +487,9 @@ int meson_cpufreq_boost(unsigned int freq)
     int ret = 0;
 	struct cpufreq_policy * policy = NULL;
 
+#if (defined CONFIG_HAS_EARLYSUSPEND)
     if (!early_suspend_flag) {
+#endif
         // only allow freq boost when not in early suspend
         //check last_cpu_rate. inaccurate but no lock
         //printk("%u %u\n", last_cpu_rate, freq);
@@ -501,7 +505,9 @@ int meson_cpufreq_boost(unsigned int freq)
             mutex_unlock(&meson_cpufreq_mutex);
         }
         //}
+#if (defined CONFIG_HAS_EARLYSUSPEND)
     }
+#endif
     return ret;
 }
 #endif

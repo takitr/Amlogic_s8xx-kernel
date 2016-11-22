@@ -10,7 +10,7 @@
 
 /*
  * this file is use to copy battery parameters passed from uboot to kernel
- * struct, parameters are global data and can be used by different types of 
+ * struct, parameters are global data and can be used by different types of
  * PMU driver.
  */
 
@@ -23,13 +23,13 @@ static int __init parse_tag_battery(const struct tag *tag)
      * Note: here we only copy data from uboot, checking each data if they are valid
      * should be done by your PMU driver.
      */
-    memcpy(&board_battery_para_from_uboot, 
-           &tag->u.board_battery.battery_para, 
+    memcpy(&board_battery_para_from_uboot,
+           &tag->u.board_battery.battery_para,
            sizeof(struct battery_parameter));
-    if (board_battery_para_from_uboot.pmu_battery_cap == 0 || 
+    if (board_battery_para_from_uboot.pmu_battery_cap == 0 ||
         board_battery_para_from_uboot.pmu_battery_rdc == 0 ||
         board_battery_para_from_uboot.pmu_charge_efficiency == 0) {
-        printk("Wrong parameters from uboot, we use defaut configs\n");    
+        printk("Wrong parameters from uboot, we use defaut configs\n");
         return 0;
     }
     battery_paramter_uboot = UBOOT_BATTERY_PARA_SUCCESS;
@@ -40,11 +40,11 @@ static int __init parse_tag_battery(const struct tag *tag)
 __tagtable(ATAG_BATTERY, parse_tag_battery);
 
 /*
- * tell driver if we have got battery parameters from uboot 
+ * tell driver if we have got battery parameters from uboot
  */
 int get_uboot_battery_para_status(void)
 {
-    return battery_paramter_uboot; 
+    return battery_paramter_uboot;
 }
 EXPORT_SYMBOL_GPL(get_uboot_battery_para_status);
 
@@ -53,7 +53,6 @@ EXPORT_SYMBOL_GPL(get_uboot_battery_para_status);
  */
 struct battery_parameter *get_uboot_battery_para(void)
 {
-    return &board_battery_para_from_uboot;    
+    return &board_battery_para_from_uboot;
 }
 EXPORT_SYMBOL_GPL(get_uboot_battery_para);
-

@@ -18,4 +18,3 @@ source "drivers/amlogic/tvin/it660x/Kconfig"
 source "drivers/amlogic/tvin/isp/Kconfig"
 source "drivers/amlogic/tvin/vdin_ctrl/Kconfig"
 endif
-

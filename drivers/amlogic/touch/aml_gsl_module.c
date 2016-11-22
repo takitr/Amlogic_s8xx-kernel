@@ -18,7 +18,7 @@ static int __init aml_gsl_init(void)
 	return 0;
 }
 static void __exit aml_gsl_exit(void)
-{	
+{
 	struct aml_gsl_api *api = aml_gsl_get_api();
 	printk("==%s==\n", __func__);
 	if (api) {

@@ -36,7 +36,7 @@
 #include <net/netlink.h>
 #include <net/genetlink.h>
 
-#include "thermal_core.h"
+#include <linux/thermal_core.h>
 
 MODULE_AUTHOR("Zhang Rui");
 MODULE_DESCRIPTION("Generic thermal management sysfs support");
@@ -481,14 +481,7 @@ temp_show(struct device *dev, struct device_attribute *attr, char *buf)
 	if (ret)
 		return ret;
 
-#if defined(CONFIG_MACH_MESON8B_ODROIDC)
-        /* Fake workaround to return the temperature
-         * as millidegree Celsius
-         */
-	return sprintf(buf, "%ld\n", temperature * 1000);
-#else
 	return sprintf(buf, "%ld\n", temperature);
-#endif
 }
 
 static ssize_t

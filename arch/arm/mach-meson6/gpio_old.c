@@ -273,7 +273,7 @@ retry:
 	{
 
         debug( "clrsetbits %08x %08x %08x \n",p_pin_mux_reg_addr[pinmux->pinmux[i].reg],pinmux->pinmux[i].clrmask,pinmux->pinmux[i].setmask);
-    	pimux_locktable[pinmux->pinmux[i].reg]|=locallock[pinmux->pinmux[i].reg];
+	pimux_locktable[pinmux->pinmux[i].reg]|=locallock[pinmux->pinmux[i].reg];
         clrsetbits_le32(p_pin_mux_reg_addr[pinmux->pinmux[i].reg],pinmux->pinmux[i].clrmask,pinmux->pinmux[i].setmask);
 	}
 	spin_unlock(&pinmux_set_lock);
@@ -585,7 +585,7 @@ void gpio_enable_level_int(int pin , int flag, int group)
 {
         group &= 7;
 
-  			aml_set_reg32_bits(P_GPIO_INTR_GPIO_SEL0+(group>>2), pin, (group&3)*8, 8);
+			aml_set_reg32_bits(P_GPIO_INTR_GPIO_SEL0+(group>>2), pin, (group&3)*8, 8);
 
         aml_set_reg32_bits(P_GPIO_INTR_EDGE_POL, 0, group, 1);
         aml_set_reg32_bits(P_GPIO_INTR_EDGE_POL, flag, group+16, 1);

@@ -110,6 +110,7 @@ MODULE_PARM_DESC(cm_enable,"cm_enable");
 #define VDIN_MEAS_VSCNT_DIFF    0x50  // the diff value between normal/bad data
 
 #ifndef VDIN_DEBUG
+#undef pr_info
 #define pr_info(fmt, ...)
 #endif
 
@@ -641,7 +642,7 @@ static inline void vdin_set_color_matrix1(unsigned int offset, tvin_format_t *tv
 		case VDIN_FORMAT_CONVERT_YUV_RGB:
 			if (
 		              ((fmt_info->scan_mode == TVIN_SCAN_MODE_PROGRESSIVE) && (fmt_info->v_active >= 720)) || //  720p & above
-		       	      ((fmt_info->scan_mode == TVIN_SCAN_MODE_INTERLACED)  && (fmt_info->v_active >= 540))    // 1080i & above
+			      ((fmt_info->scan_mode == TVIN_SCAN_MODE_INTERLACED)  && (fmt_info->v_active >= 540))    // 1080i & above
 			   )
 				matrix_csc = VDIN_MATRIX_YUV709_RGB;
 			else
@@ -668,7 +669,7 @@ static inline void vdin_set_color_matrix1(unsigned int offset, tvin_format_t *tv
 		case VDIN_FORMAT_CONVERT_YUV_NV12:
 		case VDIN_FORMAT_CONVERT_YUV_NV21:
 			if (((fmt_info->scan_mode == TVIN_SCAN_MODE_PROGRESSIVE) && (fmt_info->v_active >= 720)) || //  720p & above
-         		    ((fmt_info->scan_mode == TVIN_SCAN_MODE_INTERLACED)  && (fmt_info->v_active >= 540))    // 1080i & above
+			    ((fmt_info->scan_mode == TVIN_SCAN_MODE_INTERLACED)  && (fmt_info->v_active >= 540))    // 1080i & above
 			   )
 			{
 				if (color_convert == 0)
@@ -772,7 +773,7 @@ static inline void vdin_set_color_matrix0(unsigned int offset, tvin_format_t *tv
 		case VDIN_FORMAT_CONVERT_YUV_NV12:
 		case VDIN_FORMAT_CONVERT_YUV_NV21:
 			if (((fmt_info->scan_mode == TVIN_SCAN_MODE_PROGRESSIVE) && (fmt_info->v_active >= 720)) || //  720p & above
-               		    ((fmt_info->scan_mode == TVIN_SCAN_MODE_INTERLACED)  && (fmt_info->v_active >= 540))    // 1080i & above
+			    ((fmt_info->scan_mode == TVIN_SCAN_MODE_INTERLACED)  && (fmt_info->v_active >= 540))    // 1080i & above
 			   )
 			{
 				if (color_convert == 0)
@@ -2025,4 +2026,3 @@ inline void vdin_force_gofiled(struct vdin_dev_s *devp)
 	WR_BITS(VDIN_COM_CTRL0,1,28,1);    //vdin software reset base on di_pre;must set once only!!!
 	WR_BITS(VDIN_COM_CTRL0,0,28,1);
 }
-

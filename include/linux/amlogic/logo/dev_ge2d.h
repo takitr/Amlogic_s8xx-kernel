@@ -1,7 +1,7 @@
 #ifndef  DEV_GE2D_H
 #define DEV_GE2D_H
 #include <linux/amlogic/amports/canvas.h>
-#include <linux/amlogic/ge2d/ge2d.h> 
+#include <linux/amlogic/ge2d/ge2d.h>
 typedef  struct {
 	rectangle_t  src_rect;
 	rectangle_t  dst_rect;

@@ -15,20 +15,20 @@
 				 74  0x16  0x40    /* 720p 1080i */
 				 148  0x16  0x40   /* 1080p */
 				>;
-#endif        
-        
+#endif
+
 //$$ MATCH "HDMI_vend-data_match" = <&vend_data>
 //$$ L2 PROP_STR = "vendor_name"
 //$$ L2 PROP_U32 = "vendor_id"
 //$$ L2 PROP_STR = "product_desc"
-//$$ L2 PROP_STR = "cec_osd_string"        
+//$$ L2 PROP_STR = "cec_osd_string"
         vend_data: vend_data{
             vendor_name = "Amlogic";           /* Max Chars: 8     */
             vendor_id = <0x000000>;                 /* Refer to http://standards.ieee.org/develop/regauth/oui/oui.txt   */
             product_desc = "M8 MBox SKTv1";        /* Max Chars: 16    */
             cec_osd_string = "Amlogic MBox";        /* Max Chars: 14    */
         };
-        
+
 //$$ MATCH "HDMI_pwr-ctrl_match" = <&pwr_ctrl>
 //$$ L2 PROP_STR = "pwr_5v_on"
 //$$ L2 PROP_STR = "pwr_5v_off"

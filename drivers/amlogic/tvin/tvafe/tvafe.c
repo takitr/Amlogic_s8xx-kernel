@@ -14,7 +14,7 @@
 #include <linux/init.h>
 #include <linux/module.h>
 #include <linux/kernel.h>
-#include <linux/slab.h> 
+#include <linux/slab.h>
 #include <linux/interrupt.h>
 #include <linux/fs.h>
 #include <linux/device.h>
@@ -127,7 +127,7 @@ static ssize_t tvafe_store(struct device *dev, struct device_attribute *attr,con
 		tvafe_vga_get_edid(&edid);
 		for(i=0; i<32; i++)
 		{
-        		pr_info("0x%2x 0x%2x 0x%2x 0x%2x 0x%2x 0x%2x 0x%2x 0x%2x.\n", edid.value[(i<<3)+0],
+			pr_info("0x%2x 0x%2x 0x%2x 0x%2x 0x%2x 0x%2x 0x%2x 0x%2x.\n", edid.value[(i<<3)+0],
 				edid.value[(i<<3)+1], edid.value[(i<<3)+2], edid.value[(i<<3)+3], edid.value[(i<<3)+4],
 				edid.value[(i<<3)+5], edid.value[(i<<3)+6], edid.value[(i<<3)+7] );
 		}
@@ -135,20 +135,20 @@ static ssize_t tvafe_store(struct device *dev, struct device_attribute *attr,con
 	else if(!strncmp(buff,"set_edid",strlen("set_edid"))){
 		int i=0;
 		struct tvafe_vga_edid_s edid={ {0x00, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x00,
-									 	0x30, 0xa4, 0x21, 0x00, 0x01, 0x01, 0x01, 0x01,
-									 	0x0e, 0x17, 0x01, 0x03, 0x80, 0x24, 0x1d, 0x78,
-									 	0xee, 0x00, 0x0c, 0x0a, 0x05, 0x04, 0x09, 0x02,
-									 	0x00, 0x20, 0x80, 0xa1, 0x08, 0x70, 0x01, 0x01,
-									 	0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01,
-									 	0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x02, 0x3a,
-									 	0x80, 0x18, 0x71, 0x38, 0x2d, 0x40, 0x58, 0x2c,
-									 	0x45, 0x00, 0xa0, 0x5a, 0x00, 0x00, 0x00, 0x1e,
-									 	0x00, 0x00, 0x00, 0xfd, 0x00, 0x3b, 0x3c, 0x1f,
- 										0x2d, 0x08, 0x00, 0x0a, 0x20, 0x20, 0x20, 0x20,
- 										0x20, 0x20, 0x00, 0x00, 0x00, 0xfc, 0x00, 0x44,
- 										0x35, 0x30, 0x4c, 0x57, 0x37, 0x31, 0x30, 0x30,
+										0x30, 0xa4, 0x21, 0x00, 0x01, 0x01, 0x01, 0x01,
+										0x0e, 0x17, 0x01, 0x03, 0x80, 0x24, 0x1d, 0x78,
+										0xee, 0x00, 0x0c, 0x0a, 0x05, 0x04, 0x09, 0x02,
+										0x00, 0x20, 0x80, 0xa1, 0x08, 0x70, 0x01, 0x01,
+										0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01,
+										0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x02, 0x3a,
+										0x80, 0x18, 0x71, 0x38, 0x2d, 0x40, 0x58, 0x2c,
+										0x45, 0x00, 0xa0, 0x5a, 0x00, 0x00, 0x00, 0x1e,
+										0x00, 0x00, 0x00, 0xfd, 0x00, 0x3b, 0x3c, 0x1f,
+										0x2d, 0x08, 0x00, 0x0a, 0x20, 0x20, 0x20, 0x20,
+										0x20, 0x20, 0x00, 0x00, 0x00, 0xfc, 0x00, 0x44,
+										0x35, 0x30, 0x4c, 0x57, 0x37, 0x31, 0x30, 0x30,
 										0x0a, 0x20, 0x20, 0x20, 0x21, 0x39, 0x90, 0x30,
-									 	0x62, 0x1a, 0x27, 0x40, 0x68, 0xb0, 0x36, 0x00,
+										0x62, 0x1a, 0x27, 0x40, 0x68, 0xb0, 0x36, 0x00,
 										0xa0, 0x64, 0x00, 0x00, 0x00, 0x1c, 0x00, 0x88,
 										0x00, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x00,
 										0x30, 0xa4, 0x21, 0x00, 0x01, 0x01, 0x01, 0x01,
@@ -168,7 +168,7 @@ static ssize_t tvafe_store(struct device *dev, struct device_attribute *attr,con
 										0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
 										}
 										};
-		
+
 		for(i=0; i<32; i++)
 		{
 		pr_info("0x%2x 0x%2x 0x%2x 0x%2x 0x%2x 0x%2x 0x%2x 0x%2x.\n", edid.value[(i<<3)+0],
@@ -225,24 +225,24 @@ static ssize_t dumpmem_store(struct device *dev, struct device_attribute *attr,c
 {
 	unsigned int n=0;
 	char *buf_orig, *ps, *token;
-    	char *parm[6] = {NULL};
-    	struct tvafe_dev_s *devp;
-    	if(!buff)
+	char *parm[6] = {NULL};
+	struct tvafe_dev_s *devp;
+	if(!buff)
 	    return len;
-    	buf_orig = kstrdup(buff, GFP_KERNEL);
+	buf_orig = kstrdup(buff, GFP_KERNEL);
 	//printk(KERN_INFO "input cmd : %s",buf_orig);
 	devp = dev_get_drvdata(dev);
 	ps = buf_orig;
-    	while (1) {
-    		token = strsep(&ps, " \n");
-    		if (token == NULL)
-    			break;
-    		if (*token == '\0')
-    			continue;
-    		parm[n++] = token;
-	    	}
+	while (1) {
+		token = strsep(&ps, " \n");
+		if (token == NULL)
+			break;
+		if (*token == '\0')
+			continue;
+		parm[n++] = token;
+		}
 	if(!strncmp(parm[0], "dumpmem", strlen("dumpmem"))){
-	 	 if(parm[1] != NULL){
+		 if(parm[1] != NULL){
 		    struct file *filp = NULL;
 		    loff_t pos = 0;
 		    void * buf = NULL;
@@ -630,7 +630,7 @@ int tvafe_dec_isr(struct tvin_frontend_s *fe, unsigned int hcnt64)
 	{
 		tvafe_vga_vs_cnt(&tvafe->adc);
         if(tvafe->adc.vga_auto.phase_state == VGA_VDIN_BORDER_DET){
-                		tvin_vdin_bar_detect(tvafe->parm.info.fmt,&tvafe->adc);
+				tvin_vdin_bar_detect(tvafe->parm.info.fmt,&tvafe->adc);
 		}
 
 	}
@@ -1260,7 +1260,7 @@ static long tvafe_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
             if(fmt >= TVIN_SIG_FMT_COMP_1080P_23HZ_D976 && fmt <= TVIN_SIG_FMT_COMP_1080P_60HZ_D000){
 				//1080p
 				tvafe->cal.fmt_cal_val.comp_cal_val[0].a_analog_clamp -= 2;
-	   			tvafe_set_cal_value2(&(tvafe->cal.fmt_cal_val.comp_cal_val[0]));
+				tvafe_set_cal_value2(&(tvafe->cal.fmt_cal_val.comp_cal_val[0]));
 				i = 0;
 			}else if((fmt >= TVIN_SIG_FMT_COMP_720P_59HZ_D940 && fmt <= TVIN_SIG_FMT_COMP_720P_50HZ_D000)
 					|| (fmt >= TVIN_SIG_FMT_COMP_1080I_47HZ_D952 && fmt <= TVIN_SIG_FMT_COMP_1080I_60HZ_D000)){
@@ -1549,7 +1549,7 @@ static int tvafe_drv_probe(struct platform_device *pdev)
 		                ret = -EFAULT;
 		                goto fail_get_resource_mem;
 		        }
-		
+
 		        tdevp->mem.start = (phys_addr_t)get_reserve_block_addr(ret)+offset;
 		        tdevp->mem.size = size;
 		}
@@ -1572,7 +1572,7 @@ static int tvafe_drv_probe(struct platform_device *pdev)
 			tdevp->mem.start,
 			tdevp->mem.size);
 #ifdef CONFIG_USE_OF
-	if(of_property_read_u32_array(pdev->dev.of_node, "tvafe_pin_mux", 
+	if(of_property_read_u32_array(pdev->dev.of_node, "tvafe_pin_mux",
 				(u32*)tvafe_pinmux.pin, TVAFE_SRC_SIG_MAX_NUM)){
 		pr_err("Can't get pinmux data.\n");
 	}
@@ -1758,4 +1758,3 @@ module_exit(tvafe_drv_exit);
 MODULE_DESCRIPTION("AMLOGIC TVAFE driver");
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("Xu Lin <lin.xu@amlogic.com>");
-

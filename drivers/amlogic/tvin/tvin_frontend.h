@@ -80,4 +80,3 @@ struct tvin_decoder_ops_s *tvin_get_fe_ops(enum tvin_port_e port, int index);
 struct tvin_state_machine_ops_s *tvin_get_sm_ops(enum tvin_port_e port, int index);
 
 #endif
-

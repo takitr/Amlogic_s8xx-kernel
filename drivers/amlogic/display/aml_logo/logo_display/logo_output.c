@@ -6,7 +6,7 @@
  *		this file decode logo data according to it's type.
  *
  *  Author: Amlogic Software
- *  Created: 
+ *  Created:
  *
  *******************************************************************/
 #include  "logo.h"
@@ -33,7 +33,7 @@ static  output_dev_list_t aml_output_dev[LOGO_DEV_MAX];
 	const char  *device_name[3]={"mesonfb0","mesonfb1","amstream"};
 	struct  device  *dev=NULL;
 	struct platform_device  * platform_dev;
-	struct resource * res; 
+	struct resource * res;
 	int idx;
 
 	for(i=0;i<LOGO_DEV_MEM;i++)
@@ -45,10 +45,10 @@ static  output_dev_list_t aml_output_dev[LOGO_DEV_MAX];
 		 dev=bus_find_device(&platform_bus_type, NULL, logo->platform_res[i].name, match_device_name) ;
 		 if(dev)
 		{
-			
+
 			platform_dev =dev_to_platformdev(dev) ;
 			amlog_mask_level(LOG_MASK_DEVICE,LOG_LEVEL_LOW,"got platform resource\n");
-#if 0			
+#if 0
 			res=platform_get_resource(platform_dev,IORESOURCE_MEM,num);//something special.
 #else
 			res = &memobj;
@@ -62,13 +62,13 @@ static  output_dev_list_t aml_output_dev[LOGO_DEV_MAX];
 #endif
 			if(res)
 			{
-				amlog_mask_level(LOG_MASK_DEVICE,LOG_LEVEL_LOW,"resource: start=0x%x,end=0x%x\r\n",res->start,res->end);
+				amlog_mask_level(LOG_MASK_DEVICE,LOG_LEVEL_LOW,"resource: start=0x%x,end=0x%x\n",res->start,res->end);
 				logo->platform_res[i].mem_start=res->start;
 				logo->platform_res[i].mem_end=res->end;
 			}else{
 				amlog_mask_level(LOG_MASK_DEVICE,LOG_LEVEL_HIGH,"can't get device resource\n");
 			}
-			
+
 		}
 	}
 	return SUCCESS;
@@ -77,7 +77,7 @@ int  register_logo_output_dev(logo_output_dev_t* new_dev)
 {
 	output_dev_list_t  *pitem;
 	static int count=0;
-	
+
 	pitem=&aml_output_dev[count++];
 	pitem->dev=new_dev;
 	list_add_tail(&pitem->list,&output_dev_line);
@@ -100,22 +100,22 @@ int  setup_output_device(logo_object_t *plogo)
 	}
 	load_all_output_dev();
 	list_for_each_entry(pitem,&output_dev_line,list){
-		if(pitem->dev->op.init(plogo)==OUTPUT_DEV_FOUND)	
+		if(pitem->dev->op.init(plogo)==OUTPUT_DEV_FOUND)
 		{
 			found=1;
 			amlog_mask_level(LOG_MASK_DEVICE,LOG_LEVEL_LOW,"output device setup OK,logo dev index:0x%d\n",plogo->dev->idx);
-			return  SUCCESS; 
+			return  SUCCESS;
 		}
 	}
 	return -OUTPUT_DEV_SETUP_FAIL;
 }
- 
+
 int  unregister_logo_output_dev(void)
 {
 	output_dev_list_t  *pitem,*tmp;
 
 	list_for_each_entry_safe(pitem,tmp,&output_dev_line,list){
-		if(pitem)  
+		if(pitem)
 		{
 			pitem->dev->op.deinit();
 			list_del(&pitem->list );

@@ -290,7 +290,7 @@ static int cec_ping_logic_addr(int cnt)
 		mdelay(1);
 		if(i++>cec_wait_for_ack_cnt){
 			printk("\n cec ctrl err");
-    		return false;
+		return false;
 		}
 	}
 
@@ -584,7 +584,7 @@ int hdmirx_cec_rx_monitor(void)
 #endif
 #if CEC_VENDOR_SPECIFIC_FUNC_SUPPORT
 	case E_MSG_DEVICE_VENDOR_ID:
-    	//do nothing : any other interested device may store the vendor ID of the device
+	//do nothing : any other interested device may store the vendor ID of the device
 		if((queue.msg[queue.head].msg_len!=5)&&(cec_log&(1<<0))){
 			printk("\n E_MSG_VS_DEVICE_VENDOR_ID--len error");
 			break;
@@ -709,10 +709,10 @@ void CEC_Config_LogicAddress(int addr)
 	if(addr >= 8){
 		hdmirx_wr_dwc(0x1f18,1<<(addr-8));
 		hdmirx_wr_dwc(0x1f14,0);
-  	}else{
-  		hdmirx_wr_dwc(0x1f14,1<<addr);
+	}else{
+		hdmirx_wr_dwc(0x1f14,1<<addr);
 		hdmirx_wr_dwc(0x1f18,0);
-  	}
+	}
 
 }
 
@@ -815,4 +815,3 @@ MODULE_PARM_DESC(cec_ctrl_wait_times, "\n cec_ctrl_wait_times \n");
 module_param(cec_ctrl_wait_times, int, 0664);
 
 #endif
-

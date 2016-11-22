@@ -53,7 +53,7 @@
 #define COMMMAND1_OPMODE_MASK		(7 << COMMMAND1_OPMODE_SHIFT)
 #define COMMMAND1_OPMODE_POWER_DOWN	0
 #define COMMMAND1_OPMODE_ALS_ONCE	1
-#define COMMMAND1_OPMODE_ALS_CONTINUOUS   5 
+#define COMMMAND1_OPMODE_ALS_CONTINUOUS   5
 
 #define ISL29023_REG_ADD_COMMANDII	0x01
 #define COMMANDII_RESOLUTION_SHIFT	2
@@ -97,7 +97,7 @@ struct isl29023_chip {
 #endif
 };
 
-static struct isl29023_chip *the_data_isl29023 = NULL; 
+static struct isl29023_chip *the_data_isl29023 = NULL;
 
 
 #define CONFIG_STK_ALS_CHANGE_THRESHOLD	 20
@@ -353,7 +353,7 @@ static int isl29023_chip_init(struct i2c_client *client)
 		dev_err(&client->dev, "Init of isl29023 fails\n");
 		return -ENODEV;
 	}
-	
+
 	return 0;
 }
 
@@ -361,33 +361,33 @@ static int isl29023_chip_init(struct i2c_client *client)
 static void isl29023_early_suspend(struct early_suspend *handler)
 {
 	/*int ret;
-	
+
 	LTR558_DEBUG("%s\n", __func__);
- 
- 	//ret=ltr558_ps_disable(); 
+
+	//ret=ltr558_ps_disable();
 	if(1 == als_active_ltr558)
 	{
-  		ret = ltr558_als_disable(); 
+		ret = ltr558_als_disable();
 	}*/
 	//enable_als(0);
 	isl29023_disable();
-	
+
 }
 
 
 static void isl29023_early_resume(struct early_suspend *handler)
-{	
-	
- /*int ret; 
- //ret = ltr558_devinit(); 
+{
+
+ /*int ret;
+ //ret = ltr558_devinit();
  LTR558_DEBUG("%s\n", __func__);
- // ret = ltr558_ps_enable(PS_RANGE1); 
- 
- // Enable ALS to Full Range at startup 
-  
+ // ret = ltr558_ps_enable(PS_RANGE1);
+
+ // Enable ALS to Full Range at startup
+
  //ret = ltr558_als_enable(ALS_RANGE1_320);
  if(1 == als_active_ltr558)
- 	ltr558_als_enable(als_gainrange_ltr558);
+	ltr558_als_enable(als_gainrange_ltr558);
  */
     //enable_als(1);
 }
@@ -433,7 +433,7 @@ static int isl29023_probe(struct i2c_client *client,
 
 
 	input_dev = input_allocate_device();
-	if (!input_dev) 
+	if (!input_dev)
 	{
 		ret = -ENOMEM;
 		goto exit_input_device_alloc_failed;
@@ -446,12 +446,12 @@ static int isl29023_probe(struct i2c_client *client,
 	input_dev->id.vendor = 0x0001;
 	input_dev->id.product = 0x0001;
 	input_dev->id.version = 0x0010;
-	
-	__set_bit(EV_ABS, input_dev->evbit);	
+
+	__set_bit(EV_ABS, input_dev->evbit);
 
 	//for lightsensor
 	input_set_abs_params(input_dev, ABS_MISC, 0, 100001, 0, 0);
-	
+
 	ret = input_register_device(input_dev);
 	if (ret < 0)
 	{
@@ -508,7 +508,7 @@ static int isl29023_remove(struct i2c_client *client)
 		kfree(the_data_isl29023);
 		the_data_isl29023 = 0;
 	}
-	
+
 	kfree(chip);
 	return 0;
 }
@@ -534,7 +534,7 @@ static struct i2c_driver isl29023_driver = {
 static int __init isl29023_init(void)
 {
 	return i2c_add_driver(&isl29023_driver);
-	
+
 }
 
 static void __exit isl29023_exit(void)

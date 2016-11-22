@@ -1,7 +1,7 @@
 #include <linux/kernel.h>
 #include <linux/i2c.h>
 #include <linux/delay.h>
-#include "aml_demod.h"
+#include <linux/dvb/aml_demod.h>
 #include "demod_func.h"
 
 // basic functions
@@ -433,17 +433,16 @@ int am_demod_i2c_xfer(struct aml_demod_i2c *adap, struct i2c_msg msgs[], int num
     //printk("adap->scl_oe[%x], adap->i2c_priv[%p], adap->i2c_id[%x]\n", adap->scl_oe, adap->i2c_priv, adap->i2c_id);
     if(adap->scl_oe)
     {
-    	ret = aml_i2c_sw_bit_xfer(adap, msgs, num);
+	ret = aml_i2c_sw_bit_xfer(adap, msgs, num);
     }
     else
     {
-    	if(adap->i2c_priv){
+	if(adap->i2c_priv){
 		//printk("msgs[%p], num[%x]\n", msgs, num);
 		ret = i2c_transfer((struct i2c_adapter *)adap->i2c_priv, msgs, num);
 	} else {
-    		printk("i2c error, no valid i2c\n");
-    	}
+		printk("i2c error, no valid i2c\n");
+	}
     }
     return ret;
 }
-

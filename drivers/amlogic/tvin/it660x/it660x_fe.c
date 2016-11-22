@@ -73,23 +73,23 @@ static void it660xin_open(struct tvin_frontend_s *fe, enum tvin_port_e port)
                                         (1 << 7)     | // pm_gpioA_lcd_in_clk
                                         (1 << 6)));     // pm_gpioA_lcd_in
 
-        WRITE_MPEG_REG_BITS(VDIN_ASFIFO_CTRL2, 0x39, 2, 6); 
+        WRITE_MPEG_REG_BITS(VDIN_ASFIFO_CTRL2, 0x39, 2, 6);
 
 }
 static void it660xin_close(struct tvin_frontend_s *fe)
 {
         it660xin_t *devp = container_of(fe,it660xin_t,frontend);
-                
+
 }
 static void it660xin_start(struct tvin_frontend_s *fe, enum tvin_sig_fmt_e fmt)
 {
         it660xin_t *devp = container_of(fe,it660xin_t,frontend);
-                
+
 }
 static void it660xin_stop(struct tvin_frontend_s *fe, enum tvin_port_e port)
 {
         it660xin_t *devp = container_of(fe,it660xin_t,frontend);
-                
+
 }
 static int it660xin_isr(struct tvin_frontend_s *fe, unsigned int hcnt64)
 {
@@ -103,7 +103,7 @@ static struct tvin_decoder_ops_s it660xin_dec_ops = {
         .close = it660xin_close,
         .start  = it660xin_start,
         .stop  = it660xin_stop,
-        .decode_isr =it660xin_isr, 
+        .decode_isr =it660xin_isr,
 };
 
 static void it660xin_get_sig_propery(struct tvin_frontend_s *fe, struct tvin_sig_property_s *prop)
@@ -112,7 +112,7 @@ static void it660xin_get_sig_propery(struct tvin_frontend_s *fe, struct tvin_sig
         prop->color_format = TVIN_RGB444;
         if(devp->parm.h_active >= 1440)
                 prop->decimation_ratio = 1;
-        else 
+        else
                 prop->decimation_ratio = 0;
 }
 static struct tvin_state_machine_ops_s it660xin_sm_ops = {
@@ -139,7 +139,7 @@ static int it660xin_probe(struct platform_device *pdev)
         ret = -1;
     }
     platform_set_drvdata(pdev,it660_devp);
-    
+
     printk("[it660..] it660xin probe end.\n");
     return ret;
 }
@@ -244,7 +244,7 @@ void config_dvin (unsigned long hs_pol_inv,             // Invert HS polarity, f
 {
     unsigned long data32;
 
-    printk("[it660..]%s: %lu %lu %lu %lu.\n",  __func__, active_start_pix_fe, active_start_line_fe,  line_width, field_height);  
+    printk("[it660..]%s: %lu %lu %lu %lu.\n",  __func__, active_start_pix_fe, active_start_line_fe,  line_width, field_height);
     // Program reg DVIN_CTRL_STAT: disable DVIN
     WRITE_MPEG_REG(DVIN_CTRL_STAT, 0);
 
@@ -260,7 +260,7 @@ void config_dvin (unsigned long hs_pol_inv,             // Invert HS polarity, f
     data32 |= (dvin_clk_inv     & 0x1)  << 9;
     data32 |= (vs_hs_tim_ctrl   & 0x3)  << 10;
     WRITE_MPEG_REG(DVIN_FRONT_END_CTRL, data32);
-    
+
     // Program reg DVIN_HS_LEAD_VS_ODD
     data32 = 0;
     data32 |= (hs_lead_vs_odd_min & 0xfff) << 0;
@@ -272,25 +272,22 @@ void config_dvin (unsigned long hs_pol_inv,             // Invert HS polarity, f
     data32 |= (active_start_pix_fe & 0xfff) << 0;
     data32 |= (active_start_pix_fo & 0xfff) << 16;
     WRITE_MPEG_REG(DVIN_ACTIVE_START_PIX, data32);
-    
+
     // Program reg DVIN_ACTIVE_START_LINE
     data32 = 0;
     data32 |= (active_start_line_fe & 0xfff) << 0;
     data32 |= (active_start_line_fo & 0xfff) << 16;
     WRITE_MPEG_REG(DVIN_ACTIVE_START_LINE, data32);
-    
+
     // Program reg DVIN_DISPLAY_SIZE
     data32 = 0;
     data32 |= ((line_width-1)   & 0xfff) << 0;
     data32 |= ((field_height-1) & 0xfff) << 16;
     WRITE_MPEG_REG(DVIN_DISPLAY_SIZE, data32);
-    
+
     // Program reg DVIN_CTRL_STAT, and enable DVIN
     data32 = 0;
     data32 |= 1                     << 0;
     data32 |= (data_comp_map & 0x7) << 1;
     WRITE_MPEG_REG(DVIN_CTRL_STAT, data32);
 } /* config_dvin */
-
-
-

@@ -13,15 +13,15 @@ int mspro_media_type_identification(MS_MSPRO_Card_Info_t *ms_mspro_info)
 
 	if (ms_mspro_buf->mspro.regs.Type_Reg != 0x01)
 		return MS_MSPRO_ERROR_MEDIA_TYPE;
-		
+
 	if (ms_mspro_buf->mspro.regs.Category_Reg != 0x00)
 		return MS_MSPRO_ERROR_MEDIA_TYPE;
-		
+
 	if (ms_mspro_buf->mspro.regs.Class_Reg == 0x00)
 	{
 		ms_mspro_info->write_protected_flag = ((MSPRO_Status_Register_t*)&ms_mspro_buf->mspro.regs.Status_Reg)->WP;
 		ms_mspro_info->card_type = CARD_TYPE_MSPRO;
-		
+
 		return MS_MSPRO_NO_ERROR;
 	}
 	else
@@ -30,7 +30,7 @@ int mspro_media_type_identification(MS_MSPRO_Card_Info_t *ms_mspro_info)
 		{
 			ms_mspro_info->read_only_flag = 0x01;
 			ms_mspro_info->card_type = CARD_TYPE_MSPRO;
-			
+
 			return MS_MSPRO_NO_ERROR;
 		}
 		else
@@ -45,28 +45,28 @@ int mspro_cpu_startup(MS_MSPRO_Card_Info_t *ms_mspro_info)
 	MS_MSPRO_TPC_Packet_t packet;
 	MS_MSPRO_INT_Register_t * pIntReg;
 	MS_MSPRO_Card_Buffer_t *ms_mspro_buf = (MS_MSPRO_Card_Buffer_t *)(ms_mspro_info->ms_mspro_buf);
-	
+
 	int error;
-	
+
 	int retry_cnt = 0;
 	do
 	{
 		ms_delay_ms(10);
-		
+
 		retry_cnt++;
-		
+
 		packet.TPC_cmd.value = TPC_MS_MSPRO_GET_INT;        //SET_CMD
 		packet.param.in.count = 1;
 		packet.param.in.buffer = &ms_mspro_buf->mspro.regs.INT_Reg;
 		error = ms_mspro_packet_communicate(ms_mspro_info, &packet);
 		if(error)
 			continue;
-			
+
 		//check command status
 		pIntReg = (MS_MSPRO_INT_Register_t*)&ms_mspro_buf->mspro.regs.INT_Reg;
 		if(!pIntReg->CED)
 			continue;
-			
+
 		packet.TPC_cmd.value = TPC_MS_MSPRO_GET_INT;        //SET_CMD
 		packet.param.in.count = 1;
 		packet.param.in.buffer = &ms_mspro_buf->mspro.regs.INT_Reg;
@@ -91,9 +91,9 @@ int mspro_cpu_startup(MS_MSPRO_Card_Info_t *ms_mspro_info)
 		{
 			break;
 		}
-		
+
 	} while(retry_cnt < MSPRO_STARTUP_TIMEOUT);
-	
+
 	if(retry_cnt >= MSPRO_STARTUP_TIMEOUT)
 		return MSPRO_ERROR_STARTUP_TIMEOUT;
 		else
@@ -104,27 +104,27 @@ int mspro_confirm_attribute_information(MS_MSPRO_Card_Info_t *ms_mspro_info, uns
 {
 	int error,i;
 	MS_MSPRO_Card_Buffer_t *ms_mspro_buf = (MS_MSPRO_Card_Buffer_t *)(ms_mspro_info->ms_mspro_buf);
-	
+
 	unsigned char entry_cnt = 0, entry_index = 0;
 
 	// read attribute information
 	error = mspro_read_attribute_sector(ms_mspro_info, 0, 1, data_buf);
 	if(error)
 		return error;
-		
+
 	// save attribute information area
 	memcpy(&ms_mspro_buf->mspro.attribute_information_area, data_buf, MSRPO_ATTRIBUTE_INFOMATION_SIZE);
 	ms_mspro_endian_convert(ENDIAN_TYPE_WORD, &ms_mspro_buf->mspro.attribute_information_area.Signature_Code);
 	ms_mspro_endian_convert(ENDIAN_TYPE_WORD, &ms_mspro_buf->mspro.attribute_information_area.Version_Information);
-	
+
 	if(ms_mspro_buf->mspro.attribute_information_area.Signature_Code != 0xA5C3)
 		return MSPRO_ERROR_MEDIA_BREAKDOWN;
-	
+
 	// check device information entry count
 	entry_cnt = ms_mspro_buf->mspro.attribute_information_area.Device_Information_Entry_Count;
 	if((entry_cnt < 1) || (entry_cnt > MSRPO_MAX_DEVICE_INFORMATION_ENTRY))
 		return MSPRO_ERROR_MEDIA_BREAKDOWN;
-	
+
 	// check device information entry
 	memcpy(&ms_mspro_buf->mspro.device_information_entry, data_buf+MSRPO_ATTRIBUTE_INFOMATION_SIZE, entry_cnt*MSRPO_DEVICE_INFORMATION_ENTRY_SIZE);
 	error = MSPRO_ERROR_MEDIA_BREAKDOWN;
@@ -132,50 +132,50 @@ int mspro_confirm_attribute_information(MS_MSPRO_Card_Info_t *ms_mspro_info, uns
 	{
 		ms_mspro_endian_convert(ENDIAN_TYPE_DWORD, &ms_mspro_buf->mspro.device_information_entry[i].Address);
 		ms_mspro_endian_convert(ENDIAN_TYPE_DWORD, &ms_mspro_buf->mspro.device_information_entry[i].Size);
-		
+
 		if(ms_mspro_buf->mspro.device_information_entry[i].Device_Information_ID != MSPRO_DEVID_SYSTEM_INFORMATION)
 			continue;
-			
+
 		if(ms_mspro_buf->mspro.device_information_entry[i].Size != MSPRO_SYSTEM_INFORMATION_SIZE)
 			break;
-			
+
 		if(ms_mspro_buf->mspro.device_information_entry[i].Address < 0x1A0)
 			break;
-		
+
 		if((ms_mspro_buf->mspro.device_information_entry[i].Address + ms_mspro_buf->mspro.device_information_entry[i].Size) > 0x8000)
 			break;
-		
+
 		entry_index = i;
 		error = MS_MSPRO_NO_ERROR;
 	}
 
 	if(error)
 		return error;
-	
+
 	ms_mspro_buf->mspro.system_entry_index = entry_index;
-	
+
 	return MS_MSPRO_NO_ERROR;
 }
 
 int mspro_confirm_system_information(MS_MSPRO_Card_Info_t *ms_mspro_info, unsigned char * data_buf)
 {
 	int error;
-	
+
 	unsigned short sector_addr, data_offset, data_size;
 	MS_MSPRO_Card_Buffer_t *ms_mspro_buf = (MS_MSPRO_Card_Buffer_t *)(ms_mspro_info->ms_mspro_buf);
-	
-	
+
+
 	sector_addr = ms_mspro_buf->mspro.device_information_entry[ms_mspro_buf->mspro.system_entry_index].Address / MSPRO_SECTOR_SIZE;
 	data_offset = ms_mspro_buf->mspro.device_information_entry[ms_mspro_buf->mspro.system_entry_index].Address % MSPRO_SECTOR_SIZE;
 	data_size = ms_mspro_buf->mspro.device_information_entry[ms_mspro_buf->mspro.system_entry_index].Size;
-	
+
 	// read system information
 	error = mspro_read_attribute_sector(ms_mspro_info, sector_addr, 1, data_buf);
 	if(error)
 		return error;
 	// save system information
 	memcpy(&ms_mspro_buf->mspro.system_information, data_buf+data_offset, MSPRO_SECTOR_SIZE-data_offset);
-	
+
 	if(data_size > (MSPRO_SECTOR_SIZE-data_offset))
 	{
 		// read system information
@@ -186,7 +186,7 @@ int mspro_confirm_system_information(MS_MSPRO_Card_Info_t *ms_mspro_info, unsign
 		data_offset = data_size-(MSPRO_SECTOR_SIZE-data_offset)-1;
 		memcpy((unsigned char *)&ms_mspro_buf->mspro.system_information+data_offset, data_buf, data_size-(MSPRO_SECTOR_SIZE-data_offset));
 	}
-	
+
 	ms_mspro_endian_convert(ENDIAN_TYPE_WORD, &ms_mspro_buf->mspro.system_information.Block_Size);
 	ms_mspro_endian_convert(ENDIAN_TYPE_WORD, &ms_mspro_buf->mspro.system_information.Total_Blocks);
 	ms_mspro_endian_convert(ENDIAN_TYPE_WORD, &ms_mspro_buf->mspro.system_information.User_Area_Blocks);
@@ -200,11 +200,11 @@ int mspro_confirm_system_information(MS_MSPRO_Card_Info_t *ms_mspro_info, unsign
 	ms_mspro_endian_convert(ENDIAN_TYPE_WORD, &ms_mspro_buf->mspro.system_information.Start_Sector);
 	ms_mspro_endian_convert(ENDIAN_TYPE_WORD, &ms_mspro_buf->mspro.system_information.Unit_Size);
 	ms_mspro_endian_convert(ENDIAN_TYPE_WORD, &ms_mspro_buf->mspro.system_information.Controller_Code);
-	
+
 	// check system information
 	if(ms_mspro_buf->mspro.system_information.Memory_Stick_Class != 2)
 		return MSPRO_ERROR_MEDIA_BREAKDOWN;
-	
+
 	if(ms_mspro_buf->mspro.system_information.Device_Type == 0)
 	{
 		if(ms_mspro_info->read_only_flag)
@@ -222,12 +222,12 @@ int mspro_confirm_system_information(MS_MSPRO_Card_Info_t *ms_mspro_info, unsign
 		error = MSPRO_ERROR_MEDIA_BREAKDOWN;
 		return error;
 	}
-	
+
 	if((ms_mspro_buf->mspro.system_information.Memory_Stick_Sub_Class & 0xC0) != 0x00)
 	{
 		ms_mspro_info->write_protected_flag = 1;
 	}
-	
+
 	return MS_MSPRO_NO_ERROR;
 }
 
@@ -244,11 +244,11 @@ int mspro_read_user_sector(MS_MSPRO_Card_Info_t *ms_mspro_info, unsigned long se
 	MS_MSPRO_Card_Buffer_t *ms_mspro_buf = (MS_MSPRO_Card_Buffer_t *)(ms_mspro_info->ms_mspro_buf);
 
 	int error;
-	
+
 	unsigned char* buf = ms_mspro_info->data_buf;
-		
+
 	mass_counter=0;
-	
+
 	if(sector_count == 0)
 		return MS_MSPRO_ERROR_PARAMETER;
 
@@ -289,7 +289,7 @@ int mspro_read_user_sector(MS_MSPRO_Card_Info_t *ms_mspro_info, unsigned long se
 		if(error)
 			return error;
 	}
-#endif 	
+#endif
 #ifdef MS_MSPRO_SW_CONTROL
 	if(MS_WORK_MODE == CARD_SW_MODE)
 	{
@@ -314,7 +314,7 @@ int mspro_read_user_sector(MS_MSPRO_Card_Info_t *ms_mspro_info, unsigned long se
 		error = ms_mspro_wait_int(ms_mspro_info, &packet);
 		if(error)
 			return error;
-			
+
 		//get INT register
 		if(ms_mspro_info->interface_mode == INTERFACE_PARALLEL)
 		{
@@ -329,7 +329,7 @@ int mspro_read_user_sector(MS_MSPRO_Card_Info_t *ms_mspro_info, unsigned long se
 			if(error)
 				return error;
 		}
-		
+
 		//check command status
 		pIntReg = (MS_MSPRO_INT_Register_t*)&ms_mspro_buf->mspro.regs.INT_Reg;
 		if(pIntReg->CMDNK)
@@ -342,7 +342,7 @@ int mspro_read_user_sector(MS_MSPRO_Card_Info_t *ms_mspro_info, unsigned long se
 		}
 		if(pIntReg->CED)
 		{
-			if(mass_counter == 0) 
+			if(mass_counter == 0)
 			{
 			    return MS_MSPRO_ERROR_NO_READ;
 			}
@@ -356,7 +356,7 @@ int mspro_read_user_sector(MS_MSPRO_Card_Info_t *ms_mspro_info, unsigned long se
 		{
 			mass_counter = 0;
 			return MS_MSPRO_ERROR_TIMEOUT;
-		}	
+		}
 		packet.TPC_cmd.value = TPC_MSPRO_READ_LONG_DATA;    //READ_LONG_DATA
 		packet.param.in.count = MSPRO_SECTOR_SIZE;      //READ_ADRS,READ_SIZE,WRITE_ADRS,WRITE_SIZE
 		packet.param.in.buffer = data_buf+data_offset;
@@ -402,9 +402,9 @@ int mspro_write_user_sector(MS_MSPRO_Card_Info_t *ms_mspro_info, unsigned long s
 	MS_MSPRO_INT_Register_t * pIntReg;
 	unsigned long data_offset = 0;
 	MS_MSPRO_Card_Buffer_t *ms_mspro_buf = (MS_MSPRO_Card_Buffer_t *)(ms_mspro_info->ms_mspro_buf);
-	
+
 	int error;
-	
+
 	unsigned char* buf = ms_mspro_info->data_buf;
 
 	mass_counter=0;
@@ -468,14 +468,14 @@ int mspro_write_user_sector(MS_MSPRO_Card_Info_t *ms_mspro_info, unsigned long s
 		if(error)
 			return error;
 	}
-#endif 
+#endif
 
 	while(1)
 	{
 		error = ms_mspro_wait_int(ms_mspro_info, &packet);
 		if(error)
 			return error;
-			
+
 		//get INT register
 		if(ms_mspro_info->interface_mode == INTERFACE_PARALLEL)
 		{
@@ -490,7 +490,7 @@ int mspro_write_user_sector(MS_MSPRO_Card_Info_t *ms_mspro_info, unsigned long s
 			if(error)
 				return error;
 	}
-		
+
 		//check command status
 		pIntReg = (MS_MSPRO_INT_Register_t*)&ms_mspro_buf->mspro.regs.INT_Reg;
 		if(pIntReg->CED && pIntReg->ERR && pIntReg->CMDNK)
@@ -509,7 +509,7 @@ int mspro_write_user_sector(MS_MSPRO_Card_Info_t *ms_mspro_info, unsigned long s
 		{
 			break;
 		}
-		
+
 		packet.TPC_cmd.value = TPC_MSPRO_WRITE_LONG_DATA;   //WRITE_LONG_DATA
 		packet.param.out.count = MSPRO_SECTOR_SIZE;     //READ_ADRS,READ_SIZE,WRITE_ADRS,WRITE_SIZE
 		packet.param.out.buffer = data_buf+data_offset;
@@ -534,12 +534,12 @@ int mspro_erase_user_sector(MS_MSPRO_Card_Info_t *ms_mspro_info, unsigned long s
 	MS_MSPRO_Card_Buffer_t *ms_mspro_buf = (MS_MSPRO_Card_Buffer_t *)(ms_mspro_info->ms_mspro_buf);
 
 	int error;
-	
+
 	unsigned char* buf = ms_mspro_info->data_buf;
 	unsigned char* report_buf = ms_mspro_info->data_buf;
-	
+
 	memset(report_buf, 0, MSPRO_REPORT_SIZE);
-		
+
 	if(sector_count == 0)
 		return MS_MSPRO_ERROR_PARAMETER;
 
@@ -547,7 +547,7 @@ int mspro_erase_user_sector(MS_MSPRO_Card_Info_t *ms_mspro_info, unsigned long s
 	if(MS_WORK_MODE == CARD_HW_MODE)
 	{
 		if((ms_mspro_buf->mspro.reg_set.write_addr != 0x11) ||
-	   	   (ms_mspro_buf->mspro.reg_set.write_size != 0x06))
+		   (ms_mspro_buf->mspro.reg_set.write_size != 0x06))
 		{
 			packet.TPC_cmd.value = TPC_MS_MSPRO_SET_RW_REG_ADRS;    //WRITE_REG: Status, Type, Catagory, Class
 			packet.param.out.count = 4;             //READ_ADRS,READ_SIZE,WRITE_ADRS,WRITE_SIZE
@@ -558,13 +558,13 @@ int mspro_erase_user_sector(MS_MSPRO_Card_Info_t *ms_mspro_info, unsigned long s
 			if(error)
 				return error;
 		}
-	}	   	  
+	}
 #endif
 #ifdef MS_MSPRO_SW_CONTROL
 	if(MS_WORK_MODE == CARD_SW_MODE)
 	{
 		if((ms_mspro_buf->mspro.reg_set.write_addr != 0x11) ||
-	   	   (ms_mspro_buf->mspro.reg_set.write_size != 0x07))
+		   (ms_mspro_buf->mspro.reg_set.write_size != 0x07))
 		{
 			packet.TPC_cmd.value = TPC_MS_MSPRO_SET_RW_REG_ADRS;    //WRITE_REG: Status, Type, Catagory, Class
 			packet.param.out.count = 4;             //READ_ADRS,READ_SIZE,WRITE_ADRS,WRITE_SIZE
@@ -610,7 +610,7 @@ int mspro_erase_user_sector(MS_MSPRO_Card_Info_t *ms_mspro_info, unsigned long s
 		error = ms_mspro_packet_communicate(ms_mspro_info, &packet);
 		if(error)
 			return error;
-	
+
 		packet.TPC_cmd.value = TPC_MS_MSPRO_WRITE_REG;    //WRITE_REG: Status, Type, Catagory, Class
 		packet.param.out.count = 1;             //READ_ADRS,READ_SIZE,WRITE_ADRS,WRITE_SIZE
 		ms_mspro_buf->mspro.regs.parameters.data.TPC_Pamameter_Reg = MSPRO_REPORT_TYPE;
@@ -635,7 +635,7 @@ int mspro_erase_user_sector(MS_MSPRO_Card_Info_t *ms_mspro_info, unsigned long s
 		error = ms_mspro_wait_int(ms_mspro_info, &packet);
 		if(error)
 			return error;
-			
+
 		//get INT register
 		if(ms_mspro_info->interface_mode == INTERFACE_PARALLEL)
 		{
@@ -650,7 +650,7 @@ int mspro_erase_user_sector(MS_MSPRO_Card_Info_t *ms_mspro_info, unsigned long s
 			if(error)
 				return error;
 		}
-		
+
 		//check command status
 		pIntReg = (MS_MSPRO_INT_Register_t*)&ms_mspro_buf->mspro.regs.INT_Reg;
 		if(pIntReg->CMDNK)
@@ -665,7 +665,7 @@ int mspro_erase_user_sector(MS_MSPRO_Card_Info_t *ms_mspro_info, unsigned long s
 		{
 			break;
 		}
-		
+
 		packet.TPC_cmd.value = TPC_MSPRO_READ_SHORT_DATA;   //READ_SHORT_DATA
 		packet.param.in.count = MSPRO_REPORT_SIZE;      //READ_ADRS,READ_SIZE,WRITE_ADRS,WRITE_SIZE
 		packet.param.in.buffer = report_buf;
@@ -676,7 +676,7 @@ int mspro_erase_user_sector(MS_MSPRO_Card_Info_t *ms_mspro_info, unsigned long s
 		all_sectorts = (report_buf[0]<<24) | (report_buf[1]<<16) | (report_buf[2]<<8) | report_buf[3];
 		processed_sectors = (report_buf[4]<<24) | (report_buf[5]<<16) | (report_buf[6]<<8) | report_buf[7];
 	}
-	
+
 	if(all_sectorts != processed_sectors)
 		return MS_MSPRO_ERROR_FLASH_ERASE;
 	else
@@ -687,7 +687,7 @@ int mspro_read_attribute_sector(MS_MSPRO_Card_Info_t *ms_mspro_info, unsigned lo
 {
 	MS_MSPRO_INT_Register_t * pIntReg;
 	MS_MSPRO_Card_Buffer_t *ms_mspro_buf = (MS_MSPRO_Card_Buffer_t *)(ms_mspro_info->ms_mspro_buf);
-	
+
 #ifdef MS_MSPRO_HW_CONTROL
 	if(MS_WORK_MODE == CARD_HW_MODE)
 	{
@@ -709,7 +709,7 @@ int mspro_read_attribute_sector(MS_MSPRO_Card_Info_t *ms_mspro_info, unsigned lo
 			sector_count -= mass_counter;
 			data_buf += MSPRO_SECTOR_SIZE*mass_counter;
 			error = mspro_read_user_sector(ms_mspro_info, sector_addr, sector_count, data_buf);
-		}	
+		}
 		read_sector_type=0;
 		return error;
 	}
@@ -718,14 +718,14 @@ int mspro_read_attribute_sector(MS_MSPRO_Card_Info_t *ms_mspro_info, unsigned lo
 #ifdef MS_MSPRO_SW_CONTROL
 	if(MS_WORK_MODE == CARD_SW_MODE)
 	{
-		
+
 	MS_MSPRO_TPC_Packet_t packet;
 	unsigned long data_offset = 0;
-	
+
 	int error;
-	
+
 	unsigned char* buf = ms_mspro_info->data_buf;
-		
+
 	if(sector_count == 0)
 		return MS_MSPRO_ERROR_PARAMETER;
 
@@ -761,7 +761,7 @@ int mspro_read_attribute_sector(MS_MSPRO_Card_Info_t *ms_mspro_info, unsigned lo
 		error = ms_mspro_wait_int(ms_mspro_info, &packet);
 		if(error)
 			return error;
-			
+
 		//get INT register
 		if(ms_mspro_info->interface_mode == INTERFACE_PARALLEL)
 		{
@@ -776,7 +776,7 @@ int mspro_read_attribute_sector(MS_MSPRO_Card_Info_t *ms_mspro_info, unsigned lo
 			if(error)
 				return error;
 		}
-		
+
 		//check command status
 		pIntReg = (MS_MSPRO_INT_Register_t*)&ms_mspro_buf->mspro.regs.INT_Reg;
 		if(pIntReg->CMDNK)
@@ -791,7 +791,7 @@ int mspro_read_attribute_sector(MS_MSPRO_Card_Info_t *ms_mspro_info, unsigned lo
 		{
 			break;
 		}
-		
+
 		packet.TPC_cmd.value = TPC_MSPRO_READ_LONG_DATA;    //READ_LONG_DATA
 		packet.param.in.count = MSPRO_SECTOR_SIZE;      //READ_ADRS,READ_SIZE,WRITE_ADRS,WRITE_SIZE
 		packet.param.in.buffer = data_buf+data_offset;
@@ -803,7 +803,7 @@ int mspro_read_attribute_sector(MS_MSPRO_Card_Info_t *ms_mspro_info, unsigned lo
 	}
 
 	return MS_MSPRO_NO_ERROR;
-	
+
 	}
 #endif
 	return 0;

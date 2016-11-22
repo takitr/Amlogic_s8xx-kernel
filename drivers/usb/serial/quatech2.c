@@ -15,6 +15,7 @@
 
 #include <asm/unaligned.h>
 #include <linux/errno.h>
+#include <linux/init.h>
 #include <linux/slab.h>
 #include <linux/tty.h>
 #include <linux/tty_driver.h>
@@ -140,7 +141,6 @@ static void qt2_release(struct usb_serial *serial)
 
 	serial_priv = usb_get_serial_data(serial);
 
-	usb_kill_urb(serial_priv->read_urb);
 	usb_free_urb(serial_priv->read_urb);
 	kfree(serial_priv);
 }

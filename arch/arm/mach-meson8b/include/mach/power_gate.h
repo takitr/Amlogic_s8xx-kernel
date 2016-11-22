@@ -26,7 +26,7 @@
 
 #define IS_CLK_GATE_ON(_MOD) (READ_CBUS_REG(GCLK_REG_##_MOD) & (GCLK_MASK_##_MOD))
 #define GATE_INIT(_MOD) GCLK_ref[GCLK_IDX_##_MOD] = IS_CLK_GATE_ON(_MOD)?1:0
-	
+
 extern spinlock_t gate_lock;
 
 #define CLK_GATE_ON(_MOD) \
@@ -36,7 +36,7 @@ extern spinlock_t gate_lock;
 		__CLK_GATE_ON(_MOD); \
 		spin_unlock_irqrestore(&gate_lock, flags); \
 	}while(0)
-	
+
 #define CLK_GATE_OFF(_MOD) \
 	do{                     \
 		unsigned long flags; \
@@ -353,7 +353,7 @@ extern spinlock_t gate_lock;
 #define GCLK_REG_RESERVED1_4      (HHI_GCLK_MPEG1)
 #define GCLK_MASK_RESERVED1_4      (1<<17)
 
-//NEW ADD 
+//NEW ADD
 #define GCLK_IDX_RESERVED1_5         50
 #define GCLK_NAME_RESERVED1_5      "RESERVED1_5"
 #define GCLK_DEV_RESERVED1_5      "CLKGATE_RESERVED1_5"
@@ -402,7 +402,7 @@ extern spinlock_t gate_lock;
 #define GCLK_REG_HIU_PARSER_TOP      (HHI_GCLK_MPEG1)
 #define GCLK_MASK_HIU_PARSER_TOP      (1<<25)
 
-//NEW ADD 
+//NEW ADD
 #define GCLK_IDX_USB_GENERAL         58
 #define GCLK_NAME_USB_GENERAL      "USB_GENERAL"
 #define GCLK_DEV_USB_GENERAL      "CLKGATE_USB_GENERAL"

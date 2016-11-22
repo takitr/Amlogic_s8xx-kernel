@@ -176,7 +176,7 @@ static int st15xx_i2c_txdata(char *txdata, int length)
 		},
 	};
 
-   	//msleep(1);
+	//msleep(1);
 	ret = i2c_transfer(this_client->adapter, msg, 1);
 	if (ret < 0)
 		pr_err("%s i2c write error: %d\n", __func__, ret);
@@ -383,13 +383,13 @@ static int st15xx_read_data(void)
 			event->x1 = (s16)(buf[Touch_Point_Reg] & 0xF0)<<4 | (s16)buf[Touch_Point_Reg+1];
 			event->y1 = (s16)(buf[Touch_Point_Reg] & 0x0F)<<8 | (s16)buf[Touch_Point_Reg+2];
 			Cur_Touch_Point_Reg--;
-            		break;
+			break;
 		default:
 		    return -1;
 	}
 #else
     if (event->touch_point == 1) {
-    	event->x1 = (s16)(buf[3] & 0x0F)<<8 | (s16)buf[4];
+	event->x1 = (s16)(buf[3] & 0x0F)<<8 | (s16)buf[4];
 		event->y1 = (s16)(buf[5] & 0x0F)<<8 | (s16)buf[6];
     }
 #endif
@@ -582,7 +582,7 @@ function	:
 static irqreturn_t st15xx_ts_interrupt(int irq, void *dev_id)
 {
 	struct st15xx_ts_data *st15xx_ts = dev_id;
-    	disable_irq_nosync(this_client->irq);
+	disable_irq_nosync(this_client->irq);
 #if ST15XX_DEBUG
 	printk("enter irq(%d, %d)\n",irq, this_client->irq);
 #endif

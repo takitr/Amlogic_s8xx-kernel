@@ -64,7 +64,7 @@ static const char * bc_name[]={
 	"DCP (Charger)",
 	"CDP (PC with Charger)",
 };
-static void charger_detect_work(void *_vp)
+void charger_detect_work(void *_vp)
 {
 	dwc_otg_core_if_t * core_if = (dwc_otg_core_if_t *) _vp;
 	dwc_irqflags_t flags;
@@ -77,15 +77,14 @@ static void charger_detect_work(void *_vp)
 	if(core_if->session_valid){
 		/* Save status, turn on pull up */
 		core_if->dev_if->vbus_on = 1;
-//		if(core_if->dev_if->pull_up){
+		if(core_if->dev_if->pull_up){
 			dwc_otg_device_soft_connect(core_if);
-//		}
+		}
 	}else{
 		core_if->dev_if->vbus_on = 0;
 		/* Disable Pull up, defaultly */
-//		if(core_if->dev_if->pull_up){
+		if(core_if->dev_if->pull_up)
 			dwc_otg_device_soft_disconnect(core_if);
-//		}
 	}
 	DWC_SPINUNLOCK_IRQRESTORE(core_if->lock,flags);
 
@@ -94,19 +93,31 @@ static void charger_detect_work(void *_vp)
 			core_if->bc_mode = USB_BC_MODE_DISCONNECT;
 		}else{
 			one_loop = 100; // ms
-			delay = one_loop * 20; // MAX 2s
+			if (core_if->non_normal_usb_charger_detect_delay != 0){
+			   delay = core_if->non_normal_usb_charger_detect_delay; // MAX 20s,for non-normol usb charger detect
+			   core_if->non_normal_usb_charger_detect_delay = 0;
+			}
+			else
+				delay = one_loop * 20; // MAX 2s
 
 			while(delay > 0){
 				if(core_if->device_connected){
-					core_if->bc_mode = USB_BC_MODE_SDP;	// PC
+					if(!core_if->session_valid)  
+						core_if->bc_mode = USB_BC_MODE_DISCONNECT;  //check if USB power removed
+					else
+					  core_if->bc_mode = USB_BC_MODE_SDP;	// PC
 					break;
 				}
 				DWC_MSLEEP(one_loop);
 				delay -= one_loop;
 			}
 
-			if(delay <= 0)	// Time out
-				core_if->bc_mode = USB_BC_MODE_DCP;	// Charger
+			if(delay <= 0) {	// Time out
+				if(!core_if->session_valid)  
+						core_if->bc_mode = USB_BC_MODE_DISCONNECT;  //check if USB power removed
+				else
+				    core_if->bc_mode = USB_BC_MODE_DCP;	// Charger
+			}
 		}
 		DWC_PRINTF("Detected battery charger type: %s\n",bc_name[core_if->bc_mode]);
 		dwc_otg_charger_detect_notifier_call(core_if->bc_mode);
@@ -118,7 +129,7 @@ static void charger_detect_work(void *_vp)
 {
 	dwc_otg_core_if_t * core_if = (dwc_otg_core_if_t *) _vp;
 	dwc_irqflags_t flags;
-	
+
 	DWC_DEBUGPL(DBG_HCDV, "%s() %p\n", __func__, core_if);
 
 	/* At this point pull up should be disabled */
@@ -220,7 +231,7 @@ int32_t dwc_otg_handle_otg_intr(dwc_otg_core_if_t * core_if)
 				gotgctl.b.devhnpen = 1;
 				DWC_MODIFY_REG32(&global_regs->gotgctl, gotgctl.d32, 0);
 				if (core_if->test_mode == 6) {
-					DWC_WORKQ_SCHEDULE_DELAYED(core_if->wq_otg,	dwc_otg_initiate_srp, 
+					DWC_WORKQ_SCHEDULE_DELAYED(core_if->wq_otg,	dwc_otg_initiate_srp,
 								core_if, 3000, "initate SRP"); //manukz: old value was 50
 					core_if->test_mode = 0;
 				} else	if (core_if->adp_enable) {
@@ -237,7 +248,7 @@ int32_t dwc_otg_handle_otg_intr(dwc_otg_core_if_t * core_if)
 					gpwrdn.b.pmuactv = 1;
 					DWC_MODIFY_REG32(&core_if->core_global_regs->gpwrdn, 0, gpwrdn.d32);
 					dwc_otg_adp_sense_start(core_if);
-				} 
+				}
 			}
 		}
 		if (core_if->otg_ver == 0) {
@@ -436,7 +447,7 @@ host:
  * This function handles the Connector ID Status Change Interrupt.  It
  * reads the OTG Interrupt Register (GOTCTL) to determine whether this
  * is a Device to Host Mode transition or a Host Mode to Device
- * Transition. 
+ * Transition.
  *
  * This only occurs when the cable is connected/removed from the PHY
  * connector.
@@ -462,7 +473,7 @@ int32_t dwc_otg_handle_conn_id_status_change_intr(dwc_otg_core_if_t * core_if)
 	DWC_DEBUGPL(DBG_CIL,
 		    " ++Connector ID Status Change Interrupt++  (%s)\n",
 		    (dwc_otg_is_host_mode(core_if) ? "Host" : "Device"));
-	
+
 	DWC_SPINUNLOCK(core_if->lock);
 
 	/*
@@ -502,9 +513,12 @@ int32_t dwc_otg_handle_session_req_intr(dwc_otg_core_if_t * core_if)
 		DWC_PRINTF("SRP: Device mode\n");
 		gotgctl.d32 =
 			DWC_READ_REG32(&core_if->core_global_regs->gotgctl);
-
+		if (gotgctl.b.sesreqscs)
+			DWC_PRINTF("SRP Success\n");
+		else
+			DWC_PRINTF("SRP Fail\n");
 		if (core_if->otg_ver) {
-			gotgctl.d32 = 0 ;	
+			gotgctl.d32 = 0 ;
 			gotgctl.b.devhnpen = 1;
 			DWC_MODIFY_REG32(&core_if->core_global_regs->gotgctl, gotgctl.d32, 0);
 		}
@@ -621,8 +635,8 @@ int32_t dwc_otg_handle_wakeup_detected_intr(dwc_otg_core_if_t * core_if)
 
 			lpmcfg.d32 =
 			    DWC_READ_REG32(&core_if->core_global_regs->glpmcfg);
-			lpmcfg.b.hird_thres &= (~(1 << 4));	
-	       	lpmcfg.b.en_utmi_sleep = 0; 
+			lpmcfg.b.hird_thres &= (~(1 << 4));
+		lpmcfg.b.en_utmi_sleep = 0;
 
 			/* Clear Enbl_L1Gating bit. */
 			pcgcctl.b.enbl_sleep_gating = 1;
@@ -825,29 +839,29 @@ static int32_t dwc_otg_handle_pwrdn_idsts_change(dwc_otg_device_t *otg_dev)
 	if (core_if->adp_enable) {
 		uint8_t is_host = 0;
 		DWC_SPINUNLOCK(core_if->lock);
-		
+
 #if 0
 		/* Change the core_if's lock to hcd/pcd lock depend on mode? */
 
-#ifndef DWC_HOST_ONLY		
+#ifndef DWC_HOST_ONLY
 		if (gpwrdn_temp.b.idsts)
 			core_if->lock = otg_dev->pcd->lock;
 #endif
 #ifndef DWC_DEVICE_ONLY
 		if (!gpwrdn_temp.b.idsts) {
-				core_if->lock = otg_dev->hcd->lock;	
+				core_if->lock = otg_dev->hcd->lock;
 				is_host = 1;
 		}
 #endif
 #endif
 		DWC_PRINTF("RESTART ADP\n");
-		if (core_if->adp.probe_enabled)		
+		if (core_if->adp.probe_enabled)
 			dwc_otg_adp_probe_stop(core_if);
-		if (core_if->adp.sense_enabled)		
+		if (core_if->adp.sense_enabled)
 			dwc_otg_adp_sense_stop(core_if);
-		if (core_if->adp.sense_timer_started)		
+		if (core_if->adp.sense_timer_started)
 			DWC_TIMER_CANCEL(core_if->adp.sense_timer);
-		if (core_if->adp.vbuson_timer_started)		
+		if (core_if->adp.vbuson_timer_started)
 			DWC_TIMER_CANCEL(core_if->adp.vbuson_timer);
 		core_if->adp.probe_timer_values[0] = -1;
 		core_if->adp.probe_timer_values[1] = -1;
@@ -855,7 +869,7 @@ static int32_t dwc_otg_handle_pwrdn_idsts_change(dwc_otg_device_t *otg_dev)
 		core_if->adp.vbuson_timer_started = 0;
 		core_if->adp.probe_counter = 0;
 		core_if->adp.gpwrdn = 0;
-		
+
 		/* Disable PMU and restart ADP */
 		gpwrdn_temp.d32 = 0;
 		gpwrdn_temp.b.pmuactv = 1;
@@ -866,7 +880,7 @@ static int32_t dwc_otg_handle_pwrdn_idsts_change(dwc_otg_device_t *otg_dev)
 		dwc_otg_adp_start(core_if, is_host);
 		DWC_SPINLOCK(core_if->lock);
 	}
-	
+
 
 	return 1;
 }
@@ -942,7 +956,7 @@ static int32_t dwc_otg_handle_pwrdn_session_change(dwc_otg_core_if_t * core_if)
 			/*
 			 * Initiate SRP after initial ADP probe.
 			 */
-			dwc_otg_initiate_srp(core_if);	
+			dwc_otg_initiate_srp(core_if);
 		}
 	} else if (core_if->adp_enable){
 		dwc_otg_adp_probe_stop(core_if);
@@ -990,7 +1004,7 @@ static uint32_t dwc_otg_handle_pwrdn_stschng_intr(dwc_otg_device_t *otg_dev)
 	}
 	gpwrdn.d32 = DWC_READ_REG32(&core_if->core_global_regs->gpwrdn);
 
-	DWC_PRINTF("gpwrdn.d32 = %x\n", gpwrdn.d32);	
+	DWC_PRINTF("gpwrdn.d32 = %x\n", gpwrdn.d32);
 
 	if (gpwrdn.b.idsts ^ gpwrdn_temp.b.idsts) {
 		retval = dwc_otg_handle_pwrdn_idsts_change(otg_dev);
@@ -998,7 +1012,7 @@ static uint32_t dwc_otg_handle_pwrdn_stschng_intr(dwc_otg_device_t *otg_dev)
 		retval = dwc_otg_handle_pwrdn_session_change(core_if);
 	}
 
-	
+
 	return retval;
 }
 
@@ -1194,7 +1208,7 @@ int32_t dwc_otg_handle_usb_suspend_intr(dwc_otg_core_if_t * core_if)
 
 	DWC_DEBUGPL(DBG_ANY, "USB SUSPEND\n");
 
-	if ((core_if->otg_ver == 1) && (core_if->op_state == A_PERIPHERAL)) 
+	if ((core_if->otg_ver == 1) && (core_if->op_state == A_PERIPHERAL))
 		dwc_mdelay(200); //vahrama - WA - see BU's mail
 
 	if (dwc_otg_is_device_mode(core_if)) {
@@ -1327,7 +1341,7 @@ int32_t dwc_otg_handle_usb_suspend_intr(dwc_otg_core_if_t * core_if)
 			if (core_if->lx_state != DWC_OTG_L3 && dcfg.b.devaddr) {
 				DWC_DEBUGPL(DBG_ANY, "Start entering to extended hibernation\n");
 				core_if->xhib = 1;
-							
+
 				/* Clear interrupt in gintsts */
 				gintsts.d32 = 0;
 				gintsts.b.usbsuspend = 1;
@@ -1336,7 +1350,7 @@ int32_t dwc_otg_handle_usb_suspend_intr(dwc_otg_core_if_t * core_if)
 
 				dwc_otg_save_global_regs(core_if);
 				dwc_otg_save_dev_regs(core_if);
-				
+
 				/* Wait for 10 PHY clocks */
 				dwc_udelay(10);
 
@@ -1346,7 +1360,7 @@ int32_t dwc_otg_handle_usb_suspend_intr(dwc_otg_core_if_t * core_if)
 				pcgcctl.b.enbl_extnd_hiber = 1;
 				DWC_MODIFY_REG32(core_if->pcgcctl, 0, pcgcctl.d32);
 				DWC_MODIFY_REG32(core_if->pcgcctl, 0, pcgcctl.d32);
-				
+
 				pcgcctl.d32 = 0;
 				pcgcctl.b.extnd_hiber_pwrclmp = 1;
 				DWC_MODIFY_REG32(core_if->pcgcctl, 0, pcgcctl.d32);
@@ -1358,7 +1372,7 @@ int32_t dwc_otg_handle_usb_suspend_intr(dwc_otg_core_if_t * core_if)
 				DWC_MODIFY_REG32(core_if->pcgcctl, 0, pcgcctl.d32);
 
 				DWC_DEBUGPL(DBG_ANY, "Finished entering to extended hibernation\n");
-				
+
 				return 1;
 			}
 		}
@@ -1489,10 +1503,10 @@ static int32_t dwc_otg_handle_lpm_intr(dwc_otg_core_if_t * core_if)
 		lpmcfg.b.en_utmi_sleep = 1;
 
 		pcgcctl.b.enbl_sleep_gating = 1;
-	   	DWC_MODIFY_REG32(core_if->pcgcctl,0,pcgcctl.d32);
+		DWC_MODIFY_REG32(core_if->pcgcctl,0,pcgcctl.d32);
 
 		if(dwc_otg_get_param_besl_enable(core_if)) {
-			lpmcfg.b.en_besl = 1;				
+			lpmcfg.b.en_besl = 1;
 		}
 
 		DWC_WRITE_REG32(&core_if->core_global_regs->glpmcfg,
@@ -1551,7 +1565,7 @@ static inline uint32_t dwc_otg_read_common_intr(dwc_otg_core_if_t * core_if)
 			    gintsts.d32, gintmsk.d32);
 	}
 #endif
-	if (gahbcfg.b.glblintrmsk)	
+	if (gahbcfg.b.glblintrmsk)
 		return ((gintsts.d32 & gintmsk.d32) & gintmsk_common.d32);
 	else
 		return 0;
@@ -1591,15 +1605,15 @@ int32_t dwc_otg_handle_common_intr(void *dev)
 	dwc_otg_device_t *otg_dev = dev;
 	dwc_otg_core_if_t *core_if = otg_dev->core_if;
 	gpwrdn.d32 = DWC_READ_REG32(&core_if->core_global_regs->gpwrdn);
-	
+
 	if (dwc_otg_check_haps_status(core_if) == -1 ) {
-		DWC_WARN("HAPS is disconnected");			
+		DWC_WARN("HAPS is disconnected");
 		return retval;
 	}
-	
+
 	if (dwc_otg_is_device_mode(core_if))
 		core_if->frame_num = dwc_otg_get_frame_number(core_if);
-		
+
 	if (core_if->lock)
 		DWC_SPINLOCK(core_if->lock);
 
@@ -1676,7 +1690,7 @@ int32_t dwc_otg_handle_common_intr(void *dev)
 				DWC_WRITE_REG32(&core_if->dev_if->dev_global_regs->dcfg, core_if->dr_backup->dcfg);
 				DWC_WRITE_REG32(&core_if->dev_if->dev_global_regs->dctl, core_if->dr_backup->dctl);
 				dwc_udelay(50);
-				
+
 				dctl.b.pwronprgdone = 1;
 				DWC_MODIFY_REG32(&core_if->dev_if->dev_global_regs->dctl, 0, dctl.d32);
 				dwc_udelay(10);
@@ -1733,7 +1747,7 @@ int32_t dwc_otg_handle_common_intr(void *dev)
 
 			retval |= 1;
 		}
-	 	if (gpwrdn.b.lnstschng && gpwrdn.b.lnstchng_msk) {
+		if (gpwrdn.b.lnstschng && gpwrdn.b.lnstchng_msk) {
 			CLEAR_GPWRDN_INTR(core_if, lnstschng);
 			/* remote wakeup from hibernation */
 			if (gpwrdn.b.linestate == 2 || gpwrdn.b.linestate == 1) {
@@ -1742,7 +1756,7 @@ int32_t dwc_otg_handle_common_intr(void *dev)
 				DWC_PRINTF("gpwrdn.linestate = %d\n", gpwrdn.b.linestate);
 			}
 			retval |= 1;
-	 	}
+		}
 		if (gpwrdn.b.rst_det && gpwrdn.b.rst_det_msk) {
 			CLEAR_GPWRDN_INTR(core_if, rst_det);
 			if (gpwrdn.b.linestate == 0) {

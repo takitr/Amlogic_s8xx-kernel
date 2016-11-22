@@ -328,7 +328,7 @@ void isp_set_matrix(xml_csc_t *csc, unsigned int height)
 		        WR(ISP_MATRIX_PRE_OFST0_1+i, *(start+i));
 	} else {
 	        if(height==0) {
-	    	        start = isp_matrix_lup[2];
+		        start = isp_matrix_lup[2];
 			for(i=0;i<XML_CSC;i++)
 			        WR(ISP_MATRIX_PRE_OFST0_1+i, *(start+i));
 	        }else{
@@ -780,7 +780,7 @@ void wave_init(wave_t *wave_param)
 {
 	static bool init_flag = false;
         if (!init_flag) {
-    	        init_flag = true;
+	        init_flag = true;
                 // clock_div & clock disable
                 WRITE_CBUS_REG(HHI_ISP_LED_CLK_CNTL, wave_param->wave_clock_div);
 	        // disable isp_led2_en
@@ -866,11 +866,11 @@ void torch_level(bool mode_pol_inv,bool led1_pol_inv,bool pin_mux_inv,bool torch
 void wave_power_manage(bool enable)
 {
 	if(enable)
-    	// clock enable
-    	        WRITE_CBUS_REG_BITS(HHI_ISP_LED_CLK_CNTL,1,16,1);
+	// clock enable
+	        WRITE_CBUS_REG_BITS(HHI_ISP_LED_CLK_CNTL,1,16,1);
 	else
 	// clock disable
-    	        WRITE_CBUS_REG_BITS(HHI_ISP_LED_CLK_CNTL,0,16,1);
+	        WRITE_CBUS_REG_BITS(HHI_ISP_LED_CLK_CNTL,0,16,1);
 }
 
 /*only adjust g0 r1 b2 g3*/

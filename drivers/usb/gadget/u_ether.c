@@ -253,6 +253,7 @@ rx_submit(struct eth_dev *dev, struct usb_request *req, gfp_t gfp_flags)
 	if (size > MAX_BUFFER_SIZE) {
 		printk(KERN_ERR "[%s]: size = %d\n", __func__, size);
 		goto enomem;
+
 	}
 	req->length = size;
 	req->complete = rx_complete;
@@ -471,11 +472,10 @@ static void eth_work(struct work_struct *work)
 static void tx_complete(struct usb_ep *ep, struct usb_request *req)
 {
 	struct eth_dev	*dev = ep->driver_data;
-	struct ctx* ctx = (struct ctx*) req->context;
-
+  struct ctx* ctx = (struct ctx*) req->context;
 	switch (req->status) {
 	default:
-	    dev->net->stats.tx_errors += ctx->count;
+		dev->net->stats.tx_errors += ctx->count;
 		VDBG(dev, "tx err %d\n", req->status);
 		/* FALLTHROUGH */
 	case -ECONNRESET:		/* unlink */
@@ -502,14 +502,13 @@ static inline int is_promisc(u16 cdc_filter)
 {
 	return cdc_filter & USB_CDC_PACKET_TYPE_PROMISCUOUS;
 }
-
 netdev_tx_t eth_start_xmit(struct sk_buff *skb,struct net_device *net);
 void eth_tx_timeout(unsigned long arg)
 {
 	struct eth_dev *ctx = (struct eth_dev *)arg;
- 
-    if (ctx->net != NULL) {
-    	eth_start_xmit(NULL, ctx->net);
+
+        if (ctx->net != NULL) {
+		eth_start_xmit(NULL, ctx->net);
 	}
 }
 
@@ -608,31 +607,31 @@ netdev_tx_t eth_start_xmit(struct sk_buff *skb,
 
 		length = skb->len;
 	}
-    /* copy data to req buffer for 4-byte align */
-    /* req->buf = skb->data; */
-    spin_lock_irqsave(&dev->req_lock, flags);
-    if(dev->req == NULL){
-        dev->req = container_of(dev->tx_reqs.next, struct usb_request, list);
-        dev->req->length = 0;
-        list_del(&dev->req->list);
-        ctx = (struct ctx*) kzalloc(sizeof(*ctx), GFP_KERNEL);
-        if(!ctx) {
-            printk("[%s]: alloc ctx failed...\n", __func__);
-            dev_kfree_skb_any(skb);
-            spin_unlock_irqrestore(&dev->req_lock, flags);			
-            goto drop;
-        }
-        dev->req->context = ctx;
+		/* copy data to req buffer for 4-byte align */
+	/* req->buf = skb->data; */
+	spin_lock_irqsave(&dev->req_lock, flags);
+  if(dev->req == NULL){
+  	dev->req = container_of(dev->tx_reqs.next, struct usb_request, list);
+    dev->req->length = 0;
+    list_del(&dev->req->list);
+		ctx = (struct ctx*) kzalloc(sizeof(*ctx), GFP_KERNEL);
+	  if(!ctx) {
+			printk("[%s]: alloc ctx failed...\n", __func__);
+			dev_kfree_skb_any(skb);
+      spin_unlock_irqrestore(&dev->req_lock, flags);			
+			goto drop;
+		  }
+		dev->req->context = ctx;
     } else {
-        ctx = (struct ctx*)dev->req->context;
-    }
-    dev->req->complete = tx_complete;
+			ctx = (struct ctx*)dev->req->context;
+      }
+		dev->req->complete = tx_complete;
 
 	/* NCM requires no zlp if transfer is dwNtbInMaxSize */
 	if (dev->port_usb->is_fixed &&
 	    length == dev->port_usb->fixed_in_len &&
 	    (length % in->maxpacket) == 0)
-		dev->req->zero = 0;
+	    dev->req->zero = 0;
 	else
 		dev->req->zero = 1;
 
@@ -642,45 +641,45 @@ netdev_tx_t eth_start_xmit(struct sk_buff *skb,
 	 */
 	if (dev->req->zero && !dev->zlp && (length % in->maxpacket) == 0)
 		length++;
+		
+	if (length > MAX_BUFFER_SIZE) {
+		printk("[%s]: length = %d\n", __func__, length);
+		dev_kfree_skb_any(skb);	
+        spin_unlock_irqrestore(&dev->req_lock, flags);
+		goto drop;
+	}
+	
+	/* copy data to req buffer for 4-byte align */
+	memcpy(dev->req->buf + dev->req->length, skb->data, length);
+	ctx->length += skb->len;
+	ctx->count++;
+	dev_kfree_skb_any(skb);
+ 	dev->req->length += length;
+  if((dev->req->length + 1600) < MAX_BUFFER_SIZE){
+		eth_tx_timeout_start(dev);
+        spin_unlock_irqrestore(&dev->req_lock, flags);
+        return NETDEV_TX_OK;
+  }
+  else{
+    	goto xmit_send;
+  }
+                
+  spin_unlock_irqrestore(&dev->req_lock, flags);
 
-    if (length > MAX_BUFFER_SIZE) {
-        printk("[%s]: length = %d\n", __func__, length);
-        dev_kfree_skb_any(skb);	
-        spin_unlock_irqrestore(&dev->req_lock, flags);
-        goto drop;
-    }
-    
-    /* copy data to req buffer for 4-byte align */
-    memcpy(dev->req->buf + dev->req->length, skb->data, length);
-    ctx->length += skb->len;
-    ctx->count++;
-    dev_kfree_skb_any(skb);
-    dev->req->length += length;
-    if((dev->req->length + 1600) < MAX_BUFFER_SIZE){
-        eth_tx_timeout_start(dev);
-        spin_unlock_irqrestore(&dev->req_lock, flags);
-        return NETDEV_TX_OK;
-    }
-    else{
-        goto xmit_send;
-    }
-    
-    spin_unlock_irqrestore(&dev->req_lock, flags);
-    
 timeout_send:
-    spin_lock_irqsave(&dev->req_lock, flags);
-    
+	spin_lock_irqsave(&dev->req_lock, flags);
+        
 xmit_send:
-    if(dev->req && dev->port_usb){
-        if(dev->req->length)
-            retval = usb_ep_queue(dev->port_usb->in_ep, dev->req, GFP_ATOMIC);
-        dev->req = NULL;
-        spin_unlock_irqrestore(&dev->req_lock, flags);
-    }
-    else{
-        spin_unlock_irqrestore(&dev->req_lock, flags);
-        return NETDEV_TX_OK;
-    }
+        if(dev->req && dev->port_usb){
+        	if(dev->req->length)
+	        	retval = usb_ep_queue(dev->port_usb->in_ep, dev->req, GFP_ATOMIC);
+            dev->req = NULL;
+        	spin_unlock_irqrestore(&dev->req_lock, flags);
+        }
+        else{
+        	spin_unlock_irqrestore(&dev->req_lock, flags);
+	        return NETDEV_TX_OK;
+        }
         
 	switch (retval) {
 	default:
@@ -697,10 +696,10 @@ drop:
 		spin_lock_irqsave(&dev->req_lock, flags);
 		if (list_empty(&dev->tx_reqs))
 			netif_start_queue(net);
-        if(dev->req){
-            dev->req->length = 0;
-            list_add(&dev->req->list, &dev->tx_reqs);
-        }
+		if(dev->req){
+       dev->req->length = 0;
+       list_add(&dev->req->list, &dev->tx_reqs);
+		}
 		spin_unlock_irqrestore(&dev->req_lock, flags);
 	}
 	return NETDEV_TX_OK;
@@ -885,8 +884,7 @@ struct eth_dev *gether_setup_name(struct usb_gadget *g, u8 ethaddr[ETH_ALEN],
 	net->netdev_ops = &eth_netdev_ops;
 
 	SET_ETHTOOL_OPS(net, &ops);
-
-    netif_carrier_off(net);
+  netif_carrier_off(net);
 	dev->gadget = g;
 	SET_NETDEV_DEV(net, &g->dev);
 	SET_NETDEV_DEVTYPE(net, &gadget_type);

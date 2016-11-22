@@ -187,7 +187,7 @@ static void kill_all_urbs(dwc_otg_hcd_t * hcd)
 	kill_urbs_in_qh_list(hcd, &hcd->periodic_sched_inactive);
 	kill_urbs_in_qh_list(hcd, &hcd->periodic_sched_ready);
 	kill_urbs_in_qh_list(hcd, &hcd->periodic_sched_assigned);
-	kill_urbs_in_qh_list(hcd, &hcd->periodic_sched_queued);	
+	kill_urbs_in_qh_list(hcd, &hcd->periodic_sched_queued);
 	DWC_SPINUNLOCK_IRQRESTORE(hcd->lock, flags);
 }
 
@@ -472,7 +472,7 @@ int dwc_otg_hcd_suspend(dwc_otg_hcd_t * hcd)
 	uart.b.set_iddq = 1;
 	DWC_WRITE_REG32(&hcd->core_if->usb_peri_reg->dbg_uart,uart.d32);
 
- 	return 0;
+	return 0;
 }
 
 /** dwc_otg_hcd resume  */

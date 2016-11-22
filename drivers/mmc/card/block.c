@@ -670,7 +670,7 @@ static inline int mmc_blk_part_switch(struct mmc_card *card,
 int mmc_blk_main_md_part_switch(struct mmc_card *card)
 {
 	struct mmc_blk_data *main_md = mmc_get_drvdata(card);
-    
+
     return mmc_blk_part_switch(card, main_md);
 }
 
@@ -935,7 +935,7 @@ static int mmc_blk_reset(struct mmc_blk_data *md, struct mmc_host *host,
 	int err;
 
 	if (md->reset_done & type){
-        pr_err("%s %d reset error md->reset_done:%d and type:%d\n", 
+        pr_err("%s %d reset error md->reset_done:%d and type:%d\n",
             __func__, __LINE__, md->reset_done, type);
 		return -EEXIST;
 	}
@@ -1845,7 +1845,7 @@ static int mmc_blk_issue_rw_rq(struct mmc_queue *mq, struct request *rqc)
 			else {
 #ifdef CONFIG_AML_MMC_DEBUG_FORCE_SINGLE_BLOCK_RW
 				mmc_blk_rw_rq_prep(mq->mqrq_cur, card, true, mq); // --debug: force single block
-#else 
+#else
                 mmc_blk_rw_rq_prep(mq->mqrq_cur, card, 0, mq);
 #endif
             }
@@ -2083,7 +2083,7 @@ static inline int mmc_blk_readonly(struct mmc_card *card)
 static int mmc_wipe_part_ioctl(struct block_device *bdev)
 {
 	struct mmc_blk_data *md;
-	struct mmc_card *card;    
+	struct mmc_card *card;
     struct gendisk *disk = bdev->bd_disk;
     __u64 offset, size;
     int err, part_num, arg;
@@ -2095,7 +2095,7 @@ static int mmc_wipe_part_ioctl(struct block_device *bdev)
 
     pr_err("%s, %d part_num:%d, size:%012llx, offset:%012llx, disk->disk_name:%s\n",
         __func__, __LINE__, part_num, size, offset, disk->disk_name);
-    
+
     md = mmc_blk_get(bdev->bd_disk);
     if (!md) {
         pr_err("%s, failed to get mmc blk\n", __func__);
@@ -2115,9 +2115,9 @@ static int mmc_wipe_part_ioctl(struct block_device *bdev)
     if (!mmc_can_erase(card)) {
         pr_err("device do not support erase, do nothing\n");
 		err = 0;
-		goto cmd_rel_host;
+		goto dev_card_err;
 	}
-    
+
 	mmc_claim_host(card->host);
 
 	err = mmc_blk_part_switch(card, md);
@@ -2135,7 +2135,7 @@ static int mmc_wipe_part_ioctl(struct block_device *bdev)
 		arg = MMC_ERASE_ARG;
 
 retry:
-#if 1   
+#if 1
 	if (card->quirks & MMC_QUIRK_INAND_CMD38) {
                 pr_err("checked MMC_QUIRK_INAND_CMD38 here\n");
 		err = mmc_switch(card, EXT_CSD_CMD_SET_NORMAL,
@@ -2147,22 +2147,22 @@ retry:
 		if (err)
 			goto out;
 	}
- #endif  
- 
+ #endif
+
 	err = mmc_erase(card, offset, size, arg);
 out:
 	if (err == -EIO && !mmc_blk_reset(md, card->host, MMC_BLK_DISCARD)){
         pr_err("Erase failed and retry here\n");
 		goto retry;
 	}
-    
+
 	if (!err){
         mmc_blk_reset_success(md, MMC_BLK_DISCARD);
 	}
     else{
         pr_err("Erase failed and err:%d\n", err);
     }
-    
+
 cmd_rel_host:
     mmc_release_host(card->host);
 
@@ -2171,7 +2171,7 @@ dev_card_err:
 
 blk_get_err:
 	pr_err("%s completed, err:%d time cost:%lduS\n", __func__, err, (READ_CBUS_REG(ISA_TIMERE)-time_start_cnt));
-    return err;  
+    return err;
 }
 
 
@@ -2202,27 +2202,13 @@ static struct mmc_blk_data *mmc_blk_alloc_req(struct mmc_card *card,
 	 * partitions, devidx will not coincide with a per-physical card
 	 * index anymore so we keep track of a name index.
 	 */
-#if defined(CONFIG_MACH_MESON8B_ODROIDC)
-    if (strncmp(dev_name(mmc_dev(card->host)), "aml_sdhc.0", 8) == 0) {
-        md->name_idx = 0;
-        __set_bit(md->name_idx, name_use);
-    } else if (strncmp(dev_name(mmc_dev(card->host)), "aml_sdio.0", 8) == 0) {
-        if (!subname) {
-            md->name_idx = find_first_zero_bit(name_use, max_devices);
-            __set_bit(md->name_idx, name_use);
-        } else {
-            md->name_idx = ((struct mmc_blk_data *)
-                            dev_to_disk(parent)->private_data)->name_idx;
-        }
-    }
-#else
 	if (!subname) {
 		md->name_idx = find_first_zero_bit(name_use, max_devices);
 		__set_bit(md->name_idx, name_use);
 	} else
 		md->name_idx = ((struct mmc_blk_data *)
 				dev_to_disk(parent)->private_data)->name_idx;
-#endif
+
 	md->area_type = area_type;
 
 	/*
@@ -2512,11 +2498,10 @@ static const struct mmc_fixup blk_fixups[] =
 		  MMC_QUIRK_BLK_NO_CMD23),
 
 	/*
-	 * Some MMC cards need longer data read timeout than indicated in CSD.
+	 * Some Micron MMC cards needs longer data read timeout than
+	 * indicated in CSD.
 	 */
 	MMC_FIXUP(CID_NAME_ANY, CID_MANFID_MICRON, 0x200, add_quirk_mmc,
-		  MMC_QUIRK_LONG_READ_TIME),
-	MMC_FIXUP("008GE0", CID_MANFID_TOSHIBA, CID_OEMID_ANY, add_quirk_mmc,
 		  MMC_QUIRK_LONG_READ_TIME),
 
 	/*
@@ -2577,9 +2562,7 @@ static int mmc_blk_probe(struct mmc_card *card)
 	if (mmc_add_disk(md))
 		goto out;
 
-#if !defined(CONFIG_MACH_MESON8B_ODROIDC)
     aml_emmc_partition_ops(card, md->disk); // add by gch
-#endif
 
 	list_for_each_entry(part_md, &md->part, part) {
 		if (mmc_add_disk(part_md))

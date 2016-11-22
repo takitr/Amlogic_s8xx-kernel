@@ -117,4 +117,3 @@ void RxAVI_ResetData(void);
 
 range_quantization_type RxAVI_GetRangeQuantization(void);
 #endif // __SI_RX_INFO_H__
-

@@ -160,7 +160,7 @@ static int i2c_read_bytes(struct i2c_client *client, uint8_t *buf, int len)
 	msgs[1].addr=client->addr;
 	msgs[1].len=len;
 	msgs[1].buf=&buf[0];
-	
+
 	ret=i2c_transfer(client->adapter,msgs,2);
 	return ret;
 }
@@ -183,7 +183,7 @@ static void pixcir_ts_poscheck(struct work_struct *work)
 	ret = i2c_read_bytes(tsdata->client, Rdbuf, 10);
 	if (ret != 2){
 		dev_err(&tsdata->client->dev, "Unable to read i2c page!(%d)\n", ret);
-		goto out;	
+		goto out;
 	}
 
 	posx1 = ((Rdbuf[3] << 8) | Rdbuf[2]);
@@ -248,7 +248,7 @@ static void pixcir_ts_poscheck(struct work_struct *work)
 		Rdbuf[0] = 0x29;
 		if (i2c_read_bytes(tsdata->client, Rdbuf, 1) != 2) {
 			dev_err(&tsdata->client->dev, "Unable to read i2c page!\n");
-			goto out;	
+			goto out;
 		}
 		int i;
 		for (i=0; i<tsdata->pdata->key_num; i++) {
@@ -308,7 +308,7 @@ static int pixcir_i2c_ts_probe(struct i2c_client *client,
 		dev_err(&client->dev, "failed to load platform data!\n");
 		return -ENODEV;
 	}
-	
+
 	tsdata = kzalloc(sizeof(*tsdata), GFP_KERNEL);
 	if (!tsdata)
 	{
@@ -383,7 +383,7 @@ static int pixcir_i2c_ts_probe(struct i2c_client *client,
     //gpio_out_low(PAD_GPIOC_3);
     //gpio_set_status(PAD_GPIOA_16, gpio_status_in);
     //gpio_irq_set(PAD_GPIOA_16,GPIO_IRQ(1,GPIO_IRQ_RISING));
-    
+
 	if (request_irq(tsdata->irq, pixcir_ts_isr, IRQF_DISABLED,client->name, tsdata))
 	{
 		dev_err(&client->dev, "Unable to request touchscreen IRQ.\n");
@@ -581,7 +581,7 @@ static ssize_t pixcir_write(struct file *file, char __user *buf,size_t count, lo
 		if (tmp==NULL)
 			return -ENOMEM;
 		if (copy_from_user(tmp,buf,count))
-		{ 	
+		{
 			printk("CALIBRATION_FLAG copy_from_user error\n");
 			kfree(tmp);
 			return -EFAULT;
@@ -626,11 +626,11 @@ static int pixcir_release(struct inode *inode, struct file *file)
 
 /*********************************V2.0-Bee-0928-TOP****************************************/
 static const struct file_operations pixcir_i2c_ts_fops =
-{	.owner = THIS_MODULE,  
+{	.owner = THIS_MODULE,
 	.write = pixcir_write,
-	.open = pixcir_open, 
+	.open = pixcir_open,
 	.unlocked_ioctl = pixcir_ioctl,
-	.release = pixcir_release, 
+	.release = pixcir_release,
 };
 /*********************************V2.0-Bee-0928-BOTTOM****************************************/
 
@@ -646,12 +646,12 @@ static struct i2c_driver pixcir_i2c_ts_driver =
 		{
 			.owner = THIS_MODULE,
 			.name = "pixcir_i2c_ts_driver_v1.5",
-		}, 
-	.probe = pixcir_i2c_ts_probe, 
+		},
+	.probe = pixcir_i2c_ts_probe,
 	.remove = pixcir_i2c_ts_remove,
-	.suspend = pixcir_i2c_ts_suspend, 
+	.suspend = pixcir_i2c_ts_suspend,
 	.resume = pixcir_i2c_ts_resume,
-	.id_table = pixcir_i2c_ts_id, 
+	.id_table = pixcir_i2c_ts_id,
 };
 
 static int __init pixcir_i2c_ts_init(void)
@@ -700,4 +700,3 @@ deferred_module_init( pixcir_i2c_ts_init);
 module_init( pixcir_i2c_ts_init);
 #endif
 module_exit( pixcir_i2c_ts_exit);
-

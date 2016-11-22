@@ -78,7 +78,7 @@ ROM const uint8_t default_interrupt_masks[NMB_OF_RX_INTERRUPTS] =
 	//RX_M__INTR3__PARITY_ERR |
     //RX_M__INTR3__NEW_MPEG_PACKET |
     RX_M__INTR3__NEW_AUD_PACKET |
-	//RX_M__INTR3__NEW_SP_PACKET | 
+	//RX_M__INTR3__NEW_SP_PACKET |
 	RX_M__INTR3__NEW_AVI_PACKET|
 	0,
 
@@ -96,7 +96,7 @@ ROM const uint8_t default_interrupt_masks[NMB_OF_RX_INTERRUPTS] =
 	//RX_M__INTR5__FN_CHANGED |
 	//RX_M__INTR5__AAC_DONE |
 	//RX_M__INTR5__AUDIO_LINK_EROR |
-	//RX_M__INTR5__V_RES_CHANGE |   //There should vid_clk change when resolution change, 
+	//RX_M__INTR5__V_RES_CHANGE |   //There should vid_clk change when resolution change,
 	//RX_M__INTR5__H_RES_CHANGE |
 	//RX_M__INTR5__POLARITY_CHANGE |
 	//RX_M__INTR5__INTERLACED_CHANGED |
@@ -108,7 +108,7 @@ ROM const uint8_t default_interrupt_masks[NMB_OF_RX_INTERRUPTS] =
 	//RX_M__INTR6__AUD_FLAT |
 	// RX_M__INTR6__CHST_READY | // cannot use this interrupt because it is triggered on every CHST receiving even nothing changes
 	//RX_M__INTR6__DSD_MUTE_PATTERN_DETECT |
- 	RX_M__INTR6__NEW_ACP_PACKET |
+	RX_M__INTR6__NEW_ACP_PACKET |
 	RX_M__INTR6__CABLE_UNPLUG | // enabled to clear an AAC exception
 	0,
 
@@ -260,9 +260,9 @@ void RxIsr_SwitchReceiveInfoFrameOnEveryPacket(uint8_t info_type, bool_t switch_
             break;
         default:
             break;
-            
+
     }
-    
+
 }
 #endif
 
@@ -398,13 +398,13 @@ void sii_signal_notify(unsigned int status)
     // signal detection for vdin utility.
     if( (status==1) && (signal_status==0) )
     {
-    	signal_status = status;
+	signal_status = status;
         sii5293_output_mode_trigger(1);
     }
     else if( (status==0) && (signal_status==1) )
     {
-    	signal_status = status;
-    	sii5293_output_mode_trigger(0);
+	signal_status = status;
+	sii5293_output_mode_trigger(0);
     }
 
     return ;
@@ -414,7 +414,7 @@ extern void sii9293_cable_status_notify(unsigned int cable_status);
 void SiiRxInterruptHandler(void)
 {
     uint8_t interrupts[NMB_OF_RX_INTERRUPTS];
-   
+
     //DEBUG_PRINT(MSG_STAT, ("RX Interrupt detected!\n"));
     // get interrupt requests
     SiiRegReadBlock(RX_A__INTR1, &interrupts[INT1], 4);
@@ -460,17 +460,17 @@ void SiiRxInterruptHandler(void)
 
         if(SiiDrvRxIsSyncDetected())
         {
-        	// SCDT detection for vdin utility.
-        	printk("sii9293 irq got SCDT!\n");
+		// SCDT detection for vdin utility.
+		printk("sii9293 irq got SCDT!\n");
 
             rx_isr.bScdtState = true;
 #if defined(__KERNEL__)
             SiiConnectionStateNotify(true);
-#endif  
+#endif
         }
         else
         {
-        	// SCDT detection for vdin utility.
+		// SCDT detection for vdin utility.
 			printk("sii9293 irq lost SCDT!\n");
 			sii_signal_notify(0);
 
@@ -550,9 +550,9 @@ void SiiRxInterruptHandler(void)
             SiiRegWrite(RX_A__INTR6_MASK, rx_isr.shadow_interrupt_mask[INT6]);
             SiiRegWrite(RX_A__INTR8_MASK, rx_isr.shadow_interrupt_mask[INT8]);
             sii9293_cable_status_notify(0);
-            
+
         }
-            
+
     }
     if (interrupts[INT8] & RX_M__INTR8__CABLE_IN)
     {
@@ -590,4 +590,3 @@ bool_t SiiDrvVidStableGet ( bool_t *pData )
     }
     return false;
 }
-

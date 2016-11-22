@@ -2,7 +2,7 @@
  * include/linux/novatek_ts.h
  *
  * Copyright (C) 2010 - 2011 Novatek, Inc.
- * 
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -15,7 +15,7 @@
  *
  */
 
-#ifndef 	_LINUX_NOVATEK_TOUCH_H 
+#ifndef 	_LINUX_NOVATEK_TOUCH_H
 #define		_LINUX_NOVATEK_TOUCH_H
 
 
@@ -48,7 +48,7 @@
 //	#define INT_CFG    	S3C_GPIO_SFN(2)					//IO configer as EINT
 //#else
 //	#define TS_INT	0
-//#endif	
+//#endif
 //#else
 ///**********************Step 2: Setting Interrupt******************************/
 //#define BABBAGE_NOVATEK_TS_RST1  (('k'-'a')*8+7)
@@ -92,14 +92,14 @@
 
 //static const char *novatek_ts_name = "nt1103-ts";
 //static struct workqueue_struct *novatek_wq;
-//struct i2c_client * i2c_connect_client_novatek = NULL; 
+//struct i2c_client * i2c_connect_client_novatek = NULL;
 //static struct proc_dir_entry *novatek_proc_entry;
 //static struct kobject *novatek_debug_kobj;
-//	
+//
 //#ifdef CONFIG_HAS_EARLYSUSPEND
 //static void novatek_ts_early_suspend(struct early_suspend *h);
 //static void novatek_ts_late_resume(struct early_suspend *h);
-//#endif 
+//#endif
 
 //*****************************End of Part I *********************************
 
@@ -111,7 +111,7 @@ const uint16_t touch_key_array[] =
 {
 	KEY_MENU,				//MENU
 	KEY_HOME,				//HOME
-	KEY_SEND				//CALL							  
+	KEY_SEND				//CALL
 };
 
 #define MAX_KEY_NUM	 (sizeof(touch_key_array)/sizeof(touch_key_array[0]))

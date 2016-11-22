@@ -15,11 +15,11 @@ void aml_sensor_report_acc(struct i2c_client *client, struct input_dev *dev, int
     for(i = 0; i < curr_idx; i++)
     {
         if(sensor_pdata[i].client && sensor_pdata[i].client == client)
-        { 
+        {
             if(sensor_pdata[i].acc_swap_xy)
             {
                 int temp = x;
-                x = y; 
+                x = y;
                 y = temp;
             }
             x *= sensor_pdata[i].acc_negate_x ? -1 : 1;
@@ -41,12 +41,12 @@ void aml_sensor_report_mag(struct i2c_client *client, struct input_dev *dev, int
     for(i = 0; i < curr_idx; i++)
     {
         if(sensor_pdata[i].client && sensor_pdata[i].client == client)
-        { 
+        {
 
             if(sensor_pdata[i].mag_swap_xy)
             {
                 int temp = x;
-                x = y; 
+                x = y;
                 y = temp;
             }
             x *= sensor_pdata[i].mag_negate_x ? -1 : 1;
@@ -68,11 +68,11 @@ void aml_sensor_report_gyr(struct i2c_client *client, struct input_dev *dev, int
     for(i = 0; i < curr_idx; i++)
     {
         if(sensor_pdata[i].client && sensor_pdata[i].client == client)
-        { 
+        {
             if(sensor_pdata[i].gyr_swap_xy)
             {
                 int temp = x;
-                x = y; 
+                x = y;
                 y = temp;
             }
             x *= sensor_pdata[i].gyr_negate_x ? -1 : 1;
@@ -91,7 +91,7 @@ void aml_sensor_report_gyr(struct i2c_client *client, struct input_dev *dev, int
 int dt_sensor_setup_i2c_dev(struct device_node *node,  struct i2c_board_info *i2c_info, int *i2c_bus_nr, int *gpio)
 {
         int ret = -1;
-    
+
         int r;
         int irq;
         const char *status;
@@ -113,7 +113,7 @@ int dt_sensor_setup_i2c_dev(struct device_node *node,  struct i2c_board_info *i2
             if(r< 0){
                 printk("%s: Failed to read dev_name from device tree\n", __func__);
                 return -1;
-            } 
+            }
 
             strncpy(i2c_info->type, name, I2C_NAME_SIZE);
 
@@ -169,11 +169,11 @@ int dt_sensor_setup_i2c_dev(struct device_node *node,  struct i2c_board_info *i2
                 sensor_pdata[curr_idx].gyr_negate_z = gyr_dir & 0x0100;
                 sensor_pdata[curr_idx].gyr_swap_xy = gyr_dir & 0x1000;
             }
-           
+
             r = of_property_read_u32(node, "irq",&irq);
             if(r < 0 || irq <= 0)
             {
-                *gpio = -1; 
+                *gpio = -1;
                 i2c_info->irq = 0;
             }
             else
@@ -183,7 +183,7 @@ int dt_sensor_setup_i2c_dev(struct device_node *node,  struct i2c_board_info *i2
                 if(r < 0)
                 {
                     printk("%s: faild to get gpio str for dev %s\n", __func__, i2c_info->type);
-                    *gpio = -1; 
+                    *gpio = -1;
                     i2c_info->irq = 0;
                 }
                 else
@@ -192,19 +192,19 @@ int dt_sensor_setup_i2c_dev(struct device_node *node,  struct i2c_board_info *i2
                     *gpio = amlogic_gpio_name_map_num(gpio_str);
                 }
             }
-    } 
-    
+    }
+
     return ret;
 }
 
 
 static int aml_sensor_probe(struct platform_device *pdev)
 {
-	
+
 	struct device_node* child;
 	struct i2c_board_info i2c_info;
 	struct i2c_adapter *adapter;
-    int i2c_bus_nr; 
+    int i2c_bus_nr;
     int gpio;
 
 	struct device_node* node = pdev->dev.of_node;
@@ -244,11 +244,11 @@ static int aml_sensor_probe(struct platform_device *pdev)
 
 static int aml_sensor_remove(struct platform_device *pdev)
 {
-   return 0; 
+   return 0;
 }
 
 static const struct of_device_id sensor_prober_dt_match[]={
-	{	
+	{
 		.compatible = "amlogic,aml_sensor",
 	},
 	{},
@@ -288,4 +288,3 @@ module_exit(aml_sensor_prober_exit);
 
 MODULE_LICENSE("GPL v2");
 MODULE_DESCRIPTION("Amlogic MEMS sensor prober driver");
-

@@ -1,1 +1,0 @@
-obj-$(CONFIG_BACKPORT_AR5523)   := ar5523.o

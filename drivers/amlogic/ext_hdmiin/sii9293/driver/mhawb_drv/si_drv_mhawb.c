@@ -42,7 +42,7 @@ struct mhawb_t MHAWB_MEMORY g_mhawb = {
 	#endif
 };
 
-static  struct workqueue_struct 	*mdt_hid_bridge_wq = NULL;	
+static  struct workqueue_struct 	*mdt_hid_bridge_wq = NULL;
         struct work_struct		mhawb_work;
 static void   delayed_mhawb_do_work_func(struct work_struct *p);
 
@@ -57,10 +57,10 @@ uint8_t MHAWB_CODE_MEMORY offsets_and_header_lengths[4][2] = {
 	//length must include 1 byte length  and # of MDT bytes
 	{MHAWB_ACCEL_ADOPTERID_LEVEL_BYTE_OFFSET_FOR_FIRST_BYTE,	MHAWB_ACCEL_ADOPTERID_LEVEL_BYTE_LENGHT_HEADER_SUM},
 	//length must be # of MDT bytes
-	{MHAWB_ACCEL_ALL_BYTE_OFFSET_FOR_FIRST_BYTE,			MHAWB_ACCEL_ALL_LEVEL_BYTE_LENGHT_HEADER_SUM}	
+	{MHAWB_ACCEL_ALL_BYTE_OFFSET_FOR_FIRST_BYTE,			MHAWB_ACCEL_ALL_LEVEL_BYTE_LENGHT_HEADER_SUM}
 };
 
-uint8_t MHAWB_CODE_MEMORY clear_tx_fifo[3] = { 
+uint8_t MHAWB_CODE_MEMORY clear_tx_fifo[3] = {
 	MHAWB_GEN_2_WRITE_BURST_XFIFO_EMPTY,
 	MHAWB_REG_GEN_2_WRITE_BURST_INTR_MASK_VALUE,
 	0xE0};
@@ -77,15 +77,15 @@ extern uint8_t (*mdt_burst_sync_and_send)(void);
 //2013-05-22 - support timeouts
 #ifndef __KERNEL__
 bool_t is_expired(clock_time_t ms_start, clock_time_t ms_timeout) {
-	
+
 	clock_time_t ms_now = SiiTimerTotalElapsed();
 	clock_time_t ms_elapsed;
-	
+
 	if (ms_now >= ms_start)
 		ms_elapsed = ms_now - ms_start;
 	else
 		ms_elapsed = (0xffffffff - ms_start) + ms_now;
-	
+
 	if (ms_elapsed > ms_timeout)
 		return true;
 	else
@@ -210,7 +210,7 @@ static void MHAWB_XFIFO_Timer_Callback(void *pArg)
 	printk(KERN_ERR "MHAWB XFIFO EMPTY timer expired.\n");
 	if (g_mhawb.state == MHAWB_STATE_WAIT_FOR_XFIFO_EMPTY_AS_PROXY) {
 		//since MHAWB interrupts haven't occured; task other driver code to clear INTR
-		SiiDrvHawbProcessInterrupts();		
+		SiiDrvHawbProcessInterrupts();
 		if  (g_mhawb.empty_levels == MHAWB_XFIFO_EMPTY_LEVELS_MAX) {
 			//can't wait any longer; reset MHAWB  with full FIFO
 			g_mhawb.state	   = MHAWB_STATE_RESET;
@@ -259,15 +259,15 @@ uint8_t mdt_burst_value_update_local(struct hid_usage *usage, __s32 value) {
 		return 0;
 	}
 
-	if (g_mhawb.next_rx_level->fields.level.length != 0) {	
-		printk(KERN_ERR "-#-#-#-#-#-# mhawb_local_fifo_full #-#-#-#-#-#-\n");	
+	if (g_mhawb.next_rx_level->fields.level.length != 0) {
+		printk(KERN_ERR "-#-#-#-#-#-# mhawb_local_fifo_full #-#-#-#-#-#-\n");
 		up(&g_api_lock);
 		return MHAWB_SENDAPI_ERROR_UNKNOWNMHLERROR;
 	}
 
 
 	if (hid_event->length >= MHAWB_FIELD_BYTE_MAX_LENGTH_FOR_DATA) {
-		//printk(KERN_ERR "packet exceeds allowed length\n");	
+		//printk(KERN_ERR "packet exceeds allowed length\n");
 		up(&g_api_lock);
 		return MHAWB_UPDATEAPI_ERROR_EXCEEDSRANGE;
 	}
@@ -284,7 +284,7 @@ uint8_t mdt_burst_value_update_local(struct hid_usage *usage, __s32 value) {
 		case EV_REL:
 			mdt_packet_type = DEV_TYPE_MOUSE;
 			break;
-		case EV_ABS:			
+		case EV_ABS:
 			mdt_packet_type = DEV_TYPE_TOUCH;
 			break;
 		default:
@@ -313,12 +313,12 @@ uint8_t mdt_burst_value_update_local(struct hid_usage *usage, __s32 value) {
 
 			printk(KERN_ERR "mdt_k\t%x\t%x\t%x\t%x",(int)hid_event->length,
 								(int)mdt_packet->event_keyboard.header.isHID,
-							 	(int)mdt_packet->event_keyboard.header.isKeyboard,
-							 	(int)mdt_packet->event_mouse.header.isNotMouse);
+								(int)mdt_packet->event_keyboard.header.isKeyboard,
+								(int)mdt_packet->event_mouse.header.isNotMouse);
 
 
 			//  current MDT packet in BURST is already a keyboard packet
-			if  ((mdt_packet->header.isKeyboard == 1) &&				
+			if  ((mdt_packet->header.isKeyboard == 1) &&
 				(mdt_packet->event_cursor.header.touch.isNotMouse == 0)) {
 
 				if (mdt_packet	== &mdt_burst->events[0]) {
@@ -333,7 +333,7 @@ uint8_t mdt_burst_value_update_local(struct hid_usage *usage, __s32 value) {
 						up(&g_api_lock);
 						return MHAWB_UPDATEAPI_ERROR_EXCEEDSRANGE;
 					}
-				}				
+				}
 
 				// room for more key codes in the packet
 				if (value) {
@@ -387,7 +387,7 @@ uint8_t mdt_burst_value_update_local(struct hid_usage *usage, __s32 value) {
 			//				 	(int)mdt_packet->event_mouse.header.isNotMouse);
 
 			//  current MDT packet in BURST is already a mouse packet
-			if  ((mdt_packet->event_mouse.header.isKeyboard == 0) && 
+			if  ((mdt_packet->event_mouse.header.isKeyboard == 0) &&
 				(mdt_packet->event_mouse.header.isNotMouse == 0)) {
 
 				if (mdt_packet	== &mdt_burst->events[0]) {
@@ -436,7 +436,7 @@ uint8_t mdt_burst_value_update_local(struct hid_usage *usage, __s32 value) {
 					case REL_WHEEL:
 					case REL_Z:	mdt_packet->event_mouse.body.XYZ.z_byteLen = (uint8_t)value;
 						break;
-					default: 
+					default:
 						up(&g_api_lock);
 						return MHAWB_UPDATEAPI_ERROR_UNSUPPORTEDFIELD;
 				}
@@ -451,7 +451,7 @@ uint8_t mdt_burst_value_update_local(struct hid_usage *usage, __s32 value) {
 				mdt_packet->event_mouse.header.isHID			= 1;
 				//mdt_packet->event_mouse.header.isKeyboard		= 0;
 				//mdt_packet->event_mouse.header.touch.isNotMouse 	= 0;
-				
+
 				if (usage->code < REL_MAX)	//since BTN is in header, only increment REL change
 					hid_event->length++;
 
@@ -481,7 +481,7 @@ uint8_t mdt_burst_value_update_local(struct hid_usage *usage, __s32 value) {
 					case REL_WHEEL:
 					case REL_Z:	mdt_packet->event_mouse.body.XYZ.z_byteLen = (uint8_t)value;
 						break;
-					default: 
+					default:
 						up(&g_api_lock);
 						return MHAWB_UPDATEAPI_ERROR_UNSUPPORTEDFIELD;
 				}
@@ -496,22 +496,22 @@ uint8_t mdt_burst_value_update_local(struct hid_usage *usage, __s32 value) {
 		default:
 			up(&g_api_lock);
 			return MHAWB_UPDATEAPI_ERROR_UNSUPPORTEDFIELD;
-	};	
+	};
 
 	//printk(KERN_ERR "mdt_e\t%x\t%x\t%x\t%x",(int)hid_event->length,
 	//					(int)mdt_packet->event_keyboard.header.isHID,
 	//				 	(int)mdt_packet->event_mouse.header.isKeyboard,
 	//				 	(int)mdt_packet->event_mouse.header.isNotMouse);
 
-	
-	up(&g_api_lock);	
+
+	up(&g_api_lock);
 	return MHAWB_UPDATEAPI_SUCCESS;
-			
+
 }
 //EXPORT_SYMBOL(mdt_burst_value_update);
 
 uint8_t enqueue_packet(union mdt_event_t *packet_payload, uint8_t *packet_length) {
-	
+
 	//int i;
 
 	//mhawb_init is a prerequisite
@@ -522,7 +522,7 @@ uint8_t enqueue_packet(union mdt_event_t *packet_payload, uint8_t *packet_length
 #if 0
 	if (g_mhawb.state == MHAWB_STATE_DISABLED || g_mhawb.state == MHAWB_STATE_TAKEOVER) {
 		printk(KERN_ERR "############ mhawb disabled ############\n");
-	
+
 		//2013-07-16 ---
 		//
 		//DISABLE should trigger initialization instead of reset
@@ -552,21 +552,21 @@ uint8_t enqueue_packet(union mdt_event_t *packet_payload, uint8_t *packet_length
 #endif
 		return MHAWB_EVENT_HANDLER_FAILED;
 	}
-	
+
 	//printk(KERN_ERR "------------ mhawb_b ------------\n");
 
 	// LOCAL buffer is full; DROP PACKET
-	if (g_mhawb.next_rx_level->fields.level.length != 0) {	
+	if (g_mhawb.next_rx_level->fields.level.length != 0) {
 		printk(KERN_ERR "                 - mhawb_local_fifo_full ############\n");
 		#ifndef FLOOD_TEST
-		memset(packet_payload->bytes, 0, *packet_length);		
+		memset(packet_payload->bytes, 0, *packet_length);
 		*packet_length = 0;
 		#endif
-		
+
 		//2013-07-16 --
 		//	no need to force delayed work; wait for interrupt or timeout
 		//g_mhawb.hid_event_received = 1;
-	
+
 		// something's wrong; MHAWB state machine should have caught this problem
 		//if (g_mhawb.state != MHAWB_STATE_WAIT_FOR_XFIFO_EMPTY) {
 		//	printk(KERN_ERR "############ mhawb_unexpected_state %d ############\n", g_mhawb.state);
@@ -629,16 +629,16 @@ uint8_t enqueue_packet(union mdt_event_t *packet_payload, uint8_t *packet_length
 
 	//This length also serves as flag to trigger MDT
 	g_mhawb.next_rx_level->fields.level.length = *packet_length;
-										
+
 	//It would be easy to copy the length at the head of the data to
-	//   simplify future processing but, the future code might be 
+	//   simplify future processing but, the future code might be
 	//	 confusing to someone that missed the detail here.
 	g_mhawb.next_rx_level = g_mhawb.next_rx_level->fields.next;
 
 	//printk(KERN_ERR "                 - mhawb_f ------------\n");
-	
-	
-	#ifndef FLOOD_TEST		
+
+
+	#ifndef FLOOD_TEST
 	memset(packet_payload->bytes, 0, (*packet_length));
 	*packet_length = 0;
 	#endif
@@ -663,7 +663,7 @@ void update_position(uint16_t *origin, int16_t delta) {
 		*origin += delta;
 		if (*origin > XY_MAX)
 			*origin = XY_MAX;
-	}	
+	}
 }
 
 uint8_t mdt_burst_simulate_touch(struct mdt_cursor_mouse_t *mousePacket) {
@@ -708,7 +708,7 @@ uint8_t mdt_burst_simulate_touch(struct mdt_cursor_mouse_t *mousePacket) {
 	//up(&g_mhawb_lock);
 
 	// this is short call; actual work done by a seperate MDT thread
-	
+
 	ret = mdt_burst_send_touch(&mdt_touch);
 	#ifdef FLOOD_TEST
 	ret = mdt_burst_send_touch(&mdt_touch);
@@ -721,8 +721,8 @@ uint8_t mdt_burst_simulate_touch(struct mdt_cursor_mouse_t *mousePacket) {
 	} else
 		return MHAWB_SENDAPI_SUCCESS;
 
-		
-		
+
+
 
 	return ret;
 }
@@ -731,7 +731,7 @@ uint8_t mdt_burst_simulate_touch(struct mdt_cursor_mouse_t *mousePacket) {
 //#define SIMULATE_TOUCH
 uint8_t mdt_burst_sync_and_send_local(void) {
 
-	uint8_t ret;	
+	uint8_t ret;
 
 	if (down_trylock(&g_api_lock)) {
 		printk(KERN_ERR " mdt_burst_sync_and_send_local failed to lock");
@@ -739,19 +739,19 @@ uint8_t mdt_burst_sync_and_send_local(void) {
 	}
 
 #ifdef SIMULATE_TOUCH
-	ret = mdt_burst_simulate_touch((struct mdt_cursor_mouse_t *)g_mhawb.hid_event.burst_bytes);	
+	ret = mdt_burst_simulate_touch((struct mdt_cursor_mouse_t *)g_mhawb.hid_event.burst_bytes);
 	g_mhawb.hid_event.length = 0;
 	up(&g_api_lock);
 	return ret;
 #else
-	
+
 	//printk(KERN_ERR "mouse pkt x:%x y:%x btn:%x"	,((struct mdt_cursor_mouse_t *)(g_mhawb.hid_event.burst_bytes))->body.XYZ.x_byteLen
 	//						,((struct mdt_cursor_mouse_t *)(g_mhawb.hid_event.burst_bytes))->body.XYZ.y_byteLen
 	//
     #ifdef FLOOD_TEST
-    	g_mhawb.hid_event.length = MDT_MOUSE_PACKET_LENGTH + 1;
-    	enqueue_packet((union mdt_event_t*)g_mhawb.hid_event.burst_bytes, &g_mhawb.hid_event.length);
-    	enqueue_packet((union mdt_event_t*)g_mhawb.hid_event.burst_bytes, &g_mhawb.hid_event.length);
+	g_mhawb.hid_event.length = MDT_MOUSE_PACKET_LENGTH + 1;
+	enqueue_packet((union mdt_event_t*)g_mhawb.hid_event.burst_bytes, &g_mhawb.hid_event.length);
+	enqueue_packet((union mdt_event_t*)g_mhawb.hid_event.burst_bytes, &g_mhawb.hid_event.length);
     #endif
 	ret = enqueue_packet((union mdt_event_t*)g_mhawb.hid_event.burst_bytes, &g_mhawb.hid_event.length);
 	up(&g_api_lock);
@@ -785,10 +785,10 @@ uint8_t mdt_burst_send_touch(struct mdt_cursor_other_t *touchPacket) {
 
 	uint8_t length = MDT_TOUCH_PACKET_LENGTH + 1;
 	uint8_t ret;
-	
-	//		
+
+	//
 	// Qualify packet
-	//					
+	//
 	if (!(touchPacket->header.touch.isNotMouse) 	||
 		 (touchPacket->header.touch.isKeyboard)	||
 		!(touchPacket->header.touch.isHID)	||
@@ -822,12 +822,12 @@ EXPORT_SYMBOL(mdt_burst_send_touch);
 
 
 static void delayed_mhawb_do_work_func(struct work_struct *p) {
-	
+
 	//printk(KERN_ERR "                 - mhawb_delayed_func ------\n");
 
 	if (wait_event_interruptible(g_mhawb.wait,
 		((g_mhawb.hid_event_received == 1)
-		//2013-06-16 -- this will create unnecessary work load 
+		//2013-06-16 -- this will create unnecessary work load
 		/*||
 		 (g_mhawb.empty_levels != MHAWB_XFIFO_EMPTY_LEVELS_MAX)*/))) {
 		printk(KERN_ERR "              ++ mhawb_wait_failed -------\n");
@@ -841,20 +841,20 @@ static void delayed_mhawb_do_work_func(struct work_struct *p) {
 	//xyu: only do following work when mdt_burst_sync_and_send is available
 	if (mdt_burst_sync_and_send)
 	{
-    	//print_intr_status();
+	//print_intr_status();
 
-    	//printk(KERN_ERR "------------ mhawb_delayed_start -----\n");	
-    	if (HalAcquireIsrLock() == HAL_RET_SUCCESS) {
-    		//printk(KERN_ERR "------------ mhawb_delayed_cont -----\n");
-    		// 2013-07-16 --
-    		//	this while loop means that register will be polled once for expediency
-    		while (mhawb_do_work() == MHAWB_EVENT_HANDLER_WAITING);
-    		//only clear do_work request from API client if work is done
-    		g_mhawb.hid_event_received = 0;
-    		//printk(KERN_ERR "------------ mhawb_delayed_end -------\n");
-    		HalReleaseIsrLock();
-    	}
-    	queue_work(mdt_hid_bridge_wq, &mhawb_work);
+	//printk(KERN_ERR "------------ mhawb_delayed_start -----\n");
+	if (HalAcquireIsrLock() == HAL_RET_SUCCESS) {
+		//printk(KERN_ERR "------------ mhawb_delayed_cont -----\n");
+		// 2013-07-16 --
+		//	this while loop means that register will be polled once for expediency
+		while (mhawb_do_work() == MHAWB_EVENT_HANDLER_WAITING);
+		//only clear do_work request from API client if work is done
+		g_mhawb.hid_event_received = 0;
+		//printk(KERN_ERR "------------ mhawb_delayed_end -------\n");
+		HalReleaseIsrLock();
+	}
+	queue_work(mdt_hid_bridge_wq, &mhawb_work);
 	}
 }
 
@@ -863,7 +863,7 @@ enum mhawb_return_e mhawb_init( void ) {
 	// activate MDT state machine here
 	if (g_mhawb.state == MHAWB_STATE_UNINITIALIZED) {
 		g_mhawb.state = MHAWB_STATE_DISABLED;
-		
+
 //	        SiiOsTimerCreate("MHAWB XFIFO    Timeout", MHAWB_XFIFO_Timer_Callback,   NULL, &g_mhawb.timer_xfifoempty);
 
 		g_mhawb.hid_event_received = 0;
@@ -911,7 +911,7 @@ enum mhawb_return_e mhawb_destroy( void )
 
 enum mhawb_return_e mhawb_do_isr_work( void ) {
 
-    
+
     SiiRegWrite(MHAWB_REG_GEN_2_WRITE_BURST_INTR, MHAWB_GEN_2_WRITE_BURST_XFIFO_FULL);
     if (is_interrupt_asserted())
     {
@@ -948,13 +948,13 @@ enum mhawb_return_e mhawb_do_isr_work( void ) {
 }
 
 enum mhawb_return_e mhawb_do_work( void ) {
-		
+
 	enum mhawb_return_e	ret    = MHAWB_EVENT_HANDLER_SUCCESS;
-	
+
 	//This assignment is temporary. INTR status not needed in every state.
 	uint8_t	volatile g_intr = is_interrupt_asserted();
 	uint8_t	reg_val;
-	uint8_t	level_index;			
+	uint8_t	level_index;
 	uint8_t	MHAWB_MEMORY	*buffer_start;
 	uint8_t	buffer_length;
 
@@ -977,18 +977,18 @@ enum mhawb_return_e mhawb_do_work( void ) {
 	#else
 	if ((( hawb3DXmitCurrentIndex != 0 ) && ( g_mhawb.state != MHAWB_STATE_WAIT_FOR_XFIFO_EMPTY_AS_PROXY)) ||
 	#endif
-		 ( !SiiMhlRxCbusConnected() ) || 
-		 ( g_mhawb.state == MHAWB_STATE_DISABLED )){		
-		
+		 ( !SiiMhlRxCbusConnected() ) ||
+		 ( g_mhawb.state == MHAWB_STATE_DISABLED )){
+
 		if (g_mhawb.state != MHAWB_STATE_DISABLED) {
 			#ifndef __KERNEL__
 			hawb3DXfifoEmptyFlag = true;
 			#endif
 			SiiDrvHawbInit();
-			SiiDrvHawbEnable(false);	
-			SiiOsTimerStop(g_mhawb.timer_xfifoempty);		
+			SiiDrvHawbEnable(false);
+			SiiOsTimerStop(g_mhawb.timer_xfifoempty);
 			g_mhawb.state = MHAWB_STATE_DISABLED;
-		} 
+		}
 		#ifdef __KERNEL__
 			else {
 				if ((SiiCbusRequestStatus() == CBUS_REQ_PENDING) &&
@@ -1003,15 +1003,15 @@ enum mhawb_return_e mhawb_do_work( void ) {
 		//				(int)g_mhawb.hid_event.length, (int)SiiCbusRequestStatus(),
 		//				(int)SiiMhlRxCbusConnected());
 		return MHAWB_EVENT_HANDLER_FAILED;
-	} 
-#endif	
-//	printk(KERN_ERR "              MHAWB_S t:%x i:%x s:%x lev:%x len:%x stat:%x cn:%x\n", (int)g_mhawb.timer_running, (int)g_intr, (int)g_mhawb.state, 
+	}
+#endif
+//	printk(KERN_ERR "              MHAWB_S t:%x i:%x s:%x lev:%x len:%x stat:%x cn:%x\n", (int)g_mhawb.timer_running, (int)g_intr, (int)g_mhawb.state,
 //						(int)g_mhawb.empty_levels,
 //						(int)g_mhawb.hid_event.length, (int)SiiCbusRequestStatus(),
 //						(int)SiiMhlRxCbusConnected());
 
 	// Polled part of the state machine supports initiation of init and tranmission.
-	switch (g_mhawb.state) {		
+	switch (g_mhawb.state) {
 		case MHAWB_STATE_INIT:
 		case MHAWB_STATE_RESET:
 			if (SiiCbusAbortStateGet())
@@ -1025,23 +1025,23 @@ enum mhawb_return_e mhawb_do_work( void ) {
 //				g_mhawb.state	= MHAWB_STATE_WAIT_FOR_DATA;
 
 			memset(&g_mhawb.circular_buffer, 0, sizeof(g_mhawb.circular_buffer));
-			
+
 			//less code to initialize 4 elements than write a loop
 			g_mhawb.circular_buffer[0].fields.next = &g_mhawb.circular_buffer[1];
 			g_mhawb.circular_buffer[1].fields.next = &g_mhawb.circular_buffer[2];
 			g_mhawb.circular_buffer[2].fields.next = &g_mhawb.circular_buffer[3];
 			g_mhawb.circular_buffer[3].fields.next = &g_mhawb.circular_buffer[0];
-		
+
 			g_mhawb.next_rx_level = &g_mhawb.circular_buffer[0];
-		
+
 			for (level_index = 0; level_index < MHAWB_XFIFO_EMPTY_LEVELS_MAX; level_index++)
 				g_mhawb.circular_buffer[level_index].fields.level.length = 0;
 
 			g_mhawb.peer_adopter_id[0] = SiiCbusRemoteDcapGet(0x03);
 			g_mhawb.peer_adopter_id[1] = SiiCbusRemoteDcapGet(0x04);
-									
+
 			//g_mhawb.empty_levels = MHAWB_XFIFO_EMPTY_LEVELS_MAX;
-			
+
 			current_level = g_mhawb.next_rx_level;
 			for ( g_mhawb.next_tx_level = current_level->fields.next;
 						(g_mhawb.next_tx_level != current_level) && (g_mhawb.next_tx_level->fields.level.length == 0);
@@ -1058,36 +1058,36 @@ enum mhawb_return_e mhawb_do_work( void ) {
 			SiiRegBitsSet(MHAWB_REG_GEN_2_WRITE_BURST_XMIT_CTRL, 	MHAWB_GEN_2_WRITE_BURST_XMIT_FIXED_LENGTH, 1);
 			#endif
 
-			#if ((MHAWB_ACCEL_SETTING == MHAWB_ACCEL_ADOPTER_ID) || (MHAWB_ACCEL_SETTING == MHAWB_ACCEL_ADOTPER_ID_AND_LENGTH))	
+			#if ((MHAWB_ACCEL_SETTING == MHAWB_ACCEL_ADOPTER_ID) || (MHAWB_ACCEL_SETTING == MHAWB_ACCEL_ADOTPER_ID_AND_LENGTH))
 			//SiiRegWriteBlock(MHAWB_GEN_2_WRITE_BURST_PEER_ADPT_ID_LBYTE,
 			//		g_mhawb.peer_adopter_id, MHAWB_FIELD_BYTE_MAX_LENGTH_FOR_ADOPTERID);
 			SiiRegWrite(MHAWB_GEN_2_WRITE_BURST_PEER_ADPT_ID_LBYTE, g_mhawb.peer_adopter_id[1]);
 			SiiRegWrite(MHAWB_GEN_2_WRITE_BURST_PEER_ADPT_ID_HBYTE, g_mhawb.peer_adopter_id[0]);
 			SiiRegBitsSet(MHAWB_REG_GEN_2_WRITE_BURST_XMIT_CTRL, 	MHAWB_GEN_2_WRITE_BURST_XMIT_FIXED_ADOPTER_ID,	1);
 			#endif
-		
+
 			SiiRegBitsSet(MHAWB_REG_GEN_2_WRITE_BURST_XFIFO_STATUS, MHAWB_GEN_2_WRITE_BURST_XMIT_PRE_HS_EN,1);
 			SiiRegWrite(MHAWB_REG_GEN_2_WRITE_BURST_INTR_MASK,	MHAWB_REG_GEN_2_WRITE_BURST_INTR_MASK_VALUE);
 			SiiRegWrite(MHAWB_GEN_2_WRITE_BURST_ERROR_INTR_MASK,	MHAWB_GEN_2_WRITE_BURST_ERROR_INTR_MASK_VALUE);
-			
+
 			//printk(KERN_ERR "CBUS CTRL %02X\n", (int)SiiRegRead( MHAWB_REG_GEN_2_WRITE_BURST_XMIT_CTRL  ));
 
 			// Workaround. This is a hack. Timeout doesn't behavior as expected.
 			// Set timer for about 50 ms
 			SiiRegWrite(MHAWB_REG_GEN_2_WRITE_BURST_XMIT_TIMEOUT, 01);
-		
+
 			//2013-07-16 --
 			//	reset was found to be without reset. let try more
 			//Reset TX
 			//xyu: In my test, toggle enable bit is not needed.
 			//SiiRegBitsSet(MHAWB_REG_GEN_2_WRITE_BURST_XMIT_CTRL, 	MHAWB_GEN_2_WRITE_BURST_XMIT_EN, 0);
 			//SiiRegBitsSet(MHAWB_REG_GEN_2_WRITE_BURST_XMIT_CTRL, 	MHAWB_GEN_2_WRITE_BURST_XMIT_EN, 1);
-			
+
 			//2013-07-16 --
 			//	reset was found to be without reset. let try more
 			//Reset HAWB
 			 SiiRegBitsSet(REG_HAWB_CTRL, 				BIT_HAWB_WRITE_BURST_DISABLE, 	 1);
-			 SiiRegBitsSet(REG_HAWB_CTRL, 				BIT_HAWB_WRITE_BURST_DISABLE, 	 0);  
+			 SiiRegBitsSet(REG_HAWB_CTRL, 				BIT_HAWB_WRITE_BURST_DISABLE, 	 0);
 
 			SiiRegWrite(MHAWB_REG_GEN_2_WRITE_BURST_INTR, MHAWB_GEN_2_WRITE_BURST_XFIFO_FULL);
 			//printk(KERN_ERR "CBUS CTRL %02X\n", (int)SiiRegRead( MHAWB_REG_GEN_2_WRITE_BURST_XMIT_CTRL  ));
@@ -1095,13 +1095,13 @@ enum mhawb_return_e mhawb_do_work( void ) {
 			// clear IDLE interrupt signalling HAWB is ready
 			//xyu: this interrupt is not take care in the main CBUS handler
 			//SiiRegWrite(MHAWB_REG_GEN_2_WRITE_BURST_INTR, 		MHAWB_GEN_2_WRITE_BURST_SM_IDLE);
-			
+
 			//SiiOsTimerStop(g_mhawb.timer_xfifoempty);
-	
+
 			// Support MDT activation while HAWB interrupts are pending.
 			g_mhawb.hid_event.length = 0;
 			memset(g_mhawb.hid_event.burst_bytes, 0, sizeof(struct mhawb_fifo_level_data_t));
-			
+
 			//2013-07-16
 			//     -- interrupt will only occur during initialization
 			// in an interrupt oriented driver this interrupt occurs first.
@@ -1112,28 +1112,28 @@ enum mhawb_return_e mhawb_do_work( void ) {
 			//  	also allow receipt of new data
 			//SiiOsTimerStart(g_mhawb.timer_xfifoempty, MHAWB_TIMEOUT_FOR_XFIFO_EMPTY);
 			//ret 		= MHAWB_EVENT_HANDLER_WAITING;
-			
+
 			//2013-07-16
 			//    clear pending updates
 			//g_mhawb.hid_event_received = 0;
 
-			g_mhawb.touch_x	= (XY_MAX/2); g_mhawb.touch_y = (XY_MAX/2); 
+			g_mhawb.touch_x	= (XY_MAX/2); g_mhawb.touch_y = (XY_MAX/2);
 
-			break;			
+			break;
 		case MHAWB_STATE_WAIT_FOR_XFIFO_EMPTY_AS_PROXY:
 			// This is the entry point from 3D code.
-			
+
 			// This is a temproary state to handle interrupts missed by other parts of the firmware.
 			// Once the state machine exists this state, it will not return here.
-			
+
 			// After the remaining interrupt is handled the state machine will go through RESET.
 			//
 			{
 				//2013-05-22 - support timeouts
 				//In case the PROXY state was triggered without reset, reset the timer here.
-				
+
 				//Use timeouts to allow MDT prioritization in polling implementation.
-				//Timer is started and will be considered in particular states 
+				//Timer is started and will be considered in particular states
 				//	relative to the wait allowed for that state.
 				#ifdef __KERNEL__
 				//SiiOsTimerStart(g_mhawb.timer_xfifoempty, MHAWB_TIMEOUT_FOR_XFIFO_EMPTY);
@@ -1143,38 +1143,38 @@ enum mhawb_return_e mhawb_do_work( void ) {
 				#endif
 			}
 		case MHAWB_STATE_WAIT_FOR_XFIFO_EMPTY:
-			// The work done in this state depends on INT status 
-			g_intr = is_interrupt_asserted();						
-		
-			// 
+			// The work done in this state depends on INT status
+			g_intr = is_interrupt_asserted();
+
+			//
 			// - 130715 - FIFO EMPTY check and supporting code removed -
-			//				
+			//
 			// if FIFO is already empty, the state machine is in the wrong state
 			// since XFIFO_EMPTY support receipt of new data, don't worry about occurance
 			//	since it will clear once new data arrives.
 
-		
+
 			if (g_intr) {
 				// rather than check interrupt bit, check for a change in
-				// the number of free levels								
+				// the number of free levels
 				reg_val = SiiRegRead(MHAWB_REG_GEN_2_WRITE_BURST_XFIFO_STATUS);
 				reg_val = reg_val >> MHAWB_GEN_2_WRITE_BURST_XFIFO_LEVEL_AVAIL_LSB;
-				
-				// Predictive interrupt handling looks for an expected condition.				
+
+				// Predictive interrupt handling looks for an expected condition.
 				// 	if the FIFO is now empty, clear related interrupt interrupt
 				if (reg_val == MHAWB_XFIFO_EMPTY_LEVELS_MAX) {
-					SiiRegWrite(MHAWB_REG_GEN_2_WRITE_BURST_INTR, 
+					SiiRegWrite(MHAWB_REG_GEN_2_WRITE_BURST_INTR,
 						MHAWB_GEN_2_WRITE_BURST_XFIFO_EMPTY /*|
 							MHAWB_GEN_2_WRITE_BURST_SM_IDLE*/ );
-					
+
 					if (g_mhawb.state == MHAWB_STATE_WAIT_FOR_XFIFO_EMPTY_AS_PROXY)
-						g_mhawb.state	= MHAWB_STATE_INIT;	
-					else 
+						g_mhawb.state	= MHAWB_STATE_INIT;
+					else
 						g_mhawb.state	= MHAWB_STATE_WAIT_FOR_DATA;
 
 					//2013-05-22 - support timeouts
 					//Use timeouts to allow MDT prioritization in polling implementation.
-					//Timer is started and will be considered in particular states 
+					//Timer is started and will be considered in particular states
 					//	relative to the wait allowed for that state.
 					//printk(KERN_ERR "MHAWB XFIFO timer stop.\n");
 					//SiiOsTimerStop(g_mhawb.timer_xfifoempty);
@@ -1187,7 +1187,7 @@ enum mhawb_return_e mhawb_do_work( void ) {
 					// if FIFO isn't empty, interrupt may reflect an error condition
 				} else {
 					//2013-05-22 - support timeouts
-					
+
 					//if this wasn't an error, we're here for some unrelated reason
 					//   and should allow MDT to continue running until timeout
 
@@ -1210,41 +1210,41 @@ enum mhawb_return_e mhawb_do_work( void ) {
 		case MHAWB_STATE_WAIT_FOR_DATA:
 			//MHAWB_SUPPORT_USE_REFERENCE differs from the alternative because it only
 			//	allows FIFO writes when FIFO is empty.
-		
+
 			// exit if nothing is to be sent, exit
 			//if (g_mhawb.next_tx_level->fields.level.length == 0) {
 			//	break;
 			//}
 
 			// if FIFO full, FOR loop below with exit due to empty_levels
-			
+
 			// If FIFO is empty, copy pending levels into FIFO
 			//
 			// To demonstrate use of various optimizations, the following code appropriately sets
 			//    the buffer header and identifies the offest.
 			//
 			// In a production system, only one optimization configuration needs to be supported
-			//			
+			//
 			// Empty_levels should never be greater than MHAWB_XFIFO_EMPTY_LEVELS_MAX. If this happens
-			//		counter overflowed. Remove condition in future code reduction efforts.					
-			//g_mhawb.state					= MHAWB_STATE_WAIT_FOR_XFIFO_EMPTY;		
-			
+			//		counter overflowed. Remove condition in future code reduction efforts.
+			//g_mhawb.state					= MHAWB_STATE_WAIT_FOR_XFIFO_EMPTY;
+
 			//as code reduction can replace current_level with g_mhawb.next_tx_level
-			for( current_level = g_mhawb.next_tx_level; 
+			for( current_level = g_mhawb.next_tx_level;
 					 ((current_level->fields.level.length != 0) && (!is_interrupt_asserted()));
 					 current_level = current_level->fields.next) {
-							
+
 				//g_mhawb.empty_levels--;
 
 				#if (MHAWB_ACCEL_SETTING == MHAWB_RUNTIME)
-						 
-				buffer_start 	= (current_level->raw_bytes + 
+
+				buffer_start 	= (current_level->raw_bytes +
 						offsets_and_header_lengths[g_mhawb.flags_accelerations][FIELD_FIRST_BYTE_OFFEST]);
 				buffer_length 	= (current_level->fields.level.length +
 						offsets_and_header_lengths[g_mhawb.flags_accelerations][FIELD_HEADER_SUM]);
-						 
+
 				switch(g_mhawb.flags_accelerations) {
-					case MHAWB_ACCEL_LENGTH:						
+					case MHAWB_ACCEL_LENGTH:
 						memcpy(buffer_start,g_mhawb.peer_adopter_id, FIELD_BYTE_MAX_LENGTH_FOR_ADOPTERID);
 					case MHAWB_ACCEL_ADOTPER_ID_AND_LENGTH:
 						//length is ensured to be less than FIELD_BYTE_MAX_LENGTH_FOR_DATA
@@ -1258,18 +1258,18 @@ enum mhawb_return_e mhawb_do_work( void ) {
 						*buffer_start = buffer_length;
 						break;
 					case MHAWB_ACCEL_NOTHING:
-					default:					
+					default:
 						*buffer_start = buffer_length;
-						memcpy((buffer_start + MHAWB_ACCEL_NONE_LEVEL_BYTE_OFFSET_FOR_ADOPTERID), 
+						memcpy((buffer_start + MHAWB_ACCEL_NONE_LEVEL_BYTE_OFFSET_FOR_ADOPTERID),
 							g_mhawb.peer_adopter_id, FIELD_BYTE_MAX_LENGTH_FOR_ADOPTERID);
-						break;					
+						break;
 				}
 				#else
-				buffer_start 	= (current_level->raw_bytes + 
+				buffer_start 	= (current_level->raw_bytes +
 						offsets_and_header_lengths[MHAWB_ACCEL_SETTING][FIELD_FIRST_BYTE_OFFEST]);
 				buffer_length 	= (current_level->fields.level.length +
-						offsets_and_header_lengths[MHAWB_ACCEL_SETTING][FIELD_HEADER_SUM]);				
-				
+						offsets_and_header_lengths[MHAWB_ACCEL_SETTING][FIELD_HEADER_SUM]);
+
 				#if (MHAWB_ACCEL_SETTING == MHAWB_ACCEL_LENGTH)
 						memcpy(buffer_start,g_mhawb.peer_adopter_id, FIELD_BYTE_MAX_LENGTH_FOR_ADOPTERID);
 						//length is ensured to be less than FIELD_BYTE_MAX_LENGTH_FOR_DATA
@@ -1292,12 +1292,12 @@ enum mhawb_return_e mhawb_do_work( void ) {
 
 				#elif	(MHAWB_ACCEL_SETTING == MHAWB_ACCEL_NOTHING)
 						*buffer_start = buffer_length;
-						memcpy((buffer_start + MHAWB_ACCEL_NONE_LEVEL_BYTE_OFFSET_FOR_ADOPTERID), 
+						memcpy((buffer_start + MHAWB_ACCEL_NONE_LEVEL_BYTE_OFFSET_FOR_ADOPTERID),
 						g_mhawb.peer_adopter_id, FIELD_BYTE_MAX_LENGTH_FOR_ADOPTERID);
 
 				#endif
 				#endif
-				//TODO - decide if length should be increase here by when to accomodate wrapper	
+				//TODO - decide if length should be increase here by when to accomodate wrapper
 
 				//2013-07-30-bug in the i2c driver requires that this lenght be increased by 1
 				SiiRegWriteBlock(MHAWB_GEN_2_WRITE_BURST_XFIFO_DATA , buffer_start, buffer_length);
@@ -1306,35 +1306,35 @@ enum mhawb_return_e mhawb_do_work( void ) {
 				// Since hardware FIFO is never cleared, might as well free up buffer now.
 				// This is especially important now to avoid sending the same data twice.
 				current_level->fields.level.length = 0;
-						
+
 				#if (MHAWB_ACCEL_SETTING == MHAWB_ACCEL_ADOTPER_ID_AND_LENGTH)
 				//Workaround. Mask is cleared for larger packet sizes. Not a problem for a 4 byte packet.
 				//Need to cache this to avoid frequent writes
 				if (buffer_length > 4)
-					SiiRegWrite(MHAWB_REG_GEN_2_WRITE_BURST_INTR_MASK, 			
+					SiiRegWrite(MHAWB_REG_GEN_2_WRITE_BURST_INTR_MASK,
 							MHAWB_REG_GEN_2_WRITE_BURST_INTR_MASK_VALUE);
-				#endif						
+				#endif
 			}
-			
+
 			g_mhawb.next_tx_level = current_level;
 #if 0
-			// to accept new data while waiting for XFIFO_EMPTY, 
+			// to accept new data while waiting for XFIFO_EMPTY,
 			//	setup for XFIFO_EMPTY only when explicitely waiting for data
-			if(g_mhawb.state == MHAWB_STATE_WAIT_FOR_DATA) {						
+			if(g_mhawb.state == MHAWB_STATE_WAIT_FOR_DATA) {
 				//exit and come back again immediately for  further handling
 				g_mhawb.state = MHAWB_STATE_WAIT_FOR_XFIFO_EMPTY;
 
 				//2013-07-16 --
 				//	now that this code is syncrhonized with ISR, don't delay ISR
 				//ret 	      = MHAWB_EVENT_HANDLER_WAITING;
-			
+
 				//initiate empty interrupt timeout
 				//printk(KERN_ERR "MHAWB XFIFO timer start.\n");
 				SiiOsTimerStart(g_mhawb.timer_xfifoempty, MHAWB_TIMEOUT_FOR_XFIFO_EMPTY);
 			}
 #endif
 			break;
-			//DEBUG_PRINT( MSG_ALWAYS, "M2 %x %x %x\n",(int)g_mhawb.state,(int)g_intr, (int)g_mhawb.empty_levels);			
+			//DEBUG_PRINT( MSG_ALWAYS, "M2 %x %x %x\n",(int)g_mhawb.state,(int)g_intr, (int)g_mhawb.empty_levels);
 
 		// the following 3 should never happen
 		case MHAWB_STATE_UNINITIALIZED:
@@ -1343,13 +1343,13 @@ enum mhawb_return_e mhawb_do_work( void ) {
 		default:
 			return MHAWB_EVENT_HANDLER_FAILED;
 	}
-//	printk(KERN_ERR "              MHAWB_E t:%x i:%x s:%x lev:%x len:%x stat:%x cn:%x end:%x\n", (int)g_mhawb.timer_running, (int) g_intr, (int)g_mhawb.state, 
+//	printk(KERN_ERR "              MHAWB_E t:%x i:%x s:%x lev:%x len:%x stat:%x cn:%x end:%x\n", (int)g_mhawb.timer_running, (int) g_intr, (int)g_mhawb.state,
 //						(int)g_mhawb.empty_levels,
 //						(int)g_mhawb.hid_event.length, (int)SiiCbusRequestStatus(),
 //						(int)SiiMhlRxCbusConnected(), (int) ret);
 
 	//print_intr_status();
-	
+
 	return ret;
 }
 

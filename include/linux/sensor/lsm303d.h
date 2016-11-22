@@ -94,7 +94,7 @@ magnetometer:
 #define LSM303D_MAG_MIN_POLL_PERIOD_MS	5
 
 struct lsm303d_acc_platform_data {
-	
+
 	unsigned int poll_interval;
 	unsigned int min_interval;
 
@@ -129,7 +129,7 @@ struct lsm303d_mag_platform_data {
 };
 
 struct lsm303d_main_platform_data {
-	
+
 	struct lsm303d_acc_platform_data *pdata_acc;
 	struct lsm303d_mag_platform_data *pdata_mag;
 };

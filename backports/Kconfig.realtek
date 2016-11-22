@@ -1,1 +1,0 @@
-source "$BACKPORT_DIR/drivers/realtek/Kconfig"

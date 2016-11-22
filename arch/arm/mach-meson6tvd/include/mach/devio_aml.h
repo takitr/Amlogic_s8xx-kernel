@@ -9,4 +9,3 @@ struct devio_aml_platform_data {
 };
 
 #endif/*define _DEVIO_AML_H_*/
-

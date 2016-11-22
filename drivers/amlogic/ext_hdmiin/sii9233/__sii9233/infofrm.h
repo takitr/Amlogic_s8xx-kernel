@@ -1,16 +1,16 @@
 /******************************************************************************
  *
- * Copyright 2008, Silicon Image, Inc.  All rights reserved.  
+ * Copyright 2008, Silicon Image, Inc.  All rights reserved.
  * No part of this work may be reproduced, modified, distributed, transmitted,
  * transcribed, or translated into any language or computer format, in any form
  * or by any means without written permission of: Silicon Image, Inc., 1060
  * East Arques Avenue, Sunnyvale, California 94085
- * 
+ *
  *****************************************************************************/
 /**
  * @file infofrm.h
  *
- * This is a description of the file. 
+ * This is a description of the file.
  *
  * $Author: $Vladimir Grekhov
  * $Rev: $
@@ -29,8 +29,8 @@
 
 /*****************************************************************************/
 /**
- *  The description of the function HdmiInitIf(). This function intializes Info Frame 
- *	related registers and data structures. Function should be called only once		
+ *  The description of the function HdmiInitIf(). This function intializes Info Frame
+ *	related registers and data structures. Function should be called only once
  *
  *  @param[in,out]      none
  *
@@ -43,8 +43,8 @@ void HdmiInitIf ( void );
 
 /*****************************************************************************/
 /**
- *  The description of the function HdmiProcIfTo(). This function handles info frame 
- *	time outs		
+ *  The description of the function HdmiProcIfTo(). This function handles info frame
+ *	time outs
  *
  *  @param[in] wToStep  Info Frame elapsed from previous to call ( measured in MS)
  *

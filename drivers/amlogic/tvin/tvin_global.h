@@ -40,7 +40,7 @@
 #define CVD_PART3_REG_6         0xfa
 
 //#define ACD_REG_NUM1            0x32  //0x00-0x32 except 0x1E&0x31
-//#define ACD_REG_NUM2            0x39  //the sum of the part2 acd register 
+//#define ACD_REG_NUM2            0x39  //the sum of the part2 acd register
 #define ACD_REG_NUM            0xff//the sum all of the acd register
 
 //#define CRYSTAL_24M
@@ -190,4 +190,3 @@ typedef struct tvin_sig_property_s {
 #define CAMERA_IN_ANCI_DATA_SIZE        0x4000 //save anci data from bt656in
 
 #endif // __TVIN_GLOBAL_H
-

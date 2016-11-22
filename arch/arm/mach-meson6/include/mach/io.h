@@ -114,12 +114,12 @@
 #define IO_A9_APB_BASE      IO_A9_APB_PHY_BASE     ///256k
 #define IO_DEMOD_APB_BASE   IO_DEMOD_APB_PHY_BASE  ///112k
 #define IO_MALI_APB_BASE    IO_MALI_APB_PHY_BASE   ///128k
-#define IO_APB2_BUS_BASE    IO_APB2_BUS_PHY_BASE 
+#define IO_APB2_BUS_BASE    IO_APB2_BUS_PHY_BASE
 #define IO_AHB_BASE         IO_AHB_PHY_BASE        ///128k
 #define IO_AHB_BUS_BASE         IO_AHB_BUS_PHY_BASE        ///128k
 
 #define IO_BOOTROM_BASE     IO_BOOTROM_PHY_BASE    ///64k
-#define IO_SECBUS_BASE      IO_SECBUS_PHY_BASE   
+#define IO_SECBUS_BASE      IO_SECBUS_PHY_BASE
 #define IO_EFUSE_BASE       IO_EFUSE_PHY_BASE      ///4k
 #define IO_SECURE_BASE      IO_SECURE_PHY_BASE     ///16k
 #endif

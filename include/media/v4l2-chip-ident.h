@@ -37,7 +37,7 @@ enum {
 
 
 
-    
+
 	/* SP0A19*/
 	V4L2_IDENT_SP0A19 =  19,
 
@@ -46,7 +46,7 @@ enum {
 
 	/* GC0308, 0x5138= 20792  */
 	V4L2_IDENT_GC0308 =  21,
-	
+
 	/* SP0838,   */
 	V4L2_IDENT_SP0838 =  23,
 
@@ -55,25 +55,25 @@ enum {
 
     /* HI704,   */
 	V4L2_IDENT_HI704 =  27,
-	
+
 	/* HI2056,   */
 	V4L2_IDENT_HI2056 =  28,
 
 	/* GC0307,   */
 	V4L2_IDENT_GC0307 =  29,
-	
+
 	/* GC0329,   */
 	V4L2_IDENT_GC0329 =  31,
-	
+
 	/* NT99250,   */
 	V4L2_IDENT_NT99250 = 32,
 
 	/* NT99252,  */
 	V4L2_IDENT_NT99252 = 33,
-	
+
 	/* NT99340,  */
 	V4L2_IDENT_NT99340 = 34,
-	
+
 	/* NT99340,  */
 	V4L2_IDENT_SP2518 = 35,
 
@@ -82,7 +82,7 @@ enum {
 
         /* AR0543  */
         V4L2_IDENT_AR0543 = 39,
-        
+
         /* AR0833  */
         V4L2_IDENT_AR0833 = 40,
 
@@ -98,6 +98,8 @@ enum {
      /* BF3720  */
      V4L2_IDENT_BF3720 = 44,
 
+     /* HM1375  */
+     V4L2_IDENT_HM1375 = 45,
 	/* module tvaudio: reserved range 50-99 */
 	V4L2_IDENT_TVAUDIO = 50,	/* A tvaudio chip, unknown which it is exactly */
 

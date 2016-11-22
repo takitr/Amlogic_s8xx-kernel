@@ -266,9 +266,6 @@ static void mmc_select_card_type(struct mmc_card *card)
 	card->ext_csd.card_type = card_type;
 }
 
-/* Minimum partition switch timeout in milliseconds */
-#define MMC_MIN_PART_SWITCH_TIME	300
-
 /*
  * Decode extended CSD.
  */
@@ -333,10 +330,6 @@ static int mmc_read_ext_csd(struct mmc_card *card, u8 *ext_csd)
 
 		/* EXT_CSD value is in units of 10ms, but we store in ms */
 		card->ext_csd.part_time = 10 * ext_csd[EXT_CSD_PART_SWITCH_TIME];
-		/* Some eMMC set the value too low so set a minimum */
-		if (card->ext_csd.part_time &&
-		    card->ext_csd.part_time < MMC_MIN_PART_SWITCH_TIME)
-			card->ext_csd.part_time = MMC_MIN_PART_SWITCH_TIME;
 
 		/* Sleep / awake timeout in 100ns units */
 		if (sa_shift > 0 && sa_shift <= 0x17)
@@ -499,11 +492,11 @@ static int mmc_read_ext_csd(struct mmc_card *card, u8 *ext_csd)
 
 		card->ext_csd.rel_param = ext_csd[EXT_CSD_WR_REL_PARAM];
 		card->ext_csd.rst_n_function = ext_csd[EXT_CSD_RST_N_FUNCTION];
-        
+
         if ((card->ext_csd.rst_n_function & EXT_CSD_RST_N_EN_MASK) != EXT_CSD_RST_N_ENABLED){
 
             pr_err("Enable hw reset function here, only once, rst_n_function:%d\n", card->ext_csd.rst_n_function);
-            //add enable hw reset function here, only run once for eMMC            
+            //add enable hw reset function here, only run once for eMMC
             err = mmc_switch(card, EXT_CSD_CMD_SET_NORMAL, EXT_CSD_RST_N_FUNCTION,
                     EXT_CSD_RST_N_ENABLED,
                     10);
@@ -514,10 +507,6 @@ static int mmc_read_ext_csd(struct mmc_card *card, u8 *ext_csd)
             else{
                 card->ext_csd.rst_n_function |= EXT_CSD_RST_N_ENABLED;
             }
-        }
-        else{
-            pr_err("###check hw reset function is already enabled here\n");          
-
         }
 
 		/*
@@ -866,7 +855,7 @@ static int mmc_init_card(struct mmc_host *host, u32 ocr,
 	struct mmc_card *oldcard)
 {
 	struct mmc_card *card;
-	int err, ddr = 0;
+	int err, ddr = 0,flag = 0;
 	u32 cid[4];
 	unsigned int max_dtr;
 	u32 rocr;
@@ -1063,32 +1052,40 @@ static int mmc_init_card(struct mmc_host *host, u32 ocr,
 	/*
 	 * Activate high speed (if supported)
 	 */
+	printk("Activate high speed\n");
 	if (card->ext_csd.hs_max_dtr != 0) {
 		err = 0;
 		if (card->ext_csd.hs_max_dtr > 52000000 &&
-		    host->caps2 & MMC_CAP2_HS200)
+		    host->caps2 & MMC_CAP2_HS200){
 			err = mmc_select_hs200(card);
-		else if	(host->caps & MMC_CAP_MMC_HIGHSPEED)
+			//printk("mmc_select_card err=%d\n",err);
+			//err = -EBADMSG;
+			if (err && err != -EBADMSG)
+				goto free_card;
+			if (err){
+				pr_warning("%s: switch to hS200 failed\n",mmc_hostname(card->host));
+				err = 0;
+				flag=1;
+			}else{
+				mmc_card_set_hs200(card);
+				mmc_set_timing(card->host,MMC_TIMING_MMC_HS200);
+			}
+		}else
+			flag=1;
+
+		if(flag && host->caps & MMC_CAP_MMC_HIGHSPEED){
 			err = mmc_switch(card, EXT_CSD_CMD_SET_NORMAL,
 					 EXT_CSD_HS_TIMING, 1,
 					 card->ext_csd.generic_cmd6_time);
-
-		if (err && err != -EBADMSG)
-			goto free_card;
-
-		if (err) {
-			pr_warning("%s: switch to highspeed failed\n",
-			       mmc_hostname(card->host));
-			err = 0;
-		} else {
-			if (card->ext_csd.hs_max_dtr > 52000000 &&
-			    host->caps2 & MMC_CAP2_HS200) {
-				mmc_card_set_hs200(card);
-				mmc_set_timing(card->host,
-					       MMC_TIMING_MMC_HS200);
-			} else {
-				mmc_card_set_highspeed(card);
-				mmc_set_timing(card->host, MMC_TIMING_MMC_HS);
+			if (err && err != -EBADMSG)
+				goto free_card;
+			if (err) {
+				pr_warning("%s: switch to highspeed failed\n",
+				       mmc_hostname(card->host));
+				err = 0;
+			} else{
+					mmc_card_set_highspeed(card);
+					mmc_set_timing(card->host, MMC_TIMING_MMC_HS);
 			}
 		}
 	}
@@ -1606,6 +1603,7 @@ int mmc_attach_mmc(struct mmc_host *host)
 	/*
 	 * Detect and init the card.
 	 */
+	printk("mmc_init_card\n");
 	err = mmc_init_card(host, host->ocr, NULL);
 	if (err)
 		goto err;

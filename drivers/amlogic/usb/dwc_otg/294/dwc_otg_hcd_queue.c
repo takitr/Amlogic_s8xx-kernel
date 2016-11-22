@@ -7,7 +7,7 @@
  * Synopsys HS OTG Linux Software Driver and documentation (hereinafter,
  * "Software") is an Unsupported proprietary work of Synopsys, Inc. unless
  * otherwise expressly agreed to in writing between Synopsys and you.
- * 
+ *
  * The Software IS NOT an item of Licensed Software or Licensed Product under
  * any End User Software License Agreement or Agreement for Licensed Product
  * with Synopsys or any supplement thereto. You are permitted to use and
@@ -17,7 +17,7 @@
  * any information contained herein except pursuant to this license grant from
  * Synopsys. If you do not agree with this notice, including the disclaimer
  * below, then you are not authorized to use the Software.
- * 
+ *
  * THIS SOFTWARE IS BEING DISTRIBUTED BY SYNOPSYS SOLELY ON AN "AS IS" BASIS
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -42,7 +42,7 @@
 #include "dwc_otg_hcd.h"
 #include "dwc_otg_regs.h"
 
-/** 
+/**
  * Free each QTD in the QH's QTD-list then free the QH.  QH should already be
  * removed from a list.  QTD list should already be empty if called from URB
  * Dequeue.
@@ -54,7 +54,7 @@ void dwc_otg_hcd_qh_free(dwc_otg_hcd_t * hcd, dwc_otg_qh_t * qh)
 {
 	dwc_otg_qtd_t *qtd, *qtd_tmp;
 	dwc_irqflags_t flags;
-	
+
 	/* Free each QTD in the QTD list */
 	DWC_SPINLOCK_IRQSAVE(hcd->lock, &flags);
 	DWC_CIRCLEQ_FOREACH_SAFE(qtd, qtd_tmp, &qh->qtd_list, qtd_list_entry) {
@@ -144,16 +144,16 @@ static uint32_t calc_bus_time(int speed, int is_in, int is_isoc, int bytecount)
 	return NS_TO_US(retval);
 }
 
-/** 
+/**
  * Initializes a QH structure.
  *
  * @param hcd The HCD state structure for the DWC OTG controller.
  * @param qh  The QH to init.
  * @param urb Holds the information about the device/endpoint that we need
- * 	      to initialize the QH. 
+ * 	      to initialize the QH.
  */
 #define SCHEDULE_SLOP 10
-#define SCHEDULE_SPLIT_SLOP	10 
+#define SCHEDULE_SPLIT_SLOP	10
 void qh_init(dwc_otg_hcd_t * hcd, dwc_otg_qh_t * qh, dwc_otg_hcd_urb_t * urb)
 {
 	char *speed, *type;
@@ -172,7 +172,7 @@ void qh_init(dwc_otg_hcd_t * hcd, dwc_otg_qh_t * qh, dwc_otg_hcd_urb_t * urb)
 	DWC_LIST_INIT(&qh->qh_list_entry);
 	qh->channel = NULL;
 
-	/* FS/LS Enpoint on HS Hub 
+	/* FS/LS Enpoint on HS Hub
 	 * NOT virtual root hub */
 	dev_speed = hcd->fops->speed(hcd, urb->priv);
 
@@ -224,7 +224,7 @@ void qh_init(dwc_otg_hcd_t * hcd, dwc_otg_qh_t * qh, dwc_otg_hcd_urb_t * urb)
 	}else if(qh->do_split){
 		qh->interval = SCHEDULE_SPLIT_SLOP;
 		qh->sched_frame = dwc_frame_num_inc(hcd->frame_number,
-					     SCHEDULE_SPLIT_SLOP);		
+					     SCHEDULE_SPLIT_SLOP);
 	}
 
 	DWC_DEBUGPL(DBG_HCD, "DWC OTG HCD QH Initialized\n");
@@ -446,14 +446,14 @@ static int schedule_periodic(dwc_otg_hcd_t * hcd, dwc_otg_qh_t * qh)
 		DWC_INFO("%s: Channel max transfer size too small " "for periodic transfer.\n", __func__);	//NOTICE
 		return status;
 	}
-	
+
 	frame_number = dwc_otg_hcd_get_frame_number(hcd);
 	if((qh->ep_type == UE_INTERRUPT) && !(qh->ep_is_in)){
 		//if(((frame_sched - frame_number) > _qh->interval) || dwc_frame_num_le(frame_number,DWC_HFNUM_MAX_FRNUM + frame_sched)){
 			qh->sched_frame = dwc_frame_num_inc(frame_number, SCHEDULE_SLOP);
 		//}//fix it in future
 	}
-	
+
 	if (hcd->core_if->dma_desc_enable) {
 		/* Don't rely on SOF and start in ready schedule */
 		DWC_LIST_INSERT_TAIL(&hcd->periodic_sched_ready, &qh->qh_list_entry);
@@ -524,7 +524,7 @@ static void deschedule_periodic(dwc_otg_hcd_t * hcd, dwc_otg_qh_t * qh)
 	hcd->periodic_usecs -= qh->usecs;
 }
 
-/** 
+/**
  * Removes a QH from either the non-periodic or periodic schedule.  Memory is
  * not freed.
  *
@@ -571,7 +571,7 @@ void dwc_otg_hcd_qh_remove(dwc_otg_hcd_t * hcd, dwc_otg_qh_t * qh)
  */
 void dwc_otg_hcd_qh_deactivate(dwc_otg_hcd_t * hcd, dwc_otg_qh_t * qh,
 			       int sched_next_periodic_split)
-{	
+{
 	if (dwc_qh_is_non_per(qh)) {
 		dwc_otg_hcd_qh_remove(hcd, qh);
 		if (!DWC_CIRCLEQ_EMPTY(&qh->qtd_list)) {
@@ -642,8 +642,8 @@ void dwc_otg_hcd_qh_deactivate(dwc_otg_hcd_t * hcd, dwc_otg_qh_t * qh,
 	}
 }
 
-/** 
- * This function allocates and initializes a QTD. 
+/**
+ * This function allocates and initializes a QTD.
  *
  * @param urb The URB to create a QTD from.  Each URB-QTD pair will end up
  * 	      pointing to each other so each pair should have a unique correlation.
@@ -663,7 +663,7 @@ dwc_otg_qtd_t *dwc_otg_hcd_qtd_create(dwc_otg_hcd_urb_t * urb, int atomic_alloc)
 	return qtd;
 }
 
-/** 
+/**
  * Initializes a QTD structure.
  *
  * @param qtd The QTD to initialize.
@@ -726,7 +726,7 @@ int dwc_otg_hcd_qtd_add(dwc_otg_qtd_t * qtd,
 			goto done;
 		}
 	}
-//	DWC_SPINLOCK_IRQSAVE(hcd->lock, &flags); 
+//	DWC_SPINLOCK_IRQSAVE(hcd->lock, &flags);
 	retval = dwc_otg_hcd_qh_add(hcd, *qh);
 	if (retval == 0) {
 		qtd->qh = *qh;

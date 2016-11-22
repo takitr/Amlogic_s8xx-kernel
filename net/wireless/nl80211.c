@@ -2483,7 +2483,6 @@ static int nl80211_new_interface(struct sk_buff *skb, struct genl_info *info)
 		 * through the netdev notifier and must be added here
 		 */
 		mutex_init(&wdev->mtx);
-		mutex_init(&wdev->clean_mtx);
 		INIT_LIST_HEAD(&wdev->event_list);
 		spin_lock_init(&wdev->event_lock);
 		INIT_LIST_HEAD(&wdev->mgmt_registrations);
@@ -10686,7 +10685,7 @@ static int nl80211_netlink_notify(struct notifier_block * nb,
 	struct wireless_dev *wdev;
 	struct cfg80211_beacon_registration *reg, *tmp;
 
-	if (state != NETLINK_URELEASE || notify->protocol != NETLINK_GENERIC)
+	if (state != NETLINK_URELEASE)
 		return NOTIFY_DONE;
 
 	rcu_read_lock();

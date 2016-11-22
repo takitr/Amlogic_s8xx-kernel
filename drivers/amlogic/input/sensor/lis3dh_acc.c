@@ -1085,7 +1085,7 @@ static ssize_t attr_get_debug(struct device *dev,
 {
      struct i2c_client *client = to_i2c_client(dev);
      struct lis3dh_acc_status *stat = i2c_get_clientdata(client);
-     
+
 	return sprintf(buf, "%d\n", stat->debug_flag);
 }
 
@@ -1094,13 +1094,13 @@ static ssize_t attr_set_debug(struct device *dev,
 {
      struct i2c_client *client = to_i2c_client(dev);
      struct lis3dh_acc_status *stat = i2c_get_clientdata(client);
-     
+
      if(!strncmp(buf, "0", 1))
          stat->debug_flag = 0;
      else if(!strncmp(buf, "1", 1)) {
          stat->debug_flag = 1;
      }
-     
+
 	return size;
 }
 
@@ -1208,14 +1208,14 @@ static void lis3dh_acc_input_work_func(struct work_struct *work)
 
 	int xyz[3] = { 0 };
 	int err;
-  
+
 	stat = container_of((struct delayed_work *)work,
 			struct lis3dh_acc_status, input_work);
 
 	mutex_lock(&stat->lock);
 	err = lis3dh_acc_get_acceleration_data(stat, xyz);
-	if (err < 0) 
-		dev_err(&stat->client->dev, "get_acceleration_data failed\n"); 
+	if (err < 0)
+		dev_err(&stat->client->dev, "get_acceleration_data failed\n");
 	else
 		lis3dh_acc_report_values(stat, xyz);
 
@@ -1345,7 +1345,7 @@ static int lis3dh_acc_probe(struct i2c_client *client,
 			I2C_FUNC_SMBUS_WORD_DATA | I2C_FUNC_SMBUS_I2C_BLOCK);
 
 	int err = -1;
-   
+
 	dev_info(&client->dev, "probe start.\n");
 
 	stat = kzalloc(sizeof(struct lis3dh_acc_status), GFP_KERNEL);
@@ -1418,7 +1418,7 @@ static int lis3dh_acc_probe(struct i2c_client *client,
 			LIS3DH_ACC_DEV_NAME, __func__, stat->irq1,
 							stat->pdata->gpio_int1);
 	}
-  
+
 	if (stat->pdata->gpio_int2 >= 0) {
 		stat->irq2 = gpio_to_irq(stat->pdata->gpio_int2);
 		pr_info("%s: %s has set irq2 to irq: %d, "
@@ -1465,14 +1465,14 @@ static int lis3dh_acc_probe(struct i2c_client *client,
 	if (err < 0) {
 		dev_err(&client->dev, "update_fs_range failed\n");
 		goto  err_power_off;
-	}   
+	}
 
 	err = lis3dh_acc_update_odr(stat, stat->pdata->poll_interval);
 	if (err < 0) {
 		dev_err(&client->dev, "update_odr failed\n");
 		goto  err_power_off;
 	}
-   
+
 	err = lis3dh_acc_input_init(stat);
 	if (err < 0) {
 		dev_err(&client->dev, "input init failed\n");
@@ -1567,7 +1567,7 @@ static int lis3dh_acc_remove(struct i2c_client *client)
 {
 
 	struct lis3dh_acc_status *stat = i2c_get_clientdata(client);
-   
+
 	if (stat->pdata->gpio_int1 >= 0) {
 		free_irq(stat->irq1, stat);
 		gpio_free(stat->pdata->gpio_int1);
@@ -1596,7 +1596,7 @@ static int lis3dh_acc_remove(struct i2c_client *client)
 static int lis3dh_acc_resume(struct i2c_client *client)
 {
 	struct lis3dh_acc_status *stat = i2c_get_clientdata(client);
-   
+
 	if (stat->on_before_suspend)
 		return lis3dh_acc_enable(stat);
 	return 0;
@@ -1605,7 +1605,7 @@ static int lis3dh_acc_resume(struct i2c_client *client)
 static int lis3dh_acc_suspend(struct i2c_client *client, pm_message_t mesg)
 {
 	struct lis3dh_acc_status *stat = i2c_get_clientdata(client);
-        
+
 	stat->on_before_suspend = atomic_read(&stat->enabled);
 	return lis3dh_acc_disable(stat);
 }
@@ -1636,7 +1636,7 @@ static struct i2c_driver lis3dh_acc_driver = {
 
 static int __init lis3dh_acc_init(void)
 {
-   
+
 	return i2c_add_driver(&lis3dh_acc_driver);
 }
 
@@ -1644,8 +1644,8 @@ static void __exit lis3dh_acc_exit(void)
 {
 
 	pr_info("%s accelerometer driver exit\n",
-						LIS3DH_ACC_DEV_NAME);   
-     
+						LIS3DH_ACC_DEV_NAME);
+
 	i2c_del_driver(&lis3dh_acc_driver);
 
 	return;
@@ -1657,4 +1657,3 @@ module_exit(lis3dh_acc_exit);
 MODULE_DESCRIPTION("lis3dh accelerometer sysfs driver");
 MODULE_AUTHOR("Matteo Dameno, Carmine Iascone, STMicroelectronics");
 MODULE_LICENSE("GPL");
-

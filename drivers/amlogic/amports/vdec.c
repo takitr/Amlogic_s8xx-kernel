@@ -111,6 +111,7 @@ s32 vdec_init(vformat_t vf)
     if (IS_ERR(vdec_device)) {
         r = PTR_ERR(vdec_device);
         printk("vdec: Decoder device register failed (%d)\n", r);
+        inited_vcodec_num--;
         goto error;
     }
 
@@ -199,7 +200,7 @@ void vdec_poweron(vdec_type_t core)
         WRITE_VREG(DOS_MEM_PD_HCODEC, 0);
         // remove hcodec isolation
         WRITE_AOREG(AO_RTI_GEN_PWR_ISO0, READ_AOREG(AO_RTI_GEN_PWR_ISO0) & ~0x30);
-#endif		
+#endif
     }
     else if (core == VDEC_HEVC) {
         if (HAS_HEVC_VDEC) {
@@ -238,7 +239,7 @@ void vdec_poweroff(vdec_type_t core)
         // vdec1 power off
         WRITE_AOREG(AO_RTI_GEN_PWR_SLEEP0, READ_AOREG(AO_RTI_GEN_PWR_SLEEP0) | 0xc);
     } else if (core == VDEC_2) {
-        if (HAS_VDEC2) { 
+        if (HAS_VDEC2) {
             // enable vdec2 isolation
             WRITE_AOREG(AO_RTI_GEN_PWR_ISO0, READ_AOREG(AO_RTI_GEN_PWR_ISO0) | 0x300);
             // power off vdec2 memories
@@ -249,7 +250,7 @@ void vdec_poweroff(vdec_type_t core)
             WRITE_AOREG(AO_RTI_GEN_PWR_SLEEP0, READ_AOREG(AO_RTI_GEN_PWR_SLEEP0) | 0x30);
         }
     } else if (core == VDEC_HCODEC) {
-#if  HAS_HDEC    
+#if  HAS_HDEC
         // enable hcodec isolation
         WRITE_AOREG(AO_RTI_GEN_PWR_ISO0, READ_AOREG(AO_RTI_GEN_PWR_ISO0) | 0x30);
         // power off hcodec memories
@@ -292,14 +293,14 @@ bool vdec_on(vdec_type_t core)
             }
         }
     } else if (core == VDEC_HCODEC) {
-#if  HAS_HDEC 
+#if  HAS_HDEC
         if (((READ_AOREG(AO_RTI_GEN_PWR_SLEEP0) & 0x3) == 0) &&
             (READ_MPEG_REG(HHI_VDEC_CLK_CNTL) & 0x1000000)) {
             ret = true;
         }
 #endif
     } else if (core == VDEC_HEVC) {
-        if (HAS_HEVC_VDEC) { 
+        if (HAS_HEVC_VDEC) {
             if (((READ_AOREG(AO_RTI_GEN_PWR_SLEEP0) & 0xc0) == 0) &&
                 (READ_MPEG_REG(HHI_VDEC2_CLK_CNTL) & 0x1000000)) {
                 ret = true;
@@ -572,11 +573,11 @@ static ssize_t dump_trace_show(struct class *class, struct class_attribute *attr
 	for(i=0;i<debug_trace_num;i++){
         if(i%4 == 0){
 	        if(i%16 == 0)
-	        	pbuf += sprintf(pbuf, "\n");
+			pbuf += sprintf(pbuf, "\n");
 	        else if(i%8 == 0)
-	        	pbuf += sprintf(pbuf, "  ");
+			pbuf += sprintf(pbuf, "  ");
 	        else // 4
-	        	pbuf += sprintf(pbuf, " ");
+			pbuf += sprintf(pbuf, " ");
         }
 		pbuf += sprintf(pbuf, "%04x:",trace_buf[i]);
 	}while(i<debug_trace_num);
@@ -757,4 +758,3 @@ module_exit(vdec_module_exit);
 MODULE_DESCRIPTION("AMLOGIC vdec  driver");
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("Tim Yao <timyao@amlogic.com>");
-

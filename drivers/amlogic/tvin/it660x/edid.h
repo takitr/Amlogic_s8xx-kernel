@@ -14,7 +14,7 @@
 #include "mcu.h"
 #include "debug.h"
 
-//#define _COPY_EDID_ 
+//#define _COPY_EDID_
 
 #ifdef _COPY_EDID_
 

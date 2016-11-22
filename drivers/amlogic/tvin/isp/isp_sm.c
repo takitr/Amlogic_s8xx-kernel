@@ -194,7 +194,7 @@ void af_sm_init(isp_dev_t *devp)
 	struct cam_function_s *func = &devp->cam_param->cam_function;
 	/*init for af*/
 	if(devp->flag & ISP_AF_SM_MASK){
-    	        sm_state.af_state = AF_SCAN_INIT;
+	        sm_state.af_state = AF_SCAN_INIT;
 	}
 	if(devp->flag & ISP_FLAG_CAPTURE){
 		af_info->cur_step = af_info->capture_step;
@@ -242,7 +242,7 @@ void isp_ae_sm(isp_dev_t *devp)
 	static unsigned int newstep,delay_vs,sum,targ_ag_adjust_dir;
 	unsigned int avg_sum = 0;
 
-    	switch(sm_state.isp_ae_parm.isp_ae_state){
+	switch(sm_state.isp_ae_parm.isp_ae_state){
 		case AE_INIT:
 			delay_vs = 0;
 			aepa->win_l = (parm->h_active * aep->ratio_winl) >> 10;
@@ -292,7 +292,7 @@ void isp_ae_sm(isp_dev_t *devp)
 			/*calculate luma avg*/
 			for(i=0;i<16;i++){
 				sub_avg[i] = ae->luma_win[i]/aepa->sub_pixel_sum;
-			    	avg_sum += sub_avg[i] * aep->coef_cur[i];
+				avg_sum += sub_avg[i] * aep->coef_cur[i];
 				if((i == ae_step)&&(ae_sm_dg&AE_CALCULATE_LUMA_AVG_DG))
 					pr_info("sub_avg[%d]=%d,ae->luma_win=%d,aep->coef_cur=%d,aep->coef_env=%d,avg_sum=%d \n",i,sub_avg[i],ae->luma_win[i],aep->coef_cur[i],aep->coef_env[i],avg_sum);
 			}
@@ -429,7 +429,7 @@ void isp_ae_sm(isp_dev_t *devp)
 			break;
 		default:
 			break;
-    	}
+	}
 }
 
 // VDIN_MATRIX_YUV601_RGB
@@ -1266,4 +1266,3 @@ MODULE_PARM_DESC(af_sm_dg,"\n debug flag for auto focus.\n");
 
 module_param(capture_debug,uint,0664);
 MODULE_PARM_DESC(capture_debug,"\n debug flag for isp capture function.\n");
-

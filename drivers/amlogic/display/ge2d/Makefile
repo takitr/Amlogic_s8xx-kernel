@@ -10,4 +10,3 @@ ge2d-objs=bitblt.o \
 				blend.o
 obj-$(CONFIG_AM_GE2D) +=ge2d.o
 EXTRA_CFLAGS += -Iinclude/linux/ge2d/
-									

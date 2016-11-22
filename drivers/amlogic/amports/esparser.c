@@ -95,7 +95,7 @@ static irqreturn_t parser_isr(int irq, void *dev_id)
 
 static inline u32 buf_wp(u32 type)
 {
-    u32 wp = 
+    u32 wp =
 #if MESON_CPU_TYPE >= MESON_CPU_TYPE_MESON8
     (type == BUF_TYPE_HEVC) ? READ_VREG(HEVC_STREAM_WR_PTR) :
 #endif
@@ -106,7 +106,7 @@ static inline u32 buf_wp(u32 type)
     return wp;
 }
 
-static ssize_t _esparser_write(const char __user *buf, 
+static ssize_t _esparser_write(const char __user *buf,
 							size_t count,
 							u32 type,
 							int isphybuf)
@@ -140,7 +140,7 @@ static ssize_t _esparser_write(const char __user *buf,
                 return -EFAULT;
             }
         }
-   
+
         wmb();
         // reset the Write and read pointer to zero again
         WRITE_MPEG_REG(PFIFO_RD_PTR, 0);
@@ -173,7 +173,7 @@ static ssize_t _esparser_write(const char __user *buf,
 
             if (wp == buf_wp(type)) {
                 /*no data fetched*/
-            	return -EAGAIN;
+		return -EAGAIN;
             } else {
                 printk("write timeout, but fetched ok,len=%d,wpdiff=%d\n", len, wp - buf_wp(type));
             }
@@ -242,7 +242,6 @@ s32 esparser_init(struct stream_buf_s *buf)
     u32 parser_sub_end_ptr;
     u32 parser_sub_rp;
     bool first_use = false;
-
 #if MESON_CPU_TYPE >= MESON_CPU_TYPE_MESON8
     if (HAS_HEVC_VDEC && (buf->type == BUF_TYPE_HEVC)) {
         pts_type = PTS_TYPE_HEVC;
@@ -257,7 +256,7 @@ s32 esparser_init(struct stream_buf_s *buf)
     } else {
         return -EINVAL;
     }
-
+    mutex_lock(&esparser_mutex);
     parser_sub_start_ptr = READ_MPEG_REG(PARSER_SUB_START_PTR);
     parser_sub_end_ptr = READ_MPEG_REG(PARSER_SUB_END_PTR);
     parser_sub_rp = READ_MPEG_REG(PARSER_SUB_RP);
@@ -417,7 +416,7 @@ s32 esparser_init(struct stream_buf_s *buf)
         WRITE_MPEG_REG(PARSER_INT_ENABLE,
                        PARSER_INTSTAT_SC_FOUND << PARSER_INT_HOST_EN_BIT);
     }
-
+    mutex_unlock(&esparser_mutex);
     return 0;
 
 Err_2:
@@ -426,6 +425,7 @@ Err_2:
 Err_1:
     atomic_dec(&esparser_use_count);
     buf->flag &= ~BUF_FLAG_PARSER;
+    mutex_unlock(&esparser_mutex);
     return r;
 }
 
@@ -471,7 +471,7 @@ void esparser_release(struct stream_buf_s *buf)
         printk("[%s:%d]###warning, esparser has been released already\n", __FUNCTION__, __LINE__);
         return;
     }
-    
+
     if (atomic_dec_and_test(&esparser_use_count)) {
         WRITE_MPEG_REG(PARSER_INT_ENABLE, 0);
         free_irq(INT_PARSER, (void *)esparser_id);
@@ -520,10 +520,10 @@ ssize_t drm_write(struct file *file,
     if (buf == NULL || count == 0) {
         return -EINVAL;
     }
-	
+
     res = copy_from_user(drm, buf, sizeof(drminfo_t));
     if (res) {
-        printk("drm kmalloc failed res[%d]\n",res);	
+        printk("drm kmalloc failed res[%d]\n",res);
         return -EFAULT;
     }
 
@@ -536,13 +536,13 @@ ssize_t drm_write(struct file *file,
         realcount = drm->drm_pktsize;
         buf = buf + sizeof(drminfo_t);
         isphybuf =0;
-        //DRM_PRNT("drm_get_rawdata drminfo+es drm->drm_hasesdata[0x%x] stbuf->type %d\n",drm->drm_hasesdata,stbuf->type);	
+        //DRM_PRNT("drm_get_rawdata drminfo+es drm->drm_hasesdata[0x%x] stbuf->type %d\n",drm->drm_hasesdata,stbuf->type);
     } else {//buf is hwhead;
         realcount = count;
         isphybuf =0;
 	//DRM_PRNT("drm_get_rawdata drm->drm_hasesdata[0x%x] len[%d] count[%d] realcout[%d]\n",drm->drm_hasesdata,len,count,realcount);
     }
-	
+
     len = realcount ;
     count = realcount;
     totalcount = realcount;
@@ -558,10 +558,10 @@ ssize_t drm_write(struct file *file,
                     return -EAGAIN;
 	            }
             }
-    	}
-    	len = min(len, count);
+	}
+	len = min(len, count);
 
-    	mutex_lock(&esparser_mutex);
+	mutex_lock(&esparser_mutex);
 
         r = _esparser_write(buf,len,stbuf->type,isphybuf);
         if (r < 0){
@@ -605,7 +605,7 @@ ssize_t esparser_write(struct file *file,
     if (stbuf->type!=BUF_TYPE_SUBTITLE && /*subtitle have no level to check,*/
         stbuf_space(stbuf) < count) {
         if ((file != NULL) && (file->f_flags & O_NONBLOCK)) {
-            len = stbuf_space(stbuf) ;	
+            len = stbuf_space(stbuf) ;
 
             if(len<256) {//<1k.do eagain,
                 return -EAGAIN;
@@ -657,4 +657,3 @@ void esparser_sub_reset(void)
 
     return;
 }
-

@@ -128,4 +128,3 @@ DT_MACHINE_START(AML8726_MX, "Amlogic Meson6TV")
 	.dt_compat	= m6tv_common_boards_compat,
 	.restart    = meson_common_restart,
 MACHINE_END
-

@@ -25,7 +25,7 @@
 static  int audiodsp_microcode_insert(struct audiodsp_priv*priv,struct audiodsp_microcode *pmcode)
 {
 	unsigned long flags;
-	
+
 	if(pmcode==NULL)
 		return -1;
 	spin_lock_irqsave(&priv->mcode_lock, flags);
@@ -73,7 +73,7 @@ static struct audiodsp_microcode *  audiodsp_find_mcode_by_name(struct audiodsp_
 
  int audiodsp_microcode_load(struct audiodsp_priv*priv,struct audiodsp_microcode *pmcode)
 {
-	
+
 	const struct firmware *firmware;
 	int err=0;
     unsigned dsp_code_text_start = 0;
@@ -105,7 +105,7 @@ static struct audiodsp_microcode *  audiodsp_find_mcode_by_name(struct audiodsp_
     mb();
 	pmcode->code_size=firmware->size;
 	DSP_PRNT("load mcode size=%d\n,load addr 0x%lx mcode name %s",firmware->size,pmcode->code_start_addr,pmcode->file_name);
-release:	
+release:
 	release_firmware(firmware);
 
 error1:
@@ -147,15 +147,15 @@ error1:
 				}
 
 		}
-	
-	
+
+
 	return 0;
 
 }
 
   int audiodsp_microcode_free(struct audiodsp_priv*priv)
   {
-  	unsigned long flags;
+	unsigned long flags;
 	struct audiodsp_microcode *pmcode;
 	struct list_head  *list,*head;
 	local_irq_save(flags);

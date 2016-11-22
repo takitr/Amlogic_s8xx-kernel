@@ -42,7 +42,7 @@ unsigned char cf_open(void)
 		ret = cf_card_init(&cf_info);
 		cf_retry_init = 0;
 	}
-	
+
 	if(ret)
 		return CARD_UNIT_READY;
 	else
@@ -76,8 +76,8 @@ int cf_ioctl(dev_t dev, int req, void *argp)
 {
 	/*unsigned32 ret=0;
     int errno;
-    blkdev_request1 *req1 =(blkdev_request1 *) argp;  
-    blkdev_request *r =&(req1->req); 
+    blkdev_request1 *req1 =(blkdev_request1 *) argp;
+    blkdev_request *r =&(req1->req);
     blkdev_sg_buffer* psgbuf ;
     void * databuf;
     avfs_status_code status;
@@ -93,27 +93,27 @@ int cf_ioctl(dev_t dev, int req, void *argp)
             {
                 case BLKDEV_REQ_READ:
                 case BLKDEV_REQ_READ_DEV:
-                	card_get_dev();
+			card_get_dev();
                     ret = cf_read_data(r->start,r->count*512,(INT8U *)databuf);
                     card_put_dev();
                     if(!ret)
                         status=AVFS_SUCCESSFUL;
                     else
-                        status=AVFS_IO_ERROR;                   
+                        status=AVFS_IO_ERROR;
                     if(r->req_done)
-                        r->req_done(r->done_arg, status, ret);       
+                        r->req_done(r->done_arg, status, ret);
                     break;
                 case BLKDEV_REQ_WRITE:
                 case BLKDEV_REQ_WRITE_DEV:
-                	card_get_dev();
+			card_get_dev();
                     ret = cf_write_data(r->start,r->count*512,(INT8U *)databuf);
                     card_put_dev();
                     if(!ret)
                         status=AVFS_SUCCESSFUL;
                     else
-                        status=AVFS_IO_ERROR;                       
+                        status=AVFS_IO_ERROR;
                     if(r->req_done)
-                        r->req_done(r->done_arg, status, ret);       
+                        r->req_done(r->done_arg, status, ret);
                     break;
                 case BLKDEV_REQ_ASYREAD_DEV:
                 case BLKDEV_REQ_ASYREAD_MEM:
@@ -133,15 +133,15 @@ int cf_ioctl(dev_t dev, int req, void *argp)
         }
         case BLKIO_GET_TYPE_STR:
         {
-        	*(char **)argp = "CF";
-        	break;
-    	}
-    	case BLKIO_GET_DEVSTAT:
-    	{
-    		blkdev_stat_t *info = (blkdev_stat_t *)argp;
-    		cf_get_info(info);
-    		break;
-    	}    	
+		*(char **)argp = "CF";
+		break;
+	}
+	case BLKIO_GET_DEVSTAT:
+	{
+		blkdev_stat_t *info = (blkdev_stat_t *)argp;
+		cf_get_info(info);
+		break;
+	}
         default:
         {
             errno = EBADRQC;
@@ -149,7 +149,7 @@ int cf_ioctl(dev_t dev, int req, void *argp)
             break;
         }
     }*/
-    return 0; 
+    return 0;
 }
 
 void cf_init(void)

@@ -36,7 +36,7 @@ enum
     INFO_MPEG,
     INFO_UNREC,
     INFO_ACP,
-    INFO_VSI, 
+    INFO_VSI,
 };
 
 
@@ -44,4 +44,3 @@ enum
 void RxInfo_InterruptHandler(uint8_t info_type);
 
 #endif // __SI_DRV_RX_INFO_H__
-

@@ -27,12 +27,12 @@
 #define HDMI_3D_SVD_SUPPORT                                  // comment this out if the sink doesn't support 3D
 #define HDMI_SVD_STRUCTURE_LENGTH_EDID      17  // number of VIC entries in EDID (should be updated per application)
 
-ROM Mandatory3dFmt_t Mandatory_60[Mandatory3dFmt_60] = { {{VIC_1080P_24, 0}, {FRAME_SEQUENTIAL|TOP_BOTTOM}}, 
+ROM Mandatory3dFmt_t Mandatory_60[Mandatory3dFmt_60] = { {{VIC_1080P_24, 0}, {FRAME_SEQUENTIAL|TOP_BOTTOM}},
                                                          {{VIC_720P_60, 0} , {FRAME_SEQUENTIAL|TOP_BOTTOM}},
                                                          {{VIC_1080i_60, 0}, {LEFT_RIGHT}}
                                                          };
 
-ROM Mandatory3dFmt_t Mandatory_50[Mandatory3dFmt_50] = { {{VIC_1080P_24, 0}, {FRAME_SEQUENTIAL|TOP_BOTTOM}}, 
+ROM Mandatory3dFmt_t Mandatory_50[Mandatory3dFmt_50] = { {{VIC_1080P_24, 0}, {FRAME_SEQUENTIAL|TOP_BOTTOM}},
                                                          {{VIC_720P_50, 0},  {FRAME_SEQUENTIAL|TOP_BOTTOM}},
                                                          {{VIC_1080i_50, 0}, {LEFT_RIGHT}}
                                                          };
@@ -228,7 +228,7 @@ bool_t SiiDrv3DWriteBurst()
         }
         pvideoFormatData++;
     }
-    
+
     return SUCCESS;
 }
 
@@ -304,7 +304,7 @@ void SiiDrvCbusBuild3DData(void)
     uint8_t checksum;
     uint8_t length = HDMI_3D_SVD_STRUCTURE_LENGTH;
     uint8_t EdidVicCnt = HDMI_SVD_STRUCTURE_LENGTH_EDID;
-    
+
     memset(pDrvCbus->videoFormatData, 0x00, sizeof(pDrvCbus->videoFormatData));
 
     pDrvCbus->videoFormatData[0].burstId.low = burstId_3D_DTD;
@@ -545,7 +545,7 @@ bool_t  SiiDrvCbusMscAbortResReasonGet ( uint8_t *pData )
 {
     if ( pDrvCbus->statusFlags & SiiCBUS_MSC_ABORT_RES )
 	{
-    	*pData = pDrvCbus->mscAbortResReason;
+	*pData = pDrvCbus->mscAbortResReason;
 		pDrvCbus->statusFlags &= ~SiiCBUS_MSC_ABORT_RES;
 		return( true );
 	}
@@ -568,7 +568,7 @@ void  SiiDrvCbusTermCtrl ( bool_t terminate )
 /*****************************************************************************/
 /**
  *  @brief        Write the specified Sideband Channel command to the CBUS.
- *                   Command can be a MSC_MSG command (RCP/MCW/RAP), or another command 
+ *                   Command can be a MSC_MSG command (RCP/MCW/RAP), or another command
  *                   such as READ_DEVCAP, GET_VENDOR_ID, SET_HPD, CLR_HPD, etc.
  *
  *  @param[in]        pReq        Pointer to a cbus_req_t structure containing the
@@ -817,7 +817,7 @@ bool_t SiiDrvCbusProcessInterrupts()
  *  @retval    false        Failure
  *
  *  @note: Requires that SiiDrvCbusInstanceSet() is called prior to this call
- * 
+ *
  *****************************************************************************/
  bool_t SiiDrvCbusInitialize ( void )
 {
@@ -839,7 +839,7 @@ bool_t SiiDrvCbusProcessInterrupts()
     {
         SiiRegWrite(REG_CBUS_DEVICE_CAP_6, MHL_AUD_LINK_MODE_2CH);
     }
-    
+
     // Enable the VS commands, all interrupts, and clear legacy
     SiiRegWrite( REG_CBUS_INTR_0_MASK, 0xFF );      // Enable desired interrupts
     SiiRegWrite( REG_CBUS_INTR_1_MASK, 0xCC );      // Enable desired interrupts
@@ -850,5 +850,3 @@ bool_t SiiDrvCbusProcessInterrupts()
 #endif
     return( true );
 }
-
-

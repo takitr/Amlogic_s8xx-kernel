@@ -303,7 +303,7 @@ static void reinit_camera_dec(struct am656in_dev_s *devp)
 			(2 << BT_HSYNC_DELAY)
 
 		      );
-	//WRITE_CBUS_REG(BT_PORT_CTRL,0x421001); 
+	//WRITE_CBUS_REG(BT_PORT_CTRL,0x421001);
 
 	WR(BT_601_CTRL2 , ( 10 << 16));     // FID field check done point.
 
@@ -358,11 +358,11 @@ static void reinit_camera_dec(struct am656in_dev_s *devp)
 			|(1 << BT_CLOCK_ENABLE)      // enable 656 clock.
 			|(0 << BT_FID_EN_BIT)            // use external fid pin.
 			|(1 << BT_XCLK27_EN_BIT)     // xclk27 is input.
-			|(1 << BT_PROG_MODE ) 
-			|(0 << BT_AUTO_FMT)  
+			|(1 << BT_PROG_MODE )
+			|(0 << BT_AUTO_FMT)
 			|(1 << BT_CAMERA_MODE)     // enable camera mode
-			|(1 << BT_656CLOCK_RESET) 
-			|(1 << BT_SYSCLOCK_RESET) 
+			|(1 << BT_656CLOCK_RESET)
+			|(1 << BT_SYSCLOCK_RESET)
 		      );
 	WRITE_CBUS_REG(PERIPHS_PIN_MUX_7,0) ;  //disable XIF function. it's shared with gpioZ_3.
 	temp_data = READ_CBUS_REG(PERIPHS_PIN_MUX_9);
@@ -370,8 +370,8 @@ static void reinit_camera_dec(struct am656in_dev_s *devp)
 			(1 << 14) |    // enable gpioZ 10:3 to be bt656 dt_in
 			(1 << 15) |
 			(1 << 16));
-	#elif (MESON_CPU_TYPE >= CONFIG_ARCH_MESON8)
-	if(devp->para.isp_fe_port == TVIN_PORT_CAMERA) {		
+	#elif (MESON_CPU_TYPE >= MESON_CPU_TYPE_MESON8)
+	if(devp->para.isp_fe_port == TVIN_PORT_CAMERA) {
 	        temp_data = (1 << BT_EN_BIT)    // enable BT moduale.
 			|(0 << BT_REF_MODE_BIT )      // timing reference is from bit stream.
 			|(0 << BT_FMT_MODE_BIT )      //PAL
@@ -380,16 +380,16 @@ static void reinit_camera_dec(struct am656in_dev_s *devp)
 			|(1 << BT_CLOCK_ENABLE)      // enable 656 clock.
 			|(0 << BT_FID_EN_BIT)            // use external fid pin.
 			//|(0 << BT_XCLK27_EN_BIT)     // xclk27 is input. change to Raw_mode setting from M8
-			|(0 << BT_PROG_MODE ) 
-			|(0 << BT_AUTO_FMT)  
+			|(0 << BT_PROG_MODE )
+			|(0 << BT_AUTO_FMT)
 			|(0 << BT_CAMERA_MODE)     // enable camera mode
-			|(1 << BT_656CLOCK_RESET) 
-			|(1 << BT_SYSCLOCK_RESET) 
+			|(1 << BT_656CLOCK_RESET)
+			|(1 << BT_SYSCLOCK_RESET)
 			|(1<<9)					//enable raw data output
 			|(1<<27)				//enable raw data to isp
 			|(0<<28)				//enable csi2 pin
 		    ;
-	} else {	
+	} else {
 	        temp_data = (1 << BT_EN_BIT)    // enable BT moduale.
 			|(0 << BT_REF_MODE_BIT )      // timing reference is from bit stream.
 			|(0 << BT_FMT_MODE_BIT )      //PAL
@@ -398,11 +398,11 @@ static void reinit_camera_dec(struct am656in_dev_s *devp)
 			|(1 << BT_CLOCK_ENABLE)      // enable 656 clock.
 			|(0 << BT_FID_EN_BIT)            // use external fid pin.
 			//|(1 << BT_XCLK27_EN_BIT)     // xclk27 is input. change to Raw_mode setting from M8
-			|(1 << BT_PROG_MODE ) 
-			|(0 << BT_AUTO_FMT)  
+			|(1 << BT_PROG_MODE )
+			|(0 << BT_AUTO_FMT)
 			|(1 << BT_CAMERA_MODE)     // enable camera mode
-			|(1 << BT_656CLOCK_RESET) 
-			|(1 << BT_SYSCLOCK_RESET) 
+			|(1 << BT_656CLOCK_RESET)
+			|(1 << BT_SYSCLOCK_RESET)
 			;
 	}
 	if(devp->para.bt_path == BT_PATH_GPIO) {
@@ -419,7 +419,7 @@ static void reinit_camera_dec(struct am656in_dev_s *devp)
                 temp_data |= 0x80000fc0;
                 WRITE_CBUS_REG(HHI_CSI_PHY_CNTL2,temp_data);
 	}
-		
+
 	#endif
 
 	return;
@@ -432,7 +432,7 @@ static void start_amvdec_656_601_camera_in(struct am656in_dev_s *devp)
                 printk("[bt656..] %s bt656 have started alreadly.\n",__func__);
                 return;
         }
-        devp->dec_status = TVIN_AM656_RUNING; 
+        devp->dec_status = TVIN_AM656_RUNING;
 	//NTSC or PAL input(interlace mode): D0~D7(with SAV + EAV )
 	if(port == TVIN_PORT_BT656){
 		devp->para.fmt=TVIN_SIG_FMT_BT656IN_576I_50HZ;
@@ -462,7 +462,7 @@ static void start_amvdec_656_601_camera_in(struct am656in_dev_s *devp)
 	}
     printk("[bt656(%s)]: %s input port: %s fmt: %s.\n",BT656_VER,__func__,
             tvin_port_str(devp->para.port),tvin_sig_fmt_str(devp->para.fmt));
-	
+
 	return;
 }
 
@@ -510,7 +510,7 @@ static int am656in_open(struct inode *node, struct file *file)
 
 }
 static int am656in_release(struct inode *node, struct file *file)
-{    
+{
 	file->private_data = NULL;
 	return 0;
 }
@@ -707,15 +707,15 @@ static int amvdec_656in_probe(struct platform_device *pdev)
 	//		    devp->mem_start,
 	//		    devp->mem_size);
     //}
-    
-    
+
+
 	/*register frontend */
     sprintf(devp->frontend.name, "%s", DEV_NAME);
 	//tvin_frontend_init(&devp->frontend, &am656_decoder_ops_s, &am656_machine_ops, pdev->id);
     if(!tvin_frontend_init(&devp->frontend,&am656_decoder_ops_s,&am656_machine_ops, pdev->id)) {
         if(tvin_reg_frontend(&devp->frontend))
             printk(" %s register frontend error \n",__func__);
-    }        
+    }
 
 	/*set pinmux for ITU601 A and ITU601 B*/
 	/* set drvdata */
@@ -734,7 +734,7 @@ fail_kmalloc_dev:
 }
 
 static int amvdec_656in_remove(struct platform_device *pdev)
-{	
+{
 	struct am656in_dev_s *devp;
 	devp = platform_get_drvdata(pdev);
 
@@ -744,7 +744,7 @@ static int amvdec_656in_remove(struct platform_device *pdev)
 	kfree((const void *)devp);
 	/* free drvdata */
 	dev_set_drvdata(devp->dev, NULL);
-	platform_set_drvdata(pdev, NULL);       
+	platform_set_drvdata(pdev, NULL);
 	return 0;
 }
 //#ifdef CONFIG_OF
@@ -765,7 +765,7 @@ static struct platform_driver amvdec_656in_driver = {
 };
 
 static int __init amvdec_656in_init_module(void)
-{       
+{
         int ret = 0;
         struct platform_device *pdev;
         printk("amvdec_656in module: init.\n");
@@ -796,8 +796,8 @@ static int __init amvdec_656in_init_module(void)
                 printk("failed to register amvdec_656in driver\n");
                 goto fail_pdrv_register;
         }
-                        
-        return 0;        
+
+        return 0;
 fail_pdrv_register:
         platform_device_unregister(pdev);
 fail_pdev_register:
@@ -826,4 +826,3 @@ module_exit(amvdec_656in_exit_module);
 MODULE_DESCRIPTION("AMLOGIC BT656_601 input driver");
 MODULE_LICENSE("GPL");
 MODULE_VERSION("2.0.0");
-

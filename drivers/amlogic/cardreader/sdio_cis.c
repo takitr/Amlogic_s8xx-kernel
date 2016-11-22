@@ -407,4 +407,3 @@ void sdio_free_func_cis(struct sdio_func *func)
 	 */
 	put_device(&func->card->dev);
 }
-

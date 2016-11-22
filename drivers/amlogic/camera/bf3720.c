@@ -205,36 +205,36 @@ struct v4l2_querymenu bf3720_qmenu_wbmode[] = {
 			},{
 				.id 		= V4L2_CID_DO_WHITE_BALANCE,
 				.index		= CAM_WB_FLUORESCENT,
-				.name		= "fluorescent", 
+				.name		= "fluorescent",
 				.reserved	= 0,
 			},{
 				.id 		= V4L2_CID_DO_WHITE_BALANCE,
 				.index		= CAM_WB_FLUORESCENT,
-				.name		= "warm-fluorescent", 
+				.name		= "warm-fluorescent",
 				.reserved	= 0,
 			},
 		};
-	
+
 struct v4l2_querymenu bf3720_qmenu_anti_banding_mode[] = {
 		{
 			.id 		= V4L2_CID_POWER_LINE_FREQUENCY,
-			.index		= CAM_BANDING_50HZ, 
+			.index		= CAM_BANDING_50HZ,
 			.name		= "50hz",
 			.reserved	= 0,
 		},{
 			.id 		= V4L2_CID_POWER_LINE_FREQUENCY,
-			.index		= CAM_BANDING_60HZ, 
+			.index		= CAM_BANDING_60HZ,
 			.name		= "60hz",
 			.reserved	= 0,
 		},
 	};
-	
+
 	typedef struct {
 		__u32	id;
 		int 	num;
 		struct v4l2_querymenu* bf3720_qmenu;
 	}bf3720_qmenu_set_t;
-	
+
 	bf3720_qmenu_set_t bf3720_qmenu_set[] = {
 		{
 			.id 			= V4L2_CID_DO_WHITE_BALANCE,
@@ -246,12 +246,12 @@ struct v4l2_querymenu bf3720_qmenu_anti_banding_mode[] = {
 			.bf3720_qmenu	= bf3720_qmenu_anti_banding_mode,
 		},
 	};
-	
+
 	static int vidioc_querymenu(struct file *file, void *priv,
 					struct v4l2_querymenu *a)
 	{
 		int i, j;
-	
+
 		for (i = 0; i < ARRAY_SIZE(bf3720_qmenu_set); i++)
 		if (a->id && a->id == bf3720_qmenu_set[i].id) {
 			for(j = 0; j < bf3720_qmenu_set[i].num; j++)
@@ -261,7 +261,7 @@ struct v4l2_querymenu bf3720_qmenu_anti_banding_mode[] = {
 				return (0);
 			}
 		}
-	
+
 		return -EINVAL;
 	}
 
@@ -378,7 +378,7 @@ struct bf3720_device {
 
 	/* platform device data from board initting. */
 	aml_cam_info_t  cam_info;
-	
+
 	/* wake lock */
 	struct wake_lock	wake_lock;
 
@@ -430,10 +430,10 @@ static int get_total_pic_size(resolution_size_t max_size)
 	if (max_size >= SIZE_2592X1944)
 		ret = 4;
 	else if (max_size >= SIZE_2048X1536)
-		ret = 3;    
-		
+		ret = 3;
+
 	//printk("total_pic_size is %d\n", ret);
-	
+
 	return ret;
 }
 
@@ -443,11 +443,11 @@ static int get_total_pic_size(resolution_size_t max_size)
    ------------------------------------------------------------------*/
 
 struct aml_camera_i2c_fig_s bf3720_script[] = {
-	
+
 	{0x1b , 0x2f},  // 0x2f; 0x5b:3倍频;   0x6e:2倍频; 0X6F: 1倍频
 	{0x11 , 0x00},
 	{0x15 , 0x00},
-	{0x3a , 0x01},  // YUV 输出顺序；03:VYUY; 02:UYVY; 01:YVYU; 00:YUYV                    
+	{0x3a , 0x01},  // YUV 输出顺序；03:VYUY; 02:UYVY; 01:YVYU; 00:YUYV
 	{0x09 , 0x10},
 
 	{0x13 , 0x80},
@@ -456,27 +456,27 @@ struct aml_camera_i2c_fig_s bf3720_script[] = {
 	{0x87 , 0x2a},
 	{0x13 , 0x87},
 
-	{0xbb , 0x20},	
+	{0xbb , 0x20},
 	{0x2f , 0x10},
 	{0x27 , 0xc1},
-	{0x16 , 0x80},	
+	{0x16 , 0x80},
 	{0xe1 , 0x98},
-	{0xe4 , 0x0f},	
+	{0xe4 , 0x0f},
 	{0xe3 , 0x04},
 	{0xec , 0xa8},
 	{0x20 , 0x40},
 	{0xeb , 0xd5},
- 	{0xd2 , 0x19},
+	{0xd2 , 0x19},
 
 	//lens shading
 	{0x33 , 0x80},
 	{0x34 , 0x28},
 	{0x35 , 0x34},
 	{0x65 , 0x32},
-	{0x66 , 0x30},	
-	{0xf1 , 0x00},	
-	
-	//AE	
+	{0x66 , 0x30},
+	{0xf1 , 0x00},
+
+	//AE
 	{0x24 , 0x50},//0x70 zhouj20140212
 	{0x97 , 0x70},
 	{0x25 , 0x88},
@@ -495,38 +495,38 @@ struct aml_camera_i2c_fig_s bf3720_script[] = {
 	{0x2d , 0x40},
 	{0x2e , 0x38},
      /*
-	//gamma 清晰亮丽	
+	//gamma 清晰亮丽
 	{0x40 , 0x58},
 	{0x41 , 0x54},
 	{0x42 , 0x4e},
-	{0x43 , 0x44}, 
-	{0x44 , 0x3e}, 
+	{0x43 , 0x44},
+	{0x44 , 0x3e},
 	{0x45 , 0x39},
 	{0x46 , 0x35},
 	{0x47 , 0x31},
-	{0x48 , 0x2e}, 
-	{0x49 , 0x2b}, 
+	{0x48 , 0x2e},
+	{0x49 , 0x2b},
 	{0x4b , 0x29},
 	{0x4c , 0x27},
 	{0x4e , 0x23},
-	{0x4f , 0x20}, 
+	{0x4f , 0x20},
 	{0x50 , 0x1f},
 
 	//gamma default
 	{0x40 , 0x88},
 	{0x41 , 0x70},
 	{0x42 , 0x5f},
-	{0x43 , 0x50}, 
-	{0x44 , 0x46}, 
+	{0x43 , 0x50},
+	{0x44 , 0x46},
 	{0x45 , 0x40},
 	{0x46 , 0x3a},
 	{0x47 , 0x36},
-	{0x48 , 0x32}, 
-	{0x49 , 0x2f}, 
+	{0x48 , 0x32},
+	{0x49 , 0x2f},
 	{0x4b , 0x2c},
 	{0x4c , 0x29},
 	{0x4e , 0x25},
-	{0x4f , 0x22}, 
+	{0x4f , 0x22},
 	{0x50 , 0x1f},
 	 */
      /*
@@ -534,37 +534,37 @@ struct aml_camera_i2c_fig_s bf3720_script[] = {
 	{0x40 , 0x98},
 	{0x41 , 0x88},
 	{0x42 , 0x6e},
-	{0x43 , 0x59}, 
-	{0x44 , 0x4d}, 
+	{0x43 , 0x59},
+	{0x44 , 0x4d},
 	{0x45 , 0x45},
 	{0x46 , 0x3e},
 	{0x47 , 0x39},
-	{0x48 , 0x35}, 
-	{0x49 , 0x31}, 
+	{0x48 , 0x35},
+	{0x49 , 0x31},
 	{0x4b , 0x2e},
 	{0x4c , 0x2b},
 	{0x4e , 0x26},
-	{0x4f , 0x23}, 
+	{0x4f , 0x23},
 	{0x50 , 0x20},
       */
 	//gamma low noise
-	{0x40 , 0x68}, 
-	{0x41 , 0x60}, 
-	{0x42 , 0x54}, 
-	{0x43 , 0x46}, 
-	{0x44 , 0x3e}, 
-	{0x45 , 0x39}, 
-	{0x46 , 0x35}, 
-	{0x47 , 0x31}, 
-	{0x48 , 0x2e}, 
-	{0x49 , 0x2b}, 
-	{0x4b , 0x29}, 
-	{0x4c , 0x27}, 
-	{0x4e , 0x24}, 
-	{0x4f , 0x22}, 
-	{0x50 , 0x20}, 
+	{0x40 , 0x68},
+	{0x41 , 0x60},
+	{0x42 , 0x54},
+	{0x43 , 0x46},
+	{0x44 , 0x3e},
+	{0x45 , 0x39},
+	{0x46 , 0x35},
+	{0x47 , 0x31},
+	{0x48 , 0x2e},
+	{0x49 , 0x2b},
+	{0x4b , 0x29},
+	{0x4c , 0x27},
+	{0x4e , 0x24},
+	{0x4f , 0x22},
+	{0x50 , 0x20},
 	{0x3f , 0x30},
-		
+
 	//非A光CCM  CCM default
 	{0xd4 , 0x0a},
 	{0x51 , 0x26},
@@ -601,24 +601,24 @@ struct aml_camera_i2c_fig_s bf3720_script[] = {
 	{0x54 , 0x12},
 	{0x57 , 0x77},
 	{0x58 , 0x65},
-	{0x59 , 0x45},		
-	{0x5a , 0x5e},		
-	{0x5b , 0x19},		
-	{0x5d , 0x95},		
+	{0x59 , 0x45},
+	{0x5a , 0x5e},
+	{0x5b , 0x19},
+	{0x5d , 0x95},
 	{0xd3 , 0x00},
-      
+
 	//非A光 CCM 绿色较好
-	{0xd4 , 0x0a},                   
-	{0x51 , 0x05},                    
-	{0x52 , 0x16},                    
-	{0x53 , 0x11},                    
-	{0x54 , 0x15},                    
-	{0x57 , 0x8f},                    
-	{0x58 , 0x7a},                    
-	{0x59 , 0x48},                    
-	{0x5a , 0x88},                    
-	{0x5b , 0x3f},                    
-	{0x5d , 0x95},                    
+	{0xd4 , 0x0a},
+	{0x51 , 0x05},
+	{0x52 , 0x16},
+	{0x53 , 0x11},
+	{0x54 , 0x15},
+	{0x57 , 0x8f},
+	{0x58 , 0x7a},
+	{0x59 , 0x48},
+	{0x5a , 0x88},
+	{0x5b , 0x3f},
+	{0x5d , 0x95},
 	{0xd3 , 0x00},
 	*/
 
@@ -636,12 +636,12 @@ struct aml_camera_i2c_fig_s bf3720_script[] = {
 	{0x5d , 0x9d},
 	{0xd3 , 0x00},
 
-	//非A光饱和度	
+	//非A光饱和度
 	{0x3B , 0x00},
 	{0xb1 , 0xc0},
 	{0xb2 , 0x98},//0xa0
 
-	//A光饱和度	
+	//A光饱和度
 	{0x3B , 0x01},
 	{0xb1 , 0xc0},
 	{0xb2 , 0xa0},
@@ -653,19 +653,19 @@ struct aml_camera_i2c_fig_s bf3720_script[] = {
 	{0x70 , 0x87},//高四位边缘增强
 	{0x72 , 0x72},
 	{0x7a , 0x33},//去噪寄存器
-	{0x78 , 0x33},	
+	{0x78 , 0x33},
 	{0x5c , 0x00},
 	//gain
 
 
-	{0xa2 , 0x0c},//AWB	
+	{0xa2 , 0x0c},//AWB
 	{0xa3 , 0x27},
 	{0xa4 , 0x09},
 	{0xa5 , 0x30},
 	{0xa7 , 0x97},
 	{0xa8 , 0x19},
 	{0xa9 , 0x52},
-	{0xaa , 0x52},	
+	{0xaa , 0x52},
 	{0xab , 0x18},
 	{0xac , 0x30},
 	{0xad , 0xf0},
@@ -673,8 +673,8 @@ struct aml_camera_i2c_fig_s bf3720_script[] = {
 	{0xd0 , 0x00},
 	{0xd1 , 0x91},
 	{0x23 , 0x44},
-	{0xee , 0x30},	
-	 
+	{0xee , 0x30},
+
 	{0x91 , 0x9c},
 	{0x78 , 0x73},
 	{0x7c , 0x48},
@@ -692,7 +692,7 @@ struct aml_camera_i2c_fig_s bf3720_script[] = {
 	{0x19 , 0x00},
 	{0x1a , 0x78},
 	{0x12 , 0x10},
-       */	
+       */
       //1600*1200
 	{0xc0 , 0x00},
 	{0xc1 , 0x00},
@@ -705,38 +705,38 @@ struct aml_camera_i2c_fig_s bf3720_script[] = {
 	{0x18, 0xc8},		///c8
 	{0x19, 0x00},
 	{0x1a, 0x96},
-	
-    {0x12, 0x10}, 
-        
+
+    {0x12, 0x10},
+
 	{0x1e , 0x30},//mirror and flip//0x00//0x20 //0x10
 	{0x89 , 0x55},
 
-	{0xff,0xff}, 
+	{0xff,0xff},
 };
 
-//load bf3720 parameters 
+//load bf3720 parameters
 static void bf3720_init_regs(struct bf3720_device *dev)
 {
 	int i=0;//,j;
 	unsigned char buf[2];
 	struct i2c_client *client = v4l2_get_subdevdata(&dev->sd);
-	
+
 	while(1)
 	{
 		buf[0] = bf3720_script[i].addr;//(unsigned char)((bf3720_script[i].addr >> 8) & 0xff);
 		//buf[1] = (unsigned char)(bf3720_script[i].addr & 0xff);
 		buf[1] = bf3720_script[i].val;
-		if (bf3720_script[i].val==0xff&&bf3720_script[i].addr==0xff) 
-	 	{
-	    		printk("bf3720_write_regs success in initial bf3720.\n");
-	 		break;
-	 	}
+		if (bf3720_script[i].val==0xff&&bf3720_script[i].addr==0xff)
+		{
+			printk("bf3720_write_regs success in initial bf3720.\n");
+			break;
+		}
 		if((i2c_put_byte_add8(client,buf, 2)) < 0)
-	    	{
+		{
 			printk("fail in initial bf3720. \n");
 			return;
-	    	}
-		i++;	
+		}
+		i++;
 	}
 	msleep(20);
 	return;
@@ -829,17 +829,17 @@ void bf3720_set_param_wb(struct bf3720_device *dev,enum  camera_wb_flip_e para)/
 		case CAM_WB_AUTO://auto
 			buf[0]=0x13;
 			buf[1]=0x87;
-			i2c_put_byte_add8(client,buf,2);	
-		    	printk("CAM_WB_AUTO       \n");
-			
+			i2c_put_byte_add8(client,buf,2);
+			printk("CAM_WB_AUTO       \n");
+
 			break;
 
 		case CAM_WB_CLOUD: //cloud
 
 			buf[0]=0x13;
 			buf[1]=0x85;
-			i2c_put_byte_add8(client,buf,2);	
-			
+			i2c_put_byte_add8(client,buf,2);
+
 			printk("CAM_WB_CLOUD       \n");
 			buf[0]=0x01;
 			buf[1]=0x06;
@@ -847,14 +847,14 @@ void bf3720_set_param_wb(struct bf3720_device *dev,enum  camera_wb_flip_e para)/
 
 			buf[0]=0x02;
 			buf[1]=0x1d;
-			i2c_put_byte_add8(client,buf,2);		
-			
+			i2c_put_byte_add8(client,buf,2);
+
 			break;
 
 		case CAM_WB_DAYLIGHT: //
 			buf[0]=0x13;
 			buf[1]=0x85;
-			i2c_put_byte_add8(client,buf,2);	
+			i2c_put_byte_add8(client,buf,2);
 			printk("CAM_WB_DAYLIGHT       \n");
 			buf[0]=0x01;
 			buf[1]=0x0d;
@@ -862,15 +862,15 @@ void bf3720_set_param_wb(struct bf3720_device *dev,enum  camera_wb_flip_e para)/
 
 			buf[0]=0x02;
 			buf[1]=0x16;
-			i2c_put_byte_add8(client,buf,2);		
+			i2c_put_byte_add8(client,buf,2);
 
 			break;
 
 		case CAM_WB_INCANDESCENCE:
 			buf[0]=0x13;
 			buf[1]=0x85;
-			i2c_put_byte_add8(client,buf,2);	
-			
+			i2c_put_byte_add8(client,buf,2);
+
 			printk("CAM_WB_INCANDESCENCE       \n");
 			buf[0]=0x01;
 			buf[1]=0x13;
@@ -878,7 +878,7 @@ void bf3720_set_param_wb(struct bf3720_device *dev,enum  camera_wb_flip_e para)/
 
 			buf[0]=0x02;
 			buf[1]=0x11;
-			i2c_put_byte_add8(client,buf,2);		
+			i2c_put_byte_add8(client,buf,2);
 
 
 			break;
@@ -886,7 +886,7 @@ void bf3720_set_param_wb(struct bf3720_device *dev,enum  camera_wb_flip_e para)/
 		case CAM_WB_TUNGSTEN://wusideng
 			buf[0]=0x13;
 			buf[1]=0x85;
-			i2c_put_byte_add8(client,buf,2);	
+			i2c_put_byte_add8(client,buf,2);
                      printk("CAM_WB_TUNGSTEN       \n");
 			buf[0]=0x01;
 			buf[1]=0x13;
@@ -894,30 +894,30 @@ void bf3720_set_param_wb(struct bf3720_device *dev,enum  camera_wb_flip_e para)/
 
 			buf[0]=0x02;
 			buf[1]=0x11;
-			i2c_put_byte_add8(client,buf,2);		
+			i2c_put_byte_add8(client,buf,2);
 
-	
+
 			break;
 
-      	case CAM_WB_FLUORESCENT:
+	case CAM_WB_FLUORESCENT:
 
 			buf[0]=0x13;
 			buf[1]=0x85;
-			i2c_put_byte_add8(client,buf,2);	
+			i2c_put_byte_add8(client,buf,2);
 			printk("CAM_WB_FLUORESCENT       \n");
- 			buf[0]=0x01;
+			buf[0]=0x01;
 			buf[1]=0x0a;
 			i2c_put_byte_add8(client,buf,2);
 
 			buf[0]=0x02;
 			buf[1]=0x1b;
-			i2c_put_byte_add8(client,buf,2);		
+			i2c_put_byte_add8(client,buf,2);
 
 			break;
 		case CAM_WB_MANUAL:
-		    	                      // TODO
+			                      // TODO
 			break;
-			
+
 		default:
 			break;
 	}
@@ -945,25 +945,25 @@ void bf3720_set_param_exposure(struct bf3720_device *dev,enum camera_exposure_e 
     unsigned char buf[2];
     switch (para)
 	{
-		case EXPOSURE_N4_STEP:	
+		case EXPOSURE_N4_STEP:
 			buf[0]=0x55;
 			buf[1]=0xc8;
 			i2c_put_byte_add8(client,buf,2);
 			break;
-			
-		case EXPOSURE_N3_STEP:	
+
+		case EXPOSURE_N3_STEP:
 			buf[0]=0x55;
 			buf[1]=0xb8;
 			i2c_put_byte_add8(client,buf,2);
 			break;
 
-		case EXPOSURE_N2_STEP:	
+		case EXPOSURE_N2_STEP:
 			buf[0]=0x55;
 			buf[1]=0xa8;
 			i2c_put_byte_add8(client,buf,2);
 			break;
 
-		case EXPOSURE_N1_STEP:	
+		case EXPOSURE_N1_STEP:
 			printk("EXPOSURE_N1_STEP       \n");
 			buf[0]=0x55;
 			buf[1]=0x98;
@@ -978,13 +978,13 @@ void bf3720_set_param_exposure(struct bf3720_device *dev,enum camera_exposure_e 
 			break;
 
 		case EXPOSURE_P1_STEP:
-            printk("EXPOSURE_P1_STEP       \n");	
+            printk("EXPOSURE_P1_STEP       \n");
 			buf[0]=0x55;
 			buf[1]=0x18;
 			i2c_put_byte_add8(client,buf,2);
 			break;
 
-		case EXPOSURE_P2_STEP:			
+		case EXPOSURE_P2_STEP:
 			buf[0]=0x55;
 			buf[1]=0x28;
 			i2c_put_byte_add8(client,buf,2);
@@ -996,19 +996,19 @@ void bf3720_set_param_exposure(struct bf3720_device *dev,enum camera_exposure_e 
 			i2c_put_byte_add8(client,buf,2);
 			break;
 
-		case EXPOSURE_P4_STEP:			
+		case EXPOSURE_P4_STEP:
 			buf[0]=0x55;
 			buf[1]=0x48;
 			i2c_put_byte_add8(client,buf,2);
 			break;
 
-		default:			
+		default:
 			buf[0]=0x55;
 			buf[1]=0x00;
 			i2c_put_byte_add8(client,buf,2);
 			break;
 	}
-	
+
 	mdelay(20);
 
 } /* bf3720_set_param_exposure */
@@ -1059,15 +1059,15 @@ void bf3720_set_param_effect(struct bf3720_device *dev,enum camera_effect_flip_e
 			buf[1]=0x8d;
 			i2c_put_byte_add8(client,buf,2);
             buf[0]=0xb1;
-			buf[1]=0x15; 
+			buf[1]=0x15;
 			i2c_put_byte_add8(client,buf,2);
 			buf[0]=0x56;
 			buf[1]=0xe8;
 			i2c_put_byte_add8(client,buf,2);
 		    buf[0]=0xb4;
 			buf[1]=0x40;
-			i2c_put_byte_add8(client,buf,2);	
-																													
+			i2c_put_byte_add8(client,buf,2);
+
 			break;
 
 		case CAM_EFFECT_ENC_GRAYSCALE:
@@ -1266,10 +1266,10 @@ void bf3720_set_night_mode(struct bf3720_device *dev,enum  camera_night_mode_fli
 	if (enable) {
 		buf[0]=0x86;
 		buf[1]=0xff;
-		i2c_put_byte_add8(client,buf ,2); //Camera Enable night mode 
+		i2c_put_byte_add8(client,buf ,2); //Camera Enable night mode
 	    buf[0]=0x89;
 		buf[1]=0xa5;
-	    i2c_put_byte_add8(client,buf, 2); //Camera Enable night mode  
+	    i2c_put_byte_add8(client,buf, 2); //Camera Enable night mode
 	}
 	else {
 		buf[0]=0x86;
@@ -1277,7 +1277,7 @@ void bf3720_set_night_mode(struct bf3720_device *dev,enum  camera_night_mode_fli
 		i2c_put_byte_add8(client,buf , 2); // //97
 		buf[0]=0x89;
 		buf[1]=0x5d;
-	    i2c_put_byte_add8(client,0x89 , 0x5d);  
+	    i2c_put_byte_add8(client,0x89 , 0x5d);
 	}
 */
 }    /* bf3720_NightMode */
@@ -1292,7 +1292,7 @@ void bf3720_set_param_banding(struct bf3720_device *dev,enum  camera_banding_fli
 			buf[0]=0x80;
 			buf[1]=0x82;   // ad clock-48m,2pclk=96m mclk
 			i2c_put_byte_add8(client,buf,2);
-			
+
 			buf[0]=0x8a;
 			buf[1]=0xbc;//24 M  //0xa6//0xbc 3XLCK//0X7D 2XLCK//
 			i2c_put_byte_add8(client,buf,2);
@@ -1305,10 +1305,10 @@ void bf3720_set_param_banding(struct bf3720_device *dev,enum  camera_banding_fli
 
 			buf[0]=0x8b;
 			buf[1]=0x9c;//24 M //0x8a//0x9c 3XLCK//0X68 2XLCK//
-			i2c_put_byte_add8(client,buf,2);		
+			i2c_put_byte_add8(client,buf,2);
 			break;
 		default:
-		    	break;
+			break;
 
 	}
 }
@@ -1341,127 +1341,127 @@ void bf3720_set_resolution(struct bf3720_device *dev,int height,int width)
 //	static unsigned int shutter_l = 0;
 //	static unsigned int shutter_h = 0;
 	struct i2c_client *client = v4l2_get_subdevdata(&dev->sd);
-	
+
 	//printk( KERN_INFO" set camera  BF3720_set_resolution=width =0x%d \n ",width);
 	//printk( KERN_INFO" set camera  BF3720_set_resolution=height =0x%d \n ",height);
-	if (width*height<640*480){		
+	if (width*height<640*480){
 
 		 printk("####################set 320X240 #################################\n");
 		 bf3720_frmintervals_active.denominator	= 15;
-   		 bf3720_frmintervals_active.numerator	= 1;
-   		 BF3720_h_active=320;
-   		 BF3720_v_active=238;
-   		
+		 bf3720_frmintervals_active.numerator	= 1;
+		 BF3720_h_active=320;
+		 BF3720_v_active=238;
+
 	}
 	else if((width*height<1600*1200))
 	{
-		//800*600 
+		//800*600
             printk("####################set 800X600 #################################\n");
 
 			//buf[0]=0x1b;
-    		//buf[1]=0x2f;
-    		//i2c_put_byte_add8(client,buf,2);
-			
-    		buf[0]=0xc0;
-    		buf[1]=0x00;
-    		i2c_put_byte_add8(client,buf,2);
-    		
-    		buf[0]=0xc1;
-    		buf[1]=0x00;   
-    		i2c_put_byte_add8(client,buf,2);
-    		
-    		buf[0]=0xc2;
-    		buf[1]=0x00;
-    		i2c_put_byte_add8(client,buf,2);
-    		
-    		
-    		buf[0]=0xc3;
-    		buf[1]=0x00;
-    		i2c_put_byte_add8(client,buf,2);
-    		
-    		buf[0]=0xc4;
-    		buf[1]=0x00;
-    		i2c_put_byte_add8(client,buf,2);
-    		
-    
-    		
-    		buf[0]=0x17;
-    		buf[1]=0x00;  
-    		i2c_put_byte_add8(client,buf,2);
-    		
-    		buf[0]=0x18;
-    		buf[1]=0xc8;
-    		i2c_put_byte_add8(client,buf,2);
-    		
-    		buf[0]=0x19;
-    		buf[1]=0x00;
-    		i2c_put_byte_add8(client,buf,2);
-    		
-    		buf[0]=0x1a;
-    		buf[1]=0x96;  
-    		i2c_put_byte_add8(client,buf,2);
-    		
-    		buf[0]=0x12;
-    		buf[1]=0x10;  
-    		i2c_put_byte_add8(client,buf,2);
-    
-    	   // buf[0]=0x89;
-    		//buf[1]=0x3d;  
-    		//i2c_put_byte_add8(client,buf,2);
-			
-    	bf3720_frmintervals_active.numerator = 1;
-    	bf3720_frmintervals_active.denominator = 15;
-    	BF3720_h_active=800;
-    	BF3720_v_active=598;
+		//buf[1]=0x2f;
+		//i2c_put_byte_add8(client,buf,2);
+
+		buf[0]=0xc0;
+		buf[1]=0x00;
+		i2c_put_byte_add8(client,buf,2);
+
+		buf[0]=0xc1;
+		buf[1]=0x00;
+		i2c_put_byte_add8(client,buf,2);
+
+		buf[0]=0xc2;
+		buf[1]=0x00;
+		i2c_put_byte_add8(client,buf,2);
+
+
+		buf[0]=0xc3;
+		buf[1]=0x00;
+		i2c_put_byte_add8(client,buf,2);
+
+		buf[0]=0xc4;
+		buf[1]=0x00;
+		i2c_put_byte_add8(client,buf,2);
+
+
+
+		buf[0]=0x17;
+		buf[1]=0x00;
+		i2c_put_byte_add8(client,buf,2);
+
+		buf[0]=0x18;
+		buf[1]=0xc8;
+		i2c_put_byte_add8(client,buf,2);
+
+		buf[0]=0x19;
+		buf[1]=0x00;
+		i2c_put_byte_add8(client,buf,2);
+
+		buf[0]=0x1a;
+		buf[1]=0x96;
+		i2c_put_byte_add8(client,buf,2);
+
+		buf[0]=0x12;
+		buf[1]=0x10;
+		i2c_put_byte_add8(client,buf,2);
+
+	   // buf[0]=0x89;
+		//buf[1]=0x3d;
+		//i2c_put_byte_add8(client,buf,2);
+
+	bf3720_frmintervals_active.numerator = 1;
+	bf3720_frmintervals_active.denominator = 15;
+	BF3720_h_active=800;
+	BF3720_v_active=598;
 		mdelay(50);
 	} else if(width*height>=1200*1600 ) {
 	    printk("####################set 1600X1200 #################################\n");
 		buf[0]=0xc0;
 		buf[1]=0x00;
 		i2c_put_byte_add8(client,buf,2);
-		
+
 		buf[0]=0xc1;
-		buf[1]=0x00;   
+		buf[1]=0x00;
 		i2c_put_byte_add8(client,buf,2);
-		
+
 		buf[0]=0xc2;
 		buf[1]=0x00;
 		i2c_put_byte_add8(client,buf,2);
-		
-		
+
+
 		buf[0]=0xc3;
 		buf[1]=0x00;
 		i2c_put_byte_add8(client,buf,2);
-		
+
 		buf[0]=0xc4;
 		buf[1]=0x00;
 		i2c_put_byte_add8(client,buf,2);
-		
+
 		buf[0]=0x12;
-		buf[1]=0x00;  
+		buf[1]=0x00;
 		i2c_put_byte_add8(client,buf,2);
-		
+
 		buf[0]=0x17;
-		buf[1]=0x00;  
+		buf[1]=0x00;
 		i2c_put_byte_add8(client,buf,2);
-		
+
 		buf[0]=0x18;
 		buf[1]=0xc8;
 		i2c_put_byte_add8(client,buf,2);
-		
+
 		buf[0]=0x19;
 		buf[1]=0x00;
 		i2c_put_byte_add8(client,buf,2);
-		
+
 		buf[0]=0x1a;
-		buf[1]=0x96;  
+		buf[1]=0x96;
 		i2c_put_byte_add8(client,buf,2);
-		
+
 		//buf[0]=0x1b; // 0x2f; 0x5b:3倍频;   0x6e:2倍频; 0X6F: 1倍频
-		//buf[1]=0x2f;  
+		//buf[1]=0x2f;
 		//i2c_put_byte_add8(client,buf,2);
 		//mdelay(20);
-			
+
 		bf3720_frmintervals_active.denominator 	= 5;
 		bf3720_frmintervals_active.numerator	= 1;
 		BF3720_h_active=1600;
@@ -1470,7 +1470,7 @@ void bf3720_set_resolution(struct bf3720_device *dev,int height,int width)
 		mdelay(130);
 	}
 	printk(KERN_INFO " set camera  BF3720_set_resolution=w=%d,h=%d. \n ",width,height);
-	set_flip(dev);	
+	set_flip(dev);
 
 }    /* BF3720_set_resolution */
 
@@ -1495,9 +1495,9 @@ static int convert_canvas_index(unsigned int v4l2_format, unsigned int start_can
 	case V4L2_PIX_FMT_BGR24:
 	case V4L2_PIX_FMT_RGB24:
 		canvas = start_canvas;
-		break; 
+		break;
 	case V4L2_PIX_FMT_NV12:
-	case V4L2_PIX_FMT_NV21: 
+	case V4L2_PIX_FMT_NV21:
 		canvas = start_canvas | ((start_canvas+1)<<8);
 		break;
 	case V4L2_PIX_FMT_YVU420:
@@ -1522,7 +1522,7 @@ static int bf3720_setting(struct bf3720_device *dev,int PROP_ID,int value )
 	//unsigned char cur_val;
 	//struct i2c_client *client = v4l2_get_subdevdata(&dev->sd);
 
-	
+
 	switch(PROP_ID)  {
 	case V4L2_CID_BRIGHTNESS:
 		dprintk(dev, 1, "setting brightned:%d\n",v4l_2_bf3720(value));
@@ -1544,37 +1544,37 @@ static int bf3720_setting(struct bf3720_device *dev,int PROP_ID,int value )
 			bf3720_qctrl[0].default_value=value;
 			bf3720_set_param_wb(dev,value);
 			printk(KERN_INFO " set camera  white_balance=%d. \n ",value);
-        	}
+		}
 		break;
 	case V4L2_CID_EXPOSURE:
         if(bf3720_qctrl[1].default_value!=value){
 			bf3720_qctrl[1].default_value=value;
 			bf3720_set_param_exposure(dev,value);
 			printk(KERN_INFO " set camera  exposure=%d. \n ",value);
-        	}
+		}
 		break;
 	case V4L2_CID_COLORFX:
         if(bf3720_qctrl[2].default_value!=value){
 			bf3720_qctrl[2].default_value=value;
 			bf3720_set_param_effect(dev,value);
 			printk(KERN_INFO " set camera  effect=%d. \n ",value);
-        	}
+		}
 		break;
 	case V4L2_CID_WHITENESS:
 		 if(bf3720_qctrl[3].default_value!=value){
 			bf3720_qctrl[3].default_value=value;
 			bf3720_set_param_banding(dev,value);
 			printk(KERN_INFO " set camera  banding=%d. \n ",value);
-        	}
+		}
 		break;
 	case V4L2_CID_BLUE_BALANCE:
 		 if(bf3720_qctrl[4].default_value!=value){
 			bf3720_qctrl[4].default_value=value;
 			bf3720_set_night_mode(dev,value);
 			printk(KERN_INFO " set camera  scene mode=%d. \n ",value);
-        	}
+		}
 		break;
-	case V4L2_CID_HFLIP:    /* set flip on H. */          
+	case V4L2_CID_HFLIP:    /* set flip on H. */
 		value = value & 0x3;
 		if(bf3720_qctrl[5].default_value!=value){
 			bf3720_qctrl[5].default_value=value;
@@ -1587,7 +1587,7 @@ static int bf3720_setting(struct bf3720_device *dev,int PROP_ID,int value )
 		if(bf3720_qctrl[7].default_value!=value){
 			bf3720_qctrl[7].default_value=value;
 			//printk(KERN_INFO " set camera  zoom mode=%d. \n ",value);
-        	}
+		}
 		break;
 	case V4L2_CID_ROTATE:
 	    printk(" set camera111  rotate =%d. \n ",value);
@@ -1602,7 +1602,7 @@ static int bf3720_setting(struct bf3720_device *dev,int PROP_ID,int value )
 	}
 	return ret;
 
-	
+
 
 }
 
@@ -2072,13 +2072,14 @@ static int vidioc_s_fmt_vid_cap(struct file *file, void *priv,
 	struct bf3720_fh *fh = priv;
 	struct videobuf_queue *q = &fh->vb_vidq;
 	struct bf3720_device *dev = fh->dev;
-	int ret = vidioc_try_fmt_vid_cap(file, fh, f);
+	int ret = 0;
 
         f->fmt.pix.width = (f->fmt.pix.width + (CANVAS_WIDTH_ALIGN-1) ) & (~(CANVAS_WIDTH_ALIGN-1));
 	if ((f->fmt.pix.pixelformat==V4L2_PIX_FMT_YVU420) ||
             (f->fmt.pix.pixelformat==V4L2_PIX_FMT_YUV420)){
                 f->fmt.pix.width = (f->fmt.pix.width + (CANVAS_WIDTH_ALIGN*2-1) ) & (~(CANVAS_WIDTH_ALIGN*2-1));
         }
+	ret = vidioc_try_fmt_vid_cap(file, fh, f);
 	if (ret < 0)
 		return ret;
 
@@ -2102,7 +2103,7 @@ static int vidioc_s_fmt_vid_cap(struct file *file, void *priv,
 		bf3720_set_resolution(dev,fh->height,fh->width);
 	}
 	#endif
-	
+
 	ret = 0;
 out:
 	mutex_unlock(&q->vb_lock);
@@ -2129,9 +2130,9 @@ static int vidioc_querybuf(struct file *file, void *priv, struct v4l2_buffer *p)
         int ret = videobuf_querybuf(&fh->vb_vidq, p);
 #if MESON_CPU_TYPE >= MESON_CPU_TYPE_MESON8
         if(ret == 0){
-        	p->reserved  = convert_canvas_index(fh->fmt->fourcc, BF3720_RES0_CANVAS_INDEX + p->index*3);
+		p->reserved  = convert_canvas_index(fh->fmt->fourcc, BF3720_RES0_CANVAS_INDEX + p->index*3);
         }else{
-        	p->reserved = 0;
+		p->reserved = 0;
         }
 #endif
         return ret;
@@ -2171,7 +2172,7 @@ static int vidioc_streamon(struct file *file, void *priv, enum v4l2_buf_type i)
 	struct bf3720_device *dev = fh->dev;
 	vdin_parm_t para;
 	int ret = 0 ;
-	
+
 	if (fh->type != V4L2_BUF_TYPE_VIDEO_CAPTURE)
 		return -EINVAL;
 	if (i != fh->type)
@@ -2188,7 +2189,7 @@ static int vidioc_streamon(struct file *file, void *priv, enum v4l2_buf_type i)
 	para.vs_bp = 2;
 	para.cfmt = TVIN_YUV422;
         para.dfmt = TVIN_NV21;
-	para.scan_mode = TVIN_SCAN_MODE_PROGRESSIVE;	
+	para.scan_mode = TVIN_SCAN_MODE_PROGRESSIVE;
 	para.skip_count = 4; //skip_num
 	para.bt_path = dev->cam_info.bt_path;
 	ret =  videobuf_streamon(&fh->vb_vidq);
@@ -2375,7 +2376,7 @@ static int bf3720_open(struct file *file)
 
 #if MESON_CPU_TYPE >= MESON_CPU_TYPE_MESON6
 	switch_mod_gate_by_name("ge2d", 1);
-#endif	
+#endif
 	aml_cam_init(&dev->cam_info);
 	bf3720_init_regs(dev);
 	mutex_lock(&dev->mutex);
@@ -2390,7 +2391,7 @@ static int bf3720_open(struct file *file)
 		video_device_node_name(dev->vdev),
 		v4l2_type_names[V4L2_BUF_TYPE_VIDEO_CAPTURE], dev->users);
 
-    	/* init video dma queues */
+	/* init video dma queues */
 	INIT_LIST_HEAD(&dev->vidq.active);
 	init_waitqueue_head(&dev->vidq.wq);
 	spin_lock_init(&dev->slock);
@@ -2505,7 +2506,7 @@ static int bf3720_close(struct file *file)
 	aml_cam_uninit(&dev->cam_info);
 #if MESON_CPU_TYPE >= MESON_CPU_TYPE_MESON6
 	switch_mod_gate_by_name("ge2d", 0);
-#endif	
+#endif
 	wake_unlock(&(dev->wake_lock));
 
 	return 0;
@@ -2625,7 +2626,7 @@ static int bf3720_probe(struct i2c_client *client,
 	plat_dat= (aml_cam_info_t*)client->dev.platform_data;
 	if (plat_dat) {
 		memcpy(&t->cam_info, plat_dat, sizeof(aml_cam_info_t));
-		if (plat_dat->front_back >=0) { 
+		if (plat_dat->front_back >=0) {
 			   video_nr = plat_dat->front_back;
 		}
 	} else {
@@ -2633,11 +2634,11 @@ static int bf3720_probe(struct i2c_client *client,
 		kfree(t);
 		return -1;
 	}
-	
+
 	t->cam_info.version = BF3720_DRIVER_VERSION;
 	if (aml_cam_info_reg(&t->cam_info) < 0)
 		printk("reg caminfo error\n");
-		
+
 	err = video_register_device(t->vdev, VFL_TYPE_GRABBER, video_nr);
 	if (err < 0) {
 		video_device_release(t->vdev);
@@ -2677,6 +2678,3 @@ static struct i2c_driver bf3720_i2c_driver = {
 };
 
 module_i2c_driver(bf3720_i2c_driver);
-
-
-

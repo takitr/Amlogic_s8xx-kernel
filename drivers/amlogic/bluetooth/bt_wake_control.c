@@ -107,7 +107,7 @@ static int get_host_wake_value(void)
  * Local functions
  */
 static void set_bt_wake(int active)
-{   
+{
 	unsigned long irq_flags;
 			//gpio_out(bsi->ext_wake, 1);
 	spin_lock_irqsave(&ext_wake_lock, irq_flags);
@@ -115,7 +115,7 @@ static void set_bt_wake(int active)
         amlogic_gpio_direction_output(bsi->gpio_ext_wake,active, BT_SLEEP);
 	ext_wake_active = active;
 	spin_unlock_irqrestore(&ext_wake_lock, irq_flags);
-}	
+}
 
 /**
  * @return 1 if the Host can go to sleep, 0 otherwise.
@@ -237,14 +237,14 @@ static void btwake_control_tx_timer_expire(unsigned long data)
 	BT_DBG("Tx timer expired");
 
     if(bsi != NULL && bsi->uport != NULL) {
-    	if(am_uart_tx_empty(bsi->uport)) {
-    		BT_DBG("BT go to sleep");
-    		set_bt_wake(0);
-    	}
-    	else {
-    		BT_DBG("TX not empty");
-    		mod_timer(&tx_timer, jiffies + (TX_TIMER_INTERVAL * HZ));
-    	}
+	if(am_uart_tx_empty(bsi->uport)) {
+		BT_DBG("BT go to sleep");
+		set_bt_wake(0);
+	}
+	else {
+		BT_DBG("TX not empty");
+		mod_timer(&tx_timer, jiffies + (TX_TIMER_INTERVAL * HZ));
+	}
     } else {
         printk("bsi is NULL or bsi->port is NULL");
     }
@@ -282,20 +282,20 @@ static int btwake_control_start(void)
 	}
 
 	/* assert BT_WAKE */
-	set_bt_wake(1);	
-	
+	set_bt_wake(1);
+
     BT_DBG("request_irq\n");
     if(bsi->gpio_host_wake) {
         retval = request_irq((bsi->host_wake_irq_high + INT_GPIO_0) , btwake_control_hostwake_isr, IRQF_DISABLED , "bluetooth hostwake rise", bsi);
-    	if (retval  < 0) {
-    		BT_ERR("Couldn't acquire BT_HOST_WAKE RISE IRQ");
-    		goto fail;
-    	}
+	if (retval  < 0) {
+		BT_ERR("Couldn't acquire BT_HOST_WAKE RISE IRQ");
+		goto fail;
+	}
         retval = request_irq( (bsi->host_wake_irq_low + INT_GPIO_0) , btwake_control_hostwake_isr, IRQF_DISABLED ,"bluetooth hostwake fall", bsi);
-    	if (retval  < 0) {
-    		BT_ERR("Couldn't acquire BT_HOST_WAKE FALL IRQ");
-    		goto fail2;
-    	}
+	if (retval  < 0) {
+		BT_ERR("Couldn't acquire BT_HOST_WAKE FALL IRQ");
+		goto fail2;
+	}
     }
 
 	return 0;
@@ -344,19 +344,19 @@ static int __init btwake_control_probe(struct platform_device *pdev)
 		ret = -ENODEV;
         return ret;
     }
-//	bsi = bt_get_driver_data(pdev);	
+//	bsi = bt_get_driver_data(pdev);
 	bsi = kzalloc(sizeof(struct btwake_control_info), GFP_KERNEL);
 	if (!bsi)
 	    return -ENOMEM;
     wake_lock_init(&bsi->wake_lock, WAKE_LOCK_SUSPEND, "wake_lock");
-    
-	BT_DBG("CONFIG_BT_HOST_WAKE"); 
+
+	BT_DBG("CONFIG_BT_HOST_WAKE");
 	ret = of_property_read_string(pdev->dev.of_node,"gpio_host_wake",&str);
 	if (ret) {
 	    printk("couldn't find host_wake gpio\n");
     }
     else {
-        bsi->gpio_host_wake = amlogic_gpio_name_map_num(str);	
+        bsi->gpio_host_wake = amlogic_gpio_name_map_num(str);
         ret = amlogic_gpio_request(	bsi->gpio_host_wake, BT_SLEEP);
         if(ret) {
             BT_ERR("request bt host wake gpio failed\n");
@@ -374,7 +374,7 @@ static int __init btwake_control_probe(struct platform_device *pdev)
         }
     }
 
-    BT_DBG("CONFIG_BT_WAKE"); 
+    BT_DBG("CONFIG_BT_WAKE");
 	ret = of_property_read_string(pdev->dev.of_node,"gpio_ext_wake",&str);
 	if (ret) {
 		printk("couldn't find ext_wake gpio\n");
@@ -392,23 +392,23 @@ static int __init btwake_control_probe(struct platform_device *pdev)
             goto free_bt_ext_wake;
         }
     }
-    
+
 	spin_lock_init(&ext_wake_lock);
-    set_bt_wake(1);			
-    ret = of_property_read_u32(pdev->dev.of_node, "host_wake_irq_high", &bsi->host_wake_irq_high);	
+    set_bt_wake(1);
+    ret = of_property_read_u32(pdev->dev.of_node, "host_wake_irq_high", &bsi->host_wake_irq_high);
 	if(ret)
-	   goto free_bsi;	
-    ret = of_property_read_u32(pdev->dev.of_node, "host_wake_irq_low", &bsi->host_wake_irq_low);	
+	   goto free_bsi;
+    ret = of_property_read_u32(pdev->dev.of_node, "host_wake_irq_low", &bsi->host_wake_irq_low);
 	if(ret)
-	   goto free_bsi;	
+	   goto free_bsi;
 
     amlogic_gpio_to_irq(bsi->gpio_host_wake, BT_SLEEP,AML_GPIO_IRQ(bsi->host_wake_irq_high, FILTER_NUM7,GPIO_IRQ_RISING));
-    amlogic_gpio_to_irq(bsi->gpio_host_wake, BT_SLEEP,AML_GPIO_IRQ(bsi->host_wake_irq_low, FILTER_NUM7,GPIO_IRQ_FALLING));		      
+    amlogic_gpio_to_irq(bsi->gpio_host_wake, BT_SLEEP,AML_GPIO_IRQ(bsi->host_wake_irq_low, FILTER_NUM7,GPIO_IRQ_FALLING));
 
     btwake_control_ops.setup_bt_port = btwake_control_setup_port;
     btwake_control_ops.bt_can_sleep = btwake_control_can_sleep;
-    register_bt_wake_ops(&btwake_control_ops); 
-   	
+    register_bt_wake_ops(&btwake_control_ops);
+
     BT_DBG("---gpio_host_wake=%d,irq_num=%d, irq_type=%d,gpio_ext_wake=%d---",bsi->gpio_host_wake,bsi->host_wake_irq_low,bsi->host_wake_irq_high,bsi->gpio_ext_wake);
 	return 0;
 
@@ -444,11 +444,11 @@ static int btwake_control_remove(struct platform_device *pdev)
     bsi->gpio_ext_wake = 0;
 	wake_lock_destroy(&bsi->wake_lock);
 	kfree(bsi);
-    unregister_bt_wake_ops(); 
+    unregister_bt_wake_ops();
 	return 0;
 }
 
-static int btwake_control_suspend(struct platform_device *pdev, pm_message_t state)                                               
+static int btwake_control_suspend(struct platform_device *pdev, pm_message_t state)
 {
     return 0;
 }
@@ -497,7 +497,7 @@ static const struct file_operations proc_file_operations_btwrite= {
     .llseek     = seq_lseek,
 	.release    = seq_release,
 };
- 
+
 static int __init btwake_control_init(void)
 {
 	int retval;
@@ -521,7 +521,7 @@ static int __init btwake_control_init(void)
 		return -ENOMEM;
 	}else
 	BT_DBG("create /proc/%s directory", PROC_DIR);
-	
+
 	ent = proc_create("lpm",0777, sleep_dir,&proc_file_operations_lpm);
 	BT_DBG("create /proc/%s/lpm entry", PROC_DIR);
 	if (ent == NULL) {
@@ -538,7 +538,7 @@ static int __init btwake_control_init(void)
 		retval = -ENOMEM;
 		goto fail;
 	}else
-	BT_DBG("create /proc/%s/btwrite entry", PROC_DIR);	
+	BT_DBG("create /proc/%s/btwrite entry", PROC_DIR);
 
 	/* Initialize spinlock. */
 	spin_lock_init(&rw_lock);

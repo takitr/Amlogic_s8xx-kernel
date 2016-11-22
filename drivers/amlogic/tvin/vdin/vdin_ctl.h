@@ -169,4 +169,3 @@ extern void vdin_set_mpegin(struct vdin_dev_s *devp);
 extern void vdin_force_gofiled(struct vdin_dev_s *devp);
 
 #endif
-

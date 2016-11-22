@@ -48,6 +48,13 @@ static const struct regmap_config codec_regmaps[] = {
 		.val_bits = 	9,
 		.max_register = 	0x37,
 	},
+	{
+		.name = "es8323",
+		.reg_bits = 	8,
+		.val_bits = 	8,
+		.max_register = 	0x35,
+	},
+	
 };
 
 static int test_codec_of_node(struct device_node* p_node, aml_audio_codec_info_t* audio_codec_dev)
@@ -58,7 +65,7 @@ static int test_codec_of_node(struct device_node* p_node, aml_audio_codec_info_t
 	struct i2c_adapter *adapter;
 	struct i2c_client *client;
 	struct regmap *regmap;
-	
+
 	memset(&board_info, 0, sizeof(board_info));
 
 	ret = of_property_read_string(p_node, "codec_name", &audio_codec_dev->name);
@@ -78,13 +85,13 @@ static int test_codec_of_node(struct device_node* p_node, aml_audio_codec_info_t
 		ret = -ENODEV;
 		goto exit;
 	}
-	
+
 	/* if aml pmu codec, do not test i2c for it was done in power domain */
 	if (!strcmp(audio_codec_dev->name, "amlpmu3"))
 		goto exit;
-	if (!strcmp(audio_codec_dev->name, "dummy_codec"))
+	if (!strcmp(audio_codec_dev->name, "amlpmu4"))
 		goto exit;
-	if (!strcmp(audio_codec_dev->name, "pcm5102"))
+	if (!strcmp(audio_codec_dev->name, "dummy_codec"))
 		goto exit;
 
 	ret = of_property_read_u32(p_node,"i2c_addr", &audio_codec_dev->i2c_addr);
@@ -110,7 +117,7 @@ static int test_codec_of_node(struct device_node* p_node, aml_audio_codec_info_t
 		printk("%s fail to get i2c_bus\n", __func__);
 		goto exit;
 	}
-	
+
 	if (!strncmp(str, "i2c_bus_ao", 10))
         audio_codec_dev->i2c_bus_type = AML_I2C_BUS_AO;
 	else if (!strncmp(str, "i2c_bus_a", 9))
@@ -123,13 +130,13 @@ static int test_codec_of_node(struct device_node* p_node, aml_audio_codec_info_t
         audio_codec_dev->i2c_bus_type = AML_I2C_BUS_D;
     else
 		printk("ERR, unsupported i2c bus addr: %s \n", str);
-	
+
 	adapter = i2c_get_adapter(audio_codec_dev->i2c_bus_type);
 	if (!adapter){
 		ret = -ENODEV;
 		goto exit;
 	}
-	
+
 	strncpy(board_info.type, "codec_i2c", I2C_NAME_SIZE);
 	board_info.addr = audio_codec_dev->i2c_addr;
 	client = i2c_new_device(adapter, &board_info);
@@ -146,7 +153,7 @@ static int test_codec_of_node(struct device_node* p_node, aml_audio_codec_info_t
 		ret = PTR_ERR(regmap);
 		goto err1;
 	}
-	
+
 	ret = regmap_read(regmap, audio_codec_dev->id_reg, &val);
 	if (ret){
 		printk("try regmap_read err, so %s disabled\n", audio_codec_dev->name);
@@ -158,6 +165,8 @@ static int test_codec_of_node(struct device_node* p_node, aml_audio_codec_info_t
 		printk("ID value mismatch, so %s disabled!\n", audio_codec_dev->name);
 		ret = -ENODEV;
 	}
+
+	printk("-----------val=0x%x---------\n",val);
 	
 err1:
 	i2c_unregister_device(client);
@@ -176,7 +185,7 @@ static int register_i2c_codec_device(aml_audio_codec_info_t* audio_codec_dev)
 
 	strncpy(board_info.type, audio_codec_dev->name, I2C_NAME_SIZE);
 	board_info.addr = audio_codec_dev->i2c_addr;
-	
+
 	adapter = i2c_get_adapter(audio_codec_dev->i2c_bus_type);
 	client = i2c_new_device(adapter, &board_info);
 	snprintf(tmp, NAME_SIZE, "%s", audio_codec_dev->name);
@@ -200,28 +209,35 @@ static int aml_audio_codec_probe(struct platform_device *pdev)
 		ret = -ENOMEM;
 		goto exit;
     }
-	
+
 	memset(&codec_info, 0, sizeof(codec_info));
 
     for_each_child_of_node(audio_codec_node, child) {
         memset(audio_codec_dev, 0, sizeof(aml_audio_codec_info_t));
 		ret = test_codec_of_node(child, audio_codec_dev);
 		codec_info.codec_index++;
-		
+
 		if (ret == 0){
 			ext_codec = 1;
 			printk("using external codec, index = %d\n", codec_info.codec_index);
 			break;
 		}
     }
-	
+
 	if (ext_codec &&(!strcmp(audio_codec_dev->name, "amlpmu3"))){
 		printk("using aml pmu3 codec\n");
 		strlcpy(codec_info.name_bus, "aml_pmu3_codec.0", NAME_SIZE);
 		strlcpy(codec_info.name, "amlpmu3", NAME_SIZE);
 		goto exit;
 	}
-    
+
+	if (ext_codec &&(!strcmp(audio_codec_dev->name, "amlpmu4"))){
+		printk("using aml pmu4 codec\n");
+		strlcpy(codec_info.name_bus, "aml_pmu4_codec.0", NAME_SIZE);
+		strlcpy(codec_info.name, "amlpmu4", NAME_SIZE);
+		goto exit;
+	}	
+
 	if (ext_codec &&(!strcmp(audio_codec_dev->name, "dummy_codec"))){
 		printk("using external dummy codec\n");
 		strlcpy(codec_info.name_bus, "dummy_codec.0", NAME_SIZE);
@@ -229,13 +245,6 @@ static int aml_audio_codec_probe(struct platform_device *pdev)
 		goto exit;
 	}
 
-	if (ext_codec &&(!strcmp(audio_codec_dev->name, "pcm5102"))){
-		printk("using pcm5102 codec\n");
-		strlcpy(codec_info.name_bus, "pcm5102.0", NAME_SIZE);
-		strlcpy(codec_info.name, "pcm5102", NAME_SIZE);
-		goto exit;
-	}
-		
 	if (!ext_codec){
 		printk("no external codec, using aml default codec\n");
 		strlcpy(codec_info.name_bus, "aml_m8_codec.0", NAME_SIZE);
@@ -299,4 +308,3 @@ module_exit(aml_audio_codec_probe_exit);
 
 MODULE_LICENSE("GPL v2");
 MODULE_DESCRIPTION("Amlogic Audio Codec prober driver");
-

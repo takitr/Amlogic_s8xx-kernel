@@ -43,30 +43,6 @@ const static struct sd_caps host_caps[] = {
 	SD_CAPS(MMC_PM_KEEP_POWER, "MMC_PM_KEEP_POWER"),
 };
 
-#if defined(CONFIG_MACH_MESON8B_ODROIDC)
-static int disable_uhs = 0;
-
-static int __init setup_disableuhs(char *line)
-{
-        disable_uhs = 1;
-        return 0;
-}
-early_param("disableuhs", setup_disableuhs);
-
-/* Force to set "MMC_CAP_NONREMOVABLE" to prevent MMC card detection
- * by MicroSD card socket.
- */
-static int mmc_removable = 0;
-
-static int __init setup_mmc_removable(char *line)
-{
-        mmc_removable = 1;
-        return 0;
-}
-early_param("mmc_removable", setup_mmc_removable);
-#endif
-
-
 static int amlsd_get_host_caps(struct device_node* of_node,
                 struct amlsd_platform* pdata)
 {
@@ -80,21 +56,9 @@ static int amlsd_get_host_caps(struct device_node* of_node,
                 caps |= host_caps[i].caps;
         }
     };
-
-#if defined(CONFIG_MACH_MESON8B_ODROIDC)
-    if (disable_uhs) {
-            caps &= ~(MMC_CAP_UHS_SDR12 | MMC_CAP_UHS_SDR25 |
-                            MMC_CAP_UHS_SDR50 | MMC_CAP_UHS_SDR104 |
-                            MMC_CAP_UHS_DDR50);
-    }
-
-    if (mmc_removable) {
-        caps &= ~MMC_CAP_NONREMOVABLE;
-    } else {
-        caps |= MMC_CAP_NONREMOVABLE;
-    }
-#endif
-
+	if(caps & MMC_CAP_8_BIT_DATA){
+		caps |= MMC_CAP_4_BIT_DATA;
+	}
     pdata->caps = caps;
     printk("pdata->caps %x\n", pdata->caps);
 	return 0;
@@ -220,7 +184,6 @@ int amlsd_get_platform_data(struct platform_device* pdev,
         SD_PARSE_GPIO_NUM_PROP(child, "jtag_pin", str, pdata->jtag_pin);
 		SD_PARSE_U32_PROP(child, "card_type", prop, pdata->card_type);
         SD_PARSE_GPIO_NUM_PROP(child, "gpio_dat3", str, pdata->gpio_dat3);
-        SD_PARSE_GPIO_NUM_PROP(child, "gpio_volsw", str, pdata->gpio_volsw);
 
 		pdata->port_init = of_amlsd_init;
 		pdata->pwr_pre = of_amlsd_pwr_prepare;
@@ -231,13 +194,6 @@ int amlsd_get_platform_data(struct platform_device* pdev,
 		// pdata->cd = of_amlsd_detect;
 		pdata->irq_init = of_amlsd_irq_init;
         pdata->ro = of_amlsd_ro;
-
-#if defined(CONFIG_MACH_MESON8B_ODROIDC)
-	    if (disable_uhs) {
-	            pdata->f_max = 40000000;
-	    }
-#endif
     }
     return 0;
 }
-

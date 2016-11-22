@@ -35,9 +35,11 @@ static int meson_cpu_version[MESON_CPU_VERSION_LVL_MAX+1];
 int __init meson_cpu_version_init(void)
 {
 	unsigned int version,ver;
+#ifndef CONFIG_MESON_TRUSTZONE
 	unsigned int  *version_map;
+#endif
 
-	meson_cpu_version[MESON_CPU_VERSION_LVL_MAJOR] = 
+	meson_cpu_version[MESON_CPU_VERSION_LVL_MAJOR] =
 		aml_read_reg32(P_ASSIST_HW_REV);
 
 #ifndef CONFIG_MESON_TRUSTZONE
@@ -48,7 +50,7 @@ int __init meson_cpu_version_init(void)
 #endif
 
 	version = aml_read_reg32(P_METAL_REVISION);
-	switch (version) {		
+	switch (version) {
 		case 0x11111111:
 			ver = 0xA;
 			break;

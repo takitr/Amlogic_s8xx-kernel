@@ -12,6 +12,7 @@
  */
 
 #include <linux/kernel.h>
+#include <linux/init.h>
 #include <linux/tty.h>
 #include <linux/tty_driver.h>
 #include <linux/slab.h>

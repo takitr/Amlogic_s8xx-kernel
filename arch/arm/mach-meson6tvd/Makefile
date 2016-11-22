@@ -26,4 +26,3 @@ obj-$(CONFIG_SMP)				+= headsmp.o smp.o
 obj-$(CONFIG_MESON_SUSPEND)			+= power_suspend.o
 
 obj-$(CONFIG_CPU_IDLE)				+= cpuidle.o
-

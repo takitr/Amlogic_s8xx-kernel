@@ -160,4 +160,3 @@ extern void tvafe_cvd2_set_reg8a(unsigned int v);
 extern void get_cvd_version(char **ver,char **last_ver);
 
 #endif // _TVAFE_CVD_H
-

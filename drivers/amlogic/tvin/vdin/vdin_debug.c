@@ -126,7 +126,7 @@ static void dump_other_mem(char *path,unsigned int start,unsigned int offset)
         if(IS_ERR(filp)){
                 printk(KERN_ERR"create %s error.\n",path);
                 return;
-       	}
+	}
         buf = phys_to_virt(start);
         vfs_write(filp,buf,offset,&pos);
         pr_info("write from 0x%x to 0x%x to %s.\n",start,start+offset,path);
@@ -156,9 +156,9 @@ static void vdin_dump_state(vdin_dev_t *devp)
 		pr_info("current vframe(%u):\n buf(w%u,h%u),type (0x%x,%u), duration(%d), ratio_control (0x%x).\n",
                           vf->index,vf->width,vf->height,vf->type,vf->type,vf->duration,vf->ratio_control);
 		pr_info(" trans fmt %u,left_start_x %u,right_start_x %u,width_x %u\n"
-	      		  " left_start_y %u,right_start_y %u,height_y %u\n",
-	      		  vf->trans_fmt,vf->left_eye.start_x,vf->right_eye.start_x,vf->left_eye.width,
-	      		  vf->left_eye.start_y,vf->right_eye.start_y,vf->left_eye.height);
+			  " left_start_y %u,right_start_y %u,height_y %u\n",
+			  vf->trans_fmt,vf->left_eye.start_x,vf->right_eye.start_x,vf->left_eye.width,
+			  vf->left_eye.start_y,vf->right_eye.start_y,vf->left_eye.height);
                 pr_info("current parameters:\n frontend of vdin index: %d, 3d flag: 0x%x, reserved 0x%x,"
                         " devp->flags:0x%x, max buffer num %u.\n",curparm->index,  curparm->flag,
                         curparm->reserved, devp->flags,devp->canvas_max_num);
@@ -381,7 +381,7 @@ static ssize_t vdin_attr_store(struct device *dev,struct device_attribute *attr,
 			pr_info("enable manual convertion w=%u h=%u dest_cfmt=%s.\n",
 				devp->debug.scaler4w,devp->debug.scaler4h,tvin_color_fmt_str(devp->debug.dest_cfmt));
                 } else {
-                	devp->flags &= (~VDIN_FLAG_MANUAL_CONVERTION);
+			devp->flags &= (~VDIN_FLAG_MANUAL_CONVERTION);
                         pr_info("disable manual convertion w=%u h=%u dest_cfmt=%s.\n",
 				devp->debug.scaler4w,devp->debug.scaler4h,tvin_color_fmt_str(devp->debug.dest_cfmt));
                 }
@@ -395,7 +395,7 @@ static ssize_t vdin_attr_store(struct device *dev,struct device_attribute *attr,
         else if(!strcmp(parm[0],"force_recycle")) {
                 devp->flags |= VDIN_FLAG_FORCE_RECYCLE;
         }else if(!strcmp(parm[0],"read_pic")){
-        	vdin_write_mem(devp,parm[1]);
+		vdin_write_mem(devp,parm[1]);
 }
 
 
@@ -863,4 +863,3 @@ void vdin_remove_class_files(struct class *vdin_clsp)
 {
 	class_remove_file(vdin_clsp, &class_attr_memp);
 }
-

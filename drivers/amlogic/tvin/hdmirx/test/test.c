@@ -37,7 +37,7 @@ unsigned char   aud_clk_stable              = 0;
 // --------------------------------------------------------
 //                     C_Entry
 // --------------------------------------------------------
-void test(void) 
+void test(void)
 {
     unsigned long   data32;
     unsigned char   divisor_i2s = 0;    // aoclk    = amclk / 1
@@ -52,29 +52,29 @@ void test(void)
     // Program core_pin_mux to enable HDMI pins
     // --------------------------------------------------------
 	WRITE_CBUS_REG(PERIPHS_PIN_MUX_0 , READ_CBUS_REG(PERIPHS_PIN_MUX_0 )|
-				( (1 << 27)   |   // pm_gpioW_0_hdmirx_5V_A  
-				(1 << 26)   |   // pm_gpioW_1_hdmirx_HPD_A 
-				(1 << 25)   |   // pm_gpioW_2_hdmirx_scl_A 
-				(1 << 24)   |   // pm_gpioW_3_hdmirx_sda_A 
-				(1 << 23)   |   // pm_gpioW_4_hdmirx_5V_B  
-				(1 << 22)   |   // pm_gpioW_5_hdmirx_HPD_B 
-				(1 << 21)   |   // pm_gpioW_6_hdmirx_scl_B 
-				(1 << 20)   |   // pm_gpioW_7_hdmirx_sda_B 
-				(1 << 19)   |   // pm_gpioW_8_hdmirx_5V_C  
-				(1 << 18)   |   // pm_gpioW_9_hdmirx_HPD_C 
+				( (1 << 27)   |   // pm_gpioW_0_hdmirx_5V_A
+				(1 << 26)   |   // pm_gpioW_1_hdmirx_HPD_A
+				(1 << 25)   |   // pm_gpioW_2_hdmirx_scl_A
+				(1 << 24)   |   // pm_gpioW_3_hdmirx_sda_A
+				(1 << 23)   |   // pm_gpioW_4_hdmirx_5V_B
+				(1 << 22)   |   // pm_gpioW_5_hdmirx_HPD_B
+				(1 << 21)   |   // pm_gpioW_6_hdmirx_scl_B
+				(1 << 20)   |   // pm_gpioW_7_hdmirx_sda_B
+				(1 << 19)   |   // pm_gpioW_8_hdmirx_5V_C
+				(1 << 18)   |   // pm_gpioW_9_hdmirx_HPD_C
 				(1 << 17)   |   // pm_gpioW_10_hdmirx_scl_C
 				(1 << 16)   |   // pm_gpioW_11_hdmirx_sda_C
-				(1 << 15)   |   // pm_gpioW_12_hdmirx_5V_D 
+				(1 << 15)   |   // pm_gpioW_12_hdmirx_5V_D
 				(1 << 14)   |   // pm_gpioW_13_hdmirx_HPD_D
 				(1 << 13)   |   // pm_gpioW_14_hdmirx_scl_D
 				(1 << 12)   |   // pm_gpioW_15_hdmirx_sda_D
-				(1 << 11)));     // pm_gpioW_16_hdmirx_cec  
+				(1 << 11)));     // pm_gpioW_16_hdmirx_cec
 
 	WRITE_CBUS_REG(PERIPHS_PIN_MUX_1 , READ_CBUS_REG(PERIPHS_PIN_MUX_1 )|
 				( (1 << 2)    |   // pm_gpioW_17_hdmirx_tmds_clk
-				(1 << 1)    |   // pm_gpioW_18_hdmirx_pix_clk 
-				(1 << 0)));      // pm_gpioW_19_hdmirx_audmeas 
-    
+				(1 << 1)    |   // pm_gpioW_18_hdmirx_pix_clk
+				(1 << 0)));      // pm_gpioW_19_hdmirx_audmeas
+
     // --------------------------------------------------------
     // Set up HDMI
     // --------------------------------------------------------
@@ -124,4 +124,3 @@ void test(void)
 
     return;
 }
-

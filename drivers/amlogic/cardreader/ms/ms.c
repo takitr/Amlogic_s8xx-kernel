@@ -56,9 +56,9 @@ unsigned MS_WORK_MODE;
 void ms_insert_detector(struct memory_card *card)
 {
 	MS_MSPRO_Card_Info_t *ms_mspro_info = (MS_MSPRO_Card_Info_t *)card->card_info;
-	
+
 	int ret = ms_mspro_check_insert(ms_mspro_info);
-	
+
 	if(ret)
 		card->card_status = CARD_INSERTED;
 	else
@@ -72,7 +72,7 @@ void ms_open(struct memory_card *card)
 {
 	int ret;
 	MS_MSPRO_Card_Info_t *ms_mspro_info = (MS_MSPRO_Card_Info_t *)card->card_info;
-	
+
 	ret = ms_mspro_init(ms_mspro_info);
 	if(ret)
 	{
@@ -80,7 +80,7 @@ void ms_open(struct memory_card *card)
 		ret = ms_mspro_init(ms_mspro_info);
 	}
 	disable_port_switch = 0;
-	
+
 	card->capacity = ms_mspro_info->blk_nums;
 	if(ret)
 		card->unit_state = CARD_UNIT_READY;
@@ -93,34 +93,34 @@ void ms_open(struct memory_card *card)
 void ms_close(struct memory_card *card)
 {
 	MS_MSPRO_Card_Info_t *ms_mspro_info = (MS_MSPRO_Card_Info_t *)card->card_info;
-	
+
 	if (ms_mspro_info->data_buf != NULL)
 	{
 		dma_free_coherent(NULL, 4096, ms_mspro_info->data_buf, (dma_addr_t )ms_mspro_info->data_phy_buf);
 		ms_mspro_info->data_buf  = NULL;
 		ms_mspro_info->data_phy_buf = NULL;
 	}
-	
+
 	if (ms_mspro_info->ms_mspro_buf != NULL)
 	{
 		dma_free_coherent(NULL, 4096, ms_mspro_info->ms_mspro_buf, (dma_addr_t )ms_mspro_info->ms_mspro_phy_buf);
 		ms_mspro_info->ms_mspro_buf  = NULL;
 		ms_mspro_info->ms_mspro_phy_buf = NULL;
 	}
-	
+
 	ms_mspro_exit(ms_mspro_info);
 	ms_mspro_free(ms_mspro_info);
 	ms_mspro_info = NULL;
 	card->card_info = NULL;
 	card->unit_state =  CARD_UNIT_PROCESSED;
-	
+
 	return;
 }
 
 unsigned char ms_read_info(struct memory_card *card, u32 *blk_length, u32 *capacity, u32 *raw_cid)
 {
 	MS_MSPRO_Card_Info_t *ms_mspro_info = (MS_MSPRO_Card_Info_t *)card->card_info;
-	
+
 	if(ms_mspro_info->inited_flag)
 	{
 		if(blk_length)
@@ -268,7 +268,7 @@ static void ms_io_init(struct memory_card *card)
 		MS_PWR_OUTPUT_EN_MASK = 1;
 		MS_PWR_OUTPUT_REG = MS_BAKUP_OUTPUT_REG;
 		MS_PWR_OUTPUT_MASK = 1;
-		MS_PWR_EN_LEVEL = 0;	
+		MS_PWR_EN_LEVEL = 0;
 	}
 	return;
 }
@@ -324,7 +324,7 @@ int ms_probe(struct memory_card *card)
 	ms_mspro_info->data_buf = dma_alloc_coherent(NULL, PAGE_CACHE_SIZE, (dma_addr_t *)&ms_mspro_info->data_phy_buf, GFP_KERNEL);
 	if(ms_mspro_info->data_buf == NULL)
 		return -ENOMEM;
-	
+
 	ms_mspro_info->ms_mspro_buf = dma_alloc_coherent(NULL, PAGE_CACHE_SIZE, (dma_addr_t *)&ms_mspro_info->ms_mspro_phy_buf, GFP_KERNEL);
 	if(ms_mspro_info->ms_mspro_buf == NULL)
 		return -ENOMEM;

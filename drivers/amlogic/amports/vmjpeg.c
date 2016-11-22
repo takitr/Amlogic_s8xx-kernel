@@ -80,7 +80,7 @@ MODULE_AMLOG(LOG_LEVEL_ERROR, 0, LOG_LEVEL_DESC, LOG_DEFAULT_MASK_DESC);
 
 
 
-#if MESON_CPU_TYPE >= MESON_CPU_TYPE_MESON6  
+#if MESON_CPU_TYPE >= MESON_CPU_TYPE_MESON6
 //#define NV21
 #endif
 static DEFINE_MUTEX(vmjpeg_mutex);
@@ -203,7 +203,7 @@ static irqreturn_t vmjpeg_isr(int irq, void *dev_id)
 
             kfifo_put(&display_q, (const vframe_t **)&vf);
 
-            vf_notify_receiver(PROVIDER_NAME,VFRAME_EVENT_PROVIDER_VFRAME_READY,NULL);               
+            vf_notify_receiver(PROVIDER_NAME,VFRAME_EVENT_PROVIDER_VFRAME_READY,NULL);
 
         } else {
             u32 index = ((reg & PICINFO_BUF_IDX_MASK) - 1) & 3;
@@ -274,8 +274,8 @@ static irqreturn_t vmjpeg_isr(int irq, void *dev_id)
             vfbuf_use[index]++;
 
             kfifo_put(&display_q, (const vframe_t **)&vf);
-            
-		    vf_notify_receiver(PROVIDER_NAME,VFRAME_EVENT_PROVIDER_VFRAME_READY,NULL);            
+
+		    vf_notify_receiver(PROVIDER_NAME,VFRAME_EVENT_PROVIDER_VFRAME_READY,NULL);
 #endif
         }
 
@@ -323,13 +323,13 @@ static int vmjpeg_event_cb(int type, void *data, void *private_data)
         spin_lock_irqsave(&lock, flags);
         vmjpeg_local_init();
         vmjpeg_prot_init();
-        spin_unlock_irqrestore(&lock, flags); 
+        spin_unlock_irqrestore(&lock, flags);
 #ifndef CONFIG_POST_PROCESS_MANAGER
         vf_reg_provider(&vmjpeg_vf_prov);
-#endif              
+#endif
         amvdec_start();
     }
-    return 0;        
+    return 0;
 }
 
 static int  vmjpeg_vf_states(vframe_states_t *states, void* op_arg)
@@ -578,7 +578,7 @@ static void init_scaler(void)
     WRITE_VREG(PSCALE_BMEM_DAT, 0x10000);
 
     /* reset pscaler */
-#if MESON_CPU_TYPE >= MESON_CPU_TYPE_MESON6  
+#if MESON_CPU_TYPE >= MESON_CPU_TYPE_MESON6
     WRITE_VREG(DOS_SW_RESET0, (1<<10));
     WRITE_VREG(DOS_SW_RESET0, 0);
 #else
@@ -594,7 +594,7 @@ static void init_scaler(void)
 
 static void vmjpeg_prot_init(void)
 {
-#if MESON_CPU_TYPE >= MESON_CPU_TYPE_MESON6  
+#if MESON_CPU_TYPE >= MESON_CPU_TYPE_MESON6
     WRITE_VREG(DOS_SW_RESET0, (1<<7) | (1<<6));
     WRITE_VREG(DOS_SW_RESET0, 0);
 #else
@@ -631,7 +631,7 @@ static void vmjpeg_prot_init(void)
     WRITE_VREG(ASSIST_MBOX1_MASK, 1);
     /* set interrupt mapping for vld */
     WRITE_VREG(ASSIST_AMR1_INT8, 8);
-#if MESON_CPU_TYPE >= MESON_CPU_TYPE_MESON6  
+#if MESON_CPU_TYPE >= MESON_CPU_TYPE_MESON6
 #ifdef NV21
     SET_VREG_MASK(MDEC_PIC_DC_CTRL, 1<<17);
 #else
@@ -703,11 +703,11 @@ static s32 vmjpeg_init(void)
 #ifdef CONFIG_POST_PROCESS_MANAGER
     vf_provider_init(&vmjpeg_vf_prov, PROVIDER_NAME, &vmjpeg_vf_provider, NULL);
     vf_reg_provider(&vmjpeg_vf_prov);
-    vf_notify_receiver(PROVIDER_NAME,VFRAME_EVENT_PROVIDER_START,NULL);               
-#else 
+    vf_notify_receiver(PROVIDER_NAME,VFRAME_EVENT_PROVIDER_START,NULL);
+#else
     vf_provider_init(&vmjpeg_vf_prov, PROVIDER_NAME, &vmjpeg_vf_provider, NULL);
     vf_reg_provider(&vmjpeg_vf_prov);
-#endif 
+#endif
 
     vf_notify_receiver(PROVIDER_NAME, VFRAME_EVENT_PROVIDER_FR_HINT, (void *)vmjpeg_amstream_dec_info.rate);
 
@@ -733,15 +733,15 @@ static s32 vmjpeg_init(void)
 static int amvdec_mjpeg_probe(struct platform_device *pdev)
 {
     struct vdec_dev_reg_s *pdata = (struct vdec_dev_reg_s *)pdev->dev.platform_data;
-	
+
     mutex_lock(&vmjpeg_mutex);
-	
+
     amlog_level(LOG_LEVEL_INFO, "amvdec_mjpeg probe start.\n");
 
     if (pdata == NULL) {
         amlog_level(LOG_LEVEL_ERROR, "amvdec_mjpeg memory resource undefined.\n");
         mutex_unlock(&vmjpeg_mutex);
-		
+
         return -EFAULT;
     }
 
@@ -755,10 +755,10 @@ static int amvdec_mjpeg_probe(struct platform_device *pdev)
     if (vmjpeg_init() < 0) {
         amlog_level(LOG_LEVEL_ERROR, "amvdec_mjpeg init failed.\n");
         mutex_unlock(&vmjpeg_mutex);
-		
+
         return -ENODEV;
     }
-	
+
     mutex_unlock(&vmjpeg_mutex);
 
     amlog_level(LOG_LEVEL_INFO, "amvdec_mjpeg probe end.\n");
@@ -769,7 +769,7 @@ static int amvdec_mjpeg_probe(struct platform_device *pdev)
 static int amvdec_mjpeg_remove(struct platform_device *pdev)
 {
     mutex_lock(&vmjpeg_mutex);
-	
+
     if (stat & STAT_VDEC_RUN) {
         amvdec_stop();
         stat &= ~STAT_VDEC_RUN;
@@ -793,7 +793,7 @@ static int amvdec_mjpeg_remove(struct platform_device *pdev)
     }
 
     amvdec_disable();
-	
+
     mutex_unlock(&vmjpeg_mutex);
 
     amlog_level(LOG_LEVEL_INFO, "amvdec_mjpeg remove.\n");

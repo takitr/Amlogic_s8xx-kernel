@@ -9,4 +9,3 @@ struct isl290xx_platform_data {
 };
 
 #endif
-

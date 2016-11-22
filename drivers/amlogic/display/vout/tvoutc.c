@@ -51,7 +51,7 @@ static const unsigned int  signal_set[SIGNAL_SET_MAX][3]=
 	{
 		VIDEO_SIGNAL_TYPE_CVBS,            	//cvbs&svideo
 		VIDEO_SIGNAL_TYPE_SVIDEO_LUMA,
-    	VIDEO_SIGNAL_TYPE_SVIDEO_CHROMA,
+	VIDEO_SIGNAL_TYPE_SVIDEO_CHROMA,
 	},
 	{	VIDEO_SIGNAL_TYPE_PROGRESSIVE_Y,     //progressive.
 		VIDEO_SIGNAL_TYPE_PROGRESSIVE_PB,
@@ -66,12 +66,12 @@ static const unsigned int  signal_set[SIGNAL_SET_MAX][3]=
 };
 static  const  char*   signal_table[]={
 	"INTERLACE_Y ", /**< Interlace Y signal */
-    	"CVBS",            /**< CVBS signal */
-    	"SVIDEO_LUMA",     /**< S-Video luma signal */
-    	"SVIDEO_CHROMA",   /**< S-Video chroma signal */
-    	"INTERLACE_PB",    /**< Interlace Pb signal */
-    	"INTERLACE_PR",    /**< Interlace Pr signal */
-    	"INTERLACE_R",     /**< Interlace R signal */
+	"CVBS",            /**< CVBS signal */
+	"SVIDEO_LUMA",     /**< S-Video luma signal */
+	"SVIDEO_CHROMA",   /**< S-Video chroma signal */
+	"INTERLACE_PB",    /**< Interlace Pb signal */
+	"INTERLACE_PR",    /**< Interlace Pr signal */
+	"INTERLACE_R",     /**< Interlace R signal */
          "INTERLACE_G",     /**< Interlace G signal */
          "INTERLACE_B",     /**< Interlace B signal */
          "PROGRESSIVE_Y",   /**< Progressive Y signal */
@@ -228,16 +228,11 @@ int tvoutc_setclk(tvmode_t mode)
 			  setreg(&sd[xtal]);
 			  break;
 		case TVMODE_720P:
-		case TVMODE_800P:
-        case TVMODE_800X480P_60HZ:
-        case TVMODE_720P_50HZ:
+		case TVMODE_720P_50HZ:
 		case TVMODE_1080I:
 		case TVMODE_1080I_50HZ:
 		case TVMODE_1080P:
 		case TVMODE_1080P_50HZ:
-		case TVMODE_SVGA:
-		case TVMODE_SXGA:
-		case TVMODE_1920x1200:
 			  setreg(&hd[xtal]);
 			  if(xtal == 1)
 			  {
@@ -257,6 +252,16 @@ static void set_tvmode_misc(tvmode_t mode)
     set_vmode_clk(mode);
 }
 
+static const reg_t * tvregs_setting_mode(tvmode_t mode)
+{
+    int i = 0;
+    for(i = 0; i < ARRAY_SIZE(tvregsTab); i++) {
+        if(mode == tvregsTab[i].tvmode)
+            return tvregsTab[i].reg_setting;
+    }
+    return NULL;
+}
+
 /*
  * uboot_display_already() uses to judge whether display has already
  * be set in uboot.
@@ -265,21 +270,15 @@ static void set_tvmode_misc(tvmode_t mode)
  */
 static int uboot_display_already(tvmode_t mode)
 {
-    tvmode_t source = vmode_to_tvmode(get_resolution_vmode());
-    if(source == mode)
-        return 1;
-    else
-        return 0;
-    /*
-    const  reg_t *s = tvregsTab[mode];
+    const  reg_t *s = tvregs_setting_mode(mode);
     unsigned int pxcnt_tab = 0;
     unsigned int lncnt_tab = 0;
 
     while(s->reg != MREG_END_MARKER) {
-        if(s->reg == P_ENCP_VIDEO_MAX_PXCNT) {
+        if(s->reg == P_ENCP_VIDEO_MAX_PXCNT || s->reg == ENCP_VIDEO_MAX_PXCNT) {
             pxcnt_tab = s->val;
         }
-        if(s->reg == P_ENCP_VIDEO_MAX_LNCNT) {
+        if(s->reg == P_ENCP_VIDEO_MAX_LNCNT || s->reg == ENCP_VIDEO_MAX_LNCNT) {
             lncnt_tab = s->val;
         }
         s++;
@@ -291,7 +290,6 @@ static int uboot_display_already(tvmode_t mode)
     } else {
         return 0;
     }
-    */
 }
 
 #if (MESON_CPU_TYPE >= MESON_CPU_TYPE_MESON8)
@@ -299,7 +297,7 @@ static unsigned int vdac_cfg_valid = 0, vdac_cfg_value = 0;
 static unsigned int cvbs_get_trimming_version(unsigned int flag)
 {
 	unsigned int version = 0xff;
-	
+
 	if( (flag&0xf0) == 0xa0 )
 		version = 5;
 	else if( (flag&0xf0) == 0x40 )
@@ -370,7 +368,8 @@ static void cvbs_performance_enhancement(tvmode_t mode)
 {
 	const reg_t *s;
 	unsigned int index = cvbs_performance_index;
-	unsigned int max = sizeof(tvregs_576cvbs_performance)/sizeof(reg_t*);
+	unsigned int max = 0;
+	unsigned int type = 0;
 
 	if( TVMODE_576CVBS != mode )
 		return ;
@@ -378,12 +377,33 @@ static void cvbs_performance_enhancement(tvmode_t mode)
 	if( 0xff == index )
 		return ;
 
-	index = (index>=max)?0:index;
-	printk("cvbs performance use table = %d\n", index);
-	s = tvregs_576cvbs_performance[index];
+#if MESON_CPU_TYPE == MESON_CPU_TYPE_MESON8
+		if( IS_MESON_M8M2_CPU )
+		{
+			max = sizeof(tvregs_576cvbs_performance_m8m2)/sizeof(reg_t*);
+			index = (index>=max)?0:index;
+			s = tvregs_576cvbs_performance_m8m2[index];
+			type = 2;
+		}
+		else
+		{
+			max = sizeof(tvregs_576cvbs_performance_m8)/sizeof(reg_t*);
+			index = (index>=max)?0:index;
+			s = tvregs_576cvbs_performance_m8[index];
+			type = 0;
+		}
+#elif MESON_CPU_TYPE == MESON_CPU_TYPE_MESON8B
+		max = sizeof(tvregs_576cvbs_performance_m8b)/sizeof(reg_t*);
+		index = (index>=max)?0:index;
+		s = tvregs_576cvbs_performance_m8b[index];
+		type = 1;
+#endif
+
+	printk("cvbs performance type = %d, table = %d\n", type, index);
+
 	while (MREG_END_MARKER != s->reg)
 	{
-    	setreg(s++);
+	setreg(s++);
 	}
 	return ;
 }
@@ -392,10 +412,21 @@ static void cvbs_performance_enhancement(tvmode_t mode)
 
 static DEFINE_MUTEX(setmode_mutex);
 
+const static tvinfo_t * tvinfo_mode(tvmode_t mode)
+{
+    int i = 0;
+    for(i = 0; i < ARRAY_SIZE(tvinfoTab); i++) {
+        if(mode == tvinfoTab[i].tvmode)
+            return &tvinfoTab[i];
+    }
+    return NULL;
+}
+
 int tvoutc_setmode(tvmode_t mode)
 {
-    const  reg_t *s;
-#if MESON_CPU_TYPE >= MESON_CPU_TYPE_MESON8
+    const reg_t *s;
+    const tvinfo_t * tvinfo;
+#if MESON_CPU_TYPE >= MESON_CPU_TYPE_MESON6
     static int uboot_display_flag = 1;
 #else
     static int uboot_display_flag = 0;
@@ -409,7 +440,13 @@ int tvoutc_setmode(tvmode_t mode)
 //TODO
 //    switch_mod_gate_by_name("venc", 1);
 #endif
-    printk("TV mode %s selected.\n", tvinfoTab[mode].id);
+    tvinfo = tvinfo_mode(mode);
+    if(!tvinfo) {
+        printk(KERN_ERR "tvinfo %d not find\n", mode);
+        mutex_unlock(&setmode_mutex);
+        return 0;
+    }
+    printk("TV mode %s selected.\n", tvinfo->id);
 
 #ifdef CONFIG_ARCH_MESON8B
 	if( (mode!=TVMODE_480CVBS) && (mode!=TVMODE_576CVBS) )
@@ -425,8 +462,13 @@ int tvoutc_setmode(tvmode_t mode)
 		CLK_GATE_OFF(VCLK2_VENCI1);
 	}
 #endif
-
-    s = tvregsTab[mode];
+    s = tvregs_setting_mode(mode);
+    if(!s) {
+        printk("display mode %d regs setting failed\n", mode);
+        mutex_lock(&setmode_mutex);
+        return 0;
+    }
+    //s = tvregsTab[mode];
 
     if(uboot_display_flag) {
         uboot_display_flag = 0;
@@ -445,10 +487,14 @@ int tvoutc_setmode(tvmode_t mode)
 		(mode==TVMODE_1080I) || (mode==TVMODE_1080I_50HZ) ||
 		(mode==TVMODE_1080P) || (mode==TVMODE_1080P_50HZ) ||
 		(mode==TVMODE_1080P_24HZ) || (mode==TVMODE_4K2K_24HZ) ||
-		(mode==TVMODE_4K2K_25HZ) || (mode==TVMODE_4K2K_30HZ) ||
-		(mode==TVMODE_4K2K_SMPTE) )
+		(mode==TVMODE_4K2K_25HZ) || (mode==TVMODE_4K2K_30HZ) || (mode==TVMODE_4K2K_FAKE_5G) ||
+		(mode==TVMODE_4K2K_SMPTE) || (mode==TVMODE_4K2K_60HZ) )
 	{
+#if MESON_CPU_TYPE == MESON_CPU_TYPE_MESONG9TV
+    // NOTE: for G9TV, DO NOT TURN OFF HPLL
+#else
 		WRITE_CBUS_REG_BITS(HHI_VID_PLL_CNTL, 0x0, 30, 1);
+#endif
 	}
 
     cvbs_cntl_output(0);
@@ -467,7 +513,7 @@ int tvoutc_setmode(tvmode_t mode)
     }else{
 	aml_write_reg32(P_PERIPHS_PIN_MUX_0, (aml_read_reg32(P_PERIPHS_PIN_MUX_0)&(~(3<<20))));
     }
-
+printk("%s[%d] mode is %d\n", __func__, __LINE__, mode);
 #if ((defined CONFIG_ARCH_MESON8) || (defined CONFIG_ARCH_MESON8B))
 	// for hdmi mode, leave the hpll setting to be done by hdmi module.
 	if( (mode==TVMODE_480CVBS) || (mode==TVMODE_576CVBS) )
@@ -501,7 +547,6 @@ int tvoutc_setmode(tvmode_t mode)
 		case TVMODE_480P_RPT:
 		case TVMODE_576P:
 		case TVMODE_576P_RPT:
-        case TVMODE_800X480P_60HZ:
 		case TVMODE_720P:
 #ifdef CONFIG_AML_VOUT_FRAMERATE_AUTOMATION
 		case TVMODE_720P_59HZ:
@@ -531,22 +576,23 @@ int tvoutc_setmode(tvmode_t mode)
 		case TVMODE_4K2K_23HZ:
 #endif
         case TVMODE_4K2K_SMPTE:
+        case TVMODE_4K2K_FAKE_5G:
+        case TVMODE_4K2K_60HZ:
 		case TVMODE_VGA:
 		case TVMODE_SVGA:
 		case TVMODE_XGA:
 		case TVMODE_SXGA:
 		case TVMODE_WSXGA:
 		case TVMODE_FHDVGA:
-        aml_set_reg32_bits(P_VPU_VIU_VENC_MUX_CTRL, 2, 0, 2); //reg0x271a, select ENCP to VIU1
-        aml_set_reg32_bits(P_VPU_VIU_VENC_MUX_CTRL, 2, 4, 4); //reg0x271a, Select encP clock to VDIN
-        aml_set_reg32_bits(P_VPU_VIU_VENC_MUX_CTRL, 2, 8, 4); //reg0x271a,Enable VIU of ENC_P domain to VDIN;
+        default:
+            aml_set_reg32_bits(P_VPU_VIU_VENC_MUX_CTRL, 2, 0, 2); //reg0x271a, select ENCP to VIU1
+            aml_set_reg32_bits(P_VPU_VIU_VENC_MUX_CTRL, 2, 4, 4); //reg0x271a, Select encP clock to VDIN
+            aml_set_reg32_bits(P_VPU_VIU_VENC_MUX_CTRL, 2, 8, 4); //reg0x271a,Enable VIU of ENC_P domain to VDIN;
         break;
-		default:
-			printk(KERN_ERR "unsupport tv mode,video clk is not set!!\n");
 	}
 #endif
 
-    aml_write_reg32(P_VPP_POSTBLEND_H_SIZE, tvinfoTab[mode].xres);
+    aml_write_reg32(P_VPP_POSTBLEND_H_SIZE, tvinfo->xres);
 
 #ifdef CONFIG_ARCH_MESON3
 printk(" clk_util_clk_msr 6 = %d\n", clk_util_clk_msr(6));
@@ -581,13 +627,13 @@ printk(" clk_util_clk_msr 29 = %d\n", clk_util_clk_msr(29));
     if( (mode==TVMODE_480CVBS) || (mode==TVMODE_576CVBS) )
     {
         msleep(1000);
-#ifdef CONFIG_ARCH_MESON8B
+
 		CLK_GATE_ON(VCLK2_ENCI);
 		CLK_GATE_ON(VCLK2_VENCI1);
         CLK_GATE_ON(CTS_ENCI);
         CLK_GATE_ON(CTS_VDAC);
 		CLK_GATE_ON(DAC_CLK);
-#endif
+
         cvbs_cntl_output(1);
     }
 #endif
@@ -595,4 +641,3 @@ printk(" clk_util_clk_msr 29 = %d\n", clk_util_clk_msr(29));
     mutex_unlock(&setmode_mutex);
     return 0;
 }
-

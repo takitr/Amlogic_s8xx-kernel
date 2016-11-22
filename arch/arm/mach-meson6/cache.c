@@ -80,7 +80,7 @@ static int __init meson_cache_init(void)
 	prefetch |= 0x6;
 #ifdef CONFIG_SMP
 	prefetch |= (1<<28) | (1<<29);
-#ifdef CONFIG_MESON_L2CC_DLF	
+#ifdef CONFIG_MESON_L2CC_DLF
 	prefetch |= (1<<30);
 #endif
 #ifdef CONFIG_MESON_L2CC_OPTIMIZE
@@ -116,7 +116,7 @@ static int __init meson_cache_of_init(void)
 	/*
 		put some default aux setting here
 	*/
-	
+
 	l2x0_of_init(aux,~0);
 	return 0;
 }

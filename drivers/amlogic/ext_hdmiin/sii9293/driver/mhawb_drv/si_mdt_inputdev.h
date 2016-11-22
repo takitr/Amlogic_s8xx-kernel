@@ -57,7 +57,7 @@
 #define MDT_DPAD_RIGHT			0x02
 #define MDT_DPAD_DOWN			0x04
 #define MDT_DPAD_LEFT			0x08
-	
+
 #define MDT_GAMEXYRZ_X			0
 #define MDT_GAMEXYRZ_Y			1
 #define MDT_GAMEXYRZ_Z			2
@@ -111,7 +111,7 @@
 #define X_MAX				800	//	touch.deviceType = touchscreen
 #define Y_MAX				760	//	touch.orientationAware = 0
 #define SCALE_X_RAW			XY_MAX	//	devices.internal = 0
-#define SCALE_X_SCREEN			500	// These values were experimentally selected based on	
+#define SCALE_X_SCREEN			500	// These values were experimentally selected based on
 #define SCALE_Y_RAW			XY_MAX	//	MDT sending 1920 x 1920
 #define SCALE_Y_SCREEN			500	// 	scaling SCREEN/RAW min=0; max=X_MAX
 #define SINGLE_TOUCH			0
@@ -127,9 +127,9 @@
 #endif
 #ifdef __KERNEL__
 	typedef struct input_dev	 	si_input_dev;
-	
+
 	#define si_input_report_key(x,y,z)	input_report_key(x, y, z)
-	#define si_input_report_rel(x,y,z)	input_report_rel(x, y, z)		
+	#define si_input_report_rel(x,y,z)	input_report_rel(x, y, z)
 	#define si_input_sync(x)     		input_sync(x);
 	#define si_input_allocate_device()	input_allocate_device()
 	#define si_set_bit(x,y)			set_bit(x,y)
@@ -139,7 +139,7 @@
 	typedef unsigned char si_input_dev;
 
 	#include "..\..\platform\api\si_osdebug.h"
-	
+
 	#define SI_MDT_DEBUG_PRINT(x)		CBUS_DEBUG_PRINT(x)
 
 	#define si_input_report_key(x,y,z)	SI_MDT_DEBUG_PRINT(("MDTkeyboard  event %02x %02x\n",(int)y,(int)z))
@@ -158,13 +158,13 @@
 	unsigned char				isNotLast:1;	\
 	unsigned char				isKeyboard:1;	\
 	unsigned char				isPortB:1; 	\
-	unsigned char          			isHID  :1;		
+	unsigned char          			isHID  :1;
 
 #define mdt_rawevent_header		\
 	unsigned char				isRW:1;		\
 	unsigned char				isRequest:1;	\
 	unsigned char				isPriority:1; 	\
-	unsigned char          		isHID:1;		
+	unsigned char          		isHID:1;
 
 
 #define mdt_cursor_suffix		\
@@ -194,7 +194,7 @@ struct mdt_touch_XYZ_t{
 		unsigned char			byte_8bit;
 		unsigned char			byte_6bit:6;
 		mdt_cursor_suffix	// common, 2 bit suffix
-	} vendor_specific;    
+	} vendor_specific;
 };
 
 struct mdt_game_XYZRz_t{
@@ -219,7 +219,7 @@ struct mdt_non_mouse_cursorheader_t{
 	mdt_event_header		// common, 4 bit header nibble
 };
 
-struct mdt_mouse_cursorheader_t {    
+struct mdt_mouse_cursorheader_t {
 	unsigned char          		button:3;
 	unsigned char				isNotMouse:1;
 	mdt_event_header		// common, 4 bit header	nibble
@@ -227,17 +227,17 @@ struct mdt_mouse_cursorheader_t {
 
 
 struct mdt_cursor_mouse_t{	  	// 4 bytes or 7 bytes in length
-  	struct mdt_mouse_cursorheader_t	header;		//use when (!IsNotMouse)
+	struct mdt_mouse_cursorheader_t	header;		//use when (!IsNotMouse)
 	union {
-	 	struct mdt_mouse_XYZ_t	  XYZ;		//use when (!IsNotLast) 
+		struct mdt_mouse_XYZ_t	  XYZ;		//use when (!IsNotLast)
 		struct mdt_mouse_XYZ_VS_t XYZ_VS;	//use when (!IsNotMouse) && (IsNotLast)
 		unsigned char		raw[6];
 	} body;
 };
 
-struct mdt_cursor_other_t{		// 4 bytes or 7 bytes in length			 
+struct mdt_cursor_other_t{		// 4 bytes or 7 bytes in length
 	union {
-	  	struct mdt_non_mouse_cursorheader_t 	touch;  //use when (IsNotMouse)
+		struct mdt_non_mouse_cursorheader_t 	touch;  //use when (IsNotMouse)
 		struct mdt_mouse_cursorheader_t		game;
 		unsigned char				raw;
 	} header;
@@ -250,13 +250,13 @@ struct mdt_cursor_other_t{		// 4 bytes or 7 bytes in length
 };
 
 struct mdt_keyboard_header_t{
-  	unsigned char	   			modifier_keys :3;
+	unsigned char	   			modifier_keys :3;
 	unsigned char	   			reserved:1;			//set to 0
 	mdt_event_header
 };
 
 struct mdt_raw_with_header {
-  	unsigned char	   			ls_nibble :4;
+	unsigned char	   			ls_nibble :4;
 	mdt_rawevent_header
 };
 
@@ -264,9 +264,9 @@ struct mdt_keyboard_event_t{          	//4 bytes or 7 bytes in length
 	struct mdt_keyboard_header_t	header;	// to avoid wasting space, all bit fields must be in the same struct
 	union {
 		struct {
-       			unsigned char		keycodes_firstThree[3];
-       			unsigned char		reserved [3];
-     		} truncated;
+			unsigned char		keycodes_firstThree[3];
+			unsigned char		reserved [3];
+		} truncated;
 		unsigned char			keycodes_all[6];
 	} body;
 };
@@ -315,7 +315,7 @@ struct mdt_burst_01_t{	     		// 6, 9, 13, or 16 bytes
 
 #define NOTICE_DEV_PLUG				'R'
 #define NOTICE_DEV_UNPLUG			'U'
-#define RESPONSE_ACK				'A'	
+#define RESPONSE_ACK				'A'
 #define RESPONSE_NACK				'N'
 
 #define PARSE_FAILURE				4
@@ -334,7 +334,7 @@ struct gamepad_history_t {
 	int				x_delta;
 	int				y_delta;
 	unsigned char 			dpad_event;
-	unsigned char			other_buttons;	
+	unsigned char			other_buttons;
 };
 
 struct mdt_touch_history_t{
@@ -358,20 +358,20 @@ struct si_mdt_inputdevs_t {
 	unsigned char			touchscreen_timer_on;
 
 	unsigned char			prior_mouse_buttons;
-	struct gamepad_history_t	prior_game_event;	
-	struct mdt_touch_history_t	prior_touch_events[MDT_MAX_TOUCH_CONTACTS];	
+	struct gamepad_history_t	prior_game_event;
+	struct mdt_touch_history_t	prior_touch_events[MDT_MAX_TOUCH_CONTACTS];
 	unsigned char			prior_touch_button;
 #ifdef  PHOENIX_BLADE
 	unsigned char 			touch_debounce_counter;
 	enum phoenix_blade_demo_state_e	phoenix_blade_state;
 	struct mdt_touch_history_t	prior_native_touch;
-	struct mdt_double_touch_t	double_touch;	
+	struct mdt_double_touch_t	double_touch;
 	struct mdt_simulated_buttons_t	simulated;
 #endif
 	unsigned char 			is_dev_registered[DEV_TYPE_COUNT];// Instance tracking variables
 	unsigned char			keycodes_old[MDT_HID_INPUT_REPORT];	// Prior HID input report
 	unsigned char			keycodes_new[MDT_HID_INPUT_REPORT]; // Current HID input report
-	unsigned char			*key_map;	
+	unsigned char			*key_map;
 
 	//user overrides
 	unsigned int			x_max, x_screen, x_raw, x_shift;
@@ -384,7 +384,7 @@ struct si_mdt_inputdevs_t {
 
 	//note: Unsuccesfully tried to use an array of pointers for si_input_dev. This didn't work.
 	si_input_dev			*dev_touchscreen;
-	si_input_dev			*dev_keyboard;			// Input devices are event generating interfaces in 
+	si_input_dev			*dev_keyboard;			// Input devices are event generating interfaces in
 	si_input_dev 			*dev_mouse;			//    the Linux input subsystem. Such devices
 									//    are typically located under /dev/input/<xyz>
 } ;									//    Linux file system. These devices can be read but,
@@ -400,7 +400,7 @@ struct si_mdt_inputdevs_t {
 #define MDT_MOUSE_PACKET_LENGTH		MDT_MIN_PACKET_LENGTH
 #define MDT_MAX_PACKET_LENGTH		MDT_KEYBOARD_PACKET_LENGTH
 
-        
+
 #define MDT_SYNC_ERROR_OFFSET		8
 #define MDT_SYNC_ERROR_FLAG_MASK	0xF0
 #define MDT_SYNC_ERROR_VALUE_MASK	0x0F
@@ -418,7 +418,7 @@ uint8_t		mdt_register_device(unsigned char mdt_device_type);
 void		mdt_generate_event_keyboard(struct mdt_keyboard_event_t *keyboardPacket);
 void		mdt_generate_event_mouse(struct mdt_cursor_mouse_t *mousePacket);
 void 	 	mdt_generate_event_gamepad(struct mdt_cursor_other_t *gamePacket);
-unsigned char	mdt_generate_event_touchscreen(struct mdt_cursor_other_t *touchPacket, 
+unsigned char	mdt_generate_event_touchscreen(struct mdt_cursor_other_t *touchPacket,
 			unsigned char submitEvent, unsigned char isOnTouchTimeout);
 unsigned char	mdt_generate_event_mouse_from_nativetouch(struct mdt_touch_history_t *touch_event);
 void		mdt_reset_touch(void);

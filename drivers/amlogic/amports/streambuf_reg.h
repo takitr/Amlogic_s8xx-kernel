@@ -81,4 +81,3 @@
 #endif
 
 #endif /* STREAMBUF_REG_H */
-

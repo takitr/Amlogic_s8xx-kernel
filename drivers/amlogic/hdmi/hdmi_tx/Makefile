@@ -1,6 +1,6 @@
 obj-$(CONFIG_AML_HDMI_TX)		+= hdmitx.o
 
-hdmitx-objs := hdmi_tx.o hdmi_tx_video.o hdmi_tx_audio.o hdmi_tx_edid.o hdmi_tx_audio.o hdmi_tx_hdcp.o
+hdmitx-objs := hdmi_tx.o hdmi_tx_video.o hdmi_tx_audio.o hdmi_tx_edid.o hdmi_tx_audio.o hdmi_tx_hdcp.o hdmi_tx_compliance.o
 
 ifdef CONFIG_AML_HDMI_TX_NEW_CEC_DRIVER
   hdmitx-objs += amlogic_cec.o

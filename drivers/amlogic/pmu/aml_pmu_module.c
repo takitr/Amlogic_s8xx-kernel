@@ -28,12 +28,12 @@ extern struct aml_pmu_api aml_pmu_common_api;
 static int aml_pmu_algorithm_init(void)
 {
     aml_pmu_register_api(&aml_pmu_common_api);
-    return 0;    
+    return 0;
 }
 
 static void aml_pmu_algorithm_exit(void)
 {
-    aml_pmu_clear_api();    
+    aml_pmu_clear_api();
 }
 
 module_init(aml_pmu_algorithm_init);

@@ -13,4 +13,3 @@ struct bt_wake_ops {
 extern void register_bt_wake_ops(struct bt_wake_ops *);
 extern void unregister_bt_wake_ops(void);
 #endif
-

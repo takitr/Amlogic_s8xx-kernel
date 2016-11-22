@@ -25,8 +25,8 @@
 
 #define DRV_NAME "spdif-dit"
 
-#define STUB_RATES	SNDRV_PCM_RATE_8000_384000
-#define STUB_FORMATS	SNDRV_PCM_FMTBIT_S16_LE | SNDRV_PCM_FMTBIT_S24_LE | SNDRV_PCM_FMTBIT_S32_LE
+#define STUB_RATES	SNDRV_PCM_RATE_44100 | SNDRV_PCM_RATE_48000 | SNDRV_PCM_RATE_88200 | SNDRV_PCM_RATE_96000 | SNDRV_PCM_RATE_176400 | SNDRV_PCM_RATE_192000
+#define STUB_FORMATS	SNDRV_PCM_FMTBIT_S16_LE | SNDRV_PCM_FMTBIT_S32_LE
 
 
 static struct snd_soc_codec_driver soc_codec_spdif_dit;
@@ -37,18 +37,18 @@ static struct snd_soc_dai_driver dit_stub_dai = {
 	.name		= "dit-hifi",
 	.playback 	= {
 		.stream_name	= "Playback",
-		.channels_min	= 1,
-		.channels_max	= 8,
+		.channels_min	= 2,
+		.channels_max	= 2,
 		.rates		= STUB_RATES,
 		.formats	= STUB_FORMATS,
 	},
 	.capture 	= {
 		.stream_name	= "Capture",
-		.channels_min	= 1,
-		.channels_max	= 8,
+		.channels_min	= 2,
+		.channels_max	= 2,
 		.rates		= STUB_RATES,
 		.formats	= STUB_FORMATS,
-	},	
+	},
 };
 
 static unsigned int spdif_pinmux = 0;
@@ -81,7 +81,7 @@ static ssize_t spdif_mute_show(struct device *dev,
         return sprintf(buf, "spdif_unmute\n");
     }else{
         return sprintf(buf, "spdif_mute\n");
-    }        
+    }
 }
 
 static ssize_t spdif_mute_set(struct device *dev,
@@ -156,4 +156,3 @@ MODULE_AUTHOR("Steve Chen <schen@mvista.com>");
 MODULE_DESCRIPTION("SPDIF dummy codec driver");
 MODULE_LICENSE("GPL");
 MODULE_ALIAS("platform:" DRV_NAME);
-

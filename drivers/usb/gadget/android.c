@@ -824,7 +824,7 @@ static int mass_storage_function_init(struct android_usb_function *f,
 			kfree(config);
 			return err;
 		}
- 	}
+	}
 
 	config->common = common;
 	f->config = config;
@@ -1434,14 +1434,14 @@ android_setup(struct usb_gadget *gadget, const struct usb_ctrlrequest *c)
 		}
 	}
 
-	
+
 	/* Special case the accessory function.
 	 * It needs to handle control requests before it is enabled.
 	 */
 	 /*need first common then acc,so can reset complete */
 	if (value < 0)
 		value = composite_setup_func(gadget, c);
-		
+
 	if (value < 0)
 		value = acc_ctrlrequest(cdev, c);
 

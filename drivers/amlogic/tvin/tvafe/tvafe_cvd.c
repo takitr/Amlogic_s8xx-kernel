@@ -514,7 +514,7 @@ static void tvafe_cvd2_non_std_config(struct tvafe_cvd2_s *cvd2)
 	else
 	{
         if (cvd_nonstd_dbg_en)
-        	pr_info("[tvafe..] %s: out of non-std signal.\n",__func__);
+		pr_info("[tvafe..] %s: out of non-std signal.\n",__func__);
 		WRITE_APB_REG(CVD2_HSYNC_RISING_EDGE_START, 0x6d);
 		WRITE_APB_REG(TVFE_CLAMP_INTF, 0x8666);
 		WRITE_APB_REG_BITS(CVD2_H_LOOP_MAXSTATE, 5, HSTATE_MAX_BIT, HSTATE_MAX_WID);
@@ -765,7 +765,7 @@ static void tvafe_cvd2_get_signal_status(struct tvafe_cvd2_s *cvd2)
 				}
 				else if (cvd2->hw.acc425_cnt < ((cvd2->hw.acc4xx_cnt)*3)/5)
 				{*/
- 					cvd2->hw.fsc_425 = false;
+					cvd2->hw.fsc_425 = false;
 					cvd2->hw.fsc_443 = true;
 			}
 			else if(cvd2->hw.acc4xx_cnt  < 40)
@@ -1224,7 +1224,7 @@ static bool tvafe_cvd2_condition_shift(struct tvafe_cvd2_s *cvd2)
 		return false;
 	}
 	if(ignore_pal_nt)
-	
+
 {
 		return false;
 	}
@@ -1252,7 +1252,7 @@ static bool tvafe_cvd2_condition_shift(struct tvafe_cvd2_s *cvd2)
 			break;
 	}
 	if(ignore_443_358)
-	
+
 {
 		if(ret)
 			return true;
@@ -1381,7 +1381,7 @@ static void tvafe_cvd2_search_video_mode(struct tvafe_cvd2_s * cvd2,struct tvafe
 					//force mode:due to some signal is hard to check out
 					if(++try_format_cnt==try_format_max)
 						{
-				    		cvd_force_config_fmt(cvd2,mem,config_force_fmt);
+						cvd_force_config_fmt(cvd2,mem,config_force_fmt);
 							return;
 						}
 					else if(try_format_cnt>try_format_max)
@@ -1903,7 +1903,7 @@ inline void tvafe_cvd2_adj_pga(struct tvafe_cvd2_s *cvd2)
 	}
 
 	return;
-} 
+}
 #endif
 
 #ifdef TVAFE_SET_CVBS_CDTO_EN
@@ -2120,5 +2120,3 @@ void tvafe_cvd2_set_reg8a(unsigned int v)
 	cvd_reg8a = v;
 	WRITE_APB_REG(CVD2_CHROMA_LOOPFILTER_STATE, cvd_reg8a);
 }
-
-

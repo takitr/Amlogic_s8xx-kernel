@@ -43,4 +43,3 @@ extern const unsigned char cvd_yc_reg_0x18_0x1f[TVIN_SIG_FMT_CVBS_SECAM-TVIN_SIG
 
 
 #endif
-

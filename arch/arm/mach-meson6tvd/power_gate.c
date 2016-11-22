@@ -42,4 +42,3 @@ int video_dac_disable()
 	return 0;
 }
 EXPORT_SYMBOL(video_dac_disable);
-

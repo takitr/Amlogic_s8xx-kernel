@@ -165,4 +165,3 @@ int clk_disable_usb(struct clk *clk)
 	return 0;
 }
 EXPORT_SYMBOL(clk_disable_usb);
-

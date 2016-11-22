@@ -34,9 +34,9 @@ GlobalStatus_t CurrentStatus;
 //------------------------------------------------------------------------------
 static void AutoVideoSetup(void)
 {
-    
+
 	const uint8_t unmuteTimeConf[] = {0xFF,0x00,0x00,0xFF,0x00,0x00};
-	RegisterWriteBlock(REG__WAIT_CYCLE, (uint8_t *)&unmuteTimeConf[0],6);	//video unmute wait 
+	RegisterWriteBlock(REG__WAIT_CYCLE, (uint8_t *)&unmuteTimeConf[0],6);	//video unmute wait
 
     RegisterWrite(REG__VID_CTRL,  (BIT__IVS   & CONF__VSYNC_INVERT) |
                                   (BIT__IHS   & CONF__HSYNC_INVERT) );  //set HSYNC,VSNC polarity
@@ -50,10 +50,10 @@ static void AutoVideoSetup(void)
 #endif //(CONF__ODCK_LIMITED==ENABLE)
 
 
-#if (PEBBLES_ES1_ZONE_WORKAROUND == ENABLE)	
+#if (PEBBLES_ES1_ZONE_WORKAROUND == ENABLE)
 	RegisterWrite(REG__AVC_EN2, BIT__AUTO_DC_CONF);			   //mask out auto configure deep color clock
 	RegisterWrite(REG__VIDA_XPCNT_EN, BIT__VIDA_XPCNT_EN);	   //en read xpcnt
-#endif //(PEBBLES_ES1_ZONE_WORKAROUND == ENABLE)	 
+#endif //(PEBBLES_ES1_ZONE_WORKAROUND == ENABLE)
 
 #if (PEBBLES_STARTER_NO_CLK_DIVIDER == ENABLE)
 	RegisterModify(REG__AVC_EN2, BIT__AUTO_CLK_DIVIDER,SET);	  //msk out auto clk divider
@@ -81,7 +81,7 @@ static void AutoAudioSetup(void)
                        BIT__AUDIO_FIFO_OVERRUN |
                        BIT__FS_CHANGED         |
                        BIT__H_RES_CHANGED      );
-#if (CONF__VSYNC_OVERFLOW != ENABLE)   
+#if (CONF__VSYNC_OVERFLOW != ENABLE)
     abAecEnables[2] = (BIT__V_RES_CHANGED      );
 #endif
     RegisterWriteBlock(REG__AEC_EN1, abAecEnables, 3);
@@ -95,12 +95,12 @@ static void AutoAudioSetup(void)
 // Description: Setup new input port after port change
 //------------------------------------------------------------------------------
 static void ConfigureSelectedPort(void)
-{		  
-	
+{
+
     switch (CurrentStatus.PortSelection)
     {
         case PORT_SELECT__PORT_0:
-        {	
+        {
             RegisterModify(REG__PORT_SWTCH2, MSK__PORT_EN,VAL__PORT0_EN);     //select port 0
             RegisterWrite(REG__PORT_SWTCH, BIT__DDC0_EN);     //select DDC 0
             HAL_VccEnable(ON);
@@ -218,12 +218,12 @@ static void SystemInit(void)
 	TurnVideoMute(ON);
 
 #if(PEBBLES_ES1_STARTER_CONF==ENABLE)
-    RegisterWrite(REG__TERMCTRL2, VAL__45OHM); 			//1.term default value	
+    RegisterWrite(REG__TERMCTRL2, VAL__45OHM); 			//1.term default value
 
     RegisterWrite(REG__FACTORY_A87,0x43);              //2.Set PLL mode to internal and set selcalrefg to F
     RegisterWrite(REG__FACTORY_A81,0x18);              //Set PLL zone to auto and set Div20 to 1
 
-    RegisterWrite(REG__DRIVE_CNTL,0x64);               //3.change output strength,  
+    RegisterWrite(REG__DRIVE_CNTL,0x64);               //3.change output strength,
 
     RegisterWrite(REG__FACTORY_ABB,0x04);              //4.desable DEC_CON
 
@@ -231,25 +231,25 @@ static void SystemInit(void)
     RegisterWrite(REG__FACTORY_AB5,0x40);              //EnableEQ
 
     RegisterWrite(REG__FACTORY_9E5, 0x02);             //6. DLL by pass
-	RegisterWrite(REG__FACTORY_A89,0x00);			   //7. configure the PLLbias 	
+	RegisterWrite(REG__FACTORY_A89,0x00);			   //7. configure the PLLbias
 	RegisterWrite(REG__FACTORY_00E,0x40);  			   //for ES1.1 conf only
 #endif
-			
-    CEC_Init();					  
+
+    CEC_Init();
     //set recommended values
     RegisterWrite(REG__AACR_CFG1, CONF__AACR_CFG1_VALUE);   //pll config #1
-    RegisterWrite(REG__CBUS_PAD_SC, VAL__SC_CONF);  		//CBUS slew rate 
+    RegisterWrite(REG__CBUS_PAD_SC, VAL__SC_CONF);  		//CBUS slew rate
     RegisterWrite(REG__SRST,  BIT__SWRST_AUTO);             //enable auto sw reset
 	RegisterWrite(REG__INFM_CLR,BIT__CLR_GBD|BIT__CLR_ACP);	//clr GBD & ACP
 
     RegisterWrite(REG__ECC_HDCP_THRES, CONF__HDCPTHRESH & 0xff);      //HDCP threshold low uint8_t
     RegisterWrite(REG__ECC_HDCP_THRES+1, (CONF__HDCPTHRESH>>8) & 0xff);  //HDCP threshold high uint8_t
     AutoVideoSetup();
-    AutoAudioSetup();    
+    AutoAudioSetup();
     SetupInterruptMasks();
 	InitializePortSwitch();
-    TurnPowerDown(OFF);	 						   	
-	RegisterModify(REG__HPD_HW_CTRL,MSK__INVALIDATE_ALL, CLEAR); //CLEAR disable auto HPD conf 
+    TurnPowerDown(OFF);
+	RegisterModify(REG__HPD_HW_CTRL,MSK__INVALIDATE_ALL, CLEAR); //CLEAR disable auto HPD conf
 
 	/* Inti Hdmi Info frame related chip registers and data */
 	HdmiInitIf ();
@@ -285,7 +285,7 @@ static void HdmiTask(void)
         if (TIMER_Expired(TIMER__VIDEO))
         {
 			PclkCheck();
-        	TIMER_Set(TIMER__VIDEO, VIDEO_STABLITY_CHECK_INTERVAL);  // start the video timer 
+		TIMER_Set(TIMER__VIDEO, VIDEO_STABLITY_CHECK_INTERVAL);  // start the video timer
 			CurrentStatus.VideoStabilityCheckCount++;
 
         }
@@ -294,7 +294,7 @@ static void HdmiTask(void)
 			DEBUG_PRINT(("V CHECK %d times\n",(int)CurrentStatus.VideoStabilityCheckCount));
 			CurrentStatus.VideoState = STATE_VIDEO__CHECKED;
 			CurrentStatus.VideoStabilityCheckCount = 0;
-		}					  										
+		}
 	}
 #endif //#if (PEBBLES_VIDEO_STATUS_2ND_CHECK==ENABLE)
 }
@@ -325,8 +325,8 @@ void sii9223a_main(void)
         {
             if (TIMER_Expired(TIMER__POLLING))
             {
-                TIMER_Set(TIMER__POLLING, 20);       //poll every 20ms	   
-                PollPortSwitch();  
+                TIMER_Set(TIMER__POLLING, 20);       //poll every 20ms
+                PollPortSwitch();
                 PollInterrupt();
             }
 #if (CONF__CEC_ENABLE == ENABLE)
@@ -351,4 +351,3 @@ void sii9223a_main(void)
 //        DEBUG_POLL();
     }
 }
-

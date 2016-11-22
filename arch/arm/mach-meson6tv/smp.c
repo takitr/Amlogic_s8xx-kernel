@@ -172,5 +172,3 @@ struct smp_operations __initdata meson6tv_smp_ops = {
 	.cpu_disable		= meson6tv_cpu_disable,
 #endif
 };
-
-

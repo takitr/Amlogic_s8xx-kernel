@@ -27,4 +27,3 @@ void ct36x_platform_hw_reset(struct ct36x_platform_data *pdata);
 
 extern struct i2c_driver ct36x_ts_driver;
 #endif
-

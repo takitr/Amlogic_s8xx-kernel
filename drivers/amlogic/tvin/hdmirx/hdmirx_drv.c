@@ -280,7 +280,7 @@ bool hdmirx_fmt_chg(struct tvin_frontend_s *fe)
 	if (!hdmirx_hw_pll_lock()) {
 	    ret = true;
 	} else {
- 		fmt = hdmirx_hw_get_fmt();
+		fmt = hdmirx_hw_get_fmt();
 		if(fmt != parm->info.fmt)
 		{
 			pr_info("hdmirx fmt: %d --> %d\n", parm->info.fmt, fmt);
@@ -505,7 +505,7 @@ void hdmirx_powerdown(const char* buf, int size)
 			WRITE_MPEG_REG(HHI_HDMIRX_CLK_CNTL,0x0);
 		}
 		pr_info("[hdmirx]: hdmirx power down\n");
-  	}
+	}
 }
 
 int hdmirx_print_buf(char* buf, int len)
@@ -1068,4 +1068,3 @@ module_exit(hdmirx_exit);
 
 MODULE_DESCRIPTION("AMLOGIC HDMIRX driver");
 MODULE_LICENSE("GPL");
-

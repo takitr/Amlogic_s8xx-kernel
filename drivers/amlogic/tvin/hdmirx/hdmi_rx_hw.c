@@ -115,7 +115,7 @@ uint32_t hdmirx_rd_dwc(uint16_t addr)
  * @param[in] data new register value
  */
 void hdmirx_wr_dwc(uint16_t addr, uint32_t data)
-{ 
+{
 	/* log_info("%04X:%08X", addr, data); */
     ulong flags;
 	unsigned long dev_offset = 0x10;    // TOP ADDR_PORT: 0xc800e000; DWC ADDR_PORT: 0xc800e010
@@ -216,7 +216,7 @@ unsigned long hdmirx_rd_top (unsigned long addr)
 	unsigned long data;
     spin_lock_irqsave(&reg_rw_lock, flags);
 	WRITE_APB_REG((HDMIRX_ADDR_PORT | dev_offset), addr);
-	data = READ_APB_REG((HDMIRX_DATA_PORT | dev_offset)); 
+	data = READ_APB_REG((HDMIRX_DATA_PORT | dev_offset));
     spin_unlock_irqrestore(&reg_rw_lock, flags);
 	return (data);
 } /* hdmirx_rd_TOP */
@@ -314,7 +314,7 @@ void phy_init(int rx_port_sel, int dcm)
 
 	/* write timebase override and override enable */
 	hdmirx_wr_phy(OVL_PROT_CTRL, 0x2); //disable overload protect for Philips DVD
-	hdmirx_wr_phy(REG_HDMI_PHY_CMU_CONFIG, 
+	hdmirx_wr_phy(REG_HDMI_PHY_CMU_CONFIG,
 	(rx.phy.phy_cmu_config_force_val != 0) ? rx.phy.phy_cmu_config_force_val :
 	((rx.phy.lock_thres << 10) | (1 << 9) | (((1 << 9) - 1) & ((rx.phy.cfg_clk * 4) / 1000))));
 
@@ -342,7 +342,7 @@ void phy_init(int rx_port_sel, int dcm)
     data32 |= 0             << 1;   // [1]      phypddq
     data32 |= 0             << 0;   // [0]      phyreset
     hdmirx_wr_dwc(RA_SNPS_PHYG3_CTRL,    data32); // DEFAULT: {27'd0, 3'd0, 2'd1}
-}   
+}
 
 void hdmirx_phy_hw_reset(void)
 {
@@ -425,9 +425,9 @@ static int audio_init(void)
     data32 |= aud_mute_sel     << 5;   // [6:5]    aud_mute_sel
     data32 |= 1     << 3;   // [4:3]    aud_mute_mode
     data32 |= 0     << 1;   // [2:1]    aud_ttone_fs_sel
-    data32 |= 0     << 0;   // [0]      testtone_en 
+    data32 |= 0     << 0;   // [0]      testtone_en
     hdmirx_wr_dwc( RA_AUD_MUTE_CTRL,  data32); // DEFAULT: {9'd0, 2'd0, 2'd0, 2'd0, 7'd48, 2'd0, 1'b1, 2'd3, 2'd3, 2'd0, 1'b0}
-	
+
     data32  = 0;
     data32 |= 0     << 4;   // [11:4]   audio_fmt_chg_thres
     data32 |= 0     << 1;   // [2:1]    audio_fmt
@@ -442,7 +442,7 @@ static int audio_init(void)
     data32 |= 0 << 2;   // [4:2]    deltacts_irqtrig
     data32 |= 0 << 0;   // [1:0]    cts_n_meas_mode
     hdmirx_wr_dwc( RA_PDEC_ACRM_CTRL, data32); // DEFAULT: {27'd0, 3'd0, 2'd1}
-	
+
 	/* enable all outputs and select 32-bit for I2S */
 	hdmirx_wr_dwc(RA_AUD_SAO_CTRL, 1);
 
@@ -519,14 +519,14 @@ static void control_init_more(void)
     data32 |= edid_clock_divide << 0;   // [ 7: 0]  clk_divide_m1
     hdmirx_wr_top(HDMIRX_TOP_EDID_GEN_CNTL,  data32);
 
-#if 0    
+#if 0
     data32  = 0;
     data32 |= VSYNC_POLARITY    << 3;   // [4:3]    vs_pol_adj_mode:0=invert input VS; 1=no invert; 2=auto convert to high active; 3=no invert.
     data32 |= 2                 << 1;   // [2:1]    hs_pol_adj_mode:0=invert input VS; 1=no invert; 2=auto convert to high active; 3=no invert.
     hdmirx_wr_dwc( RA_HDMI_SYNC_CTRL,     data32); // DEFAULT: {27'd0, 2'd0, 2'd0, 1'b0}
 #endif
 
-#define interlace_mode 1    
+#define interlace_mode 1
     data32  = 0;
     data32 |= 1                 << 4;   // [4]      v_offs_lin_mode
     data32 |= 1                 << 1;   // [1]      v_edge
@@ -542,7 +542,7 @@ static void control_init_more(void)
     data32 |= 0     << 8;   // [9:8]    hs_filt_sens
     data32 |= 2     << 6;   // [7:6]    de_measure_mode
     data32 |= 0     << 5;   // [5]      de_regen
-    data32 |= 3     << 3;   // [4:3]    de_filter_sens 
+    data32 |= 3     << 3;   // [4:3]    de_filter_sens
     hdmirx_wr_dwc( RA_HDMI_ERRORA_PROTECT, data32); // DEFAULT: {11'd0, 1'b0, 1'b0, 3'd0, 2'd0, 2'd0, 2'd0, 2'd0, 2'd0, 1'b0, 2'd0, 3'd0}
 
     data32  = 0;
@@ -561,7 +561,7 @@ static void control_init_more(void)
 
     data32  = 0;
     data32 |= 1 << 10;  // [11:10]  vofs_lin_ith
-    data32 |= 3 << 8;   // [9:8]    vact_lin_ith 
+    data32 |= 3 << 8;   // [9:8]    vact_lin_ith
     data32 |= 0 << 6;   // [7:6]    vtot_lin_ith
     data32 |= 7 << 3;   // [5:3]    vs_clk_ith
     data32 |= 2 << 0;   // [2:0]    vtot_clk_ith
@@ -574,7 +574,7 @@ static void control_init_more(void)
 
     data32  = 0;
     data32 |= 0                 << 1;   // [4:1]    man_vid_derepeat
-  	if(hdmirx_de_repeat_enable)
+	if(hdmirx_de_repeat_enable)
 		data32 |= 1             << 0;   // [0]      auto_derepeat
 	else
 		data32 |= 0				<< 0;	// disable auto de repeat
@@ -585,7 +585,7 @@ static int control_init(unsigned port)
 {
 	int err = 0;
 	unsigned evaltime = 0;
-	
+
   evaltime = (rx.ctrl.md_clk * 4095) / 158000;
 	hdmirx_wr_dwc(RA_HDMI_OVR_CTRL, ~0);	/* enable all */
 	hdmirx_wr_bits_dwc(RA_HDMI_SYNC_CTRL, VS_POL_ADJ_MODE, VS_POL_ADJ_AUTO);
@@ -595,7 +595,7 @@ static int control_init(unsigned port)
 	/* bit field shared between phy and controller */
 	hdmirx_wr_bits_dwc(RA_HDMI_PCB_CTRL, INPUT_SELECT, port);
 	hdmirx_wr_bits_dwc(RA_SNPS_PHYG3_CTRL, ((1 << 2) - 1) << 2, port);
-	
+
 	control_init_more();
 	return err;
 }
@@ -632,7 +632,7 @@ static void hdmi_rx_ctrl_hdcp_config( const struct hdmi_rx_ctrl_hdcp *hdcp)
 	hdmirx_wr_dwc(RA_HDCP_RPT_BSTATUS, 0);	/* nothing attached downstream */
 
   hdmirx_wr_bits_dwc( RA_HDCP_CTRL, HDCP_ENABLE, 1);
-	
+
 }
 
 #if 0
@@ -675,7 +675,7 @@ void hdmirx_set_hpd(int port, unsigned char val)
     }
 #endif
     hdmirx_print("%s(%d,%d)\n", __func__, port, val);
-    
+
 }
 
 
@@ -694,7 +694,7 @@ static void control_reset(unsigned char seq)
 
     /* add delay for audio problem */
         mdelay(2);
-    
+
     // Enable functional modules
     data32  = 0;
 #if CEC_FUNC_ENABLE
@@ -754,23 +754,23 @@ static void control_reset(unsigned char seq)
 void hdmirx_set_pinmux(void)
 {
 	WRITE_CBUS_REG(PERIPHS_PIN_MUX_0 , READ_CBUS_REG(PERIPHS_PIN_MUX_0 )|
-				( (1 << 27)   |   // pm_gpioW_0_hdmirx_5V_A  
-				(1 << 26)   |   // pm_gpioW_1_hdmirx_HPD_A 
-				(1 << 25)   |   // pm_gpioW_2_hdmirx_scl_A 
-				(1 << 24)   |   // pm_gpioW_3_hdmirx_sda_A 
-				(1 << 23)   |   // pm_gpioW_4_hdmirx_5V_B  
-				(1 << 22)   |   // pm_gpioW_5_hdmirx_HPD_B 
-				(1 << 21)   |   // pm_gpioW_6_hdmirx_scl_B 
-				(1 << 20)   |   // pm_gpioW_7_hdmirx_sda_B 
-				(1 << 19)   |   // pm_gpioW_8_hdmirx_5V_C  
-				(1 << 18)   |   // pm_gpioW_9_hdmirx_HPD_C 
+				( (1 << 27)   |   // pm_gpioW_0_hdmirx_5V_A
+				(1 << 26)   |   // pm_gpioW_1_hdmirx_HPD_A
+				(1 << 25)   |   // pm_gpioW_2_hdmirx_scl_A
+				(1 << 24)   |   // pm_gpioW_3_hdmirx_sda_A
+				(1 << 23)   |   // pm_gpioW_4_hdmirx_5V_B
+				(1 << 22)   |   // pm_gpioW_5_hdmirx_HPD_B
+				(1 << 21)   |   // pm_gpioW_6_hdmirx_scl_B
+				(1 << 20)   |   // pm_gpioW_7_hdmirx_sda_B
+				(1 << 19)   |   // pm_gpioW_8_hdmirx_5V_C
+				(1 << 18)   |   // pm_gpioW_9_hdmirx_HPD_C
 				(1 << 17)   |   // pm_gpioW_10_hdmirx_scl_C
 				(1 << 16)   |   // pm_gpioW_11_hdmirx_sda_C
-				(1 << 15)   |   // pm_gpioW_12_hdmirx_5V_D 
+				(1 << 15)   |   // pm_gpioW_12_hdmirx_5V_D
 				(1 << 14)   |   // pm_gpioW_13_hdmirx_HPD_D
 				(1 << 13)   |   // pm_gpioW_14_hdmirx_scl_D
 				(1 << 12)   |   // pm_gpioW_15_hdmirx_sda_D
-				(1 << 11)));     // pm_gpioW_16_hdmirx_cec  
+				(1 << 11)));     // pm_gpioW_16_hdmirx_cec
 #ifdef USE_GPIO_FOR_HPD
     if (pwr_gpio_pull_down)
         WRITE_CBUS_REG(PAD_PULL_UP_REG2, READ_CBUS_REG(PAD_PULL_UP_REG2) |
@@ -778,7 +778,7 @@ void hdmirx_set_pinmux(void)
 
     WRITE_CBUS_REG(PERIPHS_PIN_MUX_0, READ_CBUS_REG(PERIPHS_PIN_MUX_0 ) &
                 (~((1<<26)|(1<<22)|(1<<18)|(1<<14))));
-                
+
     WRITE_CBUS_REG(PREG_PAD_GPIO5_EN_N, READ_CBUS_REG(PREG_PAD_GPIO5_EN_N) &
                 (~((1<<1)|(1<<5)|(1<<9)|(1<<13))));
 
@@ -789,11 +789,11 @@ void hdmirx_set_pinmux(void)
 #if 0
 	WRITE_CBUS_REG(PERIPHS_PIN_MUX_1 , READ_CBUS_REG(PERIPHS_PIN_MUX_1 )|
 				( (1 << 2)    |   // pm_gpioW_17_hdmirx_tmds_clk
-				(1 << 1)    |   // pm_gpioW_18_hdmirx_pix_clk 
-				(1 << 0)));      // pm_gpioW_19_hdmirx_audmeas 
+				(1 << 1)    |   // pm_gpioW_18_hdmirx_pix_clk
+				(1 << 0)));      // pm_gpioW_19_hdmirx_audmeas
 #endif
 
-}    
+}
 
 void clk_off(void)
 {
@@ -843,7 +843,7 @@ void clk_init(void)
     data32 |= 0 << 1;   // [1]      bus_clk_inv
     data32 |= 0 << 0;   // [0]      hdmi_clk_inv
     hdmirx_wr_top( HDMIRX_TOP_CLK_CNTL, data32);    // DEFAULT: {32'h0}
-  
+
 
 }
 
@@ -869,7 +869,7 @@ void hdmirx_hw_config(void)
 	phy_init(rx.port, 0); //port, dcm
 	/**/
 
-	/* control config */    
+	/* control config */
 	control_init(rx.port);
 	audio_init();
 	packet_init();
@@ -1092,7 +1092,7 @@ void hdmirx_config_video(struct hdmi_rx_ctrl_video *video_params)
     data32 |= 0                             << 16;  // [18:16]  force_vid_rate_luma_cfg   : 0=Bypass, not rate change. Applicable only if force_vid_rate=1
     data32 |= 0x7fff                        << 0;   // [14: 0]  hsizem1
     hdmirx_wr_top( HDMIRX_TOP_VID_CNTL,   data32);
-}    
+}
 
 int hdmirx_config_audio(void)
 {
@@ -1143,9 +1143,9 @@ unsigned long data32 = 0;
     data32 |= (RX_8_CHANNEL? 0x1f:0x3)  << 2;   // [6:2]    ch_map[4:0]
     data32 |= 1                         << 0;   // [1:0]    aud_layout_ctrl:0/1=auto layout; 2=layout 0; 3=layout 1.
     hdmirx_wr_dwc( RA_AUD_CHEXTRA_CTRL,    data32); // DEFAULT: {24'd0, 1'b0, 5'd0, 2'd0}
-#endif 
+#endif
 /* amlogic HDMIRX audio module enable*/
-	WRITE_MPEG_REG(HHI_AUDCLK_PLL_CNTL,  0x60010000); 
+	WRITE_MPEG_REG(HHI_AUDCLK_PLL_CNTL,  0x60010000);
 	WRITE_MPEG_REG(HHI_AUDCLK_PLL_CNTL2, 0x814d3928);
 	WRITE_MPEG_REG(HHI_AUDCLK_PLL_CNTL3, 0x6b425012);
 	WRITE_MPEG_REG(HHI_AUDCLK_PLL_CNTL4, 0x101);
@@ -1215,17 +1215,17 @@ static unsigned long clk_util_clk_msr2( unsigned long   clk_mux, unsigned long  
 int hdmirx_get_clock(int index)
 {
     return clk_util_clk_msr2(index, 50);
-}    
+}
 
 int hdmirx_get_tmds_clock(void)
 {
     return clk_util_clk_msr2(57, 50);
-}    
+}
 
 int hdmirx_get_pixel_clock(void)
 {
     return clk_util_clk_msr2(58, 50);
-}    
+}
 
 void hdmirx_read_audio_info(struct aud_info_s* audio_info)
 {
@@ -1248,7 +1248,7 @@ void hdmirx_read_audio_info(struct aud_info_s* audio_info)
   else{
       audio_info->audio_recovery_clock = 0;
   }
-}    
+}
 
 int hdmirx_get_pdec_aud_sts(void)
 {

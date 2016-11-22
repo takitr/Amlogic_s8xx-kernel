@@ -1,9 +1,9 @@
 
 /*******************************************************************
- * 
+ *
  *  Copyright C 2005 by Amlogic, Inc. All Rights Reserved.
  *
- *  Description: 
+ *  Description:
  *
  *  Author: Amlogic Software
  *  Created: Thu Aug 30 17:34:00 2006
@@ -42,23 +42,23 @@
 #define xd_bus_start_pin_0_bit 8
 #define xd_bus_sel_chang_point_0_bit 0
 
-#define xd_clock_divide_bit      24 
-#define xd_clock_output_sel_bit  20 
+#define xd_clock_divide_bit      24
+#define xd_clock_output_sel_bit  20
 
-#define xd_inc_event_addr_bit       19 
-#define xd_async_fifo_endian_bit    18 
-#define xd_send_to_async_fifo_bit   17 
-#define xd_data_in_serial_lsb_bit   16 
-#define xd_invert_no_wait_condition_2_0_bit   15 
-#define xd_invert_no_wait_condition_2_1_bit   14 
-#define xd_invert_no_wait_condition_2_2_bit   13 
-#define xd_invert_data_bus_bit   12 
-#define xd_invert_clock_in_bit   11 
-#define xd_event_wait_clk_en_bit 10 
-#define xd_data_in_serial_bit     9 
-#define xd_invert_data_in_clk_bit 8 
-#define xd_data_in_begin_bit      4 
-#define xd_data_in_clk_sel_bit    0 
+#define xd_inc_event_addr_bit       19
+#define xd_async_fifo_endian_bit    18
+#define xd_send_to_async_fifo_bit   17
+#define xd_data_in_serial_lsb_bit   16
+#define xd_invert_no_wait_condition_2_0_bit   15
+#define xd_invert_no_wait_condition_2_1_bit   14
+#define xd_invert_no_wait_condition_2_2_bit   13
+#define xd_invert_data_bus_bit   12
+#define xd_invert_clock_in_bit   11
+#define xd_event_wait_clk_en_bit 10
+#define xd_data_in_serial_bit     9
+#define xd_invert_data_in_clk_bit 8
+#define xd_data_in_begin_bit      4
+#define xd_data_in_clk_sel_bit    0
 
 
 #define     xd_no_wait_condition_0_bit  28
@@ -70,7 +70,7 @@
 #define     xd_invert_irq_1_bit         10
 #define     xd_enable_transfer_end_irq   9
 #define     xd_enable_second_ext_irq_bit 8
-#define     xd_no_wait_condition_check_point_bit 0 
+#define     xd_no_wait_condition_check_point_bit 0
 
 #define     xd_no_wait_condition_0_bit  28
 #define     xd_no_wait_condition_1_bit  24
@@ -82,7 +82,7 @@
 #define     xd_invert_irq_1_bit         10
 #define     xd_enable_transfer_end_irq   9
 #define     xd_enable_second_ext_irq_bit 8
-#define     xd_no_wait_condition_check_point_bit 0 
+#define     xd_no_wait_condition_check_point_bit 0
 
 #define xd_clock_divide_ext_bit   24
 #define xd_s_bus_start_bit        20
@@ -102,8 +102,8 @@
 #define XD_BUS_OUTPUT_ADDR     2
 #define XD_BUS_OUTPUT_DATA     3
 
-#define XD_CONFIG_INPUT        0xffff 
-#define XD_CONFIG_OUTPUT    0xfffe 
+#define XD_CONFIG_INPUT        0xffff
+#define XD_CONFIG_OUTPUT    0xfffe
 #define XD_NO_OUTOUT_CF0 (0x00000000 | XD_CONFIG_OUTPUT)   // RE
 #define XD_NO_OUTOUT_CF1 (0x00010000 | XD_CONFIG_OUTPUT)   // WE
 #define XD_NO_OUTOUT_CF2 (0x00020000 | XD_CONFIG_INPUT)    // R/-B
@@ -112,7 +112,7 @@
 #define XD_NO_OUTOUT_CF5 (0x00050000 | XD_CONFIG_OUTPUT)   // CLE
 
 
-#define XD_RW_PULSE_WIDTH 6 
+#define XD_RW_PULSE_WIDTH 6
 
 #define XD_EVENT_LENGTH (XD_RW_PULSE_WIDTH + 3)
 #define XD_RW_PULSE_START 0
@@ -170,28 +170,28 @@
 #define XD_CMD_WR_OUTOUT_CF1 (0x00010000 | (XD_RW_PULSE_END << 8) | XD_RW_PULSE_START)   // We_n
 #define XD_CMD_WR_OUTOUT_CF2 (0x00020000 | XD_CONFIG_INPUT) // Rb_n input
 #define XD_CMD_WR_OUTOUT_CF3 (0x00030000 | XD_CONFIG_OUTPUT) // chip select
-#define XD_CMD_WR_OUTOUT_CF4 (0x00040000 | XD_CONFIG_OUTPUT) // Ale 
+#define XD_CMD_WR_OUTOUT_CF4 (0x00040000 | XD_CONFIG_OUTPUT) // Ale
 #define XD_CMD_WR_OUTOUT_CF5 (0x00050000 | (XD_CLE_END << 8) | XD_CLE_START) // Cle
 
 #define XD_ADDR_WR_OUTOUT_CF0 (0x00000000 | XD_CONFIG_OUTPUT) // Re_n
 #define XD_ADDR_WR_OUTOUT_CF1 (0x00010000 | (XD_RW_PULSE_END << 8) | XD_RW_PULSE_START)   // We_n
 #define XD_ADDR_WR_OUTOUT_CF2 (0x00020000 | XD_CONFIG_INPUT) // Rb_n input
 #define XD_ADDR_WR_OUTOUT_CF3 (0x00030000 | XD_CONFIG_OUTPUT) // chip select
-#define XD_ADDR_WR_OUTOUT_CF4 (0x00040000 | (XD_ALE_END << 8) | XD_ALE_START) // Ale 
+#define XD_ADDR_WR_OUTOUT_CF4 (0x00040000 | (XD_ALE_END << 8) | XD_ALE_START) // Ale
 #define XD_ADDR_WR_OUTOUT_CF5 (0x00050000 | XD_CONFIG_OUTPUT) // Cle
 
 #define XD_DATA_READ_OUTOUT_CF0 (0x00000000 | (XD_RW_PULSE_END << 8) | XD_RW_PULSE_START) // Re_n
 #define XD_DATA_READ_OUTOUT_CF1 (0x00010000 | XD_CONFIG_OUTPUT)   // We_n
 #define XD_DATA_READ_OUTOUT_CF2 (0x00020000 | XD_CONFIG_INPUT) // Rb_n input
 #define XD_DATA_READ_OUTOUT_CF3 (0x00030000 | XD_CONFIG_OUTPUT) // chip select
-#define XD_DATA_READ_OUTOUT_CF4 (0x00040000 | XD_CONFIG_OUTPUT) // Ale 
+#define XD_DATA_READ_OUTOUT_CF4 (0x00040000 | XD_CONFIG_OUTPUT) // Ale
 #define XD_DATA_READ_OUTOUT_CF5 (0x00050000 | XD_CONFIG_OUTPUT) // Cle
 
 #define XD_DATA_WR_OUTOUT_CF0 (0x00000000 | XD_CONFIG_OUTPUT) // Re_n
 #define XD_DATA_WR_OUTOUT_CF1 (0x00010000 | (XD_RW_PULSE_END << 8) | XD_RW_PULSE_START)   // We_n
 #define XD_DATA_WR_OUTOUT_CF2 (0x00020000 | XD_CONFIG_INPUT) // Rb_n input
 #define XD_DATA_WR_OUTOUT_CF3 (0x00030000 | XD_CONFIG_OUTPUT) // chip select
-#define XD_DATA_WR_OUTOUT_CF4 (0x00040000 | XD_CONFIG_OUTPUT) // Ale 
+#define XD_DATA_WR_OUTOUT_CF4 (0x00040000 | XD_CONFIG_OUTPUT) // Ale
 #define XD_DATA_WR_OUTOUT_CF5 (0x00050000 | XD_CONFIG_OUTPUT) // Cle
 
 #define XD_BUS_CONFIG ( \

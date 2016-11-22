@@ -171,7 +171,7 @@ static void kill_urbs_in_qh_list(dwc_otg_hcd_t * hcd, dwc_list_link_t * qh_list)
 				hcd->fops->complete(hcd, qtd->urb->priv,
 						    qtd->urb, -DWC_E_SHUTDOWN);
 				dwc_otg_hcd_qtd_remove_and_free(hcd, qtd, qh);
-			}			
+			}
 		}
 		dwc_otg_hcd_qh_remove(hcd, qh);
 	}
@@ -192,7 +192,7 @@ static void kill_all_urbs(dwc_otg_hcd_t * hcd)
 	kill_urbs_in_qh_list(hcd, &hcd->periodic_sched_inactive);
 	kill_urbs_in_qh_list(hcd, &hcd->periodic_sched_ready);
 	kill_urbs_in_qh_list(hcd, &hcd->periodic_sched_assigned);
-	kill_urbs_in_qh_list(hcd, &hcd->periodic_sched_queued);	
+	kill_urbs_in_qh_list(hcd, &hcd->periodic_sched_queued);
 	DWC_SPINUNLOCK_IRQRESTORE(hcd->lock, flags);
 }
 
@@ -481,6 +481,21 @@ void dwc_otg_hcd_stop(dwc_otg_hcd_t * hcd)
 	dwc_mdelay(1);
 }
 
+void host_hibernation_restore(dwc_otg_hcd_t * hcd)
+{
+	hprt0_data_t hprt0 = {.d32 = 0 };
+
+	hprt0.d32 = DWC_READ_REG32(hcd->core_if->host_if->hprt0);
+	hprt0.b.prtpwr = 0;
+	DWC_WRITE_REG32(hcd->core_if->host_if->hprt0, hprt0.d32);
+
+	dwc_mdelay(1);
+
+	hprt0.d32 = DWC_READ_REG32(hcd->core_if->host_if->hprt0);
+	hprt0.b.prtpwr = 1;
+	DWC_WRITE_REG32(hcd->core_if->host_if->hprt0, hprt0.d32);
+
+}
 static void dwc_otg_hcd_power_save(dwc_otg_hcd_t * hcd, int power_on)
 {
 	usb_dbg_uart_data_t uart = {.d32 = 0 };
@@ -496,7 +511,7 @@ static void dwc_otg_hcd_power_save(dwc_otg_hcd_t * hcd, int power_on)
 		pcgcctl.b.stoppclk = 1;
 		uart.b.set_iddq = 1;
 	}
-	
+
 	DWC_WRITE_REG32(hcd->core_if->pcgcctl, pcgcctl.d32);
 	if(!hcd->auto_pm_suspend_flag)
 	{
@@ -520,16 +535,16 @@ int dwc_otg_hcd_suspend(dwc_otg_hcd_t * hcd)
 {
 	hcd->core_if->suspend_mode = 1;
 	DWC_DEBUGPL(DBG_HCD, "DWC OTG HCD SUSPEND\n");
+
 	dwc_otg_hcd_power_save(hcd, 0);
 
- 	return 0;
+	return 0;
 }
 
 extern void dwc_otg_power_notifier_call(char is_power_on);
 /** dwc_otg_hcd resume  */
 int dwc_otg_hcd_resume(dwc_otg_hcd_t *hcd)
 {
-
 	DWC_DEBUGPL(DBG_HCD, "DWC OTG HCD RESUME\n");
 
 	hcd->ssplit_lock = 0;
@@ -540,8 +555,11 @@ int dwc_otg_hcd_resume(dwc_otg_hcd_t *hcd)
 	}
 
 	hcd->core_if->suspend_mode = 0;
+
 	dwc_otg_hcd_power_save(hcd, 1);
-	
+	if (hcd->pm_freeze_flag) {
+		host_hibernation_restore(hcd);
+	}
 	return 0;
 }
 
@@ -775,7 +793,7 @@ static void reset_tasklet_func(void *data)
 static void isoc_complete_tasklet_func(void * data)
 {
 	dwc_otg_hcd_t *dwc_otg_hcd = (dwc_otg_hcd_t *) data;
-#if 0	
+#if 0
 	dwc_otg_hcd_urb_t *urb = NULL;
 	dwc_list_link_t *iso_comp_urb_entry;
 	dwc_otg_hcd_urb_list_t * urb_list;
@@ -1124,8 +1142,8 @@ static void dwc_otg_hcd_reinit(dwc_otg_hcd_t * hcd)
 		//hcd->flags.d32 = 0;
 		printk("-------hcd->flags.d32 = %d\n",hcd->flags.d32);
 	}
-	
-	hcd->core_if->not_clear_hcd_flag=0;	
+
+	hcd->core_if->not_clear_hcd_flag=0;
 
 	hcd->non_periodic_qh_ptr = &hcd->non_periodic_sched_active;
 	hcd->non_periodic_channels = 0;
@@ -1428,6 +1446,12 @@ dwc_otg_transaction_type_e dwc_otg_hcd_select_transactions(dwc_otg_hcd_t * hcd)
 	dwc_otg_qh_t *qh;
 	int num_channels;
 	dwc_otg_transaction_type_e ret_val = DWC_OTG_TRANSACTION_NONE;
+	hfnum_data_t hfnum;
+	gintmsk_data_t intr_mask = {.d32 = 0 };
+	hfnum.d32 = DWC_READ_REG32(&hcd->core_if->host_if->host_global_regs->hfnum);
+	intr_mask.d32 = DWC_READ_REG32(&hcd->core_if->core_global_regs->gintmsk);
+	if ((hfnum.b.frrem < 3000) && intr_mask.b.sofintr) {return ret_val;}
+
 
 #ifdef DEBUG_SOF
 	DWC_DEBUGPL(DBG_HCD, "  Select Transactions\n");
@@ -3147,14 +3171,14 @@ int dwc_otg_hcd_send_lpm(dwc_otg_hcd_t * hcd, uint8_t devaddr, uint8_t hird,
 	/* Program LPM transaction fields */
 	lpmcfg.b.rem_wkup_en = bRemoteWake;
 	lpmcfg.b.hird = hird;
-	
+
 	if(dwc_otg_get_param_besl_enable(hcd->core_if)) {
 		lpmcfg.b.hird_thres = 0x16;
 		lpmcfg.b.en_besl = 1;
 	} else {
 		lpmcfg.b.hird_thres = 0x1c;
 	}
-	
+
 	lpmcfg.b.lpm_chan_index = channel;
 	lpmcfg.b.en_utmi_sleep = 1;
 	/* Program LPM config register */

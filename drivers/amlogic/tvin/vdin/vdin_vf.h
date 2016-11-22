@@ -168,4 +168,3 @@ extern void vdin_vf_unfreeze(struct vf_pool *p);
 
 extern void vdin_dump_vf_state(struct vf_pool *p);
 #endif /* __VDIN_VF_H */
-

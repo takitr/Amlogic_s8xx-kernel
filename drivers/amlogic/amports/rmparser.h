@@ -132,5 +132,3 @@ extern void rm_audio_reset(void);
 #endif
 
 #endif /* RMPARSER_H */
-
-

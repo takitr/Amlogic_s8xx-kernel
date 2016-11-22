@@ -13,5 +13,5 @@ config	AMAUDIO
     select SWITCH
 	help
 		"Amlogic Audio Interface"
-	
-endmenu	
+
+endmenu

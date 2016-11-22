@@ -76,7 +76,7 @@ extern int gpio_flag;
 //#define debug
 #ifdef debug
 	#define gpio_print(...) printk(__VA_ARGS__)
-#else 
+#else
 	#define gpio_print(...)
 #endif
 //gpio subsystem set pictrl subsystem gpio owner
@@ -224,8 +224,8 @@ static unsigned int gpio_to_pin[][6]={
 	[GPIOAO_9]={P_PIN_MUX_REG(AO,29),P_PIN_MUX_REG(1,15),NONE,NONE,NONE,NONE,},
 	[GPIOAO_10]={P_PIN_MUX_REG(AO,28),P_PIN_MUX_REG(1,14),NONE,NONE,NONE,NONE,},
 	[GPIOAO_11]={P_PIN_MUX_REG(AO,27),NONE,NONE,NONE,NONE,NONE,},
-	[GPIOAO_12]={P_PIN_MUX_REG(AO,17),NONE,NONE,NONE,NONE,NONE,},
-	[GPIOAO_13]={P_PIN_MUX_REG(AO,31),P_PIN_MUX_REG(AO,19),NONE,NONE,NONE,NONE,},
+    [GPIOAO_12]={P_PIN_MUX_REG(AO,17),P_PIN_MUX_REG(AO,14),NONE,NONE,NONE,NONE,},
+    [GPIOAO_13]={P_PIN_MUX_REG(AO,31),P_PIN_MUX_REG(AO,13),P_PIN_MUX_REG(AO,3),NONE,NONE,NONE,},
 	[DIF_TTL_0_P]={P_PIN_MUX_REG(0,24),P_PIN_MUX_REG(6,0),NONE,NONE,NONE,NONE,},
 	[DIF_TTL_0_N]={P_PIN_MUX_REG(0,24),P_PIN_MUX_REG(6,1),NONE,NONE,NONE,NONE,},
 	[DIF_TTL_1_P]={P_PIN_MUX_REG(0,24),P_PIN_MUX_REG(6,2),NONE,NONE,NONE,NONE,},
@@ -412,191 +412,10 @@ int gpio_amlogic_requst(struct gpio_chip *chip,unsigned offset)
 /* amlogic request gpio interface*/
 
 void	 gpio_amlogic_free(struct gpio_chip *chip,unsigned offset)
-{	
+{
 	 pinctrl_free_gpio(offset);
 	return;
 }
-
-#if defined(CONFIG_MACH_MESON8B_ODROIDC)
-
-#include <linux/interrupt.h>
-
-#define	AMLGPIO_IRQ_MAX	8
-
-/* IRQ desc debug flag */
-#if 0
-#define	DEBUG_IRQ_DESC
-#endif
-
-unsigned int meson_irq_desc[AMLGPIO_IRQ_MAX] = { 0, };
-
-/* DEBUG MESSAGE */
-void display_irq_desc(const char *func)
-{
-#if defined(DEBUG_IRQ_DESC)
-	int i;
-	for (i = 0; i < AMLGPIO_IRQ_MAX; i++)	{
-		pr_err("%s : irq_desc[%d] = %d\n", func,
-						i,
-						meson_irq_desc[i]);
-	}
-#endif
-}
-
-int gpio_amlogic_to_irq(struct gpio_chip *chip, unsigned offset)
-{
-	return	offset;
-}
-
-int amlogic_setup_irq(unsigned int offset, unsigned int aml_irq_flags)
-{
-	unsigned reg,start_bit;
-	unsigned irq_bank = aml_irq_flags & 0x7;
-	unsigned filter = (aml_irq_flags>>8) & 0x7;
-	unsigned irq_type = (aml_irq_flags>>16) & 0x3;
-	unsigned type[]={0x0, 	/*GPIO_IRQ_HIGH*/
-			0x10000, /*GPIO_IRQ_LOW*/
-			0x1,  	/*GPIO_IRQ_RISING*/
-			0x10001, /*GPIO_IRQ_FALLING*/
-			};
-
-	if (meson_irq_desc[irq_bank])	{
-		pr_err("ERROR(%s) : already allocation irq bank!!\n",
-							 __func__);
-		pr_err("ERROR(%s) : gpio = %d, bank = %d\n", __func__,
-							    offset,
-							    irq_bank);
-		return	-1;
-	}
-
-	/*set trigger type*/
-	aml_clrset_reg32_bits(P_GPIO_INTR_EDGE_POL,0x10001<<irq_bank,type[irq_type]<<irq_bank);
-	printk(" reg:%x,clearmask=%x,setmask=%x\n",(P_GPIO_INTR_EDGE_POL&0xffff)>>2,0x10001<<irq_bank,(aml_read_reg32(P_GPIO_INTR_EDGE_POL)>>irq_bank)&0x10001);
-	/*select pin*/
-	reg=irq_bank<4?P_GPIO_INTR_GPIO_SEL0:P_GPIO_INTR_GPIO_SEL1;
-	start_bit=(irq_bank&3)*8;
-	aml_clrset_reg32_bits(reg,0xff<<start_bit,amlogic_pins[offset].num<<start_bit);
-	printk("reg:%x,clearmask=%x,set pin=%d\n",(reg&0xffff)>>2,0xff<<start_bit,(aml_read_reg32(reg)>>start_bit)&0xff);
-	/*set filter*/
-	start_bit=(irq_bank)*4;
-	aml_clrset_reg32_bits(P_GPIO_INTR_FILTER_SEL0,0x7<<start_bit,filter<<start_bit);
-	printk("reg:%x,clearmask=%x,setmask=%x\n",(P_GPIO_INTR_FILTER_SEL0&0xffff)>>2,0x7<<start_bit,(aml_read_reg32(P_GPIO_INTR_FILTER_SEL0)>>start_bit)&0x7);
-
-	meson_irq_desc[irq_bank] = offset;
-
-	/* DEBUG MESSAGE */
-	display_irq_desc(__func__);
-	return 0;
-}
-
-EXPORT_SYMBOL(amlogic_setup_irq);
-
-static int find_free_irq_bank(void)
-{
-	unsigned int i;
-
-	for (i = 0; i < AMLGPIO_IRQ_MAX; i++)	{
-		if (!meson_irq_desc[i])
-			break;
-	}
-	if (i == AMLGPIO_IRQ_MAX)
-		pr_err("ERROR(%s) : Can't find free irq bank!!\n", __func__);
-
-	return	(i != AMLGPIO_IRQ_MAX) ? i : -1;
-}
-
-/* find available irq bank */
-int meson_fix_irqbank(int bank)
-{
-	if (bank < AMLGPIO_IRQ_MAX)	{
-		if (!meson_irq_desc[bank])
-			return	bank;
-		else	{
-			pr_err("ERROR(%s):already allocation irq bank(%d)!!\n",
-							__func__, bank);
-		}
-
-		/* if irq bank is not empty then find free irq bank */
-		bank = find_free_irq_bank();
-		pr_err("%s : new allocation irq bank(%d)!!\n",
-						__func__, bank);
-		return	bank;
-	}
-	return	-1;
-}
-EXPORT_SYMBOL(meson_fix_irqbank);
-
-int meson_setup_irq(struct gpio_chip *chip, unsigned int gpio,
-			unsigned int irq_flags, int *irq_banks)
-{
-	int irq_rising = -1, irq_falling = -1;
-	unsigned int gpio_flag;
-
-	/* rising irq setup */
-	if (irq_flags & IRQF_TRIGGER_RISING)	{
-		irq_rising = find_free_irq_bank();
-		if (irq_rising < 0)
-			goto out;
-
-		gpio_flag = AML_GPIO_IRQ(irq_rising,
-					 FILTER_NUM0,
-					 GPIO_IRQ_RISING);
-
-		if (amlogic_setup_irq(gpio, gpio_flag) < 0)
-			goto out;
-	}
-
-	/* falling irq setup */
-	if (irq_flags & IRQF_TRIGGER_FALLING)	{
-		irq_falling = find_free_irq_bank();
-		if ((irq_falling) < 0)
-			goto out;
-
-		gpio_flag = AML_GPIO_IRQ(irq_falling,
-					 FILTER_NUM0,
-					 GPIO_IRQ_FALLING);
-
-		if (amlogic_setup_irq(gpio, gpio_flag) < 0)
-			goto out;
-	}
-
-	irq_banks[0] = irq_rising;	irq_banks[1] = irq_falling;
-	return	0;
-out:
-	if (irq_rising  != -1)
-		meson_irq_desc[irq_rising]  = 0;
-	if (irq_falling != -1)
-		meson_irq_desc[irq_falling] = 0;
-
-	/* DEBUG MESSAGE */
-	display_irq_desc(__func__);
-
-	return	-1;
-}
-EXPORT_SYMBOL(meson_setup_irq);
-
-void meson_free_irq(unsigned int gpio, int *irq_banks)
-{
-	int i, find;
-
-	irq_banks[0] = -1, irq_banks[1] = -1;
-
-	for (i = 0, find = 0; i < AMLGPIO_IRQ_MAX; i++)	{
-		if (gpio == meson_irq_desc[i])	{
-			irq_banks[find++] = i;
-			meson_irq_desc[i] = 0;
-		}
-		if (find == 2)
-			break;
-	}
-
-	/* DEBUG MESSAGE */
-	display_irq_desc(__func__);
-}
-EXPORT_SYMBOL(meson_free_irq);
-
-#else
-
 int gpio_amlogic_to_irq(struct gpio_chip *chip,unsigned offset)
 {
 	unsigned reg,start_bit;
@@ -624,8 +443,6 @@ int gpio_amlogic_to_irq(struct gpio_chip *chip,unsigned offset)
 	printk("reg:%x,clearmask=%x,setmask=%x\n",(P_GPIO_INTR_FILTER_SEL0&0xffff)>>2,0x7<<start_bit,(aml_read_reg32(P_GPIO_INTR_FILTER_SEL0)>>start_bit)&0x7);
 	return 0;
 }
-
-#endif
 
 int gpio_amlogic_direction_input(struct gpio_chip *chip,unsigned offset)
 {
@@ -739,7 +556,7 @@ int gpio_amlogic_name_to_num(const char *name)
 		return -1;
 	}
 	p=strcpy(p,name);
-	for(i=0;i<len;p++,i++){		
+	for(i=0;i<len;p++,i++){
 		if(*p=='_'){
 			*p='\0';
 			tmp=i;
@@ -763,7 +580,7 @@ int gpio_amlogic_name_to_num(const char *name)
 	else if(!strcmp(p,"GPIOX"))
 		num=num+97;
 	else
-		num= -1;	
+		num= -1;
 	kzfree(start);
 	return num;
 }
@@ -779,7 +596,7 @@ static struct gpio_chip amlogic_gpio_chip={
 };
 
 
-static const struct of_device_id amlogic_gpio_match[] = 
+static const struct of_device_id amlogic_gpio_match[] =
 {
 	{
 	.compatible = "amlogic,m8b-gpio",
@@ -853,7 +670,7 @@ static int amlogic_gpio_probe(struct platform_device *pdev)
 		gpio_flag=AML_GPIO_IRQ(GPIO_IRQ0,FILTER_NUM7,i);
 		gpio_amlogic_to_irq(NULL,50);
 	}
-	
+
 #endif
 #ifdef pull_dump
 

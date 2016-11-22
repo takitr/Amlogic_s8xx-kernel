@@ -15,7 +15,7 @@ void ata_start_timer(unsigned long time_value)
 int ata_check_timer()
 {
 	cur_time = ata_get_timer_tick();
-	
+
 	if(cur_time < start_time)
 	{
 		time_diff = ATA_MAX_TIMER_TICK - start_time + cur_time + 1;
@@ -24,7 +24,7 @@ int ata_check_timer()
 	{
 		time_diff = cur_time - start_time;
 	}
-	
+
 	if(last_time_diff > time_diff)
 	{
 		overflow_cnt++;
@@ -32,7 +32,7 @@ int ata_check_timer()
 	last_time_diff = time_diff;
 
 	time_diff += (overflow_cnt << 24);
-	
+
 	if(time_diff >= timeout_value)
 	{
 		timeout_flag = 1;
@@ -62,7 +62,7 @@ unsigned char read_pio_8(unsigned reg)
 
 	reg = ATABASE + (reg << 2);
 	addr = (unsigned *)reg;
-	
+
 	return IO_READ32(addr);
 }
 
@@ -70,20 +70,20 @@ void write_pio_8(unsigned reg, unsigned char val)
 {
 	volatile unsigned *addr;
 	unsigned data = val;
-	
+
 	reg = ATABASE + (reg << 2);
 	addr = (unsigned *)reg;
-	
+
 	*addr = data;
 }
 
 unsigned short read_pio_16(unsigned reg)
 {
 	volatile unsigned *addr;
-	
+
 	reg = ATABASE + (reg << 2);
 	addr = (unsigned *)reg;
-	
+
 	return IO_READ32(addr);
 }
 
@@ -91,10 +91,9 @@ void write_pio_16(unsigned reg, unsigned short val)
 {
 	volatile unsigned *addr;
 	unsigned data = val;
-	
+
 	reg = ATABASE + (reg << 2);
 	addr = (unsigned *)reg;
-	
+
 	*addr = data;
 }
-

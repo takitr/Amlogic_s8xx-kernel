@@ -3,9 +3,9 @@
 
 
 #define SUB_FMT_VALID 			(1<<1)
-#define CHANNEL_VALID 			(1<<2)	
-#define SAMPLE_RATE_VALID     	(1<<3)	
-#define DATA_WIDTH_VALID     	(1<<4)	
+#define CHANNEL_VALID 			(1<<2)
+#define SAMPLE_RATE_VALID     	(1<<3)
+#define DATA_WIDTH_VALID     	(1<<4)
 struct digit_raw_output_info
 {
 	int	framelength;
@@ -46,13 +46,13 @@ struct frame_fmt
     int channel_num;
     int sample_rate;
     int data_width;
-    int buffered_len;/*dsp codec,buffered origan data len*/ 
+    int buffered_len;/*dsp codec,buffered origan data len*/
     int format;
     unsigned int total_byte_parsed;
-    union{	
-    	 unsigned int total_sample_decoded;
-        void  *pcm_encoded_info;	//used for encoded pcm info	 	 
-    }data;		 
+    union{
+	 unsigned int total_sample_decoded;
+        void  *pcm_encoded_info;	//used for encoded pcm info
+    }data;
     unsigned int bps;
     void* private_data;
     struct digit_raw_output_info * digit_raw_output_info;
@@ -84,4 +84,3 @@ struct dsp_working_info
 	int reserved[5];
 };
 #endif
-

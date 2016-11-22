@@ -20,4 +20,3 @@ int sdio_io_rw_extended(struct memory_card *card, int write, unsigned fn,
 int sdio_reset(struct card_host *host);
 
 #endif
-

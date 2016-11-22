@@ -40,6 +40,11 @@
 #endif
 #endif
 
+#ifdef  CONFIG_AMLOGIC_USB_3
+extern void aml_enable_scrambling(void);
+extern void aml_disable_scrambling(void);
+#endif
+
 #define USB_VENDOR_GENESYS_LOGIC		0x05e3
 #define HUB_QUIRK_CHECK_PORT_AUTOSUSPEND	0x01
 
@@ -1708,14 +1713,11 @@ static int hub_probe(struct usb_interface *intf, const struct usb_device_id *id)
 	 * - If user has indicated to prevent autosuspend by passing
 	 *   usbcore.autosuspend = -1 then keep autosuspend disabled.
 	 */
-
-	 /* for Amlogic dwc_otg usb controller, change to 100ms */
-	pm_runtime_set_autosuspend_delay(&hdev->dev, 100);
-
-/*#ifdef CONFIG_PM_RUNTIME
+#ifdef CONFIG_PM_RUNTIME
 	if (hdev->dev.power.autosuspend_delay >= 0)
-		pm_runtime_set_autosuspend_delay(&hdev->dev, 0);
-#endif */
+		/* for Amlogic dwc_otg usb controller, change to 100ms */
+		pm_runtime_set_autosuspend_delay(&hdev->dev, 100);
+#endif
 
 	/*
 	 * Hubs have proper suspend/resume support, except for root hubs
@@ -2085,6 +2087,7 @@ void usb_disconnect(struct usb_device **pdev)
 	 * this device (and any of its children) will fail immediately.
 	 * this quiesces everything except pending urbs.
 	 */
+
 	usb_set_device_state(udev, USB_STATE_NOTATTACHED);
 	dev_info(&udev->dev, "USB disconnect, device number %d\n",
 			udev->devnum);
@@ -4171,13 +4174,7 @@ hub_port_init (struct usb_hub *hub, struct usb_device *udev, int port1,
 						r = -EPROTO;
 					break;
 				}
-				/*
-				 * Some devices time out if they are powered on
-				 * when already connected. They need a second
-				 * reset. But only on the first attempt,
-				 * lest we get into a time out/reset loop
-				 */
-				if (r == 0  || (r == -ETIMEDOUT && j == 0))
+				if (r == 0)
 					break;
 			}
 			udev->descriptor.bMaxPacketSize0 =
@@ -4219,6 +4216,14 @@ hub_port_init (struct usb_hub *hub, struct usb_device *udev, int port1,
 				if (retval != -ENODEV)
 					dev_err(&udev->dev, "device not accepting address %d, error %d\n",
 							devnum, retval);
+#ifdef  CONFIG_AMLOGIC_USB_3
+				if (j >= SET_ADDRESS_TRIES) {
+					if (udev->speed == USB_SPEED_HIGH) {
+						aml_enable_scrambling();
+						udev->aml_flag++;
+					}
+				}
+#endif
 				goto fail;
 			}
 			if (udev->speed == USB_SPEED_SUPER) {
@@ -4251,6 +4256,7 @@ hub_port_init (struct usb_hub *hub, struct usb_device *udev, int port1,
 			break;
 		}
 	}
+
 	if (retval)
 		goto fail;
 
@@ -4467,6 +4473,12 @@ static void hub_port_connect_change(struct usb_hub *hub, int port1,
 				!(portstatus & USB_PORT_STAT_CONNECTION))
 			usb_phy_notify_disconnect(hcd->phy, udev->speed);
 		usb_disconnect(&hub->ports[port1 - 1]->child);
+#ifdef  CONFIG_AMLOGIC_USB_3
+		if (udev->aml_flag) {
+			aml_disable_scrambling();
+			udev->aml_flag = 0;
+		}
+#endif
 	}
 	clear_bit(port1, hub->change_bits);
 

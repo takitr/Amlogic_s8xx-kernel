@@ -57,18 +57,19 @@ int thermal_firmware_init(void)
 	}
 	else
 		return -1;
-	
+
 }
+EXPORT_SYMBOL(thermal_firmware_init);
 int get_cpu_temp(void)
 {
 	int ret=-1,tempa;
 	if(temps->flag){
 		ret=get_adc_sample(6);
 		if(ret>=0){
-			tempa=(10*(ret-temps->adc_efuse))/32+27;
+			tempa=(10000*(ret-temps->adc_efuse))/32+27000;
 			ret=tempa;
 		}
 	}
 	return ret;
 }
-
+EXPORT_SYMBOL(get_cpu_temp);

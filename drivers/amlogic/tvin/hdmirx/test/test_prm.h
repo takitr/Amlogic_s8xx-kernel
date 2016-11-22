@@ -15,16 +15,16 @@
 #define LINES_F0            262                     // Number of lines in the even field.
 #define LINES_F1            263                     // Number of lines in the odd field.
 
-#define FRONT_PORCH         38                      // Number of pixels from DE Low to HSYNC high. 
-#define HSYNC_PIXELS        124                     // Number of pixels of HSYNC pulse. 
+#define FRONT_PORCH         38                      // Number of pixels from DE Low to HSYNC high.
+#define HSYNC_PIXELS        124                     // Number of pixels of HSYNC pulse.
 #define BACK_PORCH          114                     // Number of pixels from HSYNC low to DE high.
 
-#define EOF_LINES           4                       // HSYNC count between last line of active video and start of VSYNC 
+#define EOF_LINES           4                       // HSYNC count between last line of active video and start of VSYNC
                                                     // a.k.a. End of Field (EOF). In interlaced mode,
-                                                    // HSYNC count will be eof_lines at the end of even field  
+                                                    // HSYNC count will be eof_lines at the end of even field
                                                     // and eof_lines+1 at the end of odd field.
 #define VSYNC_LINES         3                       // HSYNC count of VSYNC assertion
-                                                    // In interlaced mode VSYNC will be in-phase with HSYNC in the even field and 
+                                                    // In interlaced mode VSYNC will be in-phase with HSYNC in the even field and
                                                     // out-of-phase with HSYNC in the odd field.
 #define SOF_LINES           15                      // HSYNC count between VSYNC de-assertion and first line of active video
 
@@ -239,34 +239,34 @@ unsigned long aud_clk_ien_maskn = ( 0
                                     | HDMIRX_DWC_AUD_CLK_IEN_BIT22_wakeupctrl
                                 #endif
                                 #ifdef HDMIRX_DWC_AUD_CLK_IEN_BIT21_errorFoll
-                                    | HDMIRX_DWC_AUD_CLK_IEN_BIT21_errorFoll 
+                                    | HDMIRX_DWC_AUD_CLK_IEN_BIT21_errorFoll
                                 #endif
                                 #ifdef HDMIRX_DWC_AUD_CLK_IEN_BIT20_errorInit
-                                    | HDMIRX_DWC_AUD_CLK_IEN_BIT20_errorInit 
+                                    | HDMIRX_DWC_AUD_CLK_IEN_BIT20_errorInit
                                 #endif
                                 #ifdef HDMIRX_DWC_AUD_CLK_IEN_BIT19_arblst
-                                    | HDMIRX_DWC_AUD_CLK_IEN_BIT19_arblst    
+                                    | HDMIRX_DWC_AUD_CLK_IEN_BIT19_arblst
                                 #endif
                                 #ifdef HDMIRX_DWC_AUD_CLK_IEN_BIT18_nack
-                                    | HDMIRX_DWC_AUD_CLK_IEN_BIT18_nack      
+                                    | HDMIRX_DWC_AUD_CLK_IEN_BIT18_nack
                                 #endif
                                 #ifdef HDMIRX_DWC_AUD_CLK_IEN_BIT17_eom
-                                    | HDMIRX_DWC_AUD_CLK_IEN_BIT17_eom       
+                                    | HDMIRX_DWC_AUD_CLK_IEN_BIT17_eom
                                 #endif
                                 #ifdef HDMIRX_DWC_AUD_CLK_IEN_BIT16_done
-                                    | HDMIRX_DWC_AUD_CLK_IEN_BIT16_done      
+                                    | HDMIRX_DWC_AUD_CLK_IEN_BIT16_done
                                 #endif
                                 #ifdef HDMIRX_DWC_AUD_CLK_IEN_BIT01_sckStable
-                                    | HDMIRX_DWC_AUD_CLK_IEN_BIT01_sckStable 
+                                    | HDMIRX_DWC_AUD_CLK_IEN_BIT01_sckStable
                                 #endif
                                 #ifdef HDMIRX_DWC_AUD_CLK_IEN_BIT00_ctsnCnt
-                                    | HDMIRX_DWC_AUD_CLK_IEN_BIT00_ctsnCnt   
+                                    | HDMIRX_DWC_AUD_CLK_IEN_BIT00_ctsnCnt
                                 #endif
                                     );
 
 unsigned long aud_fifo_ien_maskn= ( 0
                                 #ifdef HDMIRX_DWC_AUD_FIFO_IEN_BIT04_afifOverfl
-                                    | HDMIRX_DWC_AUD_FIFO_IEN_BIT04_afifOverfl 
+                                    | HDMIRX_DWC_AUD_FIFO_IEN_BIT04_afifOverfl
                                 #endif
                                 #ifdef HDMIRX_DWC_AUD_FIFO_IEN_BIT03_afifUnderfl
                                     | HDMIRX_DWC_AUD_FIFO_IEN_BIT03_afifUnderfl
@@ -275,115 +275,115 @@ unsigned long aud_fifo_ien_maskn= ( 0
                                     | HDMIRX_DWC_AUD_FIFO_IEN_BIT02_afifThsPass
                                 #endif
                                 #ifdef HDMIRX_DWC_AUD_FIFO_IEN_BIT01_afifThMax
-                                    | HDMIRX_DWC_AUD_FIFO_IEN_BIT01_afifThMax  
+                                    | HDMIRX_DWC_AUD_FIFO_IEN_BIT01_afifThMax
                                 #endif
                                 #ifdef HDMIRX_DWC_AUD_FIFO_IEN_BIT00_afifThMin
-                                    | HDMIRX_DWC_AUD_FIFO_IEN_BIT00_afifThMin  
+                                    | HDMIRX_DWC_AUD_FIFO_IEN_BIT00_afifThMin
                                 #endif
                                     );
 
 unsigned long md_ien_maskn      = ( 0
                                 #ifdef HDMIRX_DWC_MD_IEN_BIT11_vofsLin
-                                    | HDMIRX_DWC_MD_IEN_BIT11_vofsLin   
+                                    | HDMIRX_DWC_MD_IEN_BIT11_vofsLin
                                 #endif
                                 #ifdef HDMIRX_DWC_MD_IEN_BIT10_vtotLin
-                                    | HDMIRX_DWC_MD_IEN_BIT10_vtotLin   
+                                    | HDMIRX_DWC_MD_IEN_BIT10_vtotLin
                                 #endif
                                 #ifdef HDMIRX_DWC_MD_IEN_BIT09_vactLin
-                                    | HDMIRX_DWC_MD_IEN_BIT09_vactLin   
+                                    | HDMIRX_DWC_MD_IEN_BIT09_vactLin
                                 #endif
                                 #ifdef HDMIRX_DWC_MD_IEN_BIT08_vsClk
-                                    | HDMIRX_DWC_MD_IEN_BIT08_vsClk     
+                                    | HDMIRX_DWC_MD_IEN_BIT08_vsClk
                                 #endif
                                 #ifdef HDMIRX_DWC_MD_IEN_BIT07_vtotClk
-                                    | HDMIRX_DWC_MD_IEN_BIT07_vtotClk   
+                                    | HDMIRX_DWC_MD_IEN_BIT07_vtotClk
                                 #endif
                                 #ifdef HDMIRX_DWC_MD_IEN_BIT06_hactPix
-                                    | HDMIRX_DWC_MD_IEN_BIT06_hactPix   
+                                    | HDMIRX_DWC_MD_IEN_BIT06_hactPix
                                 #endif
                                 #ifdef HDMIRX_DWC_MD_IEN_BIT05_hsClk
-                                    | HDMIRX_DWC_MD_IEN_BIT05_hsClk     
+                                    | HDMIRX_DWC_MD_IEN_BIT05_hsClk
                                 #endif
                                 #ifdef HDMIRX_DWC_MD_IEN_BIT04_htot32Clk
-                                    | HDMIRX_DWC_MD_IEN_BIT04_htot32Clk 
+                                    | HDMIRX_DWC_MD_IEN_BIT04_htot32Clk
                                 #endif
                                 #ifdef HDMIRX_DWC_MD_IEN_BIT03_ilace
-                                    | HDMIRX_DWC_MD_IEN_BIT03_ilace     
+                                    | HDMIRX_DWC_MD_IEN_BIT03_ilace
                                 #endif
                                 #ifdef HDMIRX_DWC_MD_IEN_BIT02_deActivity
                                     | HDMIRX_DWC_MD_IEN_BIT02_deActivity
                                 #endif
                                 #ifdef HDMIRX_DWC_MD_IEN_BIT01_vsAct
-                                    | HDMIRX_DWC_MD_IEN_BIT01_vsAct     
+                                    | HDMIRX_DWC_MD_IEN_BIT01_vsAct
                                 #endif
                                 #ifdef HDMIRX_DWC_MD_IEN_BIT00_hsAct
-                                    | HDMIRX_DWC_MD_IEN_BIT00_hsAct     
+                                    | HDMIRX_DWC_MD_IEN_BIT00_hsAct
                                 #endif
                                     );
 
 unsigned long hdmi_ien_maskn    = ( 0
                                 #ifdef HDMIRX_DWC_HDMI_IEN_BIT30_i2cmpArblost
-                                    | HDMIRX_DWC_HDMI_IEN_BIT30_i2cmpArblost     
+                                    | HDMIRX_DWC_HDMI_IEN_BIT30_i2cmpArblost
                                 #endif
                                 #ifdef HDMIRX_DWC_HDMI_IEN_BIT29_i2cmpnack
-                                    | HDMIRX_DWC_HDMI_IEN_BIT29_i2cmpnack        
+                                    | HDMIRX_DWC_HDMI_IEN_BIT29_i2cmpnack
                                 #endif
                                 #ifdef HDMIRX_DWC_HDMI_IEN_BIT28_i2cmpdone
-                                    | HDMIRX_DWC_HDMI_IEN_BIT28_i2cmpdone        
+                                    | HDMIRX_DWC_HDMI_IEN_BIT28_i2cmpdone
                                 #endif
                                 #ifdef HDMIRX_DWC_HDMI_IEN_BIT25_aksvRcv
-                                    | HDMIRX_DWC_HDMI_IEN_BIT25_aksvRcv          
+                                    | HDMIRX_DWC_HDMI_IEN_BIT25_aksvRcv
                                 #endif
                                 #ifdef HDMIRX_DWC_HDMI_IEN_BIT24_pllClockGated
-                                    | HDMIRX_DWC_HDMI_IEN_BIT24_pllClockGated    
+                                    | HDMIRX_DWC_HDMI_IEN_BIT24_pllClockGated
                                 #endif
                                 #ifdef HDMIRX_DWC_HDMI_IEN_BIT16_dcmCurrentModeChg
                                     | HDMIRX_DWC_HDMI_IEN_BIT16_dcmCurrentModeChg
                                 #endif
                                 #ifdef HDMIRX_DWC_HDMI_IEN_BIT15_dcmPhDiffCntOverfl
-                                    | HDMIRX_DWC_HDMI_IEN_BIT15_dcmPhDiffCntOverfl  
+                                    | HDMIRX_DWC_HDMI_IEN_BIT15_dcmPhDiffCntOverfl
                                 #endif
                                 #ifdef HDMIRX_DWC_HDMI_IEN_BIT14_dcmGcpZeroFieldsPass
                                     | HDMIRX_DWC_HDMI_IEN_BIT14_dcmGcpZeroFieldsPass
                                 #endif
                                 #ifdef HDMIRX_DWC_HDMI_IEN_BIT13_ctl3Change
-                                    | HDMIRX_DWC_HDMI_IEN_BIT13_ctl3Change  
+                                    | HDMIRX_DWC_HDMI_IEN_BIT13_ctl3Change
                                 #endif
                                 #ifdef HDMIRX_DWC_HDMI_IEN_BIT12_ctl2Change
-                                    | HDMIRX_DWC_HDMI_IEN_BIT12_ctl2Change  
+                                    | HDMIRX_DWC_HDMI_IEN_BIT12_ctl2Change
                                 #endif
                                 #ifdef HDMIRX_DWC_HDMI_IEN_BIT11_ctl1Change
-                                    | HDMIRX_DWC_HDMI_IEN_BIT11_ctl1Change  
+                                    | HDMIRX_DWC_HDMI_IEN_BIT11_ctl1Change
                                 #endif
                                 #ifdef HDMIRX_DWC_HDMI_IEN_BIT10_ctl0Change
-                                    | HDMIRX_DWC_HDMI_IEN_BIT10_ctl0Change  
+                                    | HDMIRX_DWC_HDMI_IEN_BIT10_ctl0Change
                                 #endif
                                 #ifdef HDMIRX_DWC_HDMI_IEN_BIT09_vsPolAdj
-                                    | HDMIRX_DWC_HDMI_IEN_BIT09_vsPolAdj    
+                                    | HDMIRX_DWC_HDMI_IEN_BIT09_vsPolAdj
                                 #endif
                                 #ifdef HDMIRX_DWC_HDMI_IEN_BIT08_hsPolAdj
-                                    | HDMIRX_DWC_HDMI_IEN_BIT08_hsPolAdj    
+                                    | HDMIRX_DWC_HDMI_IEN_BIT08_hsPolAdj
                                 #endif
                                 #ifdef HDMIRX_DWC_HDMI_IEN_BIT07_resOverload
-                                    | HDMIRX_DWC_HDMI_IEN_BIT07_resOverload 
+                                    | HDMIRX_DWC_HDMI_IEN_BIT07_resOverload
                                 #endif
                                 #ifdef HDMIRX_DWC_HDMI_IEN_BIT06_clkChange
-                                    | HDMIRX_DWC_HDMI_IEN_BIT06_clkChange   
+                                    | HDMIRX_DWC_HDMI_IEN_BIT06_clkChange
                                 #endif
                                 #ifdef HDMIRX_DWC_HDMI_IEN_BIT05_pllLckChg
-                                    | HDMIRX_DWC_HDMI_IEN_BIT05_pllLckChg   
+                                    | HDMIRX_DWC_HDMI_IEN_BIT05_pllLckChg
                                 #endif
                                 #ifdef HDMIRX_DWC_HDMI_IEN_BIT04_eqgainDone
-                                    | HDMIRX_DWC_HDMI_IEN_BIT04_eqgainDone  
+                                    | HDMIRX_DWC_HDMI_IEN_BIT04_eqgainDone
                                 #endif
                                 #ifdef HDMIRX_DWC_HDMI_IEN_BIT03_offscalDone
-                                    | HDMIRX_DWC_HDMI_IEN_BIT03_offscalDone 
+                                    | HDMIRX_DWC_HDMI_IEN_BIT03_offscalDone
                                 #endif
                                 #ifdef HDMIRX_DWC_HDMI_IEN_BIT02_rescalDone
-                                    | HDMIRX_DWC_HDMI_IEN_BIT02_rescalDone  
+                                    | HDMIRX_DWC_HDMI_IEN_BIT02_rescalDone
                                 #endif
                                 #ifdef HDMIRX_DWC_HDMI_IEN_BIT01_actChange
-                                    | HDMIRX_DWC_HDMI_IEN_BIT01_actChange   
+                                    | HDMIRX_DWC_HDMI_IEN_BIT01_actChange
                                 #endif
                                 #ifdef HDMIRX_DWC_HDMI_IEN_BIT00_stateReached
                                     | HDMIRX_DWC_HDMI_IEN_BIT00_stateReached

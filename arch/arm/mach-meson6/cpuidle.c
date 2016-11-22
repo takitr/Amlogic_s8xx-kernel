@@ -121,7 +121,7 @@ int __init meson6_idle_init(void)
 		dev->cpu = cpu_id;
 
 		printk("Meson6 cpuidle driver register = %d\n",cpuidle_register_driver(&meson6_idle_driver));
-		
+
 		//cpuidle_register_driver(&meson6_idle_driver);
 
 		if (cpuidle_register_device(dev)) {
@@ -134,4 +134,3 @@ int __init meson6_idle_init(void)
 }
 
 late_initcall(meson6_idle_init);
-

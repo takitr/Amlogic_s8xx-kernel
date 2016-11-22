@@ -14,4 +14,3 @@
 int hdcp_ksv_valid(unsigned char * dat);
 
 #endif
-

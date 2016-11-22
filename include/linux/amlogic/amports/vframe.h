@@ -169,6 +169,7 @@ typedef struct vframe_s {
         u32 ratio_control;
 
         u32 orientation;
+        u32 video_angle;
         enum vframe_source_type_e source_type;
         enum vframe_secam_phase_e  phase;
         enum vframe_source_mode_e source_mode;
@@ -194,6 +195,7 @@ typedef struct vframe_s {
         enum pixel_aspect_ratio_e pixel_ratio;
         u64 ready_jiffies64;//ready from decode on  jiffies_64
         atomic_t use_cnt;
+		u32  frame_dirty;
 } vframe_t;
 
 #if 0
@@ -222,4 +224,3 @@ u8 is_vpp_postblend(void);
 
 void pause_video(unsigned char);
 #endif /* VFRAME_H */
-

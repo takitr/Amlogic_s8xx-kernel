@@ -33,7 +33,7 @@ typedef struct tvafe_cal_operand_s {
 	unsigned int bpg_v;
 	unsigned int clk_ctl;
 	unsigned int vafe_ctl;
-#ifdef CONFIG_ADC_CAL_SIGNALED	
+#ifdef CONFIG_ADC_CAL_SIGNALED
 	unsigned int pin_a_mux:2;
 	unsigned int pin_b_mux:3;
 	unsigned int pin_c_mux:3;
@@ -91,4 +91,3 @@ extern void tvafe_set_apb_bus_err_ctrl(void);
 extern void tvafe_enable_module(bool enable);
 extern void tvafe_enable_avout(bool enable);
 #endif  // _TVAFE_GENERAL_H
-

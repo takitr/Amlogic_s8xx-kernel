@@ -133,7 +133,7 @@ struct am_csi2_s{
     unsigned char channel;    /* bitmask[3:0] */
     int vdin_num;
 
-    int id;	
+    int id;
     struct platform_device *pdev;
     struct am_csi2_client_config *client;
 
@@ -217,7 +217,7 @@ extern void cal_csi_para(csi_parm_t* info);
 //struct v4l2_device;
 
 //#define CSI2_CLK_RESET                0x2a00
-#define CSI2_CFG_CLK_ENABLE_DWC         3 
+#define CSI2_CFG_CLK_ENABLE_DWC         3
 #define CSI2_CFG_CLK_AUTO_GATE_OFF      2
 #define CSI2_CFG_CLK_ENABLE             1
 #define CSI2_CFG_SW_RESET               0

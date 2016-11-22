@@ -113,4 +113,3 @@ int sdio_reset(struct card_host *host)
 	ret = sdio_io_rw_direct_host(host, 1, 0, SDIO_CCCR_ABORT, abort, NULL);
 	return ret;
 }
-

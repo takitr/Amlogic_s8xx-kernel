@@ -1,5 +1,5 @@
 /*
- * Amlogic M6 
+ * Amlogic M6
  * frame buffer driver-----------HDMI_RX
  * Copyright (C) 2010 Amlogic, Inc.
  *
@@ -31,7 +31,7 @@
 #include <linux/platform_device.h>
 #include <linux/mutex.h>
 #include <linux/cdev.h>
-#include <linux/proc_fs.h> 
+#include <linux/proc_fs.h>
 #include <asm/uaccess.h>
 #include <mach/am_regs.h>
 #ifdef USE_TVIN_CAMERA
@@ -150,10 +150,10 @@ static void stop_vdin(void);
 ******************************/
 
 static ssize_t show_enable(struct device * dev, struct device_attribute *attr, char * buf)
-{   
+{
     return sprintf(buf, "%d\n", hdmirx_device.vdin_enable);
 }
-    
+
 static ssize_t store_enable(struct device * dev, struct device_attribute *attr, const char * buf, size_t count)
 {
     size_t r;
@@ -166,13 +166,13 @@ static ssize_t store_enable(struct device * dev, struct device_attribute *attr, 
     vdin_enable = val&0xff;
     hdmirx_device.global_event = (val>>8)&0xff;
     if(vdin_enable != hdmirx_device.vdin_enable){
-        hdmirx_device.vdin_enable = vdin_enable; 
+        hdmirx_device.vdin_enable = vdin_enable;
         if(hdmirx_device.vdin_enable == 1){
             //start_vdin(getHDMIRXHorzActive(), getHDMIRXVertActive(), 10000, IsHDMIRXInterlace());
         }
         else if(hdmirx_device.vdin_enable == 0){
             //stop_vdin();
-        }  
+        }
     }
 
     return count;
@@ -180,10 +180,10 @@ static ssize_t store_enable(struct device * dev, struct device_attribute *attr, 
 
 
 static ssize_t show_poweron(struct device * dev, struct device_attribute *attr, char * buf)
-{   
+{
     return sprintf(buf, "%d\n", hdmirx_device.it660x_enable);
 }
-    
+
 static ssize_t store_poweron(struct device * dev, struct device_attribute *attr, const char * buf, size_t count)
 {
     size_t r;
@@ -193,36 +193,36 @@ static ssize_t store_poweron(struct device * dev, struct device_attribute *attr,
         return -EINVAL;
     }
     if(val != hdmirx_device.it660x_enable){
-        hdmirx_device.it660x_enable = val; 
+        hdmirx_device.it660x_enable = val;
         if(hdmirx_device.vdin_enable == 1){
         }
         else if(hdmirx_device.it660x_enable == 0){
-        }  
+        }
     }
 
     return count;
 }
 
-#ifdef DEBUG_DVIN  
-int hs_pol_inv;           
-int vs_pol_inv;           
-int de_pol_inv;           
-int field_pol_inv;        
-int ext_field_sel;        
-int de_mode;              
-int data_comp_map;        
-int mode_422to444;        
-int dvin_clk_inv;         
-int vs_hs_tim_ctrl;       
-int hs_lead_vs_odd_min;   
-int hs_lead_vs_odd_max;   
-int active_start_pix_fe;  
-int active_start_pix_fo;  
-int active_start_line_fe; 
-int active_start_line_fo; 
-int line_width;           
-int field_height; 
-#endif       
+#ifdef DEBUG_DVIN
+int hs_pol_inv;
+int vs_pol_inv;
+int de_pol_inv;
+int field_pol_inv;
+int ext_field_sel;
+int de_mode;
+int data_comp_map;
+int mode_422to444;
+int dvin_clk_inv;
+int vs_hs_tim_ctrl;
+int hs_lead_vs_odd_min;
+int hs_lead_vs_odd_max;
+int active_start_pix_fe;
+int active_start_pix_fo;
+int active_start_line_fe;
+int active_start_line_fo;
+int line_width;
+int field_height;
+#endif
 static ssize_t store_dbg(struct device * dev, struct device_attribute *attr, const char * buf, size_t count)
 {
     char tmpbuf[128];
@@ -235,26 +235,26 @@ static ssize_t store_dbg(struct device * dev, struct device_attribute *attr, con
     }
     tmpbuf[i]=0;
     if(strncmp(tmpbuf, "config_dvin", 11)==0){
-#ifdef DEBUG_DVIN  
-        config_dvin (hs_pol_inv,          
-                  vs_pol_inv,          
-                  de_pol_inv,          
-                  field_pol_inv,       
-                  ext_field_sel,       
-                  de_mode,             
-                  data_comp_map,       
-                  mode_422to444,       
-                  dvin_clk_inv,        
-                  vs_hs_tim_ctrl,      
-                  hs_lead_vs_odd_min,  
-                  hs_lead_vs_odd_max,  
-                  active_start_pix_fe, 
-                  active_start_pix_fo, 
+#ifdef DEBUG_DVIN
+        config_dvin (hs_pol_inv,
+                  vs_pol_inv,
+                  de_pol_inv,
+                  field_pol_inv,
+                  ext_field_sel,
+                  de_mode,
+                  data_comp_map,
+                  mode_422to444,
+                  dvin_clk_inv,
+                  vs_hs_tim_ctrl,
+                  hs_lead_vs_odd_min,
+                  hs_lead_vs_odd_max,
+                  active_start_pix_fe,
+                  active_start_pix_fo,
                   active_start_line_fe,
                   active_start_line_fo,
-                  line_width,          
+                  line_width,
                   field_height);
-#endif       
+#endif
     }
     else if(strncmp(tmpbuf, "pause", 5)==0){
         hdmirx_device.task_pause = 1;
@@ -309,7 +309,7 @@ static ssize_t store_dbg(struct device * dev, struct device_attribute *attr, con
         }
     }
 
-    return 16;    
+    return 16;
 }
 
 static DEVICE_ATTR(enable, S_IWUSR | S_IRUGO, show_enable, store_enable);
@@ -340,7 +340,7 @@ int xCntSum, xCntCnt ;
 
 BOOL ReadRXIntPin(void)
 {
-#if 0	
+#if 0
 	bit i;
 
 	i=P3_2;
@@ -353,7 +353,7 @@ BOOL ReadRXIntPin(void)
 void MCU_init(void)
 {
     ENABLE_HPD_MUX; // HPD
-    CLEAR_HPD; 
+    CLEAR_HPD;
     //ENABLE_SYSRSTN_MUX; // SYSRSTN, low to reset
     //RESET_SYSRSTN; //low to reset
 }
@@ -395,8 +395,8 @@ void hdmirx_set_hpd()
         }
         //HDMIRX_DEBUG_PRINTF(("\n")) ;
 
-    	Turn_HDMIRX(ON) ;
-        SET_HPD; //RX_HPD = HIGH ; // GPIOD_4    
+	Turn_HDMIRX(ON) ;
+        SET_HPD; //RX_HPD = HIGH ; // GPIOD_4
         RXHPD_ENABLE = TRUE ;
     }
 }
@@ -406,8 +406,8 @@ void hdmirx_clear_hpd()
     if( RXHPD_ENABLE == TRUE )
     {
       HPDOff_TickCount = jiffies * 1000 / HZ  ;
-    	Turn_HDMIRX(OFF) ;
-        CLEAR_HPD; //RX_HPD = LOW ;// GPIOD_4    
+	Turn_HDMIRX(OFF) ;
+        CLEAR_HPD; //RX_HPD = LOW ;// GPIOD_4
         RXHPD_ENABLE = FALSE ;
     }
 }
@@ -421,7 +421,7 @@ static void update_status(unsigned char clear)
         vert_active = 0;
         is_interlace = 0;
         vfreq = 0;
-        
+
         audio_status = 0;
         audio_sample_freq = 0;
         audio_channel_alloc = 0;
@@ -477,14 +477,14 @@ static void update_status(unsigned char clear)
                 case 0xe:
                     audio_sample_freq = 192000;
                     break;
-                case 0x9:    
+                case 0x9:
                     printk("smaple freq for HBR\n");
                     audio_sample_freq = 768000;
-                    break;                        
+                    break;
             }
             if((audio_sample_freq != hdmirx_device.aud_info.real_sample_rate)||
                 (hdmirx_device.global_event&0x1)){
-                hdmirx_device.aud_info.real_sample_rate = audio_sample_freq;                    
+                hdmirx_device.aud_info.real_sample_rate = audio_sample_freq;
 #ifdef CONFIG_AML_AUDIO_DSP
                 if(hdmirx_device.vdin_started){
                     mailbox_send_audiodsp(1, M2B_IRQ0_DSP_AUDIO_EFFECT, DSP_CMD_SET_HDMI_SR, (char *)&hdmirx_device.aud_info.real_sample_rate,sizeof(hdmirx_device.aud_info.real_sample_rate));
@@ -499,8 +499,8 @@ static void update_status(unsigned char clear)
             audio_sample_freq = 0;
             audio_channel_alloc = 0;
         }
-    }    
-}    
+    }
+}
 
 
 #if 1
@@ -523,10 +523,10 @@ void tx_event(unsigned int event, void* arg)
     if(event != 0){
         hdmirx_device.repeater_tx_event = event;
     }
-}    
+}
 
-static int 
-hdmi_task_handle(void *data) 
+static int
+hdmi_task_handle(void *data)
 {
 
     int repeater = 0;
@@ -538,10 +538,10 @@ hdmi_task_handle(void *data)
 
 
     MCU_init() ;
-    
+
     HoldSystem();
-    
-  	hdmirx_clear_hpd();
+
+	hdmirx_clear_hpd();
 
     update_status(1);
     printk("\n%s\n" , VERSION_STRING);
@@ -561,13 +561,13 @@ hdmi_task_handle(void *data)
             bSignal = CheckHDMIRX();
             bChangeMode = (bSignal != bOldSignal);
         }
-        
+
         pre_state = hdmirx_device.state;
         switch(hdmirx_device.state){
             case HDMIRX_STATE_POWEROFF:
                 if(hdmirx_device.it660x_enable){
                     repeater=repeater_enable ;
-    	              if( repeater ){
+	              if( repeater ){
                         hdmi_repeater_set_hdcp_mode(HDMI_TX_HDCP_MODE_REPEATER);
                         RxHDCPSetRepeater();
                     }
@@ -575,44 +575,44 @@ hdmi_task_handle(void *data)
                         hdmi_repeater_set_hdcp_mode(HDMI_TX_HDCP_MODE_NONE_REPEATER);
                         RxHDCPSetReceiver();
                     }
-                    hdmirx_device.state = HDMIRX_STATE_POWERON;    
+                    hdmirx_device.state = HDMIRX_STATE_POWERON;
                 }
-                
+
                 break;
             case HDMIRX_STATE_POWERON:
                 if(hdmirx_device.it660x_enable == 0){
-                  	hdmirx_clear_hpd();
+			hdmirx_clear_hpd();
                     PowerDownHDMI();
-                    hdmirx_device.state = HDMIRX_STATE_POWEROFF;    
+                    hdmirx_device.state = HDMIRX_STATE_POWEROFF;
                 }
-               	else{
-               	    if((!repeater)||(get_hdmi_tx_state(HDMI_TX_STATE_HPD)==1)){
-               	        hdmirx_set_hpd();
-                        hdmirx_device.state = HDMIRX_STATE_HPD_HIGH;    
+		else{
+		    if((!repeater)||(get_hdmi_tx_state(HDMI_TX_STATE_HPD)==1)){
+		        hdmirx_set_hpd();
+                        hdmirx_device.state = HDMIRX_STATE_HPD_HIGH;
                     }
                 }
                 break;
             case HDMIRX_STATE_HPD_HIGH:
                 if(hdmirx_device.it660x_enable == 0){
-                  	hdmirx_clear_hpd();
+			hdmirx_clear_hpd();
                     PowerDownHDMI();
-                    hdmirx_device.state = HDMIRX_STATE_POWEROFF;    
+                    hdmirx_device.state = HDMIRX_STATE_POWEROFF;
                 }
                 else if(bSignal){
                     stable_count = 0;
-                    hdmirx_device.state = HDMIRX_STATE_STABLE;    
+                    hdmirx_device.state = HDMIRX_STATE_STABLE;
                 }
                 break;
             case HDMIRX_STATE_STABLE:
                 if(hdmirx_device.it660x_enable == 0){
-                  	hdmirx_clear_hpd();
+			hdmirx_clear_hpd();
                     PowerDownHDMI();
                     update_status(1);
-                    hdmirx_device.state = HDMIRX_STATE_POWEROFF;    
+                    hdmirx_device.state = HDMIRX_STATE_POWEROFF;
                 }
                 else if(!bSignal){
                     update_status(1);
-                    hdmirx_device.state = HDMIRX_STATE_HPD_HIGH;    
+                    hdmirx_device.state = HDMIRX_STATE_HPD_HIGH;
                 }
                 else{
                     update_status(0);
@@ -624,7 +624,7 @@ hdmi_task_handle(void *data)
                     }
                     if((stable_count == stable_threshold)&&(hdmirx_device.vdin_enable)){
                         start_vdin(getHDMIRXHorzActive(), getHDMIRXVertActive(), 10000, IsHDMIRXInterlace());
-                        hdmirx_device.state = HDMIRX_STATE_READY;    
+                        hdmirx_device.state = HDMIRX_STATE_READY;
                     }
                 }
 
@@ -632,30 +632,30 @@ hdmi_task_handle(void *data)
             case HDMIRX_STATE_READY:
                 if(hdmirx_device.it660x_enable == 0){
                     stop_vdin();
-                  	hdmirx_clear_hpd();
+			hdmirx_clear_hpd();
                     PowerDownHDMI();
                     update_status(1);
-                    hdmirx_device.state = HDMIRX_STATE_POWEROFF;    
+                    hdmirx_device.state = HDMIRX_STATE_POWEROFF;
                 }
                 else if(repeater&&get_hdmi_tx_state(HDMI_TX_STATE_HPD)==0){
-               	    hdmirx_clear_hpd();
-                    hdmirx_device.state = HDMIRX_STATE_POWERON;    
+		    hdmirx_clear_hpd();
+                    hdmirx_device.state = HDMIRX_STATE_POWERON;
                 }
                 else if((!bSignal)||bChangeMode){
                     stop_vdin();
                     update_status(1);
-                    hdmirx_device.state = HDMIRX_STATE_HPD_HIGH;    
+                    hdmirx_device.state = HDMIRX_STATE_HPD_HIGH;
                 }
                 else if(hdmirx_device.vdin_enable == 0){
                     stop_vdin();
-                    hdmirx_device.state = HDMIRX_STATE_STABLE;    
+                    hdmirx_device.state = HDMIRX_STATE_STABLE;
                 }
                 else{
                     update_status(0);
                 }
                 break;
         }
-        
+
         if(pre_state != hdmirx_device.state){
             printk("[HDMIRX State] %s -> %s\n", state_name[pre_state], state_name[hdmirx_device.state]);
         }
@@ -676,7 +676,7 @@ hdmi_task_handle(void *data)
                 }
                 hdmi_repeater_enable_hdcp(1);
             }
-            
+
             if(get_hdmi_tx_state(HDMI_TX_STATE_HDCP_AUTH) == 1){
                 if(pre_tx_auth == 0)
                     printk("[HDMIRX HDCP] TX authenticated\n");
@@ -685,7 +685,7 @@ hdmi_task_handle(void *data)
                 {
                     printk("[HDMIRX HDCP] RX auth done\n");
                     char bksv_buf[5];
-                    /* to do, read b-ksv list */    
+                    /* to do, read b-ksv list */
 
                     hdmi_hdcp_get_bksv(bksv_buf, 0);
                     printk("BKSV: ");
@@ -724,13 +724,13 @@ hdmi_task_handle(void *data)
         /*HDCP end*/
         msleep(10);
 
-    } 
-}    
+    }
+}
 
 
 #else
-static int 
-hdmi_task_handle(void *data) 
+static int
+hdmi_task_handle(void *data)
 {
 
     int repeater = 0;
@@ -745,81 +745,81 @@ hdmi_task_handle(void *data)
 
 	printk("\n%s\n" , VERSION_STRING);
   while(1){
-    	HoldSystem();
-    	hdmirx_clear_hpd();
-    	#ifdef _COPY_EDID_
-    	CopyDefaultEDID() ;
-    	#endif
-    
+	HoldSystem();
+	hdmirx_clear_hpd();
+	#ifdef _COPY_EDID_
+	CopyDefaultEDID() ;
+	#endif
+
       repeater=repeater_enable ;
     #if 0
         GetCurrentHDMIPort();
         SelectHDMIPort(CAT_HDMI_PORTA);
-    #endif    
-    	// InitHDMIRX(FALSE);
-    	if( repeater )
-    	{
-    	    DownStreamCount = 3 ;
-        	RxHDCPSetRepeater();
+    #endif
+	// InitHDMIRX(FALSE);
+	if( repeater )
+	{
+	    DownStreamCount = 3 ;
+		RxHDCPSetRepeater();
         }
         else
         {
-        	RxHDCPSetReceiver();
+		RxHDCPSetReceiver();
         }
-    	hdmirx_set_hpd();
-    
+	hdmirx_set_hpd();
+
       while(hdmirx_device.it660x_enable){
             while(hdmirx_device.task_pause){
                 msleep(10);
             }
-    
+
             //HoldSystem();
-    
-    		if(ReadRXIntPin())
-    		{
-    	        Check_HDMInterrupt();
-    	    }
-    
-    	    //if(IsTimeOut(20))
-    	    //{
-    
+
+		if(ReadRXIntPin())
+		{
+	        Check_HDMInterrupt();
+	    }
+
+	    //if(IsTimeOut(20))
+	    //{
+
                 dump_count ++ ;
-    		    bOldSignal = bSignal ;
-    		    bSignal = CheckHDMIRX();
-    		    bChangeMode = (bSignal != bOldSignal);
-    
+		    bOldSignal = bSignal ;
+		    bSignal = CheckHDMIRX();
+		    bChangeMode = (bSignal != bOldSignal);
+
                 if(bChangeMode)
                 {
                     // if Changed Mode ...
-    
-        	        if(bSignal)
-        	        {
+
+		        if(bSignal)
+		        {
                         stable_count = 0;
                         update_status(0);
-        	            // if signal is TRUE , then ...
+		            // if signal is TRUE , then ...
                         dump_vidmode();
                         if( IsHDMIRXHDMIMode() ) dump_InfoFrame() ;
                         dump_audSts();
-    
-        	        }
-        	        else
-        	        {
+
+		        }
+		        else
+		        {
                         stable_count = 0;
                         stop_vdin();
                         update_status(1);
-        	            // if signal is FALSE , then ...
+		            // if signal is FALSE , then ...
                         xCntCnt = 0 ;
                         xCntSum = 0 ;
-    
-        	        }
-    
-        			bChangeMode = FALSE ; // clear bChange Mode action
+
+		        }
+
+				bChangeMode = FALSE ; // clear bChange Mode action
                 }
                 else
                 {
                     // if not change mode, ...
-        	        if(bSignal)
-        	        {
+		        if(bSignal)
+		        {
                       if(stable_count<stable_threshold){
                         stable_count++;
                         if(stable_count == stable_threshold){
@@ -829,9 +829,9 @@ hdmi_task_handle(void *data)
 
                       update_status(0);
 
-        	            // if signal is TRUE , then ...
-        	            if( (dump_count % 20) == 1 )
-        	            {
+		            // if signal is TRUE , then ...
+		            if( (dump_count % 20) == 1 )
+		            {
                             xCntCnt ++ ;
                             xCntSum += getHDMIRXxCnt() ;
                             if( xCntCnt > 40 )
@@ -839,22 +839,22 @@ hdmi_task_handle(void *data)
                                 xCntCnt /= 2 ;
                                 xCntSum /= 2 ;
                             }
-    
-        	            }
-        	        }
-        	        else
-        	        {
+
+		            }
+		        }
+		        else
+		        {
                        stable_count = 0;
                        stop_vdin();
                        update_status(1);
-        	            
-        	            // if signal is FALSE , then ...
+
+		            // if signal is FALSE , then ...
                         xCntCnt = 0 ;
                         xCntSum = 0 ;
-        	        }
-        	    }
-    
-    
+		        }
+		    }
+
+
                 if( dump_count > (DUMP_TIME*1000/20) )
                 {
                     dump_count = 0 ;
@@ -863,7 +863,7 @@ hdmi_task_handle(void *data)
                         dump_vidmode();
                         if( IsHDMIRXHDMIMode() ) dump_InfoFrame() ;
                         dump_audSts();
-    
+
                     }
                     else
                     {
@@ -876,76 +876,76 @@ hdmi_task_handle(void *data)
                     printk("\n\n");
                     DumpHDMIRXReg();
                 }
-    
+
                 if( (dump_count % (1000/20)) == 0)
                 {
                     if( repeater!=repeater_enable )
                     {
                         repeater=repeater_enable ;
-                    	hdmirx_clear_hpd();
-    
-    
-                    	if( repeater )
-                    	{
-                    	    if( DownStreamCount == 0 )
-                    	    {
-                    	        DownStreamCount = 5 ;
-                    	    }
-                    	    else
-                    	    {
-                    	        DownStreamCount -- ;
-                    	    }
-                    	    printk("Set Repeater Mode, DownStream  = %d\n",DownStreamCount) ;
-                        	RxHDCPSetRepeater();
+			hdmirx_clear_hpd();
+
+
+			if( repeater )
+			{
+			    if( DownStreamCount == 0 )
+			    {
+			        DownStreamCount = 5 ;
+			    }
+			    else
+			    {
+			        DownStreamCount -- ;
+			    }
+			    printk("Set Repeater Mode, DownStream  = %d\n",DownStreamCount) ;
+				RxHDCPSetRepeater();
                         }
                         else
                         {
-                        	RxHDCPSetReceiver();
+				RxHDCPSetReceiver();
                         }
-                    	hdmirx_set_hpd();
+			hdmirx_set_hpd();
                     }
-    
+
                 }
-    
+
                 if( repeater )
                 {
-            	    if(IsRxAuthStart())
-            	    {
-            	        DelayCounter = 0 ;
-            	    }
-    
-            	    if(IsRxAuthDone())
-            	    {
-            	        DelayCounter = DownStreamCount*2+1 ;
-            	    }
-    
-            	    if(DelayCounter > 0)
-            	    {
-            	        DelayCounter -- ;
-            	        if(DelayCounter == 0)
-            	        {
-            	            for(i = 0 ; i < 5*DownStreamCount ; i++)
-            	            {
-            	                KSVList[i] = SampleKSVList[i] ;
-            	            }
-            	            setRxHDCPKSVList(0,KSVList,DownStreamCount);
-            	            if( DownStreamCount > 0 )
-            	            {
-            	                bStatus=DownStreamCount|0x0100 ;
-            	            }
-            	            else
-            	            {
-            	                bStatus=0;
-            	            }
-            	            setRxHDCPBStatus(bStatus);
-            	            setRxHDCPCalcSHA();
-    
-            	        }
-            	    }
+		    if(IsRxAuthStart())
+		    {
+		        DelayCounter = 0 ;
+		    }
+
+		    if(IsRxAuthDone())
+		    {
+		        DelayCounter = DownStreamCount*2+1 ;
+		    }
+
+		    if(DelayCounter > 0)
+		    {
+		        DelayCounter -- ;
+		        if(DelayCounter == 0)
+		        {
+		            for(i = 0 ; i < 5*DownStreamCount ; i++)
+		            {
+		                KSVList[i] = SampleKSVList[i] ;
+		            }
+		            setRxHDCPKSVList(0,KSVList,DownStreamCount);
+		            if( DownStreamCount > 0 )
+		            {
+		                bStatus=DownStreamCount|0x0100 ;
+		            }
+		            else
+		            {
+		                bStatus=0;
+		            }
+		            setRxHDCPBStatus(bStatus);
+		            setRxHDCPCalcSHA();
+
+		        }
+		    }
                 }
             //}//	if(IsTimeOut(20))
             msleep(10);
-    
+
         }
         PowerDownHDMI();
   }
@@ -1138,11 +1138,11 @@ static void start_vdin(int width, int height, int frame_rate, int field_flag)
     tvin_parm_t para;
 #else
     vdin_parm_t para;
-#endif    
+#endif
     if(hdmirx_device.vdin_enable == 0){
         return;
     }
-    
+
     vpos = get_vdin_v4l2_ops();
     if(hdmirx_device.vdin_started){
         if(hdmirx_device.cur_width != width ||
@@ -1153,54 +1153,54 @@ static void start_vdin(int width, int height, int frame_rate, int field_flag)
             printk("%s: stop vdin\n", __func__);
         }
     }
-    
+
     if(hdmirx_device.vdin_started==0 && width>0 && height>0 && frame_rate >0){
         hdmirx_device.cur_width = width;
         hdmirx_device.cur_height = height;
         hdmirx_device.cur_frame_rate = frame_rate;
-        
+
         if(field_flag && height <= 480 ){
-            config_dvin(0, //hs_pol_inv,          
-                      1, //vs_pol_inv,          
-                      0, //de_pol_inv,          
-                      0, //field_pol_inv,       
-                      0, //ext_field_sel,       
-                      3, //de_mode,             
-                      0, //data_comp_map,       
-                      0, //mode_422to444,       
-                      0, //dvin_clk_inv,        
-                      0, //vs_hs_tim_ctrl,      
-                      400, //hs_lead_vs_odd_min,  
-                      1200, //hs_lead_vs_odd_max,  
-                      getHDMIRXHorzBackPorch(),//0xdc, //active_start_pix_fe, 
-                      getHDMIRXHorzBackPorch(),//0xdc, //active_start_pix_fo, 
+            config_dvin(0, //hs_pol_inv,
+                      1, //vs_pol_inv,
+                      0, //de_pol_inv,
+                      0, //field_pol_inv,
+                      0, //ext_field_sel,
+                      3, //de_mode,
+                      0, //data_comp_map,
+                      0, //mode_422to444,
+                      0, //dvin_clk_inv,
+                      0, //vs_hs_tim_ctrl,
+                      400, //hs_lead_vs_odd_min,
+                      1200, //hs_lead_vs_odd_max,
+                      getHDMIRXHorzBackPorch(),//0xdc, //active_start_pix_fe,
+                      getHDMIRXHorzBackPorch(),//0xdc, //active_start_pix_fo,
                       getHDMIRXVertSyncBackPorch(), //0x19, //active_start_line_fe,
                       getHDMIRXVertSyncBackPorch(),//0x19, //active_start_line_fo,
-                      getHDMIRXHorzTotal(), //0x672, //line_width,          
+                      getHDMIRXHorzTotal(), //0x672, //line_width,
                       getHDMIRXVertTotal() //0x2ee //field_height
-                      );       
+                      );
         }
         else{
-            config_dvin(0, //hs_pol_inv,          
-                      height>480?0:1, //vs_pol_inv,          
-                      0, //de_pol_inv,          
+            config_dvin(0, //hs_pol_inv,
+                      height>480?0:1, //vs_pol_inv,
+                      0, //de_pol_inv,
                       (field_flag && height>=540)?1:0, //field_pol_inv, set to 1 for 1080i
-                      0, //ext_field_sel,       
-                      3, //de_mode,             
-                      0, //data_comp_map,       
-                      0, //mode_422to444,       
-                      0, //dvin_clk_inv,        
-                      0, //vs_hs_tim_ctrl,      
-                      0, //hs_lead_vs_odd_min,  
-                      0, //hs_lead_vs_odd_max,  
-                      getHDMIRXHorzBackPorch(),//0xdc, //active_start_pix_fe, 
-                      getHDMIRXHorzBackPorch(),//0xdc, //active_start_pix_fo, 
+                      0, //ext_field_sel,
+                      3, //de_mode,
+                      0, //data_comp_map,
+                      0, //mode_422to444,
+                      0, //dvin_clk_inv,
+                      0, //vs_hs_tim_ctrl,
+                      0, //hs_lead_vs_odd_min,
+                      0, //hs_lead_vs_odd_max,
+                      getHDMIRXHorzBackPorch(),//0xdc, //active_start_pix_fe,
+                      getHDMIRXHorzBackPorch(),//0xdc, //active_start_pix_fo,
                       getHDMIRXVertSyncBackPorch(), //0x19, //active_start_line_fe,
                       getHDMIRXVertSyncBackPorch(),//0x19, //active_start_line_fo,
-                      getHDMIRXHorzTotal(), //0x672, //line_width,          
+                      getHDMIRXHorzTotal(), //0x672, //line_width,
                       getHDMIRXVertTotal() //0x2ee //field_height
-                      );       
-        }        
+                      );
+        }
 #ifdef USE_TVIN_CAMERA
         para.fmt_info.h_active = hdmirx_device.cur_width;
         para.fmt_info.v_active = hdmirx_device.cur_height;
@@ -1219,7 +1219,7 @@ static void start_vdin(int width, int height, int frame_rate, int field_flag)
         }
         para.fmt_info.frame_rate = frame_rate;
         para.fmt_info.hsync_phase = 1;
-      	para.fmt_info.vsync_phase  = 0;	
+	para.fmt_info.vsync_phase  = 0;
 #else
         memset( &para, 0, sizeof(para));
         para.port  = TVIN_PORT_DVIN0;
@@ -1256,7 +1256,7 @@ static void start_vdin(int width, int height, int frame_rate, int field_flag)
                 para.fmt = TVIN_SIG_FMT_MAX+1;
                 set_invert_top_bot(true);
             }
-            para.scan_mode = TVIN_SCAN_MODE_INTERLACED;	
+            para.scan_mode = TVIN_SCAN_MODE_INTERLACED;
         }
         else{
             if(hdmirx_device.cur_width == 1920 &&  hdmirx_device.cur_height == 1080){
@@ -1274,7 +1274,7 @@ static void start_vdin(int width, int height, int frame_rate, int field_flag)
             else{
                 para.fmt = TVIN_SIG_FMT_MAX+1;
             }
-            para.scan_mode = TVIN_SCAN_MODE_PROGRESSIVE;	
+            para.scan_mode = TVIN_SCAN_MODE_PROGRESSIVE;
         }
         para.hsync_phase = 1;
         para.vsync_phase = 0;
@@ -1283,25 +1283,25 @@ static void start_vdin(int width, int height, int frame_rate, int field_flag)
         para.cfmt = TVIN_RGB444;
         para.reserved = 0; //skip_num
 
-#endif      	
+#endif
         vpos->start_tvin_service(0,&para);
         hdmirx_device.vdin_started = 1;
-        
+
         printk("%s: %dx%d %d/s\n", __func__, width, height, frame_rate);
-        
-        hdmirx_device.aud_info.real_sample_rate = audio_sample_freq;                    
+
+        hdmirx_device.aud_info.real_sample_rate = audio_sample_freq;
 #ifdef CONFIG_AML_AUDIO_DSP
         mailbox_send_audiodsp(1, M2B_IRQ0_DSP_AUDIO_EFFECT, DSP_CMD_SET_HDMI_SR, (char *)&hdmirx_device.aud_info.real_sample_rate,sizeof(hdmirx_device.aud_info.real_sample_rate));
         printk("[IT660x]%s: mailbox_send_audiodsp %d\n",__func__, hdmirx_device.aud_info.real_sample_rate);
 #endif
-        
+
     }
 }
 
 
 /*****************************
-*    hdmirx driver file_operations 
-*    
+*    hdmirx driver file_operations
+*
 ******************************/
 static int it660x_hdmirx_open(struct inode *node, struct file *file)
 {
@@ -1377,11 +1377,11 @@ static int it660x_hdmirx_probe(struct platform_device *pdev)
     cdev_add(&(hdmirx_device.cdev), hdmirx_id, HDMI_RX_COUNT);
 
     //hdmirx_dev = device_create(hdmirx_class, NULL, hdmirx_id, "it660x_hdmirx%d", 0);
-    hdmirx_dev = device_create(hdmirx_class, NULL, hdmirx_id, NULL, "it660x_hdmirx%d", 0); //kernel>=2.6.27 
+    hdmirx_dev = device_create(hdmirx_class, NULL, hdmirx_id, NULL, "it660x_hdmirx%d", 0); //kernel>=2.6.27
     device_create_file(hdmirx_dev, &dev_attr_enable);
     device_create_file(hdmirx_dev, &dev_attr_poweron);
     device_create_file(hdmirx_dev, &dev_attr_debug);
-    
+
     if (hdmirx_dev == NULL) {
         pr_error("device_create create error\n");
         class_destroy(hdmirx_class);
@@ -1389,11 +1389,11 @@ static int it660x_hdmirx_probe(struct platform_device *pdev)
         return r;
     }
     hdmirx_device.task = kthread_run(hdmi_task_handle, &hdmirx_device, "kthread_hdmi");
-    
+
 	if (r < 0){
 		printk(KERN_ERR "hdmirx: register switch dev failed\n");
 		return r;
-	}    
+	}
 
     return r;
 }
@@ -1401,7 +1401,7 @@ static int it660x_hdmirx_probe(struct platform_device *pdev)
 static int it660x_hdmirx_remove(struct platform_device *pdev)
 {
     kthread_stop(hdmirx_device.task);
-    
+
     //it660xin_remove();
     /* Remove the cdev */
     device_remove_file(hdmirx_dev, &dev_attr_enable);
@@ -1456,7 +1456,7 @@ static int  __init it660x_hdmirx_init(void)
         pr_error("failed to alloc it660x_hdmirx_device\n");
         return -ENOMEM;
     }
-    
+
     if(platform_device_add(it660x_hdmirx_device)){
         platform_device_put(it660x_hdmirx_device);
         pr_error("failed to add it660x_hdmirx_device\n");
@@ -1464,7 +1464,7 @@ static int  __init it660x_hdmirx_init(void)
     }
     if (platform_driver_register(&it660x_hdmirx_driver)) {
         pr_error("failed to register it660x_hdmirx module\n");
-        
+
         platform_device_del(it660x_hdmirx_device);
         platform_device_put(it660x_hdmirx_device);
         return -ENODEV;
@@ -1479,7 +1479,7 @@ static void __exit it660x_hdmirx_exit(void)
 {
     pr_dbg("it660x_hdmirx_exit\n");
     platform_driver_unregister(&it660x_hdmirx_driver);
-    platform_device_unregister(it660x_hdmirx_device); 
+    platform_device_unregister(it660x_hdmirx_device);
     it660x_hdmirx_device = NULL;
     return ;
 }
@@ -1518,13 +1518,13 @@ MODULE_PARM_DESC(audio_channel_alloc, "\n audio_channel_alloc \n");
 module_param(audio_channel_alloc, int, 0664);
 
 
-#ifdef DEBUG_DVIN  
+#ifdef DEBUG_DVIN
 MODULE_PARM_DESC(hs_pol_inv, "\n hs_pol_inv \n");
 module_param(hs_pol_inv, int, 0664);
 
 MODULE_PARM_DESC(vs_pol_inv, "\n vs_pol_inv \n");
 module_param(vs_pol_inv, int, 0664);
-          
+
 MODULE_PARM_DESC(de_pol_inv, "\n de_pol_inv \n");
 module_param(de_pol_inv, int, 0664);
 
@@ -1533,19 +1533,19 @@ module_param(field_pol_inv, int, 0664);
 
 MODULE_PARM_DESC(ext_field_sel, "\n ext_field_sel \n");
 module_param(ext_field_sel, int, 0664);
-           
+
 MODULE_PARM_DESC(de_mode, "\n de_mode \n");
 module_param(de_mode, int, 0664);
-      
+
 MODULE_PARM_DESC(data_comp_map, "\n data_comp_map \n");
 module_param(data_comp_map, int, 0664);
-       
+
 MODULE_PARM_DESC(mode_422to444, "\n mode_422to444 \n");
 module_param(mode_422to444, int, 0664);
-         
+
 MODULE_PARM_DESC(dvin_clk_inv, "\n dvin_clk_inv \n");
 module_param(dvin_clk_inv, int, 0664);
-      
+
 MODULE_PARM_DESC(vs_hs_tim_ctrl, "\n vs_hs_tim_ctrl \n");
 module_param(vs_hs_tim_ctrl, int, 0664);
 
@@ -1554,10 +1554,10 @@ module_param(hs_lead_vs_odd_min, int, 0664);
 
 MODULE_PARM_DESC(hs_lead_vs_odd_max, "\n hs_lead_vs_odd_max \n");
 module_param(hs_lead_vs_odd_max, int, 0664);
-  
+
 MODULE_PARM_DESC(active_start_pix_fe, "\n active_start_pix_fe \n");
 module_param(active_start_pix_fe, int, 0664);
- 
+
 MODULE_PARM_DESC(active_start_pix_fo, "\n active_start_pix_fo \n");
 module_param(active_start_pix_fo, int, 0664);
 
@@ -1566,10 +1566,10 @@ module_param(active_start_line_fe, int, 0664);
 
 MODULE_PARM_DESC(active_start_line_fo, "\n active_start_line_fo \n");
 module_param(active_start_line_fo, int, 0664);
-           
+
 MODULE_PARM_DESC(line_width, "\n line_width \n");
 module_param(line_width, int, 0664);
-      
+
 MODULE_PARM_DESC(field_height, "\n field_height \n");
 module_param(field_height, int, 0664);
 #endif

@@ -1,10 +1,10 @@
 /*******************************************************************
- * 
+ *
  *  Copyright C 2012 by Amlogic, Inc. All Rights Reserved.
  *
- *  Description: 
+ *  Description:
  *
- *  Author: jian.xu 
+ *  Author: jian.xu
  *  Created: 04/16 2012
  *
  *******************************************************************/
@@ -29,7 +29,7 @@ typedef struct
 #define MIN(x,y)	(((x)<(y))?(x):(y))
 #define MIN_CACHE_LINE(x,y) (MIN(x,y) & (~0x1f))
 
-#define PCM_BUFFER_RESERVED     (4096)         
+#define PCM_BUFFER_RESERVED     (4096)
 
 static log_stream_t log_stream = {0};
 
@@ -74,8 +74,8 @@ int pcmenc_stream_space(void)
 {
     int space;
 
-    log_stream.rpointer = get_read_pointer(); 
-    log_stream.wpointer = get_write_pointer(); 
+    log_stream.rpointer = get_read_pointer();
+    log_stream.wpointer = get_write_pointer();
 
     if(log_stream.wpointer >= log_stream.rpointer){
         space =  log_stream.size - (log_stream.wpointer - log_stream.rpointer);
@@ -92,8 +92,8 @@ int pcmenc_stream_content(void)
 {
     int content;
 
-    log_stream.rpointer = get_read_pointer(); 
-    log_stream.wpointer = get_write_pointer(); 
+    log_stream.rpointer = get_read_pointer();
+    log_stream.wpointer = get_write_pointer();
 
     if(log_stream.rpointer > log_stream.wpointer){
         content =  log_stream.size - (log_stream.rpointer - log_stream.wpointer);
@@ -166,6 +166,6 @@ int pcmenc_stream_deinit(void)
 {
 	log_stream.start = 0;
 	log_stream.end = 0;
-	log_stream.size = 0; 
+	log_stream.size = 0;
 	return 0;
 }

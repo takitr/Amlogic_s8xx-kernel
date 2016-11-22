@@ -31,7 +31,6 @@ struct gg_data {
 	int out_gpio;
 };
 
-#if !defined(CONFIG_ARCH_MESON8B)
 /* Private function for resolving node pointer to gpio_chip */
 static int of_gpiochip_find_and_xlate(struct gpio_chip *gc, void *data)
 {
@@ -56,7 +55,6 @@ static int of_gpiochip_find_and_xlate(struct gpio_chip *gc, void *data)
 	gg_data->out_gpio = ret + gc->base;
 	return true;
 }
-#endif
 
 /**
  * of_get_named_gpio_flags() - Get a GPIO number and flags to use with GPIO API
@@ -69,31 +67,6 @@ static int of_gpiochip_find_and_xlate(struct gpio_chip *gc, void *data)
  * value on the error condition. If @flags is not NULL the function also fills
  * in flags for the GPIO.
  */
-#if defined(CONFIG_ARCH_MESON8B)
-#include <linux/amlogic/aml_gpio_consumer.h>
-int of_get_named_gpio_flags(struct device_node *np, const char *propname,
-                int index __attribute__((unused)),
-                enum of_gpio_flags *flags)
-{
-    const char *str;
-    int gpio;
-
-    if(of_property_read_string(np, "gpios", &str))
-        return -EPROBE_DEFER;
-
-    gpio = amlogic_gpio_name_map_num(str);
-
-    /* Set ODROID-C1 status LED to active low */
-    if (flags != NULL) {
-        if (gpio == 13)
-            *flags = 1;
-        else
-            *flags = 0;
-    }
-
-    return gpio;
-}
-#else
 int of_get_named_gpio_flags(struct device_node *np, const char *propname,
 			   int index, enum of_gpio_flags *flags)
 {
@@ -120,7 +93,6 @@ int of_get_named_gpio_flags(struct device_node *np, const char *propname,
 	pr_debug("%s exited with status %d\n", __func__, gg_data.out_gpio);
 	return gg_data.out_gpio;
 }
-#endif
 EXPORT_SYMBOL(of_get_named_gpio_flags);
 
 /**

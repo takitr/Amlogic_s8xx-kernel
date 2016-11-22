@@ -44,7 +44,7 @@ static int aml_card_read_key (struct memory_card  *card, size_t offset, u_char *
 
 	if (!card->key_info->env_valid)
 		return 1;
-#if 1	
+#if 1
 	addr = card->key_info->env_valid_node->phy_blk_addr;
 	addr *= (1<<KEYBLOCKSIZE_SHIFT);
 	addr += card->key_info->env_valid_node->phy_page_addr * KEYSECTORSIZE;
@@ -63,7 +63,7 @@ static int aml_card_read_key (struct memory_card  *card, size_t offset, u_char *
 			return 1;
 		}
 
-		if (memcmp(key_oobinfo->name, ENV_KEY_MAGIC, 4)) 
+		if (memcmp(key_oobinfo->name, ENV_KEY_MAGIC, 4))
 			printk("invalid card key magic: %llx\n", (uint64_t)addr);
 
 		addr += KEYSECTORSIZE;
@@ -126,7 +126,7 @@ static int aml_card_save_key(struct memory_card  *card, u_char *buf)
 	loff_t addr = 0;
 	mesonkey_t *key_ptr = (mesonkey_t *)buf;
 
-	if (!card->key_info->env_init) 
+	if (!card->key_info->env_init)
 		return 1;
 
 	pages_per_blk = KEYBLOCKSIZE / KEYSECTORSIZE;
@@ -180,7 +180,7 @@ static int aml_card_save_key(struct memory_card  *card, u_char *buf)
 		printk("update card key FAILED!\n");
 		return 1;
 	}
-	
+
 	return error;
 }
 
@@ -220,7 +220,7 @@ static int aml_card_key_init(struct memory_card  *card)
 
 	key_blk = 0;
 	do {
-		
+
 		error = sd_mmc_read_data(card->card_info, start_blk, KEYSECTORSIZE,data_buf);
 		if ((error != 0) && (error != -EUCLEAN)) {
 			printk("blk check good but read failed: %llx, %d\n", (uint64_t)offset, error);
@@ -243,7 +243,7 @@ static int aml_card_key_init(struct memory_card  *card)
 					card->key_info->env_valid_node->phy_blk_addr = start_blk;
 					card->key_info->env_valid_node->phy_page_addr = 0;
 					card->key_info->env_valid_node->ec = key_oobinfo->ec;
-					card->key_info->env_valid_node->timestamp = key_oobinfo->timestamp;	
+					card->key_info->env_valid_node->timestamp = key_oobinfo->timestamp;
 				}
 				else {
 					env_free_node->phy_blk_addr = start_blk;
@@ -264,7 +264,7 @@ static int aml_card_key_init(struct memory_card  *card)
 				card->key_info->env_valid_node->phy_blk_addr = start_blk;
 				card->key_info->env_valid_node->phy_page_addr = 0;
 				card->key_info->env_valid_node->ec = key_oobinfo->ec;
-				card->key_info->env_valid_node->timestamp = key_oobinfo->timestamp;	
+				card->key_info->env_valid_node->timestamp = key_oobinfo->timestamp;
 			}
 		}
 		else if (key_blk < max_key_blk) {
@@ -340,11 +340,11 @@ static int aml_card_key_check(struct memory_card  *card)
 			printk("card key read failed: %llx, %d\n", (uint64_t)offset, error);
 			goto exit;
 		}
-#endif 	
+#endif
 	}else {
 			update_key_flag =1 ;
 	}
-		
+
 	if (update_key_flag) {
 		error = aml_card_save_key(card, (u_char *)key_ptr);
 		if (error) {
@@ -365,7 +365,7 @@ static int card_key_open(struct inode * inode, struct file * filp)
 	return 0;
 }
 /*
- * This funcion reads the u-boot keyionment variables. 
+ * This funcion reads the u-boot keyionment variables.
  * The f_pos points directly to the key location.
  */
 static ssize_t card_key_read(struct file *file, char __user *buf,
@@ -390,9 +390,9 @@ static ssize_t card_key_read(struct file *file, char __user *buf,
 	{
 		return -ENOMEM;
 	}
-	
+
 	error = aml_card_read_key (card_key_card, 0, (u_char *)key_ptr);
-	if (error) 
+	if (error)
 	{
 		printk("card_key_read: card key read failed: %llx, %d\n", (uint64_t)*ppos, error);
 		kfree(key_ptr);
@@ -410,7 +410,7 @@ static ssize_t card_key_read(struct file *file, char __user *buf,
 
 	copy_to_user(buf, (key_ptr + *ppos), read_size);
 	*ppos += read_size;
-	
+
 	kfree(key_ptr);
 	return read_size;
 }
@@ -421,7 +421,7 @@ static ssize_t card_key_write(struct file *file, const char __user *buf,
 	u_char *key_ptr = NULL;
 	ssize_t write_size;
 	int error = 0;
-	
+
 	if(*ppos == CONFIG_KEYSIZE)
 	{
 		return 0;
@@ -439,7 +439,7 @@ static ssize_t card_key_write(struct file *file, const char __user *buf,
 		return -ENOMEM;
 	}
 	error = aml_card_read_key (card_key_card, 0, (u_char *)key_ptr);
-	if (error) 
+	if (error)
 	{
 		printk("card_key_read: card key read failed: %llx, %d\n", (uint64_t)*ppos, error);
 		kfree(key_ptr);
@@ -459,7 +459,7 @@ static ssize_t card_key_write(struct file *file, const char __user *buf,
 
 	error = aml_card_save_key(card_key_card, key_ptr);
 
-	if (error) 
+	if (error)
 	{
 		printk("card_key_read: card key read failed: %llx, %d\n", (uint64_t)*ppos, error);
 		kfree(key_ptr);
@@ -467,7 +467,7 @@ static ssize_t card_key_write(struct file *file, const char __user *buf,
 	}
 
 	*ppos += write_size;
-	
+
 	kfree(key_ptr);
 	return write_size;
 }
@@ -502,7 +502,7 @@ static int card_key_cls_resume(struct device *dev)
 }
 
 static struct class card_key_class = {
-    
+
 	.name = "card_key",
 	.owner = THIS_MODULE,
 	.suspend = card_key_cls_suspend,
@@ -525,7 +525,7 @@ int card_key_init(struct memory_card *card)
 	}
 
 	card_key_card = card;
-	
+
 	ret = alloc_chrdev_region(&card_key_devno, 0, 1, AML_KEY_DEVICE_NAME);
 	if (ret < 0) {
 		pr_err("card_key: failed to allocate chrdev. \n");
@@ -549,8 +549,8 @@ int card_key_init(struct memory_card *card)
 	}
 	devp = device_create(&card_key_class, NULL, card_key_devno, NULL, "card_key");
 	if (IS_ERR(devp)) {
-	 	printk(KERN_ERR "card_key: failed to create device node\n");
-	 	ret = PTR_ERR(devp);
+		printk(KERN_ERR "card_key: failed to create device node\n");
+		ret = PTR_ERR(devp);
 	}
 	return 0;
 }
@@ -559,7 +559,7 @@ int card_key_init(struct memory_card *card)
 
 #include "sd/sd_port.h"
 
-//struct memory_card *card_find_card(struct card_host *host, u8 card_type); 
+//struct memory_card *card_find_card(struct card_host *host, u8 card_type);
 static int aml_card_base_read_key (struct memory_card  *card, size_t offset, u_char * buf,unsigned int data_size)
 {
 	unsigned char *data_buf;
@@ -587,7 +587,7 @@ static int aml_card_base_read_key (struct memory_card  *card, size_t offset, u_c
 	addr = card->key_info->key_phy_addr;
 	addr >>=9;
 	data_buf = sd_mmc_info->sd_mmc_buf;//the sd_mmc_buf is 128k byte
-	
+
 	sdio_close_host_interrupt(SDIO_IF_INT);
 	sd_sdio_enable(sd_mmc_info->io_pad_type);
 	error = sd_mmc_read_data(card->card_info,addr,data_size,data_buf);
@@ -615,9 +615,9 @@ static int aml_card_base_read_key (struct memory_card  *card, size_t offset, u_c
 		sd_sdio_enable(sd_mmc_info_sdio->io_pad_type);
 		sdio_open_host_interrupt(SDIO_IF_INT);
 		if (sd_mmc_info_sdio->sd_save_hw_io_flag) {
-	    		WRITE_CBUS_REG(SDIO_CONFIG, sd_mmc_info_sdio->sd_save_hw_io_config);
-	      		WRITE_CBUS_REG(SDIO_MULT_CONFIG, sd_mmc_info_sdio->sd_save_hw_io_mult_config);
-    		}
+			WRITE_CBUS_REG(SDIO_CONFIG, sd_mmc_info_sdio->sd_save_hw_io_config);
+			WRITE_CBUS_REG(SDIO_MULT_CONFIG, sd_mmc_info_sdio->sd_save_hw_io_mult_config);
+		}
 	}
 #endif
 
@@ -738,7 +738,7 @@ static int aml_card_write_key(struct memory_card  *card, loff_t offset, u_char *
 	{	printk("security key is valid %s:%d\n",__FILE__,__LINE__);
 		return 0;//wrote key, can't write key again
 	}
-#endif	
+#endif
 	sd_mmc_info = card->card_info;
 	if(!sd_mmc_info->sd_mmc_buf)
 	{
@@ -816,7 +816,7 @@ static int aml_card_key_init(struct memory_card  *card)
 			//continue;
 		}
 #endif
-#if 0		
+#if 0
 		if (!memcmp(data_buf, ENV_KEY_MAGIC, 4))
 		{
 			card->key_info->key_valid = 1;
@@ -889,7 +889,7 @@ static int card_key_open(struct inode * inode, struct file * filp)
 }
 
 /*
- * This funcion reads the u-boot keyionment variables. 
+ * This funcion reads the u-boot keyionment variables.
  * The f_pos points directly to the key location.
  */
 static ssize_t card_key_read(struct file *file, char __user *buf,
@@ -939,7 +939,7 @@ static int card_key_cls_resume(struct device *dev)
 
 
 static struct class card_key_class = {
-    
+
 	.name = "card_key",
 	.owner = THIS_MODULE,
 
@@ -971,12 +971,12 @@ static int32_t card_keybox_read(aml_keybox_provider_t * provider, uint8_t *buf,i
 	data_size = size;
 	error = aml_card_read_key (card_key_card, 0, (u_char *)buf,data_size);
 	printk("error=%d,%s\n",error,__func__);
-#else	
+#else
 	data_size = 12;
 	error = aml_card_read_key (card_key_card, 0, (u_char *)abcdefadd,data_size);
 	printk("error=%d,%s,%s\n",error,abcdefadd,__func__);
-#endif 	
-	if (error) 
+#endif
+	if (error)
 	{
 		return -EFAULT;
 	}
@@ -1025,11 +1025,11 @@ static int32_t card_keybox_write(aml_keybox_provider_t * provider, uint8_t *buf,
 	printk("error=%d,%s,%s\n",error,abcdef,__func__);
 #endif
 
-	if (error) 
+	if (error)
 	{
 		return -EFAULT;
 	}
-	
+
 	return 0;
 }
 
@@ -1062,5 +1062,3 @@ int card_key_init(struct memory_card *card)
 
 
 #endif
-
-

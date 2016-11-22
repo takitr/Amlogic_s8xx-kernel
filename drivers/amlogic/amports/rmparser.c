@@ -191,7 +191,7 @@ static ssize_t _rmparser_write(const char __user *buf, size_t count)
         vwp=buf_wp(BUF_TYPE_VIDEO);
         awp=buf_wp(BUF_TYPE_AUDIO);
         WRITE_MPEG_REG(PARSER_FETCH_ADDR, virt_to_phys((u8 *)fetchbuf));
-        
+
         WRITE_MPEG_REG(PARSER_FETCH_CMD,
                        (7 << FETCH_ENDIAN) | len);
 
@@ -203,23 +203,23 @@ static ssize_t _rmparser_write(const char __user *buf, size_t count)
 			    parse_halt,READ_MPEG_REG(PARSER_CONTROL));
 
             vreal_set_fatal_flag(1);
-			
-			if(parse_halt > 10) {			    
+
+			if(parse_halt > 10) {
 			    WRITE_MPEG_REG(PARSER_CONTROL, (ES_SEARCH | ES_PARSER_START));
 			    printk("reset parse_control=%x\n",READ_MPEG_REG(PARSER_CONTROL));
-			}			
+			}
             return -EAGAIN;
         } else if (ret < 0) {
             return -ERESTARTSYS;
         }
 
-        
+
         if(vwp==buf_wp(BUF_TYPE_VIDEO) && awp==buf_wp(BUF_TYPE_AUDIO)){
 			if((parse_halt+1)%10==1)
             printk("Video&Audio  WP not changed after write,video %x->%x,Audio:%x-->%x,parse_halt=%d\n",
             vwp,buf_wp(BUF_TYPE_VIDEO),awp,buf_wp(BUF_TYPE_AUDIO),parse_halt);
             parse_halt ++;/*wp not changed ,we think have bugs on parser now.*/
-            if(parse_halt > 10 && (stbuf_level(get_buf_by_type(BUF_TYPE_VIDEO))< 1000 || stbuf_level(get_buf_by_type(BUF_TYPE_AUDIO))< 100)) 
+            if(parse_halt > 10 && (stbuf_level(get_buf_by_type(BUF_TYPE_VIDEO))< 1000 || stbuf_level(get_buf_by_type(BUF_TYPE_AUDIO))< 100))
             {/*reset while at  least one is underflow.*/
                 WRITE_MPEG_REG(PARSER_CONTROL, (ES_SEARCH | ES_PARSER_START));
                 printk("reset parse_control=%x\n",READ_MPEG_REG(PARSER_CONTROL));
@@ -233,12 +233,12 @@ static ssize_t _rmparser_write(const char __user *buf, size_t count)
                 return -EAGAIN;
             }
         }else{
-            halt_droped_len=0;	
+            halt_droped_len=0;
             parse_halt = 0;
             p += len;
             r -= len;
         }
-    }   
+    }
     return count - r;
 }
 
@@ -252,10 +252,10 @@ ssize_t rmparser_write(struct file *file,
     size_t towrite=count;
     if ((stbuf_space(vbuf) < count) ||
         (stbuf_space(abuf) < count)) {
-        if (file->f_flags & O_NONBLOCK) { 
+        if (file->f_flags & O_NONBLOCK) {
             towrite=min(stbuf_space(vbuf), stbuf_space(abuf));
 	     if(towrite<1024)/*? can write small?*/
-	         return -EAGAIN;			
+	         return -EAGAIN;
         }else{
 	        if ((port->flag & PORT_FLAG_VID)
 	            && (stbuf_space(vbuf) < count)) {

@@ -373,21 +373,12 @@ static irqreturn_t gpio_sysfs_irq(int irq, void *priv)
 	return IRQ_HANDLED;
 }
 
-#if defined(CONFIG_MACH_MESON8B_ODROIDC)
-	#include <linux/amlogic/aml_gpio_consumer.h>
-	/* AMLogic GPIO irq bank start offset */
-	#define	AMLGPIO_IRQ_BASE	96
-#endif
-
 static int gpio_setup_irq(struct gpio_desc *desc, struct device *dev,
 		unsigned long gpio_flags)
 {
 	struct sysfs_dirent	*value_sd;
 	unsigned long		irq_flags;
 	int			ret, irq, id;
-#if defined(CONFIG_MACH_MESON8B_ODROIDC)
-	int			irq_banks[2] = {0, };
-#endif
 
 	if ((desc->flags & GPIO_TRIGGER_MASK) == gpio_flags)
 		return 0;
@@ -398,21 +389,8 @@ static int gpio_setup_irq(struct gpio_desc *desc, struct device *dev,
 
 	id = desc->flags >> ID_SHIFT;
 	value_sd = idr_find(&dirent_idr, id);
-	if (value_sd)	{
-#if defined(CONFIG_MACH_MESON8B_ODROIDC)
-		meson_free_irq(irq, &irq_banks[0]);
-
-		/* rising irq bank */
-		if (irq_banks[0] != -1)
-			free_irq(irq_banks[0] + AMLGPIO_IRQ_BASE, value_sd);
-
-		/* falling irq bank */
-		if (irq_banks[1] != -1)
-			free_irq(irq_banks[1] + AMLGPIO_IRQ_BASE, value_sd);
-#else
+	if (value_sd)
 		free_irq(irq, value_sd);
-#endif
-	}
 
 	desc->flags &= ~GPIO_TRIGGER_MASK;
 
@@ -450,37 +428,8 @@ static int gpio_setup_irq(struct gpio_desc *desc, struct device *dev,
 		}
 	}
 
-#if defined(CONFIG_MACH_MESON8B_ODROIDC)
-	ret = meson_setup_irq(desc->chip, irq, irq_flags, &irq_banks[0]);
-
-	if (ret < 0)
-		goto free_id;
-
-	/* rising irq bank */
-	if (irq_banks[0] != -1)	{
-		ret = request_any_context_irq(irq_banks[0] + AMLGPIO_IRQ_BASE,
-					gpio_sysfs_irq, IRQF_DISABLED,
-					"gpiolib", value_sd);
-		if (ret < 0)
-			goto free_id;
-	}
-	/* falling irq bank */
-	if (irq_banks[1] != -1)	{
-		ret = request_any_context_irq(irq_banks[1] + AMLGPIO_IRQ_BASE,
-					gpio_sysfs_irq, IRQF_DISABLED,
-					"gpiolib", value_sd);
-
-		if (ret < 0)	{
-			if (irq_banks[0] != -1)
-				free_irq(irq_banks[0] + AMLGPIO_IRQ_BASE,
-					 value_sd);
-			goto free_id;
-		}
-	}
-#else
 	ret = request_any_context_irq(irq, gpio_sysfs_irq, irq_flags,
 				"gpiolib", value_sd);
-#endif
 	if (ret < 0)
 		goto free_id;
 
@@ -506,7 +455,7 @@ static const struct {
 	{ "rising",  BIT(FLAG_TRIG_RISE) },
 	{ "both",    BIT(FLAG_TRIG_FALL) | BIT(FLAG_TRIG_RISE) },
 };
-
+#if 0
 static ssize_t gpio_edge_show(struct device *dev,
 		struct device_attribute *attr, char *buf)
 {
@@ -561,8 +510,11 @@ found:
 
 	return status;
 }
+#endif
 
+#if 0
 static DEVICE_ATTR(edge, 0644, gpio_edge_show, gpio_edge_store);
+#endif
 
 static int sysfs_set_active_low(struct gpio_desc *desc, struct device *dev,
 				int value)
@@ -868,14 +820,14 @@ static int gpiod_export(struct gpio_desc *desc, bool direction_may_change)
 		if (status)
 			goto fail_remove_attr_group;
 	}
-
+#if 0
 	if (gpiod_to_irq(desc) >= 0 && (direction_may_change ||
 				       !test_bit(FLAG_IS_OUT, &desc->flags))) {
 		status = device_create_file(dev, &dev_attr_edge);
 		if (status)
 			goto fail_remove_attr_direction;
 	}
-
+#endif
 	set_bit(FLAG_EXPORT, &desc->flags);
 	mutex_unlock(&sysfs_lock);
 	return 0;

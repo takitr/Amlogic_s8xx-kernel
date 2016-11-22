@@ -529,4 +529,3 @@ void CopyDefaultEDID()
 }
 
 #endif // _COPY_EDID_
-

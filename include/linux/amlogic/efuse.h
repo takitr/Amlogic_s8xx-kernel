@@ -53,11 +53,11 @@ struct efuse_platform_data {
 };
 
 typedef struct efuseinfo_item{
-	char title[40];	
+	char title[40];
 	unsigned id;
 	loff_t offset;    // write offset
 	unsigned enc_len;
-	unsigned data_len;			
+	unsigned data_len;
 	int bch_en;
 	int bch_reverse;
 } efuseinfo_item_t;
@@ -66,20 +66,20 @@ typedef struct efuseinfo_item{
 typedef struct efuseinfo{
 	struct efuseinfo_item *efuseinfo_version;
 	int size;
-	int version;	
+	int version;
 }efuseinfo_t;
 
-typedef int (*pfn) (unsigned param, efuseinfo_item_t *info); 
+typedef int (*pfn) (unsigned param, efuseinfo_item_t *info);
 
 #include <linux/cdev.h>
 
-typedef struct 
+typedef struct
 {
     struct cdev cdev;
     unsigned int flags;
 } efuse_dev_t;
 
-#define EFUSE_READ_ONLY     
+#define EFUSE_READ_ONLY
 
 
 #include <linux/ioctl.h>

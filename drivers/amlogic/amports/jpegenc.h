@@ -1,11 +1,17 @@
 #ifndef __JPEG_ENC_H_
 #define __JPEG_ENC_H_
 
-#if MESON_CPU_TYPE >= MESON_CPU_TYPE_MESON8
+#if MESON_CPU_TYPE >= MESON_CPU_TYPE_MESONG9TV
+#define JPEGENC_DEV_VERSION "AML-G9"
+#elif MESON_CPU_TYPE >= MESON_CPU_TYPE_MESON8
 #define JPEGENC_DEV_VERSION "AML-M8"
-#define INT_JPEG_ENCODER INT_DOS_MAILBOX_2
 #else
 #define JPEGENC_DEV_VERSION "AML-MT"
+#endif
+
+#if MESON_CPU_TYPE >= MESON_CPU_TYPE_MESON8
+#define INT_JPEG_ENCODER INT_DOS_MAILBOX_2
+#else
 #define INT_JPEG_ENCODER INT_MAILBOX_1A
 #endif
 
@@ -65,7 +71,7 @@ typedef enum{
     LOCAL_BUFF = 0,
     CANVAS_BUFF,
     PHYSICAL_BUFF,
-    MAX_BUFF_TYPE 
+    MAX_BUFF_TYPE
 }jpegenc_mem_type;
 
 typedef enum{
@@ -73,17 +79,17 @@ typedef enum{
     FMT_YUV444_SINGLE,
     FMT_NV21,
     FMT_NV12,
-    FMT_YUV420,    
+    FMT_YUV420,
     FMT_YUV444_PLANE,
     FMT_RGB888,
     FMT_RGB888_PLANE,
     FMT_RGB565,
     FMT_RGBA8888,
-    MAX_FRAME_FMT 
+    MAX_FRAME_FMT
 }jpegenc_frame_fmt;
 
 ///////////////////////////////////////////////////////////////////////////
-// Memory Address 
+// Memory Address
 ///////////////////////////////////////////////////////////////////////////
 
 // moved to jpeg_enc.s
@@ -170,7 +176,7 @@ typedef enum{
 #define num_blk_in_mcu              0x00A
 #endif
 /********************************************
-* defines for HENC command 
+* defines for HENC command
 ********************************************/
 #define HENC_SEND_RSVD_COMMAND1             1
 #define HENC_SEND_RSVD_COMMAND2             2
@@ -224,7 +230,7 @@ typedef enum{
 unsigned long reciprocal (unsigned int q)
 {
     unsigned long q_recip;
-    
+
     switch (q) {
         case   0    : q_recip   = 0;        break;  // Invalid 1/0
         case   1    : q_recip   = 65535;    break;  // 65535 * (1/1)
@@ -495,7 +501,7 @@ static const unsigned short jpeg_quant[7][DCTSIZE2]   = {
     0x0A, 0x12, 0x21, 0x23, 0x27, 0x29, 0x29, 0x29,
     0x10, 0x1F, 0x29, 0x29, 0x29, 0x29, 0x29, 0x29,
     0x15, 0x29, 0x29, 0x29, 0x29, 0x29, 0x29, 0x29,
-    0x19, 0x29, 0x29, 0x29, 0x29, 0x29, 0x29, 0x29 
+    0x19, 0x29, 0x29, 0x29, 0x29, 0x29, 0x29, 0x29
     },
     {       // jpeg_quant[1][] : Chroma, Canon
     0x0A, 0x0E, 0x10, 0x14, 0x15, 0x1D, 0x2B, 0x35,
@@ -505,7 +511,7 @@ static const unsigned short jpeg_quant[7][DCTSIZE2]   = {
     0x15, 0x25, 0x40, 0x48, 0x4E, 0x54, 0x54, 0x54,
     0x1D, 0x3E, 0x54, 0x54, 0x54, 0x54, 0x54, 0x54,
     0x2B, 0x54, 0x54, 0x54, 0x54, 0x54, 0x54, 0x54,
-    0x35, 0x54, 0x54, 0x54, 0x54, 0x54, 0x54, 0x54 
+    0x35, 0x54, 0x54, 0x54, 0x54, 0x54, 0x54, 0x54
     },
     {       // jpeg_quant[2][] : Luma, spec example Table K.1
       16,   11,   10,   16,   24,   40,    51,  61,
@@ -515,7 +521,7 @@ static const unsigned short jpeg_quant[7][DCTSIZE2]   = {
       18,   22,   37,   56,   68,  109,   103,  77,
       24,   35,   55,   64,   81,  104,   113,  92,
       49,   64,   78,   87,  103,  121,   120, 101,
-      72,   92,   95,   98,  112,  100,   103,  99 
+      72,   92,   95,   98,  112,  100,   103,  99
     },
     {       // jpeg_quant[3][] : Chroma, spec example Table K.2
       17,   18,   24,   47,   99,   99,    99,   99,   // 07
@@ -535,7 +541,7 @@ static const unsigned short jpeg_quant[7][DCTSIZE2]   = {
       18,   22,   37,   56,   68,  109,   103,  77,
       24,   35,   55,   64,   81,  104,   113,  92,
       49,   64,   78,   87,  103,  121,   120, 101,
-      72,   92,   95,   98,  112,  100,   103,  16 
+      72,   92,   95,   98,  112,  100,   103,  16
     },
     {       // jpeg_quant[5][] : Chroma, spec example Table K.2, modified to create long ZRL
       17,   18,   24,   47,   99,   99,    99,   99,   // 07
@@ -555,7 +561,7 @@ static const unsigned short jpeg_quant[7][DCTSIZE2]   = {
        1,    1,    1,    1,    1,    1,     1,   1,
        1,    1,    1,    1,    1,    1,     1,   1,
        1,    1,    1,    1,    1,    1,     1,   1,
-       1,    1,    1,    1,    1,    1,     1,   1 
+       1,    1,    1,    1,    1,    1,     1,   1
     }
 };  /* jpeg_quant */
 
@@ -577,7 +583,7 @@ static const unsigned char jpeg_huffman_dc[2][16+12]  = {
         0x00,                           // number of code length=14
         0x00,                           // number of code length=15
         0x00,                           // number of code length=16
-        
+
         0x00,                           // Entry index for code with minimum code length (=2 in this case)
         0x01, 0x02, 0x03, 0x04, 0x05,
         0x06,
@@ -588,15 +594,15 @@ static const unsigned char jpeg_huffman_dc[2][16+12]  = {
         0x0B
     },
     {                                   // jpeg_huffman_dc[1][]
-        0x00,                           // number of code length=1 
-        0x03,                           // number of code length=2 
-        0x01,                           // number of code length=3 
-        0x01,                           // number of code length=4 
-        0x01,                           // number of code length=5 
-        0x01,                           // number of code length=6 
-        0x01,                           // number of code length=7 
-        0x01,                           // number of code length=8 
-        0x01,                           // number of code length=9 
+        0x00,                           // number of code length=1
+        0x03,                           // number of code length=2
+        0x01,                           // number of code length=3
+        0x01,                           // number of code length=4
+        0x01,                           // number of code length=5
+        0x01,                           // number of code length=6
+        0x01,                           // number of code length=7
+        0x01,                           // number of code length=8
+        0x01,                           // number of code length=9
         0x01,                           // number of code length=10
         0x01,                           // number of code length=11
         0x00,                           // number of code length=12
@@ -620,15 +626,15 @@ static const unsigned char jpeg_huffman_dc[2][16+12]  = {
 
 static const unsigned char jpeg_huffman_ac[2][16+162]  = {
     {                                   // jpeg_huffman_ac[0][]
-        0x00,                           // number of code length=1  
-        0x02,                           // number of code length=2 
-        0x01,                           // number of code length=3 
-        0x03,                           // number of code length=4 
-        0x03,                           // number of code length=5 
-        0x02,                           // number of code length=6 
-        0x04,                           // number of code length=7 
-        0x03,                           // number of code length=8 
-        0x05,                           // number of code length=9 
+        0x00,                           // number of code length=1
+        0x02,                           // number of code length=2
+        0x01,                           // number of code length=3
+        0x03,                           // number of code length=4
+        0x03,                           // number of code length=5
+        0x02,                           // number of code length=6
+        0x04,                           // number of code length=7
+        0x03,                           // number of code length=8
+        0x05,                           // number of code length=9
         0x05,                           // number of code length=10
         0x04,                           // number of code length=11
         0x04,                           // number of code length=12
@@ -659,15 +665,15 @@ static const unsigned char jpeg_huffman_ac[2][16+162]  = {
         0xE8, 0xE9, 0xEA, 0xF1, 0xF2, 0xF3, 0xF4, 0xF5, 0xF6, 0xF7, 0xF8, 0xF9, 0xFA
     },
     {                                   // jpeg_huffman_ac[1][]
-        0x00,                           // number of code length=1  
-        0x02,                           // number of code length=2 
-        0x01,                           // number of code length=3 
-        0x02,                           // number of code length=4 
-        0x04,                           // number of code length=5 
-        0x04,                           // number of code length=6 
-        0x03,                           // number of code length=7 
-        0x04,                           // number of code length=8 
-        0x07,                           // number of code length=9 
+        0x00,                           // number of code length=1
+        0x02,                           // number of code length=2
+        0x01,                           // number of code length=3
+        0x02,                           // number of code length=4
+        0x04,                           // number of code length=5
+        0x04,                           // number of code length=6
+        0x03,                           // number of code length=7
+        0x04,                           // number of code length=8
+        0x07,                           // number of code length=9
         0x05,                           // number of code length=10
         0x04,                           // number of code length=11
         0x04,                           // number of code length=12

@@ -4,7 +4,6 @@
 
 # Each configuration option enables a list of files.
 
-obj-y 				  += fbtft/
 obj-$(CONFIG_VGASTATE)            += vgastate.o
 obj-$(CONFIG_HDMI)                += hdmi.o
 obj-y                             += fb_notify.o
@@ -178,4 +177,3 @@ obj-$(CONFIG_VIDEOMODE_HELPERS) += display_timing.o videomode.o
 ifeq ($(CONFIG_OF),y)
 obj-$(CONFIG_VIDEOMODE_HELPERS) += of_display_timing.o of_videomode.o
 endif
-obj-y += fbtft/

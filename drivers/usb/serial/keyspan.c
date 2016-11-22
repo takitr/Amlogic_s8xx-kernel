@@ -31,6 +31,7 @@
 #include <linux/kernel.h>
 #include <linux/jiffies.h>
 #include <linux/errno.h>
+#include <linux/init.h>
 #include <linux/slab.h>
 #include <linux/tty.h>
 #include <linux/tty_driver.h>
@@ -2390,10 +2391,6 @@ static void keyspan_release(struct usb_serial *serial)
 	struct keyspan_serial_private *s_priv;
 
 	s_priv = usb_get_serial_data(serial);
-
-	/* Make sure to unlink the URBs submitted in attach. */
-	usb_kill_urb(s_priv->instat_urb);
-	usb_kill_urb(s_priv->indat_urb);
 
 	usb_free_urb(s_priv->instat_urb);
 	usb_free_urb(s_priv->indat_urb);

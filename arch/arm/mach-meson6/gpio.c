@@ -74,7 +74,7 @@ extern int gpio_flag;
 //#define debug
 #ifdef debug
 	#define gpio_print(...) printk(__VA_ARGS__)
-#else 
+#else
 	#define gpio_print(...)
 #endif
 //gpio subsystem set pictrl subsystem gpio owner
@@ -524,7 +524,7 @@ int gpio_amlogic_requst(struct gpio_chip *chip,unsigned offset)
 /* amlogic request gpio interface*/
 
 void	 gpio_amlogic_free(struct gpio_chip *chip,unsigned offset)
-{	
+{
 	 pinctrl_free_gpio(offset);
 	return;
 }
@@ -634,7 +634,7 @@ int gpio_amlogic_name_to_num(const char *name)
 		return -1;
 	}
 	p=strcpy(p,name);
-	for(i=0;i<len;p++,i++){		
+	for(i=0;i<len;p++,i++){
 		if(*p=='_'){
 			*p='\0';
 			tmp=i;
@@ -666,7 +666,7 @@ int gpio_amlogic_name_to_num(const char *name)
 	else if(!strcmp(p,"GPIOAO"))
 		num=num+182;
 	else
-		num= -1;	
+		num= -1;
 	kzfree(start);
 	return num;
 }
@@ -682,7 +682,7 @@ static struct gpio_chip amlogic_gpio_chip={
 };
 
 
-static const struct of_device_id amlogic_gpio_match[] = 
+static const struct of_device_id amlogic_gpio_match[] =
 {
 	{
 	.compatible = "amlogic,m6-gpio",

@@ -230,7 +230,7 @@ struct v4l2_querymenu gt2005_qmenu_wbmode[] = {
     },{
         .id         = V4L2_CID_DO_WHITE_BALANCE,
         .index      = CAM_WB_FLUORESCENT,
-        .name       = "fluorescent", 
+        .name       = "fluorescent",
         .reserved   = 0,
     },{
         .id         = V4L2_CID_DO_WHITE_BALANCE,
@@ -243,12 +243,12 @@ struct v4l2_querymenu gt2005_qmenu_wbmode[] = {
 struct v4l2_querymenu gt2005_qmenu_anti_banding_mode[] = {
     {
         .id         = V4L2_CID_POWER_LINE_FREQUENCY,
-        .index      = CAM_BANDING_50HZ, 
+        .index      = CAM_BANDING_50HZ,
         .name       = "50hz",
         .reserved   = 0,
     },{
         .id         = V4L2_CID_POWER_LINE_FREQUENCY,
-        .index      = CAM_BANDING_60HZ, 
+        .index      = CAM_BANDING_60HZ,
         .name       = "60hz",
         .reserved   = 0,
     },
@@ -401,7 +401,7 @@ struct gt2005_device {
 
 	/* platform device data from board initting. */
 	aml_cam_info_t cam_info;
-	
+
 	/* wake lock */
 	struct wake_lock	wake_lock;
 
@@ -521,12 +521,12 @@ struct aml_camera_i2c_fig_s GT2005_script[] = {
 	{0x0200 , 0x08},//0x30
 
 	//Brightness
-	{0x0201 , 0x00}, //   
+	{0x0201 , 0x00}, //
 
 	//Saturation
 	{0x0202 , 0x40},  //
 
- 	//Do not change
+	//Do not change
 	{0x0203 , 0x00},
 	{0x0204 , 0x78},//0x03
 	{0x0205 , 0x1F},
@@ -761,7 +761,7 @@ struct aml_camera_i2c_fig_s GT2005_script[] = {
 	{0x0421 , 0x2A},
 	{0x0422 , 0x27},
 	{0x0423 , 0x22},
-	{0x0424 , 0x2A}, 
+	{0x0424 , 0x2A},
 	{0x0425 , 0x2A},
 	{0x0426 , 0x27},
 	{0x0427 , 0x22},
@@ -795,7 +795,7 @@ struct aml_camera_i2c_fig_s GT2005_script[] = {
 	{0x0441 , 0x5F},
 	{0x0442 , 0x00},
 	{0x0443 , 0x00},
-	{0x0444 , 0x40}, //0x17 kim 
+	{0x0444 , 0x40}, //0x17 kim
 */
 
 //above old para
@@ -1129,12 +1129,12 @@ void GT2005_init_regs(struct gt2005_device *dev)
 		}
 		if((i2c_put_byte(client,GT2005_script[i].addr, GT2005_script[i].val)) < 0)
 		{
-	 		printk("fail in initial GT2005. \n");
+			printk("fail in initial GT2005. \n");
 			return;
 		}
 		i++;
 	}
-	
+
 	return;
 }
 /*************************************************************************
@@ -1238,7 +1238,7 @@ void GT2005_set_param_wb(struct gt2005_device *dev,enum  camera_wb_flip_e para)/
 			break;
 
 		case CAM_WB_MANUAL:
-		    	// TODO
+			// TODO
 			break;
 		default:
 			break;
@@ -1286,17 +1286,17 @@ void GT2005_set_param_exposure(struct gt2005_device *dev,enum camera_exposure_e 
 			i2c_put_byte(client,0x0300 , 0x81);
 			i2c_put_byte(client,0x0301 , 0x70);
 			i2c_put_byte(client,0x0201 , 0xd0);
-			break;		
+			break;
 		case EXPOSURE_0_STEP:
 			i2c_put_byte(client,0x0300 , 0x81);
 			i2c_put_byte(client,0x0301 , 0x80);
 			i2c_put_byte(client,0x0201 , 0x00);
-			break;		
+			break;
 		case EXPOSURE_P1_STEP:
 			i2c_put_byte(client,0x0300 , 0x81);
 			i2c_put_byte(client,0x0301 , 0x90);
 			i2c_put_byte(client,0x0201 , 0x10);
-			break;	
+			break;
 		case EXPOSURE_P2_STEP:
 			i2c_put_byte(client,0x0300 , 0x81);
 			i2c_put_byte(client,0x0301 , 0xa0);
@@ -1306,8 +1306,8 @@ void GT2005_set_param_exposure(struct gt2005_device *dev,enum camera_exposure_e 
 			i2c_put_byte(client,0x0300 , 0x81);
 			i2c_put_byte(client,0x0301 , 0xb0);
 			i2c_put_byte(client,0x0201 , 0x30);
-			break;						
-		case EXPOSURE_P4_STEP:	
+			break;
+		case EXPOSURE_P4_STEP:
 			i2c_put_byte(client,0x0300 , 0x81);
 			i2c_put_byte(client,0x0301 , 0xc0);
 			i2c_put_byte(client,0x0201 , 0x40);
@@ -1351,7 +1351,7 @@ void GT2005_set_param_effect(struct gt2005_device *dev,enum camera_effect_flip_e
 			break;
 
 		case CAM_EFFECT_ENC_SEPIA:
-		     	i2c_put_byte(client,0x0115,0x0a);
+			i2c_put_byte(client,0x0115,0x0a);
 			i2c_put_byte(client,0x026e,0x60);
 			i2c_put_byte(client,0x026f,0xa0);
 			break;
@@ -1455,7 +1455,7 @@ void GT2005_set_resolution(struct gt2005_device *dev,int height,int width)
 		i2c_put_byte(client,0x0109, 0x00);
 		i2c_put_byte(client,0x010a, 0x04);
 		i2c_put_byte(client,0x010b, 0x03);
-		
+
 		i2c_put_byte(client,0x0110, 0x01);
 		i2c_put_byte(client,0x0111, 0x40);
 		i2c_put_byte(client,0x0112, 0x00);
@@ -1500,7 +1500,7 @@ void GT2005_set_resolution(struct gt2005_device *dev,int height,int width)
 
 		ret =i2c_get_byte(client, 0x13);
 		shutterL=(char)ret;
-		
+
 		ret =i2c_get_byte(client, 0x14);
 		AGain_shutterH=(char)ret;
 
@@ -1512,7 +1512,7 @@ void GT2005_set_resolution(struct gt2005_device *dev,int height,int width)
 
 		ret =i2c_get_byte(client, 0x17);
 		DGain_shutterL=(char)ret;
-		
+
 		//AGain_shutter = ((AGain_shutterH<<8)|(AGain_shutterL&0xff));
 #endif
 		i2c_put_byte(client,0x0109 ,  0x01);
@@ -1523,13 +1523,13 @@ void GT2005_set_resolution(struct gt2005_device *dev,int height,int width)
 		i2c_put_byte(client,0x0111 ,  0x40);
 		i2c_put_byte(client,0x0112 , 0x04);
 		i2c_put_byte(client,0x0113 , 0xb2);//b0
-#if  1 
+#if  1
 		//AGain_shutter = ((AGain_shutterH<<8)|(AGain_shutterL&0xff));
 		DGain_shutter = (DGain_shutterH<<8|(DGain_shutterL&0xff));
 		DGain_shutter = DGain_shutter>>2;
 		shutter =( (shutterH<<8)|(shutterL&0xff));
 		//shutter = shutter/2;
-	   	i2c_put_byte(client, 0x0300, 0x41);
+		i2c_put_byte(client, 0x0300, 0x41);
 		i2c_put_byte(client, 0x0304, shutter>>8);
 		i2c_put_byte(client, 0x0305, shutter&0xff);
 
@@ -1640,7 +1640,7 @@ static int gt2005_setting(struct gt2005_device *dev,int PROP_ID,int value )
 			printk(KERN_INFO " set camera  scene mode=%d. \n ",value);
 		}
 		break;
-	case V4L2_CID_HFLIP:    /* set flip on H. */          
+	case V4L2_CID_HFLIP:    /* set flip on H. */
 		value = value & 0x3;
 		if(gt2005_qctrl[5].default_value!=value){
 			gt2005_qctrl[5].default_value=value;
@@ -2076,7 +2076,7 @@ static int vidioc_s_fmt_vid_cap(struct file *file, void *priv,
 	int ret = vidioc_try_fmt_vid_cap(file, fh, f);
 	if (ret < 0)
 		return ret;
-	
+
 	mutex_lock(&q->vb_lock);
 
 	if (videobuf_queue_is_busy(&fh->vb_vidq)) {
@@ -2084,13 +2084,13 @@ static int vidioc_s_fmt_vid_cap(struct file *file, void *priv,
 		ret = -EBUSY;
 		goto out;
 	}
-	
+
 	fh->fmt           = get_format(f);
 	fh->width         = f->fmt.pix.width;
 	fh->height        = f->fmt.pix.height;
 	fh->vb_vidq.field = f->fmt.pix.field;
 	fh->type          = f->type;
-	
+
 	if (f->fmt.pix.pixelformat==V4L2_PIX_FMT_RGB24) {
 		GT2005_set_resolution(dev,fh->height,fh->width);
 	} else{
@@ -2186,7 +2186,7 @@ static int vidioc_streamon(struct file *file, void *priv, enum v4l2_buf_type i)
 	para.cfmt = TVIN_YUV422;
 	para.scan_mode = TVIN_SCAN_MODE_PROGRESSIVE;
 	para.skip_count =  2; //skip_num
-	printk("gt2005,h=%d, v=%d, frame_rate=%d\n", 
+	printk("gt2005,h=%d, v=%d, frame_rate=%d\n",
 		gt2005_h_active, gt2005_v_active, gt2005_frmintervals_active.denominator);
 	ret =  videobuf_streamon(&fh->vb_vidq);
 	if(ret == 0){
@@ -2361,9 +2361,9 @@ static int gt2005_open(struct file *file)
 #endif
 #if MESON_CPU_TYPE >= MESON_CPU_TYPE_MESON6
 	switch_mod_gate_by_name("ge2d", 1);
-#endif		
+#endif
 	aml_cam_init(&dev->cam_info);
-	
+
 	GT2005_init_regs(dev);
 	msleep(40);
 	mutex_lock(&dev->mutex);
@@ -2378,7 +2378,7 @@ static int gt2005_open(struct file *file)
 		video_device_node_name(dev->vdev),
 		v4l2_type_names[V4L2_BUF_TYPE_VIDEO_CAPTURE], dev->users);
 
-    	/* init video dma queues */
+	/* init video dma queues */
 	INIT_LIST_HEAD(&dev->vidq.active);
 	init_waitqueue_head(&dev->vidq.wq);
 	spin_lock_init(&dev->slock);
@@ -2487,13 +2487,13 @@ static int gt2005_close(struct file *file)
 	power_down_gt2005(dev);
 #endif
 	msleep(10);
-	
+
 	aml_cam_uninit(&dev->cam_info);
 
 	msleep(10);
 #if MESON_CPU_TYPE >= MESON_CPU_TYPE_MESON6
 	switch_mod_gate_by_name("ge2d", 0);
-#endif		
+#endif
 	wake_unlock(&(dev->wake_lock));
 #ifdef CONFIG_CMA
     vm_deinit_buf();
@@ -2613,12 +2613,12 @@ static int gt2005_probe(struct i2c_client *client,
 	memcpy(t->vdev, &gt2005_template, sizeof(*t->vdev));
 
 	video_set_drvdata(t->vdev, t);
-	
+
 	wake_lock_init(&(t->wake_lock),WAKE_LOCK_SUSPEND, "gt2005");
 	/* Register it */
 	if (plat_dat) {
 		memcpy(&t->cam_info, plat_dat, sizeof(aml_cam_info_t));
-		if(plat_dat->front_back>=0)  
+		if(plat_dat->front_back>=0)
 			video_nr=plat_dat->front_back;
 	}else {
 		printk("camera gt2005: have no platform data\n");
@@ -2626,11 +2626,11 @@ static int gt2005_probe(struct i2c_client *client,
 		kfree(client);
 		return -1;
 	}
-	
+
 	t->cam_info.version = GT2005_DRIVER_VERSION;
 	if (aml_cam_info_reg(&t->cam_info) < 0)
 		printk("reg caminfo error\n");
-	
+
 	err = video_register_device(t->vdev, VFL_TYPE_GRABBER, video_nr);
 	if (err < 0) {
 		video_device_release(t->vdev);
@@ -2670,4 +2670,3 @@ static struct i2c_driver gt2005_i2c_driver = {
 };
 
 module_i2c_driver(gt2005_i2c_driver);
-

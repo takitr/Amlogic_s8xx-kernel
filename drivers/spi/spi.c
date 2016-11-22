@@ -1394,7 +1394,7 @@ static int __spi_async(struct spi_device *spi, struct spi_message *message)
 
 	message->spi = spi;
 	message->status = -EINPROGRESS;
-	
+
 #if !defined(CONFIG_ARCH_MESON6) && !defined(CONFIG_ARCH_MESON8) && !defined(CONFIG_ARCH_MESON8B)
 	spin_unlock_irqrestore(&master->bus_lock_spinlock, flags);
 #endif

@@ -1223,4 +1223,3 @@ void setRxHDCPEvent(BYTE event);
 
 
 #endif // _HDMIRX_H_
-

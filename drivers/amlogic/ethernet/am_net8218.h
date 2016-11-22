@@ -13,7 +13,7 @@
 #define ETH_MAC_4_GMII_Addr_CR_P                2
 #define ETH_MAC_4_GMII_Addr_GR_P                6
 #define ETH_MAC_4_GMII_Addr_PA_P                11
-  
+
 #define ETH_MAC_4_GMII_Addr_CR_60_100           (0<<ETH_MAC_4_GMII_Addr_CR_P)
 #define ETH_MAC_4_GMII_Addr_CR_100_150          (1<<ETH_MAC_4_GMII_Addr_CR_P)
 #define ETH_MAC_4_GMII_Addr_CR_20_35            (2<<ETH_MAC_4_GMII_Addr_CR_P)
@@ -42,8 +42,8 @@
 
 //ring buf must less than the MAX alloc length 131072
 //131072/1536~=85;
-#define TX_RING_SIZE 	16384	// 512, 32768
-#define RX_RING_SIZE 	32768  	// 4096, 65536
+#define TX_RING_SIZE 	128
+#define RX_RING_SIZE 	128
 #define CACHE_LINE 32
 #define IS_CACHE_ALIGNED(x)		(!((unsigned long )x &(CACHE_LINE-1)))
 #define CACHE_HEAD_ALIGNED(x)	((x-CACHE_LINE) & (~(CACHE_LINE-1)))
@@ -69,6 +69,7 @@
 #define RX_INTR_EN  1<<6
 #define EARLY_RX_INTR_EN 1<<14
 #define INTERNALPHY_ID 79898963
+#define PMU4_PHY_ID 20142014
 enum mii_reg_bits {
 	MDIO_ShiftClk = 0x10000, MDIO_DataIn = 0x80000, MDIO_DataOut = 0x20000,
 	MDIO_EnbOutput = 0x40000, MDIO_EnbIn = 0x00000,
@@ -152,26 +153,21 @@ struct _rx_desc {
 };
 
 struct am_net_private {
-	struct _rx_desc *rx_ring;		// rx section
+	struct _rx_desc *rx_ring;
 	struct _rx_desc *rx_ring_dma;
-	struct _rx_desc *last_rx;
-	struct tasklet_struct rx_tasklet;
-
-	struct _tx_desc *tx_ring;		// tx section
+	struct _tx_desc *tx_ring;
 	struct _tx_desc *tx_ring_dma;
+	struct _rx_desc *last_rx;
 	struct _tx_desc *last_tx;
 	struct _tx_desc *start_tx;
-	struct tasklet_struct tx_tasklet;
-
 	struct net_device *dev;
 	struct net_device_stats stats;
 	struct timer_list timer;	/* Media monitoring timer. */
-//	int pmt;
-//	currently not used in the driver
+	struct tasklet_struct rx_tasklet;
+	int int_rx_tx;
+	int pmt;
 	unsigned int irq_mask;
-	struct tasklet_struct st_tasklet;
-	struct tasklet_struct rt_tasklet;
-	unsigned long status;	
+
 	/* Frequently used values: keep some adjacent for cache effect. */
 	spinlock_t lock;
 	unsigned int rx_buf_sz;	/* Based on MTU+slack. */
@@ -183,12 +179,14 @@ struct am_net_private {
 	struct mii_bus *mii;
 	phy_interface_t phy_interface;
 	int phy_addr;
-	int phy_mask; 
+	int phy_mask;
 	struct phy_device *phydev;
 	int oldlink;
 	int speed;
 	int oldduplex;
 	int refcnt;
+
+
 };
 
-#endif			
+#endif

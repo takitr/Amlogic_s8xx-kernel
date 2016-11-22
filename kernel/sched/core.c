@@ -5242,7 +5242,6 @@ migration_call(struct notifier_block *nfb, unsigned long action, void *hcpu)
 
 	case CPU_UP_PREPARE:
 		rq->calc_load_update = calc_load_update;
-		account_reset_rq(rq);
 		break;
 
 	case CPU_ONLINE:
@@ -7762,7 +7761,7 @@ cpu_cgroup_allow_attach(struct cgroup *cgrp, struct cgroup_taskset *tset)
 		tcred = __task_cred(task);
 
 		if ((current != task) && !capable(CAP_SYS_NICE) &&
-		    !uid_eq(cred->euid, tcred->uid) && !uid_eq(cred->euid, tcred->suid))
+		    cred->euid != tcred->uid && cred->euid != tcred->suid)
 			return -EACCES;
 	}
 

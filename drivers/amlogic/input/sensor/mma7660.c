@@ -1,6 +1,6 @@
 /*
  *  mma7660.c - Linux kernel modules for 3-Axis Orientation/Motion
- *  Detection Sensor 
+ *  Detection Sensor
  *
  *  Copyright (C) 2009-2010 Freescale Semiconductor Ltd.
  *
@@ -186,7 +186,7 @@ static void mma7660_put_cablic(const char *addr)
 #define CABLIC_FILE   "/data/mma7660_cablic.dat"
 
 
-static const struct cablic def_arr[CABLIC_NUM] = 
+static const struct cablic def_arr[CABLIC_NUM] =
 {
 {0,1,0,-1,0,43,1},
 {0},
@@ -210,7 +210,7 @@ static SENSOR_DEVICE_ATTR(y_axis_force, S_IRUGO, show_axis_force, NULL, 1);
 static SENSOR_DEVICE_ATTR(z_axis_force, S_IRUGO, show_axis_force, NULL, 2);
 static SENSOR_DEVICE_ATTR(orientation, S_IRUGO, show_orientation, NULL, 0);
 
-static struct attribute* mma7660_attrs[] = 
+static struct attribute* mma7660_attrs[] =
 {
 	&sensor_dev_attr_all_axis_force.dev_attr.attr,
 	&sensor_dev_attr_x_axis_force.dev_attr.attr,
@@ -249,7 +249,7 @@ static void mma7660_read_tilt(u8* pt)
 	int count=0;
 	assert(mma7660_i2c_client);
 	do
-	{	
+	{
 		result = i2c_smbus_read_byte_data(mma7660_i2c_client, MMA7660_TILT);
 		assert(result>0);
 		count++;
@@ -265,14 +265,14 @@ ssize_t	show_orientation(struct device *dev, struct device_attribute *attr, char
 
 	switch((orientation>>2)&0x07)
 	{
-	case 1: 
+	case 1:
 		result = sprintf(buf, "Left\n");
 		break;
 
 	case 2:
 		result = sprintf(buf, "Right\n");
 		break;
-	
+
 	case 5:
 		result = sprintf(buf, "Downward\n");
 		break;
@@ -302,20 +302,20 @@ ssize_t	show_orientation(struct device *dev, struct device_attribute *attr, char
 ssize_t show_xyz_force(struct device *dev, struct device_attribute *attr, char *buf)
 {
 	int i;
-	s8 xyz[3]; 
+	s8 xyz[3];
 
 	for(i=0; i<3; i++)
 		mma7660_read_xyz(i, &xyz[i]);
-	return sprintf(buf, "(%d,%d,%d)\n", xyz[0], xyz[1], xyz[2]);	
+	return sprintf(buf, "(%d,%d,%d)\n", xyz[0], xyz[1], xyz[2]);
 }
 
 ssize_t	show_axis_force(struct device *dev, struct device_attribute *attr, char *buf)
 {
 	s8 force;
-    	int n = ((struct sensor_device_attribute *)to_sensor_dev_attr(attr))->index;
+	int n = ((struct sensor_device_attribute *)to_sensor_dev_attr(attr))->index;
 
 	mma7660_read_xyz(n, &force);
-	return sprintf(buf, "%d\n", force);	
+	return sprintf(buf, "%d\n", force);
 }
 
 ssize_t mma7660_debug_show(struct device *dev,
@@ -357,7 +357,7 @@ static ssize_t mma7660_debug_store(struct device *dev,
 	error = strict_strtoul(buf, 10, &data);
 	if (error)
 		return error;
-    
+
     dbg_level = data;
 
 	return count;
@@ -481,31 +481,31 @@ static int mma7660_init_client(struct i2c_client *client)
 
 
 	// Enable Orientation Detection Logic
-	result = i2c_smbus_write_byte_data(client, 
+	result = i2c_smbus_write_byte_data(client,
 		MMA7660_MODE, MK_MMA7660_MODE(0, 0, 0, 0, 0, 0, 0)); //enter standby
     if(result < 0)
         return result;
-	result = i2c_smbus_write_byte_data(client, 
-		MMA7660_SR, MK_MMA7660_SR(7, 0, 0)); 
+	result = i2c_smbus_write_byte_data(client,
+		MMA7660_SR, MK_MMA7660_SR(7, 0, 0));
 
     if(result < 0)
         return result;
-	//result = i2c_smbus_write_byte_data(client, 
-	//	MMA7660_INTSU, MK_MMA7660_INTSU(0, 0, 0, 0, 1, 0, 1, 1)); 
-	
-	result = i2c_smbus_write_byte_data(client, 
-	MMA7660_INTSU, MK_MMA7660_INTSU(1, 1, 1, 1, 1, 1, 1, 1)); 	
-	
-    if(result < 0)
-        return result;
+	//result = i2c_smbus_write_byte_data(client,
+	//	MMA7660_INTSU, MK_MMA7660_INTSU(0, 0, 0, 0, 1, 0, 1, 1));
 
-	result = i2c_smbus_write_byte_data(client, 
-		MMA7660_SPCNT, 0xA0); 
+	result = i2c_smbus_write_byte_data(client,
+	MMA7660_INTSU, MK_MMA7660_INTSU(1, 1, 1, 1, 1, 1, 1, 1));
 
     if(result < 0)
         return result;
-	result = i2c_smbus_write_byte_data(client, 
-		MMA7660_MODE, MK_MMA7660_MODE(0, 1, 0, 0, 0, 0, 1)); 
+
+	result = i2c_smbus_write_byte_data(client,
+		MMA7660_SPCNT, 0xA0);
+
+    if(result < 0)
+        return result;
+	result = i2c_smbus_write_byte_data(client,
+		MMA7660_MODE, MK_MMA7660_MODE(0, 1, 0, 0, 0, 0, 1));
 
     if(result < 0)
         return result;
@@ -615,14 +615,14 @@ static struct sample get_mid(struct sample *samples)
     result.x = (sum.x - (min.x + max.x) )/2;
     result.y = (sum.y - (min.y + max.y) )/2;
     result.z = (sum.z - (min.z + max.z) )/2;
-       
+
     return result;
 }
 
 static void report_abs(void)
 {
 	int i;
-	s8 xyz[3]; 
+	s8 xyz[3];
 	s16 x, y, z;
 
     struct sample data;
@@ -640,7 +640,7 @@ static void report_abs(void)
 
 	for(i=0; i<3; i++)
 		mma7660_read_xyz(i, &xyz[i]);
-		
+
 	mutex_unlock(&sensor_lock);
 	/* convert signed 10bits to signed 16bits */
 
@@ -659,14 +659,14 @@ static void report_abs(void)
 
 
     ++sample_nr;
-    
+
     if(dev_delay >= 40)
     {//Apply a higher poll rate.
-        if(sample_nr >= 4) 
+        if(sample_nr >= 4)
         {
             data = get_mid(samples);
 
-            sample_nr = 0; 
+            sample_nr = 0;
 
         }
         else
@@ -677,8 +677,8 @@ static void report_abs(void)
     }
     else
     {
-        if(sample_nr >= 4) 
-            sample_nr = 0; 
+        if(sample_nr >= 4)
+            sample_nr = 0;
 
         data = get_avg(samples);
     }
@@ -689,7 +689,7 @@ static void report_abs(void)
 	for (i = 0; i < CABLIC_NUM; i++) {
 		if (cab_arry[i].valid == 0) break;
 		if (data.x > 0)
-        
+
 			data.x = data.x - cab_arry[i].xoffset;
 		else
 			data.x = data.x - cab_arry[i].xoffset1;
@@ -764,11 +764,11 @@ static void report_abs(void)
 				zoffset2 = zoffset2/num2z;
 			else
 				zoffset2 = 0;
-            
+
 			printk("num1x=%d,num2x=%d,num1y=%d,num2y=%d,num1z=%d,num2z=%d\n",num1x, num2x, num1y, num2y, num1z, num2z);
 			printk("xoffset1=%d,yoffset1=%d,zoffset1=%d\n",xoffset1,yoffset1,zoffset1);
 			printk("xoffset2=%d,yoffset2=%d,zoffset2=%d\n",xoffset2,yoffset2,zoffset2);
-    
+
             num1x = num2x = num1y = num2y = num1z = num2z = 0;
 
 			if (current_num == CABLIC_NUM)
@@ -799,7 +799,7 @@ static void report_abs(void)
 #endif
 
 
-        
+
         aml_sensor_report_acc(mma7660_i2c_client, mma7660_idev->input, data.x, data.y, data.z);
 
         if(dbg_level)
@@ -810,7 +810,7 @@ static void report_abs(void)
 static void mma7660_dev_poll(struct input_polled_dev *dev)
 {
 	report_abs();
-} 
+}
 /////////////////////////end//////
 
 /*
@@ -828,8 +828,8 @@ static int mma7660_probe(struct i2c_client *client,
 #if DEBUG
 	printk("probing mma7660 \n");
 #endif
-	mutex_init(&sensor_lock);	
-	result = i2c_check_functionality(adapter, 
+	mutex_init(&sensor_lock);
+	result = i2c_check_functionality(adapter,
 		I2C_FUNC_SMBUS_BYTE|I2C_FUNC_SMBUS_BYTE_DATA);
 	assert(result);
 
@@ -845,7 +845,7 @@ static int mma7660_probe(struct i2c_client *client,
 	assert(!(IS_ERR(hwmon_dev)));
 
 	dev_info(&client->dev, "build time %s %s\n", __DATE__, __TIME__);
-  
+
 
 	/*input poll device register */
 	mma7660_idev = input_allocate_polled_device();
@@ -911,11 +911,11 @@ static int mma7660_remove(struct i2c_client *client)
 static int mma7660_suspend(struct device *dev)
 {
 	int result;
-	
+
 	if(!is_enabled)
 		return 0;
 	mutex_lock(&sensor_lock);
-	result = i2c_smbus_write_byte_data(mma7660_i2c_client, 
+	result = i2c_smbus_write_byte_data(mma7660_i2c_client,
 		MMA7660_MODE, MK_MMA7660_MODE(0, 0, 0, 0, 0, 0, 0));
 	assert(result==0);
 	is_enabled = 0;
@@ -929,7 +929,7 @@ static int mma7660_resume(struct device *dev)
 	if(is_enabled)
 		return 0;
 	mutex_lock(&sensor_lock);
-	result = i2c_smbus_write_byte_data(mma7660_i2c_client, 
+	result = i2c_smbus_write_byte_data(mma7660_i2c_client,
 		MMA7660_MODE, MK_MMA7660_MODE(0, 1, 0, 0, 0, 0, 1));
 	assert(result==0);
 	is_enabled = 1;

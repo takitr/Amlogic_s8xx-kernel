@@ -142,19 +142,19 @@ SYS_STATUS setRxHDCPKSVList(BYTE offset, BYTE *pKSVList, BYTE count)
     {
         if (KSVOffset < 4)
         {
-        	for(i = 0 ;i<5;i++)
-        	{
-        		HDMIRX_WriteI2C_Byte(REG_RX_KSV_FIFO00+i+KSVOffset*5,pKSVList[(KSVOffset-offset)*5+i]);
-        		SHABuff[KSVOffset*5+i] = pKSVList[(KSVOffset-offset)*5+i] ;
-        	}
+		for(i = 0 ;i<5;i++)
+		{
+			HDMIRX_WriteI2C_Byte(REG_RX_KSV_FIFO00+i+KSVOffset*5,pKSVList[(KSVOffset-offset)*5+i]);
+			SHABuff[KSVOffset*5+i] = pKSVList[(KSVOffset-offset)*5+i] ;
+		}
         }
         else
         {
-        	for(i = 0 ;i<5;i++)
-        	{
-        		HDMIRX_WriteI2C_Byte(REG_RX_KSV_FIFO40+i+KSVOffset*5-20,pKSVList[(KSVOffset-offset)*5+i]);
-        		SHABuff[KSVOffset*5+i] = pKSVList[(KSVOffset-offset)*5+i] ;
-        	}
+		for(i = 0 ;i<5;i++)
+		{
+			HDMIRX_WriteI2C_Byte(REG_RX_KSV_FIFO40+i+KSVOffset*5-20,pKSVList[(KSVOffset-offset)*5+i]);
+			SHABuff[KSVOffset*5+i] = pKSVList[(KSVOffset-offset)*5+i] ;
+		}
         }
     }
     HDMIRX_WriteI2C_Byte(REG_RX_BLOCK_SEL,0);
@@ -283,11 +283,11 @@ void SwitchRxHDCPState(RXHDCP_State_Type state)
     switch(state)
     {
     case RXHDCP_Reset:
-    	RxHDCPRepeaterCapabilityClear(B_KSV_READY);
+	RxHDCPRepeaterCapabilityClear(B_KSV_READY);
         break ;
 
     case RXHDCP_AuthStart:
-    	RxHDCPRepeaterCapabilityClear(B_KSV_READY);
+	RxHDCPRepeaterCapabilityClear(B_KSV_READY);
 	    setRxHDCPEvent(EVENT_RXHDCP_AUTH_START);
         break ;
 

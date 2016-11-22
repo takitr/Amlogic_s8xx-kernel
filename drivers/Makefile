@@ -155,5 +155,3 @@ obj-$(CONFIG_IPACK_BUS)		+= ipack/
 obj-$(CONFIG_NTB)		+= ntb/
 
 obj-$(CONFIG_PLAT_MESON) 	+= amlogic/
-
-obj-$(CONFIG_MACH_MESON8B_ODROIDC) += hardkernel/

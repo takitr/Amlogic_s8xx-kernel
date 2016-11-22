@@ -53,11 +53,11 @@ void __cpuinit meson_secondary_init(unsigned int cpu)
 	 * for us: do so
 	 */
 //	gic_secondary_init(0);
-#ifdef CONFIG_MESON_ARM_GIC_FIQ	
-extern void  init_fiq(void);	
+#ifdef CONFIG_MESON_ARM_GIC_FIQ
+extern void  init_fiq(void);
 	init_fiq();
-#endif	
- 
+#endif
+
 	/*
 	 * let the primary processor know we're out of the
 	 * pen, then head off into the C entry point
@@ -129,7 +129,7 @@ int __cpuinit meson_boot_secondary(unsigned int cpu, struct task_struct *idle)
 	while (time_before(jiffies, timeout)) {
 		if (pen_release == -1)
 			break;
-	}	
+	}
 
 	/*
 	 * now the secondary core is starting up let it run its
@@ -186,4 +186,3 @@ struct smp_operations meson_smp_ops __initdata = {
 	.cpu_disable    =meson_cpu_disable,
 #endif
 };
-

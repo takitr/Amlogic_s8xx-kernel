@@ -38,7 +38,7 @@ extern void lcd_print(const char *fmt, ...);
 //global define
 //***********************************************
 	#define FIN_FREQ                 (24 * 1000)
-	
+
 	//clk_ctrl
 	#define CLK_CTRL_AUTO             31
 	//#define CLK_CTRL_VCLK_SEL         30
@@ -53,7 +53,7 @@ extern void lcd_print(const char *fmt, ...);
 	#define POL_CTRL_DE               2
 	#define POL_CTRL_VS               1
 	#define POL_CTRL_HS               0
-	
+
 	//gamma_ctrl
 	#define GAMMA_CTRL_REVERSE        4
 	#define GAMMA_CTRL_EN             0
@@ -101,8 +101,8 @@ typedef struct {
 	u16 v_active;		// Vertical display area
 	u16 h_period;		// Horizontal total period time
 	u16 v_period;		// Vertical total period time
-	u32 screen_ratio_width;			// screen aspect ratio width 
-	u32 screen_ratio_height;		// screen aspect ratio height 
+	u32 screen_ratio_width;			// screen aspect ratio width
+	u32 screen_ratio_height;		// screen aspect ratio height
 	u32 h_active_area;				/* screen physical width in "mm" unit */
 	u32 v_active_area;				/* screen physical height in "mm" unit */
 
@@ -118,14 +118,14 @@ typedef struct {
 	u32 lcd_clk;		/* lcd clock*/
 	u16 sync_duration_num;
 	u16 sync_duration_den;
-	
+
 	u16 pol_ctrl;
 	//u16 inv_cnt_addr;
 	//u16 tcon_misc_sel_addr;
-	
+
 	u16 video_on_pixel;
 	u16 video_on_line;
-	
+
 	u16 hsync_width;
 	u16 hsync_bp;
 	u16 vsync_width;
@@ -152,7 +152,7 @@ typedef struct {
 	u16 vs_he_addr;
 	u16 vs_vs_addr;
 	u16 vs_ve_addr;
-	
+
 	u16 vso_hstart;
 	u16 vso_vstart;
 	u16 vso_user;
@@ -168,7 +168,7 @@ typedef struct {
 	u32 vadj_brightness;
 	u32 vadj_contrast;
 	u32 vadj_saturation;
-	
+
 	unsigned char gamma_ctrl;
 	u16 gamma_r_coeff;
 	u16 gamma_g_coeff;
@@ -176,10 +176,12 @@ typedef struct {
 	u16 GammaTableR[256];
 	u16 GammaTableG[256];
 	u16 GammaTableB[256];
-	void (*set_gamma_table)(unsigned gamma_en);
+	void (*set_gamma_table)(unsigned int gamma_en);
+	void (*gamma_test)(unsigned int num);
 } Lcd_Effect_t;
 
 //mipi-dsi config
+#define DSI_CMD_CNT_INDEX         1 //byte[1]
 #define DSI_INIT_ON_MAX           100
 #define DSI_INIT_OFF_MAX          30
 
@@ -217,6 +219,7 @@ typedef struct {
 	unsigned char preemphasis;
 	unsigned int bit_rate;
 	unsigned int sync_clock_mode;
+	unsigned char edid_timing_used;
 } EDP_Config_t;
 
 typedef struct {
@@ -296,6 +299,7 @@ typedef struct {
     void (*module_disable)(void);
     void (*lcd_test)(unsigned num);
     void (*print_version)(void);
+    void (*edp_edid_load)(void);
 } Lcd_Misc_Ctrl_t;
 
 typedef struct {

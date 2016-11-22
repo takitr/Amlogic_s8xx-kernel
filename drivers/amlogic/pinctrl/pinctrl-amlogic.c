@@ -319,7 +319,7 @@ int amlogic_pin_config_group_set(struct pinctrl_dev *pctldev,
 	}
 	if(AML_PCON_ENOUT==oenparam)
 	{
-		for(i=0;i<num_pins;i++){			
+		for(i=0;i<num_pins;i++){
 			ret=apmx->soc->pin_map_to_direction(pins[i],&reg,&bit);
 			dbg_print("pin[%d]=%d,reg=%d,bit=%d\n",i,pins[i],reg,bit);
 			if(!ret)
@@ -455,7 +455,7 @@ static int amlogic_pinctrl_parse_group(struct platform_device *pdev,
 		g->pins = devm_kzalloc(&pdev->dev, g->num_pins * sizeof(*g->pins),
 				       GFP_KERNEL);
 		if (!g->pins){
-			ret= -ENOMEM;			
+			ret= -ENOMEM;
 			dev_err(&pdev->dev, "malloc g->pins error\n");
 			goto err;
 		}
@@ -481,7 +481,7 @@ static int amlogic_pinctrl_parse_group(struct platform_device *pdev,
 	if(!of_property_read_u32(np, pinctrl_set, &val)){
 		prop = of_find_property(np, pinctrl_set, &length);
 		if (!prop){
-			ret= -EINVAL;			
+			ret= -EINVAL;
 			dev_err(&pdev->dev, "read %s length error\n",pinctrl_set);
 			goto err;
 		}
@@ -501,7 +501,7 @@ static int amlogic_pinctrl_parse_group(struct platform_device *pdev,
 
 		ret=of_property_read_u32_array(np, pinctrl_set, (u32 *)(g->setmask), length / sizeof(u32));
 		if (ret){
-			ret= -EINVAL;		
+			ret= -EINVAL;
 			dev_err(&pdev->dev, "read %s data error\n",pinctrl_set);
 			goto err;
 		}
@@ -526,7 +526,7 @@ static int amlogic_pinctrl_parse_group(struct platform_device *pdev,
 		g->clearmask= devm_kzalloc(&pdev->dev, g->num_clearmask * sizeof(*g->clearmask),
 				       GFP_KERNEL);
 		if (!g->clearmask){
-			ret=-ENOMEM;		
+			ret=-ENOMEM;
 			dev_err(&pdev->dev, "malloc g->clearmask error\n");
 			goto err;
 		}
@@ -597,7 +597,7 @@ static int amlogic_pinctrl_probe_dt(struct platform_device *pdev,
 	}
 	soc->groups = devm_kzalloc(&pdev->dev, soc->ngroups *
 				   sizeof(*soc->groups), GFP_KERNEL);
-	if (!soc->groups){		
+	if (!soc->groups){
 		dev_err(&pdev->dev, "malloc soc->functions error\n");
 		ret=-ENOMEM;
 		goto err;
@@ -672,7 +672,7 @@ static void amlogic_dump_pinctrl_data(struct platform_device *pdev)
 		printk("function name:%s\n",func->name);
 		group=(char **)(func->groups);
 		for(j=0;j<func->num_groups;group++,j++)
-		{	
+		{
 			printk("\tgroup in function:%s\n",group[j]);
 		}
 	}
@@ -716,14 +716,14 @@ int  amlogic_pmx_probe(struct platform_device *pdev,struct amlogic_pinctrl_soc_d
 	apmx->dev = &pdev->dev;
 	apmx->soc = soc_data;
 	platform_set_drvdata(pdev, apmx);
-	
+
 	ret=of_property_read_u32(pdev->dev.of_node, "#pinmux-cells", &val);
 	if(ret){
 		dev_err(&pdev->dev, "dt probe #pinmux-cells failed: %d\n", ret);
 		goto err;
 	}
 	apmx->pinmux_cell=val;
-	
+
 	ret=amlogic_pinctrl_probe_dt(pdev,apmx);
 	if (ret) {
 		dev_err(&pdev->dev, "dt probe failed: %d\n", ret);
@@ -731,7 +731,7 @@ int  amlogic_pmx_probe(struct platform_device *pdev,struct amlogic_pinctrl_soc_d
 	}
 #ifdef AML_PIN_DEBUG_GUP
 	amlogic_dump_pinctrl_data(pdev);
-#endif	
+#endif
 	amlogic_gpio_ranges.npins = apmx->soc->npins;
 	amlogic_pmx_desc.name = dev_name(&pdev->dev);
 	amlogic_pmx_desc.pins = apmx->soc->pins;
@@ -763,4 +763,3 @@ int amlogic_pmx_remove(struct platform_device *pdev)
 	return 0;
 }
 EXPORT_SYMBOL_GPL(amlogic_pmx_remove);
-

@@ -95,8 +95,8 @@ sdio{
 //$$ L2 PROP_STR 4 = "caps"
 //$$ L3 PROP_U32 = "f_min"
 //$$ L3 PROP_U32 = "f_max"
-//$$ L3 PROP_U32 = "max_req_size"    
-//$$ L2 PROP_U32 = "card_type"    
+//$$ L3 PROP_U32 = "max_req_size"
+//$$ L2 PROP_U32 = "card_type"
         sdio{
           status = "okay";
           port = <0>;          /**0:sdio_a, 1:sdio_b, 2:sdio_c, 3:sdhc_a, 4:sdhc_b, 5:sdhc_c */

@@ -22,4 +22,3 @@ config BCM2079X_I2C
       If you say yes here you get support for BCM2079x_I2C support
 
 endmenu
-

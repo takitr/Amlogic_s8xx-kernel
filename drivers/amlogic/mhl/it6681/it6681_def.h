@@ -614,7 +614,7 @@ typedef enum  {
     HDCP_CPUnknown
 } HDCPSts_Type ;
 
-					   
+
 typedef enum _Video_State_Type {
     VSTATE_Off=0,
     VSTATE_PwrOff,
@@ -833,7 +833,7 @@ typedef struct
     unsigned char EdidOffset;
     unsigned char EdidAddr;
 
-    unsigned char IT6682_MCU2VBUSOUT; 
+    unsigned char IT6682_MCU2VBUSOUT;
     unsigned char IT6682_MCU2Switch;
     unsigned char IsIT6682;
     unsigned char RxPOW;

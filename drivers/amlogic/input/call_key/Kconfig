@@ -9,6 +9,3 @@ config AML_CALL_KEY
 	default n
 	help
 	  Say Y here if you want to use the amlogic call key.
-
-
-

@@ -1,18 +1,18 @@
 /* drivers/input/touchscreen/gt9xx.h
- * 
+ *
  * 2010 - 2013 Goodix Technology.
- * 
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be a reference 
- * to you, when you are integrating the GOODiX's CTP IC into your system, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU 
+ *
+ * This program is distributed in the hope that it will be a reference
+ * to you, when you are integrating the GOODiX's CTP IC into your system,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * General Public License for more details.
- * 
+ *
  */
 
 #ifndef _GOODIX_GT9XX_H_
@@ -41,7 +41,7 @@
 #define GTP_DRIVER_SEND_CFG   1
 #define GTP_HAVE_TOUCH_KEY    0
 #define GTP_POWER_CTRL_SLEEP  1
-#define GTP_ICS_SLOT_REPORT   1 
+#define GTP_ICS_SLOT_REPORT   1
 
 #define GTP_AUTO_UPDATE       1    // auto update fw by .bin file as default
 #define GTP_HEADER_FW_UPDATE  0    // auto update fw by gtp_default_FW in gt9xx_firmware.h, function together with GTP_AUTO_UPDATE
@@ -106,7 +106,7 @@ struct goodix_ts_data {
     u8 rqst_processing;
     u8 is_950;
 #endif
-    
+
 };
 
 extern u16 show_len;
@@ -117,20 +117,20 @@ extern u16 total_len;
 // STEP_1(REQUIRED): Define Configuration Information Group(s)
 // Sensor_ID Map:
 /* sensor_opt1 sensor_opt2 Sensor_ID
-    GND         GND         0 
-    VDDIO       GND         1 
-    NC          GND         2 
-    GND         NC/300K     3 
-    VDDIO       NC/300K     4 
-    NC          NC/300K     5 
+    GND         GND         0
+    VDDIO       GND         1
+    NC          GND         2
+    GND         NC/300K     3
+    VDDIO       NC/300K     4
+    NC          NC/300K     5
 */
-// TODO: define your own default or for Sensor_ID == 0 config here. 
+// TODO: define your own default or for Sensor_ID == 0 config here.
 // The predefined one is just a sample config, which is not suitable for your tp in most cases.
 #define CTP_CFG_GROUP1 {\
 0x45,0x00,0x06,0x00,0x08,0x0A,0x35,0x00,0x02,0x0A,0x1E,0x09,0x50,0x3C,0x03,0x04,0x00,0x00,0x00,0x00,0x11,0x11,0x09,0x16,0x19,0x1B,0x14,0x90,0x2F,0xAA,0x15,0x17,0x39,0x13,0x00,0x00,0x00,0x9A,0x03,0x2D,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x14,0x32,0x94,0xC5,0x02,0x08,0x00,0x00,0x04,0x86,0x16,0x00,0x77,0x1A,0x00,0x6C,0x1F,0x00,0x62,0x26,0x00,0x5B,0x2D,0x00,0x5B,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x01,0x04,0x05,0x06,0x07,0x08,0x09,0x0C,0x0D,0x0E,0x0F,0x10,0x11,0x14,0x15,0x16,0x17,0x18,0x19,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x29,0x28,0x27,0x26,0x25,0x24,0x23,0x22,0x21,0x20,0x1F,0x1E,0x1C,0x1B,0x19,0x14,0x13,0x12,0x11,0x10,0x0F,0x0E,0x0D,0x0C,0x0A,0x08,0x07,0x06,0x04,0x02,0x00,0xFF,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xF0,0x01\
 }
 
-    
+
 // TODO: define your config for Sensor_ID == 1 here, if needed
 #define CTP_CFG_GROUP2 {\
     }
@@ -152,7 +152,7 @@ extern u16 total_len;
     }
 
 // STEP_2(REQUIRED): Customize your I/O ports & I/O operations
-#define GTP_RST_PORT    (ts_com->gpio_reset)	
+#define GTP_RST_PORT    (ts_com->gpio_reset)
 #define GTP_INT_PORT    (ts_com->gpio_interrupt)
 #define GTP_INT_IRQ     (ts_com->irq)
 //#define GTP_INT_CFG     S3C_GPIO_SFN(0xF)
@@ -185,7 +185,7 @@ extern u16 total_len;
 #endif
 #define GTP_MAX_TOUCH         5
 
-// STEP_4(optional): If keys are available and reported as keys, config your key info here                             
+// STEP_4(optional): If keys are available and reported as keys, config your key info here
 #if GTP_HAVE_TOUCH_KEY
     #define GTP_KEY_TAB  {KEY_MENU, KEY_HOME, KEY_BACK}
 #endif
@@ -193,7 +193,7 @@ extern u16 total_len;
 //***************************PART3:OTHER define*********************************
 #define GTP_DRIVER_VERSION    "V2.0<2013/08/28>"
 #define GTP_I2C_NAME          "gt9xx"
-#define GTP_POLL_TIME         10    
+#define GTP_POLL_TIME         10
 #define GTP_ADDR_LENGTH       2
 #define GTP_CONFIG_MIN_LENGTH 186
 #define GTP_CONFIG_MAX_LENGTH 240
@@ -207,7 +207,7 @@ extern u16 total_len;
 #define GTP_REG_MAIN_CLK                0x8020
 #define GTP_REG_CHIP_TYPE               0x8000
 #define GTP_REG_HAVE_KEY                0x804E
-#define GTP_REG_MATRIX_DRVNUM           0x8069     
+#define GTP_REG_MATRIX_DRVNUM           0x8069
 #define GTP_REG_MATRIX_SENNUM           0x806A
 
 #define GTP_FL_FW_BURN              0x00

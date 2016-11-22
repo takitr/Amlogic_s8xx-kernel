@@ -48,7 +48,7 @@ struct adcts {
 	bool test_mode;
 	u32 timer_count;
 	int seq;
-	
+
 	u16 x_plate_ohms;
 	int irq;
 	int (*service)(int cmd);
@@ -81,7 +81,7 @@ static ssize_t adcts_write(struct device *dev, struct device_attribute *attr, co
 	int i;
 	u32 value;
 	struct adcts *ts = (struct adcts *)dev_get_drvdata(dev);
-	
+
 	if (!strcmp(attr->attr.name, "cmd")) {
 		sscanf(buf, "%d", &i);
 		if (i == 100) {
@@ -186,12 +186,12 @@ static void adcts_work(struct adcts *ts)
 	 * in that case we have rely on the pressure anyway.
 	 */
 
-	ts->timer_count++;	
+	ts->timer_count++;
 	if (ts->test_mode) {
 		return;
 	}
-	
-	if (ts->seq == 0) { 
+
+	if (ts->seq == 0) {
 		if (ts->service(CMD_GET_PENDOWN)) {
 			if (!ts->pendown) {
 				ts->pendown = 1;
@@ -213,16 +213,16 @@ static void adcts_work(struct adcts *ts)
 			#endif
 		}
 	}
-	
-	else if (ts->seq == 1) { 
+
+	else if (ts->seq == 1) {
 		ts->event.x = ts->service(CMD_GET_X);
 		ts->seq ++;
 	}
 
-	else if (ts->seq == 2) { 
+	else if (ts->seq == 2) {
 		ts->event.y = ts->service(CMD_GET_Y);
 		struct ts_event event;
-		adcts_cache_out(ts, event);		
+		adcts_cache_out(ts, event);
 		adcts_cache_in(ts, ts->event);
 		ts->event = event;
 		if (ts->event.x || ts->event.y) {
@@ -232,13 +232,13 @@ static void adcts_work(struct adcts *ts)
 				ts->event.y = xy & 0xffff;
 			}
 			input_report_abs(input, ABS_X, ts->event.x);
-            		input_report_abs(input, ABS_Y, ts->event.y);
-            		rt = 500;	//debug
-            		input_report_abs(input, ABS_PRESSURE, rt);
-            		input_sync(input);
-            		#ifdef DEBUG
-            		printk(KERN_INFO "x=%d, y=%d\n", ts->event.x, ts->event.y);
-            		#endif
+			input_report_abs(input, ABS_Y, ts->event.y);
+			rt = 500;	//debug
+			input_report_abs(input, ABS_PRESSURE, rt);
+			input_sync(input);
+			#ifdef DEBUG
+			printk(KERN_INFO "x=%d, y=%d\n", ts->event.x, ts->event.y);
+			#endif
                   }
 		ts->seq = 0;
 		ts->service(CMD_SET_PENIRQ);
@@ -248,10 +248,10 @@ static void adcts_work(struct adcts *ts)
 static enum hrtimer_restart adcts_timer(struct hrtimer *timer)
 {
     struct adcts *ts = container_of(timer, struct adcts, timer);
-    
+
     adcts_work(ts);
     if ((ts->seq == 1) && (ts->poll_delay_flag == 1)) {
-    	ts->poll_delay_flag = 0;
+	ts->poll_delay_flag = 0;
 			hrtimer_start(&ts->timer, ktime_set(0, ts->poll_delay * 1000000), HRTIMER_MODE_REL);
 		}
 		else

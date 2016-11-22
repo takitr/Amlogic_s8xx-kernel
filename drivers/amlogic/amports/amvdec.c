@@ -139,7 +139,7 @@ static void amvdec_pg_enable(bool enable)
 #if MESON_CPU_TYPE >= MESON_CPU_TYPE_MESON6TVD
 static void amvdec2_pg_enable(bool enable)
 {
-    if (HAS_VDEC2) 
+    if (HAS_VDEC2)
     {
         ulong timeout;
         if(!vdec_on(VDEC_2))
@@ -269,7 +269,7 @@ static s32 am_loadmc_ex(const char*name,char *def,s32(* load)(const u32 *))
 		return -1;
 	}
     if ((err=(*load)((u32*)pmc_addr)) < 0) {
-    	return err;
+	return err;
     }
     if(mc_addr)
        kfree(mc_addr);
@@ -324,7 +324,7 @@ s32 amvdec_loadmc(const u32 *p)
 #ifndef AMVDEC_USE_STATIC_MEMORY
     kfree(mc_addr);
     mc_addr = NULL;
-#endif	
+#endif
 
     return ret;
 }
@@ -388,7 +388,7 @@ s32 amvdec2_loadmc(const u32 *p)
 
         return ret;
     }
-    else 
+    else
     {
         return 0;
     }
@@ -507,7 +507,7 @@ s32 amhevc_loadmc_ex(const char*name, char *def)
 {
     if (HAS_HEVC_VDEC)
         return am_loadmc_ex(name, def, &amhevc_loadmc);
-    else 
+    else
         return 0;
 }
 #endif
@@ -743,7 +743,7 @@ int amvdec_suspend(struct platform_device *dev, pm_message_t event)
     amvdec_pg_enable(false);
 
 #if MESON_CPU_TYPE >= MESON_CPU_TYPE_MESON6TVD
-    if (HAS_VDEC2) { 
+    if (HAS_VDEC2) {
         amvdec2_pg_enable(false);
     }
 #endif
@@ -770,7 +770,7 @@ int amvdec_resume(struct platform_device *dev)
         amhevc_pg_enable(true);
     }
 #endif
-    
+
     return 0;
 }
 
@@ -817,12 +817,12 @@ static int vdec_is_paused(void)
         }
     } else
 #endif
-    {    
+    {
         wp = READ_VREG(VLD_MEM_VIFIFO_WP);
         rp = READ_VREG(VLD_MEM_VIFIFO_RP);
         level = READ_VREG(VLD_MEM_VIFIFO_LEVEL);
     }
-    
+
     if ((rp == old_rp && level > 1024) || /*have data,but output buffer is full */
         (rp == old_rp && wp == old_wp && level == level)) { /*no write && not read*/
         paused_time++;
@@ -857,13 +857,13 @@ static void vdec_paused_check_timer(unsigned long arg)
     if (video_stated_changed) {
         if (!video_running) {
             if (vdec_is_paused()) {
-        		printk("vdec paused and release wakelock now\n");
-        		amvdec_wake_unlock();
+			printk("vdec paused and release wakelock now\n");
+			amvdec_wake_unlock();
                 video_stated_changed=0;
-	    	}
+		}
          } else {
-	    	amvdec_wake_lock();
-            video_stated_changed=0; 
+		amvdec_wake_lock();
+            video_stated_changed=0;
         }
     }
     mod_timer(&amvdevtimer, jiffies + WAKE_CHECK_INTERVAL);
@@ -914,6 +914,8 @@ EXPORT_SYMBOL(amvdec_disable);
 #ifdef CONFIG_PM
 EXPORT_SYMBOL(amvdec_suspend);
 EXPORT_SYMBOL(amvdec_resume);
+EXPORT_SYMBOL(amhevc_suspend);
+EXPORT_SYMBOL(amhevc_resume);
 #endif
 
 MODULE_DESCRIPTION("Amlogic Video Decoder Utility Driver");

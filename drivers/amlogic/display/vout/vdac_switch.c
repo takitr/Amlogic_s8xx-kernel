@@ -1,5 +1,5 @@
 /*************************************************************
- * Amlogic 
+ * Amlogic
  * vdac switch program
  *
  * Copyright (C) 2010 Amlogic, Inc.
@@ -19,8 +19,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
  *
  * Author:   jets.yan@amlogic
- *		   
- *		   
+ *
+ *
  **************************************************************/
 #include <linux/version.h>
 #include <linux/module.h>
@@ -75,7 +75,7 @@ static inline int str2lower(char *dst, char *src, int length)
 
 #ifdef  CONFIG_PM
 static int  meson_vdac_switch_suspend(struct platform_device *pdev, pm_message_t state)
-{	
+{
 #ifdef CONFIG_HAS_EARLYSUSPEND
     if (early_suspend_flag)
         return 0;
@@ -93,7 +93,7 @@ static int  meson_vdac_switch_resume(struct platform_device *pdev)
 
 	return 0;
 }
-#endif 
+#endif
 
 
 #ifdef CONFIG_HAS_EARLYSUSPEND
@@ -136,7 +136,7 @@ static int vdac_switch_set_mode(unsigned char mode)
 
 /*****************************************************************
 **
-**	vout driver interface  
+**	vout driver interface
 **
 ******************************************************************/
 #define VDACSWITCH_CLASS_NAME "vdac_hw_switch"
@@ -190,7 +190,7 @@ static struct class_attribute vdacswitch_class_attrs[] =
     __ATTR_NULL
 };
 
-static struct class vdacswitch_class = 
+static struct class vdacswitch_class =
 {
     .name = VDACSWITCH_CLASS_NAME,
     .class_attrs = vdacswitch_class_attrs,
@@ -254,7 +254,7 @@ static int meson_vdac_switch_probe(struct platform_device *pdev)
     int val = 0;
     struct device_node *init_data;
 #endif
-	amlog_mask_level(LOG_MASK_INIT,LOG_LEVEL_HIGH,"start init vdac switch module \r\n");
+	amlog_mask_level(LOG_MASK_INIT,LOG_LEVEL_HIGH,"start init vdac switch module\n");
 #ifdef CONFIG_HAS_EARLYSUSPEND
     early_suspend.level = EARLY_SUSPEND_LEVEL_BLANK_SCREEN;
     early_suspend.suspend = meson_vdac_switch_early_suspend;
@@ -310,10 +310,10 @@ static int meson_vdac_switch_remove(struct platform_device *pdev)
 static struct platform_driver vdac_switch_driver = {
     .probe      = meson_vdac_switch_probe,
     .remove     = meson_vdac_switch_remove,
-#ifdef  CONFIG_PM      
+#ifdef  CONFIG_PM
     .suspend  =meson_vdac_switch_suspend,
     .resume    =meson_vdac_switch_resume,
-#endif    
+#endif
     .driver     = {
         .name   = DEVICE_NAME,
     }
@@ -322,14 +322,14 @@ static struct platform_driver vdac_switch_driver = {
 static int __init vdac_switch_init_module(void)
 {
 	int ret =0;
-    
+
     printk("%s\n", __func__);
-	if (platform_driver_register(&vdac_switch_driver)) 
+	if (platform_driver_register(&vdac_switch_driver))
 	{
-   		amlog_level(LOG_LEVEL_HIGH,"failed to register vdac switch driver\n");
-    	ret= -ENODEV;
+		amlog_level(LOG_LEVEL_HIGH,"failed to register vdac switch driver\n");
+	ret= -ENODEV;
 	}
-	
+
 	return ret;
 }
 

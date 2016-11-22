@@ -2509,15 +2509,15 @@ bool tvafe_adc_cal(struct tvin_parm_s *parm, struct tvafe_cal_s *cal)
 			//  operand->lpf_b     = READ_APB_REG_BITS(ADC_REG_1A, ENLPFB_BIT,    ENLPFB_WID   );
 			//  operand->lpf_c     = READ_APB_REG_BITS(ADC_REG_1B, ENLPFC_BIT,    ENLPFC_WID   );
 #ifdef CONFIG_ADC_CAL_SIGNALED
-			operand->pin_a_mux = READ_APB_REG_BITS(ADC_REG_17, 
+			operand->pin_a_mux = READ_APB_REG_BITS(ADC_REG_17,
 			        INMUXA_BIT, INMUXA_WID);
-			operand->pin_b_mux = READ_APB_REG_BITS(ADC_REG_17, 
+			operand->pin_b_mux = READ_APB_REG_BITS(ADC_REG_17,
 			        INMUXB_BIT, INMUXB_WID);
-			operand->pin_c_mux = READ_APB_REG_BITS(ADC_REG_18, 
+			operand->pin_c_mux = READ_APB_REG_BITS(ADC_REG_18,
 					INMUXC_BIT, INMUXC_WID);
 			//operand->sog_mux   = READ_APB_REG_BITS(ADC_REG_24,
-			//		INMUXSOG_BIT, INMUXSOG_WID);	
-#endif		
+			//		INMUXSOG_BIT, INMUXSOG_WID);
+#endif
 			operand->clk_ext   = READ_APB_REG_BITS(ADC_REG_58,
 					EXTCLKSEL_BIT, EXTCLKSEL_WID);
 			operand->clk_ctl   = READ_CBUS_REG(HHI_VAFE_CLKIN_CNTL);
@@ -2533,14 +2533,14 @@ bool tvafe_adc_cal(struct tvin_parm_s *parm, struct tvafe_cal_s *cal)
 			WRITE_APB_REG_BITS(ADC_REG_17, 1, INMUXB_BIT, INMUXB_WID);
 			WRITE_APB_REG_BITS(ADC_REG_18, 1, INMUXC_BIT, INMUXC_WID);
 			//WRITE_APB_REG_BITS(ADC_REG_24, 1, INMUXSOG_BIT, INMUXSOG_WID);
-#endif	
+#endif
 			// set clk_ext & clk_ctl
 			WRITE_APB_REG_BITS(ADC_REG_58, 1, EXTCLKSEL_BIT, EXTCLKSEL_WID);
 			if (!is_component){
 				WRITE_CBUS_REG(HHI_VAFE_CLKIN_CNTL , 0x00000100); //vga
 			}else{
 				if(operand->cal_fmt_cnt == 0){
-	            	WRITE_CBUS_REG(HHI_VAFE_CLKIN_CNTL , 0x00000b00); //1080p
+			WRITE_CBUS_REG(HHI_VAFE_CLKIN_CNTL , 0x00000b00); //1080p
 	            }else if(operand->cal_fmt_cnt == 1){
 					WRITE_CBUS_REG(HHI_VAFE_CLKIN_CNTL , 0x00000b01); //720p,1080i
 				}else{
@@ -3314,4 +3314,3 @@ void tvafe_enable_module(bool enable)
 		WRITE_CBUS_REG(HHI_TVFE_AUTOMODE_CLK_CNTL, 0);
 	}
 }
-

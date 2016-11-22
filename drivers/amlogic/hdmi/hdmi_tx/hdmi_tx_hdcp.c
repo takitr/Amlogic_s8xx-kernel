@@ -47,7 +47,7 @@ static int hdmi_authenticated = -1;
 static int hdmi_hdcp_process = 1;   // default hdcp is on, if aksv is 0, then disable
 
 // Notic: the HDCP key setting has been moved to uboot
-// On MBX project, it is too late for HDCP get from 
+// On MBX project, it is too late for HDCP get from
 // other devices
 
 /* verify ksv, 20 ones and 20 zeroes*/

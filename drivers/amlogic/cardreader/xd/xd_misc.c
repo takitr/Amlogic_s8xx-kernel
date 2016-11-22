@@ -15,7 +15,7 @@ void xd_sm_start_timer(unsigned long time_value)
 int xd_sm_check_timer()
 {
 	cur_time = xd_sm_get_timer_tick();
-	
+
 	if(cur_time < start_time)
 	{
 		time_diff = XD_SM_MAX_TIMER_TICK - start_time + cur_time + 1;
@@ -24,19 +24,19 @@ int xd_sm_check_timer()
 	{
 		time_diff = cur_time - start_time;
 	}
-	
+
 	if(last_time_diff > time_diff)
 	{
 		overflow_cnt++;
 	}
 	last_time_diff = time_diff;
 
-#ifdef AML_ATHENA	
+#ifdef AML_ATHENA
 	time_diff += (overflow_cnt << 24);
 #else
 	time_diff += (overflow_cnt << 16);
 #endif
-	
+
 	if(time_diff >= timeout_value)
 	{
 		timeout_flag = 1;
@@ -151,7 +151,7 @@ void ecc_trans_result(unsigned char reg2, unsigned char reg3, unsigned char *ecc
     unsigned char a;					// Working for reg2, reg3
     unsigned char b;					// Working for ecc1, ecc2
     unsigned char i;					// For counting
-    
+
     a = BIT7; b = BIT7;
     *ecc1 = *ecc2 = 0;					// Clear ecc1, ecc2
     for(i=0; i<4; ++i)
@@ -191,7 +191,7 @@ void ecc_calculate_ecc(unsigned char *table, unsigned char *data, unsigned char 
     unsigned char reg1;					// D-all, CP5, CP4, CP3,...
     unsigned char reg2;					// LP14, 12, 10,...
     unsigned char reg3;					// LP15, 13, 11,...
-    
+
     reg1 = reg2 = reg3 = 0;				// Clear parameter
     for(i=0; i<256; i++)
     {
@@ -203,7 +203,7 @@ void ecc_calculate_ecc(unsigned char *table, unsigned char *data, unsigned char 
             reg2 ^= ~((unsigned char)i);// XOR with inv. of counter
         }
     }
-    
+
     // Trans LP14, 12, 10,... & LP15, 13, 11,... -> LP15, 14, 13,... & LP7, 6, 5,...
     ecc_trans_result(reg2,reg3,ecc1,ecc2);
 
@@ -225,15 +225,15 @@ unsigned char ecc_correct_data(unsigned char *data, unsigned char *data_ecc, uns
 	unsigned char add;					// Byte address of cor. DATA
 	unsigned char b;					// Working for bit
 	unsigned char bit;					// Bit address of cor. DATA
-	
+
 	d1 = ecc1 ^ data_ecc[1];//data[257];	// Compare LP's
 	d2 = ecc2 ^ data_ecc[0];//data[256];
 	d3 = ecc3 ^ data_ecc[2];//data[258];	// Compare CP's
 	d = ((unsigned long)d1 << 16) + ((unsigned long)d2 << 8) + (unsigned long)d3; // Result for comparison
-	
+
 	if(d == 0)							// if No error, return
 		return 0;
-		
+
 	if(((d ^ (d >> 1)) & CORRECTABLE) == CORRECTABLE)	// if correctable
 	{
 		l = BIT23;
@@ -257,15 +257,15 @@ unsigned char ecc_correct_data(unsigned char *data, unsigned char *data_ecc, uns
 		}
 		b = BIT0;
 		data[add] ^= (b << bit);		// Put corrected data
-		
+
 		return 1;
 	}
-	
+
 	i = 0;								// Clear count
 	d &= 0x00FFFFFF;					// Masking
 	while(d)							// if d=0 finish counting
 	{
-		if(d & BIT0)					// Clear number of 1 bit				
+		if(d & BIT0)					// Clear number of 1 bit
 			++i;
 		d >>= 1;						// Right shift
 	}
@@ -277,9 +277,9 @@ unsigned char ecc_correct_data(unsigned char *data, unsigned char *data_ecc, uns
 		data_ecc[1] = ecc1;				// Put right ECC code
 		data_ecc[0] = ecc2;
 		data_ecc[2] = ecc3;
-		
+
 		return 2;						// ECC error
 	}
-	
+
 	return 3;							// Uncorrectable error
 }

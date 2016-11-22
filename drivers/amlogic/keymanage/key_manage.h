@@ -66,7 +66,7 @@ struct key_info_t{
 #endif
 
 
-typedef struct 
+typedef struct
 {
     struct cdev cdev;
     unsigned int flags;
@@ -81,4 +81,3 @@ extern int unifykey_count_key(void);
 extern char unifykey_get_efuse_version(void);
 
 #endif
-

@@ -51,12 +51,12 @@ static inline void enable_watchdog(unsigned int timeout)
 {
 	pr_info("** enable watchdog\n");
 	aml_write_reg32(P_WATCHDOG_RESET, 0);
-	aml_write_reg32(P_WATCHDOG_TC, 1 << WATCHDOG_ENABLE_BIT |(timeout|WATCHDOG_COUNT_MASK));
+	aml_write_reg32(P_WATCHDOG_TC, 1 << WATCHDOG_ENABLE_BIT  | (timeout & WATCHDOG_COUNT_MASK));
 }
 static inline void reset_watchdog(void)
 {
 	pr_debug("** reset watchdog\n");
-	aml_write_reg32(P_WATCHDOG_RESET, 0);	
+	aml_write_reg32(P_WATCHDOG_RESET, 0);
 }
 #ifdef CONFIG_AML_WDT
 extern struct aml_wdt_dev *awdtv;

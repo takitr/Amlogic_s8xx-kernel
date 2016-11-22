@@ -64,18 +64,18 @@ struct vframe_provider_s * vf_get_provider_by_name(const char *provider_name)
         }
         if(i == MAX_PROVIDER_NUM){
             p = NULL;
-        } 
+        }
     }
     return p;
 }
- 
+
 struct vframe_provider_s * vf_get_provider(const char *receiver_name)
 {
     struct vframe_provider_s *p = NULL;
     char* provider_name;
 
     provider_name = vf_get_provider_name( receiver_name);
-    
+
     p = vf_get_provider_by_name(provider_name);
     return p;
 }
@@ -132,7 +132,7 @@ int vf_reg_provider(struct vframe_provider_s *prov)
     }
     for(i=0; i<MAX_PROVIDER_NUM; i++){
         if(provider_table[i] == NULL){
-           provider_table[i] = prov; 
+           provider_table[i] = prov;
            break;
         }
     }
@@ -160,7 +160,7 @@ EXPORT_SYMBOL(vf_reg_provider);
 
 void vf_unreg_provider(struct vframe_provider_s *prov)
 {
-    vframe_provider_t *p = NULL; 
+    vframe_provider_t *p = NULL;
     vframe_receiver_t* receiver = NULL;
     int i;
     for(i=0; i<MAX_PROVIDER_NUM; i++){
@@ -189,7 +189,7 @@ EXPORT_SYMBOL(vf_unreg_provider);
 
 void vf_light_unreg_provider(struct vframe_provider_s *prov)
 {
-    vframe_provider_t *p = NULL; 
+    vframe_provider_t *p = NULL;
     vframe_receiver_t* receiver = NULL;
     int i;
     for(i=0; i<MAX_PROVIDER_NUM; i++){
@@ -212,7 +212,7 @@ EXPORT_SYMBOL(vf_light_unreg_provider);
 
 void vf_ext_light_unreg_provider(struct vframe_provider_s *prov)
 {
-    vframe_provider_t *p = NULL; 
+    vframe_provider_t *p = NULL;
     vframe_receiver_t* receiver = NULL;
     int i;
     for(i=0; i<MAX_PROVIDER_NUM; i++){
@@ -264,6 +264,3 @@ void vf_put(struct vframe_s *vf, const char *receiver)
     vfp->ops->put(vf, vfp->op_arg);
 }
 EXPORT_SYMBOL(vf_put);
-
-
-

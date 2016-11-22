@@ -35,7 +35,7 @@ struct ts_chip raydium_chip = {
 
 
 static int raydium_write_block(struct i2c_client *client, u8 addr, u8 *buf, int len)
-{ 
+{
     struct i2c_msg msg[2] = {
         [0] = {
             .addr = client->addr,
@@ -56,7 +56,7 @@ static int raydium_write_block(struct i2c_client *client, u8 addr, u8 *buf, int 
 
 
 static int raydium_read_block(struct i2c_client *client, u8 addr, u8 *buf, int len)
-{ 
+{
     struct i2c_msg msg[2] = {
         [0] = {
             .addr = client->addr,
@@ -71,7 +71,7 @@ static int raydium_read_block(struct i2c_client *client, u8 addr, u8 *buf, int l
             .buf = buf
         },
     };
-    
+
     return i2c_transfer(client->adapter, msg, ARRAY_SIZE(msg));
 }
 
@@ -91,7 +91,7 @@ int raydium_reset(struct device *dev)
 
     return 0;
 }
-    
+
 
 int raydium_calibration(struct device *dev)
 {
@@ -115,7 +115,7 @@ int raydium_get_event (struct device *dev, struct ts_event *event)
 
     memset(buf, 0, ARRAY_SIZE(buf));
     if (raydium_read_block(client, RAYDIUM_CMD_START,
-            buf, RAYDIUM_PACKET_SIZE) < 0) {    
+            buf, RAYDIUM_PACKET_SIZE) < 0) {
         /* i2c read failed */
         raydium_debug_info("raydium read i2c failed!\n");
         return -1;

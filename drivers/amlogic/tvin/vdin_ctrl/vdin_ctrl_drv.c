@@ -1,5 +1,5 @@
 /*
- * Amlogic M6 
+ * Amlogic M6
  * driver-----------VDIN CONTROL
  * Copyright (C) 2010 Amlogic, Inc.
  *
@@ -31,7 +31,7 @@
 #include <linux/platform_device.h>
 #include <linux/mutex.h>
 #include <linux/cdev.h>
-#include <linux/proc_fs.h> 
+#include <linux/proc_fs.h>
 #include <asm/uaccess.h>
 #include <mach/am_regs.h>
 #include "../tvin_global.h"
@@ -106,10 +106,10 @@ static void start_vdin(enum tvin_sig_fmt_e fmt);
 ******************************/
 
 static ssize_t show_enable(struct device * dev, struct device_attribute *attr, char * buf)
-{   
+{
     return sprintf(buf, "%d\n", vdinctrl_device.vdin_enable);
 }
-    
+
 static ssize_t store_enable(struct device * dev, struct device_attribute *attr, const char * buf, size_t count)
 {
     size_t r;
@@ -121,13 +121,13 @@ static ssize_t store_enable(struct device * dev, struct device_attribute *attr, 
     }
     vdin_enable = val&0xff;
     if(vdin_enable != vdinctrl_device.vdin_enable){
-        vdinctrl_device.vdin_enable = vdin_enable; 
+        vdinctrl_device.vdin_enable = vdin_enable;
         if(vdinctrl_device.vdin_enable == 1){
             //start_vdin(getHDMIRXHorzActive(), getHDMIRXVertActive(), 10000, IsHDMIRXInterlace());
         }
         else if(vdinctrl_device.vdin_enable == 0){
             //stop_vdin();
-        }  
+        }
     }
 
     return count;
@@ -135,10 +135,10 @@ static ssize_t store_enable(struct device * dev, struct device_attribute *attr, 
 
 
 static ssize_t show_poweron(struct device * dev, struct device_attribute *attr, char * buf)
-{   
+{
     return sprintf(buf, "%d\n", vdinctrl_device.fe_enable);
 }
-    
+
 static ssize_t store_poweron(struct device * dev, struct device_attribute *attr, const char * buf, size_t count)
 {
     size_t r;
@@ -148,12 +148,12 @@ static ssize_t store_poweron(struct device * dev, struct device_attribute *attr,
         return -EINVAL;
     }
     if(val != vdinctrl_device.fe_enable){
-        vdinctrl_device.fe_enable = val; 
+        vdinctrl_device.fe_enable = val;
         if(vdinctrl_device.fe_enable == 1){
             vdinctrl_device.port = port;
         }
         else if(vdinctrl_device.fe_enable == 0){
-        }  
+        }
     }
 
     return count;
@@ -178,7 +178,7 @@ static ssize_t store_dbg(struct device * dev, struct device_attribute *attr, con
         vdinctrl_device.task_pause = 0;
         printk("Start %s\n", __func__);
     }
-    return 16;    
+    return 16;
 }
 
 static DEVICE_ATTR(enable, S_IWUSR | S_IRUGO, show_enable, store_enable);
@@ -202,11 +202,11 @@ enum tvin_sig_fmt_e  vdin_ctrl_get_fmt(int no);
 
 static void update_status(unsigned char clear)
 {
-}    
+}
 
 
-static int 
-fe_ctrl_task_handle(void *data) 
+static int
+fe_ctrl_task_handle(void *data)
 {
 
     int stable_count = 0;
@@ -224,29 +224,29 @@ fe_ctrl_task_handle(void *data)
             case FE_STATE_POWEROFF:
                 if(vdinctrl_device.fe_enable){
                     vdin_ctrl_open_fe(0, vdinctrl_device.port);
-                    vdinctrl_device.state = FE_STATE_POWERON;    
+                    vdinctrl_device.state = FE_STATE_POWERON;
                 }
-                
+
                 break;
             case FE_STATE_POWERON:
                 if(vdinctrl_device.fe_enable == 0){
                     vdin_ctrl_close_fe(0);
-                    vdinctrl_device.state = FE_STATE_POWEROFF;    
+                    vdinctrl_device.state = FE_STATE_POWEROFF;
                 }
                 else if(tvin_get_sm_status(0)==TVIN_SM_STATUS_STABLE){
                     stable_count = 0;
-                    vdinctrl_device.state = FE_STATE_STABLE;    
+                    vdinctrl_device.state = FE_STATE_STABLE;
                 }
                 break;
             case FE_STATE_STABLE:
                 if(vdinctrl_device.fe_enable == 0){
                     vdin_ctrl_close_fe(0);
                     update_status(1);
-                    vdinctrl_device.state = FE_STATE_POWEROFF;    
+                    vdinctrl_device.state = FE_STATE_POWEROFF;
                 }
                 else if(tvin_get_sm_status(0)!=TVIN_SM_STATUS_STABLE){
                     update_status(1);
-                    vdinctrl_device.state = FE_STATE_POWERON;    
+                    vdinctrl_device.state = FE_STATE_POWERON;
                 }
                 else{
                     update_status(0);
@@ -256,7 +256,7 @@ fe_ctrl_task_handle(void *data)
                     if((stable_count == stable_threshold)&&(vdinctrl_device.vdin_enable)){
                         vdinctrl_device.fmt = vdin_ctrl_get_fmt(0);
                         start_vdin(vdinctrl_device.fmt);
-                        vdinctrl_device.state = FE_STATE_READY;    
+                        vdinctrl_device.state = FE_STATE_READY;
                     }
                 }
 
@@ -266,31 +266,31 @@ fe_ctrl_task_handle(void *data)
                     vdin_ctrl_stop_fe(0);
                     vdin_ctrl_close_fe(0);
                     update_status(1);
-                    vdinctrl_device.state = FE_STATE_POWEROFF;    
+                    vdinctrl_device.state = FE_STATE_POWEROFF;
                 }
                 else if(tvin_get_sm_status(0)!=TVIN_SM_STATUS_STABLE){
                     vdin_ctrl_stop_fe(0);
                     update_status(1);
-                    vdinctrl_device.state = FE_STATE_POWERON;    
+                    vdinctrl_device.state = FE_STATE_POWERON;
                 }
                 else if(vdinctrl_device.vdin_enable == 0){
                     vdin_ctrl_stop_fe(0);
-                    vdinctrl_device.state = FE_STATE_STABLE;    
+                    vdinctrl_device.state = FE_STATE_STABLE;
                 }
                 else{
                     update_status(0);
                 }
                 break;
         }
-        
+
         if(pre_state != vdinctrl_device.state){
             printk("[VDIN CTRL State] %s -> %s\n", state_name[pre_state], state_name[vdinctrl_device.state]);
         }
 
         msleep(10);
 
-    } 
-}    
+    }
+}
 
 
 static void start_vdin(enum tvin_sig_fmt_e fmt)
@@ -299,12 +299,12 @@ static void start_vdin(enum tvin_sig_fmt_e fmt)
     vdin_parm_t para;
     if(vdinctrl_device.vdin_enable == 0){
         return;
-    }    
-    
+    }
+
         //vdinctrl_device.cur_width = width;
         //vdinctrl_device.cur_height = height;
         //vdinctrl_device.cur_frame_rate = frame_rate;
-        
+
         memset( &para, 0, sizeof(para));
 #if 1
         para.port  = vdinctrl_device.port;
@@ -315,7 +315,7 @@ static void start_vdin(enum tvin_sig_fmt_e fmt)
         para.h_active = 1280;
         para.v_active = 720;
         para.fmt = TVIN_SIG_FMT_MAX+1;
-        para.scan_mode = TVIN_SCAN_MODE_PROGRESSIVE;	
+        para.scan_mode = TVIN_SCAN_MODE_PROGRESSIVE;
         para.hsync_phase = 1;
         para.vsync_phase = 0;
         //para.hs_bp = 0;
@@ -326,17 +326,17 @@ static void start_vdin(enum tvin_sig_fmt_e fmt)
 
         vdin_ctrl_start_fe(0, &para);
 
-        printk("%s: fmt %x\n", __func__, para.fmt);        
+        printk("%s: fmt %x\n", __func__, para.fmt);
         //printk("%s: %dx%d %d/s\n", __func__, width, height, frame_rate);
-        
-        vdinctrl_device.aud_info.real_sample_rate = audio_sample_freq;                    
+
+        vdinctrl_device.aud_info.real_sample_rate = audio_sample_freq;
 
 }
 
 
 /*****************************
-*    vdin_ctrl driver file_operations 
-*    
+*    vdin_ctrl driver file_operations
+*
 ******************************/
 static int vdinctrl_open(struct inode *node, struct file *file)
 {
@@ -409,11 +409,11 @@ static int vdinctrl_probe(struct platform_device *pdev)
     cdev_add(&(vdinctrl_device.cdev), vdinctrl_id, VDIN_CTRL_COUNT);
 
     //vdinctrl_dev = device_create(vdinctrl_class, NULL, vdinctrl_id, "vdin_ctrl%d", 0);
-    vdinctrl_dev = device_create(vdinctrl_class, NULL, vdinctrl_id, NULL, "vdin_ctrl%d", 0); //kernel>=2.6.27 
+    vdinctrl_dev = device_create(vdinctrl_class, NULL, vdinctrl_id, NULL, "vdin_ctrl%d", 0); //kernel>=2.6.27
     device_create_file(vdinctrl_dev, &dev_attr_enable);
     device_create_file(vdinctrl_dev, &dev_attr_poweron);
     device_create_file(vdinctrl_dev, &dev_attr_debug);
-    
+
     if (vdinctrl_dev == NULL) {
         pr_error("device_create create error\n");
         class_destroy(vdinctrl_class);
@@ -421,11 +421,11 @@ static int vdinctrl_probe(struct platform_device *pdev)
         return r;
     }
     vdinctrl_device.task = kthread_run(fe_ctrl_task_handle, &vdinctrl_device, "kthread_hdmi");
-    
+
 	if (r < 0){
 		printk(KERN_ERR "vdin_ctrl: register switch dev failed\n");
 		return r;
-	}    
+	}
 
     return r;
 }
@@ -433,7 +433,7 @@ static int vdinctrl_probe(struct platform_device *pdev)
 static int vdinctrl_remove(struct platform_device *pdev)
 {
     kthread_stop(vdinctrl_device.task);
-    
+
     //vdinctrl_remove();
     /* Remove the cdev */
     device_remove_file(vdinctrl_dev, &dev_attr_enable);
@@ -488,7 +488,7 @@ static int  __init vdinctrl_init(void)
         pr_error("failed to alloc vdin_ctrl_device\n");
         return -ENOMEM;
     }
-    
+
     if(platform_device_add(vdin_ctrl_device)){
         platform_device_put(vdin_ctrl_device);
         pr_error("failed to add vdin_ctrl_device\n");
@@ -496,7 +496,7 @@ static int  __init vdinctrl_init(void)
     }
     if (platform_driver_register(&vdinctrl_driver)) {
         pr_error("failed to register vdin_ctrl module\n");
-        
+
         platform_device_del(vdin_ctrl_device);
         platform_device_put(vdin_ctrl_device);
         return -ENODEV;
@@ -511,7 +511,7 @@ static void __exit vdin_ctrl_exit(void)
 {
     pr_dbg("vdin_ctrl_exit\n");
     platform_driver_unregister(&vdinctrl_driver);
-    platform_device_unregister(vdin_ctrl_device); 
+    platform_device_unregister(vdin_ctrl_device);
     vdin_ctrl_device = NULL;
     return ;
 }

@@ -1,7 +1,7 @@
 /* drivers/input/misc/cm3232.c - cm3232 optical sensors driver
  *
  * Copyright (C) 2011 Capella Microsystems Inc.
- * Author: Frank Hsieh <pengyueh@gmail.com>   
+ * Author: Frank Hsieh <pengyueh@gmail.com>
  *
  * This software is licensed under the terms of the GNU General Public
  * License version 2, as published by the Free Software Foundation, and
@@ -51,7 +51,7 @@ struct cm3232_info {
 	struct input_dev *ls_input_dev;
 	atomic_t delay;
 	atomic_t enable;
-#ifdef CONFIG_HAS_EARLYSUSPEND	
+#ifdef CONFIG_HAS_EARLYSUSPEND
 	struct early_suspend early_suspend;
 #endif
 	struct i2c_client *i2c_client;
@@ -85,8 +85,8 @@ static int I2C_RxData(uint16_t slaveAddr, uint8_t *rxData, int length)
 {
 	uint8_t loop_i;
   uint8_t subaddr[1];
-  
-  
+
+
 	struct i2c_msg msg[] = {
 		{
 		 .addr = slaveAddr,
@@ -117,7 +117,7 @@ static int I2C_RxData(uint16_t slaveAddr, uint8_t *rxData, int length)
 		return -EIO;
 	}
 
-	return 0; 
+	return 0;
 }
 
 static int I2C_TxData(uint16_t slaveAddr, uint8_t *txData, int length)
@@ -180,7 +180,7 @@ static int _cm3232_I2C_Write_Byte(uint16_t SlaveAddress,
 	char buffer[2];
 	int ret = 0;
 
-	buffer[0] = CM3232_ALS_COMMAND_CODE; 
+	buffer[0] = CM3232_ALS_COMMAND_CODE;
 	buffer[1] = data;
 #if 0
 	/* Debug use */
@@ -200,9 +200,9 @@ static int _cm3232_I2C_Write_Byte(uint16_t SlaveAddress,
 
 static int get_ls_adc_value(uint16_t *als_step, bool resume)
 {
-	uint32_t tmpResult;	
+	uint32_t tmpResult;
 	int ret = 0;
-	struct cm3232_info *lpi = lp_info;	
+	struct cm3232_info *lpi = lp_info;
 
 	if (als_step == NULL)
 		return -EFAULT;
@@ -221,7 +221,7 @@ static int get_ls_adc_value(uint16_t *als_step, bool resume)
 		if (tmpResult > 0xFFFF)
 			*als_step = 0xFFFF;
 		else
-		  *als_step = tmpResult;  			
+		  *als_step = tmpResult;
 	}
 
 	D("[LS][CM3232] %s: raw adc = 0x%X\n",
@@ -240,29 +240,29 @@ static void report_lsensor_input_event(struct cm3232_info *lpi, bool resume)
 	ret = get_ls_adc_value(&adc_value, resume);
 
   if( lpi->ls_calibrate ) {
-  	for (i = 0; i < 10; i++) {
-  		if (adc_value <= (*(lpi->cali_table + i))) {
-  			level = i;
-  			if (*(lpi->cali_table + i))
-  				break;
-  		}
-  		if ( i == 9) {/*avoid  i = 10, because 'cali_table' of size is 10 */
-  			level = i;
-  			break;
-  		}
-  	}
+	for (i = 0; i < 10; i++) {
+		if (adc_value <= (*(lpi->cali_table + i))) {
+			level = i;
+			if (*(lpi->cali_table + i))
+				break;
+		}
+		if ( i == 9) {/*avoid  i = 10, because 'cali_table' of size is 10 */
+			level = i;
+			break;
+		}
+	}
   } else {
-  	for (i = 0; i < 10; i++) {
-  		if (adc_value <= (*(lpi->adc_table + i))) {
-  			level = i;
-  			if (*(lpi->adc_table + i))
-  				break;
-  		}
-  		if ( i == 9) {/*avoid  i = 10, because 'cali_table' of size is 10 */
-  			level = i;
-  			break;
-  		}
-  	}
+	for (i = 0; i < 10; i++) {
+		if (adc_value <= (*(lpi->adc_table + i))) {
+			level = i;
+			if (*(lpi->adc_table + i))
+				break;
+		}
+		if ( i == 9) {/*avoid  i = 10, because 'cali_table' of size is 10 */
+			level = i;
+			break;
+		}
+	}
 	}
 
 	if ((i == 0) || (adc_value == 0))
@@ -289,8 +289,8 @@ static void report_lsensor_input_event(struct cm3232_info *lpi, bool resume)
 static void report_do_work(struct work_struct *work)
 {
 	struct cm3232_info *lpi = lp_info;
-	
- 	if (enable_log)
+
+	if (enable_log)
 		D("[CM3232] %s\n", __func__);
 
 	report_lsensor_input_event(lpi, 0);
@@ -345,10 +345,10 @@ static int lightsensor_update_table(struct cm3232_info *lpi)
 		tmpData[i] = (uint32_t)(*(lpi->adc_table + i))
 				* lpi->als_kadc / lpi->als_gadc ;
 		if( tmpData[i] <= 0xFFFF ){
-      lpi->cali_table[i] = (uint16_t) tmpData[i];		
+      lpi->cali_table[i] = (uint16_t) tmpData[i];
     } else {
-      lpi->cali_table[i] = 0xFFFF;    
-    }         
+      lpi->cali_table[i] = 0xFFFF;
+    }
 		D("[LS][CM3232] %s: Calibrated adc_table: data[%d], %x\n",
 			__func__, i, lpi->cali_table[i]);
 	}
@@ -363,7 +363,7 @@ static int lightsensor_enable(struct cm3232_info *lpi)
 
 	mutex_lock(&als_enable_mutex);
 	D("[LS][CM3232] %s\n", __func__);
-  
+
 	cmd = CM3232_ALS_IT_200ms | CM3232_ALS_HS_HIGH ;
 	ret = _cm3232_I2C_Write_Byte(CM3232_SLAVE_addr, cmd);
 	if (ret < 0)
@@ -379,12 +379,12 @@ static int lightsensor_enable(struct cm3232_info *lpi)
 		input_report_abs(lpi->ls_input_dev, ABS_MISC, -1);
 		input_sync(lpi->ls_input_dev);
 		report_lsensor_input_event(lpi, 1);/*resume, IOCTL and DEVICE_ATTR*/
-		lpi->als_enable = 1;		
+		lpi->als_enable = 1;
 	}
        queue_delayed_work(lpi->lp_wq, &report_work, lpi->polling_delay);
        lpi->als_enable=1;
 	mutex_unlock(&als_enable_mutex);
-	
+
 	return ret;
 }
 
@@ -406,11 +406,11 @@ static int lightsensor_disable(struct cm3232_info *lpi)
 		lpi->als_enable = 0;
 	}
 
- 	cancel_delayed_work_sync(&report_work);
- 	 	
+	cancel_delayed_work_sync(&report_work);
+
   lpi->als_enable=0;
 	mutex_unlock(&als_disable_mutex);
-	
+
 	return ret;
 }
 
@@ -560,14 +560,14 @@ static ssize_t ls_poll_delay_store(struct device *dev,
 	struct cm3232_info *lpi = lp_info;
 
 	sscanf(buf, "%d", &new_delay);
-  
-	D("new delay = %d ms, old delay = %d ms \n", 
+
+	D("new delay = %d ms, old delay = %d ms \n",
   new_delay, jiffies_to_msecs(lpi->polling_delay));
 
   lpi->polling_delay = msecs_to_jiffies(new_delay);
 
   if( lpi->als_enable ){
-		lightsensor_disable(lpi); 
+		lightsensor_disable(lpi);
 		lightsensor_enable(lpi);
   }
 
@@ -604,17 +604,17 @@ static ssize_t ls_kadc_store(struct device *dev,
   if(kadc_temp != 0) {
 		lpi->als_kadc = kadc_temp;
 		if(  lpi->als_gadc != 0){
-  		if (lightsensor_update_table(lpi) < 0)
+		if (lightsensor_update_table(lpi) < 0)
 				printk(KERN_ERR "[LS][CM3232 error] %s: update ls table fail\n", __func__);
-  	} else {
+	} else {
 			printk(KERN_INFO "[LS]%s: als_gadc =0x%x wait to be set\n",
 					__func__, lpi->als_gadc);
-  	}		
+	}
 	} else {
 		printk(KERN_INFO "[LS]%s: als_kadc can't be set to zero\n",
 				__func__);
 	}
-				
+
 	mutex_unlock(&als_get_adc_mutex);
 	return count;
 }
@@ -643,17 +643,17 @@ static ssize_t ls_gadc_store(struct device *dev,
 			__func__, kadc_temp, lpi->golden_adc);
 		return -EINVAL;
 	}*/
-	
+
 	mutex_lock(&als_get_adc_mutex);
   if(gadc_temp != 0) {
 		lpi->als_gadc = gadc_temp;
 		if(  lpi->als_kadc != 0){
-  		if (lightsensor_update_table(lpi) < 0)
+		if (lightsensor_update_table(lpi) < 0)
 				printk(KERN_ERR "[LS][CM3232 error] %s: update ls table fail\n", __func__);
-  	} else {
+	} else {
 			printk(KERN_INFO "[LS]%s: als_kadc =0x%x wait to be set\n",
 					__func__, lpi->als_kadc);
-  	}		
+	}
 	} else {
 		printk(KERN_INFO "[LS]%s: als_gadc can't be set to zero\n",
 				__func__);
@@ -802,7 +802,7 @@ static void cm3232_do_work(struct work_struct *work)
 	struct cm3232_info *lpi = lp_info;
 	unsigned long delay = msecs_to_jiffies(atomic_read(&lpi->delay));
 	printk("cm3232_do_work----->1111\n");
- 	if (enable_log)
+	if (enable_log)
 		D("[CM3232] %s\n", __func__);
 
 	report_lsensor_input_event(lpi, 0);
@@ -831,7 +831,7 @@ static int lightsensor_setup(struct cm3232_info *lpi)
 				__func__);
 		goto err_free_ls_input_device;
 	}
-	
+
 	ret = misc_register(&lightsensor_misc);
 	if (ret < 0) {
 		pr_err("[LS][CM3232 error]%s: can not register ls misc device\n",
@@ -857,22 +857,22 @@ static int cm3232_setup(struct cm3232_info *lpi)
 	printk("cm3232_setup-------->1111\n");
   ret = _cm3232_I2C_Write_Byte(CM3232_SLAVE_addr, CM3232_ALS_RESET);
   if(ret<0){
-  	printk("i2c write failed!\n");
-    return ret;  
-  	}
+	printk("i2c write failed!\n");
+    return ret;
+	}
   msleep(10);
       printk("cm3232_setup-------->2222\n");
   ret = _cm3232_I2C_Write_Byte(CM3232_SLAVE_addr, CM3232_ALS_IT_200ms | CM3232_ALS_HS_HIGH );
     if(ret<0){
-  	printk("i2c write failed!\n");
-	return ret;  
-  	}
+	printk("i2c write failed!\n");
+	return ret;
+	}
 	msleep(10);
 
 	return ret;
 }
 
-#ifdef CONFIG_HAS_EARLYSUSPEND	
+#ifdef CONFIG_HAS_EARLYSUSPEND
 static void cm3232_early_suspend(struct early_suspend *h)
 {
 	struct cm3232_info *lpi = lp_info;
@@ -924,7 +924,7 @@ static int cm3232_probe(struct i2c_client *client,
 	INIT_DELAYED_WORK(&lpi->work, cm3232_do_work);
 	atomic_set(&lpi->delay, LS_POLLING_DELAY);
 	atomic_set(&lpi->enable, 0);
-	
+
 	lp_info = lpi;
 
 	mutex_init(&als_enable_mutex);
@@ -937,17 +937,17 @@ static int cm3232_probe(struct i2c_client *client,
 			__func__);
 		goto err_lightsensor_setup;
 	}
- 
+
   //SET LUX STEP FACTOR HERE
   // if 1 lux equals to adc value 28
-  // the factor will be 1/28  
-  // and lpi->golden_adc = 1;  
+  // the factor will be 1/28
+  // and lpi->golden_adc = 1;
   // set als_kadc = (ALS_CALIBRATED <<16) | 28;
 
   als_kadc = (ALS_CALIBRATED <<16) | 28;
   lpi->golden_adc = 1;
 
-  //ls calibrate always set to 1 
+  //ls calibrate always set to 1
   lpi->ls_calibrate = 1;
 	lightsensor_set_kvalue(lpi);
 	ret = lightsensor_update_table(lpi);
@@ -998,7 +998,7 @@ static int cm3232_probe(struct i2c_client *client,
 #endif
        lpi->als_enable=0;
 	D("[CM3232] %s: Probe success!\n", __func__);
-	
+
 	//schedule_delayed_work(&lpi->work, 0);
 	return ret;
 
@@ -1056,5 +1056,3 @@ module_exit(cm3232_exit);
 MODULE_LICENSE("GPL");
 MODULE_DESCRIPTION("CM3232 Driver");
 MODULE_AUTHOR("Frank Hsieh <pengyueh@gmail.com>");
-
-

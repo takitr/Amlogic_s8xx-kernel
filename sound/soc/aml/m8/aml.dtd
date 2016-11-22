@@ -22,7 +22,7 @@
         dev_name = "aml_m8_codec.0";
         status = "okay";
     };
-#endif        
+#endif
 
 #ifdef CONFIG_SND_AML_M8
 //$$ DEVICE="aml_m8_sound_card"
@@ -51,9 +51,6 @@
         pinctrl-names = "aml_snd_m8";
         pinctrl-0 = <&audio_pins>;
         status = "okay";
-        
+
     };
 #endif
-
-
-

@@ -33,7 +33,7 @@ enum amcsi_status_e{
 
 typedef struct amcsi_dev_s{
         int                     index;
-        dev_t                   devt;           
+        dev_t                   devt;
         struct cdev             cdev;
         struct device          *dev;
         unsigned int            overflow_cnt;
@@ -43,7 +43,7 @@ typedef struct amcsi_dev_s{
         unsigned char           reset;
         unsigned int            reset_count;
         unsigned int            irq_num;
-        struct tvin_frontend_s  frontend; 
+        struct tvin_frontend_s  frontend;
         unsigned int            period;
         unsigned int            min_frmrate;
         struct timer_list       t;

@@ -1272,9 +1272,9 @@ void tvin_vdin_H_bar_detect(enum tvin_sig_fmt_e fmt, struct tvafe_adc_s *adc)
 
        // barhend--;
        if(!(cnt--)){
-        	barhstart++;
+		barhstart++;
 			cnt=4;
-       	}
+	}
 
         hleft1 = READ_CBUS_REG_BITS(VDIN_BLKBAR_IND_LEFT1_CNT,BLKBAR_LEFT1_CNT_BIT,BLKBAR_LEFT1_CNT_WID);
         hleft2 = READ_CBUS_REG_BITS(VDIN_BLKBAR_IND_LEFT2_CNT,BLKBAR_LEFT2_CNT_BIT,BLKBAR_LEFT2_CNT_WID);
@@ -1282,7 +1282,7 @@ void tvin_vdin_H_bar_detect(enum tvin_sig_fmt_e fmt, struct tvafe_adc_s *adc)
 		if(hleft1 >= (fmt_info_p->v_active>>black_bar_v1) && (hleft2 <= fmt_info_p->v_active>>black_bar_v2)){
                 adc->cmd_status = TVAFE_CMD_STATUS_SUCCESSFUL;
 				if(cnt==4)
-                	adc->vga_parm.hpos_step += (barhstart);
+			adc->vga_parm.hpos_step += (barhstart);
 				else
 					adc->vga_parm.hpos_step += (barhstart+1);
                 if(adc_dbg_en)
@@ -1831,4 +1831,3 @@ void tvafe_adc_get_param(struct tvin_parm_s *parm, struct tvafe_adc_s *adc)
 				vga_parm->clk_step, vga_parm->phase, vga_parm->hpos_step, vga_parm->vpos_step);
 
 }
-

@@ -938,7 +938,7 @@ static int gt81xx_late_upgrade(void *p)
 	printk("%s: load firmware\n", g_pdata->owner);
 	if(ts->use_irq)
 		enable_irq(i2c_connect_client->irq);
-	return 0;	
+	return 0;
 	//do_exit(0);
 }
 #endif

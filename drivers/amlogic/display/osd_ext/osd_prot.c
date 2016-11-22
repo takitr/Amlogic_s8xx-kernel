@@ -76,7 +76,7 @@ int osd_ext_set_prot(unsigned char   x_rev,
 			aml_set_reg32_bits(P_VIU2_OSD2_BLK0_CFG_W0, 1, 15, 1);//switch back to little endian
 			aml_write_reg32(P_VIU2_OSD2_PROT_CTRL,0);
 		}
-		
+
 		return 0;
 	}
 	if(osd_index==OSD1){
@@ -128,5 +128,4 @@ int osd_ext_set_prot(unsigned char   x_rev,
     aml_write_reg32(P_VPU_PROT1_REQ_ONOFF,    data32);
     aml_write_reg32(P_VPU_PROT1_CLK_GATE, 1); // Enable clock
     return 0;
-}   
-
+}

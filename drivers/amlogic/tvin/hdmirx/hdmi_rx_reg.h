@@ -1,6 +1,6 @@
 /*
  * hdmirx_rx_reg.h brief registers address in HDMI RX module.
- * 
+ *
  * Copyright (C) 2012 AMLOGIC, INC. All Rights Reserved.
  * Author: Rain Zhang <rain.zhang@amlogic.com>
  * Author: Xiaofei Zhu <xiaofei.zhu@amlogic.com>
@@ -11,7 +11,7 @@
  */
 
 #ifndef HDMI_RX_REG_H_
-#define HDMI_RX_REG_H_ 
+#define HDMI_RX_REG_H_
 
 #define HDMIRX_IRQ                              24
 

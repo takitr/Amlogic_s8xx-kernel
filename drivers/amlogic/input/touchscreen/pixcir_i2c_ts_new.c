@@ -22,7 +22,7 @@
  *
  */
 
-#include <linux/delay.h>   
+#include <linux/delay.h>
 #include <linux/module.h>
 #include <linux/interrupt.h>
 #include <linux/slab.h>
@@ -42,7 +42,7 @@ static void pixcir_i2c_ts_early_resume(struct early_suspend *handler);
 #define test_bit(dat, bitno) ((dat) & (1<<(bitno)))
 static int gpio_shutdown = 0;
 /*********************************Bee-0928-TOP****************************************/
-#define PIXCIR_DEBUG	0	
+#define PIXCIR_DEBUG	0
 
 #define SLAVE_ADDR		0x5c
 #define	BOOTLOADER_ADDR		0x5d
@@ -126,7 +126,7 @@ static int i2c_read_bytes(struct i2c_client *client, uint8_t *buf, int len)
 	msgs[1].addr=client->addr;
 	msgs[1].len=len;
 	msgs[1].buf=&buf[0];
-	
+
 	ret=i2c_transfer(client->adapter,msgs,2);
 	return ret;
 }
@@ -233,7 +233,7 @@ static void pixcir_reset(struct pixcir_i2c_ts_data *tsdata)
 }
 
 static void tangoc_reset(struct pixcir_i2c_ts_data *tsdata)
-{ 
+{
 
   gpio_out_high(tsdata->pdata->gpio_shutdown);
 	msleep(100);
@@ -251,7 +251,7 @@ static void pixcir_init(struct pixcir_i2c_ts_data *tsdata)
 }
 
 
-static int 
+static int
 
 pixcir_i2c_transfer(
 
@@ -263,7 +263,7 @@ pixcir_i2c_transfer(
 
 	while((retry-- )&&(cnt>0)){
 
-		
+
 
 								//down_interruptible(&i2c.wr_sem);
 
@@ -273,7 +273,7 @@ pixcir_i2c_transfer(
 
                 if(ret>0)break;
 
-                	 
+
 
 	}
 
@@ -335,12 +335,12 @@ static void pixcir_ts_poscheck(struct work_struct *work)
 	//int flage[5]={1,1,1,1,1};
 ret=pixcir_i2c_read(tsdata->client, rdbuf,1,rdbuf,27);
 if(ret<0)goto out;
-  
+
 	touch = rdbuf[0]&0x07;
 	if(touch>5)goto out;
 	button = rdbuf[1];
 	pixcir_dbg("touch=%d, button=%d\n ",touch,button);
-	
+
 	u32 button_changed = tsdata->button ^ button;
 	if (button_changed) {
 		tsdata->button = button;
@@ -348,7 +348,7 @@ if(ret<0)goto out;
 			if ((button_changed>>i)&1) {
 				input_report_key(tsdata->input, key_map[i], (tsdata->button>>i)&1);
 				pixcir_dbg("key(%d) %s\n", key_map[i], ((tsdata->button>>i)&1) ? "down":"up");
-			}	
+			}
 	}
 
 	p=&rdbuf[2];
@@ -357,10 +357,10 @@ if(ret<0)goto out;
 		slot_id = ((pix_id & 7)<<1) | ((pix_id & 8)>>3);
 		slotid[i]=slot_id;
 		//point_slot[slot_id].active = 1;
-		point_slot[slot_id].finger_id = pix_id;	
+		point_slot[slot_id].finger_id = pix_id;
 		point_slot[slot_id].posx = (*(p+1)<<8)+(*(p));
 		point_slot[slot_id].posy = (*(p+3)<<8)+(*(p+2));
-		
+
 		point_slot[slot_id].active = 1;
 		p+=5;
 		if(distance[i]==0)
@@ -368,7 +368,7 @@ if(ret<0)goto out;
 		  point_slot_back[i].posx=point_slot[slot_id].posx;
 
 		  point_slot_back[i].posy=point_slot[slot_id].posy;
-			
+
 		}
 		//printk("==slotid[%2d]=%2d\n",i,slot_id);
 	}
@@ -378,9 +378,9 @@ if(ret<0)goto out;
 	if(touch)
 
 		{
-		
+
 		for(i=0;i<touch;i++){
-		
+
 		x=(point_slot_back[i].posx-point_slot[slotid[i]].posx);
 
 		x=(x>0)?x:-x;
@@ -393,26 +393,26 @@ if(ret<0)goto out;
 		if(distance[i]){
 			if((temp<dist)&&(touch_flage[i]==0))
 				{
-	
+
 				point_slot[slotid[i]].posx=point_slot_back[i].posx;
 
-		 		point_slot[slotid[i]].posy=point_slot_back[i].posy;
+				point_slot[slotid[i]].posy=point_slot_back[i].posy;
 				//printk("report back\n");
 				}
-			  else 
+			  else
 			    touch_flage[i]=1;
 				}
-		else 
+		else
 			distance[i]=1;
-			
+
 			}
-		
+
 		 }
-	else 
+	else
 		{memset(distance,0,sizeof(distance));
-		memset(touch_flage,0,sizeof(touch_flage));		
+		memset(touch_flage,0,sizeof(touch_flage));
 		}
-	
+
 	if(touch) {
 		input_report_key(tsdata->input, BTN_TOUCH, 1);
 		//input_report_abs(tsdata->input, ABS_MT_TOUCH_MAJOR, 15);
@@ -435,7 +435,7 @@ if(ret<0)goto out;
 		input_report_abs(tsdata->input, ABS_MT_TOUCH_MAJOR, 0);
 		pixcir_dbg("finger up\n");
 	}
-	input_sync(tsdata->input); 
+	input_sync(tsdata->input);
 
 	for (i=0; i<MAX_FINGER_NUM*2; i++) {
 		if (point_slot[i].active == 0) {
@@ -444,7 +444,7 @@ if(ret<0)goto out;
 		}
 		point_slot[i].active = 0;
 	}
-out:	
+out:
 	enable_irq(tsdata->client->irq);
 	tsdata->irq_status = 1;
 	//work_pending =                0;
@@ -522,7 +522,7 @@ static int pixcir_i2c_ts_resume(struct device *dev)
 
 static SIMPLE_DEV_PM_OPS(pixcir_dev_pm_ops,
 			 pixcir_i2c_ts_suspend, pixcir_i2c_ts_resume);
-#endif 
+#endif
 static int __devinit pixcir_i2c_ts_probe(struct i2c_client *client,
 					 const struct i2c_device_id *id)
 {
@@ -578,7 +578,7 @@ static int __devinit pixcir_i2c_ts_probe(struct i2c_client *client,
 	//__set_bit(KEY_HOME, input->keybit);
 	__set_bit(KEY_HOMEPAGE,input->keybit);
 	__set_bit(KEY_BACK, input->keybit);
-	
+
 	input_set_abs_params(input, ABS_MT_TOUCH_MAJOR, 0, 255, 0, 0);
 	input_set_abs_params(input, ABS_MT_TRACKING_ID, 0, 255, 0, 0);
 	input_set_abs_params(input, ABS_MT_POSITION_X, tsdata->pdata->xmin, tsdata->pdata->xmax, 0, 0);
@@ -613,9 +613,9 @@ static int __devinit pixcir_i2c_ts_probe(struct i2c_client *client,
 	register_early_suspend(&tsdata->early_suspend);
 	printk("Register early_suspend done\n");
  #endif
-	  
+
 /*********************************Bee-0928-BOTTOM****************************************/
-		error = request_irq(client->irq, pixcir_ts_isr,	
+		error = request_irq(client->irq, pixcir_ts_isr,
 			    /*IRQF_TRIGGER_FALLING|*/IRQF_DISABLED,
 			    client->name, tsdata);
 	if (error) {
@@ -628,12 +628,12 @@ static int __devinit pixcir_i2c_ts_probe(struct i2c_client *client,
 	printk("insmod successfully!\n");
 	dev_err(&tsdata->client->dev, "insmod successfully!\n");
 	printk("irq=%d\n",client->irq);
-	
+
  pixcir_reset(tsdata);
- 	
+
 	unsigned char Rdbuf[10];
 	int ret;
- 	int  is_pixcir=true;
+	int  is_pixcir=true;
 	memset(Rdbuf, 0, sizeof(Rdbuf));
 	Rdbuf[0] = 0;
 	ret = i2c_read_bytes(tsdata->client, Rdbuf, 10);
@@ -675,16 +675,16 @@ printk("cancel_delayed_work_sync");
 	destroy_workqueue(pixcir_wq);
  pixcir_wq=NULL;
 //	dev_set_drvdata(&client->dev, NULL);
-printk("if (tsdata->input) "); 
+printk("if (tsdata->input) ");
  if (tsdata->input)
 	{
-printk("input_unregister_device\n"); 
+printk("input_unregister_device\n");
 		input_unregister_device(tsdata->input);
-printk("input_free_device\n"); 
+printk("input_free_device\n");
 		input_free_device(tsdata->input);
 	}
 	kfree(tsdata);
-	
+
 	return error;
 }
 
@@ -725,7 +725,7 @@ static int __devexit pixcir_i2c_ts_remove(struct i2c_client *client)
 static int pixcir_i2c_ts_suspend(struct i2c_client *client, pm_message_t mesg)
 {
 	unsigned char buf[2]={0x33, 0x03};
-	
+
 	struct pixcir_i2c_ts_data *tsdata = dev_get_drvdata(&client->dev);
 //	cancel_delayed_work_sync(&tsdata->work);
 	int ret = 0;
@@ -809,7 +809,7 @@ static int pixcir_open(struct inode *inode, struct file *file)
 	if (!adapter) {
 		return -ENODEV;
 	}
-	
+
 	client = kzalloc(sizeof(*client), GFP_KERNEL);
 
 	if (!client) {
@@ -820,7 +820,7 @@ static int pixcir_open(struct inode *inode, struct file *file)
 	snprintf(client->name, I2C_NAME_SIZE, "pixcir_i2c_ts%d", adapter->nr);
 	client->driver = &pixcir_i2c_ts_driver;
 	client->adapter = adapter;
-	
+
 	file->private_data = client;
 	return 0;
 }
@@ -839,7 +839,7 @@ static long pixcir_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 	switch (cmd)
 	{
 	case CALIBRATION_FLAG:	//CALIBRATION_FLAG = 1
-	
+
        #if PIXCIR_DEBUG
 		printk("CALIBRATION\n");
 #endif
@@ -859,12 +859,12 @@ static long pixcir_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 	case RESET_TP:		//RESET_TP = 9
 		pixcir_reset(tsdata);
 		break;
-		
+
 	case ENABLE_IRQ:	//ENABLE_IRQ = 10
 		status_reg = 0;
 		enable_irq(global_irq);
 		break;
-		
+
 	case DISABLE_IRQ:	//DISABLE_IRQ = 11
 		disable_irq_nosync(global_irq);
 		break;
@@ -975,30 +975,30 @@ static ssize_t pixcir_write(struct file *file,const char __user *buf,size_t coun
 		if (tmp==NULL)
 			return -ENOMEM;
 
-		if (copy_from_user(tmp,buf,count)) { 	
+		if (copy_from_user(tmp,buf,count)) {
 			dev_err(&client->dev,
 				"%s: CALIBRATION_FLAG: copy_from_user() failed.\n", __func__);
 			ret= -EFAULT;
 		}
-		
+
 		tmp[0]=0x3a;
 		int retry=3;
 		while(retry--){
   // 	printk("pixcir_i2c  calibration %2x,%2x,%2x \n",tmp[0],tmp[1],count);
 			ret = i2c_master_send(client,tmp, count);
-			if (ret==count )break; 
+			if (ret==count )break;
 				pixcir_reset(tsdata_glob);
 		}
 		if (ret!=count ) {
 			dev_err(&client->dev,
 				"%s: CALIBRATION: i2c_master_send() failed, ret=%d\n",
 				__func__, ret);
-		
+
 			ret= -EFAULT;
-			
+
 		}
 
-    msleep(2000);		
+    msleep(2000);
 		enable_irq(client->irq);
 		kfree(tmp);
 		break;
@@ -1026,13 +1026,13 @@ static ssize_t pixcir_write(struct file *file,const char __user *buf,size_t coun
 		if (tmp==NULL)
 			return -ENOMEM;
 
-		if (copy_from_user(tmp,buf,count)) { 	
+		if (copy_from_user(tmp,buf,count)) {
 			dev_err(&client->dev,
 				"%s: default: copy_from_user() failed.\n", __func__);
 			kfree(tmp);
 			return -EFAULT;
 		}
-		
+
 		ret = i2c_master_send(client,tmp,count);
 		if (ret!=count ) {
 			dev_err(&client->dev,
@@ -1138,4 +1138,3 @@ module_exit(pixcir_i2c_ts_exit);
 MODULE_AUTHOR("Jianchun Bian <jcbian@pixcir.com.cn>");
 MODULE_DESCRIPTION("Pixcir I2C Touchscreen Driver");
 MODULE_LICENSE("Pixcir Proprietary");
-

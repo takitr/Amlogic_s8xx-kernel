@@ -63,7 +63,7 @@ enum{
 };
 
 /* this level can be modified while runtime through system attribute */
-static int Log_level = 0; //|DEBUG_MSG|DEBUG_FUNC|DEBUG_DATA; 
+static int Log_level = 0; //|DEBUG_MSG|DEBUG_FUNC|DEBUG_DATA;
 
 #define MI_DATA(format, ...)  if(DEBUG_DATA&Log_level){printk(KERN_ERR MI_TAG "[DATA_S] " format " [DATA_E]" "\n", ## __VA_ARGS__);}
 #define MI_MSG(format, ...)   if(DEBUG_MSG&Log_level){printk(KERN_ERR MI_TAG format "\n", ## __VA_ARGS__);}
@@ -82,34 +82,34 @@ static int Log_level = 0; //|DEBUG_MSG|DEBUG_FUNC|DEBUG_DATA;
 #define PLATFORM_ELSE    8
 
 #define DEVICE_CREATE_BYSELF 0   // 1 means define device in this driver
-#define DEVICE_CREATE_BYPLATFORM 2  // 2 means define device in system file 
+#define DEVICE_CREATE_BYPLATFORM 2  // 2 means define device in system file
 /* --- DO NOT TRY TO MODIFY FOLLOWING DEFINE */
 
 
 /* chip related function configure */
 #define FILTER_AVERAGE_ENHANCE                    1
 //only take effect when FILTER_AVERAGE_ENHANCE open
-#define FILTER_AVERAGE_EX                         1 
+#define FILTER_AVERAGE_EX                         1
 #define MM3A310_OFFSET_TEMP_SOLUTION              1
 // whether to suppot auto calibrate while driver insatll, only take effect when MM3A310_OFFSET_TEMP_SOLUTION open
 #define MM3A310_AUTO_CALIBRAE					  0
 #define MM3A310_STK_TEMP_SOLUTION                 1
 //if corwork with miramems' msensor, this compiler option should be set to 1, and a special IOCTL will be supported
-#define COWORK_WITH_DM211                         0 	                    
+#define COWORK_WITH_DM211                         0
 
 #define TARGET_PLATFORM					PLATFORM_ELSE//PLATFORM_QUACOMM//PLATFORM_SPRD
 #define DEVICE_CREATE_MODE				DEVICE_CREATE_BYPLATFORM//DEVICE_CREATE_BYSELF //DEVICE_CREATE_BYPLATFORM
-                                                                        
-                                                                            
+
+
 /* --- chip related function configure */
 
 #if COWORK_WITH_DM211
 #define GSENSOR						   	0x85
 #define GSENSOR_IOCTL_READ_SENSORDATA       _IOR(GSENSOR, 0x03, int)
 static int gx, gy, gz;
-#endif    
+#endif
 /*
- * Defines       
+ * Defines
  */
 
 #if TARGET_PLATFORM == PLATFORM_QUACOMM
@@ -126,7 +126,7 @@ static int gx, gy, gz;
 #define ABSMAX_2G                       (GRAVITY_EARTH * 2)
 
 #define POLL_INTERVAL_MAX   500
-#define POLL_INTERVAL       35 
+#define POLL_INTERVAL       35
 #define INPUT_FUZZ          32
 #define INPUT_FLAT          32
 static int delayMs = 50;
@@ -145,7 +145,7 @@ static struct i2c_board_info mm3a310_i2c_boardinfo = {
 
 /* register enum for MM3A310 registers */
 enum {
-    
+
     MM3A310_PAGE_NO = 0x00,
     MM3A310_OSC_REG,
     MM3A310_TEST_REG1,
@@ -180,7 +180,7 @@ enum {
 
     MM3A310_FIFO_CTRL_REG,
     MM3A310_FIFO_SRC,
-    
+
     MM3A310_INT1_CFG,
     MM3A310_INT1_SRC,
     MM3A310_INT1_THS,
@@ -198,7 +198,7 @@ enum {
     MM3A310_TIME_LIMIT,
     MM3A310_TIME_LATENCY,
     MM3A310_TIME_WINDOW = 0x3d,
-    
+
     MM3A310_SOFT_RESET = 0x0105,
 
     MM3A310_OTP_FLAG = 0x0109,
@@ -227,7 +227,7 @@ enum {
     MM3A310_LPF_COEF_B1_H,
     MM3A310_LPF_COEF_B2_L,
     MM3A310_LPF_COEF_B2_H,
-    
+
     MM3A310_TEMP_OFF1,
     MM3A310_TEMP_OFF2,
     MM3A310_TEMP_OFF3,
@@ -248,7 +248,7 @@ struct mm3a310_status {
     u8 mode; /* Full Scale */
     u8 ctl_reg1; /* ODR */
     u8 temp_cfg_reg; /* Power down mode */
-    
+
     /* OTP Offset */
     u8 otp_xoff_l;
     u8 otp_xoff_h;
@@ -338,7 +338,7 @@ static bool bzstk = false;
 static void addAixHistory(short x,short y,short z){
     aixHistort[aixHistoryIndex++] = x;
     aixHistort[aixHistoryIndex++] = y;
-    aixHistort[aixHistoryIndex++] = z;    
+    aixHistort[aixHistoryIndex++] = z;
     aixHistoryIndex = (aixHistoryIndex)%(AIX_HISTORY_SIZE*3);
 }
 
@@ -350,8 +350,8 @@ static bool isXStick(void){
             break;
         }
     }
-    
-    return i == AIX_HISTORY_SIZE; 
+
+    return i == AIX_HISTORY_SIZE;
 }
 
 static bool isYStick(void){
@@ -361,7 +361,7 @@ static bool isYStick(void){
             break;
         }
     }
-    
+
     return i == AIX_HISTORY_SIZE;
 }
 
@@ -372,30 +372,30 @@ static bool isZStick(void){
             break;
         }
     }
-    
-    return i == AIX_HISTORY_SIZE; 
+
+    return i == AIX_HISTORY_SIZE;
 }
 
 static int squareRoot(int val){
     int r = 0;
     int shift;
-    
+
     if (val < 0){
         return 0;
     }
-    
+
     for(shift=0;shift<32;shift+=2)
-    { 
+    {
         int x=0x40000000l >> shift;
         if(x + r <= val)
-        { 
+        {
             val -= x + r;
             r = (r >> 1) | x;
-        } else{ 
+        } else{
             r = r >> 1;
         }
     }
-    
+
     return r;
 }
 #endif /* ! MM3A310_STK_TEMP_SOLUTION */
@@ -415,7 +415,7 @@ typedef struct FilterAverageContextTag{
 
     int refN_l;
     int refN_h;
-        
+
 }FilterAverageContext;
 
 static FilterAverageContext tFac[3]={{0}};
@@ -423,7 +423,7 @@ static FilterAverageContext tFac[3]={{0}};
 static short filter_average(short preAve, short sample, int paramN, int* refNum)
 {
  #if FILTER_AVERAGE_EX
-    if( abs(sample-preAve) > PEAK_LVL  && *refNum < 3  ){ 
+    if( abs(sample-preAve) > PEAK_LVL  && *refNum < 3  ){
          MI_DATA("Hit, sample = %d, preAve = %d, refN =%d\n", sample, preAve, *refNum);
          sample = preAve;
          (*refNum) ++;
@@ -431,7 +431,7 @@ static short filter_average(short preAve, short sample, int paramN, int* refNum)
          if (*refNum == 3){
                 preAve = sample;
          }
-         
+
          *refNum  = 0;
     }
 #endif
@@ -451,14 +451,14 @@ static int filter_average_enhance(FilterAverageContext* fac, short sample)
         fac->sample_l = fac->sample_h = filter_average(fac->sample_l, sample, fac->filter_param_l, &fac->refN_l);
     }else{
         fac->sample_l = filter_average(fac->sample_l, sample, fac->filter_param_l,  &fac->refN_l);
-        fac->sample_h= filter_average(fac->sample_h, sample, fac->filter_param_h, &fac->refN_h);  
+        fac->sample_h= filter_average(fac->sample_h, sample, fac->filter_param_h, &fac->refN_h);
         if (abs(fac->sample_l- fac->sample_h) > fac->filter_threhold){
-            MI_DATA("adjust, fac->sample_l = %d, fac->sample_h = %d\n", fac->sample_l, fac->sample_h); 
-            fac->sample_h = fac->sample_l;            
+            MI_DATA("adjust, fac->sample_l = %d, fac->sample_h = %d\n", fac->sample_l, fac->sample_h);
+            fac->sample_h = fac->sample_l;
         }
      }
 
-    return fac->sample_h;    
+    return fac->sample_h;
 }
 
 #endif /* ! FILTER_AVERAGE_ENHANCE */
@@ -471,8 +471,8 @@ static int filter_average_enhance(FilterAverageContext* fac, short sample)
 
 static int mm3a310_read_register(struct i2c_client *client, u16 reg)
 {
-    int ret = 0; 
-    int val; 
+    int ret = 0;
+    int val;
 
     mutex_lock(&mm3a310_rw_lock);
 
@@ -486,11 +486,11 @@ static int mm3a310_read_register(struct i2c_client *client, u16 reg)
     if(!ret)
         val = i2c_smbus_read_byte_data(client, REG_ADDR(reg));
     mutex_unlock(&mm3a310_rw_lock);
-    return (ret == 0 ? val : ret); 
+    return (ret == 0 ? val : ret);
 }
 
 static int mm3a310_write_register(struct i2c_client *client, u16 reg, u8 data)
-{   
+{
     int ret = 0;
     int val;
 
@@ -540,31 +540,31 @@ static int mm3a310_read_register_continuously(struct i2c_client *client, u16 bas
 static int mm3a310_set_enable(bool bEnable){
     struct i2c_client *client;
     int ret,rst;
-    u8  val;           
-    
+    u8  val;
+
     client = mm3a310_i2c_client;
-    rst = 0;    
+    rst = 0;
     MI_MSG(">>> mm3a310_set_enable(), bEnable = %d \n", bEnable);
 
 #if MM3A310_OFFSET_TEMP_SOLUTION
     manual_load_cali_file();
 #endif
-    
+
     val = mm3a310_read_register(client, MM3A310_TEMP_CFG_REG);
     if (val < 0){
         rst = -1; // write error
     }else{
         if(bEnable)
-        {  
-            ret = mm3a310_write_register(client, MM3A310_TEMP_CFG_REG, val&0xDF); 
-        }else{        
+        {
+            ret = mm3a310_write_register(client, MM3A310_TEMP_CFG_REG, val&0xDF);
+        }else{
             ret = mm3a310_write_register(client, MM3A310_TEMP_CFG_REG, val|0x20);
         }
-        
+
         rst = (ret == 0?0:-1);
     }
-    
-    MI_MSG ("<<< mm3a310_set_enable(), rst = %d \n", rst);    
+
+    MI_MSG ("<<< mm3a310_set_enable(), rst = %d \n", rst);
     return rst;
 }
 
@@ -572,22 +572,22 @@ static int mm3a310_get_enable(bool* bEnable){
     struct i2c_client *client;
     u8 val;
     int rst;
-        
+
     MI_MSG (">>> mm3a310_get_enable()\n");
-    
+
     if (bEnable == NULL){
         return -1;
     }
-    
+
     client = mm3a310_i2c_client;
-    
-    val = mm3a310_read_register(client, MM3A310_TEMP_CFG_REG); 
+
+    val = mm3a310_read_register(client, MM3A310_TEMP_CFG_REG);
     if (val < 0){
         rst = -1; // read error
     }else{
         *bEnable = (val&0x20)?0:1;
         rst = 0;
-    }     
+    }
 
     MI_MSG ("<<< mm3a310_get_enable(), rst = %d, *bEnable = %d \n", rst, *bEnable);
     return rst;
@@ -599,23 +599,23 @@ static int mm3a310_set_odr(int odr){
     int ret;
     u8  val;
     int rst;
-    
+
     client = mm3a310_i2c_client;
     MI_MSG (">>> mm3a310_set_odr(), odr =%d\n", odr);
-    
+
     // check odr param
     if (odr > 9 || odr < 0){
         return -1;
     }
-    
+
     val = mm3a310_read_register(client, MM3A310_CTRL_REG1);
     if (val < 0){
         rst = -1;
     }else{
-        ret = mm3a310_write_register(client, MM3A310_CTRL_REG1, (val&0x0F)|(odr<<4));  
-        rst = (ret == 0?0:-1);    
-    }   
-    
+        ret = mm3a310_write_register(client, MM3A310_CTRL_REG1, (val&0x0F)|(odr<<4));
+        rst = (ret == 0?0:-1);
+    }
+
     MI_MSG ("<<< mm3a310_set_odr(), rst =%d\n", rst);
     return rst;
 }
@@ -623,20 +623,20 @@ static int mm3a310_set_odr(int odr){
 static int mm3a310_get_odr(int* odr){
     int rst;
     struct i2c_client *client;
-    
+
     MI_MSG (">>> mm3a310_get_odr()\n");
     if (odr == NULL){
         return -1;
     }
     client = mm3a310_i2c_client;
-    
+
     *odr = mm3a310_read_register(client, MM3A310_CTRL_REG1);
     if (*odr < 0){
         rst = -1;
     }else{
         *odr = ((*odr)>>4)&0x0F;
         rst = 0;
-    } 
+    }
 
     MI_MSG ("<<< mm3a310_get_odr(), rst = %d, *odr = %d\n", rst, *odr);
     return rst;
@@ -647,22 +647,22 @@ static int mm3a310_set_grange(int newrange){
     struct i2c_client *client;
     short range;
     int rst;
-    
+
     MI_MSG (">>> mm3a310_set_grange(), newrange = %d\n", newrange);
     client = mm3a310_i2c_client;
-    
+
     range = mm3a310_read_register(client, MM3A310_CTRL_REG4);
     MI_MSG("range 1 = %d\n", range);
     if (range < 0){
         rst = -1;
     }else{
         range = (range&0xCF)|((newrange&0x03)<<4);
-        
+
         MI_MSG("range 2 = %d\n", range);
         ret = mm3a310_write_register(client, MM3A310_CTRL_REG4, range);
         rst = (ret == 0?0:-1);
     }
-    
+
     MI_MSG("<<< mm3a310_set_grange(), rst = %d\n", rst);
     return rst;
 }
@@ -670,13 +670,13 @@ static int mm3a310_set_grange(int newrange){
 static int mm3a310_get_grange(int* range){
     struct i2c_client *client;
     int rst;
-    
+
     MI_MSG(">>> mm3a310_get_grange() \n");
     if (range == NULL){
         return -1;
-    }    
+    }
     client = mm3a310_i2c_client;
-    
+
     *range = mm3a310_read_register(client, MM3A310_CTRL_REG4);
     MI_MSG("range 1 = %d\n", *range);
     if (*range < 0){
@@ -705,21 +705,21 @@ static void sensor_write_work( struct work_struct *work )
 		sys_write( fd, m_work_info.buffer, m_work_info.len );
 		sys_close( fd );
 	}
-#else    
+#else
     unsigned int orgfs;
     struct file *filep;
-    int ret;   
+    int ret;
     struct work_info* pWorkInfo;
 
     orgfs = get_fs();
     set_fs(KERNEL_DS);
 
     pWorkInfo = container_of((struct delayed_work*)work, struct work_info, write_work);
-    if (pWorkInfo == NULL){            
-            MI_ERR("get pWorkInfo failed!");       
+    if (pWorkInfo == NULL){
+            MI_ERR("get pWorkInfo failed!");
             return;
     }
-    
+
     filep = filp_open(OffsetFileName, O_RDWR|O_CREAT, 0600);
     if (IS_ERR(filep))
     {
@@ -727,15 +727,15 @@ static void sensor_write_work( struct work_struct *work )
         ret =  -1;
     }
     else
-    {   
+    {
         MI_DATA("@@@@@@@@@@@@@@tst1 = %s\n", pWorkInfo->tst1);
         MI_DATA("@@@@@@@@@@@@@@tst2 = %s\n", pWorkInfo->tst2);
         filep->f_op->write(filep, pWorkInfo->buffer, pWorkInfo->len, &filep->f_pos);
         filp_close(filep, NULL);
-        ret = 0;        
+        ret = 0;
     }
-    
-    set_fs(orgfs);   
+
+    set_fs(orgfs);
     pWorkInfo->rst = ret;
     complete( &pWorkInfo->completion );
 #endif
@@ -755,27 +755,27 @@ static void sensor_read_work( struct work_struct *work )
 #else
     unsigned int orgfs;
     struct file *filep;
-     int ret; 
+     int ret;
      struct work_info* pWorkInfo;
-        
+
     orgfs = get_fs();
     set_fs(KERNEL_DS);
 
     pWorkInfo = container_of((struct delayed_work*)work, struct work_info, read_work);
-    if (pWorkInfo == NULL){            
-            MI_ERR("get pWorkInfo failed!");       
+    if (pWorkInfo == NULL){
+            MI_ERR("get pWorkInfo failed!");
             return;
     }
-    
+
     filep = filp_open(OffsetFileName, O_RDONLY, 0600);
     if (IS_ERR(filep)){
         MI_ERR("read, sys_open %s error!!.\n",OffsetFileName);
         set_fs(orgfs);
         ret =  -1;
     }else{
-    
+
         filep->f_op->read(filep, pWorkInfo->buffer,  sizeof(pWorkInfo->buffer), &filep->f_pos);
-        filp_close(filep, NULL);    
+        filp_close(filep, NULL);
         set_fs(orgfs);
         ret = 0;
     }
@@ -792,7 +792,7 @@ static int sensor_sync_read( unsigned short *x, unsigned short *y, unsigned shor
 {
 	int err;
        struct work_info* pWorkInfo = &m_work_info;
-       
+
 	init_completion( &pWorkInfo->completion );
 
 	queue_delayed_work( pWorkInfo->wq, &(pWorkInfo->read_work), msecs_to_jiffies(0) );
@@ -806,12 +806,12 @@ static int sensor_sync_read( unsigned short *x, unsigned short *y, unsigned shor
               MI_ERR("work_info.rst  not equal 0");
               return pWorkInfo->rst;
        }
-    
+
        if ( sscanf( m_work_info.buffer, "%hu %hu %hu", x, y, z ) != 3 ){
-      	        MI_ERR("Get offset from file failed !\n");
-      	        return -1;
+	        MI_ERR("Get offset from file failed !\n");
+	        return -1;
        }
-       
+
 	return 0;
 }
 
@@ -820,12 +820,12 @@ static int sensor_sync_write( unsigned short x, unsigned short y, unsigned short
 	int err;
        char data[OFFSET_VAL_LEN];
        struct work_info* pWorkInfo = &m_work_info;
-       
+
 	init_completion( &pWorkInfo->completion );
       sprintf(data,"%4d %4d %4d", x, y, z);
-      memcpy( pWorkInfo->buffer, data, OFFSET_VAL_LEN ); 
+      memcpy( pWorkInfo->buffer, data, OFFSET_VAL_LEN );
       pWorkInfo->len = OFFSET_VAL_LEN;
-        
+
 	queue_delayed_work( pWorkInfo->wq, &pWorkInfo->write_work, msecs_to_jiffies(0) );
 	err = wait_for_completion_timeout( &pWorkInfo->completion, msecs_to_jiffies( 2000 ) );
 	if ( err == 0 ){
@@ -837,10 +837,10 @@ static int sensor_sync_write( unsigned short x, unsigned short y, unsigned short
               MI_ERR("work_info.rst  not equal 0");
               return pWorkInfo->rst;
        }
-    
+
       if (sscanf( pWorkInfo->buffer, "%hu %hu %hu", &x, &y, &z ) != 3 ){
-          	MI_ERR("Get offset from file failed !\n");
-          	return -1;
+		MI_ERR("Get offset from file failed !\n");
+		return -1;
       }
 	return 0;
 }
@@ -859,7 +859,7 @@ static int mm3a310_write_offset_to_file(unsigned short x, unsigned short y, unsi
 
     orgfs = get_fs();
     set_fs(KERNEL_DS);
-    
+
     filep = filp_open(OffsetFileName, O_WRONLY|O_CREAT, 0777);
     if (IS_ERR(filep))
     {
@@ -872,7 +872,7 @@ static int mm3a310_write_offset_to_file(unsigned short x, unsigned short y, unsi
         filp_close(filep, NULL);
         ret = 0;
     }
-    
+
     set_fs(orgfs);
     return ret;
 #endif
@@ -889,7 +889,7 @@ static int mm3a310_read_offset_from_file(unsigned short *x, unsigned short *y, u
     struct file *filep;
 
 
-        
+
     orgfs = get_fs();
     set_fs(KERNEL_DS);
 
@@ -899,7 +899,7 @@ static int mm3a310_read_offset_from_file(unsigned short *x, unsigned short *y, u
         set_fs(orgfs);
         return -1;
     }
-    
+
     filep->f_op->read(filep, data, OFFSET_VAL_LEN, &filep->f_pos);
     filp_close(filep, NULL);
 
@@ -908,10 +908,10 @@ static int mm3a310_read_offset_from_file(unsigned short *x, unsigned short *y, u
         set_fs(orgfs);
         MI_ERR("Get offset from file failed !\n");
         return -1;
-    }    
+    }
 
     MI_MSG("x_off = 0x%X, y_off = 0x%X, z_off = 0x%X\n", *x, *y, *z);
-    
+
     set_fs(orgfs);
 
     return 0;
@@ -947,11 +947,11 @@ static void mm3a310_write_offset(unsigned short x, unsigned short y, unsigned sh
 
 static void manual_load_cali_file(void){
 	static bool bLoad = false;
-	
+
 	unsigned short  offset[3];
-	
+
 	if (!bLoad){
-           MI_DATA("==== manual_load_cali_file(), bLoad = %d\n", bLoad); 
+           MI_DATA("==== manual_load_cali_file(), bLoad = %d\n", bLoad);
 	    if(!mm3a310_read_offset_from_file(&offset[0], &offset[1], &offset[2]))
 	    {
 	        mm3a310_write_offset(offset[0], offset[1], offset[2]);
@@ -963,9 +963,9 @@ static void manual_load_cali_file(void){
 #if MM3A310_AUTO_CALIBRAE
 static bool check_califile_exist(void){
     unsigned int orgfs=0;
-    bool ret=true;	
+    bool ret=true;
     struct file *filep;
-        
+
     orgfs = get_fs();
     set_fs(KERNEL_DS);
 
@@ -974,12 +974,12 @@ static bool check_califile_exist(void){
         MI_ERR("%s read, sys_open %s error!!.\n",__func__,OffsetFileName);
         set_fs(orgfs);
         ret = false;
-    }else{ 
+    }else{
         MI_MSG("check_califile_exist 1");
-        filp_close(filep, NULL);    
-        set_fs(orgfs);	
+        filp_close(filep, NULL);
+        set_fs(orgfs);
     }
-    
+
     MI_MSG("check_califile_exist 2");
     return ret;
 }
@@ -988,8 +988,8 @@ static int auto_calibrate(void){
 
     struct mm3a310_cali_s mm3a310_cali_data;
 
-    int ret =0;		
-    
+    int ret =0;
+
     memset(&mm3a310_cali_data, 0, sizeof(mm3a310_cali_data));
 
     mm3a310_cali_data.z_dir =0;
@@ -1001,7 +1001,7 @@ static int auto_calibrate(void){
 	ret =-1;
     }
 
-    return ret;	
+    return ret;
 
 }
 #endif
@@ -1013,11 +1013,11 @@ static int auto_calibrate(void){
 static int cycle_read_xyz(int* x, int* y, int*z, int ncycle){
     u8      tmp_data[6];
     int j;
-    
+
 
 	*x = 0;
 	*y = 0;
-	*z = 0; 
+	*z = 0;
 	for (j = 0; j < ncycle; j++)
 	{
 		mdelay(10);
@@ -1038,17 +1038,17 @@ static int cycle_read_xyz(int* x, int* y, int*z, int ncycle){
         {
             case MODE_2G:
                 break;
-            case MODE_4G: 
+            case MODE_4G:
                 (*x)=(*x)<<1;
                 (*y)=(*y)<<1;
                 (*z)=(*z)<<1;
                 break;
-            case MODE_8G: 
+            case MODE_8G:
                 (*x)=(*x)<<2;
                 (*y)=(*y)<<2;
                 (*z)=(*z)<<2;
                 break;
-            case MODE_16G: 
+            case MODE_16G:
                 (*x)=(*x)<<3;
                 (*y)=(*y)<<3;
                 (*z)=(*z)<<3;
@@ -1077,10 +1077,10 @@ static int check_linearity_offset(void){
                 result |= mm3a310_write_register(client, MM3A310_OTP_ZOFF_H, (i & 0xFF00) >> 8);
                 result |= cycle_read_xyz(&x, &y, &z, 5);
 
-                 MI_MSG ("linearity_offset: i = %d, x = %d, y = %d, z= %d \n", i, x, y, z); 
+                 MI_MSG ("linearity_offset: i = %d, x = %d, y = %d, z= %d \n", i, x, y, z);
 
                  if (result){
-                       MI_MSG ("linearity_offset: chip op failed, result = %d \n", result); 
+                       MI_MSG ("linearity_offset: chip op failed, result = %d \n", result);
                        return result;
                  }
       }
@@ -1091,7 +1091,7 @@ static int check_linearity_offset(void){
 
 typedef struct  linearitydata{
     unsigned short  off;
-    int                    val; 
+    int                    val;
 
 }LinearityData;
 
@@ -1107,7 +1107,7 @@ static int detect_linearity_ratio(int* xr, int* yr, int* zr){
       LinearityData ydata[2] = {{0}};
       u8              ydata_count = 0;
       LinearityData zdata[2] = {{0}};
-      u8              zdata_count = 0;  
+      u8              zdata_count = 0;
 
       for (i = 10; i <= 0x3ff; i+= 50){
                 result |= mm3a310_write_register(client, MM3A310_OTP_XOFF_L, i & 0xFF);
@@ -1118,33 +1118,33 @@ static int detect_linearity_ratio(int* xr, int* yr, int* zr){
                 result |= mm3a310_write_register(client, MM3A310_OTP_ZOFF_H, (i & 0xFF00) >> 8);
                 result |= cycle_read_xyz(&x, &y, &z, 20);
 
-                 MI_MSG ("detect_linearity_ratio: i = %d, x = %d, y = %d, z= %d \n", i, x, y, z); 
+                 MI_MSG ("detect_linearity_ratio: i = %d, x = %d, y = %d, z= %d \n", i, x, y, z);
 
                  if (result){
-                       MI_MSG ("detect_linearity_ratio: chip op failed, result = %d \n", result); 
+                       MI_MSG ("detect_linearity_ratio: chip op failed, result = %d \n", result);
                        return result;
                  }
 
                  if (abs(x) < 1800 && xdata_count < 2){
                         MI_MSG("detect linearity ratio: xdata_count = %d, x = %d i = %d\n", xdata_count, x, i);
-                        
-                        xdata[xdata_count].val = x;  
-                        xdata[xdata_count].off = i;    
+
+                        xdata[xdata_count].val = x;
+                        xdata[xdata_count].off = i;
                         xdata_count ++;
                  }
 
                  if (abs(y) < 1800 && ydata_count < 2){
                         MI_MSG("detect linearity ratio: ydata_count = %d, y = %d i = %d\n", ydata_count, y, i);
-                        ydata[ydata_count].val = y;  
-                        ydata[ydata_count].off = i;    
-                        ydata_count ++;                       
+                        ydata[ydata_count].val = y;
+                        ydata[ydata_count].off = i;
+                        ydata_count ++;
                  }
 
                   if (abs(z) < 1800 && zdata_count < 2){
                         MI_MSG("detect linearity ratio: zdata_count = %d, z = %d i = %d\n", zdata_count, z, i);
-                        zdata[zdata_count].val = z;  
-                        zdata[zdata_count].off = i;    
-                        zdata_count ++;                       
+                        zdata[zdata_count].val = z;
+                        zdata[zdata_count].off = i;
+                        zdata_count ++;
                  }
 
                   if (xdata_count == 2 && ydata_count == 2 && zdata_count == 2 ){
@@ -1174,7 +1174,7 @@ static int mm3a310_calibrate(struct mm3a310_cali_s *mm3a310_cali_data)
     short     tmp_off = 0, tmp_off2 = 0 ;
     u8      ncycle = 50;
 
-#if MM3A310_STK_TEMP_SOLUTION   
+#if MM3A310_STK_TEMP_SOLUTION
     short   x_off_original = 0;
     short   y_off_original = 0;
     short   z_off_original = 0;
@@ -1214,7 +1214,7 @@ static int mm3a310_calibrate(struct mm3a310_cali_s *mm3a310_cali_data)
     mm3a310_cali_data->y_off = (tmp_data[3] << 8) | tmp_data[2] ;
     mm3a310_cali_data->z_off = (tmp_data[5] << 8) | tmp_data[4] ;
 
-#if MM3A310_STK_TEMP_SOLUTION 
+#if MM3A310_STK_TEMP_SOLUTION
     x_off_original = mm3a310_cali_data->x_off;
     y_off_original = mm3a310_cali_data->y_off;
     z_off_original = mm3a310_cali_data->z_off;
@@ -1223,7 +1223,7 @@ static int mm3a310_calibrate(struct mm3a310_cali_s *mm3a310_cali_data)
 
    if (0 != detect_linearity_ratio(&xLine, &yLine, &zLine)){
         xLine = yLine = zLine = -20;
-    }   
+    }
     result = mm3a310_write_register(client, MM3A310_OTP_XOFF_L, mm3a310_cali_data->x_off & 0xFF);
     MI_ASSERT(result==0);
     result = mm3a310_write_register(client, MM3A310_OTP_XOFF_H, (mm3a310_cali_data->x_off & 0xFF00) >> 8);
@@ -1231,7 +1231,7 @@ static int mm3a310_calibrate(struct mm3a310_cali_s *mm3a310_cali_data)
     result = mm3a310_write_register(client, MM3A310_OTP_YOFF_L, mm3a310_cali_data->y_off & 0xFF);
     MI_ASSERT(result==0);
     result = mm3a310_write_register(client, MM3A310_OTP_YOFF_H, (mm3a310_cali_data->y_off & 0xFF00) >> 8);
-    MI_ASSERT(result==0);        
+    MI_ASSERT(result==0);
     result = mm3a310_write_register(client, MM3A310_OTP_ZOFF_L, mm3a310_cali_data->z_off & 0xFF);
     MI_ASSERT(result==0);
     result = mm3a310_write_register(client, MM3A310_OTP_ZOFF_H, (mm3a310_cali_data->z_off & 0xFF00) >> 8);
@@ -1243,7 +1243,7 @@ static int mm3a310_calibrate(struct mm3a310_cali_s *mm3a310_cali_data)
     for (i = 0; i < 20 ; i++)
     {
         x = y = z = 0;
-        
+
        result = cycle_read_xyz(&x, &y, &z, ncycle);
        if (result != 0){
             MI_ERR("i2c block read failed\n");
@@ -1257,11 +1257,11 @@ static int mm3a310_calibrate(struct mm3a310_cali_s *mm3a310_cali_data)
             if ( abs(x) <= THRESHOLD )
             {
                 mm3a310_cali_data->x_ok = 1 ;
-                MI_MSG("------X is OK, 0x%X-------\n", mm3a310_cali_data->x_off); 
+                MI_MSG("------X is OK, 0x%X-------\n", mm3a310_cali_data->x_off);
             }
             else
             {
-                tmp_off = x/xLine;                
+                tmp_off = x/xLine;
 
                 tmp_off2 = (short)mm3a310_cali_data->x_off - tmp_off;
                 if (tmp_off2 > 0x3ff){
@@ -1269,17 +1269,17 @@ static int mm3a310_calibrate(struct mm3a310_cali_s *mm3a310_cali_data)
                 }else if (tmp_off2 < 0){
                     tmp_off2 = 0x01;
                 }
-                
+
                 mm3a310_cali_data->x_off = (unsigned short)tmp_off2;
                 MI_MSG("tmp_off = %d, tmp_off2 = %d,  mm3a310_cali_data->x_off = %d\n", tmp_off, tmp_off2,  mm3a310_cali_data->x_off);
-               
+
 
                 result = mm3a310_write_register(client, MM3A310_OTP_XOFF_L, mm3a310_cali_data->x_off & 0xFF);
                 MI_ASSERT(result==0);
                 result = mm3a310_write_register(client, MM3A310_OTP_XOFF_H, (mm3a310_cali_data->x_off & 0xFF00) >> 8);
                 MI_ASSERT(result==0);
             }
-            
+
         }
 
         if (! mm3a310_cali_data->y_ok)
@@ -1287,11 +1287,11 @@ static int mm3a310_calibrate(struct mm3a310_cali_s *mm3a310_cali_data)
             if ( abs(y) <= THRESHOLD )
             {
                 mm3a310_cali_data->y_ok = 1 ;
-                MI_MSG("------Y is OK, 0x%X-------\n", mm3a310_cali_data->y_off); 
+                MI_MSG("------Y is OK, 0x%X-------\n", mm3a310_cali_data->y_off);
             }
             else
             {
-                 tmp_off = y/yLine;                
+                 tmp_off = y/yLine;
 
                 tmp_off2 = (short)mm3a310_cali_data->y_off - tmp_off;
                 if (tmp_off2 > 0x3ff){
@@ -1299,7 +1299,7 @@ static int mm3a310_calibrate(struct mm3a310_cali_s *mm3a310_cali_data)
                 }else if (tmp_off2 < 0){
                     tmp_off2 = 0x01;
                 }
-                
+
                 mm3a310_cali_data->y_off = (unsigned short)tmp_off2;
                 MI_MSG("tmp_off = %d, tmp_off2 = %d,  mm3a310_cali_data->y_off = %d\n", tmp_off, tmp_off2,  mm3a310_cali_data->y_off);
 
@@ -1308,7 +1308,7 @@ static int mm3a310_calibrate(struct mm3a310_cali_s *mm3a310_cali_data)
                 result = mm3a310_write_register(client, MM3A310_OTP_YOFF_H, (mm3a310_cali_data->y_off & 0xFF00) >> 8);
                 MI_ASSERT(result==0);
             }
-            
+
         }
 
         if (! mm3a310_cali_data->z_ok)
@@ -1316,11 +1316,11 @@ static int mm3a310_calibrate(struct mm3a310_cali_s *mm3a310_cali_data)
             if ( abs(z - (mm3a310_cali_data->z_dir > 0 ? 1024 : -1024)) <= THRESHOLD )
             {
                 mm3a310_cali_data->z_ok = 1 ;
-                MI_MSG("------Z is OK, 0x%X-------\n", mm3a310_cali_data->z_off); 
+                MI_MSG("------Z is OK, 0x%X-------\n", mm3a310_cali_data->z_off);
             }
             else
             {
-                tmp_off = (z - (mm3a310_cali_data->z_dir > 0 ? 1024 : -1024)) /zLine;                
+                tmp_off = (z - (mm3a310_cali_data->z_dir > 0 ? 1024 : -1024)) /zLine;
 
                 tmp_off2 = (short)mm3a310_cali_data->z_off - tmp_off;
                 if (tmp_off2 > 0x3ff){
@@ -1328,17 +1328,17 @@ static int mm3a310_calibrate(struct mm3a310_cali_s *mm3a310_cali_data)
                 }else if (tmp_off2 < 0){
                     tmp_off2 = 0x01;
                 }
-                
+
                 mm3a310_cali_data->z_off = (unsigned short)tmp_off2;
                 MI_MSG("tmp_off = %d, tmp_off2 = %d,  mm3a310_cali_data->z_off = %d\n", tmp_off, tmp_off2,  mm3a310_cali_data->y_off);
-                
+
 
                 result = mm3a310_write_register(client, MM3A310_OTP_ZOFF_L, mm3a310_cali_data->z_off & 0xFF);
                 MI_ASSERT(result==0);
                 result = mm3a310_write_register(client, MM3A310_OTP_ZOFF_H, (mm3a310_cali_data->z_off & 0xFF00) >> 8);
                 MI_ASSERT(result==0);
             }
-            
+
         }
 
         if(mm3a310_cali_data->x_ok && mm3a310_cali_data->y_ok && mm3a310_cali_data->z_ok )
@@ -1348,7 +1348,7 @@ static int mm3a310_calibrate(struct mm3a310_cali_s *mm3a310_cali_data)
         }
     }
 
-#if MM3A310_STK_TEMP_SOLUTION   
+#if MM3A310_STK_TEMP_SOLUTION
      if(mm3a310_cali_data->x_ok + mm3a310_cali_data->y_ok + mm3a310_cali_data->z_ok  == 2){
 
        if(mm3a310_cali_data->x_ok == 0){
@@ -1358,18 +1358,18 @@ static int mm3a310_calibrate(struct mm3a310_cali_s *mm3a310_cali_data)
         result = mm3a310_write_register(client, MM3A310_OTP_XOFF_H, (mm3a310_cali_data->x_off & 0xFF00) >> 8);
         MI_ASSERT(result==0);
 
-        MI_MSG("--- Calibrate done but x skipped---\n");    
+        MI_MSG("--- Calibrate done but x skipped---\n");
 
-       }else 
+       }else
        if(mm3a310_cali_data->y_ok == 0){
-           
+
         mm3a310_cali_data->y_off = y_off_original;
         result = mm3a310_write_register(client, MM3A310_OTP_YOFF_L, mm3a310_cali_data->y_off & 0xFF);
         MI_ASSERT(result==0);
         result = mm3a310_write_register(client, MM3A310_OTP_YOFF_H, (mm3a310_cali_data->y_off & 0xFF00) >> 8);
         MI_ASSERT(result==0);
 
-        MI_MSG("--- Calibrate done but y skipped---\n");    
+        MI_MSG("--- Calibrate done but y skipped---\n");
 
        }else
         if(mm3a310_cali_data->z_ok == 0){
@@ -1380,7 +1380,7 @@ static int mm3a310_calibrate(struct mm3a310_cali_s *mm3a310_cali_data)
         result = mm3a310_write_register(client, MM3A310_OTP_ZOFF_H, (mm3a310_cali_data->z_off & 0xFF00) >> 8);
         MI_ASSERT(result==0);
 
-        MI_MSG("--- Calibrate done but z skipped---\n");    
+        MI_MSG("--- Calibrate done but z skipped---\n");
         }
 
          goto success_exit;
@@ -1412,19 +1412,19 @@ static int mm3a310_preset_register(struct i2c_client *client){
     /* Power on, DATA measurement enable, lDO swtich all on */
     result |= mm3a310_write_register(client, MM3A310_TEMP_CFG_REG, 0x88);
     result |= mm3a310_write_register(client, MM3A310_LDO_REG, 0x02);
-    result |= mm3a310_write_register(client, MM3A310_OTP_TRIM_OSC, 0x27);   
-    result |= mm3a310_write_register(client, MM3A310_LPF_ABSOLUTE, 0x30);   
-    result |= mm3a310_write_register(client, MM3A310_TEMP_OFF1, 0x3f);   
-    result |= mm3a310_write_register(client, MM3A310_TEMP_OFF2, 0xff);   
+    result |= mm3a310_write_register(client, MM3A310_OTP_TRIM_OSC, 0x27);
+    result |= mm3a310_write_register(client, MM3A310_LPF_ABSOLUTE, 0x30);
+    result |= mm3a310_write_register(client, MM3A310_TEMP_OFF1, 0x3f);
+    result |= mm3a310_write_register(client, MM3A310_TEMP_OFF2, 0xff);
     result |= mm3a310_write_register(client, MM3A310_TEMP_OFF3, 0x0f);
 
 #if MM3A310_OFFSET_TEMP_SOLUTION
 
 #if MM3A310_AUTO_CALIBRAE
 	if(check_califile_exist()){
-		manual_load_cali_file();         	
+		manual_load_cali_file();
 	}else{
-    		auto_calibrate();
+		auto_calibrate();
 	}
 #else
     manual_load_cali_file();
@@ -1437,45 +1437,45 @@ static int mm3a310_preset_register(struct i2c_client *client){
 
 static int mm3a310_otp(struct i2c_client * client){
     int result;
-    
+
     result = mm3a310_write_register(client, MM3A310_TEMP_CFG_REG, 0x08);
     MI_ASSERT(result==0);
     if (result != 0){
         return result;
     }
-    
+
     result = mm3a310_write_register(client, MM3A310_CTRL_REG5, 0x80);
     MI_ASSERT(result==0);
     if (result != 0){
         return result;
     }
-    
+
     return result;
 }
 
 static int mm3a310_init_client(struct i2c_client *client)
 {
-    int result=0;   
+    int result=0;
 
     MI_FUN;
 
 #if MM3A310_OFFSET_TEMP_SOLUTION
     m_work_info.wq = create_singlethread_workqueue( "oo" );
-    
+
     INIT_DELAYED_WORK( &m_work_info.read_work, sensor_read_work );
     INIT_DELAYED_WORK( &m_work_info.write_work, sensor_write_work );
 #endif
 
     /* soft reset */
-    result |= mm3a310_write_register(client, MM3A310_SOFT_RESET, 0xAA);   
+    result |= mm3a310_write_register(client, MM3A310_SOFT_RESET, 0xAA);
     mdelay(5);
-    result |= mm3a310_write_register(client, MM3A310_SOFT_RESET, 0x00);   
+    result |= mm3a310_write_register(client, MM3A310_SOFT_RESET, 0x00);
     mdelay(10);
 
     result |= mm3a310_otp(client);
     result |= mm3a310_preset_register(client);
 
-    MI_MSG("mm3a310_init_client ok reuslt:%d\n", result); 
+    MI_MSG("mm3a310_init_client ok reuslt:%d\n", result);
     return result;
 }
 
@@ -1483,7 +1483,7 @@ static int mm3a310_init_client(struct i2c_client *client)
 *
 * Read sensor data from MM3A310
 *
-***************************************************************/             
+***************************************************************/
 static int mm3a310_read_data(short *x, short *y, short *z)
 {
     u8    tmp_data[6];
@@ -1505,17 +1505,17 @@ static int mm3a310_read_data(short *x, short *y, short *z)
     {
         case MODE_2G:
             break;
-        case MODE_4G: 
+        case MODE_4G:
             (*x)=(*x)<<1;
             (*y)=(*y)<<1;
             (*z)=(*z)<<1;
             break;
-        case MODE_8G: 
+        case MODE_8G:
             (*x)=(*x)<<2;
             (*y)=(*y)<<2;
             (*z)=(*z)<<2;
             break;
-        case MODE_16G: 
+        case MODE_16G:
             (*x)=(*x)<<3;
             (*y)=(*y)<<3;
             (*z)=(*z)<<3;
@@ -1525,7 +1525,7 @@ static int mm3a310_read_data(short *x, short *y, short *z)
 
     MI_DATA("mm3a310_raw: x=%d, y=%d, z=%d",  *x, *y, *z);
 
-#if MM3A310_STK_TEMP_SOLUTION   
+#if MM3A310_STK_TEMP_SOLUTION
 
     addAixHistory(*x,*y,*z);
 
@@ -1542,8 +1542,8 @@ static int mm3a310_read_data(short *x, short *y, short *z)
         *z = squareRoot(1024*1024 - (*x)*(*x) - (*y)*(*y));
    }else{
 
-    	 MI_ERR( "CHIP ERR !MORE STK!\n"); 
-    
+	 MI_ERR( "CHIP ERR !MORE STK!\n");
+
     return 0;
     }
 #endif
@@ -1553,10 +1553,10 @@ static int mm3a310_read_data(short *x, short *y, short *z)
         *x = filter_average_enhance(&tFac[0], *x);
         *y = filter_average_enhance(&tFac[1], *y);
         *z = filter_average_enhance(&tFac[2], *z);
-#endif  
+#endif
 
 
-    MI_DATA("mm3a310_filt: x=%d, y=%d, z=%d",  *x, *y, *z); 
+    MI_DATA("mm3a310_filt: x=%d, y=%d, z=%d",  *x, *y, *z);
 
     return 0;
 }
@@ -1567,18 +1567,18 @@ static void report_abs(void)
     int result=0;
 
     /* check if any new data ready */
-    result=mm3a310_read_register(mm3a310_i2c_client, MM3A310_STATUS_REG); 
+    result=mm3a310_read_register(mm3a310_i2c_client, MM3A310_STATUS_REG);
     if(!(result & 0x08)){
-        return ; 
+        return ;
     }
-        
+
     if (mm3a310_read_data(&x,&y,&z) != 0) {
         MI_ERR("MM3A310 data read failed!\n");
         return;
     }
-    
+
     /* adjust direction */
-#if TARGET_PLATFORM == PLATFORM_QUACOMM	
+#if TARGET_PLATFORM == PLATFORM_QUACOMM
     input_report_rel(mm3a310_idev->input, REL_RX, x);
     input_report_rel(mm3a310_idev->input, REL_RY, y);
     input_report_rel(mm3a310_idev->input, REL_RZ, z);
@@ -1594,7 +1594,7 @@ static void report_abs(void)
    gx = x;
    gy = y;
    gz = z;
-#endif    
+#endif
 }
 
 static void mm3a310_dev_poll(struct input_polled_dev *dev)
@@ -1645,7 +1645,7 @@ static long mm3a310_misc_ioctl( struct file *file,unsigned int cmd, unsigned lon
 
     switch (cmd) {
 #if COWORK_WITH_DM211
-    case GSENSOR_IOCTL_READ_SENSORDATA:           
+    case GSENSOR_IOCTL_READ_SENSORDATA:
             {
             void *data = (void __user *) arg;
             char strbuf[256];
@@ -1654,21 +1654,21 @@ static long mm3a310_misc_ioctl( struct file *file,unsigned int cmd, unsigned lon
             if(data == NULL)
             {
                 err = -EINVAL;
-                break;      
+                break;
             }
- 
+
             sprintf(strbuf, "%04x %04x %04x", gx, gy, -gz);
-            
-           
+
+
             if(copy_to_user(data, strbuf, strlen(strbuf)+1))
             {
                 err = -EFAULT;
-                break;      
+                break;
             }
         }
             break;
 #endif
-            
+
     case MM3A310_ACC_IOCTL_GET_DELAY:
         interval = POLL_INTERVAL;
         if (copy_to_user(argp, &interval, sizeof(interval)))
@@ -1697,24 +1697,24 @@ static long mm3a310_misc_ioctl( struct file *file,unsigned int cmd, unsigned lon
             return EINVAL;
         break;
 
-    case MM3A310_ACC_IOCTL_GET_ENABLE:        
+    case MM3A310_ACC_IOCTL_GET_ENABLE:
         err = mm3a310_get_enable(&bEnable);
         if (err < 0){
             return -EINVAL;
         }
 
         if (copy_to_user(argp, &bEnable, sizeof(EINVAL)))
-                return -EINVAL;            
+                return -EINVAL;
         break;
     case MM3A310_ACC_IOCTL_SET_G_RANGE:
         if (copy_from_user(&range, argp, sizeof(range)))
-            return -EFAULT;            
+            return -EFAULT;
         err = mm3a310_set_grange(range);
         if (err < 0)
             return EINVAL;
         break;
-        
-    case MM3A310_ACC_IOCTL_GET_G_RANGE:        
+
+    case MM3A310_ACC_IOCTL_GET_G_RANGE:
         err = mm3a310_get_grange(&range);
         if (err < 0){
            return -EINVAL;
@@ -1728,16 +1728,16 @@ static long mm3a310_misc_ioctl( struct file *file,unsigned int cmd, unsigned lon
     case MM3A310_ACC_IOCTL_CALIBRATION:
         if(copy_from_user(&mm3a310_cali_data, (struct mm3a310_cali_s *)arg, sizeof(struct mm3a310_cali_s)))
             return -EFAULT;
-        
+
         if(mm3a310_calibrate(&mm3a310_cali_data))
         {
             MI_ERR(" ----- mm3a310 calibrate failed !\n");
             return -EFAULT;
-        } 
+        }
 
         if(copy_to_user((struct mm3a310_cali_s *)arg, &mm3a310_cali_data, sizeof(struct mm3a310_cali_s)))
             return -EFAULT;
-        break;        
+        break;
 
     case MM3A310_ACC_IOCTL_UPDATE_OFFSET:
 
@@ -1746,13 +1746,13 @@ static long mm3a310_misc_ioctl( struct file *file,unsigned int cmd, unsigned lon
         /* update offset */
         mm3a310_write_offset(mm3a310_cali_data.x_off, mm3a310_cali_data.y_off, mm3a310_cali_data.z_off);
         break;
-#endif /* !MM3A310_OFFSET_TEMP_SOLUTION */ 
-     
+#endif /* !MM3A310_OFFSET_TEMP_SOLUTION */
+
 
     case MM3A310_ACC_IOCTL_GET_COOR_XYZ:
 
         if(mm3a310_read_data(&xyz[0],&xyz[1],&xyz[2]))
-            return -EFAULT;        
+            return -EFAULT;
 
         if(copy_to_user((void __user *)arg, xyz, sizeof(xyz)))
             return -EFAULT;
@@ -1790,9 +1790,9 @@ static ssize_t mm3a310_enable_show(struct device *dev,
 {
     int ret;
     bool bEnable;
-    
+
     MI_MSG(">>> mm3a310_enable_show() \n");
-    ret = mm3a310_get_enable(&bEnable);    
+    ret = mm3a310_get_enable(&bEnable);
     if (ret < 0){
         ret = -EINVAL;
     }else{
@@ -1810,30 +1810,30 @@ static ssize_t mm3a310_enable_store(struct device *dev,
     bool bEnable;
     unsigned long enable;
 
-    MI_MSG(">>> mm3a310_enable_store() \n");    
+    MI_MSG(">>> mm3a310_enable_store() \n");
 
     if (buf == NULL){
-        MI_ERR("error:buf == NULL\n"); 
+        MI_ERR("error:buf == NULL\n");
         return -1;
     }
-    MI_MSG(">>> mm3a310_enable_store() 1, buf = %s\n", buf); 
-    enable = simple_strtoul(buf, NULL, 10);    
+    MI_MSG(">>> mm3a310_enable_store() 1, buf = %s\n", buf);
+    enable = simple_strtoul(buf, NULL, 10);
     bEnable = (enable > 0) ? true : false;
 
-    MI_MSG(">>> mm3a310_enable_store() 2\n"); 
+    MI_MSG(">>> mm3a310_enable_store() 2\n");
     ret = mm3a310_set_enable (bEnable);
     if (ret < 0){
         ret = -EINVAL;
     }else{
         ret = count;
     }
-    
+
     MI_MSG("<<< mm3a310_enable_store(), ret = %d, bEanble=%d \n", ret, bEnable);
     return ret;
 }
 
 static ssize_t mm3a310_delay_show(struct device *dev, struct device_attribute *attr, char *buf)
-{    
+{
     MI_MSG(">>> mm3a310_delay_show() \n");
     return sprintf(buf, "%d\n", delayMs);
 }
@@ -1845,10 +1845,10 @@ static ssize_t mm3a310_delay_store(struct device *dev,
     //int ret = 0;
     int interval = 0;
 
-    MI_MSG(">>> mm3a310_delay_store() \n");    
+    MI_MSG(">>> mm3a310_delay_store() \n");
 
-    interval = simple_strtoul(buf, NULL, 10);    
-    
+    interval = simple_strtoul(buf, NULL, 10);
+
      if (interval < 0 || interval > 1000)
             return -EINVAL;
      if((interval <=30)&&(interval > 10))
@@ -1856,7 +1856,7 @@ static ssize_t mm3a310_delay_store(struct device *dev,
             interval = 10;
      }
      delayMs = interval;
-        
+
     return count;
 }
 
@@ -1865,13 +1865,13 @@ static ssize_t mm3a310_offset_show(struct device *dev, struct device_attribute *
     int count;
     u8 off[6];
     struct i2c_client *client;
-    
+
     client = mm3a310_i2c_client;
 
-    mm3a310_read_register_continuously(client, MM3A310_OTP_XOFF_L, 6, off);        
+    mm3a310_read_register_continuously(client, MM3A310_OTP_XOFF_L, 6, off);
 
     count = sprintf(buf, "%d,%d,%d,%d,%d,%d\n", off[0],off[1],off[2],off[3],off[4],off[5]);
-    
+
     return count;
 }
 
@@ -1900,8 +1900,8 @@ static ssize_t mm3a310_average_enhance_show(struct device *dev,
     int ret;
 
     ret = sprintf(buf, "%d %d %d\n", tFac[0].filter_param_l, tFac[0].filter_param_h, tFac[0].filter_threhold);
-    
-    MI_MSG("filter_param_l = %d, filter_param_h = %d, filter_threhold = %d\n", 
+
+    MI_MSG("filter_param_l = %d, filter_param_h = %d, filter_threhold = %d\n",
         tFac[0].filter_param_l, tFac[0].filter_param_h, tFac[0].filter_threhold);
 
     return ret;
@@ -1909,21 +1909,21 @@ static ssize_t mm3a310_average_enhance_show(struct device *dev,
 
 static ssize_t mm3a310_average_enhance_store(struct device *dev,struct device_attribute *attr,const char *buf, size_t count)
 {
-    //nAverageFilterSample = simple_strtoul(buf, NULL, 10);    
+    //nAverageFilterSample = simple_strtoul(buf, NULL, 10);
 
     sscanf(buf, "%d %d %d\n", &(tFac[0].filter_param_l), &(tFac[0].filter_param_h), &(tFac[0].filter_threhold));
 
     tFac[1].filter_param_l = tFac[2].filter_param_l = tFac[0].filter_param_l;
     tFac[1].filter_param_h = tFac[2].filter_param_h = tFac[0].filter_param_h;
     tFac[1].filter_threhold = tFac[2].filter_threhold =tFac[0].filter_threhold;
-    
-    MI_MSG("filter_param_l = %d, filter_param_h = %d, filter_threhold = %d\n", 
+
+    MI_MSG("filter_param_l = %d, filter_param_h = %d, filter_threhold = %d\n",
     tFac[0].filter_param_l, tFac[0].filter_param_h, tFac[0].filter_threhold);
-    
-    MI_MSG("filter_param_l = %d, filter_param_h = %d, filter_threhold = %d\n", 
+
+    MI_MSG("filter_param_l = %d, filter_param_h = %d, filter_threhold = %d\n",
     tFac[1].filter_param_l, tFac[1].filter_param_h, tFac[1].filter_threhold);
-    
-    MI_MSG("filter_param_l = %d, filter_param_h = %d, filter_threhold = %d\n", 
+
+    MI_MSG("filter_param_l = %d, filter_param_h = %d, filter_threhold = %d\n",
     tFac[2].filter_param_l, tFac[2].filter_param_h, tFac[2].filter_threhold);
 
     return count;
@@ -1933,9 +1933,9 @@ static ssize_t mm3a310_average_enhance_store(struct device *dev,struct device_at
 #if MM3A310_OFFSET_TEMP_SOLUTION
 static ssize_t mm3a310_calibrate_show(struct device *dev,struct device_attribute *attr,char *buf)
 {
-    int ret;       
-    MI_MSG(">>> mm3a310_calibrate_show() \n");   
-    ret = sprintf(buf, "%d\n", bCaliResult);   
+    int ret;
+    MI_MSG(">>> mm3a310_calibrate_show() \n");
+    ret = sprintf(buf, "%d\n", bCaliResult);
     MI_MSG("<<< mm3a310_calibrate_show(), ret = %d, bCaliResult = %d\n", ret, bCaliResult);
     return ret;
 }
@@ -1947,7 +1947,7 @@ static ssize_t mm3a310_calibrate_store(struct device *dev,
     struct mm3a310_cali_s mm3a310_cali_data;
 
     bCaliResult = 0;
-    
+
     memset(&mm3a310_cali_data, 0, sizeof(mm3a310_cali_data));
 
     mm3a310_cali_data.z_dir = simple_strtol(buf, NULL, 10);
@@ -1958,7 +1958,7 @@ static ssize_t mm3a310_calibrate_store(struct device *dev,
 
 
 static ssize_t mm3a310_linearity_show(struct device *dev,
-                   struct device_attribute *attr, char *buf){    
+                   struct device_attribute *attr, char *buf){
 
 	return sprintf(buf, "%s\n", "--help\n \
                                     linearity data will be output by printk, so cat //proc//kmsg \n  \
@@ -2002,9 +2002,9 @@ static ssize_t mm3a310_reg_data_store(struct device *dev,
     int addr, data;
     int result;
     struct i2c_client *client;
-    
+
     client = mm3a310_i2c_client;
-    
+
     sscanf(buf, "0x%x, 0x%x\n", &addr, &data);
     result = mm3a310_write_register(client, addr, data);
     MI_ASSERT(result==0);
@@ -2021,14 +2021,14 @@ static ssize_t mm3a310_reg_data_show(struct device *dev,
     int i;
     short val;
     struct i2c_client *client;
-    
+
     client = mm3a310_i2c_client;
-    
+
     count += sprintf(buf+count, "---------page 0---------");
     for (i = 0; i <= 0x003d; i++){
         if(i%16 == 0)
             count += sprintf(buf+count, "\n%02x\t", i);
-        val = mm3a310_read_register(client, i); 
+        val = mm3a310_read_register(client, i);
         count += sprintf(buf+count, "%02X ", val);
     }
 
@@ -2036,12 +2036,12 @@ static ssize_t mm3a310_reg_data_show(struct device *dev,
     for (i = 0x0100; i <= 0x012a; i++){
         if((i&0xff)%16 == 0)
             count += sprintf(buf+count, "\n%02x\t", (i & 0xff));
-        val = mm3a310_read_register(client, i); 
+        val = mm3a310_read_register(client, i);
         count += sprintf(buf+count, "%02X ", val);
-        
+
     }
     count += sprintf(buf+count, "\n---------end---------\n");
-    
+
     return count;
 }
 
@@ -2050,9 +2050,9 @@ static ssize_t mm3a310_grange_show(struct device *dev,
 {
     int ret;
     int range;
-    
+
     ret = mm3a310_get_grange(&range);
-    
+
     if (ret == 0){
         ret = sprintf(buf, "%d\n", range);
     }else{
@@ -2068,17 +2068,17 @@ static ssize_t mm3a310_grange_store(struct device *dev,
 {
     int ret;
     int newrange;
-    
+
     sscanf(buf, "%d\n", &newrange);
-    
+
     ret = mm3a310_set_grange(newrange);
-    
+
     if (ret == 0){
         ret = count;
     }else{
         ret = -EINVAL;
-    }    
-    
+    }
+
     return ret;
 }
 
@@ -2086,15 +2086,15 @@ static ssize_t mm3a310_odr_show(struct device *dev,
                    struct device_attribute *attr, char *buf)
 {
     int ret;
-    int odr; 
-    
+    int odr;
+
     ret = mm3a310_get_odr(&odr);
     if (ret < 0){
         ret = -EINVAL;
     }else{
         ret = sprintf(buf, "%d\n", odr);
     }
-    
+
     return ret;
 }
 
@@ -2102,16 +2102,16 @@ static ssize_t mm3a310_odr_store(struct device *dev,struct device_attribute *att
 {
     int ret;
     int odr;
-    
+
     sscanf(buf, "%d\n", &odr);
-    
+
     ret = mm3a310_set_odr(odr);
     if (ret < 0){
         ret = -EINVAL;
     }else{
         ret = count;
     }
-    
+
     return ret;
 }
 
@@ -2129,14 +2129,14 @@ static ssize_t mm3a310_log_level_store(struct device *dev,
                     struct device_attribute *attr,
                     const char *buf, size_t count)
 {
-    Log_level = simple_strtoul(buf, NULL, 10);    
+    Log_level = simple_strtoul(buf, NULL, 10);
 
     return count;
 }
 
 
 static ssize_t mm3a310_version_show(struct device *dev,
-                   struct device_attribute *attr, char *buf){    
+                   struct device_attribute *attr, char *buf){
 
 	return sprintf(buf, "%s\n", DRIVER_VERSION);
 
@@ -2161,10 +2161,10 @@ static DEVICE_ATTR(average_enhance,   S_IWUGO|S_IRUGO, mm3a310_average_enhance_s
 #endif /* ! FILTER_AVERAGE_ENHANCE */
 
 static DEVICE_ATTR(log_level,  0660,  mm3a310_log_level_show, mm3a310_log_level_store);
-static DEVICE_ATTR(version,  0660,  mm3a310_version_show, NULL);  
+static DEVICE_ATTR(version,  0660,  mm3a310_version_show, NULL);
 
 
-static struct attribute *mm3a310_attributes[] = { 
+static struct attribute *mm3a310_attributes[] = {
     &dev_attr_enable.attr,
     &dev_attr_delay.attr,
     &dev_attr_poll_delay.attr, //add for quacomm platform
@@ -2173,7 +2173,7 @@ static struct attribute *mm3a310_attributes[] = {
     &dev_attr_reg_data.attr,
     &dev_attr_grange.attr,
     &dev_attr_odr.attr,
-#if MM3A310_OFFSET_TEMP_SOLUTION    
+#if MM3A310_OFFSET_TEMP_SOLUTION
     &dev_attr_calibrate.attr,
     &dev_attr_linearity.attr,
 #endif
@@ -2186,7 +2186,7 @@ static struct attribute *mm3a310_attributes[] = {
 };
 
 #if 0
-	static struct device_attribute* mm3a310_device_attributes[] = { 
+	static struct device_attribute* mm3a310_device_attributes[] = {
         &dev_attr_enable,
         &dev_attr_delay,
 	 &dev_attr_poll_delay,
@@ -2195,7 +2195,7 @@ static struct attribute *mm3a310_attributes[] = {
 	    &dev_attr_reg_data,
 	    &dev_attr_grange,
 	    &dev_attr_odr,
-	    #if MM3A310_OFFSET_TEMP_SOLUTION   
+	    #if MM3A310_OFFSET_TEMP_SOLUTION
 	    &dev_attr_calibrate_mm3a310,
 	            &dev_attr_linearity,
 	            #endif
@@ -2231,7 +2231,7 @@ static int __devinit mm3a310_probe(struct i2c_client *client,
     int result;
     struct input_dev *idev;
     struct i2c_adapter *adapter;
- 
+
     mm3a310_i2c_client = client;
     adapter = to_i2c_adapter(client->dev.parent);
     result = i2c_check_functionality(adapter,
@@ -2244,7 +2244,7 @@ static int __devinit mm3a310_probe(struct i2c_client *client,
     MI_MSG("check MM3A310 chip ID\n");
     result = mm3a310_read_register(client, MM3A310_WHO_AM_I);
 
-    if (MM3A310_ID != (result)) {    //compare the address value 
+    if (MM3A310_ID != (result)) {    //compare the address value
         MI_ERR("read chip ID 0x%x is not equal to 0x%x!", result,MM3A310_ID);
         result = -EINVAL;
         goto err_detach_client;
@@ -2254,7 +2254,7 @@ static int __devinit mm3a310_probe(struct i2c_client *client,
     result = mm3a310_init_client(client);
     if(result != 0){
         MI_ERR("chip init failed, result = %d!", result);
-        goto err_detach_client;        
+        goto err_detach_client;
     }
 
     /* input poll device register */
@@ -2270,7 +2270,7 @@ static int __devinit mm3a310_probe(struct i2c_client *client,
     mm3a310_idev->poll_interval_max = POLL_INTERVAL_MAX;
     idev = mm3a310_idev->input;
 
-    idev->name = MM3A310_DRV_NAME;   
+    idev->name = MM3A310_DRV_NAME;
     idev->id.bustype = BUS_I2C;
     idev->evbit[0] = BIT_MASK(EV_ABS);
 
@@ -2290,12 +2290,12 @@ static int __devinit mm3a310_probe(struct i2c_client *client,
     input_set_abs_params(idev, ABS_Y, -16384, 16383, INPUT_FUZZ, INPUT_FLAT);
     input_set_abs_params(idev, ABS_Z, -16384, 16383, INPUT_FUZZ, INPUT_FLAT);
 
-#endif    
+#endif
 
     result = input_register_polled_device(mm3a310_idev);
     if (result) {
         MI_ERR("register poll device failed!\n");
-        goto err_free_polled_device; 
+        goto err_free_polled_device;
     }
 
     /* Sys Attribute Register */
@@ -2305,15 +2305,15 @@ static int __devinit mm3a310_probe(struct i2c_client *client,
         result = -EINVAL;
         goto err_unregister_polled_device;
     }
-    
+
     /* Misc device interface Register */
     result = misc_register(&misc_mm3a310);
     if (result) {
         MI_ERR("%s: mm3a310_dev register failed", __func__);
         goto err_remove_sysfs_group;
     }
-    
-#ifdef CONFIG_HAS_EARLYSUSPEND    
+
+#ifdef CONFIG_HAS_EARLYSUSPEND
     early_suspend.suspend = mm3a310_early_suspend;
     early_suspend.resume  = mm3a310_early_resume;
     early_suspend.level   = EARLY_SUSPEND_LEVEL_BLANK_SCREEN;
@@ -2329,7 +2329,7 @@ err_unregister_polled_device:
 err_free_polled_device:
     input_free_polled_device(mm3a310_idev);
 err_hwmon_device_unregister:
-    //hwmon_device_unregister(&client->dev);    
+    //hwmon_device_unregister(&client->dev);
 err_detach_client:
     return result;
 }
@@ -2342,14 +2342,14 @@ static int __devexit mm3a310_remove(struct i2c_client *client)
     MI_ASSERT(result==0);
 
     misc_deregister(&misc_mm3a310);
-    
+
     sysfs_remove_group(&mm3a310_idev->input->dev.kobj, &mm3a310_attr_group);
-    
+
     input_unregister_polled_device(mm3a310_idev);
-    
+
     input_free_polled_device(mm3a310_idev);
 
-#ifdef CONFIG_HAS_EARLYSUSPEND  
+#ifdef CONFIG_HAS_EARLYSUSPEND
     unregister_early_suspend(&early_suspend);
 #endif
 
@@ -2360,10 +2360,10 @@ static int __devexit mm3a310_remove(struct i2c_client *client)
 static void mm3a310_early_suspend(struct early_suspend* es)
 {
     int result;
-	MI_MSG("mm3a310 guodm ealy suspend 11\n");	
+	MI_MSG("mm3a310 guodm ealy suspend 11\n");
     if(is_cali)
 	return 0;
-    MI_MSG("mm3a310 guodm ealy suspend 22\n");	
+    MI_MSG("mm3a310 guodm ealy suspend 22\n");
     mm3a_status.temp_cfg_reg = mm3a310_read_register(mm3a310_i2c_client, MM3A310_TEMP_CFG_REG);
     result = mm3a310_write_register(mm3a310_i2c_client, MM3A310_TEMP_CFG_REG, mm3a_status.temp_cfg_reg | 0x20); /* Power down enable */
     MI_ASSERT(result==0);
@@ -2373,8 +2373,8 @@ static void mm3a310_early_suspend(struct early_suspend* es)
 static void mm3a310_early_resume(struct early_suspend* es)
 {
     int result;
-	
-	MI_MSG("mm3a310 guodm ealy resume 11 \n");	
+
+	MI_MSG("mm3a310 guodm ealy resume 11 \n");
     if(is_cali)
 	return 0;
 
@@ -2482,35 +2482,35 @@ int i2c_static_add_device(struct i2c_board_info *info)
 i2c_err:
     return ret;
 }
-#endif /* MODULE */ 
+#endif /* MODULE */
 
 static int __init mm3a310_init(void)
-{    
+{
     int res;
 
-#if FILTER_AVERAGE_ENHANCE 
+#if FILTER_AVERAGE_ENHANCE
     /* configure default filter param */
     int i;
-    for (i = 0; i < 3;i++){     
+    for (i = 0; i < 3;i++){
         tFac[i].filter_param_l = 2;
         tFac[i].filter_param_h = 8;
         tFac[i].filter_threhold = 60;
 
         tFac[i].refN_l = 0;
         tFac[i].refN_h = 0;
-    }    
+    }
 #endif
 
 /* comment this if you register this in board info */
 #if  DEVICE_CREATE_MODE == DEVICE_CREATE_BYSELF
     res = i2c_static_add_device(&mm3a310_i2c_boardinfo);
     //res = i2c_register_board_info(I2C_STATIC_BUS_NUM, &mm3a310_i2c_boardinfo, 1);
-    if (res < 0) 
+    if (res < 0)
     {
         MI_ERR("%s: add i2c device error %d\n", __func__, res);
         return (res);
     }
-#endif 
+#endif
 
     res = i2c_add_driver(&mm3a310_driver);
     if (res < 0){

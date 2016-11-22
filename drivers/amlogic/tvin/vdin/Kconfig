@@ -8,4 +8,3 @@ config TVIN_VDIN
 	default n
 	help
 	  VDIN device driver.
-

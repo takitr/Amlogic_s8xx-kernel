@@ -9,7 +9,7 @@
  *
  * This program is distributed .as is. WITHOUT ANY WARRANTY of any
  * kind, whether express or implied; without even the implied warranty
- * of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR
  * PURPOSE.  See the GNU General Public License for more details.
 */
 
@@ -78,10 +78,10 @@ static int32_t MhlI2cRemove(struct i2c_client *client);
 
 /**
  *  @brief Standard Linux probe callback.
- *  
+ *
  *  Probe is called if the I2C device name passed to HalOpenI2cDevice matches
  *  the name of an I2C device on the system.
- *  
+ *
  *  All we need to do is store the passed in i2c_client* needed when performing
  *  I2C bus transactions with the device.
  *
@@ -102,9 +102,9 @@ static int32_t MhlI2cProbe(struct i2c_client *client, const struct i2c_device_id
 
 /**
  *  @brief Standard Linux remove callback.
- *  
+ *
  *  Remove would be called if the I2C device were removed from the system (very unlikley).
- *  
+ *
  *  All we need to do is clear our copy of the i2c_client pointer to indicate we no longer
  *  have an I2C device to work with.
  *
@@ -149,8 +149,8 @@ halReturn_t I2cAccessCheck(void)
 
 static struct i2c_board_info si_5293_i2c_boardinfo[] = {
 	{
-	   	I2C_BOARD_INFO(MHL_DEVICE_NAME, (DEV_PAGE_PP_0 >> 1)),
-     	.flags = I2C_CLIENT_WAKE,
+		I2C_BOARD_INFO(MHL_DEVICE_NAME, (DEV_PAGE_PP_0 >> 1)),
+	.flags = I2C_CLIENT_WAKE,
 		.irq = INT_GPIO_0,
 	}
 };
@@ -162,14 +162,14 @@ static struct i2c_board_info si_5293_i2c_boardinfo[] = {
 /*****************************************************************************/
 /**
  * @brief Request access to the specified I2c device.
- * 
- * @param DeviceName, the name  must be same as which is registered in your kernel code; 
- * we use probe I2C mode , so  
- *  
+ *
+ * @param DeviceName, the name  must be same as which is registered in your kernel code;
+ * we use probe I2C mode , so
+ *
  * @param DriverName, iceman driver name
- * 
+ *
  * @return
- * 
+ *
  */
 halReturn_t HalOpenI2cDevice(char const *DeviceName, char const *DriverName)
 {
@@ -187,8 +187,8 @@ halReturn_t HalOpenI2cDevice(char const *DeviceName, char const *DriverName)
     retVal = strnlen(DeviceName, I2C_NAME_SIZE);
     if (retVal >= I2C_NAME_SIZE)
     {
-    	pr_info("I2c device name too long!\n");
-    	return HAL_RET_PARAMETER_ERROR;
+	pr_info("I2c device name too long!\n");
+	return HAL_RET_PARAMETER_ERROR;
     }
 
 
@@ -200,25 +200,25 @@ halReturn_t HalOpenI2cDevice(char const *DeviceName, char const *DriverName)
     gMhlDevice.driver.id_table = gMhlI2cIdTable;
     gMhlDevice.driver.probe = MhlI2cProbe;
     gMhlDevice.driver.remove = MhlI2cRemove;
-#if 0    
+#if 0
     retVal = i2c_add_driver(&gMhlDevice.driver);
     if (retVal != 0)
     {
-    	pr_info("I2C driver add failed\n");
+	pr_info("I2C driver add failed\n");
         retStatus = HAL_RET_FAILURE;
     }
     else
     {
-    	if (gMhlDevice.pI2cClient == NULL)
+	if (gMhlDevice.pI2cClient == NULL)
         {
             i2c_del_driver(&gMhlDevice.driver);
             pr_info("I2C driver add failed\n");
             retStatus = HAL_RET_NO_DEVICE;
         }
-    	else
-    	{
-    		retStatus = HAL_RET_SUCCESS;
-    	}
+	else
+	{
+		retStatus = HAL_RET_SUCCESS;
+	}
     }
     return retStatus;
 #endif
@@ -317,10 +317,10 @@ uint8_t I2C_ReadByte(uint8_t deviceID, uint8_t offset)
 		return 0xFF;
 	}
 
-    accessI2cAddr = deviceID>>1;  
+    accessI2cAddr = deviceID>>1;
     status = i2c_smbus_xfer(gMhlDevice.pI2cClient->adapter, accessI2cAddr,
-    						0, I2C_SMBUS_READ, offset, I2C_SMBUS_BYTE_DATA,
-    						&data);
+						0, I2C_SMBUS_READ, offset, I2C_SMBUS_BYTE_DATA,
+						&data);
 	if (status < 0)
 	{
         if(deviceID != 0xfc)//void much message
@@ -353,8 +353,8 @@ void I2C_WriteByte(uint8_t deviceID, uint8_t offset, uint8_t value)
 	data.byte = value;
 
     status = i2c_smbus_xfer(gMhlDevice.pI2cClient->adapter, accessI2cAddr,
-    						0, I2C_SMBUS_WRITE, offset, I2C_SMBUS_BYTE_DATA,
-    						&data);
+						0, I2C_SMBUS_WRITE, offset, I2C_SMBUS_BYTE_DATA,
+						&data);
 	if (status < 0)
 	{
 		pr_info("I2C_WriteByte(0x%02x, 0x%02x, 0x%02x), i2c_transfer error: %d\n",
@@ -381,18 +381,18 @@ uint8_t I2C_ReadBlock(uint8_t deviceID, uint8_t offset,uint8_t *buf, uint8_t len
 		return 0x00;
 	}
 
-    accessI2cAddr = deviceID>>1; 
+    accessI2cAddr = deviceID>>1;
     memset(buf,0xff,len);
 
     for(i = 0 ;i < len;i++)
     {
         status = i2c_smbus_xfer(gMhlDevice.pI2cClient->adapter, accessI2cAddr,
-        						0, I2C_SMBUS_READ, offset + i, I2C_SMBUS_BYTE_DATA,
-        						&data);
-    	if (status < 0)
-    	{
-            return 0;//if  error , return 
-    	}
+							0, I2C_SMBUS_READ, offset + i, I2C_SMBUS_BYTE_DATA,
+							&data);
+	if (status < 0)
+	{
+            return 0;//if  error , return
+	}
 
         *buf = data.byte;
         buf++;
@@ -419,18 +419,18 @@ void I2C_WriteBlock(uint8_t deviceID, uint8_t offset, uint8_t *buf, uint8_t len)
 		return ;
 	}
 
-    accessI2cAddr = deviceID>>1; 
+    accessI2cAddr = deviceID>>1;
 
     for(i = 0 ;i < len;i++)
     {
         data.byte = *buf;
         status = i2c_smbus_xfer(gMhlDevice.pI2cClient->adapter, accessI2cAddr,
-        						0, I2C_SMBUS_WRITE, offset + i, I2C_SMBUS_BYTE_DATA,
-        						&data);
-    	if (status < 0)
-    	{
+							0, I2C_SMBUS_WRITE, offset + i, I2C_SMBUS_BYTE_DATA,
+							&data);
+	if (status < 0)
+	{
             return ;
-    	}
+	}
         buf++;
     }
     return ;
@@ -536,114 +536,114 @@ SiiPlatformStatus_t SiiMasterI2cTransfer(deviceBusTypes_t busIndex,
 
 
     do {
-    	if (I2cAccessCheck() != HAL_RET_SUCCESS)
-    	{
-    		break;
-    	}
+	if (I2cAccessCheck() != HAL_RET_SUCCESS)
+	{
+		break;
+	}
 
-    	if(busIndex != DEV_I2C_0)
-    	{
-        	SII_DEBUG_PRINT(MSG_ERR,
-        			"SiiMasterI2cTransfer error: implementation supports" \
-        			"only one I2C bus\n");
-    		break;
-    	}
+	if(busIndex != DEV_I2C_0)
+	{
+		SII_DEBUG_PRINT(MSG_ERR,
+				"SiiMasterI2cTransfer error: implementation supports" \
+				"only one I2C bus\n");
+		break;
+	}
 
-    	if(msgNum > MAX_I2C_MESSAGES)
-    	{
-        	SII_DEBUG_PRINT(MSG_ERR,
-        			"SiiMasterI2cTransfer error: implementation supports" \
-        			"only %d message segments\n", MAX_I2C_MESSAGES);
-    		break;
-    	}
+	if(msgNum > MAX_I2C_MESSAGES)
+	{
+		SII_DEBUG_PRINT(MSG_ERR,
+				"SiiMasterI2cTransfer error: implementation supports" \
+				"only %d message segments\n", MAX_I2C_MESSAGES);
+		break;
+	}
 
-    	// Function parameter checks passed, assume at this point that the
-    	// function will complete successfully.
-    	siiStatus = PLATFORM_SUCCESS;
+	// Function parameter checks passed, assume at this point that the
+	// function will complete successfully.
+	siiStatus = PLATFORM_SUCCESS;
 
-    	for(idx=0; idx < msgNum; idx++) {
-    		i2cMsg[idx].addr	= pMsgs[idx].addr >> 1;
-    		i2cMsg[idx].buf		= pMsgs[idx].pBuf;
-    		i2cMsg[idx].len		= pMsgs[idx].len;
-    		i2cMsg[idx].flags	= (pMsgs[idx].cmdFlags & SII_MI2C_RD) ? I2C_M_RD : 0;
+	for(idx=0; idx < msgNum; idx++) {
+		i2cMsg[idx].addr	= pMsgs[idx].addr >> 1;
+		i2cMsg[idx].buf		= pMsgs[idx].pBuf;
+		i2cMsg[idx].len		= pMsgs[idx].len;
+		i2cMsg[idx].flags	= (pMsgs[idx].cmdFlags & SII_MI2C_RD) ? I2C_M_RD : 0;
             i2cMsg[idx].flags   |= (1<<1); // 1 for 50k
-    		if(pMsgs[idx].cmdFlags & SII_MI2C_TEN) {
-    			pMsgs[idx].cmdFlags |= I2C_M_TEN;
-    		}
-    		if(pMsgs[idx].cmdFlags & SII_MI2C_APPEND_NEXT_MSG) {
-    			// Caller is asking that we append the buffer from the next
-    			// message to this one.  We will do this IF there is a next
-    			// message AND the direction of the two messages is the same
-    			// AND we haven't already appended a message.
+		if(pMsgs[idx].cmdFlags & SII_MI2C_TEN) {
+			pMsgs[idx].cmdFlags |= I2C_M_TEN;
+		}
+		if(pMsgs[idx].cmdFlags & SII_MI2C_APPEND_NEXT_MSG) {
+			// Caller is asking that we append the buffer from the next
+			// message to this one.  We will do this IF there is a next
+			// message AND the direction of the two messages is the same
+			// AND we haven't already appended a message.
 
-    			siiStatus = PLATFORM_INVALID_PARAMETER;
-    			if(idx+1 < msgNum && pBuffer == NULL) {
-    				if(!((pMsgs[idx].cmdFlags ^ pMsgs[idx+1].cmdFlags) & SII_MI2C_RD)) {
+			siiStatus = PLATFORM_INVALID_PARAMETER;
+			if(idx+1 < msgNum && pBuffer == NULL) {
+				if(!((pMsgs[idx].cmdFlags ^ pMsgs[idx+1].cmdFlags) & SII_MI2C_RD)) {
 
-    					i2cMsg[idx].len += pMsgs[idx+1].len;
+					i2cMsg[idx].len += pMsgs[idx+1].len;
 
-    				    pBuffer = kmalloc(i2cMsg[idx].len, GFP_KERNEL);
-    				    if(pBuffer == NULL) {
-    				    	siiStatus = PLATFORM_FAIL;
-    				    	break;
-    				    }
+				    pBuffer = kmalloc(i2cMsg[idx].len, GFP_KERNEL);
+				    if(pBuffer == NULL) {
+					siiStatus = PLATFORM_FAIL;
+					break;
+				    }
 
-    				    i2cMsg[idx].buf = pBuffer;
-    				    memmove(pBuffer, pMsgs[idx].pBuf, pMsgs[idx].len);
-    				    memmove(&pBuffer[pMsgs[idx].len], pMsgs[idx+1].pBuf, pMsgs[idx+1].len);
+				    i2cMsg[idx].buf = pBuffer;
+				    memmove(pBuffer, pMsgs[idx].pBuf, pMsgs[idx].len);
+				    memmove(&pBuffer[pMsgs[idx].len], pMsgs[idx+1].pBuf, pMsgs[idx+1].len);
 
-    				    idx += 1;
-    				    siiStatus = PLATFORM_SUCCESS;
-    				}
-    			}
-    		}
-    		msgCount++;
-    	}
+				    idx += 1;
+				    siiStatus = PLATFORM_SUCCESS;
+				}
+			}
+		}
+		msgCount++;
+	}
 
-    	if(siiStatus != PLATFORM_SUCCESS) {
-        	SII_DEBUG_PRINT(MSG_ERR,
-        			"SiiMasterI2cTransfer failed, returning error: %d\n", siiStatus);
+	if(siiStatus != PLATFORM_SUCCESS) {
+		SII_DEBUG_PRINT(MSG_ERR,
+				"SiiMasterI2cTransfer failed, returning error: %d\n", siiStatus);
 
-    		if(pBuffer != NULL) {
-        		kfree(pBuffer);
-        	}
+		if(pBuffer != NULL) {
+			kfree(pBuffer);
+		}
 
-    		return siiStatus;
-    	}
+		return siiStatus;
+	}
 
-    	i2cStatus = i2c_transfer(gMhlDevice.pI2cClient->adapter, i2cMsg, msgCount);
+	i2cStatus = i2c_transfer(gMhlDevice.pI2cClient->adapter, i2cMsg, msgCount);
 
-    	if(pBuffer != NULL) {
-    		kfree(pBuffer);
-    	}
+	if(pBuffer != NULL) {
+		kfree(pBuffer);
+	}
 
-    	if(i2cStatus < msgCount)
-    	{
-    		// All the messages were not transferred, some sort of error occurred.
-    		// Try to return the most appropriate error code to the caller.
-    		if (i2cStatus < 0)
-    		{
-    	    	SII_DEBUG_PRINT(MSG_ERR,
-    	    			"SiiMasterI2cTransfer, i2c_transfer error: %d  " \
-    	    			"deviceId: 0x%02x regOffset: 0x%02x\n",
-    	    			i2cStatus, pMsgs->addr, *pMsgs->pBuf);
-    			siiStatus = PLATFORM_FAIL;
-    		}
-    		else
-    		{
-    			// One or more messages transferred so error probably occurred on the
-    			// first unsent message.  Look to see if the message was a read or write
-    			// and set the appropriate return code.
-    			if(pMsgs[i2cStatus].cmdFlags & SII_MI2C_RD)
-    			{
-    				siiStatus = PLATFORM_I2C_READ_FAIL;
-    			}
-    			else
-    			{
-    				siiStatus = PLATFORM_I2C_WRITE_FAIL;
-    			}
-    		}
-    	}
+	if(i2cStatus < msgCount)
+	{
+		// All the messages were not transferred, some sort of error occurred.
+		// Try to return the most appropriate error code to the caller.
+		if (i2cStatus < 0)
+		{
+		SII_DEBUG_PRINT(MSG_ERR,
+				"SiiMasterI2cTransfer, i2c_transfer error: %d  " \
+				"deviceId: 0x%02x regOffset: 0x%02x\n",
+				i2cStatus, pMsgs->addr, *pMsgs->pBuf);
+			siiStatus = PLATFORM_FAIL;
+		}
+		else
+		{
+			// One or more messages transferred so error probably occurred on the
+			// first unsent message.  Look to see if the message was a read or write
+			// and set the appropriate return code.
+			if(pMsgs[i2cStatus].cmdFlags & SII_MI2C_RD)
+			{
+				siiStatus = PLATFORM_I2C_READ_FAIL;
+			}
+			else
+			{
+				siiStatus = PLATFORM_I2C_WRITE_FAIL;
+			}
+		}
+	}
 
 	} while(0);
 

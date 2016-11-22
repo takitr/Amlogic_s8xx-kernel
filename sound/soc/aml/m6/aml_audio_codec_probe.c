@@ -422,4 +422,3 @@ module_exit(aml_audio_codec_probe_exit);
 
 MODULE_LICENSE("GPL v2");
 MODULE_DESCRIPTION("Amlogic Audio Codec prober driver");
-

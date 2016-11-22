@@ -361,14 +361,14 @@ static int ep_queue(struct usb_ep *usb_ep, struct usb_request *usb_req,
 #ifdef LM_INTERFACE
 		struct device * dev = &gadget_wrapper->pcd->otg_dev->os_dep.lmdev->dev;
 		if (usb_req->length != 0/* && usb_req->dma == DWC_DMA_ADDR_INVALID*/) {
-			dma_addr = dma_map_single(dev, usb_req->buf, usb_req->length, 
+			dma_addr = dma_map_single(dev, usb_req->buf, usb_req->length,
 					ep->dwc_ep.is_in ? DMA_TO_DEVICE : DMA_FROM_DEVICE);
 			usb_req->dma = dma_addr;
 		}
 #elif defined(PCI_INTERFACE)
 		struct pci_dev *dev = gadget_wrapper->pcd->otg_dev->os_dep.pcidev;
 		if (usb_req->length != 0 && usb_req->dma == DWC_DMA_ADDR_INVALID) {
-			dma_addr = pci_map_single(dev, usb_req->buf, usb_req->length, 
+			dma_addr = pci_map_single(dev, usb_req->buf, usb_req->length,
 					ep->dwc_ep.is_in ? PCI_DMA_TODEVICE : PCI_DMA_FROMDEVICE);
 		}
 
@@ -672,7 +672,7 @@ static int dwc_otg_pcd_pullup(struct usb_gadget *_gadget, int is_on)
 	struct gadget_wrapper *d;
 	dwc_otg_core_if_t * core_if;
   dwc_irqflags_t flags;
-  
+
 	DWC_DEBUGPL(DBG_PCDV, "%s(%p), is_on %d\n", __func__, _gadget,is_on);
 	if (_gadget == 0)
 		return -ENODEV;
@@ -1219,7 +1219,7 @@ int pcd_init(
 
 	otg_dev->pcd->otg_dev = otg_dev;
 	gadget_wrapper = alloc_wrapper(_dev);
-	
+
 	/*
 	 * Initialize EP structures
 	 */
@@ -1305,7 +1305,7 @@ int usb_gadget_probe_driver(struct usb_gadget_driver *driver,
 	DWC_DEBUGPL(DBG_PCD, "registering gadget driver '%s'\n",
 		    driver->driver.name);
 
-	if (!driver || 
+	if (!driver ||
 #if LINUX_VERSION_CODE  > KERNEL_VERSION(3,6,0)
 	    !driver->bind ||
 #else

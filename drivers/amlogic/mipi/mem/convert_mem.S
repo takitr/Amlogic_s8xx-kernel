@@ -24,7 +24,7 @@ loop_16:
     sub        r3, r3, #16
     cmp        r3, #16
     bge        loop_16
-    
+
 end:
     vpop       {q0,q1,q2,q3}
     ldmia      sp!, {r4-r7, pc}

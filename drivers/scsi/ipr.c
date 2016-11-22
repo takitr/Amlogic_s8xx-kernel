@@ -3908,17 +3908,13 @@ static ssize_t ipr_store_update_fw(struct device *dev,
 	struct ipr_sglist *sglist;
 	char fname[100];
 	char *src;
-	char *endline;
-	int result, dnld_size;
+	int len, result, dnld_size;
 
 	if (!capable(CAP_SYS_ADMIN))
 		return -EACCES;
 
-	snprintf(fname, sizeof(fname), "%s", buf);
-
-	endline = strchr(fname, '\n');
-	if (endline)
-		*endline = '\0';
+	len = snprintf(fname, 99, "%s", buf);
+	fname[len-1] = '\0';
 
 	if (request_firmware(&fw_entry, fname, &ioa_cfg->pdev->dev)) {
 		dev_err(&ioa_cfg->pdev->dev, "Firmware file %s not found\n", fname);

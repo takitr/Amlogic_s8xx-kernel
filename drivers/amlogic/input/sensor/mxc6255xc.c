@@ -161,8 +161,8 @@ static int mxc622x_acc_i2c_write(struct mxc622x_acc_data *acc, u8 * buf, int len
 	struct i2c_msg msgs[] = {{
 		.addr = acc->client->addr,
 			.flags = acc->client->flags & I2C_M_TEN,
-			.len = len + 1, 
-			.buf = buf,}, 
+			.len = len + 1,
+			.buf = buf,},
 		};
 	do {
 		err = i2c_transfer(acc->client->adapter, msgs, 1);
@@ -305,7 +305,7 @@ static int mxc622x_acc_get_acceleration_data(struct mxc622x_acc_data *acc,
 
 static void mxc622x_acc_report_values(struct mxc622x_acc_data *acc, int *xyz)
 {
-	
+
 	aml_sensor_report_acc(acc->client, acc->input_dev, xyz[0], xyz[1], xyz[2]);
 }
 
@@ -395,19 +395,19 @@ static long mxc622x_acc_misc_ioctl(struct file *file,unsigned int cmd, unsigned 
 		if (copy_to_user(argp, &interval, sizeof(interval)))
 			return -EINVAL;
 		break;
-	case MXC622X_ACC_IOCTL_GET_COOR_XYZ:	       
-		err = mxc622x_acc_get_acceleration_data(acc, xyz);                
-		if (err < 0)                    
+	case MXC622X_ACC_IOCTL_GET_COOR_XYZ:
+		err = mxc622x_acc_get_acceleration_data(acc, xyz);
+		if (err < 0)
 			return err;
 		#ifdef DEBUG
 		//                printk(KERN_ALERT "%s Get coordinate xyz:[%d, %d, %d]\n",
 		//                        __func__, xyz[0], xyz[1], xyz[2]);
-		#endif                
-		if (copy_to_user(argp, xyz, sizeof(xyz))) {			
-			printk(KERN_ERR " %s %d error in copy_to_user \n",					 
-				__func__, __LINE__);			
-			return -EINVAL;                
-			}                
+		#endif
+		if (copy_to_user(argp, xyz, sizeof(xyz))) {
+			printk(KERN_ERR " %s %d error in copy_to_user \n",
+				__func__, __LINE__);
+			return -EINVAL;
+			}
 		break;
 	case MXC622X_ACC_IOCTL_GET_CHIP_ID:
 	{
@@ -466,12 +466,12 @@ static ssize_t mxc622x_enable_store(struct device *dev,
 	struct mxc622x_acc_data *acc = i2c_get_clientdata(client);
 
 	error = strict_strtoul(buf, 10, &data);
-    	if (error) {
+	if (error) {
             printk(KERN_ERR "%s: strict_strtoul failed, error=0x%x\n", __func__, error);
             return error;
 	}
        data = !!data;
-	if (data) 
+	if (data)
             mxc622x_acc_enable(acc);
        else
             mxc622x_acc_disable(acc);
@@ -505,7 +505,7 @@ static ssize_t mxc622x_delay_store(struct device *dev,
 
 	acc->pdata->poll_interval = (delay > acc->pdata->max_interval) ? acc->pdata->max_interval : delay;
        acc->pdata->poll_interval = max(acc->pdata->poll_interval, acc->pdata->min_interval);
-    
+
 	return count;
 }
 
@@ -580,7 +580,7 @@ static int mxc622x_acc_input_init(struct mxc622x_acc_data *acc)
 	int err;
     // Polling rx data when the interrupt is not used.
     if (1/*acc->irq1 == 0 && acc->irq1 == 0*/) {
-    	INIT_DELAYED_WORK(&acc->input_work, mxc622x_acc_input_work_func);
+	INIT_DELAYED_WORK(&acc->input_work, mxc622x_acc_input_work_func);
     }
 
 	acc->input_dev = input_allocate_device();
@@ -786,7 +786,7 @@ exit_kfree_pdata:
 	kfree(acc->pdata);
 err_mutexunlockfreedata:
 	kfree(acc);
- 	mutex_unlock(&acc->lock);
+	mutex_unlock(&acc->lock);
     i2c_set_clientdata(client, NULL);
     mxc622x_acc_misc_data = NULL;
 exit_alloc_data_failed:
@@ -799,15 +799,15 @@ static int  mxc622x_acc_remove(struct i2c_client *client)
 {
 	/* TODO: revisit ordering here once _probe order is finalized */
 	struct mxc622x_acc_data *acc = i2c_get_clientdata(client);
-	
-    	misc_deregister(&mxc622x_acc_misc_device);
-    	mxc622x_acc_input_cleanup(acc);
-    	mxc622x_acc_device_power_off(acc);
-    	if (acc->pdata->exit)
-    		acc->pdata->exit();
-    	kfree(acc->pdata);
-    	kfree(acc);
-    
+
+	misc_deregister(&mxc622x_acc_misc_device);
+	mxc622x_acc_input_cleanup(acc);
+	mxc622x_acc_device_power_off(acc);
+	if (acc->pdata->exit)
+		acc->pdata->exit();
+	kfree(acc->pdata);
+	kfree(acc);
+
 	return 0;
 }
 
@@ -916,7 +916,7 @@ static int __init mxc622x_acc_init(void)
 {
         int  ret = 0;
 
-    	printk(KERN_INFO "%s accelerometer driver: init\n",
+	printk(KERN_INFO "%s accelerometer driver: init\n",
 						MXC622X_ACC_I2C_NAME);
 #ifdef I2C_BUS_NUM_STATIC_ALLOC
         ret = i2c_static_add_device(&mxc622x_i2c_boardinfo);
@@ -951,6 +951,3 @@ module_exit(mxc622x_acc_exit);
 MODULE_DESCRIPTION("mxc622x accelerometer misc driver");
 MODULE_AUTHOR("Memsic");
 MODULE_LICENSE("GPL");
-
-
-

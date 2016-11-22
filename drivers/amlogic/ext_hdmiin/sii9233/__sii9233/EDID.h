@@ -22,4 +22,3 @@ void ProgramEDID(void);
 
 
 #endif
-

@@ -21,7 +21,7 @@
 #define PICINFO_INTERLACE           0x0020
 #define PICINFO_INTERLACE_TOP       0x0010
 
-#define  JPEG_INVALID_FILE_SIZE	 0x2000000 
+#define  JPEG_INVALID_FILE_SIZE	 0x2000000
 enum {
 	PIC_NA = 0,
 	PIC_DECODED = 1,
@@ -32,9 +32,9 @@ typedef  struct {
 	volatile u32 	state;
 	u32 __iomem*	vaddr;
 	u32  canvas_index;
-	
+
 }jpeg_private_t;
 static int jpeg_init(logo_object_t *logo) ;
 static  int  jpeg_decode(logo_object_t *plogo);
 static int jpeg_deinit(logo_object_t *plogo);
-#endif 
+#endif
