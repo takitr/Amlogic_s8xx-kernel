@@ -1199,11 +1199,11 @@ $(help-board-dirs): help-%:
 		echo '')
 
 #build amlogic device tree file meson.dtd 
-dtd:
-	$(srctree)/scripts/amlogic/aml_dtd.sh $(srctree)
+#dtd:
+#	$(srctree)/scripts/amlogic/aml_dtd.sh $(srctree)
 
-%.dtd:
-	$(srctree)/scripts/amlogic/aml2dts.sh $(wildcard $(srctree)/arch/arm/boot/dts/amlogic/$@)
+#%.dtd:
+#	$(srctree)/scripts/amlogic/aml2dts.sh $(wildcard $(srctree)/arch/arm/boot/dts/amlogic/$@)
 
 # Documentation targets
 # ---------------------------------------------------------------------------
