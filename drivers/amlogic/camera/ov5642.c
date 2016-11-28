@@ -280,10 +280,10 @@ struct v4l2_querymenu ov5642_qmenu_autofocus[] = {
 
 struct v4l2_querymenu ov5642_qmenu_flashmode[] = {
 	{
-		.id         = V4L2_CID_BACKLIGHT_COMPENSATION,
-		.index      = FLASHLIGHT_ON,
-		.name       = "on",
-		.reserved   = 0,
+	 	.id         = V4L2_CID_BACKLIGHT_COMPENSATION,
+	 	.index      = FLASHLIGHT_ON,
+	 	.name       = "on",
+	 	.reserved   = 0,
 	},{
 		.id         = V4L2_CID_BACKLIGHT_COMPENSATION,
 		.index      = FLASHLIGHT_OFF,
@@ -305,9 +305,9 @@ typedef struct {
 
 ov5642_qmenu_set_t ov5642_qmenu_set[] = {
 	{
-		.id             = V4L2_CID_FOCUS_AUTO,
-		.num            = ARRAY_SIZE(ov5642_qmenu_autofocus),
-		.ov5642_qmenu   = ov5642_qmenu_autofocus,
+	 	.id             = V4L2_CID_FOCUS_AUTO,
+	 	.num            = ARRAY_SIZE(ov5642_qmenu_autofocus),
+	 	.ov5642_qmenu   = ov5642_qmenu_autofocus,
 	}, {
 		.id             = V4L2_CID_BACKLIGHT_COMPENSATION,
 		.num            = ARRAY_SIZE(ov5642_qmenu_flashmode),
@@ -344,11 +344,11 @@ static struct ov5642_fmt formats[] = {
 	}, {
 		.name     = "12  Y/CbCr 4:2:0SP",
 		.fourcc   = V4L2_PIX_FMT_NV12,
-		.depth    = 12,
+		.depth    = 12,    
 	}, {
 		.name     = "12  Y/CbCr 4:2:0SP",
 		.fourcc   = V4L2_PIX_FMT_NV21,
-		.depth    = 12,
+		.depth    = 12,    
 	}, {
 		.name     = "YUV420P",
 		.fourcc   = V4L2_PIX_FMT_YUV420,
@@ -372,7 +372,7 @@ static struct ov5642_fmt *get_format(struct v4l2_format *f)
 	}
 
 	if (k == ARRAY_SIZE(formats))
-	return NULL;
+    	return NULL;
 
 	return &formats[k];
 }
@@ -434,19 +434,19 @@ struct ov5642_device {
 
 	/* platform device data from board initting. */
 	aml_cam_info_t cam_info;
-
+    
 	/* Control 'registers' */
 	int                qctl_regs[ARRAY_SIZE(ov5642_qctrl)];
-
+	
 	/* current resolution param for preview and capture */
 	resolution_param_t* cur_resolution_param;
-
+	
 	/* wake lock */
 	struct wake_lock	wake_lock;
-
+	
 	/* for down load firmware */
 	struct work_struct dl_work;
-
+	
 	int firmware_ready;
 };
 
@@ -976,7 +976,7 @@ static struct aml_camera_i2c_fig_s OV5642_script[] = {
 	{0xffff, 0xff}
 };
 
-#define PREVIEW_22_FRAME
+#define PREVIEW_22_FRAME 
 
 struct aml_camera_i2c_fig_s OV5642_preview_script[] = {
 	{0x3503, 0x00},
@@ -988,10 +988,10 @@ struct aml_camera_i2c_fig_s OV5642_preview_script[] = {
 	{0x3005, 0xff},
 	{0x3006, 0x43},
 	{0x3007, 0x37},
-
+	
 	{0x3818, 0xc1},
 	{0x3621, 0x87},
-
+	
 	{0x350c, 0x03},
 	{0x350d, 0xe8},
 	{0x3602, 0xfc},
@@ -1002,10 +1002,10 @@ struct aml_camera_i2c_fig_s OV5642_preview_script[] = {
 	{0x3604, 0x48},
 	{0x3705, 0xdb},
 	{0x370a, 0x81},
-
+	
 	{0x3801, 0x50},
 	{0x3803, 0x08},
-
+	
 	{0x3804, 0x05},
 	{0x3805, 0x00},
 	{0x3806, 0x03},
@@ -1020,9 +1020,9 @@ struct aml_camera_i2c_fig_s OV5642_preview_script[] = {
 	{0x380f, 0xe8},
 	{0x3810, 0x40},
 	{0x3815, 0x04},
-
+	
 	{0x3824, 0x11},
-
+	
 	{0x3825, 0xb4},
 	{0x3827, 0x08},
 	{0x3a00, 0x78},
@@ -1058,18 +1058,18 @@ struct aml_camera_i2c_fig_s OV5642_preview_script[] = {
 	{0x3a08, 0x0e}, //50hz
 	{0x3a09, 0x10}, //50hz
 	{0x3a0e, 0x04}, //50hz
-
+	
 	{0x3a0a, 0x0b}, //60hz
 	{0x3a0b, 0xc0}, //60hz
 	{0x3a0d, 0x05}, //60hz
 #else
 	{0x3010, 0x10},//00
 	{0x3011, 0x08},//00
-
+	
 	{0x3a08, 0x09}, //50hz
 	{0x3a09, 0x60}, //50hz
 	{0x3a0e, 0x06}, //50hz
-
+	
 	{0x3a0a, 0x07}, //60hz
 	{0x3a0b, 0xd0}, //60hz
 	{0x3a0d, 0x08}, //60hz
@@ -1088,10 +1088,10 @@ struct aml_camera_i2c_fig_s OV5642_preview_QVGA_script[] = {
 	{0x3006, 0x43},
 	{0x3007, 0x37},
 	{0x3010, 0x10},//00
-
+	
 	{0x3818, 0xc1},
 	{0x3621, 0x87},
-
+	
 	{0x350c, 0x03},
 	{0x350d, 0xe8},
 	{0x3602, 0xfc},
@@ -1102,10 +1102,10 @@ struct aml_camera_i2c_fig_s OV5642_preview_QVGA_script[] = {
 	{0x3604, 0x48},
 	{0x3705, 0xdb},
 	{0x370a, 0x81},
-
+	
 	{0x3801, 0x50},
 	{0x3803, 0x08},
-
+	
 	{0x3804, 0x05},
 	{0x3805, 0x00},
 	{0x3806, 0x03},
@@ -1120,9 +1120,9 @@ struct aml_camera_i2c_fig_s OV5642_preview_QVGA_script[] = {
 	{0x380f, 0xe8},
 	{0x3810, 0x40},
 	{0x3815, 0x04},
-
+	
 	{0x3824, 0x11},
-
+	
 	{0x3825, 0xb4},
 	{0x3827, 0x08},
 	{0x3a00, 0x78},
@@ -1167,10 +1167,10 @@ struct aml_camera_i2c_fig_s OV5642_capture_5M_script[] = {
 	{0x3007, 0x3f},
 	{0x3010, 0x30},
 	{0x3011, 0x08},
-
+	
 	{0x3818, 0xc0},
 	{0x3621, 0x09},
-
+	
 	{0x350c, 0x07},
 	{0x350d, 0xd0},
 	{0x3602, 0xe4},
@@ -1181,10 +1181,10 @@ struct aml_camera_i2c_fig_s OV5642_capture_5M_script[] = {
 	{0x3604, 0x48},
 	{0x3705, 0xda},
 	{0x370a, 0x80},
-
+	
 	{0x3801, 0x95},
 	{0x3803, 0x0e},
-
+	
 	{0x3804, 0x0a},
 	{0x3805, 0x20},
 	{0x3806, 0x07},
@@ -1199,9 +1199,9 @@ struct aml_camera_i2c_fig_s OV5642_capture_5M_script[] = {
 	{0x380f, 0xd0},
 	{0x3810, 0xc2},
 	{0x3815, 0x44},
-
+	
 	{0x3824, 0x11},
-
+	
 	{0x3825, 0xac},
 	{0x3827, 0x0c},
 	{0x3a00, 0x78},
@@ -1222,7 +1222,7 @@ struct aml_camera_i2c_fig_s OV5642_capture_5M_script[] = {
 	{0x4713, 0x03},
 	{0x471c, 0xd0},
 	{0x3815, 0x01},
-
+	
 	{0x501f, 0x00},
 	{0x3002, 0x1c},
 	{0x3819, 0x80},
@@ -1247,10 +1247,10 @@ struct aml_camera_i2c_fig_s OV5642_capture_3M_script[] = {
 	{0x3007, 0x3f},
 	{0x3010, 0x30},
 	{0x3011, 0x08},
-
+	
 	{0x3818, 0xc0},
 	{0x3621, 0x09},
-
+	
 	{0x350c, 0x07},
 	{0x350d, 0xd0},
 	{0x3602, 0xe4},
@@ -1261,10 +1261,10 @@ struct aml_camera_i2c_fig_s OV5642_capture_3M_script[] = {
 	{0x3604, 0x48},
 	{0x3705, 0xda},
 	{0x370a, 0x80},
-
+	
 	{0x3801, 0x95},
 	{0x3803, 0x0e},
-
+	
 	{0x3804, 0x0a},
 	{0x3805, 0x20},
 	{0x3806, 0x07},
@@ -1279,9 +1279,9 @@ struct aml_camera_i2c_fig_s OV5642_capture_3M_script[] = {
 	{0x380f, 0xd0},
 	{0x3810, 0xc2},
 	{0x3815, 0x44},
-
+	
 	{0x3824, 0x11},
-
+	
 	{0x3825, 0xac},
 	{0x3827, 0x0c},
 	{0x3a00, 0x78},
@@ -1302,7 +1302,7 @@ struct aml_camera_i2c_fig_s OV5642_capture_3M_script[] = {
 	{0x4713, 0x03},
 	{0x471c, 0xd0},
 	{0x3815, 0x01},
-
+	
 	{0x501f, 0x00},
 	{0x3002, 0x1c},
 	{0x3819, 0x80},
@@ -1327,10 +1327,10 @@ struct aml_camera_i2c_fig_s OV5642_capture_2M_script[] = {
 	{0x3007, 0x3f},
 	{0x3010, 0x30},
 	{0x3011, 0x08},
-
+	
 	{0x3818, 0xc0},
 	{0x3621, 0x09},
-
+	
 	{0x350c, 0x07},
 	{0x350d, 0xd0},
 	{0x3602, 0xe4},
@@ -1341,10 +1341,10 @@ struct aml_camera_i2c_fig_s OV5642_capture_2M_script[] = {
 	{0x3604, 0x48},
 	{0x3705, 0xda},
 	{0x370a, 0x80},
-
+	
 	{0x3801, 0x95},
 	{0x3803, 0x0e},
-
+	
 	{0x3804, 0x0a},
 	{0x3805, 0x20},
 	{0x3806, 0x07},
@@ -1359,9 +1359,9 @@ struct aml_camera_i2c_fig_s OV5642_capture_2M_script[] = {
 	{0x380f, 0xd0},
 	{0x3810, 0xc2},
 	{0x3815, 0x44},
-
+	
 	{0x3824, 0x11},
-
+	
 	{0x3825, 0xac},
 	{0x3827, 0x0c},
 	{0x3a00, 0x78},
@@ -1382,7 +1382,7 @@ struct aml_camera_i2c_fig_s OV5642_capture_2M_script[] = {
 	{0x4713, 0x03},
 	{0x471c, 0xd0},
 	{0x3815, 0x01},
-
+	
 	{0x501f, 0x00},
 	{0x3002, 0x1c},
 	{0x3819, 0x80},
@@ -1451,14 +1451,14 @@ int OV5642_download_firmware(struct ov5642_device *dev)
 	struct i2c_client *client = v4l2_get_subdevdata(&dev->sd);
 	int ret = 0;
 #if 0
-    int totalCnt = 0;
-    int index=0;
-    unsigned short addr = 0x8000;
+    int totalCnt = 0; 
+    int index=0; 
+    unsigned short addr = 0x8000; 
 
     i2c_put_byte(client, 0x3000, 0x20);
-    totalCnt = ARRAY_SIZE(ad5820_firmware);
+    totalCnt = ARRAY_SIZE(ad5820_firmware); 
 
-    while (index < totalCnt) {
+    while (index < totalCnt) {        
         i2c_put_byte(client, addr, ad5820_firmware[index]);
         index++;
         addr++
@@ -1474,14 +1474,14 @@ int OV5642_download_firmware(struct ov5642_device *dev)
     i2c_put_byte(client, 0x3027, 0x00);
     i2c_put_byte(client, 0x3028, 0x00);
     i2c_put_byte(client, 0x3029, 0x7f);
-    i2c_put_byte(client, 0x3000, 0x00);
+    i2c_put_byte(client, 0x3000, 0x00);  
 #else
 	int i=0;
 	i2c_put_byte(client, 0x3000, 0x20);
 	msleep(20);
 	while(1)
 	{
-		if (OV5642_AF_firmware[i].val==0xff&&OV5642_AF_firmware[i].addr==0xffff)
+		if (OV5642_AF_firmware[i].val==0xff&&OV5642_AF_firmware[i].addr==0xffff) 
 		{
 			printk("download firmware success in initial OV5642.\n");
 			break;
@@ -1515,7 +1515,7 @@ static void do_download(struct work_struct *work)
 			if (ret == 0x70) {
 				pr_info("down load firmware suscess!!!!\n");
 				break;
-			}
+			} 
 			msleep(5);
 			pr_info("FW_STATUS:0x%x\n", ret);
 		}
@@ -1532,14 +1532,14 @@ void OV5642_init_regs(struct ov5642_device *dev)
 {
 	struct i2c_client *client = v4l2_get_subdevdata(&dev->sd);
 	int i=0;
-
+	
 	while(1) {
-		if (OV5642_script[i].val == 0xff && OV5642_script[i].addr==0xffff) {
-			printk("success in initial OV5642.\n");
-			break;
-		}
-		if ((i2c_put_byte(client,OV5642_script[i].addr, OV5642_script[i].val)) < 0) {
-			printk("fail in initial OV5642. \n");
+	 	if (OV5642_script[i].val == 0xff && OV5642_script[i].addr==0xffff) {
+	 		printk("success in initial OV5642.\n");
+	 		break;
+	 	}
+	 	if ((i2c_put_byte(client,OV5642_script[i].addr, OV5642_script[i].val)) < 0) {
+	 		printk("fail in initial OV5642. \n");
 			return;
 		}
 		i++;
@@ -1562,15 +1562,15 @@ static int rewrite_preview_gain_exposure(struct ov5642_device *dev)
 	//int rc = 0;
 	//unsigned char reg_l, reg_m, reg_h;
 	struct i2c_client *client = v4l2_get_subdevdata(&dev->sd);
-
+	
 	i2c_put_byte(client, 0x3500, preview_reg3500);
 	i2c_put_byte(client, 0x3501, preview_reg3501);
 	i2c_put_byte(client, 0x3502, preview_reg3502);
-
+	
 	i2c_put_byte(client, 0x350b, preview_reg350b);
 	return 0;
 }
-
+	
 
 static int get_preview_exposure_gain(struct ov5642_device *dev)
 {
@@ -1578,7 +1578,7 @@ static int get_preview_exposure_gain(struct ov5642_device *dev)
 	unsigned int ret_l,ret_m,ret_h;
 	struct i2c_client *client = v4l2_get_subdevdata(&dev->sd);
 	ret_h = ret_m = ret_l = 0;
-
+	
 	i2c_put_byte(client, 0x3503, 0x07);//stop aec/agc
 	//get preview exp & gain
 	ret_h = ret_m = ret_l = 0;
@@ -1588,14 +1588,14 @@ static int get_preview_exposure_gain(struct ov5642_device *dev)
 	preview_reg3502 = ret_l = i2c_get_byte(client,0x3502);
 	ov5642_preview_exposure = (ret_h << 12) + (ret_m << 4) + (ret_l >> 4);
 	//printk("preview_exposure=%d\n", ov5642_preview_exposure);
-
+	
 	ret_h = ret_m = ret_l = 0;
 	ov5642_preview_maxlines = 0;
 	ret_h = i2c_get_byte(client, 0x380e);
 	ret_l = i2c_get_byte(client, 0x380f);
 	ov5642_preview_maxlines = (ret_h << 8) + ret_l;
 	//printk("Preview_Maxlines=%d\n", ov5642_preview_maxlines);
-
+	
 	//Read back AGC Gain for preview
 	ov5642_gain = 0;
 	preview_reg350b = ov5642_gain = i2c_get_byte(client, 0x350b);
@@ -1633,26 +1633,26 @@ static int cal_exposure(struct ov5642_device *dev)
 	if (ov5642_preview_maxlines == 0) {
 		ov5642_preview_maxlines = 1;
 	}
-
+	
 	ulCapture_Exposure = (ov5642_preview_exposure*(CAPTURE_FRAMERATE)*(Capture_MaxLines))/
 	(((ov5642_preview_maxlines)*(PREVIEW_FRAMERATE)));
-
+	
 	iCapture_Gain = (ov5642_gain & 0x0f) + 16;
 
 	if (ov5642_gain & 0x10) {
 		iCapture_Gain = iCapture_Gain << 1;
 	}
-
+	
 	if (ov5642_gain & 0x20)
 	{
 		iCapture_Gain = iCapture_Gain << 1;
 	}
-
+	
 	if (ov5642_gain & 0x40)
 	{
 		iCapture_Gain = iCapture_Gain << 1;
 	}
-
+	
 	if (ov5642_gain & 0x80)
 	{
 		iCapture_Gain = iCapture_Gain << 1;
@@ -1672,11 +1672,11 @@ static int cal_exposure(struct ov5642_device *dev)
 		ulCapture_Exposure = 1;
 	}
 	iCapture_Gain = (ulCapture_Exposure_Gain*2/ulCapture_Exposure + 1)/2;
-
+	
 	ExposureLow = ((unsigned char)ulCapture_Exposure) << 4;
 	ExposureMid = (unsigned char)(ulCapture_Exposure >> 4) & 0xff;
 	ExposureHigh = (unsigned char)(ulCapture_Exposure >> 12);
-
+	
 	ov5642_gain = 0;
 
 	if (iCapture_Gain > 31) {
@@ -1706,12 +1706,12 @@ static int cal_exposure(struct ov5642_device *dev)
 	if (ov5642_gain == 0x10) {
 		ov5642_gain = 0x11;
 	}
-
+	
 	i2c_put_byte(client, 0x350b, ov5642_gain);
 	i2c_put_byte(client, 0x3502, ExposureLow);
 	i2c_put_byte(client, 0x3501, ExposureMid);
 	i2c_put_byte(client, 0x3500, ExposureHigh);
-
+	
 	//printk("ov5642_gain=%d\n", ov5642_gain);
 	printk("ExposureLow=%d\n", ExposureLow);
 	printk("ExposureMid=%d\n", ExposureMid);
@@ -1740,9 +1740,9 @@ void OV5642_set_param_wb(struct ov5642_device *dev,enum  camera_wb_flip_e para)/
 {
 	struct i2c_client *client = v4l2_get_subdevdata(&dev->sd);
 
-	switch (para) {
-	case CAM_WB_AUTO://×Ô¶¯
-		i2c_put_byte(client, 0x3212, 0x03);
+	switch (para) {      
+    	case CAM_WB_AUTO://×Ô¶¯
+        	i2c_put_byte(client, 0x3212, 0x03);
             i2c_put_byte(client, 0x3406, 0x00);
             i2c_put_byte(client, 0x3400, 0x04);
             i2c_put_byte(client, 0x3401, 0x00);
@@ -1753,37 +1753,37 @@ void OV5642_set_param_wb(struct ov5642_device *dev,enum  camera_wb_flip_e para)/
             i2c_put_byte(client, 0x3212, 0x13);
             i2c_put_byte(client, 0x3212, 0xa3);
 
-		break;
+        	break;
 
-	case CAM_WB_CLOUD: //ÒõÌì
-		i2c_put_byte(client, 0x3212, 0x03);
-		i2c_put_byte(client,0x3406 , 0x01);
-		i2c_put_byte(client,0x3400 , 0x06);
-		i2c_put_byte(client,0x3401 , 0x48);
-		i2c_put_byte(client,0x3402 , 0x04);
-		i2c_put_byte(client,0x3403 , 0x00);
-		i2c_put_byte(client,0x3404 , 0x04);
-		i2c_put_byte(client,0x3405 , 0xd3);
+    	case CAM_WB_CLOUD: //ÒõÌì
+        	i2c_put_byte(client, 0x3212, 0x03);
+        	i2c_put_byte(client,0x3406 , 0x01);
+        	i2c_put_byte(client,0x3400 , 0x06);
+        	i2c_put_byte(client,0x3401 , 0x48);
+        	i2c_put_byte(client,0x3402 , 0x04);
+        	i2c_put_byte(client,0x3403 , 0x00);
+        	i2c_put_byte(client,0x3404 , 0x04);
+        	i2c_put_byte(client,0x3405 , 0xd3);
             i2c_put_byte(client, 0x3212, 0x13);
-            i2c_put_byte(client, 0x3212, 0xa3);
+            i2c_put_byte(client, 0x3212, 0xa3);            
 
-		break;
+        	break;
 
-	case CAM_WB_DAYLIGHT: //
-		i2c_put_byte(client, 0x3212, 0x03);
-		i2c_put_byte(client,0x3406 , 0x01);
-		i2c_put_byte(client,0x3400 , 0x06);
-		i2c_put_byte(client,0x3401 , 0x1c);
-		i2c_put_byte(client,0x3402 , 0x04);
-		i2c_put_byte(client,0x3403 , 0x00);
-		i2c_put_byte(client,0x3404 , 0x04);
-		i2c_put_byte(client,0x3405 , 0xf3);
+    	case CAM_WB_DAYLIGHT: //
+        	i2c_put_byte(client, 0x3212, 0x03);
+        	i2c_put_byte(client,0x3406 , 0x01);
+        	i2c_put_byte(client,0x3400 , 0x06);
+        	i2c_put_byte(client,0x3401 , 0x1c);
+        	i2c_put_byte(client,0x3402 , 0x04);
+        	i2c_put_byte(client,0x3403 , 0x00);
+        	i2c_put_byte(client,0x3404 , 0x04);
+        	i2c_put_byte(client,0x3405 , 0xf3);
             i2c_put_byte(client, 0x3212, 0x13);
-            i2c_put_byte(client, 0x3212, 0xa3);
+            i2c_put_byte(client, 0x3212, 0xa3);          
 
-		break;
+        	break;
 
-	case CAM_WB_INCANDESCENCE:
+    	case CAM_WB_INCANDESCENCE: 
             i2c_put_byte(client, 0x3212, 0x03);
             i2c_put_byte(client, 0x3406, 0x01);
             i2c_put_byte(client, 0x3400, 0x05);
@@ -1795,9 +1795,9 @@ void OV5642_set_param_wb(struct ov5642_device *dev,enum  camera_wb_flip_e para)/
             i2c_put_byte(client, 0x3212, 0x13);
             i2c_put_byte(client, 0x3212, 0xa3);
 
-		break;
-
-	case CAM_WB_TUNGSTEN:
+        	break;
+            
+    	case CAM_WB_TUNGSTEN: 
             i2c_put_byte(client,0x3212, 0x03);
             i2c_put_byte(client,0x3406, 0x01);
             i2c_put_byte(client,0x3400, 0x04);
@@ -1809,25 +1809,25 @@ void OV5642_set_param_wb(struct ov5642_device *dev,enum  camera_wb_flip_e para)/
             i2c_put_byte(client,0x3212, 0x13);
             i2c_put_byte(client,0x3212, 0xa3);
 
-		break;
+        	break;
 
-	case CAM_WB_FLUORESCENT:
-		i2c_put_byte(client,0x3406 , 0x01);
-		i2c_put_byte(client,0x3400 , 0x05);
-		i2c_put_byte(client,0x3401 , 0x48);
-		i2c_put_byte(client,0x3402 , 0x04);
-		i2c_put_byte(client,0x3403 , 0x00);
-		i2c_put_byte(client,0x3404 , 0x07);
-		i2c_put_byte(client,0x3405 , 0xcf);
-		break;
+      	case CAM_WB_FLUORESCENT:
+              	i2c_put_byte(client,0x3406 , 0x01);
+        	i2c_put_byte(client,0x3400 , 0x05);
+        	i2c_put_byte(client,0x3401 , 0x48);
+        	i2c_put_byte(client,0x3402 , 0x04);
+        	i2c_put_byte(client,0x3403 , 0x00);
+        	i2c_put_byte(client,0x3404 , 0x07);
+        	i2c_put_byte(client,0x3405 , 0xcf);
+        	break;
 
-	case CAM_WB_MANUAL:
+    	case CAM_WB_MANUAL:
                 // TODO
-		break;
+        	break;
         default:
-		break;
+        	break;
 	}
-
+    
 
 } /* OV5642_set_param_wb */
 /*************************************************************************
@@ -1852,95 +1852,95 @@ void OV5642_set_param_exposure(struct ov5642_device *dev,enum camera_exposure_e 
 
 
     switch (para) {
-	case EXPOSURE_N4_STEP:  //¸º4µµ
+    	case EXPOSURE_N4_STEP:  //¸º4µµ  
             i2c_put_byte(client,0x3a0f , 0x18);
-		i2c_put_byte(client,0x3a10 , 0x10);
-		i2c_put_byte(client,0x3a1b , 0x18);
-		i2c_put_byte(client,0x3a1e , 0x10);
-		i2c_put_byte(client,0x3a11 , 0x30);
-		i2c_put_byte(client,0x3a1f , 0x10);
-		break;
-
-	case EXPOSURE_N3_STEP:
+        	i2c_put_byte(client,0x3a10 , 0x10);
+        	i2c_put_byte(client,0x3a1b , 0x18);
+        	i2c_put_byte(client,0x3a1e , 0x10);
+        	i2c_put_byte(client,0x3a11 , 0x30);
+        	i2c_put_byte(client,0x3a1f , 0x10);
+        	break;
+            
+    	case EXPOSURE_N3_STEP:
             i2c_put_byte(client,0x3a0f , 0x20);
-		i2c_put_byte(client,0x3a10 , 0x18);
-		i2c_put_byte(client,0x3a11 , 0x41);
-		i2c_put_byte(client,0x3a1b , 0x20);
-		i2c_put_byte(client,0x3a1e , 0x18);
-		i2c_put_byte(client,0x3a1f , 0x10);
-		break;
-
-	case EXPOSURE_N2_STEP:
+        	i2c_put_byte(client,0x3a10 , 0x18);
+        	i2c_put_byte(client,0x3a11 , 0x41);
+        	i2c_put_byte(client,0x3a1b , 0x20);
+        	i2c_put_byte(client,0x3a1e , 0x18);
+        	i2c_put_byte(client,0x3a1f , 0x10);
+        	break;
+            
+    	case EXPOSURE_N2_STEP:
             i2c_put_byte(client,0x3a0f , 0x28);
-		i2c_put_byte(client,0x3a10 , 0x20);
-		i2c_put_byte(client,0x3a11 , 0x51);
-		i2c_put_byte(client,0x3a1b , 0x28);
-		i2c_put_byte(client,0x3a1e , 0x20);
-		i2c_put_byte(client,0x3a1f , 0x10);
-		break;
-
-	case EXPOSURE_N1_STEP:
+        	i2c_put_byte(client,0x3a10 , 0x20);
+        	i2c_put_byte(client,0x3a11 , 0x51);
+        	i2c_put_byte(client,0x3a1b , 0x28);
+        	i2c_put_byte(client,0x3a1e , 0x20);
+        	i2c_put_byte(client,0x3a1f , 0x10);
+        	break;
+            
+    	case EXPOSURE_N1_STEP:
             i2c_put_byte(client,0x3a0f , 0x30);
-		i2c_put_byte(client,0x3a10 , 0x28);
-		i2c_put_byte(client,0x3a11 , 0x61);
-		i2c_put_byte(client,0x3a1b , 0x30);
-		i2c_put_byte(client,0x3a1e , 0x28);
-		i2c_put_byte(client,0x3a1f , 0x10);
-		break;
-
-	case EXPOSURE_0_STEP://Ä¬ÈÏÁãµµ
+        	i2c_put_byte(client,0x3a10 , 0x28);
+        	i2c_put_byte(client,0x3a11 , 0x61);
+        	i2c_put_byte(client,0x3a1b , 0x30);
+        	i2c_put_byte(client,0x3a1e , 0x28);
+        	i2c_put_byte(client,0x3a1f , 0x10);
+        	break;
+            
+    	case EXPOSURE_0_STEP://Ä¬ÈÏÁãµµ
             i2c_put_byte(client,0x3a0f , 0x38);
-		i2c_put_byte(client,0x3a10 , 0x30);
-		i2c_put_byte(client,0x3a11 , 0x61);
-		i2c_put_byte(client,0x3a1b , 0x38);
-		i2c_put_byte(client,0x3a1e , 0x30);
-		i2c_put_byte(client,0x3a1f , 0x10);
-		break;
-
-	case EXPOSURE_P1_STEP://ÕýÒ»µµ
+        	i2c_put_byte(client,0x3a10 , 0x30);
+        	i2c_put_byte(client,0x3a11 , 0x61);
+        	i2c_put_byte(client,0x3a1b , 0x38);
+        	i2c_put_byte(client,0x3a1e , 0x30);
+        	i2c_put_byte(client,0x3a1f , 0x10);
+        	break;
+            
+    	case EXPOSURE_P1_STEP://ÕýÒ»µµ
             i2c_put_byte(client,0x3a0f , 0x40);
-		i2c_put_byte(client,0x3a10 , 0x38);
-		i2c_put_byte(client,0x3a11 , 0x71);
-		i2c_put_byte(client,0x3a1b , 0x40);
-		i2c_put_byte(client,0x3a1e , 0x38);
-		i2c_put_byte(client,0x3a1f , 0x10);
-		break;
-
-	case EXPOSURE_P2_STEP:
+        	i2c_put_byte(client,0x3a10 , 0x38);
+        	i2c_put_byte(client,0x3a11 , 0x71);
+        	i2c_put_byte(client,0x3a1b , 0x40);
+        	i2c_put_byte(client,0x3a1e , 0x38);
+        	i2c_put_byte(client,0x3a1f , 0x10);
+        	break;
+            
+    	case EXPOSURE_P2_STEP:
             i2c_put_byte(client,0x3a0f , 0x48);
-		i2c_put_byte(client,0x3a10 , 0x40);
-		i2c_put_byte(client,0x3a11 , 0x80);
-		i2c_put_byte(client,0x3a1b , 0x48);
-		i2c_put_byte(client,0x3a1e , 0x40);
-		i2c_put_byte(client,0x3a1f , 0x20);
-		break;
-
-	case EXPOSURE_P3_STEP:
+        	i2c_put_byte(client,0x3a10 , 0x40);
+        	i2c_put_byte(client,0x3a11 , 0x80);
+        	i2c_put_byte(client,0x3a1b , 0x48);
+        	i2c_put_byte(client,0x3a1e , 0x40);
+        	i2c_put_byte(client,0x3a1f , 0x20);
+        	break;
+            
+    	case EXPOSURE_P3_STEP:
             i2c_put_byte(client,0x3a0f , 0x50);
-		i2c_put_byte(client,0x3a10 , 0x48);
-		i2c_put_byte(client,0x3a11 , 0x90);
-		i2c_put_byte(client,0x3a1b , 0x50);
-		i2c_put_byte(client,0x3a1e , 0x48);
-		i2c_put_byte(client,0x3a1f , 0x20);
-		break;
-
-	case EXPOSURE_P4_STEP:
+        	i2c_put_byte(client,0x3a10 , 0x48);
+        	i2c_put_byte(client,0x3a11 , 0x90);
+        	i2c_put_byte(client,0x3a1b , 0x50);
+        	i2c_put_byte(client,0x3a1e , 0x48);
+        	i2c_put_byte(client,0x3a1f , 0x20);
+        	break;
+            
+    	case EXPOSURE_P4_STEP:    
             i2c_put_byte(client,0x3a0f , 0x58);
-		i2c_put_byte(client,0x3a10 , 0x50);
-		i2c_put_byte(client,0x3a11 , 0x91);
-		i2c_put_byte(client,0x3a1b , 0x58);
-		i2c_put_byte(client,0x3a1e , 0x50);
-		i2c_put_byte(client,0x3a1f , 0x20);
-		break;
-
-	default:
+        	i2c_put_byte(client,0x3a10 , 0x50);
+        	i2c_put_byte(client,0x3a11 , 0x91);
+        	i2c_put_byte(client,0x3a1b , 0x58);
+        	i2c_put_byte(client,0x3a1e , 0x50);
+        	i2c_put_byte(client,0x3a1f , 0x20);
+        	break;
+            
+    	default:
             i2c_put_byte(client,0x3a0f , 0x38);
-		i2c_put_byte(client,0x3a10 , 0x30);
-		i2c_put_byte(client,0x3a11 , 0x61);
-		i2c_put_byte(client,0x3a1b , 0x38);
-		i2c_put_byte(client,0x3a1e , 0x30);
-		i2c_put_byte(client,0x3a1f , 0x10);
-		break;
+        	i2c_put_byte(client,0x3a10 , 0x30);
+        	i2c_put_byte(client,0x3a11 , 0x61);
+        	i2c_put_byte(client,0x3a1b , 0x38);
+        	i2c_put_byte(client,0x3a1e , 0x30);
+        	i2c_put_byte(client,0x3a1f , 0x10);
+        	break;
     }
 } /* OV5642_set_param_exposure */
 /*************************************************************************
@@ -1962,42 +1962,42 @@ void OV5642_set_param_exposure(struct ov5642_device *dev,enum camera_exposure_e 
 void OV5642_set_param_effect(struct ov5642_device *dev,enum camera_effect_flip_e para)//ÌØÐ§ÉèÖÃ
 {
 	struct i2c_client *client = v4l2_get_subdevdata(&dev->sd);
-
+  
     switch (para) {
-	case CAM_EFFECT_ENC_NORMAL://Õý³£
-		i2c_put_byte(client,0x5001,0x03);//disable effect
-		break;
+    	case CAM_EFFECT_ENC_NORMAL://Õý³£
+        	i2c_put_byte(client,0x5001,0x03);//disable effect
+        	break;        
 
-	case CAM_EFFECT_ENC_GRAYSCALE://»Ò½×
-		i2c_put_byte(client,0x5001,0x83);
-		i2c_put_byte(client,0x5580,0x20);
-		break;
+    	case CAM_EFFECT_ENC_GRAYSCALE://»Ò½×
+        	i2c_put_byte(client,0x5001,0x83);
+        	i2c_put_byte(client,0x5580,0x20);
+        	break;
 
-	case CAM_EFFECT_ENC_SEPIA://¸´¹Å
+    	case CAM_EFFECT_ENC_SEPIA://¸´¹Å
                  /*i2c_put_byte(client,0x0115,0x0a);
-		i2c_put_byte(client,0x026e,0x60);
-		i2c_put_byte(client,0x026f,0xa0);*/
-		break;
-
-	case CAM_EFFECT_ENC_SEPIAGREEN://¸´¹ÅÂÌ
+        	i2c_put_byte(client,0x026e,0x60);
+        	i2c_put_byte(client,0x026f,0xa0);*/
+        	break;        
+                
+    	case CAM_EFFECT_ENC_SEPIAGREEN://¸´¹ÅÂÌ
             /*i2c_put_byte(client,0x0115,0x0a);
-		i2c_put_byte(client,0x026e,0x20);
-		i2c_put_byte(client,0x026f,0x00);*/
-		break;
+        	i2c_put_byte(client,0x026e,0x20);
+        	i2c_put_byte(client,0x026f,0x00);*/
+        	break;                    
 
-	case CAM_EFFECT_ENC_SEPIABLUE://¸´¹ÅÀ¶
+    	case CAM_EFFECT_ENC_SEPIABLUE://¸´¹ÅÀ¶
             /*i2c_put_byte(client,0x0115,0x0a);
-		i2c_put_byte(client,0x026e,0xfb);
-		i2c_put_byte(client,0x026f,0x00);*/
-		break;
+        	i2c_put_byte(client,0x026e,0xfb);
+        	i2c_put_byte(client,0x026f,0x00);*/
+        	break;                                
 
-	case CAM_EFFECT_ENC_COLORINV://µ×Æ¬
-		i2c_put_byte(client,0x5001,0x83);
-		i2c_put_byte(client,0x5580,0x40);
-		break;
+    	case CAM_EFFECT_ENC_COLORINV://µ×Æ¬
+        	i2c_put_byte(client,0x5001,0x83);
+        	i2c_put_byte(client,0x5580,0x40);
+        	break;        
 
-	default:
-		break;
+    	default:
+        	break;
     }
 
 
@@ -2042,7 +2042,7 @@ static int OV5642_AutoFocus(struct ov5642_device *dev, int focus_mode)
 	struct i2c_client *client = v4l2_get_subdevdata(&dev->sd);
 	int ret = 0;
 	//int i = 0;
-
+    
 	switch (focus_mode) {
 	case CAM_FOCUS_MODE_AUTO:
 		i2c_put_byte(client, CMD_ACK , 0x1);
@@ -2055,7 +2055,7 @@ static int OV5642_AutoFocus(struct ov5642_device *dev, int focus_mode)
 			i++;
 			msleep(10);
 		}
-
+		
 		if (i2c_get_byte(client, CMD_PARA4) == 0)
 			ret = -1;
 		else {
@@ -2066,18 +2066,18 @@ static int OV5642_AutoFocus(struct ov5642_device *dev, int focus_mode)
 		#endif
 		printk("auto mode start\n");
 		break;
-
+		
 	case CAM_FOCUS_MODE_CONTI_VID:
 	case CAM_FOCUS_MODE_CONTI_PIC:
-		i2c_put_byte(client, CMD_ACK , 0x1);
+    		i2c_put_byte(client, CMD_ACK , 0x1);
 		i2c_put_byte(client, CMD_MAIN , 0x4); //start to auto focus
-
+            
 		/*while(i2c_get_byte(client, CMD_ACK) == 0x1) {
 			msleep(10);
 		}*/
 		printk("start continous focus\n");
 		break;
-
+            
 	case CAM_FOCUS_MODE_RELEASE:
 	case CAM_FOCUS_MODE_FIXED:
 	default:
@@ -2095,7 +2095,7 @@ static int OV5642_FlashCtrl(struct ov5642_device *dev, int flash_mode)
 	//struct i2c_client *client = v4l2_get_subdevdata(&dev->sd);
 	int ret = 0;
 	//int i = 0;
-
+    
 	switch (flash_mode) {
 	case FLASHLIGHT_ON:
 	case FLASHLIGHT_AUTO:
@@ -2107,7 +2107,7 @@ static int OV5642_FlashCtrl(struct ov5642_device *dev, int flash_mode)
 		if (dev->cam_info.torch_support) {
 			aml_cam_torch(&dev->cam_info, 1);
 			aml_cam_flash(&dev->cam_info, 0);
-		} else
+		} else 
 			aml_cam_torch(&dev->cam_info, 1);
 		break;
 	case FLASHLIGHT_OFF:
@@ -2158,12 +2158,12 @@ static int set_flip(struct ov5642_device *dev)
 	temp |= dev->cam_info.m_flip << 5;
 	i2c_put_byte(client, 0x3621, temp);
 	printk("0x3621 dst is %x\n", temp);
-
+	
 	return 0;
 }
-
-static resolution_param_t*
-get_resolution_param(struct ov5642_device *dev,int is_capture,
+		
+static resolution_param_t* 
+get_resolution_param(struct ov5642_device *dev,int is_capture, 
 			int width, int height)
 {
 	int i = 0;
@@ -2180,7 +2180,7 @@ get_resolution_param(struct ov5642_device *dev,int is_capture,
 		tmp_resolution_param = prev_resolution_array;
 		arry_size = sizeof(prev_resolution_array);
 	}
-
+	
 	for (i = 0; i < arry_size; i++) {
 		if (tmp_resolution_param[i].size_type == res_type)
 			return &tmp_resolution_param[i];
@@ -2188,7 +2188,7 @@ get_resolution_param(struct ov5642_device *dev,int is_capture,
 	return NULL;
 }
 
-static int
+static int 
 set_resolution_param(struct ov5642_device *dev, resolution_param_t* res_param)
 {
 	struct i2c_client *client = v4l2_get_subdevdata(&dev->sd);
@@ -2232,7 +2232,7 @@ static int set_focus_zone(struct ov5642_device *dev, int value)
 	struct i2c_client *client = v4l2_get_subdevdata(&dev->sd);
 	int retry_count = 10;
 	int ret = -1;
-
+	
 	xc = ((value >> 16) & 0xffff) * 80 / 2000;
 	yc = (value & 0xffff) * 60 / 2000;
 	printk("xc = %d, yc = %d\n", xc, yc);
@@ -2240,18 +2240,18 @@ static int set_focus_zone(struct ov5642_device *dev, int value)
 	i2c_put_byte(client, CMD_PARA1, yc);
 	i2c_put_byte(client, CMD_ACK, 0x01);
 	i2c_put_byte(client, CMD_MAIN, 0x81);
-
+	
 	do {
 		msleep(5);
 		pr_info("waiting for focus zone to be set\n");
 	} while (i2c_get_byte(client, CMD_ACK) && retry_count--);
-
+	
 	if (retry_count)
 		ret = 0;
 	return ret;
 }
 
-static int ov5642_setting(struct ov5642_device *dev,int PROP_ID,int value )
+static int ov5642_setting(struct ov5642_device *dev,int PROP_ID,int value ) 
 {
 	int ret=0;
 	//unsigned char cur_val;
@@ -2267,7 +2267,7 @@ static int ov5642_setting(struct ov5642_device *dev,int PROP_ID,int value )
 		mutex_lock(&firmware_mutex);
 		ret=i2c_put_byte(client,0x0200, value);
 		mutex_unlock(&firmware_mutex);
-		break;
+		break;    
 	case V4L2_CID_SATURATION:
 		mutex_lock(&firmware_mutex);
 		ret=i2c_put_byte(client,0x0202, value);
@@ -2281,7 +2281,7 @@ static int ov5642_setting(struct ov5642_device *dev,int PROP_ID,int value )
 		}
 		break;
 	case V4L2_CID_VFLIP:    /* set flip on V. */
-		break;
+		break;    
 	case V4L2_CID_DO_WHITE_BALANCE:
 		mutex_lock(&firmware_mutex);
 		if(ov5642_qctrl[4].default_value!=value){
@@ -2320,17 +2320,17 @@ static int ov5642_setting(struct ov5642_device *dev,int PROP_ID,int value )
 		break;
 	case V4L2_CID_FOCUS_AUTO:
 		mutex_lock(&firmware_mutex);
-		if (dev->firmware_ready)
+		if (dev->firmware_ready) 
 			ret = OV5642_AutoFocus(dev,value);
 		else if (value == CAM_FOCUS_MODE_CONTI_VID ||
-				value == CAM_FOCUS_MODE_CONTI_PIC)
+        			value == CAM_FOCUS_MODE_CONTI_PIC)
 			start_focus_mode = value;
 		else
 			ret = -1;
 		mutex_unlock(&firmware_mutex);
 		break;
 	case V4L2_CID_BACKLIGHT_COMPENSATION:
-		if (dev->cam_info.flash_support)
+		if (dev->cam_info.flash_support) 
 			ret = OV5642_FlashCtrl(dev,value);
 		else
 			ret = -1;
@@ -2360,7 +2360,7 @@ static int ov5642_setting(struct ov5642_device *dev,int PROP_ID,int value )
 		break;
 	}
 	return ret;
-
+    
 }
 
 static void power_down_ov5642(struct ov5642_device *dev)
@@ -2385,9 +2385,9 @@ static void ov5642_fillbuff(struct ov5642_fh *fh, struct ov5642_buffer *buf)
 	struct ov5642_device *dev = fh->dev;
 	void *vbuf = videobuf_to_vmalloc(&buf->vb);
 	vm_output_para_t para = {0};
-	dprintk(dev,1,"%s\n", __func__);
+	dprintk(dev,1,"%s\n", __func__);    
 	if (!vbuf)
-	return;
+    	return;
  /*  0x18221223 indicate the memory type is MAGIC_VMAL_MEM*/
 	para.mirror = ov5642_qctrl[2].default_value&3;
 	para.v4l2_format = fh->fmt->fourcc;
@@ -2416,8 +2416,8 @@ static void ov5642_thread_tick(struct ov5642_fh *fh)
 
 	spin_lock_irqsave(&dev->slock, flags);
 	if (list_empty(&dma_q->active)) {
-	dprintk(dev, 1, "No active queue to serve\n");
-	goto unlock;
+    	dprintk(dev, 1, "No active queue to serve\n");
+    	goto unlock;
     }
 
 	buf = list_entry(dma_q->active.next,
@@ -2428,7 +2428,7 @@ static void ov5642_thread_tick(struct ov5642_fh *fh)
     /* Nobody is waiting on this buffer, return */
     /*
 	if (!waitqueue_active(&buf->vb.done))
-	goto unlock;
+    	goto unlock;
 */
 
        if( ! (fh->f_flags & O_NONBLOCK) ){
@@ -2468,7 +2468,7 @@ static void ov5642_sleep(struct ov5642_fh *fh)
 
 	add_wait_queue(&dma_q->wq, &wait);
 	if (kthread_should_stop())
-	goto stop_task;
+    	goto stop_task;
 
     /* Calculate time to wake up */
 	timeout = msecs_to_jiffies(2);
@@ -2492,10 +2492,10 @@ static int ov5642_thread(void *data)
 	set_freezable();
 
 	for (;;) {
-	ov5642_sleep(fh);
+    	ov5642_sleep(fh);
 
-	if (kthread_should_stop())
-		break;
+    	if (kthread_should_stop())
+        	break;
     }
 	dprintk(dev, 1, "thread: exit\n");
 	return 0;
@@ -2514,8 +2514,8 @@ static int ov5642_start_thread(struct ov5642_fh *fh)
 	dma_q->kthread = kthread_run(ov5642_thread, fh, "ov5642");
 
 	if (IS_ERR(dma_q->kthread)) {
-	v4l2_err(&dev->v4l2_dev, "kernel_thread() failed\n");
-	return PTR_ERR(dma_q->kthread);
+    	v4l2_err(&dev->v4l2_dev, "kernel_thread() failed\n");
+    	return PTR_ERR(dma_q->kthread);
     }
     /* Wakes thread */
 	wake_up_interruptible(&dma_q->wq);
@@ -2526,14 +2526,14 @@ static int ov5642_start_thread(struct ov5642_fh *fh)
 
 static void ov5642_stop_thread(struct ov5642_dmaqueue  *dma_q)
 {
-	struct ov5642_device *dev =
+	struct ov5642_device *dev = 
 			container_of(dma_q, struct ov5642_device, vidq);
 
 	dprintk(dev, 1, "%s\n", __func__);
     /* shutdown control thread */
 	if (dma_q->kthread) {
-	kthread_stop(dma_q->kthread);
-	dma_q->kthread = NULL;
+    	kthread_stop(dma_q->kthread);
+    	dma_q->kthread = NULL;
     }
 }
 
@@ -2546,7 +2546,7 @@ buffer_setup(struct videobuf_queue *vq, unsigned int *count, unsigned int *size)
 	struct ov5642_fh  *fh = vq->priv_data;
 	struct ov5642_device *dev  = fh->dev;
 	//int bytes = fh->fmt->depth >> 3 ;
-	*size = (fh->width*fh->height*fh->fmt->depth)>>3;
+	*size = (fh->width*fh->height*fh->fmt->depth)>>3;    
 	if (0 == *count)
         *count = 32;
 
@@ -2568,7 +2568,7 @@ static void free_buffer(struct videobuf_queue *vq, struct ov5642_buffer *buf)
 
 	videobuf_waiton(vq, &buf->vb, 0, 0);
 	if (in_interrupt())
-	BUG();
+    	BUG();
 
 	videobuf_vmalloc_free(&buf->vb);
 	dprintk(dev, 1, "free_buffer: freed\n");
@@ -2579,7 +2579,7 @@ static void free_buffer(struct videobuf_queue *vq, struct ov5642_buffer *buf)
 #define norm_maxh() 3000
 static int
 buffer_prepare(struct videobuf_queue *vq, struct videobuf_buffer *vb,
-			enum v4l2_field field)
+                    	enum v4l2_field field)
 {
 	struct ov5642_fh     *fh  = vq->priv_data;
 	struct ov5642_device    *dev = fh->dev;
@@ -2592,11 +2592,11 @@ buffer_prepare(struct videobuf_queue *vq, struct videobuf_buffer *vb,
 
 	if (fh->width  < 48 || fh->width  > norm_maxw() ||
         fh->height < 32 || fh->height > norm_maxh())
-	return -EINVAL;
+    	return -EINVAL;
 
 	buf->vb.size = (fh->width*fh->height*fh->fmt->depth)>>3;
 	if (0 != buf->vb.baddr  &&  buf->vb.bsize < buf->vb.size)
-	return -EINVAL;
+    	return -EINVAL;
 
 	/* These properties only change when queue is idle, see s_fmt */
 	buf->fmt       = fh->fmt;
@@ -2607,9 +2607,9 @@ buffer_prepare(struct videobuf_queue *vq, struct videobuf_buffer *vb,
 	//precalculate_bars(fh);
 
 	if (VIDEOBUF_NEEDS_INIT == buf->vb.state) {
-	rc = videobuf_iolock(vq, &buf->vb, NULL);
-	if (rc < 0)
-		goto fail;
+    	rc = videobuf_iolock(vq, &buf->vb, NULL);
+    	if (rc < 0)
+        	goto fail;
 	}
 
 	buf->vb.state = VIDEOBUF_PREPARED;
@@ -2657,7 +2657,7 @@ static struct videobuf_queue_ops ov5642_video_qops = {
 	IOCTL vidioc handling
    ------------------------------------------------------------------*/
 static int vidioc_querycap(struct file *file, void  *priv,
-			struct v4l2_capability *cap)
+                	struct v4l2_capability *cap)
 {
 	struct ov5642_fh  *fh  = priv;
 	struct ov5642_device *dev = fh->dev;
@@ -2667,18 +2667,18 @@ static int vidioc_querycap(struct file *file, void  *priv,
 	strlcpy(cap->bus_info, dev->v4l2_dev.name, sizeof(cap->bus_info));
 	cap->version = OV5642_CAMERA_VERSION;
 	cap->capabilities =	V4L2_CAP_VIDEO_CAPTURE |
-		V4L2_CAP_STREAMING     |
-		V4L2_CAP_READWRITE;
+            	V4L2_CAP_STREAMING     |
+            	V4L2_CAP_READWRITE;
 	return 0;
 }
 
 static int vidioc_enum_fmt_vid_cap(struct file *file, void  *priv,
-			struct v4l2_fmtdesc *f)
+                	struct v4l2_fmtdesc *f)
 {
 	struct ov5642_fmt *fmt;
 
 	if (f->index >= ARRAY_SIZE(formats))
-	return -EINVAL;
+    	return -EINVAL;
 
 	fmt = &formats[f->index];
 
@@ -2688,7 +2688,7 @@ static int vidioc_enum_fmt_vid_cap(struct file *file, void  *priv,
 }
 
 static int vidioc_g_fmt_vid_cap(struct file *file, void *priv,
-			struct v4l2_format *f)
+                	struct v4l2_format *f)
 {
 	struct ov5642_fh *fh = priv;
 
@@ -2701,13 +2701,13 @@ static int vidioc_g_fmt_vid_cap(struct file *file, void *priv,
 	f->fmt.pix.bytesperline =
         (f->fmt.pix.width * fh->fmt->depth) >> 3;
 	f->fmt.pix.sizeimage =
-	f->fmt.pix.height * f->fmt.pix.bytesperline;
+    	f->fmt.pix.height * f->fmt.pix.bytesperline;
 
 	return (0);
 }
 
 static int vidioc_try_fmt_vid_cap(struct file *file, void *priv,
-		struct v4l2_format *f)
+        	struct v4l2_format *f)
 {
 	struct ov5642_fh  *fh  = priv;
 	struct ov5642_device *dev = fh->dev;
@@ -2717,7 +2717,7 @@ static int vidioc_try_fmt_vid_cap(struct file *file, void *priv,
 
 	fmt = get_format(f);
 	if (!fmt) {
-		dprintk(dev, 1, "Fourcc format (0x%08x) invalid.\n",
+ 		dprintk(dev, 1, "Fourcc format (0x%08x) invalid.\n",
 			f->fmt.pix.pixelformat);
 		return -EINVAL;
 	}
@@ -2725,10 +2725,10 @@ static int vidioc_try_fmt_vid_cap(struct file *file, void *priv,
 	field = f->fmt.pix.field;
 
 	if (field == V4L2_FIELD_ANY) {
-	field = V4L2_FIELD_INTERLACED;
+    	field = V4L2_FIELD_INTERLACED;
     } else if (V4L2_FIELD_INTERLACED != field) {
-	dprintk(dev, 1, "Field type invalid.\n");
-	return -EINVAL;
+    	dprintk(dev, 1, "Field type invalid.\n");
+    	return -EINVAL;
     }
 
 	maxw  = norm_maxw();
@@ -2740,14 +2740,14 @@ static int vidioc_try_fmt_vid_cap(struct file *file, void *priv,
 	f->fmt.pix.bytesperline =
         (f->fmt.pix.width * fmt->depth) >> 3;
 	f->fmt.pix.sizeimage =
-	f->fmt.pix.height * f->fmt.pix.bytesperline;
+    	f->fmt.pix.height * f->fmt.pix.bytesperline;
 
 	return 0;
 }
 
 /*FIXME: This seems to be generic enough to be at videodev2 */
 static int vidioc_s_fmt_vid_cap(struct file *file, void *priv,
-			struct v4l2_format *f)
+                	struct v4l2_format *f)
 {
 	struct ov5642_fh *fh = priv;
 	struct videobuf_queue *q = &fh->vb_vidq;
@@ -2758,14 +2758,14 @@ static int vidioc_s_fmt_vid_cap(struct file *file, void *priv,
 
 	int ret = vidioc_try_fmt_vid_cap(file, fh, f);
 	if (ret < 0)
-	return ret;
+    	return ret;
 
 	mutex_lock(&q->vb_lock);
 
 	if (videobuf_queue_is_busy(&fh->vb_vidq)) {
-	dprintk(fh->dev, 1, "%s queue busy\n", __func__);
-	ret = -EBUSY;
-	goto out;
+    	dprintk(fh->dev, 1, "%s queue busy\n", __func__);
+    	ret = -EBUSY;
+    	goto out;
     }
 
 	fh->fmt           = get_format(f);
@@ -2776,43 +2776,43 @@ static int vidioc_s_fmt_vid_cap(struct file *file, void *priv,
 	printk("system aquire ...fh->height=%d, fh->width= %d\n",fh->height,fh->width);//potti
 #if 1
     if(f->fmt.pix.pixelformat==V4L2_PIX_FMT_RGB24){
-	res_param = get_resolution_param(dev, 1, fh->width,fh->height);
-	if (!res_param) {
-		printk("error, resolution param not get\n");
-		goto out;
-		}
-	/*get_exposure_param(dev, &gain, &exposurelow, &exposuremid, &exposurehigh);
-	printk("gain=0x%x, exposurelow=0x%x, exposuremid=0x%x, exposurehigh=0x%x\n",
-			 gain, exposurelow, exposuremid, exposurehigh);
-	*/
-	get_preview_exposure_gain(dev);
-	set_resolution_param(dev, res_param);
-	//set_exposure_param_500m(dev, gain, exposurelow, exposuremid, exposurehigh);
-	cal_exposure(dev);
+    	res_param = get_resolution_param(dev, 1, fh->width,fh->height);
+    	if (!res_param) {
+    		printk("error, resolution param not get\n");
+    		goto out;
+   		}
+    	/*get_exposure_param(dev, &gain, &exposurelow, &exposuremid, &exposurehigh);
+    	printk("gain=0x%x, exposurelow=0x%x, exposuremid=0x%x, exposurehigh=0x%x\n",
+    			 gain, exposurelow, exposuremid, exposurehigh);
+    	*/
+    	get_preview_exposure_gain(dev);
+    	set_resolution_param(dev, res_param);
+    	//set_exposure_param_500m(dev, gain, exposurelow, exposuremid, exposurehigh);
+    	cal_exposure(dev);
     }
     else {
         res_param = get_resolution_param(dev, 0, fh->width,fh->height);
         if (!res_param) {
-		printk("error, resolution param not get\n");
-		goto out;
-	}
-	rewrite_preview_gain_exposure(dev);
-	set_resolution_param(dev, res_param);
-	rewrite_preview_gain_exposure(dev);
-
-	/* relaunch the focus zone to the center */
-	mutex_lock(&firmware_mutex);
-	if (dev->firmware_ready) {
-		i2c_put_byte(client, CMD_PARA0, 40);
-		i2c_put_byte(client, CMD_PARA1, 30);
-		i2c_put_byte(client, CMD_ACK, 0x01);
-		i2c_put_byte(client, CMD_MAIN, 0x81);
-	}
-	mutex_unlock(&firmware_mutex);
-	msleep(100);
-	printk("preview delay\n");
+    		printk("error, resolution param not get\n");
+    		goto out;
+   	}
+   	rewrite_preview_gain_exposure(dev);
+   	set_resolution_param(dev, res_param);
+   	rewrite_preview_gain_exposure(dev);
+   	
+   	/* relaunch the focus zone to the center */
+   	mutex_lock(&firmware_mutex);
+   	if (dev->firmware_ready) {
+   		i2c_put_byte(client, CMD_PARA0, 40);
+   		i2c_put_byte(client, CMD_PARA1, 30);
+   		i2c_put_byte(client, CMD_ACK, 0x01);
+   		i2c_put_byte(client, CMD_MAIN, 0x81);
+   	}
+   	mutex_unlock(&firmware_mutex);
+   	msleep(100);
+   	printk("preview delay\n");
     }
-
+    
 #endif
     ret = 0;
 out:
@@ -2826,9 +2826,9 @@ out:
  * V4L2_CAP_TIMEPERFRAME need to be supported furthermore.
  */
 static int vidioc_g_parm(struct file *file, void *priv,
-			struct v4l2_streamparm *parms)
+                	struct v4l2_streamparm *parms)
 {
-	struct ov5642_fh *fh = priv;
+	struct ov5642_fh *fh = priv;	
 	struct ov5642_device *dev = fh->dev;
 	struct v4l2_captureparm *cp = &parms->parm.capture;
 	//int ret;
@@ -2837,10 +2837,10 @@ static int vidioc_g_parm(struct file *file, void *priv,
 	dprintk(dev,3,"vidioc_g_parm\n");
 	if (parms->type != V4L2_BUF_TYPE_VIDEO_CAPTURE)
 		return -EINVAL;
-
+	
 	memset(cp, 0, sizeof(struct v4l2_captureparm));
 	cp->capability = V4L2_CAP_TIMEPERFRAME;
-
+	
 	cp->timeperframe = ov5642_frmintervals_active;
 	printk("g_parm,deno=%d, numerator=%d\n", cp->timeperframe.denominator,
 						cp->timeperframe.numerator );
@@ -2861,13 +2861,13 @@ static int vidioc_enum_frameintervals(struct file *file, void *priv,
 			(fival->pixel_format ==ov5642_frmivalenum[k].pixel_format )&&
 		(fival->width==ov5642_frmivalenum[k].width)&&
 		(fival->height==ov5642_frmivalenum[k].height)){
-			memcpy( fival, &ov5642_frmivalenum[k], sizeof(struct v4l2_frmivalenum));
+			memcpy( fival, &ov5642_frmivalenum[k], sizeof(struct v4l2_frmivalenum));		
 			return 0;
 		}
 }
 
 	return -EINVAL;
-
+	
 }
 
 static int vidioc_reqbufs(struct file *file, void *priv,
@@ -2897,7 +2897,7 @@ static int vidioc_dqbuf(struct file *file, void *priv, struct v4l2_buffer *p)
 	struct ov5642_fh  *fh = priv;
 
 	return (videobuf_dqbuf(&fh->vb_vidq, p,
-		file->f_flags & O_NONBLOCK));
+            	file->f_flags & O_NONBLOCK));
 }
 
 #ifdef CONFIG_VIDEO_V4L1_COMPAT
@@ -2915,9 +2915,9 @@ static int vidioc_streamon(struct file *file, void *priv, enum v4l2_buf_type i)
 	vdin_parm_t para;
 	int ret = 0 ;
 	if (fh->type != V4L2_BUF_TYPE_VIDEO_CAPTURE)
-	return -EINVAL;
+    	return -EINVAL;
 	if (i != fh->type)
-	return -EINVAL;
+    	return -EINVAL;
 
         memset( &para, 0, sizeof( para ));
         para.port  = TVIN_PORT_CAMERA;
@@ -2959,9 +2959,9 @@ static int vidioc_streamoff(struct file *file, void *priv, enum v4l2_buf_type i)
 
 	int ret = 0 ;
 	if (fh->type != V4L2_BUF_TYPE_VIDEO_CAPTURE)
-	return -EINVAL;
+    	return -EINVAL;
 	if (i != fh->type)
-	return -EINVAL;
+    	return -EINVAL;
 	ret = videobuf_streamoff(&fh->vb_vidq);
 	if(ret == 0 ){
 		vops->stop_tvin_service(0);
@@ -3001,7 +3001,7 @@ static int vidioc_enum_framesizes(struct file *file, void *fh,struct v4l2_frmsiz
 		if (fsize->index >= ARRAY_SIZE(capture_resolution_array))
 			return -EINVAL;
 		frmsize = &capture_resolution_array[fsize->index].frmsize;
-		printk("ov5642_pic_resolution[fsize->index]   after fsize->index== %d\n",fsize->index);
+		printk("ov5642_pic_resolution[fsize->index]   after fsize->index== %d\n",fsize->index);    
 		fsize->type = V4L2_FRMSIZE_TYPE_DISCRETE;
 		fsize->discrete.width = frmsize->width;
 		fsize->discrete.height = frmsize->height;
@@ -3016,7 +3016,7 @@ static int vidioc_s_std(struct file *file, void *priv, v4l2_std_id i)
 
 /* only one input in this sample driver */
 static int vidioc_enum_input(struct file *file, void *priv,
-		struct v4l2_input *inp)
+            	struct v4l2_input *inp)
 {
 	//if (inp->index >= NUM_INPUTS)
 	//return -EINVAL;
@@ -3059,19 +3059,19 @@ static int vidioc_queryctrl(struct file *file, void *priv,
 	int i;
 	struct ov5642_fh *fh = priv;
 	struct ov5642_device *dev = fh->dev;
-
-	if (!dev->cam_info.flash_support
+	
+	if (!dev->cam_info.flash_support 
 			&& qc->id == V4L2_CID_BACKLIGHT_COMPENSATION)
 			return -EINVAL;
 
 	for (i = 0; i < ARRAY_SIZE(ov5642_qctrl); i++)
-	if (qc->id && qc->id == ov5642_qctrl[i].id) {
+    	if (qc->id && qc->id == ov5642_qctrl[i].id) {
             memcpy(qc, &(ov5642_qctrl[i]),
-		sizeof(*qc));
+            	sizeof(*qc));
             if (ov5642_qctrl[i].type == V4L2_CTRL_TYPE_MENU)
                 return ov5642_qctrl[i].maximum+1;
             else
-		return (0);
+        	return (0);
         }
 
 	return -EINVAL;
@@ -3083,13 +3083,13 @@ static int vidioc_querymenu(struct file *file, void *priv,
 	int i, j;
 
 	for (i = 0; i < ARRAY_SIZE(ov5642_qmenu_set); i++)
-	if (a->id && a->id == ov5642_qmenu_set[i].id) {
-	    for(j = 0; j < ov5642_qmenu_set[i].num; j++)
-	        if (a->index == ov5642_qmenu_set[i].ov5642_qmenu[j].index) {
-		        memcpy(a, &( ov5642_qmenu_set[i].ov5642_qmenu[j]),
-		        sizeof(*a));
-		        return (0);
-		    }
+    	if (a->id && a->id == ov5642_qmenu_set[i].id) {
+    	    for(j = 0; j < ov5642_qmenu_set[i].num; j++)
+    	        if (a->index == ov5642_qmenu_set[i].ov5642_qmenu[j].index) {
+        	        memcpy(a, &( ov5642_qmenu_set[i].ov5642_qmenu[j]),
+            	        sizeof(*a));
+        	        return (0);
+        	    }
         }
 
 	return -EINVAL;
@@ -3110,7 +3110,7 @@ static int vidioc_g_ctrl(struct file *file, void *priv,
 					&& bDoingAutoFocusMode){
 				if(i2c_get_byte(client, CMD_ACK)){
 					return -EBUSY;
-				}else{
+		    		}else{
 					bDoingAutoFocusMode = false;
 					if(i2c_get_byte(client, CMD_PARA4) == 0){
 						printk("auto mode failed!\n");
@@ -3118,7 +3118,7 @@ static int vidioc_g_ctrl(struct file *file, void *priv,
 					}else {
 						/* pause the auto focus */
 						i2c_put_byte(client, CMD_ACK , 0x1);
-						i2c_put_byte(client, CMD_MAIN , 0x6);
+						i2c_put_byte(client, CMD_MAIN , 0x6); 
 						printk("pause auto focus\n");
 					}
 				}
@@ -3138,14 +3138,14 @@ static int vidioc_g_ctrl(struct file *file, void *priv,
 
 				return 0;
 			}
-			ctrl->value = dev->qctl_regs[i];
-			return 0;
+        		ctrl->value = dev->qctl_regs[i];
+        		return 0;
 		}
 
 	return -EINVAL;
 }
 
-static int
+static int 
 vidioc_s_ctrl(struct file *file, void *priv, struct v4l2_control *ctrl)
 {
 	struct ov5642_fh *fh = priv;
@@ -3153,14 +3153,14 @@ vidioc_s_ctrl(struct file *file, void *priv, struct v4l2_control *ctrl)
 	int i;
 
 	for (i = 0; i < ARRAY_SIZE(ov5642_qctrl); i++)
-	if (ctrl->id == ov5642_qctrl[i].id) {
+    	if (ctrl->id == ov5642_qctrl[i].id) {
 		if (ctrl->value < ov5642_qctrl[i].minimum ||
 				ctrl->value > ov5642_qctrl[i].maximum ||
 				ov5642_setting(dev,ctrl->id,ctrl->value)<0) {
 			return -ERANGE;
 		}
-		dev->qctl_regs[i] = ctrl->value;
-		return 0;
+        	dev->qctl_regs[i] = ctrl->value;
+        	return 0;
         }
 	return -EINVAL;
 }
@@ -3185,12 +3185,12 @@ static int ov5642_open(struct file *file)
 	ov5642_have_opened=1;
 #if MESON_CPU_TYPE >= MESON_CPU_TYPE_MESON6
 	switch_mod_gate_by_name("ge2d", 1);
-#endif
+#endif	
 	aml_cam_init(&dev->cam_info);
 	OV5642_init_regs(dev);
-
+	
 	msleep(10);
-
+	
 	schedule_work(&(dev->dl_work));
 	//do_download(&(dev->dl_work));
 
@@ -3203,8 +3203,8 @@ static int ov5642_open(struct file *file)
 	}
 
 	dprintk(dev, 1, "open %s type=%s users=%d\n",
-	video_device_node_name(dev->vdev),
-	v4l2_type_names[V4L2_BUF_TYPE_VIDEO_CAPTURE], dev->users);
+    	video_device_node_name(dev->vdev),
+    	v4l2_type_names[V4L2_BUF_TYPE_VIDEO_CAPTURE], dev->users);
 
         /* init video dma queues */
 	INIT_LIST_HEAD(&dev->vidq.active);
@@ -3219,7 +3219,7 @@ static int ov5642_open(struct file *file)
 	mutex_unlock(&dev->mutex);
 
 	if (retval)
-	return retval;
+    	return retval;
 
 	wake_lock(&(dev->wake_lock));
 	file->private_data = fh;
@@ -3233,10 +3233,10 @@ static int ov5642_open(struct file *file)
 	fh->f_flags  = file->f_flags;
 	/* Resets frame counters */
 	dev->jiffies = jiffies;
-
+            
 	videobuf_queue_vmalloc_init(&fh->vb_vidq, &ov5642_video_qops,
-		NULL, &dev->slock, fh->type, V4L2_FIELD_INTERLACED,
-		sizeof(struct ov5642_buffer), fh, NULL);
+        	NULL, &dev->slock, fh->type, V4L2_FIELD_INTERLACED,
+        	sizeof(struct ov5642_buffer), fh, NULL);
 	bDoingAutoFocusMode=false;
 	ov5642_start_thread(fh);
 
@@ -3283,7 +3283,7 @@ static int ov5642_close(struct file *file)
 	ov5642_stop_thread(vidq);
 	videobuf_stop(&fh->vb_vidq);
 	if(fh->stream_on){
-		vops->stop_tvin_service(0);
+		vops->stop_tvin_service(0);     
 	}
 	videobuf_mmap_free(&fh->vb_vidq);
 
@@ -3294,12 +3294,12 @@ static int ov5642_close(struct file *file)
 	mutex_unlock(&dev->mutex);
 
 	dprintk(dev, 1, "close called (dev=%s, users=%d)\n",
-	video_device_node_name(vdev), dev->users);
-#if 1
+    	video_device_node_name(vdev), dev->users);
+#if 1	    
 	ov5642_qctrl[4].default_value=0;
 	ov5642_qctrl[5].default_value=4;
 	ov5642_qctrl[6].default_value=0;
-
+	
 	ov5642_qctrl[2].default_value=0;
 	ov5642_qctrl[10].default_value=100;
 	ov5642_qctrl[11].default_value=0;
@@ -3311,10 +3311,10 @@ static int ov5642_close(struct file *file)
 
 	aml_cam_uninit(&dev->cam_info);
 	aml_cam_flash(&dev->cam_info, 0);
-	msleep(2);
+	msleep(2); 
 #if MESON_CPU_TYPE >= MESON_CPU_TYPE_MESON6
 	switch_mod_gate_by_name("ge2d", 0);
-#endif
+#endif	
 	wake_unlock(&(dev->wake_lock));
 #ifdef CONFIG_CMA
     vm_deinit_buf();
@@ -3335,7 +3335,7 @@ static int ov5642_mmap(struct file *file, struct vm_area_struct *vma)
 	dprintk(dev, 1, "vma start=0x%08lx, size=%ld, ret=%d\n",
         (unsigned long)vma->vm_start,
         (unsigned long)vma->vm_end-(unsigned long)vma->vm_start,
-	ret);
+    	ret);
 
 	return ret;
 }
@@ -3383,7 +3383,7 @@ static struct video_device ov5642_template = {
 	.fops           = &ov5642_fops,
 	.ioctl_ops      = &ov5642_ioctl_ops,
 	.release	    = video_device_release,
-
+	
 	.tvnorms        = V4L2_STD_525_60,
 	.current_norm   = V4L2_STD_NTSC_M,
 };
@@ -3404,14 +3404,14 @@ static const struct v4l2_subdev_ops ov5642_ops = {
 };
 
 static int ov5642_probe(struct i2c_client *client,
-		const struct i2c_device_id *id)
+        	const struct i2c_device_id *id)
 {
 	int err;
 	struct ov5642_device *t;
 	struct v4l2_subdev *sd;
 	aml_cam_info_t* plat_dat = NULL;
 	v4l_info(client, "chip found @ 0x%x (%s)\n",
-		client->addr << 1, client->adapter->name);
+        	client->addr << 1, client->adapter->name);
 	t = kzalloc(sizeof(*t), GFP_KERNEL);
 	if (t == NULL)
 		return -ENOMEM;
@@ -3427,17 +3427,17 @@ static int ov5642_probe(struct i2c_client *client,
 		return -ENOMEM;
 	}
 	memcpy(t->vdev, &ov5642_template, sizeof(*t->vdev));
-
+	
 	video_set_drvdata(t->vdev, t);
-
+	
 	INIT_WORK(&(t->dl_work), do_download);
-
+	
 	wake_lock_init(&(t->wake_lock),WAKE_LOCK_SUSPEND, "ov5642");
 	/* Register it */
 	plat_dat = (aml_cam_info_t*)client->dev.platform_data;
 	if (plat_dat) {
 		memcpy(&t->cam_info, plat_dat, sizeof(aml_cam_info_t));
-		if (plat_dat->front_back >=0)
+		if (plat_dat->front_back >=0)  
 			video_nr = plat_dat->front_back;
 	} else {
 		printk("camera ov5642: have no platform data\n");
@@ -3445,11 +3445,11 @@ static int ov5642_probe(struct i2c_client *client,
 		kfree(client);
 		return -1;
 	}
-
+	
 	t->cam_info.version = OV5642_DRIVER_VERSION;
 	if (aml_cam_info_reg(&t->cam_info) < 0)
 		printk("reg caminfo error\n");
-
+	
 	err = video_register_device(t->vdev, VFL_TYPE_GRABBER, video_nr);
 	if (err < 0) {
 		video_device_release(t->vdev);
@@ -3488,3 +3488,4 @@ static struct i2c_driver ov5642_i2c_driver = {
 };
 
 module_i2c_driver(ov5642_i2c_driver);
+

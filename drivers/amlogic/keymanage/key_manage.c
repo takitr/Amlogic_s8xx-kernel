@@ -16,9 +16,9 @@
 /*
  * key_manage.c
  * this file support key read/write with key unite interface,and don't care about device for saving key
- * because there are many kinds of device and key, key should be configured in storage.c(board/amlogic/m6xxx/firmware/storage.c
+ * because there are many kinds of device and key, key should be configured in storage.c(board/amlogic/m6xxx/firmware/storage.c 
  *  or customer/board/m6_xxxx/firmware/storage.c)
- *
+ * 
  * the key_manage.c file should define below micro
  *     #define CONFIG_UNIFY_KEY_MANAGE
  * if the key unify interface can support all kinds of keys, depend on below micro
@@ -32,8 +32,8 @@
  *   #define CONFIG_SECURESTORAGEKEY
  *   #define CONFIG_RANDOM_GENERATE
  *   #define CONFIG_EFUSE 1
- *
- *
+ * 
+ * 
  * */
 
 
@@ -221,7 +221,7 @@ static int key_efuse_read(char *keyname,unsigned char *keydata,unsigned int data
 	char *buf;
 	if(efuse_getinfo_byTitle(title, &info) < 0)
 		return -EINVAL;
-
+	
 	buf = kzalloc(info.data_len, GFP_KERNEL);
 	if(buf == NULL){
 		printk("%s:%d,kzalloc mem fail\n",__func__,__LINE__);
@@ -276,7 +276,7 @@ static int key_efuse_query(char *keyname,unsigned int *keystate)
 
 /*
  * function name: key_unify_init
- * buf : input
+ * buf : input 
  * len  : > 0
  * return : >=0: ok, other: fail
  * */
@@ -401,8 +401,8 @@ EXPORT_SYMBOL(key_unify_read);
 *    key_unify_query - query whether key was burned.
 *    @keyname : key name will be queried.
 *    @keystate: query state value, 0: key was NOT burned; 1: key was burned; others: reserved.
-*     keypermit:
-*    return: 0: successful; others: failed.
+*     keypermit: 
+*    return: 0: successful; others: failed. 
 */
 int key_unify_query(char *keyname,unsigned int *keystate,unsigned int *keypermit)
 {
@@ -454,7 +454,7 @@ int key_unify_query(char *keyname,unsigned int *keystate,unsigned int *keypermit
 }
 EXPORT_SYMBOL(key_unify_query);
 /* function name: key_unify_uninit
- * functiion : uninit
+ * functiion : uninit 
  * return : >=0 ok, <0 fail
  * */
 int key_unify_uninit(void)
@@ -664,12 +664,12 @@ static const struct file_operations unifykey_fops = {
 
 static struct device_attribute unifykey_class_attrs[] ={
 	__ATTR_RO(unifykey_version),
-//	__ATTR_RO(installed_keys),
-	__ATTR_NULL
+//	__ATTR_RO(installed_keys), 
+	__ATTR_NULL 
 };
 static struct class unifykey_class ={
 	.name = UNIFYKEYS_CLASS_NAME,
-	.dev_attrs = unifykey_class_attrs,
+	.dev_attrs = unifykey_class_attrs, 
 };
 
 
@@ -681,7 +681,7 @@ static int aml_unifykeys_probe(struct platform_device *pdev)
 	int ret=-1;
 	struct device *devp;
 	//while(aml_unifykey_test);
-
+	
 	if (pdev->dev.of_node) {
 		ret = unifykey_dt_create(pdev);
 	}
@@ -720,11 +720,11 @@ static int aml_unifykeys_probe(struct platform_device *pdev)
 		goto error4;
 	}
 	devp->platform_data = get_unifykeys_drv_data(pdev);
-
+	
 	unifykey_device = devp;
 	printk(KERN_INFO "unifykey: device %s created ok\n", UNIFYKEYS_DEVICE_NAME);
 	return 0;
-
+	
 error4:
 	cdev_del(&unifykey_devp->cdev);
 error3:
@@ -769,15 +769,15 @@ static const struct of_device_id meson6_unifykeys_dt_match[]={
 #endif
 
 static struct platform_driver aml_unifykeys_management_driver =
-{
-	.probe = aml_unifykeys_probe,
-	.remove = aml_unifykeys_remove,
+{ 
+	.probe = aml_unifykeys_probe, 
+	.remove = aml_unifykeys_remove, 
 	.driver =
      {
-	.name = UNIFYKEYS_DEVICE_NAME,
-        .owner = THIS_MODULE,
+     	.name = UNIFYKEYS_DEVICE_NAME, 
+        .owner = THIS_MODULE, 
         .of_match_table = meson6_unifykeys_dt_match,
-     },
+     }, 
 };
 
 static int __init aml_unifykeys_management_init(void)
@@ -882,7 +882,7 @@ int do_keyunify(cmd_tbl_t * cmdtp, int flag, int argc, char *argv[])
 		key_unify_uninit();
 		return 0;
 	}
-
+	
 usage:
 	cmd_usage(cmdtp);
 	return 1;

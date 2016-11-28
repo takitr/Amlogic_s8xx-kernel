@@ -44,7 +44,9 @@
 #define CANVAS_NUM	192
 #endif
 
-#if MESON_CPU_TYPE == MESON_CPU_TYPE_MESON8
+#if MESON_CPU_TYPE == MESON_CPU_TYPE_MESON8B
+#define GM8_CANVAS_REG 0
+#elif MESON_CPU_TYPE >= MESON_CPU_TYPE_MESON8
 #define GM8_CANVAS_REG 1
 #else
 #define GM8_CANVAS_REG 0
@@ -67,7 +69,7 @@ void canvas_config(u32 index, ulong addr, u32 width,
     raw_local_save_flags(fiq_flag);
     local_fiq_disable();
     spin_lock_irqsave(&lock, flags);
-#if GM8_CANVAS_REG
+#if GM8_CANVAS_REG 
 	if (IS_MESON_M8M2_CPU)
 	{
 		CANVAS_WRITE(DC_CAV_LUT_DATAL_M8M2,
@@ -145,8 +147,8 @@ void canvas_copy(u32 src, u32 dst)
 		CANVAS_WRITE(DC_CAV_LUT_DATAH_M8M2,
 			((((width + 7) >> 3) >> CANVAS_WIDTH_LWID) << CANVAS_WIDTH_HBIT) |
 			((height & CANVAS_HEIGHT_MASK) << CANVAS_HEIGHT_BIT)    |
-			((wrap & CANVAS_XWRAP) ? CANVAS_XWRAP : 0)              |
-			((wrap & CANVAS_YWRAP) ? CANVAS_YWRAP : 0)              |
+			((wrap & CANVAS_XWRAP) ? CANVAS_XWRAP : 0)              | 
+			((wrap & CANVAS_YWRAP) ? CANVAS_YWRAP : 0)              | 
 			((blkmode & CANVAS_BLKMODE_MASK) << CANVAS_BLKMODE_BIT));
 
 		CANVAS_WRITE(DC_CAV_LUT_ADDR_M8M2, CANVAS_LUT_WR_EN | dst);
@@ -165,8 +167,8 @@ void canvas_copy(u32 src, u32 dst)
 		CANVAS_WRITE(DC_CAV_LUT_DATAH,
 			((((width + 7) >> 3) >> CANVAS_WIDTH_LWID) << CANVAS_WIDTH_HBIT) |
 			((height & CANVAS_HEIGHT_MASK) << CANVAS_HEIGHT_BIT)    |
-			((wrap & CANVAS_XWRAP) ? CANVAS_XWRAP : 0)              |
-			((wrap & CANVAS_YWRAP) ? CANVAS_YWRAP : 0)              |
+			((wrap & CANVAS_XWRAP) ? CANVAS_XWRAP : 0)              | 
+			((wrap & CANVAS_YWRAP) ? CANVAS_YWRAP : 0)              | 
 			((blkmode & CANVAS_BLKMODE_MASK) << CANVAS_BLKMODE_BIT));
 
 		CANVAS_WRITE(DC_CAV_LUT_ADDR, CANVAS_LUT_WR_EN | dst);
@@ -188,7 +190,7 @@ void canvas_update_addr(u32 index, u32 addr)
 {
     ulong flags;
     ulong fiq_flag;
-
+    
     if (index >= CANVAS_NUM)
         return;
 
@@ -208,8 +210,8 @@ void canvas_update_addr(u32 index, u32 addr)
 		CANVAS_WRITE(DC_CAV_LUT_DATAH_M8M2,
 			((((canvasPool[index].width + 7) >> 3) >> CANVAS_WIDTH_LWID) << CANVAS_WIDTH_HBIT) |
 			((canvasPool[index].height & CANVAS_HEIGHT_MASK) << CANVAS_HEIGHT_BIT)   |
-			((canvasPool[index].wrap & CANVAS_XWRAP) ? CANVAS_XWRAP : 0)             |
-			((canvasPool[index].wrap & CANVAS_YWRAP) ? CANVAS_YWRAP : 0)             |
+			((canvasPool[index].wrap & CANVAS_XWRAP) ? CANVAS_XWRAP : 0)             | 
+			((canvasPool[index].wrap & CANVAS_YWRAP) ? CANVAS_YWRAP : 0)             | 
 			((canvasPool[index].blkmode & CANVAS_BLKMODE_MASK) << CANVAS_BLKMODE_BIT));
 
 		CANVAS_WRITE(DC_CAV_LUT_ADDR_M8M2, CANVAS_LUT_WR_EN | index);
@@ -228,8 +230,8 @@ void canvas_update_addr(u32 index, u32 addr)
 		CANVAS_WRITE(DC_CAV_LUT_DATAH,
 			((((canvasPool[index].width + 7) >> 3) >> CANVAS_WIDTH_LWID) << CANVAS_WIDTH_HBIT) |
 			((canvasPool[index].height & CANVAS_HEIGHT_MASK) << CANVAS_HEIGHT_BIT)   |
-			((canvasPool[index].wrap & CANVAS_XWRAP) ? CANVAS_XWRAP : 0)             |
-			((canvasPool[index].wrap & CANVAS_YWRAP) ? CANVAS_YWRAP : 0)             |
+			((canvasPool[index].wrap & CANVAS_XWRAP) ? CANVAS_XWRAP : 0)             | 
+			((canvasPool[index].wrap & CANVAS_YWRAP) ? CANVAS_YWRAP : 0)             | 
 			((canvasPool[index].blkmode & CANVAS_BLKMODE_MASK) << CANVAS_BLKMODE_BIT));
 
 		CANVAS_WRITE(DC_CAV_LUT_ADDR, CANVAS_LUT_WR_EN | index);
@@ -315,7 +317,7 @@ static struct kobj_type canvas_attr_type = {
 static int canvas_probe(struct platform_device *pdev)
 {
     int i, r;
-
+    
 	for (i = 0; i < CANVAS_NUM; i++) {
 		r = kobject_init_and_add(&canvasPool[i].kobj, &canvas_attr_type,
 				&pdev->dev.kobj, "%d", i);
@@ -335,7 +337,7 @@ err:
 
 	pr_error("Canvas driver probe failed\n");
 
-	return r;
+	return r;	
 }
 
 //static int __devexit canvas_remove(struct platform_device *pdev)
@@ -360,7 +362,7 @@ static struct platform_driver canvas_driver = {
 static int __init amcanvas_init(void)
 {
     int r;
-
+	
     r = platform_driver_register(&canvas_driver);
     if (r) {
         pr_error("Unable to register canvas driver\n");

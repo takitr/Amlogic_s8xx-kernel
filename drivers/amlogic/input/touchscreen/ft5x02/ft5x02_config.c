@@ -79,7 +79,7 @@
 #define FT5X02_REG_FACE_DETECT_OFF			(0x49+0x80)
 #define FT5X02_REG_PEAK_VALUE_MIN				(0x4a+0x80)
 #define FT5X02_REG_DIFF_VALUE_OVER_NUM		(0x4b+0x80)
-//#define FT5X02_REG_DIFF_VALUE_PERCENT
+//#define FT5X02_REG_DIFF_VALUE_PERCENT		
 #define FT5X02_REG_POINT_AUTO_CLEAR_TIME_H	(0x4c+0x80)
 #define FT5X02_REG_POINT_AUTO_CLEAR_TIME_L	(0x4d+0x80)
 #define FT5X02_REG_DIFFDATA_HADDLE_VALUE       0xce//(0x4e+0x80)
@@ -132,7 +132,7 @@ static int ft5x02_get_tx_order(struct i2c_client * client, u8 txNO, u8 *pTxNo)
 		if(ReCode >= 0)
 			ReCode =  ft5x02_read_reg(client,
 					FT5x02_REG_TX_ORDER_START + txNO - FT5x02_TX_TEST_MODE_1,
-					pTxNo);
+					pTxNo);	
 		ft5x02_write_reg(client, FT5x02_REG_DEVICE_MODE,
 			FT5x02_REG_TEST_MODE<<4);	/*enter Test mode*/
 	}
@@ -194,11 +194,11 @@ static int ft5x02_set_tx_offset(struct i2c_client * client, u8 txNO, u8 offset_v
 			if (txNO%2 == 0)
 				ReCode = ft5x02_write_reg(client,
 							FT5x02_REG_TX_OFFSET_START + (txNO>>1),
-							(temp&0xf0) + (offset_value&0x0f));
+							(temp&0xf0) + (offset_value&0x0f));	
 			else
 				ReCode = ft5x02_write_reg(client,
 							FT5x02_REG_TX_OFFSET_START + (txNO>>1),
-							(temp&0x0f) + (offset_value<<4));
+							(temp&0x0f) + (offset_value<<4));	
 		}
 	} else {
 		ReCode = ft5x02_write_reg(client, FT5x02_REG_DEVICE_MODE,
@@ -211,17 +211,17 @@ static int ft5x02_set_tx_offset(struct i2c_client * client, u8 txNO, u8 offset_v
 				if(txNO%2 == 0)
 					ReCode = ft5x02_write_reg(client,
 						FT5x02_REG_TX_OFFSET_START+((txNO-FT5x02_TX_TEST_MODE_1)>>1),
-						(temp&0xf0)+(offset_value&0x0f));
+						(temp&0xf0)+(offset_value&0x0f));	
 				else
 					ReCode = ft5x02_write_reg(client,
 						FT5x02_REG_TX_OFFSET_START+((txNO-FT5x02_TX_TEST_MODE_1)>>1),
-						(temp&0xf0)+(offset_value<<4));
+						(temp&0xf0)+(offset_value<<4));	
 			}
 		}
 		ft5x02_write_reg(client, FT5x02_REG_DEVICE_MODE,
 			FT5x02_REG_TEST_MODE<<4);	/*enter Test mode*/
 	}
-
+	
 	return ReCode;
 }
 
@@ -284,7 +284,7 @@ static int ft5x02_set_rx_cap(struct i2c_client * client, u8 rxNO, u8 cap_value)
 		ft5x02_write_reg(client, FT5x02_REG_DEVICE_MODE,
 			FT5x02_REG_TEST_MODE<<4);	/*enter Test mode*/
 	}
-
+	
 	return ReCode;
 }
 
@@ -305,7 +305,7 @@ static int ft5x02_get_rx_cap(struct i2c_client * client, u8 rxNO, u8 *pCap)
 		ft5x02_write_reg(client, FT5x02_REG_DEVICE_MODE,
 			FT5x02_REG_TEST_MODE<<4);	/*enter Test mode*/
 	}
-
+	
 	return ReCode;
 }
 
@@ -321,11 +321,11 @@ static int ft5x02_set_rx_offset(struct i2c_client * client, u8 rxNO, u8 offset_v
 			if (rxNO%2 == 0)
 				ReCode = ft5x02_write_reg(client,
 							FT5x02_REG_RX_OFFSET_START + (rxNO>>1),
-							(temp&0xf0) + (offset_value&0x0f));
+							(temp&0xf0) + (offset_value&0x0f));	
 			else
 				ReCode = ft5x02_write_reg(client,
 							FT5x02_REG_RX_OFFSET_START + (rxNO>>1),
-							(temp&0x0f) + (offset_value<<4));
+							(temp&0x0f) + (offset_value<<4));	
 		}
 	}
 	else {
@@ -339,17 +339,17 @@ static int ft5x02_set_rx_offset(struct i2c_client * client, u8 rxNO, u8 offset_v
 				if (rxNO%2 == 0)
 					ReCode = ft5x02_write_reg(client,
 						FT5x02_REG_RX_OFFSET_START+((rxNO-FT5x02_RX_TEST_MODE_1)>>1),
-						(temp&0xf0)+(offset_value&0x0f));
+						(temp&0xf0)+(offset_value&0x0f));	
 				else
 					ReCode = ft5x02_write_reg(client,
 						FT5x02_REG_RX_OFFSET_START+((rxNO-FT5x02_RX_TEST_MODE_1)>>1),
-						(temp&0xf0)+(offset_value<<4));
+						(temp&0xf0)+(offset_value<<4));	
 			}
 		}
 		ft5x02_write_reg(client, FT5x02_REG_DEVICE_MODE,
 			FT5x02_REG_TEST_MODE<<4);	/*enter Test mode*/
 	}
-
+	
 	return ReCode;
 }
 
@@ -368,7 +368,7 @@ static int ft5x02_get_rx_offset(struct i2c_client * client, u8 rxNO, u8 *pOffset
 			ReCode = ft5x02_read_reg(client,
 						FT5x02_REG_RX_OFFSET_START+((rxNO-FT5x02_RX_TEST_MODE_1)>>1),
 						&temp);
-
+		
 		ft5x02_write_reg(client, FT5x02_REG_DEVICE_MODE,
 			FT5x02_REG_TEST_MODE<<4);	/*enter Test mode*/
 	}
@@ -379,7 +379,7 @@ static int ft5x02_get_rx_offset(struct i2c_client * client, u8 rxNO, u8 *pOffset
 		else
 			*pOffset = (temp>>4);
 	}
-
+	
 	return ReCode;
 }
 
@@ -599,7 +599,7 @@ static int ft5x02_get_diff_value_over_num(struct i2c_client *client, u8 *pnum)
 
 static int ft5x02_set_diff_value_percent(struct i2c_client *client, u8 value)
 {
-
+	
 //	return ft5x02_write_reg(client, FT5X02_REG_DIFF_VALUE_PERCENT,
 //			value);
 return 0;
@@ -833,7 +833,7 @@ static int ft5x02_set_other_param(struct i2c_client *client)
 		dev_err(&client->dev, "%s:write PERIODMONITOR failed.\n", __func__);
 		return err;
 	}
-
+	
 	err = ft5x02_write_reg(client, FT5X02_REG_AUTO_CLB_MODE,
 			FT5X02_AUTO_CLB_MODE);
 	if (err < 0) {
@@ -861,7 +861,7 @@ static int ft5x02_set_other_param(struct i2c_client *client)
 		dev_err(&client->dev, "%s:write STATE failed.\n", __func__);
 		return err;
 	}
-
+	
 	err = ft5x02_write_reg(client, FT5X02_REG_MAX_TOUCH_VALUE_HIGH,
 			FT5X02_MAX_TOUCH_VALUE_HIGH);
 	if (err < 0) {
@@ -904,137 +904,137 @@ static int ft5x02_get_other_param(struct i2c_client *client)
 	if (err < 0) {
 		dev_err(&client->dev, "%s:write THGROUP failed.\n", __func__);
 		return err;
-	} else
+	} else 
 		DBG("THGROUP=%02x\n", value<<2);
 	err = ft5x02_read_reg(client, FT5X02_REG_THPEAK, &value);
 	if (err < 0) {
 		dev_err(&client->dev, "%s:write THPEAK failed.\n",
 				__func__);
 		return err;
-	} else
+	} else 
 		DBG("THPEAK=%02x\n", value);
 	err = ft5x02_read_reg(client, FT5X02_REG_THCAL, &value);
 	if (err < 0) {
 		dev_err(&client->dev, "%s:write THCAL failed.\n",
 				__func__);
 		return err;
-	} else
+	} else 
 		DBG("THCAL=%02x\n", value);
 	err = ft5x02_read_reg(client, FT5X02_REG_THWATER, &value);
 	if (err < 0) {
 		dev_err(&client->dev, "%s:write THWATER failed.\n",
 				__func__);
 		return err;
-	} else
+	} else 
 		DBG("THWATER=%02x\n", value);
 	err = ft5x02_read_reg(client, FT5X02_REG_THFALSE_TOUCH_PEAK,
 			&value);
 	if (err < 0) {
 		dev_err(&client->dev, "%s:write THFALSE_TOUCH_PEAK failed.\n", __func__);
 		return err;
-	} else
+	} else 
 		DBG("THFALSE_TOUCH_PEAK=%02x\n", value);
 	err = ft5x02_read_reg(client, FT5X02_REG_THDIFF, &value);
 	if (err < 0) {
 		dev_err(&client->dev, "%s:write THDIFF failed.\n", __func__);
 		return err;
-	} else
+	} else 
 		DBG("THDIFF=%02x\n", value);
 	err = ft5x02_read_reg(client, FT5X02_REG_CTRL, &value);
 	if (err < 0) {
 		dev_err(&client->dev, "%s:write CTRL failed.\n", __func__);
 		return err;
-	} else
+	} else 
 		DBG("CTRL=%02x\n", value);
 	err = ft5x02_read_reg(client, FT5X02_REG_TIMEENTERMONITOR,
 			&value);
 	if (err < 0) {
 		dev_err(&client->dev, "%s:write TIMEENTERMONITOR failed.\n", __func__);
 		return err;
-	} else
+	} else 
 		DBG("TIMEENTERMONITOR=%02x\n", value);
 	err = ft5x02_read_reg(client, FT5X02_REG_PERIODACTIVE,
 			&value);
 	if (err < 0) {
 		dev_err(&client->dev, "%s:write PERIODACTIVE failed.\n", __func__);
 		return err;
-	} else
+	} else 
 		DBG("PERIODACTIVE=%02x\n", value);
 	err = ft5x02_read_reg(client, FT5X02_REG_PERIODMONITOR,
 			&value);
 	if (err < 0) {
 		dev_err(&client->dev, "%s:write PERIODMONITOR failed.\n", __func__);
 		return err;
-	} else
+	} else 
 		DBG("PERIODMONITOR=%02x\n", value);
-
+	
 	err = ft5x02_read_reg(client, FT5X02_REG_CIPHER,
 			&value);
 	if (err < 0) {
 		dev_err(&client->dev, "%s:write CIPHER failed.\n", __func__);
 		return err;
-	} else
+	} else 
 		DBG("CIPHER=%02x\n", value);
 	err = ft5x02_read_reg(client, FT5X02_REG_MODE, &value);
 	if (err < 0) {
 		dev_err(&client->dev, "%s:write MODE failed.\n", __func__);
 		return err;
-	} else
+	} else 
 		DBG("MODE=%02x\n", value);
 	err = ft5x02_read_reg(client, FT5X02_REG_PMODE, &value);
 	if (err < 0) {
 		dev_err(&client->dev, "%s:write PMODE failed.\n", __func__);
 		return err;
-	} else
+	} else 
 		DBG("PMODE=%02x\n", value);
 	err = ft5x02_read_reg(client, FT5X02_REG_FIRMID, &value);
 	if (err < 0) {
 		dev_err(&client->dev, "%s:write FIRMID failed.\n", __func__);
 		return err;
-	} else
+	} else 
 		DBG("FIRMID=%02x\n", value);
 	err = ft5x02_read_reg(client, FT5X02_REG_STATE, &value);
 	if (err < 0) {
 		dev_err(&client->dev, "%s:write STATE failed.\n", __func__);
 		return err;
-	} else
+	} else 
 		DBG("STATE=%02x\n", value);
-
+	
 	err = ft5x02_read_reg(client, FT5X02_REG_MAX_TOUCH_VALUE_HIGH,
 			&value);
 	if (err < 0) {
 		dev_err(&client->dev, "%s:write MAX_TOUCH_VALUE_HIGH failed.\n", __func__);
 		return err;
-	} else
+	} else 
 		DBG("MAX_TOUCH_VALUE_HIGH=%02x\n", value);
 	err = ft5x02_read_reg(client, FT5X02_REG_MAX_TOUCH_VALUE_LOW,
 			&value);
 	if (err < 0) {
 		dev_err(&client->dev, "%s:write MAX_TOUCH_VALUE_LOW failed.\n", __func__);
 		return err;
-	} else
+	} else 
 		DBG("MAX_TOUCH_VALUE_LOW=%02x\n", value);
 	err = ft5x02_read_reg(client, FT5X02_REG_FACE_DEC_MODE,
 			&value);
 	if (err < 0) {
 		dev_err(&client->dev, "%s:write FACE_DEC_MODE failed.\n", __func__);
 		return err;
-	} else
+	} else 
 		DBG("FACE_DEC_MODE=%02x\n", value);
 	err = ft5x02_read_reg(client, FT5X02_REG_DRAW_LINE_TH,
 			&value);
 	if (err < 0) {
 		dev_err(&client->dev, "%s:write DRAW_LINE_TH failed.\n", __func__);
 		return err;
-	} else
+	} else 
 		DBG("DRAW_LINE_TH=%02x\n", value);
-
+	
 	err = ft5x02_read_reg(client, FT5X02_REG_DIFFDATA_HADDLE_VALUE,
 			&value);
 	if (err < 0) {
 		dev_err(&client->dev, "%s:write DIFFDATA_HADDLE_VALUE failed.\n", __func__);
 		return err;
-	} else
+	} else 
 		DBG("DIFFDATA_HADDLE_VALUE=%02x\n", value);
 	return err;
 }
@@ -1044,14 +1044,14 @@ int ft5x02_get_ic_param(struct i2c_client *client)
 	int i = 0;
 	u8 value = 0x00;
 	u16 xvalue = 0x0000, yvalue = 0x0000;
-
+	
 	/*enter factory mode*/
 	err = ft5x02_write_reg(client, FT5x02_REG_DEVICE_MODE, FT5x02_FACTORYMODE_VALUE);
 	if (err < 0) {
 		dev_err(&client->dev, "%s:enter factory mode failed.\n", __func__);
 		goto RETURN_WORK;
 	}
-
+	
 	for (i = 0; i < g_ft5x02_tx_num; i++) {
 		DBG("tx%d:", i);
 		/*get tx order*/
@@ -1116,7 +1116,7 @@ int ft5x02_get_ic_param(struct i2c_client *client)
 		goto RETURN_WORK;
 	} else
 		DBG("scan select = %02x\n", value);
-
+	
 	/*get tx number*/
 	err = ft5x02_get_tx_num(client, &value);
 	if (err < 0) {
@@ -1133,7 +1133,7 @@ int ft5x02_get_ic_param(struct i2c_client *client)
 		goto RETURN_WORK;
 	} else
 		DBG("rx num = %02x\n", value);
-
+	
 	/*get gain*/
 	err = ft5x02_get_gain(client, &value);
 	if (err < 0) {
@@ -1150,7 +1150,7 @@ int ft5x02_get_ic_param(struct i2c_client *client)
 		goto RETURN_WORK;
 	} else
 		DBG("voltage = %02x\n", value);
-RETURN_WORK:
+RETURN_WORK:	
 	/*enter work mode*/
 	err = ft5x02_write_reg(client, FT5x02_REG_DEVICE_MODE, FT5x02_WORKMODE_VALUE);
 	if (err < 0) {
@@ -1293,7 +1293,7 @@ RETURN_WORK:
 		DBG("pos x = %02x\n", value);
 
 	err = ft5x02_get_other_param(client);
-
+	
 ERR_EXIT:
 	return err;
 }
@@ -1302,14 +1302,14 @@ int ft5x02_Init_IC_Param(struct i2c_client *client)
 {
 	int err = 0;
 	int i = 0;
-
+	
 	/*enter factory mode*/
 	err = ft5x02_write_reg(client, FT5x02_REG_DEVICE_MODE, FT5x02_FACTORYMODE_VALUE);
 	if (err < 0) {
 		dev_err(&client->dev, "%s:enter factory mode failed.\n", __func__);
 		goto RETURN_WORK;
 	}
-
+	
 	for (i = 0; i < g_ft5x02_tx_num; i++) {
 		if (g_ft5x02_tx_order[i] != 0xFF) {
 			/*set tx order*/
@@ -1375,7 +1375,7 @@ int ft5x02_Init_IC_Param(struct i2c_client *client)
 			__func__);
 		goto RETURN_WORK;
 	}
-
+	
 	/*set tx number*/
 	err = ft5x02_set_tx_num(client, g_ft5x02_tx_num);
 	if (err < 0) {
@@ -1390,7 +1390,7 @@ int ft5x02_Init_IC_Param(struct i2c_client *client)
 			__func__);
 		goto RETURN_WORK;
 	}
-
+	
 	/*set gain*/
 	err = ft5x02_set_gain(client, g_ft5x02_gain);
 	if (err < 0) {
@@ -1405,7 +1405,7 @@ int ft5x02_Init_IC_Param(struct i2c_client *client)
 			__func__);
 		goto RETURN_WORK;
 	}
-RETURN_WORK:
+RETURN_WORK:	
 	/*enter work mode*/
 	err = ft5x02_write_reg(client, FT5x02_REG_DEVICE_MODE, FT5x02_WORKMODE_VALUE);
 	if (err < 0) {
@@ -1535,7 +1535,8 @@ RETURN_WORK:
 	}
 
 	err = ft5x02_set_other_param(client);
-
+	
 ERR_EXIT:
 	return err;
 }
+

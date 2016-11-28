@@ -42,7 +42,7 @@
 #define SPI_FLASH_USR_DUMMY_BLEN   10
 #define SPI_FLASH_USR_CMD     0
 
-/* SPI_FLASH_ADDR */
+/* SPI_FLASH_ADDR */                            
 #define SPI_FLASH_BYTES_LEN 24
 #define SPI_FLASH_ADDR_START 0
 
@@ -101,3 +101,4 @@
 #else
 #define mtd_has_partitions()    (0)
 #endif
+

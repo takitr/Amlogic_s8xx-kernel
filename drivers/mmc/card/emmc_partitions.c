@@ -181,7 +181,7 @@ int get_reserve_partition_off (struct mmc_card *card) // byte unit
         off = MMC_BOOT_PARTITION_SIZE + MMC_BOOT_PARTITION_RESERVED;
 #else
 	      off = 0;
-#endif
+#endif	              
     } else if ((storage_flag == 0) || (storage_flag == -1)){ // if storage_flag is invalid
         if (POR_EMMC_BOOT()) {
             off = MMC_BOOT_PARTITION_SIZE + MMC_BOOT_PARTITION_RESERVED;
@@ -253,7 +253,7 @@ static int mmc_read_partition_tbl (struct mmc_card *card, struct mmc_partitions_
         goto exit_err;
     }
     start_blk >>= bit;
-    size = sizeof(struct mmc_partitions_fmt);
+    size = sizeof(struct mmc_partitions_fmt); 
     dst = (char *)pt_fmt;
     if (size >= blk_size) {
         blk_cnt = size >> bit;
@@ -265,7 +265,7 @@ static int mmc_read_partition_tbl (struct mmc_card *card, struct mmc_partitions_
         start_blk += blk_cnt;
         dst += blk_cnt << bit;
         size -= blk_cnt << bit;
-    }
+    } 
     if (size > 0) { // the last block
         ret = mmc_read_internal(card, start_blk, 1, buf);
         if (ret) { // error
@@ -443,7 +443,7 @@ static int add_emmc_partition(struct gendisk * disk, struct mmc_partitions_fmt *
     uint64_t offset, size, cap;
     struct partitions *pp;
     struct proc_dir_entry *proc_card;
-
+    
     printk("add_emmc_partition\n");
 
     cap = get_capacity(disk); // unit:512 bytes
@@ -454,11 +454,11 @@ static int add_emmc_partition(struct gendisk * disk, struct mmc_partitions_fmt *
         if ((offset + size) <= cap) {
             ret = add_emmc_each_part(disk, 1+i, offset, size, 0, pp->name);
             printk("[%sp%02d] %20s  offset 0x%012llx, size 0x%012llx %s\n",
-                    disk->disk_name, 1+i, pp->name, offset<<9,
+                    disk->disk_name, 1+i, pp->name, offset<<9, 
                     size<<9, IS_ERR(ret) ? "add fail":"");
         } else {
             printk("[%s] %s: partition exceeds device capacity:\n \
-                    %20s  offset 0x%012llx, size 0x%012llx\n",
+                    %20s  offset 0x%012llx, size 0x%012llx\n", 
                     __FUNCTION__, disk->disk_name, pp->name, offset<<9, size<<9);
             break;
         }
@@ -477,7 +477,7 @@ static int add_emmc_partition(struct gendisk * disk, struct mmc_partitions_fmt *
 static int is_card_emmc (struct mmc_card *card)
 {
     struct mmc_host *mmc = card->host;
-
+    
     return mmc->is_emmc_port; // emmc port, so it must be an eMMC or TSD
 }
 
@@ -503,7 +503,7 @@ static void show_partition_table(struct partitions * table)
 		else
 			printk("part: %d, name : %10s, size : %-4llx  mask_flag %d\n",i,par_table->name,par_table->size,par_table->mask_flags);
 	}
-
+	
 	return;
 }
 
@@ -512,11 +512,11 @@ static ssize_t emmc_part_table_get(struct class *class, struct class_attribute *
 	struct partitions * part_table = NULL;
 	struct partitions * tmp_table = NULL;
 	int i=0,part_num =0;
-
+	
 	tmp_table = pt_fmt->partitions;
 	part_table = kmalloc(MAX_MMC_PART_NUM*sizeof(struct partitions),GFP_KERNEL);
 	if(!part_table){
-	     printk("[%s] malloc failed for  part_table!\n", __FUNCTION__);
+   	     printk("[%s] malloc failed for  part_table!\n", __FUNCTION__);
 	     return -ENOMEM;
 	}
 
@@ -545,7 +545,7 @@ static ssize_t emmc_part_table_get(struct class *class, struct class_attribute *
 			part_table[part_num].offset= tmp_table[i].offset;
 			part_table[part_num].mask_flags= tmp_table[i].mask_flags;
 			if(!strncmp(part_table[part_num].name, "data", MAX_MMC_PART_NAME_LEN)){
-				part_table[part_num].size = -1;  //last part size is FULL
+				part_table[part_num].size = -1;  //last part size is FULL 
 			}
 			part_num++;
 		}
@@ -553,18 +553,18 @@ static ssize_t emmc_part_table_get(struct class *class, struct class_attribute *
 
 	show_partition_table(part_table);
 	memcpy(buf,part_table,MAX_MMC_PART_NUM*sizeof(struct partitions));
-
+	
 	if(part_table){
 		kfree(part_table);
 		part_table =NULL;
 	}
-
-	return 0;
+	
+	return 0;	
 }
 
 static int store_device = -1;
 static ssize_t store_device_flag_get(struct class *class, struct class_attribute *attr, char *buf)
-{
+{	
 	if(store_device == -1){
 		printk("[%s]  get store device flag something wrong !\n", __FUNCTION__);
 	}
@@ -573,11 +573,11 @@ static ssize_t store_device_flag_get(struct class *class, struct class_attribute
 }
 
 static struct class_attribute aml_version =
-	__ATTR(version, S_IRUGO, emmc_version_get, NULL);
+	__ATTR(version, S_IRUGO, emmc_version_get, NULL);	
 static struct class_attribute aml_part_table =
 	__ATTR(part_table, S_IRUGO, emmc_part_table_get, NULL);
 static struct class_attribute aml_store_device =
-	__ATTR(store_device, S_IRUGO, store_device_flag_get, NULL);
+	__ATTR(store_device, S_IRUGO, store_device_flag_get, NULL);	
 
 int aml_emmc_partition_ops (struct mmc_card *card, struct gendisk *disk)
 {
@@ -615,7 +615,7 @@ int aml_emmc_partition_ops (struct mmc_card *card, struct gendisk *disk)
     if (ret == 0) { // ok
         ret = add_emmc_partition(disk, pt_fmt);
     }
-
+	
     mmc_release_host(card->host);
 
 #ifdef CONFIG_SECURITYKEY
@@ -638,11 +638,11 @@ int aml_emmc_partition_ops (struct mmc_card *card, struct gendisk *disk)
 
 	aml_store_class = class_create(THIS_MODULE,"aml_store");
 	if (IS_ERR(aml_store_class)){
-		 printk("[%s] create aml_store_class class fail. \n", __FUNCTION__);
+       		 printk("[%s] create aml_store_class class fail. \n", __FUNCTION__);
 		ret = -1;
 		goto out;
 	}
-
+	
 	ret = class_create_file(aml_store_class, &aml_version);
 	if (ret) {
 		printk("[%s] can't create aml_store_class file . \n", __FUNCTION__);
@@ -662,13 +662,14 @@ int aml_emmc_partition_ops (struct mmc_card *card, struct gendisk *disk)
 
     printk("Exit %s %s.\n", __FUNCTION__, (ret == 0)?"OK":"ERROR");
 	return ret;
-
+	
 out_class3:
 	class_remove_file(aml_store_class, &aml_part_table);
 out_class2:
 	class_remove_file(aml_store_class, &aml_version);
-out_class1 :
+out_class1 : 
 	class_destroy(aml_store_class);
 out:
     return ret;
 }
+

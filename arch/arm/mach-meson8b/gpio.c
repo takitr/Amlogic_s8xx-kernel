@@ -76,7 +76,7 @@ extern int gpio_flag;
 //#define debug
 #ifdef debug
 	#define gpio_print(...) printk(__VA_ARGS__)
-#else
+#else 
 	#define gpio_print(...)
 #endif
 //gpio subsystem set pictrl subsystem gpio owner
@@ -224,8 +224,8 @@ static unsigned int gpio_to_pin[][6]={
 	[GPIOAO_9]={P_PIN_MUX_REG(AO,29),P_PIN_MUX_REG(1,15),NONE,NONE,NONE,NONE,},
 	[GPIOAO_10]={P_PIN_MUX_REG(AO,28),P_PIN_MUX_REG(1,14),NONE,NONE,NONE,NONE,},
 	[GPIOAO_11]={P_PIN_MUX_REG(AO,27),NONE,NONE,NONE,NONE,NONE,},
-    [GPIOAO_12]={P_PIN_MUX_REG(AO,17),P_PIN_MUX_REG(AO,14),NONE,NONE,NONE,NONE,},
-    [GPIOAO_13]={P_PIN_MUX_REG(AO,31),P_PIN_MUX_REG(AO,13),P_PIN_MUX_REG(AO,3),NONE,NONE,NONE,},
+	[GPIOAO_12]={P_PIN_MUX_REG(AO,17),NONE,NONE,NONE,NONE,NONE,},
+	[GPIOAO_13]={P_PIN_MUX_REG(AO,31),P_PIN_MUX_REG(AO,19),NONE,NONE,NONE,NONE,},
 	[DIF_TTL_0_P]={P_PIN_MUX_REG(0,24),P_PIN_MUX_REG(6,0),NONE,NONE,NONE,NONE,},
 	[DIF_TTL_0_N]={P_PIN_MUX_REG(0,24),P_PIN_MUX_REG(6,1),NONE,NONE,NONE,NONE,},
 	[DIF_TTL_1_P]={P_PIN_MUX_REG(0,24),P_PIN_MUX_REG(6,2),NONE,NONE,NONE,NONE,},
@@ -412,7 +412,7 @@ int gpio_amlogic_requst(struct gpio_chip *chip,unsigned offset)
 /* amlogic request gpio interface*/
 
 void	 gpio_amlogic_free(struct gpio_chip *chip,unsigned offset)
-{
+{	
 	 pinctrl_free_gpio(offset);
 	return;
 }
@@ -556,7 +556,7 @@ int gpio_amlogic_name_to_num(const char *name)
 		return -1;
 	}
 	p=strcpy(p,name);
-	for(i=0;i<len;p++,i++){
+	for(i=0;i<len;p++,i++){		
 		if(*p=='_'){
 			*p='\0';
 			tmp=i;
@@ -580,7 +580,7 @@ int gpio_amlogic_name_to_num(const char *name)
 	else if(!strcmp(p,"GPIOX"))
 		num=num+97;
 	else
-		num= -1;
+		num= -1;	
 	kzfree(start);
 	return num;
 }
@@ -596,7 +596,7 @@ static struct gpio_chip amlogic_gpio_chip={
 };
 
 
-static const struct of_device_id amlogic_gpio_match[] =
+static const struct of_device_id amlogic_gpio_match[] = 
 {
 	{
 	.compatible = "amlogic,m8b-gpio",
@@ -670,7 +670,7 @@ static int amlogic_gpio_probe(struct platform_device *pdev)
 		gpio_flag=AML_GPIO_IRQ(GPIO_IRQ0,FILTER_NUM7,i);
 		gpio_amlogic_to_irq(NULL,50);
 	}
-
+	
 #endif
 #ifdef pull_dump
 

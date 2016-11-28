@@ -38,7 +38,7 @@ Hdmi_Gate_s hdmi_gate[GATE_NUM] =   {   {HHI_HDMI_CLK_CNTL, 8},
                                         {HHI_GCLK_MPEG2   , 4},
                                     };
 
-// In order to prevent system hangup, add check_cts_hdmi_sys_clk_status() to check
+// In order to prevent system hangup, add check_cts_hdmi_sys_clk_status() to check 
 static void check_cts_hdmi_sys_clk_status(void)
 {
     int i;

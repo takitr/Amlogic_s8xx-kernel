@@ -658,7 +658,7 @@ int    clk_measure(char  index )
 	int len = sizeof(clk_table)/sizeof(char*) - 1;
 	if (index  == 0xff)
 	{
-		for(i = 0;i < len;i++)
+	 	for(i = 0;i < len;i++)
 		{
 			printk("[%10d]%s\n",clk_util_clk_msr(i),clk_table[len-i]);
 		}
@@ -776,7 +776,7 @@ int meson_clk_set_rate(struct clk *clk, unsigned long rate)
 	      spin_lock(&clockfw_lock);
 //		printk(KERN_INFO "%s() clk=%p rate=%lu\n", __FUNCTION__, clk, rate);
 	  if(clk->set_rate)
-		ret = clk->set_rate(clk, rate) ;
+	  	ret = clk->set_rate(clk, rate) ;
 	  if (!clk->open_irq)
 	      spin_unlock_irqrestore(&clockfw_lock, flags);
 	  else
@@ -825,7 +825,7 @@ int clk_set_rate(struct clk *clk, unsigned long rate)
 		mutex_lock(&clock_ops_lock);
 		//printk(KERN_INFO "%s() clk=%p rate=%lu\n", __FUNCTION__, clk, rate);
 		ret = meson_clk_set_rate(clk,rate);
-		mutex_unlock(&clock_ops_lock);
+	 	mutex_unlock(&clock_ops_lock);
 	}
 	return ret;
 }
@@ -1143,7 +1143,7 @@ static int _clk_set_rate_cpu(struct clk *clk, unsigned long cpu, unsigned long g
 				cpu = min_cpu;
 		}
 		else if(cpu < gpu + 24000000)
-			cpu += 24000000;
+    			cpu += 24000000;
 	}
 #endif
 	if ((cpu_clk_cntl & 3) == 1) {
@@ -1234,7 +1234,7 @@ static int _clk_set_rate_cpu(struct clk *clk, unsigned long cpu, unsigned long g
 		// CPU switch to sys pll
 		//cpu_clk_cntl = aml_read_reg32(P_HHI_SYS_CPU_CLK_CNTL);
 		//aml_set_reg32_mask(P_HHI_SYS_CPU_CLK_CNTL, (1 << 7));
-	}
+ 	}
 
 	clk->rate = cpu;
 
@@ -2413,7 +2413,7 @@ EXPORT_SYMBOL(clk_ops_unregister);
 #define PLL_CLK_DEFINE(name,msr)    		\
 	static unsigned pll_##name##_data[10];	\
     CLK_DEFINE(pll_##name,xtal,msr,set_##name##_pll, \
-		clk_msr_get,NULL,NULL,&pll_##name##_data)
+    		clk_msr_get,NULL,NULL,&pll_##name##_data)
 _Pragma("GCC diagnostic ignored \"-Wdeclaration-after-statement\"");
 #define PLL_RELATION_DEF(child,parent) meson_clk_register(&clk_pll_##child,&clk_##parent)
 #define CLK_PLL_CHILD_DEF(child,parent) meson_clk_register(&clk_##child,&clk_pll_##parent)

@@ -30,4 +30,4 @@ unsigned int ir_g_remote_base = P_AO_IR_DEC_LDR_ACTIVE;
 #define GET_NUM_CARRIER         0x5504
 #define SET_NUM_CARRIER         0x5505
 
-#endif
+#endif 

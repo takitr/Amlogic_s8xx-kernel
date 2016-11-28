@@ -174,7 +174,7 @@ static struct v4l2_queryctrl gc2015_qctrl[] = {
 		.step		= 90,
 		.default_value	= 0,
 		.flags         = V4L2_CTRL_FLAG_SLIDER,
-	}
+ 	}
 };
 
 static struct v4l2_frmivalenum gc2015_frmivalenum[]={
@@ -323,7 +323,7 @@ struct gc2015_device {
 
 	/* platform device data from board initting. */
 	aml_cam_info_t cam_info;
-
+	
 	/* wake lock */
 	struct wake_lock	wake_lock;
 
@@ -391,10 +391,10 @@ struct aml_camera_i2c_fig_s gc2015_script[] = {
 
 	{0x09, 0x00}, //
 	{0x0a, 0x01}, //row start
-
+	
 	{0x0b, 0x00}, //
 	{0x0c, 0x0c}, //col start  james  0x10
-
+	
 	{0x0d, 0x04}, //0x04  20120629
 	{0x0e, 0xd0}, //Preview Window height
 
@@ -442,7 +442,7 @@ struct aml_camera_i2c_fig_s gc2015_script[] = {
 	{0xb7,0x00},   //P_LSC_compensate_b2
 	{0xb8,0x80},   //P_LSC_row_center  344   (600/2-100)/2=100
 	{0xb9,0x60},   //P_LSC_col_center  544   (800/2-200)/2=100
-
+		
 	{0xba,0x03},   //[4]Y_LSC_en [3]lsc_compensate [2]signed_b4 [1:0]pixel array select
 	{0xbb,0x3e},   //C_LSC_red_b2 // 20
 	{0xbc,0x3a},   //C_LSC_green_b2   // 20
@@ -459,7 +459,7 @@ struct aml_camera_i2c_fig_s gc2015_script[] = {
 	////////////////////////////////////////////////////////////////////////
 	{0xfe,0x00}, //page0
 	{0x29,0x01}, //cisctl mode 1
-	{0x2b,0x06}, //cisctl mode 3
+	{0x2b,0x06}, //cisctl mode 3	
 	{0x32,0x1c}, //analog mode 1
 	{0x33,0x0f}, //analog mode 2
 	{0x34,0x30}, //[6:4]da_rsg
@@ -470,7 +470,7 @@ struct aml_camera_i2c_fig_s gc2015_script[] = {
 	/////////////////////////////////////////////////////////////////////
 	/////////////////////////// ISP Related /////////////////////////////
 	/////////////////////////////////////////////////////////////////////
-	{0x40,0xff},
+	{0x40,0xff}, 
 	{0x41,0x20}, //[5]skin_detectionenable[2]auto_gray,0x[1]y_gamma
 	{0x42,0xf6}, //[7]auto_sa[6]auto_ee[5]auto_dndd[4]auto_lsc[3]na[2]abs,0x[1]awb
 	{0x4b,0xe8}, //[1]AWB_gain_mode,0x1:atpregain0:atpostgain
@@ -526,14 +526,14 @@ struct aml_camera_i2c_fig_s gc2015_script[] = {
 	{0xb7,0x00},  // g offset
 	{0xb8,0x00}, // b offset
 #endif
-	{0xb0,0x40},
+	{0xb0,0x40},  
 	{0xb1,0xfe},   // 00
 	{0xb2,0x00},   // 04
-	{0xb3,0xf8},
-	{0xb4,0x48},
-	{0xb5,0xf8},
-	{0xb6,0x00},
-	{0xb7,0x04},
+	{0xb3,0xf8},  
+	{0xb4,0x48},  
+	{0xb5,0xf8},  
+	{0xb6,0x00},  
+	{0xb7,0x04},  
 	{0xb8,0x00},
 
 
@@ -542,7 +542,7 @@ struct aml_camera_i2c_fig_s gc2015_script[] = {
 	/////////////////////////////////////////////////////////////////////
 		//RGB_GAMMA
 	/***********************
-	{0xbf,0x08},
+	{0xbf,0x08}, 
 	{0xc0,0x1e},
 	{0xc1,0x33},
 	{0xc2,0x47},
@@ -559,42 +559,42 @@ struct aml_camera_i2c_fig_s gc2015_script[] = {
 	{0xcd,0xE4},
 	{0xce,0xF4},
 	{0xcf,0xff},
-
+	
 	{0xbF,0x0B}, //case Gamma_dm_3:
-	{0xc0,0x16},
-	{0xc1,0x29},
-	{0xc2,0x3C},
-	{0xc3,0x4F},
-	{0xc4,0x5F},
-	{0xc5,0x6F},
-	{0xc6,0x8A},
-	{0xc7,0x9F},
-	{0xc8,0xB4},
-	{0xc9,0xC6},
-	{0xcA,0xD3},
-	{0xcB,0xDD},
-	{0xcC,0xE5},
-	{0xcD,0xF1},
-	{0xcE,0xFA},
+	{0xc0,0x16}, 
+	{0xc1,0x29}, 
+	{0xc2,0x3C}, 
+	{0xc3,0x4F}, 
+	{0xc4,0x5F}, 
+	{0xc5,0x6F}, 
+	{0xc6,0x8A}, 
+	{0xc7,0x9F}, 
+	{0xc8,0xB4}, 
+	{0xc9,0xC6}, 
+	{0xcA,0xD3}, 
+	{0xcB,0xDD},  
+	{0xcC,0xE5},  
+	{0xcD,0xF1}, 
+	{0xcE,0xFA}, 
 	{0xcF,0xFF},
 	********************/
 
 	{0xbF,0x0B}, //case Gamma_dm_3:
-	{0xc0,0x16},
-	{0xc1,0x29},
-	{0xc2,0x3C},
-	{0xc3,0x4F},
-	{0xc4,0x5F},
-	{0xc5,0x6F},
-	{0xc6,0x8A},
-	{0xc7,0x9F},
-	{0xc8,0xB4},
-	{0xc9,0xC6},
-	{0xcA,0xD3},
-	{0xcB,0xDD},
-	{0xcC,0xE5},
-	{0xcD,0xF1},
-	{0xcE,0xFA},
+	{0xc0,0x16}, 
+	{0xc1,0x29}, 
+	{0xc2,0x3C}, 
+	{0xc3,0x4F}, 
+	{0xc4,0x5F}, 
+	{0xc5,0x6F}, 
+	{0xc6,0x8A}, 
+	{0xc7,0x9F}, 
+	{0xc8,0xB4}, 
+	{0xc9,0xC6}, 
+	{0xcA,0xD3}, 
+	{0xcB,0xDD},  
+	{0xcC,0xE5},  
+	{0xcD,0xF1}, 
+	{0xcE,0xFA}, 
 	{0xcF,0xFF},
 	//////gamma//////
 
@@ -605,41 +605,41 @@ struct aml_camera_i2c_fig_s gc2015_script[] = {
 	{0xd1,0x38}, //saturation
 	{0xd2,0x38}, //saturation
 	{0xdd,0x38}, //edge_dec
-	{0xd3,0x40},//  0x40 contrast
+	{0xd3,0x40},//  0x40 contrast  
 	{0xde,0x21}, //auto_gray
 
 	////////////////////////////////////////////////////////////////////
 	/////////////////////////// ASDE ///////////////////////////////////
 	////////////////////////////////////////////////////////////////////
-	{0x98,0x3a},
-	{0x99,0x60},
-	{0x9b,0x00},
-	{0x9f,0x12},
-	{0xa1,0x80},
-	{0xa2,0x21},
+	{0x98,0x3a}, 
+	{0x99,0x60}, 
+	{0x9b,0x00}, 
+	{0x9f,0x12}, 
+	{0xa1,0x80}, 
+	{0xa2,0x21}, 
 
 	{0xfe,0x01}, //page1
-	{0xc5,0x10},
-	{0xc6,0xff},
-	{0xc7,0xff},
-	{0xc8,0xff},
+	{0xc5,0x10}, 
+	{0xc6,0xff}, 
+	{0xc7,0xff}, 
+	{0xc8,0xff}, 
 #if 0  // 2015 A
 	////////////////////////////////////////////////////////////////////
 	/////////////////////////// AEC ////////////////////////////////////
 	////////////////////////////////////////////////////////////////////
 	{0x10,0x09}, //AEC mode 1
 	{0x11,0xb2}, //[7]fix target
-	{0x12,0x20},
-	{0x13,0x78},
-	{0x17,0x00},
-	{0x1c,0x96},
-	{0x1d,0x04}, // sunlight step
-	{0x1e,0x11},
+	{0x12,0x20}, 
+	{0x13,0x78}, 
+	{0x17,0x00}, 
+	{0x1c,0x96}, 
+	{0x1d,0x04}, // sunlight step 
+	{0x1e,0x11}, 
 	{0x21,0xc0}, //max_post_gain
 	{0x22,0x60}, //max_pre_gain
 	{0x2d,0x06}, //P_N_AEC_exp_level_1[12:8]
 	{0x2e,0x00}, //P_N_AEC_exp_level_1[7:0]
-	{0x1e,0x32},
+	{0x1e,0x32}, 
 	{0x33,0x00}, //[6:5]max_exp_level [4:0]min_exp_level
 	{0x34,0x04}, // min exp
 
@@ -713,7 +713,7 @@ struct aml_camera_i2c_fig_s gc2015_script[] = {
 	{0x5c , 0x35}, //show mode,close dark_mode
 	{0x5e , 0x29}, //close color temp
 	{0x5f , 0x50},
-	{0x60 , 0x50},
+	{0x60 , 0x50}, 
 	{0x65 , 0xc0},
 
 	////////////////////////////////////////////////////////////////////
@@ -725,7 +725,7 @@ struct aml_camera_i2c_fig_s gc2015_script[] = {
 
 	{0xfe,0x00},
 
-	//crop
+	//crop 
 	{0x50,0x01},
 	{0x51,0x00},
 	{0x52,0x00},
@@ -746,21 +746,21 @@ struct aml_camera_i2c_fig_s gc2015_script[] = {
 	{0x34,0x00},
 
 	/////pv_setting},even_skip(default_preview) start/////
-	{0x02,0x01},
-	{0x2a,0xca},
+	{0x02,0x01}, 
+	{0x2a,0xca}, 
 
 	{0x55,0x02},
 	{0x56,0x5c},  //604
 	{0x57,0x03},
 	{0x58,0x20},//800
-
+		
 	{0x48,0x40}, //global_gain
 
 	{0x63,0x77}, //BLK mode
 
 	{0x6e,0x1a},
 	{0x70,0x1a},
-	/////pv_setting},even_skip(default_preview) end/////
+	/////pv_setting},even_skip(default_preview) end/////	
 
 
 	//////////banding////////////
@@ -784,7 +784,7 @@ struct aml_camera_i2c_fig_s gc2015_script[] = {
 	{0x31 ,0x10},//Level_3  6.25fps
 	{0x32 ,0x00},
 	{0xfe ,0x00},
-#else
+#else			
 	{0x05 ,0x01},//HB
 	{0x06 ,0xc1},
 	{0x07 ,0x00},//VB
@@ -804,10 +804,10 @@ struct aml_camera_i2c_fig_s gc2015_script[] = {
 	{0x32 ,0x00},
 	{0xfe ,0x00},
 #endif
-
+			
 	{0x43 ,0x00},  //effect normal
 	{0x42 ,0xf6},  // wb normal
-	{0xff,0xff},
+	{0xff,0xff}, 
 
 };
 
@@ -817,7 +817,7 @@ void gc2015_init_regs(struct gc2015_device *dev)
 	int i=0;//,j;
 	unsigned char buf[2];
 	struct i2c_client *client = v4l2_get_subdevdata(&dev->sd);
-
+	
 	while(1) {
 		buf[0] = gc2015_script[i].addr;//(unsigned char)((gc2015_script[i].addr >> 8) & 0xff);
 		//buf[1] = (unsigned char)(gc2015_script[i].addr & 0xff);
@@ -826,11 +826,11 @@ void gc2015_init_regs(struct gc2015_device *dev)
 		if (gc2015_script[i].val==0xff&&gc2015_script[i].addr==0xff) {
 			printk("gc2015_write_regs success in initial gc2015.\n");
 			break;
-		}
+	 	}
 		if((i2c_put_byte_add8(client,buf, 2)) < 0) {
 			printk("fail in initial gc2015. \n");
 			return;
-		}
+	    	}
 	}
 	return;
 }
@@ -859,10 +859,10 @@ void gc2015_set_param_wb(struct gc2015_device *dev,enum  camera_wb_flip_e para)/
 
 	switch (para) {
 	case CAM_WB_AUTO://auto
-		printk("CAM_WB_AUTO       \n");
+	    	printk("CAM_WB_AUTO       \n");
 		buf[0]=0x42;
 		buf[1]=0x76;
-		i2c_put_byte_add8(client,buf,2);
+		i2c_put_byte_add8(client,buf,2);		
 		break;
 
 	case CAM_WB_CLOUD: //cloud
@@ -881,7 +881,7 @@ void gc2015_set_param_wb(struct gc2015_device *dev,enum  camera_wb_flip_e para)/
 
 		buf[0]=0x7c;
 		buf[1]=0x40;
-		i2c_put_byte_add8(client,buf,2);
+		i2c_put_byte_add8(client,buf,2);			
 		break;
 
 	case CAM_WB_DAYLIGHT: //
@@ -961,9 +961,9 @@ void gc2015_set_param_wb(struct gc2015_device *dev,enum  camera_wb_flip_e para)/
 		break;
 
 	case CAM_WB_MANUAL:
-		                      // TODO
+	    	                      // TODO
 		break;
-
+			
 		default:
 			break;
 	}
@@ -989,183 +989,183 @@ void gc2015_set_param_exposure(struct gc2015_device *dev,enum camera_exposure_e 
 {
 	struct i2c_client *client = v4l2_get_subdevdata(&dev->sd);
         unsigned char buf[4];
-	switch (para) {
-	case EXPOSURE_N4_STEP:
+	switch (para) {	
+	case EXPOSURE_N4_STEP:	
 		buf[0]=0xfe;
 		buf[1]=0x01;
 		i2c_put_byte_add8(client,buf,2);
-
+	
 		buf[0]=0x13;
 		buf[1]=0x40;
 		i2c_put_byte_add8(client,buf,2);
-
+	
 		buf[0]=0xfe;
 		buf[1]=0x00;
 		i2c_put_byte_add8(client,buf,2);
-
+	
 		buf[0]=0xd5;
 		buf[1]=0xc0;
 		i2c_put_byte_add8(client,buf,2);
 		break;
-	case EXPOSURE_N3_STEP:
+	case EXPOSURE_N3_STEP:	
 		buf[0]=0xfe;
 		buf[1]=0x01;
 		i2c_put_byte_add8(client,buf,2);
-
+	
 		buf[0]=0x13;
 		buf[1]=0x48;
 		i2c_put_byte_add8(client,buf,2);
-
+	
 		buf[0]=0xfe;
 		buf[1]=0x00;
 		i2c_put_byte_add8(client,buf,2);
-
+	
 		buf[0]=0xd5;
 		buf[1]=0xd0;
 		i2c_put_byte_add8(client,buf,2);
 		break;
-	case EXPOSURE_N2_STEP:
+	case EXPOSURE_N2_STEP:	
 		buf[0]=0xfe;
 		buf[1]=0x01;
 		i2c_put_byte_add8(client,buf,2);
-
+	
 		buf[0]=0x13;
 		buf[1]=0x50;
 		i2c_put_byte_add8(client,buf,2);
-
+	
 		buf[0]=0xfe;
 		buf[1]=0x00;
 		i2c_put_byte_add8(client,buf,2);
-
+	
 		buf[0]=0xd5;
 		buf[1]=0xe0;
 		i2c_put_byte_add8(client,buf,2);
 		break;
-	case EXPOSURE_N1_STEP:
+	case EXPOSURE_N1_STEP:	
 		printk("EXPOSURE_N1_STEP       \n");
 		buf[0]=0xfe;
 		buf[1]=0x01;
 		i2c_put_byte_add8(client,buf,2);
-
+	
 		buf[0]=0x13;
 		buf[1]=0x58;
 		i2c_put_byte_add8(client,buf,2);
-
+	
 		buf[0]=0xfe;
 		buf[1]=0x00;
 		i2c_put_byte_add8(client,buf,2);
-
+	
 		buf[0]=0xd5;
 		buf[1]=0xf0;
 		i2c_put_byte_add8(client,buf,2);
 		break;
-
+	
 	case EXPOSURE_0_STEP:
 	            printk("EXPOSURE_0_STEP       \n");
 		buf[0]=0xfe;
 		buf[1]=0x01;
 		i2c_put_byte_add8(client,buf,2);
-
+	
 		buf[0]=0x13;
 		buf[1]=0x68;//0x60
 		i2c_put_byte_add8(client,buf,2);
-
+	
 		buf[0]=0xfe;
 		buf[1]=0x00;
 		i2c_put_byte_add8(client,buf,2);
-
+	
 		buf[0]=0xd5;
 		buf[1]=0x00;
-		i2c_put_byte_add8(client,buf,2);
+		i2c_put_byte_add8(client,buf,2);			
 		break;
-
+	
 	case EXPOSURE_P1_STEP:
-	            printk("EXPOSURE_P1_STEP       \n");
+	            printk("EXPOSURE_P1_STEP       \n");	
 		buf[0]=0xfe;
 		buf[1]=0x01;
 		i2c_put_byte_add8(client,buf,2);
-
+	
 		buf[0]=0x13;
 		buf[1]=0x68;
 		i2c_put_byte_add8(client,buf,2);
-
+	
 		buf[0]=0xfe;
 		buf[1]=0x00;
 		i2c_put_byte_add8(client,buf,2);
-
+	
 		buf[0]=0xd5;
 		buf[1]=0x10;
 		i2c_put_byte_add8(client,buf,2);
 		break;
-
-	case EXPOSURE_P2_STEP:
+	
+	case EXPOSURE_P2_STEP:			
 		buf[0]=0xfe;
 		buf[1]=0x01;
 		i2c_put_byte_add8(client,buf,2);
-
+	
 		buf[0]=0x13;
 		buf[1]=0x70;
 		i2c_put_byte_add8(client,buf,2);
-
+	
 		buf[0]=0xfe;
 		buf[1]=0x00;
 		i2c_put_byte_add8(client,buf,2);
-
+	
 		buf[0]=0xd5;
 		buf[1]=0x20;
 		i2c_put_byte_add8(client,buf,2);
 		break;
-
+	
 	case EXPOSURE_P3_STEP:
-
+		
 		buf[0]=0xfe;
 		buf[1]=0x01;
 		i2c_put_byte_add8(client,buf,2);
-
+	
 		buf[0]=0x13;
 		buf[1]=0x78;
 		i2c_put_byte_add8(client,buf,2);
-
+	
 		buf[0]=0xfe;
 		buf[1]=0x00;
 		i2c_put_byte_add8(client,buf,2);
-
+	
 		buf[0]=0xd5;
 		buf[1]=0x30;
 		i2c_put_byte_add8(client,buf,2);
 		break;
-
-	case EXPOSURE_P4_STEP:
+	
+	case EXPOSURE_P4_STEP:			
 		buf[0]=0xfe;
 		buf[1]=0x01;
 		i2c_put_byte_add8(client,buf,2);
-
+	
 		buf[0]=0x13;
 		buf[1]=0x80;
 		i2c_put_byte_add8(client,buf,2);
-
+	
 		buf[0]=0xfe;
 		buf[1]=0x00;
 		i2c_put_byte_add8(client,buf,2);
-
+	
 		buf[0]=0xd5;
 		buf[1]=0x40;
 		i2c_put_byte_add8(client,buf,2);
 		break;
-
-	default:
+	
+	default:			
 		buf[0]=0xfe;
 		buf[1]=0x01;
 		i2c_put_byte_add8(client,buf,2);
-
+	
 		buf[0]=0x13;
 		buf[1]=0x60;
 		i2c_put_byte_add8(client,buf,2);
-
+	
 		buf[0]=0xfe;
 		buf[1]=0x00;
 		i2c_put_byte_add8(client,buf,2);
-
+	
 		buf[0]=0xd5;
 		buf[1]=0x00;
 		i2c_put_byte_add8(client,buf,2);
@@ -1207,7 +1207,7 @@ void gc2015_set_param_effect(struct gc2015_device *dev,enum camera_effect_flip_e
 			buf[0]=0x43;
 			buf[1]=0x00;
 			i2c_put_byte_add8(client,buf,2);
-
+				
 			break;
 
 		case CAM_EFFECT_ENC_GRAYSCALE:
@@ -1220,17 +1220,17 @@ void gc2015_set_param_effect(struct gc2015_device *dev,enum camera_effect_flip_e
 			buf[1]=0x02;
 			i2c_put_byte_add8(client,buf,2);
 
-
+			
 			buf[0]=0xda;
 			buf[1]=0x00;
 			i2c_put_byte_add8(client,buf,2);
 
-
+			
 			buf[0]=0xdb;
 			buf[1]=0x00;
 			i2c_put_byte_add8(client,buf,2);
 			break;
-
+			
 		case CAM_EFFECT_ENC_SEPIA:
 
 			buf[0]=0xfe;
@@ -1241,16 +1241,16 @@ void gc2015_set_param_effect(struct gc2015_device *dev,enum camera_effect_flip_e
 			buf[1]=0x02;
 			i2c_put_byte_add8(client,buf,2);
 
-
+			
 			buf[0]=0xda;
 			buf[1]=0xd0;
 			i2c_put_byte_add8(client,buf,2);
 
-
+			
 			buf[0]=0xdb;
 			buf[1]=0x28;
 			i2c_put_byte_add8(client,buf,2);
-
+		
 			break;
 
 		case CAM_EFFECT_ENC_SEPIAGREEN:
@@ -1263,16 +1263,16 @@ void gc2015_set_param_effect(struct gc2015_device *dev,enum camera_effect_flip_e
 			buf[1]=0x02;
 			i2c_put_byte_add8(client,buf,2);
 
-
+			
 			buf[0]=0xda;
 			buf[1]=0xc0;
 			i2c_put_byte_add8(client,buf,2);
 
-
+			
 			buf[0]=0xdb;
 			buf[1]=0xc0;
 			i2c_put_byte_add8(client,buf,2);
-
+			
 			break;
 
 		case CAM_EFFECT_ENC_SEPIABLUE:
@@ -1285,16 +1285,16 @@ void gc2015_set_param_effect(struct gc2015_device *dev,enum camera_effect_flip_e
 			buf[1]=0x02;
 			i2c_put_byte_add8(client,buf,2);
 
-
+			
 			buf[0]=0xda;
 			buf[1]=0x50;
 			i2c_put_byte_add8(client,buf,2);
 
-
+			
 			buf[0]=0xdb;
 			buf[1]=0xe0;
 			i2c_put_byte_add8(client,buf,2);
-
+		
 			break;
 
 		case CAM_EFFECT_ENC_COLORINV:
@@ -1306,8 +1306,8 @@ void gc2015_set_param_effect(struct gc2015_device *dev,enum camera_effect_flip_e
 			buf[1]=0x01;
 			i2c_put_byte_add8(client,buf,2);
 
-
-			break;
+			
+			break;		
 
 		default:
 			buf[0]=0xfe;
@@ -1400,7 +1400,7 @@ void gc2015_set_param_banding(struct gc2015_device *dev,enum  camera_banding_fli
 			buf[0]=0x07;
 			buf[1]=0x00;
 			i2c_put_byte_add8(client,buf,2);
-
+			
 			buf[0]=0x08;
 			buf[1]=0x40;
 			i2c_put_byte_add8(client,buf,2);
@@ -1470,7 +1470,7 @@ void gc2015_set_param_banding(struct gc2015_device *dev,enum  camera_banding_fli
 			buf[0]=0x07;
 			buf[1]=0x00;
 			i2c_put_byte_add8(client,buf,2);
-
+			
 			buf[0]=0x08;
 			buf[1]=0x20;
 			i2c_put_byte_add8(client,buf,2);
@@ -1522,14 +1522,14 @@ void gc2015_set_param_banding(struct gc2015_device *dev,enum  camera_banding_fli
 			buf[0]=0xfe;
 			buf[1]=0x00;
 			i2c_put_byte_add8(client,buf,2);
-
+	             			
 			break;
 		    default:
-			break;
+		    	break;
 
 		}
-	#endif
-}
+	#endif	
+}      
 
 static int set_flip(struct gc2015_device *dev)
 {
@@ -1565,60 +1565,60 @@ void gc2015_set_resolution(struct gc2015_device *dev,int height,int width)
 	unsigned int  temp_reg;
 	static unsigned int shutter_l = 0;
 	static unsigned int shutter_h = 0;
-
+	
 	struct i2c_client *client = v4l2_get_subdevdata(&dev->sd);
-
+	
 	if ((width<1600)&&(height<1200)) {
-		//800*600
+		//800*600 
 		buf[0]=0xfe;
 		buf[1]=0x00;
 		i2c_put_byte_add8(client,buf,2);
-
+		
 		/* rewrite shutter : 0x03, 0x04*/
 		#if 1
 		buf[0]=0x03;
 		buf[1]=(unsigned char)shutter_l;
 		i2c_put_byte_add8(client,buf,2);
-
+		
 		buf[0]=0x04;
 		buf[1]=(unsigned char)shutter_h;
 		i2c_put_byte_add8(client,buf,2);
 		#endif
-
+		
 		buf[0]=0x02;
 		buf[1]=0x01;
 		i2c_put_byte_add8(client,buf,2);
-
+		
 		buf[0]=0x2a;
 		buf[1]=0xca;
 		i2c_put_byte_add8(client,buf,2);
-
+		
 		buf[0]=0x55;
 		buf[1]=0x02;
 		i2c_put_byte_add8(client,buf,2);
-
+		
 		buf[0]=0x56;
 		buf[1]=0x5c;  //604
 		i2c_put_byte_add8(client,buf,2);
-
+		
 		buf[0]=0x57;
 		buf[1]=0x03;
 		i2c_put_byte_add8(client,buf,2);
-
+		
 		buf[0]=0x58;
 		buf[1]=0x20;   // 800
 		i2c_put_byte_add8(client,buf,2);
-
+		
 		buf[0]=0x48;
 		buf[1]=0x58;
 		i2c_put_byte_add8(client,buf,2);
-
+		
 		mdelay(250);
-
+		
 		buf[0]=0x4f;
 		buf[1]=0x01;
 		i2c_put_byte_add8(client,buf,2);
-
+		
 		gc2015_h_active=800;
 		gc2015_v_active=600;
 		gc2015_frmintervals_active.denominator = 15;
@@ -1630,139 +1630,139 @@ void gc2015_set_resolution(struct gc2015_device *dev,int height,int width)
 		buf[0]=0x4f;
 		buf[1]=0x00;   //aec off
 		i2c_put_byte_add8(client,buf,2);
-
+		
 		buf[0]=0x03;  //0x00
 		//value=i2c_get_byte(client, 0x03);
 		value=i2c_get_byte_add8(client, 0x03);
 		shutter_l = value;
 		printk( KERN_INFO" set camera  GC2015_set_resolution=0x03=0x%x \n ",value);
-
+			
 		pid |= (value << 8);
 		buf[0]=0x04; //0x00
 		//value=i2c_get_byte(client, 0x04);
 		value=i2c_get_byte_add8(client, 0x04);
 		shutter_h = value;
-		printk( KERN_INFO" set camera  GC2015_set_resolution=0x04=0x%x \n ",value);
+		printk( KERN_INFO" set camera  GC2015_set_resolution=0x04=0x%x \n ",value);			
 		pid |= (value & 0xff);
-
+		
 		shutter=pid;
 		printk( KERN_INFO" set camera  GC2015_set_resolution=shutter=0x%x \n ",shutter);
-		#endif
+           	#endif		
 		buf[0]=0xfe;
 		buf[1]=0x00;
 		i2c_put_byte_add8(client,buf,2);
-
+		
 		buf[0]=0x02;
 		buf[1]=0x00;
 		i2c_put_byte_add8(client,buf,2);
-
+		
 		buf[0]=0x2a;
 		buf[1]=0x0a;
 		i2c_put_byte_add8(client,buf,2);
-
+		
 		buf[0]=0x59;
 		buf[1]=0x11;
 		i2c_put_byte_add8(client,buf,2);
-
+		
 		buf[0]=0x5a;
 		buf[1]=0x06;
 		i2c_put_byte_add8(client,buf,2);
-
+		
 		buf[0]=0x5b;
 		buf[1]=0x00;
 		i2c_put_byte_add8(client,buf,2);
-
+		
 		buf[0]=0x5c;
 		buf[1]=0x00;
 		i2c_put_byte_add8(client,buf,2);
-
+		
 		buf[0]=0x5d;
 		buf[1]=0x00;
 		i2c_put_byte_add8(client,buf,2);
-
+		
 		buf[0]=0x5e;
 		buf[1]=0x00;
 		i2c_put_byte_add8(client,buf,2);
-
+		
 		buf[0]=0x5f;
 		buf[1]=0x00;
 		i2c_put_byte_add8(client,buf,2);
-
+		
 		buf[0]=0x60;
 		buf[1]=0x00;
-		i2c_put_byte_add8(client,buf,2);
-
+		i2c_put_byte_add8(client,buf,2);	
+		
 		buf[0]=0x61;
 		buf[1]=0x00;
 		i2c_put_byte_add8(client,buf,2);
-
+		
 		buf[0]=0x62;
 		buf[1]=0x00;
-		i2c_put_byte_add8(client,buf,2);
-
-
+		i2c_put_byte_add8(client,buf,2);	
+		
+		
 		buf[0]=0x50;
 		buf[1]=0x01;
 		i2c_put_byte_add8(client,buf,2);
-
+		
 		buf[0]=0x51;
 		buf[1]=0x00;
 		i2c_put_byte_add8(client,buf,2);
-
+		
 		buf[0]=0x52;
 		buf[1]=0x00;
 		i2c_put_byte_add8(client,buf,2);
-
+		
 		buf[0]=0x53;
 		buf[1]=0x00;
 		i2c_put_byte_add8(client,buf,2);
-
+		
 		buf[0]=0x54;
 		buf[1]=0x00;
 		i2c_put_byte_add8(client,buf,2);
-
+		
 		buf[0]=0x55;
 		buf[1]=0x04;
 		i2c_put_byte_add8(client,buf,2);
-
+		
 		buf[0]=0x56;
 		buf[1]=0xb2; //1202
 		i2c_put_byte_add8(client,buf,2);
-
+		
 		buf[0]=0x57;
 		buf[1]=0x06;
 		i2c_put_byte_add8(client,buf,2);
-
+		
 		buf[0]=0x58;
 		buf[1]=0x40; // 1600
 		i2c_put_byte_add8(client,buf,2);
-
+		
 		buf[0]=0x48;
 		buf[1]=0x60;  //78global  gain
 		i2c_put_byte_add8(client,buf,2);
 
 		mdelay(50);
 		#if  1
-
+		
 		buf[0]=0x12;
 		buf[1]= ((hb_total>>8)&0xff);
 		i2c_put_byte_add8(client,buf,2);
-
-
+		
+		
 		buf[0]=0x13;
 		buf[1]= (hb_total&0xff);
 		i2c_put_byte_add8(client,buf,2);
-
-
+		
+		
 		temp_reg = shutter * 10  /  16 ;
 		if(temp_reg < 1) temp_reg = 1;
-
+		
 		printk( KERN_INFO" set camera  GC2015_set_resolution=temp_ret=0x%x \n ",temp_reg);
 		buf[0]=0x03;
 		buf[1]= ((temp_reg>>8)&0xff);
 		i2c_put_byte_add8(client,buf,2);
-
-
+		
+		
 		buf[0]=0x04;
 		buf[1]= (temp_reg&0xff);
 		i2c_put_byte_add8(client,buf,2);
@@ -1770,27 +1770,27 @@ void gc2015_set_resolution(struct gc2015_device *dev,int height,int width)
 		buf[0]=0x6e;
 		buf[1]= 0x1b;
 		i2c_put_byte_add8(client,buf,2);
-
+		
 		buf[0]=0x6f;
 		buf[1]= 0x20;
 		i2c_put_byte_add8(client,buf,2);
-
+		
 		buf[0]=0x70;
 		buf[1]= 0x1b;
 		i2c_put_byte_add8(client,buf,2);
-
+		
 		buf[0]=0x71;
 		buf[1]= 0x20;
 		i2c_put_byte_add8(client,buf,2);
 		#endif
-		#endif
+		#endif		
 		gc2015_h_active=1600;
 		gc2015_v_active=1200;
 		gc2015_frmintervals_active.denominator = 5;
 		gc2015_frmintervals_active.numerator = 1;
 		mdelay(150);
 	}
-	printk(KERN_INFO " set camera  GC2015_set_resolution=w=%d,h=%d. \n ",width,height);
+	printk(KERN_INFO " set camera  GC2015_set_resolution=w=%d,h=%d. \n ",width,height);	
 #endif
 	set_flip(dev);
 }    /* gc2015_set_resolution */
@@ -1809,7 +1809,7 @@ static int gc2015_setting(struct gc2015_device *dev,int PROP_ID,int value )
 	//unsigned char cur_val;
 	//struct i2c_client *client = v4l2_get_subdevdata(&dev->sd);
 
-
+	
 	switch(PROP_ID)  {
 	case V4L2_CID_BRIGHTNESS:
 		dprintk(dev, 1, "setting brightned:%d\n",v4l_2_gc2015(value));
@@ -1827,10 +1827,10 @@ static int gc2015_setting(struct gc2015_device *dev,int PROP_ID,int value )
 		break;
 
 	case V4L2_CID_HFLIP:    /* set flip on H. */
-
+		
 		break;
 	case V4L2_CID_VFLIP:    /* set flip on V. */
-
+		
 		break;
 #endif
 	case V4L2_CID_DO_WHITE_BALANCE:
@@ -1838,28 +1838,28 @@ static int gc2015_setting(struct gc2015_device *dev,int PROP_ID,int value )
 			gc2015_qctrl[0].default_value=value;
 			gc2015_set_param_wb(dev,value);
 			printk(KERN_INFO " set camera  white_balance=%d. \n ",value);
-		}
+        	}
 		break;
 	case V4L2_CID_EXPOSURE:
 		if(gc2015_qctrl[1].default_value!=value){
 			gc2015_qctrl[1].default_value=value;
 			gc2015_set_param_exposure(dev,value);
 			printk(KERN_INFO " set camera  exposure=%d. \n ",value);
-		}
+        	}
 		break;
 	case V4L2_CID_COLORFX:
 		if(gc2015_qctrl[2].default_value!=value){
 			gc2015_qctrl[2].default_value=value;
 			gc2015_set_param_effect(dev,value);
 			printk(KERN_INFO " set camera  effect=%d. \n ",value);
-		}
+        	}
 		break;
 	case V4L2_CID_WHITENESS:
 		 if(gc2015_qctrl[3].default_value!=value){
 			gc2015_qctrl[3].default_value=value;
 			gc2015_set_param_banding(dev,value);
 			printk(KERN_INFO " set camera  banding=%d. \n ",value);
-		}
+        	}
 		break;
 	case V4L2_CID_BLUE_BALANCE:
 		 if(gc2015_qctrl[4].default_value!=value){
@@ -1868,7 +1868,7 @@ static int gc2015_setting(struct gc2015_device *dev,int PROP_ID,int value )
 			printk(KERN_INFO " set camera  scene mode=%d. \n ",value);
 		}
 		break;
-	case V4L2_CID_HFLIP:    /* set flip on H. */
+	case V4L2_CID_HFLIP:    /* set flip on H. */          
 		value = value & 0x3;
 		if(gc2015_qctrl[5].default_value!=value){
 			gc2015_qctrl[5].default_value=value;
@@ -1881,7 +1881,7 @@ static int gc2015_setting(struct gc2015_device *dev,int PROP_ID,int value )
 		if(gc2015_qctrl[7].default_value!=value){
 			gc2015_qctrl[7].default_value=value;
 			//printk(KERN_INFO " set camera  zoom mode=%d. \n ",value);
-		}
+        	}
 		break;
 	case V4L2_CID_ROTATE:
 		if(gc2015_qctrl[8].default_value!=value){
@@ -1895,7 +1895,7 @@ static int gc2015_setting(struct gc2015_device *dev,int PROP_ID,int value )
 	}
 	return ret;
 
-
+	
 
 }
 
@@ -2222,10 +2222,10 @@ static int vidioc_enum_frameintervals(struct file *file, void *priv,
 					struct v4l2_frmivalenum *fival)
 {
 	unsigned int k;
-
+	
 	if(fival->index > ARRAY_SIZE(gc2015_frmivalenum))
 	return -EINVAL;
-
+	
 	for(k =0; k< ARRAY_SIZE(gc2015_frmivalenum); k++)
 	{
 		if( (fival->index==gc2015_frmivalenum[k].index)&&
@@ -2236,7 +2236,7 @@ static int vidioc_enum_frameintervals(struct file *file, void *priv,
 			return 0;
 		}
 	}
-
+	
 	return -EINVAL;
 
 }
@@ -2264,14 +2264,14 @@ static int vidioc_g_parm(struct file *file, void *priv,
 	struct gc2015_fh *fh = priv;
 	struct gc2015_device *dev = fh->dev;
 	struct v4l2_captureparm *cp = &parms->parm.capture;
-
+	
 	dprintk(dev,3,"vidioc_g_parm\n");
 	if (parms->type != V4L2_BUF_TYPE_VIDEO_CAPTURE)
 		return -EINVAL;
-
+	
 	memset(cp, 0, sizeof(struct v4l2_captureparm));
 	cp->capability = V4L2_CAP_TIMEPERFRAME;
-
+	
 	cp->timeperframe = gc2015_frmintervals_active;
 	printk("g_parm,deno=%d, numerator=%d\n", cp->timeperframe.denominator,
 	cp->timeperframe.numerator );
@@ -2350,7 +2350,7 @@ static int vidioc_s_fmt_vid_cap(struct file *file, void *priv,
 		gc2015_set_resolution(dev,fh->height,fh->width);
 	}
 	#endif
-
+	
 	ret = 0;
 out:
 	mutex_unlock(&q->vb_lock);
@@ -2420,10 +2420,10 @@ static int vidioc_streamon(struct file *file, void *priv, enum v4l2_buf_type i)
 	para.hs_bp = 0;
 	para.vs_bp = 2;
 	para.cfmt = TVIN_YUV422;
-	para.scan_mode = TVIN_SCAN_MODE_PROGRESSIVE;
+	para.scan_mode = TVIN_SCAN_MODE_PROGRESSIVE;	
 	para.skip_count =  2; //skip_num
 	para.bt_path = dev->cam_info.bt_path;
-	printk("gc2015,h=%d, v=%d, frame_rate=%d\n",
+	printk("gc2015,h=%d, v=%d, frame_rate=%d\n", 
 		gc2015_h_active, gc2015_v_active, para.frame_rate);
 	ret =  videobuf_streamon(&fh->vb_vidq);
 	if(ret == 0){
@@ -2598,7 +2598,7 @@ static int gc2015_open(struct file *file)
 #endif
 #if MESON_CPU_TYPE >= MESON_CPU_TYPE_MESON6
 	switch_mod_gate_by_name("ge2d", 1);
-#endif
+#endif	
 	aml_cam_init(&dev->cam_info);
 	gc2015_init_regs(dev);
 	msleep(40);
@@ -2614,7 +2614,7 @@ static int gc2015_open(struct file *file)
 		video_device_node_name(dev->vdev),
 		v4l2_type_names[V4L2_BUF_TYPE_VIDEO_CAPTURE], dev->users);
 
-	/* init video dma queues */
+    	/* init video dma queues */
 	INIT_LIST_HEAD(&dev->vidq.active);
 	init_waitqueue_head(&dev->vidq.wq);
 	spin_lock_init(&dev->slock);
@@ -2718,7 +2718,7 @@ static int gc2015_close(struct file *file)
 	gc2015_qctrl[5].default_value=0;
 	gc2015_qctrl[7].default_value=100;
 	gc2015_qctrl[8].default_value=0;
-
+	
 	gc2015_frmintervals_active.numerator = 1;
 	gc2015_frmintervals_active.denominator = 15;
 
@@ -2729,7 +2729,7 @@ static int gc2015_close(struct file *file)
 	msleep(10);
 #if MESON_CPU_TYPE >= MESON_CPU_TYPE_MESON6
 	switch_mod_gate_by_name("ge2d", 0);
-#endif
+#endif	
 	wake_unlock(&(dev->wake_lock));
 #ifdef CONFIG_CMA
     vm_deinit_buf();
@@ -2843,7 +2843,7 @@ static int gc2015_probe(struct i2c_client *client,
 	memcpy(t->vdev, &gc2015_template, sizeof(*t->vdev));
 
 	video_set_drvdata(t->vdev, t);
-
+	
 	wake_lock_init(&(t->wake_lock),WAKE_LOCK_SUSPEND, "gc2015");
 	/* Register it */
 	plat_dat= (aml_cam_info_t*)client->dev.platform_data;
@@ -2857,11 +2857,11 @@ static int gc2015_probe(struct i2c_client *client,
 		kfree(client);
 		return -1;
 	}
-
+	
 	t->cam_info.version = GC2015_DRIVER_VERSION;
 	if (aml_cam_info_reg(&t->cam_info) < 0)
 		printk("reg caminfo error\n");
-
+	
 	err = video_register_device(t->vdev, VFL_TYPE_GRABBER, video_nr);
 	if (err < 0) {
 		video_device_release(t->vdev);
@@ -2901,3 +2901,4 @@ static struct i2c_driver gc2015_i2c_driver = {
 };
 
 module_i2c_driver(gc2015_i2c_driver);
+

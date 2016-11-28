@@ -102,11 +102,10 @@ struct efuse_hal_api_arg{
 	unsigned int offset;
 	unsigned int size;
 	unsigned int buffer_phy;
-	unsigned int retcnt_phy;
+	unsigned int retcnt_phy;	
 };
 #define EFUSE_HAL_API_READ	0
 #define EFUSE_HAL_API_WRITE 1
-#define EFUSE_HAL_API_VERIFY_IMG 3
 extern int meson_trustzone_efuse(struct efuse_hal_api_arg* arg);
 
 

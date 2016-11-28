@@ -8,7 +8,7 @@
 //------------------------------------------------------------------------------
 #ifndef __AMF_H__
 #define __AMF_H__
-
+        
 #include "config.h"
 
 //------------------------------------------------------------------------------
@@ -32,7 +32,7 @@
 
 //Audio modes
 #define AUDIO_MODE__PCM			0
-#define AUDIO_MODE__DSD			1
+#define AUDIO_MODE__DSD			1	
 #define AUDIO_MODE__HBR			2
 #define AUDIO_MODE__NOT_INIT	0x0F
 // On, Off
@@ -55,7 +55,7 @@ typedef struct {
     uint8_t PortSelection;
 	uint8_t ResolutionChangeCount;	   //for zone workaround
 	uint8_t VideoStabilityCheckCount; //for ODCK disappear workaround
-} GlobalStatus_t;
+} GlobalStatus_t; 
 
 
 

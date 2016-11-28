@@ -6,7 +6,7 @@
         status = "okay";
         #address-cells = <1>;
 		#size-cells = <0>;
-
+		
 #ifdef CONFIG_FOCALTECH_CAPACITIVE_TOUCHSCREEN
 //$$ DEVICE = "touch_ft5x06"
 //$$ L2 PROP_STR = "status"
@@ -33,7 +33,7 @@
 			yres = <600>;
 			pol = <0x1>;
 			fw_file = "/etc/touch/ft5x06.fw";
-
+						
 		};
 #endif
 

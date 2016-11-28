@@ -34,7 +34,6 @@
 #include <linux/uaccess.h>
 #include <linux/debugfs.h>
 #include <linux/dma-buf.h>
-#include <linux/proc_fs.h>
 
 #include "ion_priv.h"
 
@@ -1152,10 +1151,10 @@ static long ion_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
 		if (copy_from_user(&data, (void __user *)arg,
 				   sizeof(struct ion_fd_data)))
 			return -EFAULT;
-		mutex_lock(&client->lock);
+		mutex_lock(&client->lock);			
 		ion_sync_for_device(client, data.fd);
 		mutex_unlock(&client->lock);
-
+		
 		break;
 	}
 	case ION_IOC_CUSTOM:
@@ -1295,19 +1294,6 @@ static const struct file_operations debug_heap_fops = {
 	.release = single_release,
 };
 
-
-static int proc_heap_open(struct inode *inode, struct file *file)
-{
-	return single_open(file, ion_debug_heap_show, PDE_DATA(inode));
-}
-
-static const struct file_operations proc_heap_fops = {
-    .open = proc_heap_open,
-    .read = seq_read,
-	.llseek = seq_lseek,
-	.release = single_release,
-};
-
 #ifdef DEBUG_HEAP_SHRINKER
 static int debug_shrink_set(void *data, u64 val)
 {
@@ -1364,14 +1350,6 @@ void ion_device_add_heap(struct ion_device *dev, struct ion_heap *heap)
 	plist_add(&heap->node, &dev->heaps);
 	debugfs_create_file(heap->name, 0664, dev->debug_root, heap,
 			    &debug_heap_fops);
-
-    /* to create file in /proc */
-    if (heap->type == ION_HEAP_TYPE_SYSTEM) {
-        struct proc_dir_entry *entry;
-        entry = proc_mkdir("ion", NULL);
-        proc_create_data(heap->name, 0644, entry, &proc_heap_fops, heap);
-    }
-
 #ifdef DEBUG_HEAP_SHRINKER
 	if (heap->shrinker.shrink) {
 		char debug_name[64];

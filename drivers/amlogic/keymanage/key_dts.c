@@ -145,7 +145,7 @@ static int unifykey_item_parse_dt(struct device_node *node,int id)
 		strncpy(temp_item->name,propname,count);
 		//strcpy(temp_item->name,propname);
 	}
-
+	
 	propname = NULL;
 	ret = of_property_read_string(node,"key-device",&propname);
 	if(ret < 0){
@@ -302,20 +302,20 @@ static int unifykey_item_create(unsigned int  dt_addr,int num)
 	char *propdata,*p;
 	struct fdt_property *prop;
 	struct key_item_t *temp_item=NULL;
-
+	
 	memset(item_path,0,sizeof(item_path));
 	memset(cha,0,sizeof(cha));
 	for(i=0;i<num;i++){
 		strcpy(item_path,"/unifykey/key_");
 		sprintf(cha,"%d",i);
 		strcat(item_path,cha);
-
+		
 		nodeoffset = fdt_path_offset(dt_addr, item_path);
 		if(nodeoffset < 0) {
 			printf(" dts: not find  node %s.\n",fdt_strerror(nodeoffset));
 			break;
 		}
-
+		
 		temp_item = malloc(sizeof(struct key_item_t));
 		if(!temp_item){
 			printf("malloc mem fail,%s:%d\n",__func__,__LINE__);
@@ -425,7 +425,7 @@ int unifykey_dt_parse(void)
 	else {
 		dt_addr = simple_strtoul (getenv ("dtbaddr"), NULL, 16);
 	}
-
+	
 	if(fdt_check_header((void*)dt_addr)!= 0){
         printf(" error: image data is not a fdt\n");
         return -1;
@@ -438,7 +438,7 @@ int unifykey_dt_parse(void)
 	punifykey_num = fdt_getprop(dt_addr, nodeoffset, "unifykey-num",NULL);
 	printf("unifykey-num config is %x\n",be32_to_cpup((unsigned int*)punifykey_num));
 	unify_key_info.key_num = be32_to_cpup((unsigned int*)punifykey_num);
-
+	
 	if(!unify_key_info.key_flag){
 		unifykey_item_create(dt_addr,unify_key_info.key_num);
 		unify_key_info.key_flag = 1;
@@ -447,3 +447,5 @@ int unifykey_dt_parse(void)
 	return 0;
 }
 #endif
+
+

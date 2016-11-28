@@ -9,7 +9,7 @@
  *
  * This program is distributed .as is. WITHOUT ANY WARRANTY of any
  * kind, whether express or implied; without even the implied warranty
- * of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
  * PURPOSE.  See the
  * GNU General Public License for more details.
 */
@@ -40,13 +40,13 @@ void SiiOsDebugPrint(const char *pszFileName, uint32_t iLineNum, uint8_t printFl
     {
 	    pBuf = kmalloc(remainingBufLen, GFP_KERNEL);
 	    if(pBuf == NULL)
-		return;
+	    	return;
 	    pBufOffset = pBuf;
 
         if(pszFileName != NULL)
         {
-		// only print the file name, not the full path.
-		const char *pc;
+        	// only print the file name, not the full path.
+        	const char *pc;
 
             for(pc = &pszFileName[strlen(pszFileName)];pc  >= pszFileName;--pc)
             {
@@ -63,8 +63,8 @@ void SiiOsDebugPrint(const char *pszFileName, uint32_t iLineNum, uint8_t printFl
             }
             len = scnprintf(pBufOffset, remainingBufLen, "%s:%d ",pc,(int)iLineNum);
             if(len < 0) {
-		kfree(pBuf);
-		return;
+            	kfree(pBuf);
+            	return;
             }
 
             remainingBufLen -= len;
@@ -75,7 +75,8 @@ void SiiOsDebugPrint(const char *pszFileName, uint32_t iLineNum, uint8_t printFl
         vsnprintf(pBufOffset, remainingBufLen, pszFormat, ap);
         va_end(ap);
 
-	printk(pBuf);
+    	printk(pBuf);
 		kfree(pBuf);
     }
 }
+

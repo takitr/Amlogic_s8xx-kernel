@@ -1,6 +1,7 @@
 #
 # Makefile for the amlogic platform camera interface device drivers.
 #
+EXTRA_AFLAGS=-mfloat-abi=softfp -mfpu=neon
 amlflash-objs := common/flashlight.o
 gt2005dri-objs := gt2005.o
 gc0307dri-objs := gc0307.o
@@ -8,8 +9,8 @@ gc0308dri-objs := gc0308.o
 gc0328dri-objs := gc0328.o
 gc0329dri-objs := gc0329.o
 gc2015dri-objs := gc2015.o
-gc2035dri-objs := gc2035.o
-gc2155dri-objs := gc2155.o
+gc2035dri-objs := gc2035.o 
+gc2155dri-objs := gc2155.o 
 ov5640dri-objs := ov5640.o
 ov5642dri-objs := ov5642.o
 ov5647dri-objs := ov5647.o
@@ -24,7 +25,6 @@ hi704dri-objs := hi704.o
 hi2056dri-objs := hi2056.o
 hm2057dri-objs := hm2057.o
 hm5065dri-objs := hm5065.o
-hm1375dri-objs := hm1375.o
 ov3660dri-objs := ov3660.o
 nt99250dri-objs := nt99250.o
 nt99252dri-objs := nt99252.o
@@ -43,8 +43,8 @@ obj-$(CONFIG_VIDEO_AMLOGIC_CAPTURE_GC0308) += gc0308dri.o
 obj-$(CONFIG_VIDEO_AMLOGIC_CAPTURE_GC0328) += gc0328dri.o
 obj-$(CONFIG_VIDEO_AMLOGIC_CAPTURE_GC0329) += gc0329dri.o
 obj-$(CONFIG_VIDEO_AMLOGIC_CAPTURE_GC2015) += gc2015dri.o
-obj-$(CONFIG_VIDEO_AMLOGIC_CAPTURE_GC2035) += gc2035dri.o
-obj-$(CONFIG_VIDEO_AMLOGIC_CAPTURE_GC2155) += gc2155dri.o
+obj-$(CONFIG_VIDEO_AMLOGIC_CAPTURE_GC2035) += gc2035dri.o 
+obj-$(CONFIG_VIDEO_AMLOGIC_CAPTURE_GC2155) += gc2155dri.o 
 obj-$(CONFIG_VIDEO_AMLOGIC_CAPTURE_OV5640) += ov5640dri.o
 obj-$(CONFIG_VIDEO_AMLOGIC_CAPTURE_OV5642) += ov5642dri.o
 obj-$(CONFIG_VIDEO_AMLOGIC_CAPTURE_OV5647) += ov5647dri.o
@@ -59,7 +59,6 @@ obj-$(CONFIG_VIDEO_AMLOGIC_CAPTURE_HI704) += hi704dri.o
 obj-$(CONFIG_VIDEO_AMLOGIC_CAPTURE_HI2056) += hi2056dri.o
 obj-$(CONFIG_VIDEO_AMLOGIC_CAPTURE_HM2057) += hm2057dri.o
 obj-$(CONFIG_VIDEO_AMLOGIC_CAPTURE_HM5065) += hm5065dri.o
-obj-$(CONFIG_VIDEO_AMLOGIC_CAPTURE_HM1375) += hm1375dri.o
 obj-$(CONFIG_VIDEO_AMLOGIC_CAPTURE_OV3660) += ov3660dri.o
 obj-$(CONFIG_VIDEO_AMLOGIC_CAPTURE_NT99250) += nt99250dri.o
 obj-$(CONFIG_VIDEO_AMLOGIC_CAPTURE_NT99252) += nt99252dri.o

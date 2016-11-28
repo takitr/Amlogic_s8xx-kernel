@@ -239,3 +239,4 @@ module_exit(flashlight_exit);
 MODULE_DESCRIPTION("AMLOGIC flashlight driver");
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("amlogic");
+

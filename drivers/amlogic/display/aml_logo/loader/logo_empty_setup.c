@@ -10,7 +10,7 @@
  *
  *******************************************************************/
  #include  "loader.h"
-
+ 
  logo_object_t* get_current_logo_obj(void)
 {
 	return NULL;

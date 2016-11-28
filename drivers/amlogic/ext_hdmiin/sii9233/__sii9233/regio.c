@@ -21,7 +21,7 @@
 static void DecodeRegisterAddress(uint16_t regAddr, uint8_t* slaveID, uint8_t* offset)
 {
     uint8_t page;
-
+    
     page = (uint8_t) (regAddr >> 8);
 
 	switch (page)
@@ -34,7 +34,7 @@ static void DecodeRegisterAddress(uint16_t regAddr, uint8_t* slaveID, uint8_t* o
 			break;
 	    case (8):
 	        *slaveID = CONF__I2C_SLAVE_PAGE_8;
-			break;
+			break;		   
 		case (9):
 	        *slaveID = CONF__I2C_SLAVE_PAGE_9;
 			break;

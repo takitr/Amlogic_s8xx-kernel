@@ -42,6 +42,9 @@
 #define MAX_WIDTH 1920
 #define MAX_HEIGHT 1088
 
+#define PPMGR2_MAX_CANVAS 8
+#define PPMGR2_CANVAS_INDEX 0x70
+
 #define DUR2PTS(x) ((x) - ((x) >> 4))
 
 #define dprintk(dev, level, fmt, arg...)                    \
@@ -50,7 +53,7 @@
 #define ppmgr2_printk(level, fmt, arg...)                   \
     do {                                                    \
         if (get_ionvideo_debug() >= level)                  \
-            printk("ppmgr2-dev: " fmt, ## arg);  \
+            printk(KERN_DEBUG "ppmgr2-dev: " fmt, ## arg);  \
     } while (0)
 
 /* ------------------------------------------------------------------
@@ -81,8 +84,8 @@ struct ionvideo_dmaqueue {
     struct task_struct *kthread;
     wait_queue_head_t wq;
     /* Counters to control fps rate */
-    int vb_ready;
-    struct ionvideo_dev* pdev;
+    int frame;
+    int ini_jiffies;
 };
 
 struct ppmgr2_device {
@@ -137,7 +140,6 @@ struct ionvideo_dev {
     u8 is_video_started;
     u32 skip;
     int once_record;
-    u8 is_omx_video_started;
 };
 
 int is_ionvideo_active(void);

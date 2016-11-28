@@ -13,7 +13,7 @@
 #ifdef PRINT_DEBUG_INFO
 #define PRINT_INFO(...)		printk(__VA_ARGS__)
 #else
-#define PRINT_INFO(...)
+#define PRINT_INFO(...)	
 #endif
 
 typedef struct{
@@ -254,7 +254,7 @@ static mod_record_t mod_records[MOD_MAX_NUM + 1] = {
         .dc_en = 1,
         .no_share = 1,
     },
-
+    
     {
         .name = NULL,
         .type = -1,
@@ -271,7 +271,7 @@ static int _switch_gate(mod_type_t type, int flag)
     switch(type) {
         case MOD_VDEC:
             PRINT_INFO("turn %s vdec module\n", flag?"on":"off");
-            if (flag) {
+            if (flag) {               
                 GATE_ON(DOS);
                 aml_set_reg32_mask(P_HHI_VDEC_CLK_CNTL, 1 << 8);
             } else {
@@ -286,27 +286,27 @@ static int _switch_gate(mod_type_t type, int flag)
                 GATE_ON(AIU_AIFIFO2);
                 GATE_ON(AIU_AUD_MIXER);
                 GATE_ON(AIU_MIXER_REG);
-
+                
                 GATE_ON(AIU_IEC958);
                 GATE_ON(AIU_AI_TOP_GLUE);
                 GATE_ON(AUD_BUF);
                 GATE_ON(AIU_I2S_OUT);
                 GATE_ON(AIU_AMCLK); //this gate should not be turned off
                 GATE_ON(AIU_ICE958_AMCLK);
-                GATE_ON(AIU_AOCLK);
+                GATE_ON(AIU_AOCLK);   
                 //GATE_ON(AUD_IN);
                 GATE_ON(AIU_ADC);
                 GATE_ON(AIU_AUDIN_SCLK);
-            } else {
-		  GATE_OFF(AIU_AMCLK_MEASURE);
+            } else {   
+            	  GATE_OFF(AIU_AMCLK_MEASURE);
                 GATE_OFF(AIU_AIFIFO2);
                 GATE_OFF(AIU_AUD_MIXER);
                 GATE_OFF(AIU_MIXER_REG);
-
+                
                 GATE_OFF(AIU_IEC958);
                 GATE_OFF(AIU_AI_TOP_GLUE);
                 GATE_OFF(AUD_BUF);
-                GATE_OFF(AIU_I2S_OUT);
+                GATE_OFF(AIU_I2S_OUT);         
                 GATE_OFF(AIU_AMCLK); //this gate should not be turned off
                 GATE_OFF(AIU_ICE958_AMCLK);
                 GATE_OFF(AIU_AOCLK);
@@ -325,7 +325,7 @@ static int _switch_gate(mod_type_t type, int flag)
                 GATE_OFF(HDMI_INTR_SYNC);
                 GATE_OFF(HDMI_PCLK);
                 GATE_OFF(VCLK1_HDMI);
-            }
+            }            
             break;
         case MOD_VENC:
             PRINT_INFO("turn %s venc module\n", flag?"on":"off");
@@ -350,7 +350,7 @@ static int _switch_gate(mod_type_t type, int flag)
             } else {
                 GATE_OFF(VCLK2_VENCI);
                 GATE_OFF(VCLK2_VENCI1);
-                GATE_OFF(VCLK2_VENCP);
+                GATE_OFF(VCLK2_VENCP);  
                 GATE_OFF(VENC_P_TOP);
                 GATE_OFF(VENC_I_TOP);
                 GATE_OFF(VENCI_INT);
@@ -678,7 +678,7 @@ static int get_mod(mod_record_t* mod_record)
     PRINT_INFO("get mod  %s\n", mod_record->name);
     spin_lock_irqsave(&mod_lock, flags);
     if (mod_record->no_share)
-	ret = _switch_gate(mod_record->type, 1);
+    	ret = _switch_gate(mod_record->type, 1);
     else {
     if(mod_record->ref > 0)
         mod_record->ref++;
@@ -686,7 +686,7 @@ static int get_mod(mod_record_t* mod_record)
         mod_record->ref = 1;
         mod_record->flag = 1;
         ret = _switch_gate(mod_record->type, 1);
-    }
+    }  
     }
     spin_unlock_irqrestore(&mod_lock, flags);
     return ret;
@@ -698,12 +698,12 @@ static int put_mod(mod_record_t* mod_record)
     unsigned long flags;
     PRINT_INFO("put mod  %s\n", mod_record->name);
     spin_lock_irqsave(&mod_lock, flags);
-    if (mod_record->no_share)
-	ret = _switch_gate(mod_record->type, 0);
+    if (mod_record->no_share) 
+    	ret = _switch_gate(mod_record->type, 0); 
     else {
     mod_record->ref--;
     if(mod_record->ref <= 0) {
-        ret = _switch_gate(mod_record->type, 0);
+        ret = _switch_gate(mod_record->type, 0); 
         mod_record->ref = 0;
         mod_record->flag = 0;
         }else
@@ -926,10 +926,10 @@ static ssize_t store_dynamical_control(struct class* class, struct class_attribu
 {
     int i = 0;
     char tmp_str[32];
-
+	  
     PRINT_INFO("arg mod_name is %s\n", buf);
     while(mod_records[i].name && i < MOD_MAX_NUM) {
-	  memset(tmp_str, 0, 32);
+    	  memset(tmp_str, 0, 32);
         strncpy(tmp_str, buf, 32);
         while(tmp_str[0] && tmp_str[strlen(tmp_str)-1] < 33 )
            tmp_str[strlen(tmp_str)-1] = 0;
@@ -968,7 +968,7 @@ err:
     for(i=0; aml_mod_attrs[i].attr.name; i++){
         class_remove_file(mod_gate_clsp, &aml_mod_attrs[i]);
     }
-    class_destroy(mod_gate_clsp);
-    return -1;
+    class_destroy(mod_gate_clsp); 
+    return -1;  
 }
 arch_initcall(mode_gate_mgr_init);

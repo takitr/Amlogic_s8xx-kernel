@@ -69,14 +69,14 @@ EXPORT_SYMBOL_GPL(axp_gpio_set_io);
 int check_io012(int gpio, int val, int *io_state)
 {
     if (gpio > 2 || gpio < 0) {
-        return -1;
+        return -1;    
     }
     if ((val & 0x07) == 0x07 && axp_io_state & (1 << gpio)) {
-        *io_state = 1;
+        *io_state = 1;    
     } else if (val == 0x02) {
-        *io_state = 0;
+        *io_state = 0;    
     } else {
-        return -1;
+        return -1;    
     }
     return 0;
 }
@@ -126,7 +126,7 @@ int axp_gpio_set_value(int gpio, int value)
         switch (gpio) {
         case 0: return axp_update(&axp->dev, AXP20_GPIO0_CFG, 0x01, 0x07);
         case 1: return axp_update(&axp->dev, AXP20_GPIO1_CFG, 0x01, 0x07);
-        case 2: return axp_update(&axp->dev, AXP20_GPIO2_CFG, 0x01, 0x07);     // Need extern pull up resistor
+        case 2: return axp_update(&axp->dev, AXP20_GPIO2_CFG, 0x01, 0x07);     // Need extern pull up resistor 
         case 3: return axp_update(&axp->dev, AXP20_GPIO3_CFG, 0x02, 0x07);     // Need extern pull up resistor
         default: break;
         }
@@ -162,7 +162,7 @@ int axp_gpio_get_value(int gpio, int *value)
         switch (gpio) {
         case 0:ret = axp_read(&axp->dev, AXP20_GPIO0_CFG, &val);*value = val & 0x01;break;
         case 1:ret = axp_read(&axp->dev, AXP20_GPIO1_CFG, &val);*value = val & 0x01;break;
-        case 2:ret = axp_read(&axp->dev, AXP20_GPIO2_CFG, &val);*value = val & 0x01;break;
+        case 2:ret = axp_read(&axp->dev, AXP20_GPIO2_CFG, &val);*value = val & 0x01;break; 
         case 3:ret = axp_read(&axp->dev, AXP20_GPIO3_CFG, &val);val &= 0x02;*value = val>>1;break;
         default: return -ENXIO;
         }
@@ -299,7 +299,7 @@ static int axp_gpio_probe(struct platform_device *pdev)
 	axp_gpio_cfg_t *init_gpio_cfg = pdev->dev.platform_data;
 	struct virtual_gpio_data *drvdata;
 	int ret, i;
-
+	
 	drvdata = kzalloc(sizeof(struct virtual_gpio_data), GFP_KERNEL);
 	if (drvdata == NULL) {
 		ret = -ENOMEM;

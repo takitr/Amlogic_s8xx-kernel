@@ -66,11 +66,11 @@ typedef struct {
 	unsigned		src_crop_y;
 	unsigned		src_crop_w;
 	unsigned		src_crop_h;
-
+	
 	unsigned		dec_x;
 	unsigned		dec_y;
 	unsigned		dec_w;
-	unsigned		dec_h;
+	unsigned		dec_h;	
 	jpegdec_angle_t	angle;
 } jpegdec_config_t;
 
@@ -90,3 +90,4 @@ typedef struct {
 }  jpegdec_mem_info_t;
 
 #endif /* JPEGDEC_H */
+

@@ -46,8 +46,8 @@
 static const struct snd_pcm_hardware aml_pcm2bt_hardware = {
 	.info			= SNDRV_PCM_INFO_INTERLEAVED|
 							SNDRV_PCM_INFO_BLOCK_TRANSFER|
-						    SNDRV_PCM_INFO_PAUSE,
-
+				  		    SNDRV_PCM_INFO_PAUSE,
+				  		
 	.formats		= SNDRV_PCM_FMTBIT_S16_LE,
 
 	.period_bytes_min	= 32,
@@ -55,7 +55,7 @@ static const struct snd_pcm_hardware aml_pcm2bt_hardware = {
 	.periods_min		= 2,
 	.periods_max		= 1024,
 	.buffer_bytes_max	= 64 * 1024,
-
+	
 	.rate_min = 8000,
     .rate_max = 8000,
     .channels_min = 1,
@@ -172,18 +172,18 @@ static void aml_pcm2bt_timer_update(struct aml_pcm_runtime_data *prtd)
     struct snd_pcm_runtime *runtime = substream->runtime;
     unsigned int offset = 0;
     unsigned int size = 0;
-
+    
     if (prtd->running && snd_pcm_running(substream)) {
-	if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK) {
-		offset = aml_pcm_offset_tx(prtd);
+    	if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK) {
+    		offset = aml_pcm_offset_tx(prtd);
             if (offset < prtd->buffer_offset) {
                 size = prtd->buffer_size + offset - prtd->buffer_offset;
             } else {
                 size = offset - prtd->buffer_offset;
             }
-	} else {
+    	} else {
             int rx_overflow = 0;
-		offset = aml_pcm_offset_rx(prtd);
+    		offset = aml_pcm_offset_rx(prtd);
             if (offset < prtd->buffer_offset) {
                 size = prtd->buffer_size + offset - prtd->buffer_offset;
             } else {
@@ -193,7 +193,7 @@ static void aml_pcm2bt_timer_update(struct aml_pcm_runtime_data *prtd)
             if (rx_overflow) {
                 printk(KERN_WARNING "%s AUDIN_FIFO overflow !!\n", __FUNCTION__);
             }
-	}
+    	}
     }
 
     prtd->buffer_offset = offset;
@@ -241,7 +241,7 @@ static void aml_pcm2bt_timer_callback(unsigned long data)
 	unsigned long flags;
 	unsigned int elapsed = 0;
     unsigned int datasize = 0;
-
+	
 	spin_lock_irqsave(&prtd->lock, flags);
     aml_pcm2bt_timer_update(prtd);
     aml_pcm2bt_timer_rearm(prtd);
@@ -351,26 +351,26 @@ static int aml_pcm2bt_trigger(struct snd_pcm_substream *substream, int cmd)
 	int ret = 0;
 
 	switch (cmd) {
-	case SNDRV_PCM_TRIGGER_START:
+    	case SNDRV_PCM_TRIGGER_START:
         case SNDRV_PCM_TRIGGER_RESUME:
         case SNDRV_PCM_TRIGGER_PAUSE_RELEASE:
-		if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK)
-			aml_pcm_start_tx();
-		else
-			aml_pcm_start_rx();
+    		if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK)
+    			aml_pcm_start_tx();
+    		else
+    			aml_pcm_start_rx();
             aml_pcm2bt_timer_start(prtd);
-		break;
-	case SNDRV_PCM_TRIGGER_STOP:
-	case SNDRV_PCM_TRIGGER_SUSPEND:
-	case SNDRV_PCM_TRIGGER_PAUSE_PUSH:
+    		break;
+    	case SNDRV_PCM_TRIGGER_STOP:
+    	case SNDRV_PCM_TRIGGER_SUSPEND:
+    	case SNDRV_PCM_TRIGGER_PAUSE_PUSH:
             aml_pcm2bt_timer_stop(prtd);
-		if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK)
-			aml_pcm_stop_tx();
-		else
-			aml_pcm_stop_rx();
-		break;
-	default:
-		ret = -EINVAL;
+    		if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK)
+    			aml_pcm_stop_tx();
+    		else
+    			aml_pcm_stop_rx();
+    		break;
+    	default:
+    		ret = -EINVAL;
 	}
 
 	return ret;
@@ -381,7 +381,7 @@ static snd_pcm_uframes_t aml_pcm2bt_pointer(struct snd_pcm_substream *substream)
 	struct snd_pcm_runtime *runtime = substream->runtime;
     struct aml_pcm_runtime_data *prtd = runtime->private_data;
     snd_pcm_uframes_t frames;
-
+        
 	pcm_debug(KERN_DEBUG "enter %s\n", __FUNCTION__);
     frames = bytes_to_frames(runtime, (ssize_t)prtd->buffer_offset);
 
@@ -433,7 +433,7 @@ static int aml_pcm2bt_close(struct snd_pcm_substream *substream)
 {
 	struct snd_pcm_runtime *runtime = substream->runtime;
     struct aml_pcm_runtime_data *prtd = runtime->private_data;
-
+   
     printk(KERN_INFO "enter %s type: %d\n", __FUNCTION__, substream->stream);
     if (prtd)
 	    kfree(runtime->private_data);
@@ -466,7 +466,7 @@ static int aml_pcm2bt_copy_playback(struct snd_pcm_runtime *runtime, int channel
     return ret;
 }
 
-
+	
 
 
 static int aml_pcm2bt_copy_capture(struct snd_pcm_runtime *runtime, int channel,
@@ -511,7 +511,7 @@ static int aml_pcm2bt_copy(struct snd_pcm_substream *substream, int channel,
 }
 
 
-static int aml_pcm2bt_silence(struct snd_pcm_substream *substream, int channel,
+static int aml_pcm2bt_silence(struct snd_pcm_substream *substream, int channel, 
     snd_pcm_uframes_t pos, snd_pcm_uframes_t count)
 {
     struct snd_pcm_runtime *runtime = substream->runtime;
@@ -525,7 +525,7 @@ static int aml_pcm2bt_silence(struct snd_pcm_substream *substream, int channel,
 
     return 0;
 }
-
+                        
 static struct snd_pcm_ops aml_pcm2bt_ops = {
 	.open		= aml_pcm2bt_open,
 	.close		= aml_pcm2bt_close,
@@ -554,7 +554,7 @@ static int aml_pcm2bt_preallocate_dma_buffer(struct snd_pcm *pcm,
 	size_t size = aml_pcm2bt_hardware.buffer_bytes_max;
 
     printk(KERN_DEBUG "enter %s stream: %d\n", __FUNCTION__, stream);
-
+    
 	buf->dev.type = SNDRV_DMA_TYPE_DEV;
 	buf->dev.dev = pcm->card->dev;
 	buf->private_data = NULL;
@@ -575,10 +575,10 @@ static int aml_pcm2bt_new(struct snd_soc_pcm_runtime *rtd)
 {
 	int ret = 0;
        struct snd_soc_card *card = rtd->card;
-       struct snd_pcm *pcm =rtd->pcm ;
-//       struct snd_soc_dai *dai =rtd->cpu_dai ;
+       struct snd_pcm *pcm =rtd->pcm ;  
+//       struct snd_soc_dai *dai =rtd->cpu_dai ;  	   
        pcm_debug("enter %s dai->name: %s dai->id: %d\n", __FUNCTION__, dai->name, dai->id);
-
+    
 	if (!card->dev->dma_mask)
 		card->dev->dma_mask = &aml_pcm2bt_dmamask;
 	if (!card->dev->coherent_dma_mask)
@@ -668,7 +668,7 @@ static struct platform_driver aml_platform_pcm2bt_driver = {
 
 static int __init aml_alsa_bt_init(void)
 {
-	//aml_pcm_init_debugfs();
+	//aml_pcm_init_debugfs();		
 	return platform_driver_register(&aml_platform_pcm2bt_driver);
 }
 

@@ -1,6 +1,6 @@
 VERSION = 3
 PATCHLEVEL = 10
-SUBLEVEL = 99
+SUBLEVEL = 33
 EXTRAVERSION =
 NAME = TOSSUG Baby Fish
 
@@ -241,7 +241,7 @@ CONFIG_SHELL := $(shell if [ -x "$$BASH" ]; then echo $$BASH; \
 
 HOSTCC       = gcc
 HOSTCXX      = g++
-HOSTCFLAGS   = -Wall -Wmissing-prototypes -Wstrict-prototypes -O2 -fomit-frame-pointer -std=gnu89
+HOSTCFLAGS   = -Wall -Wmissing-prototypes -Wstrict-prototypes -O2 -fomit-frame-pointer
 HOSTCXXFLAGS = -O2
 
 # Decide whether to build built-in, modular, or both.
@@ -373,9 +373,25 @@ KBUILD_CFLAGS   := -Wall -Wundef -Wstrict-prototypes -Wno-trigraphs \
 		   -fno-strict-aliasing -fno-common \
 		   -Werror-implicit-function-declaration \
 		   -Wno-format-security \
-		   -fno-delete-null-pointer-checks \
-		   -std=gnu89
-
+		   -fno-delete-null-pointer-checks
+KBUILD_CFLAGS   += -Werror=enum-compare \
+		   -Werror=comment \
+		   -Werror=implicit-int \
+		   -Werror=missing-braces \
+		   -Werror=unused-value \
+		   -Werror=format \
+		   -Werror=switch \
+		   -Werror=strict-prototypes \
+		   -Werror=declaration-after-statement \
+		   -Werror=uninitialized \
+		   -Werror=unused-label \
+		   -Werror=undef \
+		   -Werror=unused-result \
+		   -Werror=return-type \
+		   -Werror=parentheses \
+		   -Werror=int-to-pointer-cast \
+		   -Wno-maybe-uninitialized \
+		   -Wno-error=cpp
 KBUILD_AFLAGS_KERNEL :=
 KBUILD_CFLAGS_KERNEL :=
 KBUILD_AFLAGS   := -D__ASSEMBLY__
@@ -387,12 +403,11 @@ KBUILD_LDFLAGS_MODULE := -T $(srctree)/scripts/module-common.lds
 KERNELRELEASE = $(shell head -1 include/config/kernel.release 2> /dev/null)
 KERNELRELEASE_FULL = $(shell tail -1 include/config/kernel.release 2> /dev/null)
 KERNELVERSION = $(VERSION)$(if $(PATCHLEVEL),.$(PATCHLEVEL)$(if $(SUBLEVEL),.$(SUBLEVEL)))$(EXTRAVERSION)
-CUSTOMER_DIR_NAME ?= customer
 
 
 export VERSION PATCHLEVEL SUBLEVEL KERNELRELEASE KERNELVERSION
 export ARCH SRCARCH CONFIG_SHELL HOSTCC HOSTCFLAGS CROSS_COMPILE AS LD CC
-export CPP AR NM STRIP OBJCOPY OBJDUMP CUSTOMER_DIR_NAME
+export CPP AR NM STRIP OBJCOPY OBJDUMP
 export MAKE AWK GENKSYMS INSTALLKERNEL PERL UTS_MACHINE
 export HOSTCXX HOSTCXXFLAGS LDFLAGS_MODULE CHECK CHECKFLAGS
 
@@ -618,8 +633,6 @@ ifndef CONFIG_FUNCTION_TRACER
 KBUILD_CFLAGS	+= -fomit-frame-pointer
 endif
 endif
-
-KBUILD_CFLAGS   += $(call cc-option, -fno-var-tracking-assignments)
 
 ifdef CONFIG_DEBUG_INFO
 KBUILD_CFLAGS	+= -g
@@ -1070,7 +1083,6 @@ distclean: mrproper
 		\( -name '*.orig' -o -name '*.rej' -o -name '*~' \
 		-o -name '*.bak' -o -name '#*#' -o -name '.*.orig' \
 		-o -name '.*.rej' \
-		-o -name 'ccImage' -o -name 'ccImage.*' \
 		-o -name '*%' -o -name '.*.cmd' -o -name 'core' \) \
 		-type f -print | xargs rm -f
 
@@ -1186,12 +1198,12 @@ $(help-board-dirs): help-%:
 		printf "  %-24s - Build for %s\\n" $*/$(b) $(subst _defconfig,,$(b));) \
 		echo '')
 
-#build amlogic device tree file meson.dtd
+#build amlogic device tree file meson.dtd 
 dtd:
 	$(srctree)/scripts/amlogic/aml_dtd.sh $(srctree)
 
 %.dtd:
-	$(srctree)/scripts/amlogic/aml2dts.sh $(firstword $(wildcard $(srctree)/arch/arm/boot/dts/amlogic/$@ $(srctree)/$(CUSTOMER_DIR_NAME)/meson/dt/$@))
+	$(srctree)/scripts/amlogic/aml2dts.sh $(wildcard $(srctree)/arch/arm/boot/dts/amlogic/$@)
 
 # Documentation targets
 # ---------------------------------------------------------------------------

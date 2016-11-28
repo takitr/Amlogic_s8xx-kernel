@@ -63,8 +63,6 @@ extern void tsync_set_syncthresh(unsigned int sync_thresh);
 
 extern void tsync_set_dec_reset(void);
 
-extern int tsync_get_enable(void);
-
 extern void tsync_set_enable(int enable);
 
 extern int tsync_get_mode(void);

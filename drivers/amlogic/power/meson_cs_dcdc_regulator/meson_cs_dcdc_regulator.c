@@ -139,7 +139,7 @@ static int meson_cs_dcdc_set_voltage(struct regulator_dev *dev,
 {
 	struct meson_cs_regulator_dev *meson_cs_regulator = rdev_get_drvdata(dev);
 	int cur_idx, last_idx;
-
+	
 	if (minuV < meson_cs_regulator->voltage_step_table[MESON_CS_MAX_STEPS-1] || minuV > meson_cs_regulator->voltage_step_table[0])
 		return -EINVAL;
 	if (maxuV < meson_cs_regulator->voltage_step_table[MESON_CS_MAX_STEPS-1] || maxuV > meson_cs_regulator->voltage_step_table[0])
@@ -162,7 +162,7 @@ static int meson_cs_dcdc_set_voltage(struct regulator_dev *dev,
 	}
 
 	*selector = cur_idx;
-
+	
 	if(meson_cs_regulator->voltage_step_table[cur_idx] != minuV)
 	{
 		printk("set voltage to %d; selector=%d\n", meson_cs_regulator->voltage_step_table[cur_idx], cur_idx);
@@ -262,23 +262,23 @@ static struct device_attribute *attributes_virtual[] = {
 
 
 static int of_get_voltage(void) {
-	//printk("***vcck: get_voltage\n");
-	int i;
-	unsigned int reg = aml_read_reg32(P_PWM_PWM_C);
-	for(i=0; i<MESON_CS_MAX_STEPS; i++) {
-		if(reg == *(vcck_pwm_table+i))
-			break;
-		}
+	//printk("***vcck: get_voltage\n");	 
+	int i;    
+	unsigned int reg = aml_read_reg32(P_PWM_PWM_C);	  
+	for(i=0; i<MESON_CS_MAX_STEPS; i++) { 	   
+		if(reg == *(vcck_pwm_table+i)) 	 
+			break;    
+		}	
     //printk("reg is %d\n",reg);
     //printk("i is %d\n",i);
-	if(i >= MESON_CS_MAX_STEPS)
-		return -1;
-	else
+	if(i >= MESON_CS_MAX_STEPS) 	   
+		return -1;	 
+	else		  
 		return i;
 }
 
 static int of_set_voltage(unsigned int level) {
-	//printk("***vcck: set_voltage\n");
+	//printk("***vcck: set_voltage\n");	 
 	//printk("level is %d  *(vcck_pwm_table+level) is %d\n",level,*(vcck_pwm_table+level));
 	aml_write_reg32(P_PWM_PWM_C, *(vcck_pwm_table+level));
     return 0;
@@ -324,7 +324,7 @@ int get_dt_vcck_init_data(struct device_node *np, struct regulator_init_data *vc
 		printk("vcck_init_data->consumer_supplies can not get mem\n");
 		return -1;
 	}
-
+		
 	ret = of_property_read_string(np,"vcck_data-supply",&(vcck_init_data->consumer_supplies->supply));
 	if(ret){
 			printk("don't find consumer_supplies->supply\n");
@@ -337,13 +337,13 @@ int get_dt_vcck_init_data(struct device_node *np, struct regulator_init_data *vc
 
 
 static void vcck_pwm_init(struct device * dev) {
-	printk("***vcck: vcck_pwm_init\n");
-	//enable pwm clk & pwm output
-	aml_write_reg32(P_PWM_MISC_REG_CD, (aml_read_reg32(P_PWM_MISC_REG_CD) & ~(0x7f << 8)) | ((1 << 15) | (0 << 8) | (1 << 0)));
-	aml_write_reg32(P_PWM_PWM_C, *(vcck_pwm_table+0));
-	//enable pwm_C pinmux    1<<3 pwm_D
+	printk("***vcck: vcck_pwm_init\n");    
+	//enable pwm clk & pwm output    
+	aml_write_reg32(P_PWM_MISC_REG_CD, (aml_read_reg32(P_PWM_MISC_REG_CD) & ~(0x7f << 8)) | ((1 << 15) | (0 << 8) | (1 << 0)));    
+	aml_write_reg32(P_PWM_PWM_C, *(vcck_pwm_table+0));    
+	//enable pwm_C pinmux    1<<3 pwm_D    
 
-	//pinmux_set(&vcck_pwm_set);
+	//pinmux_set(&vcck_pwm_set);    
     if (IS_ERR(devm_pinctrl_get_select_default(dev))) {
 		printk("did not get pins for pwm--------\n");
 	}
@@ -352,7 +352,7 @@ static void vcck_pwm_init(struct device * dev) {
 	//aml_write_reg32(P_PERIPHS_PIN_MUX_2, aml_read_reg32(P_PERIPHS_PIN_MUX_2) | (1 << 2));
 }
 
-static
+static 
 int meson_cs_probe(struct platform_device *pdev)
 {
 	struct meson_cs_pdata_t *meson_cs_pdata  = pdev->dev.platform_data;
@@ -375,7 +375,7 @@ int meson_cs_probe(struct platform_device *pdev)
 			printk("vcck_pdata can not get mem\n");
 			return -1;
 		}
-
+			
 		ret = of_property_read_u32(np,"default_uV",&(vcck_pdata->default_uV));
 		if(ret){
 			printk("don't find  match default_uV\n");
@@ -387,7 +387,7 @@ int meson_cs_probe(struct platform_device *pdev)
 			printk("don't find  match voltage_step_table\n");
 			goto err;
 		}
-
+			
 		ret = of_property_read_u32(np,"init-data",&val);
 		if(ret){
 			printk("don't find  match init-data\n");
@@ -407,7 +407,7 @@ int meson_cs_probe(struct platform_device *pdev)
 				printk("vcck_pdata->meson_cs_init_data can not get mem\n");
 				goto err;
 			}
-
+			
 			ret = get_dt_vcck_init_data(np_init_data,(vcck_pdata->meson_cs_init_data));
 			if(ret){
 				printk("don't find meson_cs_init_data\n");
@@ -427,7 +427,7 @@ int meson_cs_probe(struct platform_device *pdev)
 			printk("*(vcck_pwm_table+15) is %d\n *(vcck_pwm_table+16) is %d\n",*(vcck_pwm_table+15),*(vcck_pwm_table+16));
 			vcck_pdata->set_voltage = of_set_voltage;
 			vcck_pdata->get_voltage = of_get_voltage;
-
+			
 			vcck_pwm_init(&(pdev->dev));
 		}
 		else
@@ -436,8 +436,8 @@ int meson_cs_probe(struct platform_device *pdev)
 			vcck_pdata->set_voltage = NULL;
 			vcck_pdata->get_voltage = NULL;
 		}
-
-		pdev->dev.platform_data = vcck_pdata;
+		
+		pdev->dev.platform_data = vcck_pdata;	
 	}
 #endif
 
@@ -509,22 +509,22 @@ int meson_cs_probe(struct platform_device *pdev)
 
 	meson_cs_regulator->cur_uV = meson_cs_regulator->voltage_step_table[cur_idx];
 
-
+	
 	printk("================init %s done!\n",__func__);
 	return 0;
 
 err:
 	kfree(vcck_pdata);
 	return -1;
-
+	
 fail:
 
 	if(meson_cs_regulator->rdev)
 		regulator_unregister(meson_cs_regulator->rdev);
-
+	
 	if(meson_cs_regulator->regulator)
 		regulator_put(meson_cs_regulator->regulator);
-
+	
 	kfree(meson_cs_regulator);
 	return error;
 }
@@ -534,10 +534,10 @@ static int  meson_cs_remove(struct platform_device *pdev)
 	struct meson_cs_regulator_dev *meson_cs_regulator = platform_get_drvdata(pdev);
 #ifdef CONFIG_USE_OF
 	struct meson_cs_pdata_t *meson_cs_pdata;
-#endif
+#endif 
 	if(meson_cs_regulator->rdev)
 		regulator_unregister(meson_cs_regulator->rdev);
-
+	
 	if(meson_cs_regulator->regulator)
 		regulator_put(meson_cs_regulator->regulator);
 
@@ -549,7 +549,7 @@ static int  meson_cs_remove(struct platform_device *pdev)
 	kfree(meson_cs_pdata->meson_cs_init_data);
 	kfree(meson_cs_pdata);
 	kfree(meson_cs_regulator);
-#endif
+#endif 
 	return 0;
 }
 
@@ -594,8 +594,6 @@ module_exit(meson_cs_cleanup);
 #define PWM_B   1
 #define PWM_C   2
 #define PWM_D   3
-#define PWM_E   4
-#define PWM_F   5
 
 struct cs_voltage {
     int pwm_value;
@@ -604,16 +602,12 @@ struct cs_voltage {
 static struct cs_voltage *g_table = NULL;
 static int g_table_cnt = 0;
 static int use_pwm = 0;
-static int pwm_ctrl = PWM_C;
+static int pwm_ctrl = PWM_C; 
 static unsigned long pmw_base[] = {
-    P_PWM_PWM_A,
-    P_PWM_PWM_B,
-    P_PWM_PWM_C,
-    P_PWM_PWM_D,
-#if MESON_CPU_TYPE >= MESON_CPU_TYPE_MESON8
-    P_PWM_PWM_E,
-    P_PWM_PWM_F,
-#endif
+    P_PWM_PWM_A,    
+    P_PWM_PWM_B,    
+    P_PWM_PWM_C,    
+    P_PWM_PWM_D
 };
 
 static int dvfs_get_voltage_step(void)
@@ -622,14 +616,14 @@ static int dvfs_get_voltage_step(void)
     unsigned int reg_val;
 
     if (use_pwm) {
-        reg_val = aml_read_reg32(pmw_base[pwm_ctrl]);
+        reg_val = aml_read_reg32(pmw_base[pwm_ctrl]); 
         for (i = 0; i < g_table_cnt; i++) {
             if (g_table[i].pwm_value == reg_val) {
-                return i;
+                return i;    
             }
         }
         if (i >= g_table_cnt) {
-            return -1;
+            return -1;    
         }
     } else {
 		reg_val = aml_read_reg32(P_VGHL_PWM_REG0);
@@ -648,7 +642,7 @@ static int dvfs_set_voltage(int from, int to)
 	if (to < 0 || to > g_table_cnt) {
 		printk(KERN_ERR "%s: to(%d) out of range!\n", __FUNCTION__, to);
 		return -EINVAL;
-	}
+	} 
 	if (from < 0 || from > g_table_cnt) {
         if (use_pwm) {
             /*
@@ -667,21 +661,21 @@ static int dvfs_set_voltage(int from, int to)
     cur = from;
     while (cur != to) {
         /*
-         * if target step is far away from current step, don't change
+         * if target step is far away from current step, don't change 
          * voltage by one-step-done. You should change voltage step by
          * step to make sure voltage output is stable
          */
         if (cur < to) {
             if (cur < to - 3) {
-                cur += 3;
+                cur += 3;    
             } else {
-                cur = to;
+                cur = to;    
             }
         } else {
             if (cur > to + 3) {
-                cur -= 3;
+                cur -= 3;    
             } else {
-                cur = to;
+                cur = to;    
             }
         }
         if (use_pwm) {
@@ -702,8 +696,8 @@ static int meson_cs_set_voltage(uint32_t id, uint32_t min_uV, uint32_t max_uV)
 
     if (min_uV > max_uV || !g_table) {
         printk("%s, invalid voltage or NULL table\n", __func__);
-        return -1;
-    }
+        return -1;    
+    }   
     vol = (min_uV + max_uV) / 2;
     for (i = 0; i < g_table_cnt; i++) {
         if (g_table[i].voltage >= vol) {
@@ -711,7 +705,7 @@ static int meson_cs_set_voltage(uint32_t id, uint32_t min_uV, uint32_t max_uV)
         }
     }
     if (i == g_table_cnt) {
-        printk("%s, voltage is too large:%d\n", __func__, vol);
+        printk("%s, voltage is too large:%d\n", __func__, vol);    
         return -EINVAL;
     }
 
@@ -727,19 +721,19 @@ static int meson_cs_get_voltage(uint32_t id, uint32_t *uV)
         printk("%s, no voltage table\n", __func__);
         return -1;
     }
-    cur = dvfs_get_voltage_step();
+    cur = dvfs_get_voltage_step(); 
     if (cur < 0) {
         return cur;
     } else {
-        *uV = g_table[cur].voltage;
+        *uV = g_table[cur].voltage; 
         return 0;
     }
 }
 
-struct aml_dvfs_driver aml_cs_dvfs_driver = {
+struct aml_dvfs_driver aml_cs_dvfs_driver = { 
     .name        = "meson-cs-dvfs",
     .id_mask     = (AML_DVFS_ID_VCCK),
-    .set_voltage = meson_cs_set_voltage,
+    .set_voltage = meson_cs_set_voltage, 
     .get_voltage = meson_cs_get_voltage,
 };
 
@@ -765,27 +759,19 @@ static const struct of_device_id amlogic_meson_cs_dvfs_match[]={
 static void dvfs_vcck_pwm_init(struct device * dev) {
     switch (pwm_ctrl) {
     case PWM_A:
-        aml_write_reg32(P_PWM_MISC_REG_AB, (aml_read_reg32(P_PWM_MISC_REG_AB) & ~(0x7f <<  8)) | ((1 << 15) | (1 << 0)));
+        aml_write_reg32(P_PWM_MISC_REG_AB, (aml_read_reg32(P_PWM_MISC_REG_AB) & ~(0x7f <<  8)) | ((1 << 15) | (1 << 0)));    
         break;
     case PWM_B:
-        aml_write_reg32(P_PWM_MISC_REG_AB, (aml_read_reg32(P_PWM_MISC_REG_AB) & ~(0x7f << 16)) | ((1 << 23) | (1 << 1)));
+        aml_write_reg32(P_PWM_MISC_REG_AB, (aml_read_reg32(P_PWM_MISC_REG_AB) & ~(0x7f << 16)) | ((1 << 23) | (1 << 1)));    
         break;
     case PWM_C:
-        aml_write_reg32(P_PWM_MISC_REG_CD, (aml_read_reg32(P_PWM_MISC_REG_CD) & ~(0x7f <<  8)) | ((1 << 15) | (1 << 0)));
+        aml_write_reg32(P_PWM_MISC_REG_CD, (aml_read_reg32(P_PWM_MISC_REG_CD) & ~(0x7f <<  8)) | ((1 << 15) | (1 << 0)));    
         break;
     case PWM_D:
-        aml_write_reg32(P_PWM_MISC_REG_CD, (aml_read_reg32(P_PWM_MISC_REG_CD) & ~(0x7f << 16)) | ((1 << 23) | (1 << 1)));
+        aml_write_reg32(P_PWM_MISC_REG_CD, (aml_read_reg32(P_PWM_MISC_REG_CD) & ~(0x7f << 16)) | ((1 << 23) | (1 << 1)));    
         break;
-#if MESON_CPU_TYPE >= MESON_CPU_TYPE_MESON8
-    case PWM_E:
-        aml_write_reg32(P_PWM_MISC_REG_EF, (aml_read_reg32(P_PWM_MISC_REG_EF) & ~(0x7f <<  8)) | ((1 << 15) | (1 << 0)));
-        break;
-    case PWM_F:
-        aml_write_reg32(P_PWM_MISC_REG_EF, (aml_read_reg32(P_PWM_MISC_REG_EF) & ~(0x7f << 16)) | ((1 << 23) | (1 << 1)));
-        break;
-#endif
     }
-    aml_write_reg32(pmw_base[pwm_ctrl], g_table[g_table_cnt - 1].pwm_value);
+    aml_write_reg32(pmw_base[pwm_ctrl], g_table[g_table_cnt - 1].pwm_value);    
 
     if (IS_ERR(devm_pinctrl_get_select_default(dev))) {
 		printk("did not get pins for pwm--------\n");
@@ -796,7 +782,7 @@ static void dvfs_vcck_pwm_init(struct device * dev) {
 
 static int meson_cs_dvfs_probe(struct platform_device *pdev)
 {
-    int ret;
+    int ret;    
 	struct device_node *np = pdev->dev.of_node;
     int i = 0;
     char *out_str = NULL;
@@ -806,17 +792,17 @@ static int meson_cs_dvfs_probe(struct platform_device *pdev)
     }
     PARSE_UINT32_PROPERTY(np, "use_pwm", use_pwm, out);
     if (use_pwm) {
-        ret = of_property_read_string(np, "pmw_controller", (const char **)&out_str);
+        ret = of_property_read_string(np, "pmw_controller", (const char **)&out_str); 
         if (ret) {
-            printk("%s, not found 'pwm_controller', use pmw_c as default\n", __func__);
+            printk("%s, not found 'pwm_controller', use pmw_c as default\n", __func__);    
         }
         if (out_str) {
             if (!strncmp(out_str, "PWM_", 4)) {
-                i = out_str[4] - 'A';
-                if (i > PWM_F || i < 0) {
+                i = out_str[4] - 'A'; 
+                if (i > PWM_D || i < 0) {
                     printk("%s, bad pwm controller value:%s\n", __func__, out_str);
                 } else {
-                    pwm_ctrl = i;
+                    pwm_ctrl = i;    
                 }
             } else {
                 printk("%s, bad pwm controller value:%s\n", __func__, out_str);
@@ -826,12 +812,12 @@ static int meson_cs_dvfs_probe(struct platform_device *pdev)
     PARSE_UINT32_PROPERTY(np, "table_count", g_table_cnt, out);
     g_table = kzalloc(sizeof(struct cs_voltage) * g_table_cnt, GFP_KERNEL);
     if (g_table == NULL) {
-        printk("%s, allocate memory failed\n", __func__);
+        printk("%s, allocate memory failed\n", __func__);    
         return -ENOMEM;
     }
-    ret = of_property_read_u32_array(np,
-                                     "cs_voltage_table",
-                                     (u32 *)g_table,
+    ret = of_property_read_u32_array(np, 
+                                     "cs_voltage_table", 
+                                     (u32 *)g_table, 
                                      (sizeof(struct cs_voltage) * g_table_cnt) / sizeof(int));
     if (ret < 0) {
         printk("%s, failed to read 'cs_voltage_table', ret:%d\n", __func__, ret);
@@ -839,7 +825,7 @@ static int meson_cs_dvfs_probe(struct platform_device *pdev)
     }
     printk("%s, table count:%d, use_pwm:%d, pwm controller:%d\n", __func__, g_table_cnt, use_pwm, pwm_ctrl);
     for (i = 0; i < g_table_cnt; i++) {
-        printk("%2d, %08x, %7d\n", i, g_table[i].pwm_value, g_table[i].voltage);
+        printk("%2d, %08x, %7d\n", i, g_table[i].pwm_value, g_table[i].voltage);    
     }
 
     if (use_pwm) {
@@ -858,8 +844,8 @@ out:
 static int meson_cs_dvfs_remove(struct platform_device *pdev)
 {
     if (g_table) {
-        kfree(g_table);
-    }
+        kfree(g_table);    
+    } 
     aml_dvfs_unregister_driver(&aml_cs_dvfs_driver);
     return 0;
 }

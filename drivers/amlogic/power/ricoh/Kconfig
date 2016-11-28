@@ -1,4 +1,4 @@
-menuconfig RICOH_PMU
+menuconfig RICOH_PMU 
     bool    "RICOH PMU drivers"
     depends on AMLOGIC_BOARD_HAS_PMU
     select  I2C
@@ -8,13 +8,13 @@ menuconfig RICOH_PMU
         say yes if you want add RICOH power management unit support
 
 if RICOH_PMU
-choice
+choice 
     prompt "RICOH PMU type"
-    default RN5T618
-config RN5T618
+    default RN5T618 
+config RN5T618 
     bool "RN5T618 driver"
     ---help---
-        drivers for RN5T618
+        drivers for RN5T618 
 
 endchoice
 

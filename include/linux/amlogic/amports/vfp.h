@@ -37,7 +37,7 @@ static inline void vfq_lookup_start(vfq_t *q)
 static inline void vfq_lookup_end(vfq_t *q)
 {
 	  q->rp = q->pre_rp ;
-	  q->wp = q->pre_wp ;
+	  q->wp = q->pre_wp ;	
 }
 
 static inline void vfq_init(vfq_t *q, u32 size, struct vframe_s **pool)
@@ -94,7 +94,7 @@ static inline vframe_t *vfq_peek(vfq_t *q)
 static inline int vfq_level(vfq_t *q)
 {
     int level = q->wp - q->rp;
-
+    
     if (level < 0)
         level += q->size;
 

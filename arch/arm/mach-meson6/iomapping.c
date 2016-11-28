@@ -133,7 +133,7 @@ static __initdata struct map_desc meson_default_io_desc[] = {
         .pfn        = __phys_to_pfn(IO_SECURE_PHY_BASE),
         .length     = SZ_16K,
         .type       = MT_DEVICE,
-    },
+    }, 
 #ifdef CONFIG_MESON_SUSPEND
         {
         .virtual    = PAGE_ALIGN(__phys_to_virt(0x9ff00000)),

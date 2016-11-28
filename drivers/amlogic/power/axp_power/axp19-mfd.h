@@ -10,7 +10,7 @@ static int  axp19_init_chip(struct axp_mfd_chip *chip)
 	err =  __axp_read(chip->client, POWER19_IC_TYPE, &chip_id);
 	if (err)
 		return err;
-
+		
 	/*enable irqs and clear*/
 	err =  __axp_writes(chip->client, POWER19_INTEN1, 15, v);
 
@@ -41,9 +41,9 @@ static int axp19_disable_irqs(struct axp_mfd_chip *chip, uint64_t irqs)
 	v[3] = POWER19_INTEN3;
 	v[4] = ((chip->irqs_enabled) >> 16) & 0xff;
 	v[5] = POWER19_INTEN4;
-	v[6] = ((chip->irqs_enabled) >> 24) & 0xff;
+	v[6] = ((chip->irqs_enabled) >> 24) & 0xff;	
 	ret =  __axp_writes(chip->client, POWER19_INTEN1, 7, v);
-
+	
 	return ret;
 
 }
@@ -62,9 +62,9 @@ static int axp19_enable_irqs(struct axp_mfd_chip *chip, uint64_t irqs)
 	v[4] = ((chip->irqs_enabled) >> 16) & 0xff;
 	v[5] = POWER19_INTEN4;
 	v[6] = ((chip->irqs_enabled) >> 24) & 0xff;
-
+	
 	ret =  __axp_writes(chip->client, POWER19_INTEN1, 7, v);
-
+	
 	return ret;
 }
 
@@ -99,7 +99,7 @@ static ssize_t axp19_offvol_store(struct device *dev,
 		tmp = 2600;
 	if (tmp > 3300)
 		tmp = 3300;
-
+	
 	axp_read(dev,POWER19_VOFF_SET,&val);
 	val &= 0xf8;
 	val |= ((tmp - 2600) / 100);
@@ -127,7 +127,7 @@ static ssize_t axp19_noedelay_store(struct device *dev,
 	if (tmp < 500)
 		tmp = 500;
 	if (tmp > 3000)
-		tmp = 3000;
+		tmp = 3000;	
 	axp_read(dev,POWER19_OFF_CTL,&val);
 	val &= 0xfc;
 	val |= ((tmp) / 1000);
@@ -149,7 +149,7 @@ static ssize_t axp19_pekopen_show(struct device *dev,
 		default:
 			tmp = 0;break;
 	}
-	return sprintf(buf,"%d\n",tmp);
+	return sprintf(buf,"%d\n",tmp);	
 }
 
 static ssize_t axp19_pekopen_store(struct device *dev,
@@ -219,7 +219,7 @@ static ssize_t axp19_peken_store(struct device *dev,
 		tmp = 1;
 	axp_read(dev,POWER19_POK_SET,&val);
 	val &= 0xf7;
-	val |= (tmp << 3);
+	val |= (tmp << 3); 
 	axp_write(dev,POWER19_POK_SET,val);
 	return count;
 }
@@ -246,7 +246,7 @@ static ssize_t axp19_pekdelay_store(struct device *dev,
 	tmp = tmp / 32 - 1;
 	axp_read(dev,POWER19_POK_SET,&val);
 	val &= 0xfb;
-	val |= tmp << 2;
+	val |= tmp << 2; 
 	axp_write(dev,POWER19_POK_SET,val);
 	return count;
 }
@@ -272,7 +272,7 @@ static ssize_t axp19_pekclose_store(struct device *dev,
 	tmp = (tmp - 4000) / 2 ;
 	axp_read(dev,POWER19_POK_SET,&val);
 	val &= 0xfc;
-	val |= tmp ;
+	val |= tmp ; 
 	axp_write(dev,POWER19_POK_SET,val);
 	return count;
 }
@@ -295,7 +295,7 @@ static ssize_t axp19_ovtemclsen_store(struct device *dev,
 		tmp = 1;
 	axp_read(dev,POWER19_HOTOVER_CTL,&val);
 	val &= 0xfb;
-	val |= tmp << 2 ;
+	val |= tmp << 2 ; 
 	axp_write(dev,POWER19_HOTOVER_CTL,val);
 	return count;
 }
@@ -327,7 +327,7 @@ static ssize_t axp19_reg_store(struct device *dev,
 
 static struct device_attribute axp19_mfd_attrs[] = {
 	AXP_MFD_ATTR(axp19_offvol),
-	AXP_MFD_ATTR(axp19_noedelay),
+	AXP_MFD_ATTR(axp19_noedelay),	
 	AXP_MFD_ATTR(axp19_pekopen),
 	AXP_MFD_ATTR(axp19_peklong),
 	AXP_MFD_ATTR(axp19_peken),

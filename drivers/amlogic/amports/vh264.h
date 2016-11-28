@@ -27,3 +27,4 @@ extern s32 vh264_init(void);
 extern s32 vh264_release(void);
 
 #endif /* VMPEG4_H */
+

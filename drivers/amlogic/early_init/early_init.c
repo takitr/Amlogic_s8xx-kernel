@@ -36,19 +36,19 @@ static int early_init_dt_probe(struct platform_device *pdev)
 	int ret;
 	int pin;
 	printk("-------%s:%d----------\n",__func__,__LINE__);
-
-	/**     *  Meson6 socket board ONLY     *  Do *NOT* merge for other BSP     */
+	
+	/**     *  Meson6 socket board ONLY     *  Do *NOT* merge for other BSP     */    
 	ret = of_property_read_string(pdev->dev.of_node,"gpio-1",&str);
 	if(ret){
 		printk("---%s----can not get gpio-1\n",__func__);
 		return -1;
-	}
+	}	
 	pin = amlogic_gpio_name_map_num(str);
 	ret = amlogic_gpio_request(pin,"early_init");
 	if(ret){
 		printk("---%s----can not request pin %d\n",__func__,pin);
 		return -1;
-	}
+	}	
 	ret = amlogic_gpio_direction_output(pin,0,"early_init");
 	if(ret){
 		printk("---%s----can not set output pin %d\n",__func__,pin);
@@ -60,27 +60,27 @@ static int early_init_dt_probe(struct platform_device *pdev)
 	if(ret){
 		printk("---%s----can not get gpio-1\n",__func__);
 		return -1;
-	}
+	}	
 	pin = amlogic_gpio_name_map_num(str);
 	ret = amlogic_gpio_request(pin,"early_init");
 	if(ret){
 		printk("---%s----can not request pin %d\n",__func__,pin);
 		return -1;
-	}
+	}	
 	ret = amlogic_gpio_direction_output(pin,1,"early_init");
 	if(ret){
 		printk("---%s----can not set output pin %d\n",__func__,pin);
 		amlogic_gpio_free(pin,"early_init");
 		return -1;
 	}
-
+	
 	 return 0;
 }
 
 static int early_init_dt_remove(struct platform_device *pdev)
 {
 	printk("-------%s:%d----------\n",__func__,__LINE__);
-
+	
 	return 0;
 }
 
@@ -107,7 +107,7 @@ static struct platform_driver early_init_dt_driver = {
 static int __init early_init_dt_init(void)
 {
 	int ret = -1;
-	ret = platform_driver_register(&early_init_dt_driver);
+	ret = platform_driver_register(&early_init_dt_driver);	
 	if (ret != 0) {
 		printk("failed to register early_init driver, error %d\n", ret);
 		return -ENODEV;

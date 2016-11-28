@@ -3,13 +3,13 @@
 
 #define APB_BASE					0x4000
 
-// data path reset register. bit 0 rstdacdpz,bit 1  rstadcdpz
+// data path reset register. bit 0 rstdacdpz,bit 1  rstadcdpz  
 // when i2s reconfiguration, reset data path recommanded
 #define ADAC_RESET                		0x00
 //bit 0 latch
 #define ADAC_LATCH                		0x01
-/*
-[3:0]: 0=256*Fs; 1=384*Fs; 2=12M; 3=24M; 4=12.288M; 5=24.576M; 6=11.2896M; 7=22.5792M;
+/* 
+[3:0]: 0=256*Fs; 1=384*Fs; 2=12M; 3=24M; 4=12.288M; 5=24.576M; 6=11.2896M; 7=22.5792M; 
 		8=18.432M; 9=36.864M; 10=16.9344M; 11=33.8688M; >=12:Reserved.
 */
 #define ADC_MCLK_SEL                		0x02
@@ -169,7 +169,7 @@ The most significant 8 bits control the right channel:
 #define ADAC_REC_CH_SEL_LSB			0x47
 #define ADAC_REC_CH_SEL_MSB			0x48
 #define ADAC_DIGITAL_TEST_MODE_SEL 	0xd2
-#define ADC_REC_PATH_MIXER_SEL 		0xd3
+#define ADC_REC_PATH_MIXER_SEL 		0xd3 
 #define DAC_PLYBACK_DIG_MIXER_SEL 	0xd4
 /*
 VCM ramp up settle register

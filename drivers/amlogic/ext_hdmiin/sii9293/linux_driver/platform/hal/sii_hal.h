@@ -9,7 +9,7 @@
  *
  * This program is distributed .as is. WITHOUT ANY WARRANTY of any
  * kind, whether express or implied; without even the implied warranty
- * of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
  * PURPOSE.  See the GNU General Public License for more details.
 */
 
@@ -33,8 +33,8 @@
 #include "osal/include/osal.h"
 #include "si_osdebug.h"
 
-#ifdef __cplusplus
-extern "C" {
+#ifdef __cplusplus 
+extern "C" { 
 #endif  /* _defined (__cplusplus) */
 
 #ifndef	FALSE
@@ -133,11 +133,11 @@ typedef enum
 
 #define		INT_ACTIVE_HIGH					1
 #define		INT_ACTIVE_LOW					0
-#define		INT_ACTIVE_DEFAULT				INT_ACTIVE_LOW
+#define		INT_ACTIVE_DEFAULT				INT_ACTIVE_LOW					
 #define		INT_IS_ASSERTED					INT_ACTIVE_DEFAULT
 #define		GPIO_INT_PIN					94 // gpiodv_29
 
-typedef enum
+typedef enum 
 {
     GPIO_136 =0x00,
     GPIO_140,
@@ -187,7 +187,7 @@ halReturn_t HalTerm(void);
 /*****************************************************************************/
 /**
  * @brief Request access to the specified I2c device.
- *
+ * 
  *  MHL transmitters are I2c devices which must be successfully opened using
  *  this function before attempting to use any of the HAL I2c or SMBUS
  *  communication functions.
@@ -208,7 +208,7 @@ halReturn_t HalOpenI2cDevice(char const *DeviceName, char const *DriverName);
 /*****************************************************************************/
 /**
  * @brief Terminate access to an MHL transmitter device.
- *
+ * 
  *  Called when access to the previously opened I2c device is no longer needed.
  *  Causes any resources used to communicate with the device to be released.
  *
@@ -225,7 +225,7 @@ halReturn_t HalCloseI2cDevice(void);
 /*****************************************************************************/
 /**
  * @brief Read a byte from an I2c device using SMBus protocol.
- *
+ * 
  *  Reads a byte from the previously opend I2c device using
  *  the SMBus Byte Data protocol.
  *
@@ -246,7 +246,7 @@ halReturn_t HalSmbusReadByteData(uint8_t command, uint8_t *pRetByteRead);
 /*****************************************************************************/
 /**
  * @brief Write a byte to an I2c device using SMBus protocol.
- *
+ * 
  *  Writes a byte to the previously opened I2c device using
  *  the SMBus Byte Data protocol.
  *
@@ -267,7 +267,7 @@ halReturn_t HalSmbusWriteByteData(uint8_t command, uint8_t writeByte);
 /*****************************************************************************/
 /**
  * @brief Read a word from an I2c device using SMBus protocol.
- *
+ * 
  *  Reads a word from the previously opened I2c device using
  *  the SMBus Word Data protocol.
  *
@@ -288,7 +288,7 @@ halReturn_t HalSmbusReadWordData(uint8_t command, uint16_t *pRetWordRead);
 /*****************************************************************************/
 /**
  * @brief Write a word to an I2c device using SMBus protocol.
- *
+ * 
  *  Writes a word to the previously opened I2c device using
  *  the SMBus Word Data protocol.
  *
@@ -309,7 +309,7 @@ halReturn_t HalSmbusWriteWordData(uint8_t command, uint16_t wordData);
 /*****************************************************************************/
 /**
  * @brief Read a series of bytes from an I2c device using SMBus protocol.
- *
+ * 
  *  Uses the SMbus Block Data protocol to read up to 32 bytes from the
  *  previously opened I2c device.
  *
@@ -333,7 +333,7 @@ halReturn_t HalSmbusReadBlock(uint8_t command, uint8_t *buffer, uint8_t *bufferL
 /*****************************************************************************/
 /**
  * @brief Write a series of bytes to an I2c device using SMBus protocol.
- *
+ * 
  *  Uses the SMbus Block Data protocol to write up to 32 bytes to the
  *  previously opened I2c device.
  *
@@ -357,7 +357,7 @@ halReturn_t HalSmbusWriteBlock(uint8_t command, uint8_t const *blockData,
 /*****************************************************************************/
 /**
  * @brief Write a series of bytes to an I2c device.
- *
+ * 
  *  This function can write up to 255 bytes to the specified device since it
  *  does not use the SMBus protocol to perform the transfer.  Also the specified
  *  i2cAddr does not have to reference an address within the MHL transmitter,
@@ -383,7 +383,7 @@ halReturn_t HalI2cMasterWrite(uint8_t i2cAddr, uint8_t length,
 /*****************************************************************************/
 /**
  * @brief Read a series of bytes from an I2c device.
- *
+ * 
  *  This function can write up to 255 bytes to the specified device since it
  *  does not use the SMBus protocol to perform the transfer.  Also the specified
  *  i2cAddr does not have to reference an address within the MHL transmitter,
@@ -491,7 +491,7 @@ halReturn_t HalRemoveIrqHandler(void);
  * @brief Interrupt Pin asserted suppport
  *
  *  This function is responsible for return if there's interrupt asserted or not
- *
+ * 
  *
  * @return        ture if there's interrupt assserted
  *
@@ -501,7 +501,7 @@ bool_t is_interrupt_asserted( void );
 /*****************************************************************************/
 /**
  * @brief install CheckDeviceCB
- *CB function is used to check devic when IRQ handler
+ *CB function is used to check devic when IRQ handler 
  *
  *****************************************************************************/
 halReturn_t HalInstallCheckDeviceCB(fnCheckDevice fn);
@@ -600,7 +600,7 @@ halReturn_t HalGpioGetPin(GpioIndex_t gpio,int * value);
 /**
  * @brief get IRQ number from given GPIO index
  *
- *
+ * 
  *  @param[in]	gpio		     gpio index
  *  @param[in]	irqNumber		 irq number pointer.
  *

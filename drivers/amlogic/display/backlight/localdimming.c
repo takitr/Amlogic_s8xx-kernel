@@ -53,3 +53,6 @@ int local_dimming_update(unsigned int *lumas, unsigned int size)
 	}
 	return 0;
 }
+
+
+

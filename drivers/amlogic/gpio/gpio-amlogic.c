@@ -51,7 +51,7 @@ int gpio_range_check(unsigned int  pin)
 }
 static void set_gpio_owner(unsigned int  pin,const char * owner)
 {
-	amlogic_pins[pin].gpio_owner=owner;
+	amlogic_pins[pin].gpio_owner=owner;	
 }
 
 /* amlogic request gpio interface*/
@@ -135,7 +135,7 @@ int amlogic_gpio_direction_input(unsigned int pin,const char *owner)
 		return -1;
 	if( amlogic_pins[pin].gpio_owner && owner)
 		if(!strcmp(amlogic_pins[pin].gpio_owner,owner))
-			ret=gpio_direction_input(pin);
+			ret=gpio_direction_input(pin);	
 	return ret;
 }
 EXPORT_SYMBOL(amlogic_gpio_direction_input);
@@ -192,7 +192,7 @@ int amlogic_request_gpio_to_irq(unsigned int  pin,const char *label,unsigned int
 		return -1;
 	ret=amlogic_gpio_request(pin, label);
 	if(!ret)
-	{
+	{	
 		spin_lock_irqsave(&gpio_irqlock, flags);
 		gpio_flag=flag;
 		__gpio_to_irq(pin);
@@ -278,3 +278,5 @@ int amlogic_disable_pullup(unsigned int pin,const char *owner)
 	return ret;
 }
 EXPORT_SYMBOL(amlogic_disable_pullup);
+
+

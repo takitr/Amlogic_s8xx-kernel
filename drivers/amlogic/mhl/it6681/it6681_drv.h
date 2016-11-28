@@ -41,7 +41,7 @@ void it668x_set_trans_mode( char mode );
     void mhl_parse_RCPkey(struct it6681_dev_data *it6681);
 #endif
 
-#if _SUPPORT_RAP_
+#if _SUPPORT_RAP_ 
     void mhl_parse_RAPkey(struct it6681_dev_data *it6681);
 #endif
 

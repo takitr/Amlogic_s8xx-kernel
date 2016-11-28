@@ -115,3 +115,4 @@
 #define REG_CBUS_DISC_PWIDTH_MAX        (CBUS_PAGE | 0xE4)  //0x9EF=0xC0.
 
 #endif  // __SI_5293REGS_MHL_H__
+

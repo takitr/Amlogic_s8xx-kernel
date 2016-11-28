@@ -74,10 +74,6 @@ struct stream_buf_s;
 extern s32 tsdemux_init(u32 vid, u32 aid, u32 sid, u32 pcrid, bool is_hevc);
 
 extern void tsdemux_release(void);
-extern ssize_t drm_tswrite(struct file *file,
-                             struct stream_buf_s *vbuf,
-                             struct stream_buf_s *abuf,
-                             const char __user *buf, size_t count);
 
 extern ssize_t tsdemux_write(struct file *file,
                              struct stream_buf_s *vbuf,
@@ -97,3 +93,4 @@ void tsdemux_sub_reset(void);
 void tsdemux_set_skipbyte(int skipbyte);
 void tsdemux_set_demux(int dev);
 #endif /* TSDEMUX_H */
+

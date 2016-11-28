@@ -13,7 +13,7 @@
  *
  * This program is distributed .as is. WITHOUT ANY WARRANTY of any
  * kind, whether express or implied; without even the implied warranty
- * of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
  * PURPOSE.  See the
  * GNU General Public License for more details.
 */
@@ -70,14 +70,14 @@ typedef struct
 	uint16_t addr;							/**< slave address */
 	uint16_t cmdFlags;						/**< flags defining message actions */
 #define SII_MI2C_TEN	0x0010				/**< set for ten bit chip address; cleared
-												 otherwise */
+ 	 	 	 	 	 	 	 	 	 	 	 	 otherwise */
 #define SII_MI2C_RD		0x0001				/**< set for read data operation; cleared for
-												 write operations */
+ 	 	 	 	 	 	 	 	 	 	 	 	 write operations */
 #define SII_MI2C_APPEND_NEXT_MSG	0x0002	/**< append the buffer from the next message to
 												 this message */
 	uint16_t len;							/**< buffer length */
 	uint8_t *pBuf;							/**< pointer to input (for write operations)
-												 or output (for read operations) buffer */
+	 	 	 	 	 	 	 	 	 			 or output (for read operations) buffer */
 } SiiI2cMsg_t;
 
 #define MAX_I2C_TRANSFER	255		/* Maximum # of bytes in a single I2c transfer */

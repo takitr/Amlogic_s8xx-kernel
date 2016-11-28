@@ -37,3 +37,4 @@ struct am_dsc_key {
 #define AMDSC_IOC_SET_KEY      _IOW(AMDSC_IOC_MAGIC, 0x01, struct am_dsc_key)
 
 #endif
+

@@ -179,7 +179,7 @@ static struct v4l2_queryctrl ov3660_qctrl[] = {
 		.step		= 90,
 		.default_value	= 0,
 		.flags         = V4L2_CTRL_FLAG_SLIDER,
-	}
+ 	}
 };
 
 #define dprintk(dev, level, fmt, arg...) \
@@ -201,26 +201,26 @@ static struct ov3660_fmt formats[] = {
 		.fourcc   = V4L2_PIX_FMT_RGB565X, /* rrrrrggg gggbbbbb */
 		.depth    = 16,
 	},
-
+	
 	{
 		.name     = "RGB888 (24)",
 		.fourcc   = V4L2_PIX_FMT_RGB24, /* 24  RGB-8-8-8 */
 		.depth    = 24,
-	},
+	},	
 	{
 		.name     = "BGR888 (24)",
 		.fourcc   = V4L2_PIX_FMT_BGR24, /* 24  BGR-8-8-8 */
 		.depth    = 24,
-	},
+	},		
 	{
 		.name     = "12  Y/CbCr 4:2:0SP",
 		.fourcc   = V4L2_PIX_FMT_NV12,
-		.depth    = 12,
+		.depth    = 12,	
 	},
 	{
 		.name     = "12  Y/CbCr 4:2:0SP",
 		.fourcc   = V4L2_PIX_FMT_NV21,
-		.depth    = 12,
+		.depth    = 12,	
 	},
 	{
 		.name     = "YUV420P",
@@ -300,10 +300,10 @@ struct ov3660_device {
 
 	/* platform device data from board initting. */
 	aml_cam_info_t  cam_info;
-
+	
 	/* wake lock */
 	struct wake_lock	wake_lock;
-
+	
 	/* Control 'registers' */
 	int 			   qctl_regs[ARRAY_SIZE(ov3660_qctrl)];
 };
@@ -411,21 +411,21 @@ struct aml_camera_i2c_fig_s OV3660_script[] = {
 	//{0x3008, 0x02}, //WAKE UP FROM SOFTWARE POWER DOWN MODE
 //Reference IQ
 //EV
-    {0x3a0f, 0x38},
-    {0x3a10, 0x30},
-    {0x3a1b, 0x38},
-    {0x3a1e, 0x30},
-    {0x3a11, 0x70},
+    {0x3a0f, 0x38},  
+    {0x3a10, 0x30},  
+    {0x3a1b, 0x38},  
+    {0x3a1e, 0x30},  
+    {0x3a11, 0x70},  
 	{0x3a1f, 0x14},
-// awb init
-	{0x3406, 0x01},
-    {0x3400, 0x06},
-    {0x3401, 0x80},
-    {0x3402, 0x04},
-    {0x3403, 0x00},
-    {0x3404, 0x06},
-    {0x3405, 0x40},
-
+// awb init 	
+	{0x3406, 0x01},     
+    {0x3400, 0x06},              
+    {0x3401, 0x80},              
+    {0x3402, 0x04},              
+    {0x3403, 0x00},              
+    {0x3404, 0x06},              
+    {0x3405, 0x40},  
+	
 //Awb
     {0x5180, 0xff},  // awb
 	{0x5181, 0xf2},
@@ -433,17 +433,17 @@ struct aml_camera_i2c_fig_s OV3660_script[] = {
 	{0x5183, 0x14},
 	{0x5184, 0x25},
 	{0x5185, 0x24},
-    {0x5186, 0x16},
-    {0x5187, 0x16},
-    {0x5188, 0x16},
-    {0x5189, 0x68},
-    {0x518a, 0x60},
-    {0x518b, 0xe0},
-    {0x518c, 0xb2},
-    {0x518d, 0x42},
-    {0x518e, 0x15},
-    {0x518f, 0x86},
-    {0x5190, 0x56},
+    {0x5186, 0x16},  
+    {0x5187, 0x16},   
+    {0x5188, 0x16},   
+    {0x5189, 0x68},  
+    {0x518a, 0x60},  
+    {0x518b, 0xe0},  
+    {0x518c, 0xb2},  
+    {0x518d, 0x42},  
+    {0x518e, 0x15},  
+    {0x518f, 0x86},  
+    {0x5190, 0x56},  
 	{0x5191, 0xf8},
 	{0x5192, 0x04},
 	{0x5193, 0x70},
@@ -452,24 +452,24 @@ struct aml_camera_i2c_fig_s OV3660_script[] = {
 	{0x5196, 0x03},
 	{0x5197, 0x01},
 	{0x5198, 0x04},
-    {0x5199, 0x12},
-    {0x519a, 0x04},
-    {0x519b, 0x00},
-    {0x519c, 0x06},
-    {0x519d, 0x82},
+    {0x5199, 0x12},  
+    {0x519a, 0x04},   
+    {0x519b, 0x00},   
+    {0x519c, 0x06},   
+    {0x519d, 0x82},  
 	{0x519e, 0x38},
 //Color Matrix
-    {0x5381, 0x1c},  // ccm
-    {0x5382, 0x5a},
-    {0x5383, 0x12},
-    {0x5384, 0x07},
-    {0x5385, 0x73},
-    {0x5386, 0x7a},
-    {0x5387, 0x7a},
-    {0x5388, 0x5e},
-    {0x5389, 0x1c},
+    {0x5381, 0x1c},  // ccm  
+    {0x5382, 0x5a},  
+    {0x5383, 0x12},   
+    {0x5384, 0x07},    
+    {0x5385, 0x73},  
+    {0x5386, 0x7a},  
+    {0x5387, 0x7a},  
+    {0x5388, 0x5e},  
+    {0x5389, 0x1c},  
 	{0x538a, 0x01},
-    {0x538b, 0x98},
+    {0x538b, 0x98},  
 //CIP
 	{0x5300, 0x0c},
 	{0x5301, 0x20},
@@ -484,22 +484,22 @@ struct aml_camera_i2c_fig_s OV3660_script[] = {
 	{0x530b, 0x00},
 	{0x530c, 0x10},
 //Gamma
-    {0x5481, 0x06},  //gamma
-    {0x5482, 0x0e},
-    {0x5483, 0x14},
-    {0x5484, 0x3e},
-    {0x5485, 0x4c},
-    {0x5486, 0x5a},
-    {0x5487, 0x68},
-    {0x5488, 0x74},
-    {0x5489, 0x80},
-    {0x548a, 0x8d},
-    {0x548b, 0x9e},
-    {0x548c, 0xac},
-    {0x548d, 0xc3},
-    {0x548e, 0xd5},
-    {0x548f, 0xe8},
-    {0x5490, 0x20},
+    {0x5481, 0x06},  //gamma 
+    {0x5482, 0x0e},  
+    {0x5483, 0x14},  
+    {0x5484, 0x3e},  
+    {0x5485, 0x4c},  
+    {0x5486, 0x5a},  
+    {0x5487, 0x68},  
+    {0x5488, 0x74},  
+    {0x5489, 0x80},  
+    {0x548a, 0x8d},  
+    {0x548b, 0x9e},  
+    {0x548c, 0xac},  
+    {0x548d, 0xc3},  
+    {0x548e, 0xd5},  
+    {0x548f, 0xe8},  
+    {0x5490, 0x20},  
 //UV adjust
 	{0x5001, 0xa7}, //SDE on, scale on, UV average on, color matrix on, AWB on
 	{0x5580, 0x06},
@@ -510,68 +510,68 @@ struct aml_camera_i2c_fig_s OV3660_script[] = {
 	{0x558b, 0x70},
 //Lens Correction
 	{0x5000, 0xa7}, //Lens on, Gamma on, BPC on, WPC on, interpolation on
-    {0x5800, 0x0C},
-    {0x5801, 0x09},
-    {0x5802, 0x0C},
-    {0x5803, 0x0C},
-    {0x5804, 0x0D},
-    {0x5805, 0x17},
-    {0x5806, 0x06},
-    {0x5807, 0x05},
-    {0x5808, 0x04},
+    {0x5800, 0x0C}, 
+    {0x5801, 0x09},  
+    {0x5802, 0x0C},  
+    {0x5803, 0x0C},  
+    {0x5804, 0x0D},  
+    {0x5805, 0x17},  
+    {0x5806, 0x06},  
+    {0x5807, 0x05},  
+    {0x5808, 0x04},  
 	{0x5809, 0x06},
-    {0x580a, 0x09},
-    {0x580b, 0x0E},
-    {0x580c, 0x05},
-    {0x580d, 0x01},
-    {0x580e, 0x00},
-    {0x580f, 0x01},
-    {0x5810, 0x05},
-    {0x5811, 0x0D},
-    {0x5812, 0x05},
-    {0x5813, 0x01},
+    {0x580a, 0x09},  
+    {0x580b, 0x0E},  
+    {0x580c, 0x05},  
+    {0x580d, 0x01},  
+    {0x580e, 0x00},  
+    {0x580f, 0x01},  
+    {0x5810, 0x05},  
+    {0x5811, 0x0D},  
+    {0x5812, 0x05},  
+    {0x5813, 0x01},  
 	{0x5814, 0x00},
-    {0x5815, 0x01},
-    {0x5816, 0x05},
-    {0x5817, 0x0D},
-    {0x5818, 0x08},
-    {0x5819, 0x06},
+    {0x5815, 0x01},  
+    {0x5816, 0x05},  
+    {0x5817, 0x0D},  
+    {0x5818, 0x08},  
+    {0x5819, 0x06},  
 	{0x581a, 0x05},
-    {0x581b, 0x07},
-    {0x581c, 0x0B},
-    {0x581d, 0x0D},
-    {0x581e, 0x12},
-    {0x581f, 0x0D},
-    {0x5820, 0x0E},
-    {0x5821, 0x10},
-    {0x5822, 0x10},
-    {0x5823, 0x1E},
-    {0x5824, 0x53},
-    {0x5825, 0x15},
-    {0x5826, 0x05},
-    {0x5827, 0x14},
-    {0x5828, 0x54},
-    {0x5829, 0x25},
-    {0x582a, 0x33},
-    {0x582b, 0x33},
-    {0x582c, 0x34},
-    {0x582d, 0x16},
-    {0x582e, 0x24},
-    {0x582f, 0x41},
-    {0x5830, 0x50},
-    {0x5831, 0x42},
-    {0x5832, 0x15},
-    {0x5833, 0x25},
-    {0x5834, 0x34},
-    {0x5835, 0x33},
-    {0x5836, 0x24},
-    {0x5837, 0x26},
-    {0x5838, 0x54},
-    {0x5839, 0x25},
-    {0x583a, 0x15},
-    {0x583b, 0x25},
-    {0x583c, 0x53},
-    {0x583d, 0xCF},
+    {0x581b, 0x07},  
+    {0x581c, 0x0B},  
+    {0x581d, 0x0D},  
+    {0x581e, 0x12},  
+    {0x581f, 0x0D},  
+    {0x5820, 0x0E},  
+    {0x5821, 0x10},  
+    {0x5822, 0x10},  
+    {0x5823, 0x1E},  
+    {0x5824, 0x53},  
+    {0x5825, 0x15},  
+    {0x5826, 0x05},  
+    {0x5827, 0x14},  
+    {0x5828, 0x54},  
+    {0x5829, 0x25},  
+    {0x582a, 0x33},  
+    {0x582b, 0x33},  
+    {0x582c, 0x34},  
+    {0x582d, 0x16},  
+    {0x582e, 0x24},  
+    {0x582f, 0x41},  
+    {0x5830, 0x50},  
+    {0x5831, 0x42},  
+    {0x5832, 0x15},  
+    {0x5833, 0x25},  
+    {0x5834, 0x34},  
+    {0x5835, 0x33},  
+    {0x5836, 0x24},  
+    {0x5837, 0x26},  
+    {0x5838, 0x54},  
+    {0x5839, 0x25},  
+    {0x583a, 0x15},  
+    {0x583b, 0x25},  
+    {0x583c, 0x53},  
+    {0x583d, 0xCF},  
 //dns
 	{0x5308, 0x25},
 	{0x5304, 0x08},
@@ -583,13 +583,13 @@ struct aml_camera_i2c_fig_s OV3660_script[] = {
 	{0x5301, 0x18},
 	{0x5302, 0x30}, //0x18
 	{0x5303, 0x20}, //0x00
-	{0x5306, 0x18},
-    {0x5307, 0x28},
+	{0x5306, 0x18},  
+    {0x5307, 0x28}, 
 	{0x5309, 0x10},
 	{0x530a, 0x18},
 	{0x530b, 0x04},
 	{0x530c, 0x18},
-
+	
 	//{0x3820, 0x41},//0x40
 	//{0x3821, 0x07},//0x04
 	//{0x4514, 0xbb},
@@ -603,11 +603,11 @@ struct aml_camera_i2c_fig_s OV3660_script[] = {
 	{0x3a08, 0x00}, //50HZ BAND WIDTH
 	{0x3a09, 0xeb}, //50HZ BAND WIDTH
 	{0x3a0e, 0x06}, //50HZ MAX BAND
-
-	{0x380e, 0x06},
+	
+	{0x380e, 0x06}, 
 	{0x380f, 0x6d}, //inset 81 dummy lines for banding filter//1c
 	/******if use 60HZ banding remove, refer to below setting********/
-
+	
 	//{0x3c00, 0x00}, //BIT[2]:0,ENABLE 50HZ
 	{0x3a02, 0x06}, //NIGHT MODE CEILING, 60HZ
 	{0x3a03, 0x6d}, //NIGHT MODE CEILING, 60HZ
@@ -616,11 +616,11 @@ struct aml_camera_i2c_fig_s OV3660_script[] = {
 	{0x3a0d, 0x08}, //60HZ MAX BAND
 
 	#if 0
-	{0x3a0f, 0x38},
-    {0x3a10, 0x30},
-    {0x3a1b, 0x38},
-    {0x3a1e, 0x30},
-    {0x3a11, 0x70},
+	{0x3a0f, 0x38},  
+    {0x3a10, 0x30},  
+    {0x3a1b, 0x38},  
+    {0x3a1e, 0x30},  
+    {0x3a11, 0x70},  
 	{0x3a1f, 0x14},
 	#endif
 	{0x3008, 0x02}, //WAKE UP FROM SOFTWARE POWER DOWN MODE
@@ -647,14 +647,14 @@ void OV3660_init_regs(struct ov3660_device *dev)
 	msleep(3);
     while(1)
     {
-        if (OV3660_script[i].val==0xff&&OV3660_script[i].addr==0xffff)
+        if (OV3660_script[i].val==0xff&&OV3660_script[i].addr==0xffff) 
         {
-		printk("OV3660_write_regs success in initial OV3660.\n");
-		break;
+        	printk("OV3660_write_regs success in initial OV3660.\n");
+        	break;
         }
         if((i2c_put_byte(client,OV3660_script[i].addr, OV3660_script[i].val)) < 0)
         {
-		printk("fail in initial OV3660. i=%d\n",i);
+        	printk("fail in initial OV3660. i=%d\n",i);
            //break;
 		}
 		i++;
@@ -682,34 +682,34 @@ void OV3660_set_param_brightness(struct ov3660_device *dev, int value)//ÁÁ¶È
 	struct i2c_client *client = v4l2_get_subdevdata(&dev->sd);
 	int temp;
 
-    switch (value) {
+    switch (value) {	
 		case 3:
 			temp = i2c_get_byte(client,0x5588);
 			i2c_put_byte(client, 0x5588, temp&0xf7);
 			i2c_put_byte(client, 0x5587, 0x60);
 			break;
-		case 2:
+		case 2: 
 			temp = i2c_get_byte(client,0x5588);
 			i2c_put_byte(client, 0x5588, temp&0xf7);
 			i2c_put_byte(client, 0x5587, 0x40);
 			break;
-		case 1:
+		case 1: 
 			temp = i2c_get_byte(client,0x5588);
 			i2c_put_byte(client, 0x5588, temp&0xf7);
 			i2c_put_byte(client, 0x5587, 0x20);
 			break;
-		case 0:
+		case 0: 
 			temp = i2c_get_byte(client,0x5588);
 			i2c_put_byte(client, 0x5588, temp&0xf7);
 			i2c_put_byte(client, 0x5587, 0x00);
-			break;
-		case -1:
+			break;			
+		case -1: 
 			temp = i2c_get_byte(client,0x5588);
 			i2c_put_byte(client, 0x5588, temp | 0x08);
 			i2c_put_byte(client, 0x5587, 0x20);
 			break;
-	case -2:
-		temp = i2c_get_byte(client,0x5588);
+      	case -2: 
+      		temp = i2c_get_byte(client,0x5588);
 			i2c_put_byte(client, 0x5588, temp | 0x08);
 			i2c_put_byte(client, 0x5587, 0x40);
 			break;
@@ -746,24 +746,24 @@ void OV3660_set_param_contrast(struct ov3660_device *dev, int value)//ÁÁ¶È
 {
 	struct i2c_client *client = v4l2_get_subdevdata(&dev->sd);
 
-    switch (value) {
+    switch (value) {	
 		case 3:
 			i2c_put_byte(client, 0x5586, 0x38);
 			break;
-		case 2:
+		case 2: 
 			i2c_put_byte(client, 0x5586, 0x30);
 			break;
-		case 1:
+		case 1: 
 			i2c_put_byte(client, 0x5586, 0x28);
 			break;
-		case 0:
+		case 0: 
 			i2c_put_byte(client, 0x5586, 0x20);
-			break;
-		case -1:
+			break;			
+		case -1: 
 			i2c_put_byte(client, 0x5586, 0x18);
 			break;
-	case -2:
-		i2c_put_byte(client, 0x5586, 0x10);
+      	case -2: 
+      		i2c_put_byte(client, 0x5586, 0x10);
 			break;
 		case -3:
 		    i2c_put_byte(client, 0x5586, 0x08);
@@ -794,25 +794,25 @@ void OV3660_set_param_saturation(struct ov3660_device *dev, int value)//±¥ºÍ¶È
 {
 	struct i2c_client *client = v4l2_get_subdevdata(&dev->sd);
 
-    switch (value) {
-		case 2:
+    switch (value) {	
+		case 2: 
 			i2c_put_byte(client, 0x5583, 0x70);
 			i2c_put_byte(client, 0x5584, 0x70);
 			break;
-		case 1:
+		case 1: 
 			i2c_put_byte(client, 0x5583, 0x50);
 			i2c_put_byte(client, 0x5584, 0x50);
 			break;
-		case 0:
+		case 0: 
 			i2c_put_byte(client, 0x5583, 0x60);
 			i2c_put_byte(client, 0x5584, 0x40);
-			break;
-		case -1:
+			break;			
+		case -1: 
 			i2c_put_byte(client, 0x5583, 0x30);
 			i2c_put_byte(client, 0x5584, 0x30);
 			break;
-	case -2:
-		i2c_put_byte(client, 0x5583, 0x10);
+      	case -2: 
+      		i2c_put_byte(client, 0x5583, 0x10);
 			i2c_put_byte(client, 0x5584, 0x10);
 			break;
 		default:
@@ -877,7 +877,7 @@ void OV3660_set_param_wb(struct ov3660_device *dev,enum  camera_wb_flip_e para)/
 			i2c_put_byte(client, 0x3212, 0xa3);
 			break;
 
-		case CAM_WB_INCANDESCENCE:
+		case CAM_WB_INCANDESCENCE: 
 			i2c_put_byte(client, 0x3212, 0x03);
 			i2c_put_byte(client, 0x3406, 0x01);
 			i2c_put_byte(client, 0x3400, 0x04);
@@ -889,13 +889,13 @@ void OV3660_set_param_wb(struct ov3660_device *dev,enum  camera_wb_flip_e para)/
 			i2c_put_byte(client, 0x3212, 0x13);
 			i2c_put_byte(client, 0x3212, 0xa3);
 			break;
-
-		case CAM_WB_TUNGSTEN:
+			
+		case CAM_WB_TUNGSTEN: 
 			break;
 
-	case CAM_WB_FLUORESCENT:
-		i2c_put_byte(client, 0x3212, 0x03);
-		i2c_put_byte(client, 0x3406, 0x01);
+      	case CAM_WB_FLUORESCENT:
+      		i2c_put_byte(client, 0x3212, 0x03);
+      		i2c_put_byte(client, 0x3406, 0x01);
 			i2c_put_byte(client, 0x3400, 0x06);
 			i2c_put_byte(client, 0x3401, 0x57);
 			i2c_put_byte(client, 0x3402, 0x04);
@@ -906,12 +906,12 @@ void OV3660_set_param_wb(struct ov3660_device *dev,enum  camera_wb_flip_e para)/
 			i2c_put_byte(client, 0x3212, 0xa3);
 			break;
 		case CAM_WB_MANUAL:
-			// TODO
+		    	// TODO
 			break;
 	default :
 			break;
 	}
-
+	
 
 } /* OV3660_set_param_wb */
 /*************************************************************************
@@ -936,7 +936,7 @@ void OV3660_set_param_exposure(struct ov3660_device *dev,enum camera_exposure_e 
 
     switch (para)
 	{
-		case EXPOSURE_N4_STEP:  //¸º4µµ
+		case EXPOSURE_N4_STEP:  //¸º4µµ  
             i2c_put_byte(client,0x3a0f , 0x18);
 			i2c_put_byte(client,0x3a10 , 0x10);
 			i2c_put_byte(client,0x3a1b , 0x18);
@@ -944,7 +944,7 @@ void OV3660_set_param_exposure(struct ov3660_device *dev,enum camera_exposure_e 
 			i2c_put_byte(client,0x3a11 , 0x30);
 			i2c_put_byte(client,0x3a1f , 0x08);
 			break;
-
+			
 		case EXPOSURE_N3_STEP:
             i2c_put_byte(client,0x3a0f , 0x20);
 			i2c_put_byte(client,0x3a10 , 0x18);
@@ -953,7 +953,7 @@ void OV3660_set_param_exposure(struct ov3660_device *dev,enum camera_exposure_e 
 			i2c_put_byte(client,0x3a11 , 0x40);
 			i2c_put_byte(client,0x3a1f , 0x0c);
 			break;
-
+			
 		case EXPOSURE_N2_STEP:
             i2c_put_byte(client,0x3a0f , 0x28);
 			i2c_put_byte(client,0x3a10 , 0x20);
@@ -962,7 +962,7 @@ void OV3660_set_param_exposure(struct ov3660_device *dev,enum camera_exposure_e 
 			i2c_put_byte(client,0x3a11 , 0x50);
 			i2c_put_byte(client,0x3a1f , 0x10);
 			break;
-
+			
 		case EXPOSURE_N1_STEP:
             i2c_put_byte(client,0x3a0f , 0x30);
 			i2c_put_byte(client,0x3a10 , 0x28);
@@ -971,7 +971,7 @@ void OV3660_set_param_exposure(struct ov3660_device *dev,enum camera_exposure_e 
 			i2c_put_byte(client,0x3a11 , 0x60);
 			i2c_put_byte(client,0x3a1f , 0x14);
 			break;
-
+			
 		case EXPOSURE_0_STEP://Ä¬ÈÏÁãµµ
             i2c_put_byte(client,0x3a0f , 0x38);
 			i2c_put_byte(client,0x3a10 , 0x30);
@@ -980,7 +980,7 @@ void OV3660_set_param_exposure(struct ov3660_device *dev,enum camera_exposure_e 
 			i2c_put_byte(client,0x3a11 , 0x70);
 			i2c_put_byte(client,0x3a1f , 0x14);
 			break;
-
+			
 		case EXPOSURE_P1_STEP://ÕýÒ»µµ
             i2c_put_byte(client,0x3a0f , 0x40);
 			i2c_put_byte(client,0x3a10 , 0x38);
@@ -989,7 +989,7 @@ void OV3660_set_param_exposure(struct ov3660_device *dev,enum camera_exposure_e 
 			i2c_put_byte(client,0x3a11 , 0x80);
 			i2c_put_byte(client,0x3a1f , 0x1c);
 			break;
-
+			
 		case EXPOSURE_P2_STEP:
             i2c_put_byte(client,0x3a0f , 0x48);
 			i2c_put_byte(client,0x3a10 , 0x40);
@@ -998,7 +998,7 @@ void OV3660_set_param_exposure(struct ov3660_device *dev,enum camera_exposure_e 
 			i2c_put_byte(client,0x3a11 , 0x90);
 			i2c_put_byte(client,0x3a1f , 0x20);
 			break;
-
+			
 		case EXPOSURE_P3_STEP:
             i2c_put_byte(client,0x3a0f , 0x50);
 			i2c_put_byte(client,0x3a10 , 0x48);
@@ -1007,8 +1007,8 @@ void OV3660_set_param_exposure(struct ov3660_device *dev,enum camera_exposure_e 
 			i2c_put_byte(client,0x3a11 , 0xa0);
 			i2c_put_byte(client,0x3a1f , 0x24);
 			break;
-
-		case EXPOSURE_P4_STEP:
+			
+		case EXPOSURE_P4_STEP:	
             i2c_put_byte(client,0x3a0f , 0x58);
 			i2c_put_byte(client,0x3a10 , 0x50);
 			i2c_put_byte(client,0x3a1b , 0x58);
@@ -1016,7 +1016,7 @@ void OV3660_set_param_exposure(struct ov3660_device *dev,enum camera_exposure_e 
 			i2c_put_byte(client,0x3a11 , 0xb0);
 			i2c_put_byte(client,0x3a1f , 0x28);
 			break;
-
+			
 		default:
             i2c_put_byte(client,0x3a0f , 0x38);
 			i2c_put_byte(client,0x3a10 , 0x30);
@@ -1048,13 +1048,13 @@ void OV3660_set_param_effect(struct ov3660_device *dev,enum camera_effect_flip_e
 {
 	struct i2c_client *client = v4l2_get_subdevdata(&dev->sd);
 	unsigned char temp;
-
+  
     switch (para)
 	{
 		case CAM_EFFECT_ENC_NORMAL://Õý³£
 			i2c_put_byte(client,0x5001,0x00);//disable effect
 			i2c_put_byte(client,0x5580,0x00);//disable effect
-			break;
+			break;		
 
 		case CAM_EFFECT_ENC_GRAYSCALE://»Ò½×
 			i2c_put_byte(client,0x5001,0x80);
@@ -1068,26 +1068,26 @@ void OV3660_set_param_effect(struct ov3660_device *dev,enum camera_effect_flip_e
 			i2c_put_byte(client,0x5580,0x18);
 			i2c_put_byte(client,0x5583,0x40);
 			i2c_put_byte(client,0x5584,0xa0);
-			break;
-
+			break;		
+				
 		case CAM_EFFECT_ENC_SEPIAGREEN://¸´¹ÅÂÌ
 			temp = i2c_get_byte(client, 0x5580);
 			i2c_put_byte(client, 0x5580, ((temp & 0xbf )| 0x18));
 			i2c_put_byte(client,0x5583,0x60);
 			i2c_put_byte(client,0x5584,0x60);
-			break;
+			break;					
 
 		case CAM_EFFECT_ENC_SEPIABLUE://¸´¹ÅÀ¶
 			temp = i2c_get_byte(client, 0x5580);
 			i2c_put_byte(client,0x5580, ((temp & 0xbf) | 0x18));
 			i2c_put_byte(client,0x5583,0xa0);
 			i2c_put_byte(client,0x5584,0x40);
-			break;
+			break;								
 
 		case CAM_EFFECT_ENC_COLORINV://µ×Æ¬
 			i2c_put_byte(client,0x5001,0x80);
 			i2c_put_byte(client,0x5580,0x58);
-			break;
+			break;		
 
 		default:
 			break;
@@ -1116,16 +1116,16 @@ void OV3660_set_param_banding(struct ov3660_device *dev,enum  camera_banding_fli
     struct i2c_client *client = v4l2_get_subdevdata(&dev->sd);
     switch(banding){
         case CAM_BANDING_60HZ:
-		printk("set banding 60Hz\n");
-		i2c_put_byte(client, 0x3c00, 0x00);
+        	printk("set banding 60Hz\n");
+        	i2c_put_byte(client, 0x3c00, 0x00);
             break;
         case CAM_BANDING_50HZ:
-		printk("set banding 50Hz\n");
-		i2c_put_byte(client, 0x3c00, 0x04);
+        	printk("set banding 50Hz\n");
+        	i2c_put_byte(client, 0x3c00, 0x04);
             break;
 
         default :
-		break;
+	    	break;
     }
 }
 
@@ -1137,7 +1137,7 @@ unsigned char v4l_2_ov3660(int val)
 	else return 0;
 }
 
-static int ov3660_setting(struct ov3660_device *dev,int PROP_ID,int value )
+static int ov3660_setting(struct ov3660_device *dev,int PROP_ID,int value ) 
 {
 	int ret=0;
 	//unsigned char cur_val;
@@ -1156,7 +1156,7 @@ static int ov3660_setting(struct ov3660_device *dev,int PROP_ID,int value )
 			OV3660_set_param_contrast(dev,value);
 			printk(KERN_INFO " set camera  contrast=%d. \n ",value);
 		}
-		break;
+		break;	
 	case V4L2_CID_HFLIP:    /* set flip on H. */
 		value = value & 0x3;
 		if(ov3660_qctrl[2].default_value!=value){
@@ -1165,7 +1165,7 @@ static int ov3660_setting(struct ov3660_device *dev,int PROP_ID,int value )
 		}
 		break;
 	case V4L2_CID_VFLIP:    /* set flip on V. */
-		break;
+		break;	
 	case V4L2_CID_DO_WHITE_BALANCE:
 		if(ov3660_qctrl[4].default_value!=value){
 			ov3660_qctrl[4].default_value=value;
@@ -1198,7 +1198,7 @@ static int ov3660_setting(struct ov3660_device *dev,int PROP_ID,int value )
 		if(ov3660_qctrl[8].default_value!=value){
 			ov3660_qctrl[8].default_value=value;
 			//printk(KERN_INFO " set camera  zoom mode=%d. \n ",value);
-		}
+        	}
 		break;
 	case V4L2_CID_ROTATE:
 		if(ov3660_qctrl[9].default_value!=value){
@@ -1211,7 +1211,7 @@ static int ov3660_setting(struct ov3660_device *dev,int PROP_ID,int value )
 		break;
 	}
 	return ret;
-
+	
 }
 
 static void power_down_ov3660(struct ov3660_device *dev)
@@ -1235,7 +1235,7 @@ static void ov3660_fillbuff(struct ov3660_fh *fh, struct ov3660_buffer *buf)
 	struct ov3660_device *dev = fh->dev;
 	void *vbuf = videobuf_to_vmalloc(&buf->vb);
 	vm_output_para_t para ={0};
-	dprintk(dev,1,"%s\n", __func__);
+	dprintk(dev,1,"%s\n", __func__);	
 	if (!vbuf)
 		return;
  /*  0x18221223 indicate the memory type is MAGIC_VMAL_MEM*/
@@ -1288,7 +1288,7 @@ static void ov3660_thread_tick(struct ov3660_fh *fh)
 	spin_unlock_irqrestore(&dev->slock, flags);
 	ov3660_fillbuff(fh, buf);
 	dprintk(dev, 1, "filled buffer %p\n", buf);
-
+	
 	wake_up(&buf->vb.done);
 	dprintk(dev, 2, "[%p/%d] wakeup\n", buf, buf->vb. i);
 	return;
@@ -1390,7 +1390,7 @@ buffer_setup(struct videobuf_queue *vq, unsigned int *count, unsigned int *size)
 	struct ov3660_fh  *fh = vq->priv_data;
 	struct ov3660_device *dev  = fh->dev;
     //int bytes = fh->fmt->depth >> 3 ;
-	*size = (fh->width*fh->height*fh->fmt->depth)>>3;
+	*size = (fh->width*fh->height*fh->fmt->depth)>>3;	
 	if (0 == *count)
 		*count = 32;
 
@@ -1638,7 +1638,7 @@ static struct aml_camera_i2c_fig_s pic2048x1536[]={
 	{0x471c, 0xd0},
 	//{0x4514, 0xbb},
 	{0x3503, 0x03},  // turn on AGC/AEC
-
+	
 #if 0
 	//for jpeg
 	{0x440e, 0x08},
@@ -1680,7 +1680,7 @@ static struct aml_camera_i2c_fig_s pic1600x1200[]={
 	{0x3811,0x10},
 	{0x3812,0x00},
 	{0x3813,0x06},
-
+	
 	{0x3814,0x11},	// X inc
 	{0x3815,0x11},	// Y inc
 	//{0x3820,0x40},	// Vertical binning off
@@ -1696,10 +1696,10 @@ static struct aml_camera_i2c_fig_s pic1600x1200[]={
 	{0x303c,0x13},
 	{0x303d,0x32},
 	{0x3824,0x01},//0x02 can not work,black image
-	{0x460c,0x22},
-
+	{0x460c,0x22},	
+	
 //{0x3a10, 0x2d},
-
+	
 	{0xffff, 0xff},
 };
 #endif
@@ -1728,7 +1728,7 @@ static struct aml_camera_i2c_fig_s pic800x600[]={
 	{0x3811,0x10},
 	{0x3812,0x00},
 	{0x3813,0x06},
-
+	
 	//{0x3820, 0x41},  //FLIP//40
 	//{0x3821, 0x07},  //MIRROR//04
     {0x3814, 0x11},
@@ -1740,7 +1740,7 @@ static struct aml_camera_i2c_fig_s pic800x600[]={
 	{0x303d, 0x30},
 	{0x460c, 0x22},
 	{0x3824, 0x02},
-
+	
 	{0xffff, 0xff},
 };
 
@@ -1748,25 +1748,25 @@ static struct aml_camera_i2c_fig_s pic800x600[]={
 static struct aml_camera_i2c_fig_s pic640x480[]={
 	{0x3008, 0x42},
 	{0x303c, 0x11},//12
-	{0x5001, 0xa3},
-	{0x3503, 0x00},
-	{0x3a00, 0x3c},
+	{0x5001, 0xa3},         
+	{0x3503, 0x00}, 
+	{0x3a00, 0x3c}, 
 
-	{0x5302, 0x30},
-	{0x5303, 0x10},
-	{0x5306, 0x18},
-	{0x5307, 0x28},
+	{0x5302, 0x30}, 
+	{0x5303, 0x10}, 
+	{0x5306, 0x18}, 
+	{0x5307, 0x28}, 
 
-	{0x3800, 0x00},
-	{0x3801, 0x00},
-	{0x3802, 0x00},
+	{0x3800, 0x00}, 
+	{0x3801, 0x00}, 
+	{0x3802, 0x00}, 
 	{0x3803, 0x00},
-	{0x3804, 0x08},
-	{0x3805, 0x1f},
-	{0x3806, 0x06},
+	{0x3804, 0x08}, 
+	{0x3805, 0x1f}, 
+	{0x3806, 0x06}, 
 	{0x3807, 0x09},
 	{0x3808, 0x02},
-	{0x3809, 0x80},
+	{0x3809, 0x80}, 
 	{0x380a, 0x01},
 	{0x380b, 0xe0},
 	{0x3810, 0x00},
@@ -1805,9 +1805,9 @@ static struct aml_camera_i2c_fig_s pic640x480[]={
 	{0x4520, 0x0b},
 
 	{0x3008, 0x02},
-
+	
 	//{0x3a10, 0x2d},
-
+	
 	{0xffff, 0xff},
 };
 #endif
@@ -1837,7 +1837,7 @@ static struct aml_camera_i2c_fig_s pic320x240[]={
 	{0x3811,0x10},
 	{0x3812,0x00},
 	{0x3813,0x06},
-
+	
 	//{0x3820, 0x41},  //FLIP//40
 	//{0x3821, 0x07},  //MIRROR//04
     {0x3814, 0x11},
@@ -1849,7 +1849,7 @@ static struct aml_camera_i2c_fig_s pic320x240[]={
 	{0x303d, 0x30},
 	{0x460c, 0x22},
 	{0x3824, 0x02},
-
+	
 	{0xffff, 0xff},
 };
 #endif
@@ -1924,7 +1924,7 @@ void OV3660_set_resolution(struct ov3660_device *dev,int height,int width)
 		ov3660_v_active=1534;
 		ov3660_frmintervals_active.denominator 	= 5;
 		ov3660_frmintervals_active.numerator	= 1;
-	}
+	}	
 	set_flip(dev);
 }    /* OV2659_set_resolution */
 
@@ -2069,16 +2069,16 @@ static int vidioc_s_fmt_vid_cap(struct file *file, void *priv,
 		Reg0x3503 = i2c_get_byte(client, 0x3503);
 		Reg0x3503 = Reg0x3503 | 0x03;
 		i2c_put_byte(client, 0x3503, Reg0x3503);
-
+		
 		Get_preview_exposure_gain(dev);
 		OV3660_set_resolution(dev,fh->height,fh->width);
-		cal_exposure(dev);
+		cal_exposure(dev);	
 	}
 	else {
 		Reg0x3503 = i2c_get_byte(client, 0x3503);
 		Reg0x3503 = Reg0x3503& (~0x03);
 		i2c_put_byte(client, 0x3503, Reg0x3503);
-
+		
 		OV3660_set_resolution(dev,fh->height,fh->width);
 	}
 	#endif
@@ -2181,7 +2181,7 @@ static int vidioc_streamon(struct file *file, void *priv, enum v4l2_buf_type i)
 	para.hs_bp = 0;
 	para.vs_bp = 0;
 	para.cfmt = TVIN_YUV422;
-	para.scan_mode = TVIN_SCAN_MODE_PROGRESSIVE;
+	para.scan_mode = TVIN_SCAN_MODE_PROGRESSIVE;	
 	para.skip_count =  2; //skip_num
 	ret =  videobuf_streamon(&fh->vb_vidq);
 	if(ret == 0){
@@ -2355,7 +2355,7 @@ static int ov3660_open(struct file *file)
 #endif
 #if MESON_CPU_TYPE >= MESON_CPU_TYPE_MESON6
 	switch_mod_gate_by_name("ge2d", 1);
-#endif
+#endif		
     aml_cam_init(&dev->cam_info);
 	OV3660_init_regs(dev);
 	mutex_lock(&dev->mutex);
@@ -2370,7 +2370,7 @@ static int ov3660_open(struct file *file)
 		video_device_node_name(dev->vdev),
 		v4l2_type_names[V4L2_BUF_TYPE_VIDEO_CAPTURE], dev->users);
 
-	/* init video dma queues */
+    	/* init video dma queues */
 	INIT_LIST_HEAD(&dev->vidq.active);
 	init_waitqueue_head(&dev->vidq.wq);
 	spin_lock_init(&dev->slock);
@@ -2384,7 +2384,7 @@ static int ov3660_open(struct file *file)
 
 	if (retval)
 		return retval;
-
+	
 	wake_lock(&(dev->wake_lock));
 	file->private_data = fh;
 	fh->dev      = dev;
@@ -2397,7 +2397,7 @@ static int ov3660_open(struct file *file)
 	fh->f_flags  = file->f_flags;
 	/* Resets frame counters */
 	dev->jiffies = jiffies;
-
+			
 //    TVIN_SIG_FMT_CAMERA_640X480P_30Hz,
 //    TVIN_SIG_FMT_CAMERA_800X600P_30Hz,
 //    TVIN_SIG_FMT_CAMERA_1024X768P_30Hz, // 190
@@ -2450,7 +2450,7 @@ static int ov3660_close(struct file *file)
 	ov3660_stop_thread(vidq);
 	videobuf_stop(&fh->vb_vidq);
 	if(fh->stream_on){
-	    vops->stop_tvin_service(0);
+	    vops->stop_tvin_service(0);     
 	}
 	videobuf_mmap_free(&fh->vb_vidq);
 
@@ -2462,12 +2462,12 @@ static int ov3660_close(struct file *file)
 
 	dprintk(dev, 1, "close called (dev=%s, users=%d)\n",
 		video_device_node_name(vdev), dev->users);
-#if 1
+#if 1		
 	ov3660_h_active=800;
 	ov3660_v_active=600;
 	ov3660_frmintervals_active.numerator = 1;
 	ov3660_frmintervals_active.denominator = 20;
-
+	
 	ov3660_qctrl[2].default_value=0;
 	ov3660_qctrl[5].default_value=4;
 	ov3660_qctrl[8].default_value=100;
@@ -2477,8 +2477,8 @@ static int ov3660_close(struct file *file)
         aml_cam_uninit(&dev->cam_info);
 #if MESON_CPU_TYPE >= MESON_CPU_TYPE_MESON6
 	switch_mod_gate_by_name("ge2d", 0);
-#endif
-	wake_unlock(&(dev->wake_lock));
+#endif	
+	wake_unlock(&(dev->wake_lock));	
 #ifdef CONFIG_CMA
     vm_deinit_buf();
 #endif
@@ -2568,17 +2568,17 @@ static const struct v4l2_subdev_ops ov3660_ops = {
 //add by emdoor jf.s for debug ov3660
 unsigned int ov3660_reg_addr;
 
-static ssize_t ov3660_show(struct kobject *kobj, struct kobj_attribute *attr,
+static ssize_t ov3660_show(struct kobject *kobj, struct kobj_attribute *attr,			
 	       char *buf)
-{
+{	
 	unsigned  char dat;
 	dat = i2c_get_byte(ov3660_client, ov3660_reg_addr);
 	return sprintf(buf, "REG[0x%x]=0x%x\n", ov3660_reg_addr, dat);
 }
 
-static ssize_t ov3660_store(struct kobject *kobj, struct kobj_attribute *attr,
+static ssize_t ov3660_store(struct kobject *kobj, struct kobj_attribute *attr,			 
 	      const char *buf, size_t count)
-{
+{	
 	int tmp;
 	unsigned short reg;
 	unsigned char val;
@@ -2592,7 +2592,7 @@ static ssize_t ov3660_store(struct kobject *kobj, struct kobj_attribute *attr,
 		val = tmp & 0xFF;        //val
 		i2c_put_byte(ov3660_client, reg, val);
 	}
-
+	
 	return count;
 }
 
@@ -2600,9 +2600,9 @@ static ssize_t ov3660_store(struct kobject *kobj, struct kobj_attribute *attr,
 static struct kobj_attribute ov3660_attribute =	__ATTR(ov3660, 0666, ov3660_show, ov3660_store);
 
 
-static struct attribute *ov3660_attrs[] = {
-	&ov3660_attribute.attr,
-	NULL,
+static struct attribute *ov3660_attrs[] = {	
+	&ov3660_attribute.attr,	
+	NULL,	
 };
 
 
@@ -2648,13 +2648,13 @@ static int ov3660_probe(struct i2c_client *client,
 	} else {
 	   printk("camera ov3660: have no platform data\n");
 	   kfree(t);
-	   return -1;
+	   return -1; 	
 	}
-
+	
 	t->cam_info.version = OV3660_DRIVER_VERSION;
 	if (aml_cam_info_reg(&t->cam_info) < 0)
 		printk("reg caminfo error\n");
-
+	
 	err = video_register_device(t->vdev, VFL_TYPE_GRABBER, video_nr);
 	if (err < 0) {
 		video_device_release(t->vdev);

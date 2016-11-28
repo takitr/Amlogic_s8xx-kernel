@@ -45,9 +45,9 @@ static struct it6681_platform_data pdata_it6681;
 static struct class  it6681_cls;
 static struct class_attribute it6681_class_attrs[];
 
-struct it6681_data
+struct it6681_data 
 {
-#ifdef CONFIG_OF
+#ifdef CONFIG_OF    
     struct i2c_client *hdmi_tx_client;
     struct i2c_client *hdmi_rx_client;
     struct i2c_client *mhl_client;
@@ -108,13 +108,13 @@ static int i2c_read_reg(struct i2c_client *client, unsigned int offset, u8 *valu
         pr_err("IT6681 -- %s write error %d, offset=0x%02x\n", __FUNCTION__, ret, offset);
 		return ret;
     }
-
+    
 	ret = i2c_smbus_read_byte(client);
 	if (ret < 0)
 	{
-        pr_err("IT6681 -- %s read error %d, offset=0x%02x\n", __FUNCTION__, ret, offset);
+        pr_err("IT6681 -- %s read error %d, offset=0x%02x\n", __FUNCTION__, ret, offset);	    
 		return ret;
-    }
+    }		
 
 	*value = ret & 0x000000FF;
 
@@ -136,7 +136,7 @@ unsigned char hdmirxrd( unsigned char offset )
 {
     unsigned char value=0x00;
     struct it6681_data *it6681data = dev_get_drvdata(it6681dev);
-
+    
 #ifdef CONFIG_OF
     i2c_read_reg(it6681data->hdmi_rx_client,(unsigned int)offset,&value);
 #else
@@ -182,8 +182,8 @@ void hdmitxbrd( unsigned char offset, void *buffer, unsigned char length )
 #endif
 	if (ret < 0)
 	{
-        pr_err("IT6681 -- %s read error %d, offset=0x%02x\n", __FUNCTION__, ret, offset);
-    }
+        pr_err("IT6681 -- %s read error %d, offset=0x%02x\n", __FUNCTION__, ret, offset);	    
+    }		
 }
 void mhltxwr( unsigned char offset, unsigned char value )
 {
@@ -200,7 +200,7 @@ unsigned char mhltxrd( unsigned char offset )
 {
     unsigned char value;
     struct it6681_data *it6681data = dev_get_drvdata(it6681dev);
-
+    
 #ifdef CONFIG_OF
    i2c_read_reg(it6681data->mhl_client,(unsigned int)offset,&value);
 #else
@@ -212,7 +212,7 @@ unsigned char mhltxrd( unsigned char offset )
 void hdmirxset( unsigned char offset, unsigned char mask, unsigned char wdata )
 {
     unsigned char temp;
-
+        
     temp = hdmirxrd(offset);
     temp = (temp&((~mask)&0xFF))+(mask&wdata);
     hdmirxwr(offset, temp);
@@ -223,7 +223,7 @@ void hdmirxset( unsigned char offset, unsigned char mask, unsigned char wdata )
 void hdmitxset( unsigned char offset, unsigned char mask, unsigned char wdata )
 {
     unsigned char temp;
-
+   
     temp = hdmitxrd(offset);
     temp = (temp&((~mask)&0xFF))+(mask&wdata);
     hdmitxwr(offset, temp);
@@ -234,7 +234,7 @@ void hdmitxset( unsigned char offset, unsigned char mask, unsigned char wdata )
 void mhltxset( unsigned char offset, unsigned char mask, unsigned char wdata )
 {
     unsigned char temp;
-
+    
     temp = mhltxrd(offset);
     temp = (temp&((~mask)&0xFF))+(mask&wdata);
     mhltxwr(offset, temp);
@@ -244,26 +244,26 @@ void mhltxset( unsigned char offset, unsigned char mask, unsigned char wdata )
 
 void set_operation_mode( unsigned char mode )
 {
-    if ( mode == MODE_USB )
+    if ( mode == MODE_USB ) 
     {
         // switch to USB mode
-        it6681_gpio_set_value( GPIO_USB_MHL_SWITCH, 1 );
+        it6681_gpio_set_value( GPIO_USB_MHL_SWITCH, 1 ); 
     }
-    else
+    else 
     {
         // switch to MHL mode
-        it6681_gpio_set_value( GPIO_USB_MHL_SWITCH, 0 );
+        it6681_gpio_set_value( GPIO_USB_MHL_SWITCH, 0 ); 
     }
 }
 
 void set_vbus_output( unsigned char enable )
 {
-    if ( enable == 0 )
+    if ( enable == 0 ) 
     {
         // disable vbus output
         it6681_gpio_set_value( GPIO_ENVBUS, 1 );
     }
-    else
+    else 
     {
         // enable vbus output
         it6681_gpio_set_value( GPIO_ENVBUS, 0 );
@@ -275,7 +275,7 @@ unsigned long it6681_get_tick_count(void)
     struct timespec tt;
 
     tt = CURRENT_TIME;
-
+    
     return ((tt.tv_sec*1000) + (tt.tv_nsec/1000000L));
 }
 
@@ -300,20 +300,20 @@ void SetLED_HDMI_InStable( char Val )
 
 int it6681_read_edid( void *it6681_dev_data, void *pedid, unsigned short max_length)
 {
-    pr_err("%s ++, pedid=%p, len=%u\n", __FUNCTION__, pedid, max_length);
-
+    pr_err("%s ++, pedid=%p, len=%u\n", __FUNCTION__, pedid, max_length);	
+    
     if ( pedid )
     {
         if ( max_length > 512 )
         {
-            max_length = 512;
-        }
-
+            max_length = 512;    
+        }        
+        
         memcpy( pedid, it6681_edid_buf, max_length );
-
-        return 0;
-    }
-
+        
+        return 0; 
+    }        
+    
     return -1;
 }
 
@@ -322,7 +322,7 @@ int it6681_read_edid( void *it6681_dev_data, void *pedid, unsigned short max_len
 void rcp_report_event( unsigned char key)
 {
     struct it6681_data *it6681data = dev_get_drvdata(it6681dev);
-
+	
 	MHL_MSC_DEBUG_PRINTF(("rcp_report_event key: %d\n", key));
 	input_report_key(it6681data->rcp_input, (unsigned int)key+1, 1);
 	input_report_key(it6681data->rcp_input, (unsigned int)key+1, 0);
@@ -340,7 +340,7 @@ void mhl_RCP_handler(struct it6681_dev_data *it6681)
 void ucp_report_event( unsigned char key)
 {
     struct it6681_data *it6681data = dev_get_drvdata(it6681dev);
-
+	
 	MHL_MSC_DEBUG_PRINTF(("ucp_report_event key: %d\n", key));
 	input_report_key(it6681data->ucp_input, (unsigned int)key+1, 1);
 	input_report_key(it6681data->ucp_input, (unsigned int)key+1, 0);
@@ -358,7 +358,7 @@ void mhl_UCP_handler(struct it6681_dev_data *it6681)
 void ucp_mouse_report_event( unsigned char key,int x,int y)
 {
 	struct it6681_data *it6681data = dev_get_drvdata(it6681dev);
-
+     
     /* Report relative coordinates */
     input_report_rel(it6681data->ucp_mouse_input, REL_X, x);
     input_report_rel(it6681data->ucp_mouse_input, REL_Y, y);
@@ -367,7 +367,7 @@ void ucp_mouse_report_event( unsigned char key,int x,int y)
     input_report_key(it6681data->ucp_mouse_input, BTN_LEFT,   ( key&0x01));
     input_report_key(it6681data->ucp_mouse_input, BTN_MIDDLE, ((key>>1)&0x01));
     input_report_key(it6681data->ucp_mouse_input, BTN_RIGHT,  ((key>>2)&0x01));
-
+    
     input_sync(it6681data->ucp_mouse_input);
 }
 
@@ -400,8 +400,8 @@ static int it6681_timer_kthread(void *data)
 	}
 
 	return 0;
-}
-*/
+} 
+*/ 
 
 static int it6681_loop_kthread(void *data)
 {
@@ -415,13 +415,13 @@ static int it6681_loop_kthread(void *data)
     //hdcp_mode = 0;
     // packed pixel mode : 0 = auto, 1 = force
 	pp_mode = 0;
-
+        
 	atomic_set(&it6681data->it6681_timer_event ,1);
 
     it6681_fwinit();
-
+	
   //  it6681_set_hdcp( hdcp_mode ); ////dont use it!!!!!! Tranmin
-
+  
 	if ( pp_mode == 1 )
 	{
 		pr_err("Force packed pixel mode\n");
@@ -431,16 +431,16 @@ static int it6681_loop_kthread(void *data)
 	{
 	    pr_err("auto packed pixel mode\n");
 	    it6681_set_packed_pixel_mode( 1 );
-    }
+    }        
 
     it6681data->dev_inited = 1;
-    enable_irq(it6681data->irq);
+    enable_irq(it6681data->irq);    
 
     while(1)
     {
         wait_event_interruptible_timeout(it6681data->it6681_wq,0,100*HZ/1000); //100ms
-
-        if(kthread_should_stop()) break;
+        
+        if(kthread_should_stop()) break;        
 
         //it6681_irq();
         it6681_poll();
@@ -455,7 +455,7 @@ static int it6681_loop_kthread(void *data)
             if( loopcount >= 1000 )
             {
                 loopcount = 0 ;
-            }
+            }            
         }
     }
 
@@ -480,18 +480,18 @@ static irqreturn_t it6811_irq_thread(int irq, void *data)
 	//printk("%s: irq_thread_count=%d\n", __func__, irq_thread_count++);
 	if ( data && it6681data->dev_inited )
 	{
-	mutex_lock(&it6681data->lock);
-	it6681_irq();
-	mutex_unlock(&it6681data->lock);
+    	mutex_lock(&it6681data->lock);
+    	it6681_irq();
+    	mutex_unlock(&it6681data->lock);
 	}
-	return IRQ_HANDLED;
+ 	return IRQ_HANDLED;
 }
 
 static int init_it6681_loop_kthread(void)
 {
 	struct it6681_data *it6681data = dev_get_drvdata(it6681dev);
 
-	pr_err("IT6681 -- %s ++\n", __FUNCTION__);
+	pr_err("IT6681 -- %s ++\n", __FUNCTION__);	
 
 	init_waitqueue_head(&it6681data->it6681_wq);
 	it6681data->it6681_timer_task = kthread_create(it6681_loop_kthread,NULL,"it6681_loop_kthread");
@@ -506,7 +506,7 @@ static void it6681_suspend(struct early_suspend *handler)
 {
 	struct it6681_data *ddata;
 	ddata =  container_of(handler, struct it6681_data, early_suspend);
-
+  
   disable_irq(ddata->irq);
 }
 
@@ -514,7 +514,7 @@ static void it6681_resume(struct early_suspend *handler)
 {
 	struct it6681_data *ddata;
 	ddata =  container_of(handler, struct it6681_data, early_suspend);
-
+  
   enable_irq(ddata->irq);
   it6681_fwinit();
 }
@@ -538,7 +538,7 @@ static int it6681_hdmi_rx_i2c_probe(struct i2c_client *client, const struct i2c_
 	struct input_dev *mouse_ucpinput;
 #endif
 
-    pr_err("IT6681 -- %s ++\n", __FUNCTION__);
+    pr_err("IT6681 -- %s ++\n", __FUNCTION__);	
 
 	if (!i2c_check_functionality(adapter, I2C_FUNC_SMBUS_BYTE_DATA))
     {
@@ -548,14 +548,14 @@ static int it6681_hdmi_rx_i2c_probe(struct i2c_client *client, const struct i2c_
 
 	ddata = kzalloc(sizeof(struct it6681_data), GFP_KERNEL);
 
-	if (!ddata)
+	if (!ddata) 
     {
 		pr_err("IT6681 -- failed to allocate driver data\n");
 		return -ENOMEM;
 	}
 
     ddata->ddata = get_it6681_dev_data();
-#ifdef CONFIG_OF
+#ifdef CONFIG_OF    
     ddata->hdmi_rx_client = client;
 #else
     ddata->pdata = client->dev.platform_data;
@@ -567,7 +567,7 @@ static int it6681_hdmi_rx_i2c_probe(struct i2c_client *client, const struct i2c_
 	mutex_init(&ddata->lock);
 
     i2c_set_clientdata(client, ddata);
-
+    
 	it6681dev = &client->dev;
 	ddata->irq = INT_GPIO_2; //client->irq;
 	//init_waitqueue_head(&ddata->it6681_wq);
@@ -575,20 +575,20 @@ static int it6681_hdmi_rx_i2c_probe(struct i2c_client *client, const struct i2c_
     // init GPIO begin
     // This is only necessary for IT6682 with external USB switch
     ret = it6681_gpio_request( GPIO_USB_MHL_SWITCH, "it6681");
-
+    
     if (ret<0)
         pr_err("IT6681 -- %s: gpio_request failed for gpio %d\n", __func__, GPIO_USB_MHL_SWITCH);
     else
         it6681_gpio_direction_output( GPIO_USB_MHL_SWITCH, 1 );
 
     ret = it6681_gpio_request( GPIO_ENVBUS, "it6681");
-
+    
     if (ret<0)
         pr_err("IT6681 -- %s: gpio_request failed for gpio %d\n", __func__, GPIO_ENVBUS);
     else
-        it6681_gpio_direction_output(GPIO_ENVBUS, 0);
-    // init GPIO end
-
+        it6681_gpio_direction_output(GPIO_ENVBUS, 0);    
+    // init GPIO end    
+        
     // init interrupt pin
     #if 1
     ret = it6681_gpio_request(GPIO_INT, "it6681");
@@ -597,15 +597,15 @@ static int it6681_hdmi_rx_i2c_probe(struct i2c_client *client, const struct i2c_
     else {
         it6681_gpio_direction_input(GPIO_INT);
         it6681_gpio_to_irq(GPIO_INT, ddata->irq-INT_GPIO_0, GPIO_IRQ_LOW);
-
+      
 	      ret = request_threaded_irq(ddata->irq, NULL, it6811_irq_thread,
                                IRQF_TRIGGER_LOW | IRQF_ONESHOT|IRQF_DISABLED,
                                "it6681", ddata);
-	if (ret < 0)
-		goto err_exit;
-
+      	if (ret < 0)
+      		goto err_exit;
+      
         printk("%s: disable irq\n", __func__);
-	disable_irq(ddata->irq);
+      	disable_irq(ddata->irq);
     }
     #endif
     it6681_cls.name = kzalloc(10, GFP_KERNEL);
@@ -615,7 +615,7 @@ static int it6681_hdmi_rx_i2c_probe(struct i2c_client *client, const struct i2c_
 
 #if _SUPPORT_RCP_
     rcpinput = input_allocate_device();
-	if (!rcpinput)
+	if (!rcpinput) 
     {
 	    pr_err("IT6681 --failed to allocate RCP input device.\n");
 		ret =  -ENOMEM;
@@ -632,7 +632,7 @@ static int it6681_hdmi_rx_i2c_probe(struct i2c_client *client, const struct i2c_
 	rcpinput->id.bustype = BUS_I2C;
 
 	ret = input_register_device(rcpinput);
-	if (ret < 0)
+	if (ret < 0) 
     {
         pr_err("IT6681 --fail to register RCP input device. ret = %d (0x%08x)\n", ret, ret);
 		goto err_exit_rcp;
@@ -641,7 +641,7 @@ static int it6681_hdmi_rx_i2c_probe(struct i2c_client *client, const struct i2c_
 
 #if _SUPPORT_UCP_
 	ucpinput = input_allocate_device();
-	if (!ucpinput)
+	if (!ucpinput) 
     {
 		pr_err("IT6681 --failed to allocate UCP input device.\n");
 		ret =  -ENOMEM;
@@ -663,7 +663,7 @@ static int it6681_hdmi_rx_i2c_probe(struct i2c_client *client, const struct i2c_
 	ucpinput->id.bustype = BUS_I2C;
 
 	ret = input_register_device(ucpinput);
-	if (ret < 0)
+	if (ret < 0) 
     {
 		pr_err("IT6681 --fail to register UCP input device. ret = %d (0x%08x)\n", ret, ret);
 		goto err_exit_ucp;
@@ -672,7 +672,7 @@ static int it6681_hdmi_rx_i2c_probe(struct i2c_client *client, const struct i2c_
 
 #ifdef _SUPPORT_UCP_MOUSE_
 	mouse_ucpinput = input_allocate_device();
-	if (!mouse_ucpinput)
+	if (!mouse_ucpinput) 
     {
 		pr_err("IT6811 --failed to allocate UCP  MOUSE input device.\n");
 		ret =  -ENOMEM;
@@ -680,14 +680,14 @@ static int it6681_hdmi_rx_i2c_probe(struct i2c_client *client, const struct i2c_
 		#ifdef _SUPPORT_UCP_
 		goto err_exit_ucp;
 		#endif
-
+		
 		#ifdef _SUPPORT_RCP_
 		goto err_exit_rcp;
 		#endif
 
 		goto err_exit;
 	}
-
+	
     /* Announce that the virtual mouse will generate relative coordinates */
     set_bit(EV_REL, mouse_ucpinput->evbit);
     set_bit(REL_X, mouse_ucpinput->relbit);
@@ -698,16 +698,16 @@ static int it6681_hdmi_rx_i2c_probe(struct i2c_client *client, const struct i2c_
     set_bit(EV_KEY, mouse_ucpinput->evbit);
     set_bit(BTN_LEFT, mouse_ucpinput->keybit);
     set_bit(BTN_MIDDLE, mouse_ucpinput->keybit);
-    set_bit(BTN_RIGHT, mouse_ucpinput->keybit);
-
+    set_bit(BTN_RIGHT, mouse_ucpinput->keybit);	
+	
 	ddata->ucp_mouse_input = mouse_ucpinput;
-
+	
 	input_set_drvdata(mouse_ucpinput, ddata);
 	mouse_ucpinput->name = "it6811_ucp_mouse";
 	mouse_ucpinput->id.bustype = BUS_I2C;
 
 	ret = input_register_device(mouse_ucpinput);
-	if (ret < 0)
+	if (ret < 0) 
     {
 		pr_err("IT6811 --fail to register UCP MOUSE input device. ret = %d (0x%08x)\n", ret, ret);
 		goto err_exit_ucp_mouse;
@@ -721,12 +721,12 @@ static int it6681_hdmi_rx_i2c_probe(struct i2c_client *client, const struct i2c_
 	register_early_suspend(&ddata->early_suspend);
 #endif
 
-    pr_err("IT6681 -- %s --\n", __FUNCTION__);
-
+    pr_err("IT6681 -- %s --\n", __FUNCTION__);	
+       
 	return 0;
 
-#if _SUPPORT_UCP_MOUSE_
-err_exit_ucp_mouse:
+#if _SUPPORT_UCP_MOUSE_	
+err_exit_ucp_mouse:	
 	input_free_device(mouse_ucpinput);
 #endif
 
@@ -752,12 +752,12 @@ static int it6681_hdmi_tx_i2c_probe(struct i2c_client *client, const struct i2c_
 {
 #ifdef CONFIG_OF
   struct it6681_data *it6681data = dev_get_drvdata(it6681dev);
-  pr_err("%s: it6681data addr=%x\n", __FUNCTION__, it6681data);
+  pr_err("%s: it6681data addr=%x\n", __FUNCTION__, it6681data);	
   it6681data->hdmi_tx_client = client;
 #else
 	struct it6681_platform_data *pdata = client->dev.platform_data;
 
-    pr_err("%s ++\n", __FUNCTION__);
+    pr_err("%s ++\n", __FUNCTION__);	
 	pdata->hdmi_tx_client = client;
 #endif
 	return 0;
@@ -786,22 +786,22 @@ static ssize_t store_it6681(struct class *class,
 
 if (dbg == 1)  {
     RegF0 = hdmitxrd(0xF0);
-    printk("RegF0=%x\n", RegF0);
-
+    printk("RegF0=%x\n", RegF0);  
+    
     MHL04 = mhltxrd(0x04);
     MHL05 = mhltxrd(0x05);
     MHL06 = mhltxrd(0x06);
-    printk("MHL04=%x, MHL05=%x, MHL06=%x\n", MHL04, MHL05, MHL06);
+    printk("MHL04=%x, MHL05=%x, MHL06=%x\n", MHL04, MHL05, MHL06);  
 
     mhltxwr(0x04, 0xff);
     mhltxwr(0x05, 0xff);
     mhltxwr(0x06, 0xff);
-
+    
     MHL04=MHL05=MHL06=0x55;
     MHL04 = mhltxrd(0x04);
     MHL05 = mhltxrd(0x05);
     MHL06 = mhltxrd(0x06);
-    printk("after write: MHL04=%x, MHL05=%x, MHL06=%x\n", MHL04, MHL05, MHL06);
+    printk("after write: MHL04=%x, MHL05=%x, MHL06=%x\n", MHL04, MHL05, MHL06);  
 }
 else if (dbg == 2) {
     it6681_irq();
@@ -819,12 +819,12 @@ static int it6681_mhl_i2c_probe(struct i2c_client *client,const struct i2c_devic
 {
 #ifdef CONFIG_OF
   struct it6681_data *it6681data = dev_get_drvdata(it6681dev);
-  pr_err("%s: it6681data addr=%x\n", __FUNCTION__, it6681data);
+  pr_err("%s: it6681data addr=%x\n", __FUNCTION__, it6681data);	
   it6681data->mhl_client = client;
 #else
 	struct it6681_platform_data *pdata = client->dev.platform_data;
 
-    pr_err("%s ++\n", __FUNCTION__);
+    pr_err("%s ++\n", __FUNCTION__);	
 	pdata->mhl_client = client;
 #endif
 	return 0;
@@ -834,16 +834,16 @@ static int it6681_mhl_i2c_probe(struct i2c_client *client,const struct i2c_devic
 static int it6681_hdmi_rx_remove(struct i2c_client *client)
 {
     struct it6681_data *it6681data;
-
-    pr_err("%s ++\n", __FUNCTION__);
-
+    
+    pr_err("%s ++\n", __FUNCTION__);	
+    
     it6681data = i2c_get_clientdata(client);
-
+    
     if(it6681data->ddata->Aviinfo != NULL)
     {
         kfree(it6681data->ddata->Aviinfo);
     }
-
+    
     kfree(it6681data);
 
 	return 0;
@@ -851,13 +851,13 @@ static int it6681_hdmi_rx_remove(struct i2c_client *client)
 
 static int it6681_hdmi_tx_remove(struct i2c_client *client)
 {
-    pr_err("%s ++\n", __FUNCTION__);
+    pr_err("%s ++\n", __FUNCTION__);	
 	return 0;
 }
 
 static int it6681_mhl_remove(struct i2c_client *client)
 {
-    pr_err("%s ++\n", __FUNCTION__);
+    pr_err("%s ++\n", __FUNCTION__);	
 	return 0;
 }
 
@@ -928,14 +928,14 @@ static int it6681_probe(struct platform_device *pdev)
 
 	printk("%s: start\n", __func__);
 
-	for_each_child_of_node(node, child) {
-
+	for_each_child_of_node(node, child) { 
+	  
     memset(&board_info, 0, sizeof(board_info));
-	err = of_property_read_u32(child, "i2c_bus", &bus_no);
-	if (err) {
-		printk("%s£ºfaild to get i2c bus!\n", __func__);
-		return -1;
-	}
+  	err = of_property_read_u32(child, "i2c_bus", &bus_no);
+  	if (err) {
+  		printk("%s£ºfaild to get i2c bus!\n", __func__);
+  		return -1;
+  	}
     adapter = i2c_get_adapter(bus_no);
     if (!adapter) {
       printk("%s£ºfail to get adapter!\n", __func__);
@@ -947,10 +947,10 @@ static int it6681_probe(struct platform_device *pdev)
       printk("%s: fail to get i2c device address!\n", __func__);
       return -1;
     }
-
+    
     err = of_property_read_string(child, "dev_name", &str);
     if (err) {
-		printk("%s: fail to get i2c device name!\n", __func__);
+  		printk("%s: fail to get i2c device name!\n", __func__);
       return -1;
     }
 
@@ -972,7 +972,7 @@ static int it6681_remove(struct platform_device *pdev)
 }
 
 static const struct of_device_id it6681_dt_match[]={
-	{
+	{	
 		.compatible = "amlogic,it6681",
 	},
 	{},
@@ -993,7 +993,7 @@ static  struct platform_driver it6681_driver = {
 static int __init it6681_init(void)
 {
 	int ret;
-
+    
     pr_err("it6681_init ++\n");
 
 
@@ -1001,7 +1001,7 @@ static int __init it6681_init(void)
 	ret = platform_driver_register(&it6681_driver);
 	if (ret < 0)
 	{
-	  pr_err("platform_driver_register fail\n");
+	  pr_err("platform_driver_register fail\n");	
 		return ret;
 	}
 #endif
@@ -1009,7 +1009,7 @@ static int __init it6681_init(void)
 	ret = i2c_add_driver(&it6681_hdmi_rx_i2c_driver);
 	if (ret < 0)
 	{
-	    pr_err("i2c_add_driver it6681_hdmi_rx_i2c_driver fail\n");
+	    pr_err("i2c_add_driver it6681_hdmi_rx_i2c_driver fail\n");	
 		return ret;
 	}
 
@@ -1038,8 +1038,8 @@ err_exit1:
 	pr_err("i2c_add_driver it6681_mhl_i2c_driver fail\n");
 err_exit0:
 	i2c_del_driver(&it6681_hdmi_tx_i2c_driver);
-	pr_err("i2c_add_driver it6681_hdmi_tx_i2c_driver fail\n");
-
+	pr_err("i2c_add_driver it6681_hdmi_tx_i2c_driver fail\n");	
+	
 	return ret;
 }
 
@@ -1047,7 +1047,7 @@ static void __exit it6681_exit(void)
 {
     i2c_del_driver(&it6681_mhl_i2c_driver);
 	i2c_del_driver(&it6681_hdmi_tx_i2c_driver);
-	i2c_del_driver(&it6681_hdmi_rx_i2c_driver);
+	i2c_del_driver(&it6681_hdmi_rx_i2c_driver);	
 }
 
 arch_initcall(it6681_init);

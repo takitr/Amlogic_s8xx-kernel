@@ -1,11 +1,11 @@
 /*
- *
+ * 
  * Copyright (C) 2011 Goodix, Inc.
- *
+ * 
  * Author: Scott
  * Date: 2012.01.05
  */
-
+ 
 
 #include <linux/kernel.h>
 #include <linux/module.h>
@@ -70,16 +70,16 @@ static int gt82x_proc_read(char *buffer, char **buffer_location, off_t offset, i
 
 static int gt82x_proc_write(struct file *file, const char *buffer, unsigned long count, void *data)
 {
-	char procfs_buffer_size = 0;
+	char procfs_buffer_size = 0; 
 	int i;
 	unsigned char procfs_buf[PROC_FS_MAX_LEN+1] = {0};
 
 
 	procfs_buffer_size = count;
-	if(procfs_buffer_size > PROC_FS_MAX_LEN )
+	if(procfs_buffer_size > PROC_FS_MAX_LEN ) 
 		procfs_buffer_size = PROC_FS_MAX_LEN+1;
-
-	if( copy_from_user(procfs_buf, buffer, procfs_buffer_size) )
+	
+	if( copy_from_user(procfs_buf, buffer, procfs_buffer_size) ) 
 	{
 		printk(" proc_write faied at copy_from_user\n");
 		return -EFAULT;
@@ -97,8 +97,8 @@ static int gt82x_proc_write(struct file *file, const char *buffer, unsigned long
 }
 #endif
 
-/*******************************************************
-功能：
+/*******************************************************	
+功能：	
 	读取从机数据
 	每个读操作用两条i2c_msg组成，第1条消息用于发送从机地址，
 	第2条用于发送读取地址和取回数据；每条消息前发送起始信号
@@ -132,14 +132,14 @@ static s32 i2c_read_bytes(struct i2c_client *client, u8 *buf, s32 len)
     return ret;
 }
 
-/*******************************************************
+/*******************************************************	
 功能：
 	向从机写数据
 参数：
 	client:	i2c设备，包含设备地址
 	buf[0]~buf[1]：	 首字节为写地址
 	buf[2]~buf[len]：数据缓冲区
-	len：	数据长度
+	len：	数据长度	
 return：
 	执行消息数
 *******************************************************/
@@ -148,12 +148,12 @@ static s32 i2c_write_bytes(struct i2c_client *client,u8 *data,s32 len)
 {
     struct i2c_msg msg;
     s32 ret=-1;
-
+    
     //发送设备地址
     msg.flags=!I2C_M_RD;//写消息
     msg.addr=client->addr;
     msg.len=len;
-    msg.buf=data;
+    msg.buf=data;        
 
     ret=i2c_transfer(client->adapter,&msg, 1);
 
@@ -163,7 +163,7 @@ static s32 i2c_write_bytes(struct i2c_client *client,u8 *data,s32 len)
 /*******************************************************
 功能：
 	发送前缀命令
-
+	
 	ts:	client私有数据结构体
 return：
 
@@ -181,7 +181,7 @@ static s32 i2c_pre_cmd(struct goodix_ts_data *ts)
 /*******************************************************
 功能：
 	发送后缀命令
-
+	
 	ts:	client私有数据结构体
 return：
 
@@ -190,7 +190,7 @@ return：
 static s32 i2c_end_cmd(struct goodix_ts_data *ts)
 {
     s32 ret;
-    u8 end_cmd_data[2]={0x80, 0x00};
+    u8 end_cmd_data[2]={0x80, 0x00};    
 
     ret=i2c_write_bytes(ts->client,end_cmd_data,2);
     return ret;//*/
@@ -224,7 +224,7 @@ s32 goodix_init_panel(struct goodix_ts_data *ts)
     return success;
 }
 
-/*******************************************************
+/*******************************************************	
 功能：
 	触摸屏工作函数
 	由中断触发，接受1组坐标数据，校验后再分析输出
@@ -244,24 +244,24 @@ static void goodix_ts_work_func(struct work_struct *work)
 
     struct goodix_ts_data *ts = container_of(work, struct goodix_ts_data, work);
 
-    ret=i2c_read_bytes(ts->client, touch_data, ARRAY_SIZE(touch_data));
+    ret=i2c_read_bytes(ts->client, touch_data, ARRAY_SIZE(touch_data)); 
     i2c_end_cmd(ts);
     finger = touch_data[2] & 0x1f;
     key = touch_data[3] & 0x0f;
-
+    
     if(ret <= 0) {
         goodix_dbg(DBG_INFO,"I2C transfer error. Number:%d\n ", ret);
         goto XFER_ERROR;
     }
     else if((touch_data[2]&0xC0)!=0x80) {
-		goodix_dbg(DBG_INFO, "data not ready, may be caused by inormal reset\n");
+    		goodix_dbg(DBG_INFO, "data not ready, may be caused by inormal reset\n");
         goto XFER_ERROR;
     }
     else if (key == 0x0f) {
-		goodix_dbg(DBG_INFO, "unknown error, pls calibrate again\n");
+    		goodix_dbg(DBG_INFO, "unknown error, pls calibrate again\n");
         goto XFER_ERROR;
     }
-
+    
     goodix_dbg(DBG_DATA, "touch data:%5x%5x\n", touch_data[2], touch_data[3]);
     p = &touch_data[4];
     for (i=0; i<MAX_FINGER_NUM; i++) {
@@ -275,7 +275,7 @@ static void goodix_ts_work_func(struct work_struct *work)
         goodix_dbg(DBG_DATA, "check sum error(%d, %d)\n", *p, chk_sum);
         goto XFER_ERROR;
     }
-
+ 
     if (finger) {
         p = &touch_data[4];
         for(i=0; i<MAX_FINGER_NUM; i++) {
@@ -292,7 +292,7 @@ static void goodix_ts_work_func(struct work_struct *work)
                 input_report_abs(ts->input_dev, ABS_MT_TOUCH_MAJOR,15);
                 input_mt_sync(ts->input_dev);
                 p += 5;
-			goodix_dbg(DBG_REPORT, "point[%d]=(%d, %d)\n", i, x, y);
+            		goodix_dbg(DBG_REPORT, "point[%d]=(%d, %d)\n", i, x, y);
             }
         }
     }
@@ -314,7 +314,7 @@ static void goodix_ts_work_func(struct work_struct *work)
         ts->last_key = key;
     }
     input_sync(ts->input_dev);
-
+    
 XFER_ERROR:
     if(ts->irq_is_disable == 1)
     {
@@ -323,12 +323,12 @@ XFER_ERROR:
     }
 }
 
-/*******************************************************
+/*******************************************************	
 功能：
 	中断响应函数
 	由中断触发，调度触摸屏处理函数运行
 参数：
-	timer：函数关联的计时器
+	timer：函数关联的计时器	
 return：
 	计时器工作模式，HRTIMER_NORESTART表示不需要自动重启
 ********************************************************/
@@ -344,7 +344,7 @@ static irqreturn_t goodix_ts_irq_handler(s32 irq, void *dev_id)
         ts->irq_is_disable = 1;
         queue_work(goodix_wq, &ts->work);
     }
-
+        
     return IRQ_HANDLED;
 }
 
@@ -363,11 +363,11 @@ static s32 init_input_dev(struct goodix_ts_data *ts)
     ts->input_dev->evbit[0] = BIT_MASK(EV_SYN) | BIT_MASK(EV_KEY) | BIT_MASK(EV_ABS);
     ts->input_dev->keybit[BIT_WORD(BTN_TOUCH)] = BIT_MASK(BTN_TOUCH);
     ts->input_dev->absbit[0] = BIT(ABS_X) | BIT(ABS_Y) | BIT(ABS_PRESSURE);// absolute coor (x,y)
-
+    
     if (ts->pdata->key_list)
         for(i = 0; i < ts->pdata->key_num; i++)
             input_set_capability(ts->input_dev, EV_KEY, ts->pdata->key_list[i].value);
-
+    
 #ifdef GOODIX_MULTI_TOUCH
     input_set_abs_params(ts->input_dev, ABS_MT_WIDTH_MAJOR, 0, 255, 0, 0);
     input_set_abs_params(ts->input_dev, ABS_MT_TOUCH_MAJOR, 0, 255, 0, 0);
@@ -377,7 +377,7 @@ static s32 init_input_dev(struct goodix_ts_data *ts)
     input_set_abs_params(ts->input_dev, ABS_X, 0, ts->pdata->xmax, 0, 0);
     input_set_abs_params(ts->input_dev, ABS_Y, 0, ts->pdata->ymax, 0, 0);
     input_set_abs_params(ts->input_dev, ABS_PRESSURE, 0, 255, 0, 0);
-#endif
+#endif    
 
     memcpy(ts->phys, "input/ts", 8);
     ts->input_dev->name = GOODIX_I2C_NAME;
@@ -388,7 +388,7 @@ static s32 init_input_dev(struct goodix_ts_data *ts)
     ts->input_dev->id.version = 10427;    //screen firmware version
 
     ret = input_register_device(ts->input_dev);
-    if (ret)
+    if (ret) 
     {
         dev_err(&ts->client->dev,"Probe: Unable to register %s input device\n", ts->input_dev->name);
         input_free_device(ts->input_dev);
@@ -399,7 +399,7 @@ static s32 init_input_dev(struct goodix_ts_data *ts)
     return success;
 }
 
-/*******************************************************
+/*******************************************************	
 功能：
 	触摸屏探测函数
 	在注册驱动时调用(要求存在对应的client)；
@@ -416,16 +416,16 @@ static s32 goodix_ts_probe(struct i2c_client *client, const struct i2c_device_id
     s32 retry=0;
     struct goodix_ts_data *ts = NULL;
     struct ctp_platform_data *pdata = (struct ctp_platform_data *)client->dev.platform_data;
-
+    
     dev_dbg(&client->dev,"Install touch driver.\n");
 
     if (!pdata) {
         dev_err(&client->dev, "No platform data, Pls add platform data in bsp!\n");
         return -ENODEV;
     }
-
+		
     //Check I2C function
-    if (!i2c_check_functionality(client->adapter, I2C_FUNC_I2C))
+    if (!i2c_check_functionality(client->adapter, I2C_FUNC_I2C)) 
     {
         dev_err(&client->dev, "Must have I2C_FUNC_I2C.\n");
         return -ENODEV;
@@ -446,25 +446,25 @@ static s32 goodix_ts_probe(struct i2c_client *client, const struct i2c_device_id
     {
         return -1;
     }
-
+    
     goodix_ts_power(ts, 1);
     msleep(10);
 		guitar_reset(ts, 50);
-
+    
     client->irq = pdata->irq;
     disable_irq_nosync(client->irq);
     ts->irq_is_disable = 1;
     if (pdata->init_irq) {
         pdata->init_irq();
-    }
+    }  
     ret = request_irq(ts->client->irq, goodix_ts_irq_handler, pdata->irq_flag,
             ts->client->name, ts);
-    if (ret != 0)
+    if (ret != 0) 
     {
         DEBUG_MSG("Cannot allocate ts INT(%d)! ERRNO:%d\n", ts->client->irq, ret);
         return -1;
     }
-    else
+    else 
     {
         DEBUG_MSG("Reques EIRQ %d successed\n", ts->client->irq);
     }
@@ -488,12 +488,12 @@ static s32 goodix_ts_probe(struct i2c_client *client, const struct i2c_device_id
     }
 #endif
 
-    //Test I2C connection.
+    //Test I2C connection.    
     DEBUG_MSG("Testing I2C connection...\n");
     for(retry = 0;retry < 3; retry++)
     //while(1)            //For debug use!
     {
-		printk("retry pre_cmd %d\n", retry);
+    		printk("retry pre_cmd %d\n", retry);
         ret = i2c_pre_cmd(ts);
         if (ret > 0)
             break;
@@ -526,7 +526,7 @@ static s32 goodix_ts_probe(struct i2c_client *client, const struct i2c_device_id
     //Enable interrupt
     if(ts->irq_is_disable == 1)
     {
-		DEBUG_MSG("gt827 proble finished and enable interrupt!\n");
+    		DEBUG_MSG("gt827 proble finished and enable interrupt!\n");
         ts->irq_is_disable = 0;
         //enable_irq(client->irq);
     }
@@ -535,7 +535,7 @@ static s32 goodix_ts_probe(struct i2c_client *client, const struct i2c_device_id
 }
 
 
-/*******************************************************
+/*******************************************************	
 功能：
 	驱动资源释放
 参数：
@@ -548,7 +548,7 @@ static s32 goodix_ts_remove(struct i2c_client *client)
     struct goodix_ts_data *ts = i2c_get_clientdata(client);
 
     dev_notice(&client->dev,"The driver is removing...\n");
-
+    
 #ifdef CONFIG_HAS_EARLYSUSPEND
     unregister_early_suspend(&ts->early_suspend);
 #endif
@@ -557,7 +557,7 @@ static s32 goodix_ts_remove(struct i2c_client *client)
     uninit_wr_node();
 #endif
 
-    free_irq(client->irq, ts);
+    free_irq(client->irq, ts);    
     i2c_set_clientdata(client, NULL);
     input_unregister_device(ts->input_dev);
     input_free_device(ts->input_dev);
@@ -583,14 +583,14 @@ static s32 goodix_ts_suspend(struct i2c_client *client, pm_message_t mesg)
 static s32 goodix_ts_resume(struct i2c_client *client)
 {
     struct goodix_ts_data *ts = i2c_get_clientdata(client);
-
+    
     goodix_ts_power(ts, 1);
     guitar_reset(ts, 50);
 		goodix_init_panel(ts);
-
+    
     ts->irq_is_disable = 0;
     enable_irq(client->irq);
-
+    
     return success;
 }
 
@@ -632,7 +632,7 @@ static struct i2c_driver goodix_ts_driver = {
     },
 };
 
-/*******************************************************
+/*******************************************************	
 功能：
 	驱动加载函数
 return：
@@ -657,11 +657,11 @@ static s32 __devinit goodix_ts_init(void)
         dbgProcFile->write_proc = gt82x_proc_write;
         DEBUG_MSG(KERN_ALERT" /proc/%s created\n", PROC_FS_NAME);
     }
-#endif // #ifdef _ENABLE_DBG_LEVEL
+#endif // #ifdef _ENABLE_DBG_LEVEL    
     return i2c_add_driver(&goodix_ts_driver);
 }
 
-/*******************************************************
+/*******************************************************	
 功能：
 	驱动卸载函数
 参数：
@@ -686,3 +686,5 @@ module_exit(goodix_ts_exit);
 
 MODULE_DESCRIPTION("Goodix Touchscreen Driver");
 MODULE_LICENSE("GPL");
+
+

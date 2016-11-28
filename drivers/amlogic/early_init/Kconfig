@@ -4,3 +4,4 @@ config EARLY_INIT
 	depends on GPIO_AMLOGIC
 	help
 	    early_init device driver.
+

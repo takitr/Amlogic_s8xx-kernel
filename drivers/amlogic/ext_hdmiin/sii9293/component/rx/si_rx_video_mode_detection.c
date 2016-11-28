@@ -286,12 +286,12 @@ static void print_3D_resolution(void)
 	DEBUG_PRINT
 	(
 		MSG_STAT,
-
+		
 			"RX: 3D resolution VIC=0x%02X 3d_struct=0x%02X ext_data=0x%02X\n",
 			(int) p_vmd->cea861_vic,
 			(int) p_vmd->hdmi_3d_structure,
 			(int) p_vmd->hdmi_3d_ext_data
-
+		
 	);
 #endif // SI_USE_DEBUG_PRINT
 }
@@ -441,7 +441,7 @@ static bool_t fill_sync_info_from_video_table(sync_info_type *p_sync_info, uint8
 static uint8_t detect_video_resolution(sync_info_type *p_sync_info)
 {
 	uint8_t detected_video_idx = get_video_index_from_hdmi_vsif();
-//	bool_t bb;
+	bool_t bb;
 
 	if(SI_VIDEO_MODE_NON_STD == detected_video_idx)
 	{
@@ -523,7 +523,7 @@ void VMD_VideoStableNotify(uint8_t vid_idx )
     #define MAX_REPORT_DATA_STRING_SIZE 20
     uint8_t vic4x3, vic16x9;
     char str[MAX_REPORT_DATA_STRING_SIZE];
-
+    
     if (SI_VIDEO_MODE_NON_STD == vid_idx)
     {
         scnprintf(str,	MAX_REPORT_DATA_STRING_SIZE, "out of range");
@@ -565,44 +565,44 @@ bool_t VMD_DetectVideoResolution(void)
 
     if (vmd_data.bReadyforVMD)
     {
-	vid_idx = detect_video_resolution(&sync_info);
-	vmd_data.video_index = vid_idx;
+    	vid_idx = detect_video_resolution(&sync_info);
+    	vmd_data.video_index = vid_idx;
 
 #if defined(__KERNEL__)
         gDriverContext.input_video_mode = vid_idx;
         VMD_VideoStableNotify(vid_idx);
 #endif
-	if(SI_VIDEO_MODE_NON_STD == vid_idx)
-	{
-		format_detected = false;
-	}
-	else if(SI_VIDEO_MODE_PC_OTHER == vid_idx)
-	{
-		DEBUG_PRINT(MSG_STAT, "RX: PC resolution\n");
-	}
-	else if(vid_idx & SI_VIDEO_MODE_3D_RESOLUTION_MASK)
-	{
-		print_3D_resolution();
-	}
-	else if(vid_idx >= NMB_OF_CEA861_VIDEO_MODES)
-	{
-		print_hdmi_vic_resolution();
-	}
-	else
-	{
-		// CEA-861D resolutions
-		print_861_resolution();
-	}
+    	if(SI_VIDEO_MODE_NON_STD == vid_idx)
+    	{
+    		format_detected = false;
+    	}
+    	else if(SI_VIDEO_MODE_PC_OTHER == vid_idx)
+    	{
+    		DEBUG_PRINT(MSG_STAT, "RX: PC resolution\n");
+    	}
+    	else if(vid_idx & SI_VIDEO_MODE_3D_RESOLUTION_MASK)
+    	{
+    		print_3D_resolution();
+    	}
+    	else if(vid_idx >= NMB_OF_CEA861_VIDEO_MODES)
+    	{
+    		print_hdmi_vic_resolution();
+    	}
+    	else
+    	{
+    		// CEA-861D resolutions
+    		print_861_resolution();
+    	}
 
-	if(format_detected)
-	{
-		vmd_data.pix_freq = sync_info.PixelFreq;
-		save_sync_info(&sync_info);
-	}
-	else
-	{
-		VMD_ResetTimingData();
-	}
+    	if(format_detected)
+    	{
+    		vmd_data.pix_freq = sync_info.PixelFreq;
+    		save_sync_info(&sync_info);
+    	}
+    	else
+    	{
+    		VMD_ResetTimingData();
+    	}
     }else
     {
         // Video is not stable, no need to dectect resolution
@@ -721,26 +721,26 @@ void VMD_MhlVsifProcessing(uint8_t *p_packet, uint8_t length)
        }
 
        mhl_3d_format_type = ( p_packet[3] & 0x3F ) >> 2;     // get the MHL_3D_FMT_TYPE field
-
+       
 	switch(mhl_3d_format_type)
 	{
             case 0:     // Frame Sequential 3D Video
-                bValid3DVsif = true;
+                bValid3DVsif = true;        	
                 vmd_data.hdmi_3d_structure = 0x00;   // Store it for further processing.
                 vmd_data.hdmi_3d_ext_data = 0x00;   // Reset to Zero
 
                 // Configure GPIO as indicator only for Frame Sequential in MHL
                 RX_ConfigureGpioAs3dFrameIndicator();
-                break;
+                break;     
 
             case 1:     // Top-Bottom 3D Video
-                bValid3DVsif = true;
+                bValid3DVsif = true;        	
                 vmd_data.hdmi_3d_structure = 0x06;   // Store it for further processing.
                 vmd_data.hdmi_3d_ext_data = 0x00;   // Reset to Zero
                 break;
 
             case 2:     // Left-Right 3D Video
-                bValid3DVsif = true;
+                bValid3DVsif = true;      	
                 vmd_data.hdmi_3d_structure = 0x08;   // Store it for further processing.
 
                 // one additional parameter, set to the default value 0001
@@ -768,7 +768,7 @@ void VMD_MhlVsifProcessing(uint8_t *p_packet, uint8_t length)
 			VMD_DetectVideoResolution();
 		}
         }
-
+       
 }
 
 vsif_check_result_t VMD_GetVsifPacketType(uint8_t *p_packet, uint8_t length)
@@ -787,7 +787,7 @@ vsif_check_result_t VMD_GetVsifPacketType(uint8_t *p_packet, uint8_t length)
 	}
 	// Check MHL VSIF signature.
 	// MHL IEEE Registration Identifier is 0x7CA61D (least significant byte first).
-       // Check if it is MHL VSIF, MHL IEEE OUI is
+       // Check if it is MHL VSIF, MHL IEEE OUI is 
 	else if((0x1D == p_packet[0]) && (0xA6 == p_packet[1]) && (0x7C == p_packet[2]))
 	{
 		// MHL VSIF signature is found.
@@ -878,8 +878,8 @@ vsif_check_result_t VMD_GetMhlVsifPacketType(uint8_t *p_packet, uint8_t length)
 		// MHL VSIF signature is found.
 		// Check MHL format.
 
-		uint8_t mhl_video_format = p_packet[3] & 0x03;       // get the MHL_VID_FMT field
-		uint8_t mhl_3d_format_type;                                     // to keep the MHL_3D_FMT_TYPE field
+        	uint8_t mhl_video_format = p_packet[3] & 0x03;       // get the MHL_VID_FMT field
+        	uint8_t mhl_3d_format_type;                                     // to keep the MHL_3D_FMT_TYPE field
 
                // Check whether 3D format present
                if ( 0x01 != mhl_video_format || length < 4 )
@@ -889,17 +889,17 @@ vsif_check_result_t VMD_GetMhlVsifPacketType(uint8_t *p_packet, uint8_t length)
 
                mhl_3d_format_type = ( p_packet[3] & 0x3F ) >> 2;     // get the MHL_3D_FMT_TYPE field
 
-		// Check if new 3D structure field matches
-		// previously received packet. Assume there is no change
+        	// Check if new 3D structure field matches
+        	// previously received packet. Assume there is no change
               packet_analysis = OLD_3D;
-		switch(mhl_3d_format_type)
-		{
+        	switch(mhl_3d_format_type)
+        	{
                     case 0:     // Frame Sequential 3D Video
                         if ( 0x00 != vmd_data.hdmi_3d_structure || false == vmd_data.hdmi_3d_vsif_received )
                         {
                             packet_analysis = NEW_3D;
                         }
-                        break;
+                        break;     
 
                     case 1:     // Top-Bottom 3D Video
                         if ( 0x06 != vmd_data.hdmi_3d_structure )
@@ -925,7 +925,7 @@ vsif_check_result_t VMD_GetMhlVsifPacketType(uint8_t *p_packet, uint8_t length)
                     default:
                         DEBUG_PRINT(MSG_ALWAYS, ("Unrecognized MHL 3D format type.\n"));
                         break;
-		}
+        	}
 	}
 
 	return packet_analysis;
@@ -1007,7 +1007,7 @@ static void VMD_Timer_Callback(void *pArg)
 
     if( signal_detected == true )
     {
-	sii_signal_notify(1);
+    	sii_signal_notify(1);
     }
 }
 #else
@@ -1090,3 +1090,4 @@ void RX_ConfigureGpioAs3dFrameIndicator(void)
 {
     SiiRegWrite( GPIO_MODE, VAL_GPIO_0_3D_INDICATOR );
 }
+

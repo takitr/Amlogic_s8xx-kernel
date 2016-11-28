@@ -13,7 +13,7 @@
 
 /*
  * kernel head file
- *
+ * 
  ********************************** */
 
 static struct aml_emmckey_info_t *emmckey_info;
@@ -80,7 +80,7 @@ static int emmc_key_kernel_rw (struct mmc_card *card, struct emmckey_valid_node_
         ret = mmc_read_internal(card, blk, cnt, buf);
 	}
 
-exit_err:
+exit_err: 
     mmc_release_host(card->host);
 
 	return ret;
@@ -124,7 +124,7 @@ static int aml_emmc_key_check(aml_keybox_provider_t *provider)
 			temp_valid_node->next = emmckey_valid_node;
 		}
 	}while(++keypart_cnt < emmckey_info->key_part_count);
-
+	
 #if 0
 	struct emmckey_data_t *emmckey_data;
 	u32 checksum;
@@ -231,7 +231,7 @@ static int32_t emmc_keybox_write(aml_keybox_provider_t * provider, uint8_t *buf,
 		printk("%s:%d,kmalloc memory fail\n",__func__,__LINE__);
 		return -ENOMEM;
 	}
-
+	
 	memset(emmckey_data,0,sizeof(*emmckey_data));
 	memcpy(emmckey_data->keyarea_mark, EMMC_KEY_AREA_SIGNAL, 8);
 	emmc_key_transfer(emmckey_data->keyarea_mark,&emmckey_data->keyarea_mark_checksum,8,1);
@@ -255,7 +255,7 @@ static int32_t emmc_keybox_write(aml_keybox_provider_t * provider, uint8_t *buf,
 /*
  * 1  when key data is wrote to emmc, add checksum to verify if the data is correct;
  *    when key data is read from emmc, use checksum to verify if the data is correct.
- * 2  read/write size is constant
+ * 2  read/write size is constant 
  * 3  setup link table to link different area same as nand.
  * 4  key area is split 2 or more area to save key data
  * */
@@ -270,8 +270,8 @@ static char read_buf[100]={0};
 static int32_t emmc_keybox_read_file(aml_keybox_provider_t * provider, uint8_t *buf,int32_t size,int flags)
 {
 	char filename[3][30]={"/dev/cardblkinand2","/dev/cardblkinand3","/dev/cardblkinand4"};
-	struct file *fp;
-	mm_segment_t fs;
+	struct file *fp; 
+	mm_segment_t fs; 
 	loff_t pos;
 	int i;
 	//char *file = provider->priv;
@@ -279,49 +279,49 @@ static int32_t emmc_keybox_read_file(aml_keybox_provider_t * provider, uint8_t *
 	memset(read_buf,0,sizeof(read_buf));
 	for(i=0;i<3;i++){
 		file = &filename[i][0];
-		fp = filp_open(file, O_RDWR, 0644);
-		if (IS_ERR(fp)) {
-			printk("open file error:%s \n",file);
-			return -1;
+		fp = filp_open(file, O_RDWR, 0644); 
+		if (IS_ERR(fp)) { 
+			printk("open file error:%s \n",file); 
+			return -1; 
 		}
-		printk("open file ok:%s \n",file);
-		fs = get_fs();
-		set_fs(KERNEL_DS);
-		pos = 0;
+		printk("open file ok:%s \n",file); 
+		fs = get_fs(); 
+		set_fs(KERNEL_DS); 
+		pos = 0; 
 		//buf = &read_buf[i][0];
 		//size = 55;
-		vfs_read(fp, buf, size, &pos);
-		filp_close(fp, NULL);
-		set_fs(fs);
+		vfs_read(fp, buf, size, &pos); 
+		filp_close(fp, NULL); 
+		set_fs(fs); 
 		memcpy(&read_buf[0],buf,55);
-		printk("%s:%d,read data:%s \n",__func__,__LINE__,&read_buf[0]);
+		printk("%s:%d,read data:%s \n",__func__,__LINE__,&read_buf[0]); 
 	}
 	return 0;
 }
 static int32_t emmc_keybox_write_file(aml_keybox_provider_t * provider, uint8_t *buf,int32_t size)
 {
 	char filename[2][30]={"/dev/cardblkinand2","/dev/cardblkinand3"};
-	struct file *fp;
-	mm_segment_t fs;
+	struct file *fp; 
+	mm_segment_t fs; 
 	loff_t pos;
 	int i;
 	char *file;// = provider->priv;
 	for(i=0;i<2;i++){
 		file = &filename[i][0];
-		fp = filp_open(file, O_RDWR, 0644);
-		if (IS_ERR(fp)) {
-			printk("open file error\n");
-			return -1;
-		}
-		printk("%s:%d,open file ok:%s \n",__func__,__LINE__,file);
-		fs = get_fs();
-		set_fs(KERNEL_DS);
-		pos = 0;
+		fp = filp_open(file, O_RDWR, 0644); 
+		if (IS_ERR(fp)) { 
+			printk("open file error\n"); 
+			return -1; 
+		} 
+		printk("%s:%d,open file ok:%s \n",__func__,__LINE__,file); 
+		fs = get_fs(); 
+		set_fs(KERNEL_DS); 
+		pos = 0; 
 		memcpy(buf,&write_buf[0],55);
 		//size = 55;
-		vfs_write(fp, buf, size, &pos);
-		filp_close(fp, NULL);
-		set_fs(fs);
+		vfs_write(fp, buf, size, &pos); 
+		filp_close(fp, NULL); 
+		set_fs(fs); 
 	}
 	return 0;
 }
@@ -361,7 +361,7 @@ int emmc_key_read(void)
 	memset(test_emmc_read_buf,0,1024*3);
 	ret = emmc_keybox_read(&emmc_provider, test_emmc_read_buf,EMMCKEY_DATA_VALID_LEN,0);
     printk("%s:%d, read %s\n",__func__,__LINE__, (ret)? "error":"ok");
-
+    
 	printk("%s:%d,%s\n",__func__,__LINE__,test_emmc_read_buf);
 	printk("%s:%d,%s\n",__func__,__LINE__,&test_emmc_read_buf[512]);
 	printk("%s:%d,%s\n",__func__,__LINE__,&test_emmc_read_buf[1024]);
@@ -385,7 +385,7 @@ int emmc_key_write(void)
     printk("%s:%d, write %s\n",__func__,__LINE__, (ret)? "error":"ok");
 
     kfree(test_emmc_write_buf);
-
+    
     return ret;
 }
 
@@ -422,7 +422,7 @@ int emmc_key_init (struct mmc_card *card)
         err = -EINVAL;
         goto exit_err;
     }
-    lba_start = addr >> bit;
+    lba_start = addr >> bit; 
     lba_end = (addr + size) >> bit;
     emmckey_info->key_init = 1;
     printk("%s:%d emmc key lba_start:0x%llx,lba_end:0x%llx \n",__func__,__LINE__,lba_start,lba_end);
@@ -456,3 +456,4 @@ exit_err:
 	}
 	return err;
 }
+

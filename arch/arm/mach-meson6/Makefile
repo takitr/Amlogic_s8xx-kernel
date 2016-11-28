@@ -6,7 +6,7 @@
 #obj-y := clock.o time.o iomapping.o usbclock.o gpio.o mod_gate.o power_gate.o
 
 obj-y := cpu.o clock.o time.o iomapping.o usbclock.o  mod_gate.o power_gate.o gpio.o pinctrl.o
-#obj-y +=  usbclock.o usbsetting.o
+#obj-y +=  usbclock.o usbsetting.o 
 #obj-y += power_gate.o mod_gate.o watchdog.o
 obj-m :=
 obj-n :=

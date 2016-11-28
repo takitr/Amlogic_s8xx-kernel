@@ -139,7 +139,7 @@ static int pmu3_hp_event(struct snd_soc_dapm_widget *w,
 		break;
 
 	case SND_SOC_DAPM_POST_PMU:
-		/* Enable the input stage of HP driver
+		/* Enable the input stage of HP driver 
 		and start the HP DC offset cancellation process */
 		snd_soc_update_bits(codec, PMU3_BLOCK_ENABLE_2 , 0x1800, 0x1800);
 
@@ -271,11 +271,11 @@ SOC_SINGLE_TLV("PGAIN Right Gain", PMU3_PGA_IN, 4, 0xf, 0, pga_in_tlv),
 
 /* ADC */
 SOC_SINGLE_TLV("Left ADC Sidetone Volume", PMU3_SIDETONE_MIXING, 12, 0xf, 0,
-		adc_svol_tlv),
+	       	adc_svol_tlv),
 SOC_SINGLE_TLV("Right ADC Sidetone Volume", PMU3_SIDETONE_MIXING, 8, 0xf, 0,
 			adc_svol_tlv),
 
-SOC_DOUBLE_TLV("Digital Capture Volume",
+SOC_DOUBLE_TLV("Digital Capture Volume", 
 		PMU3_ADC_VOLUME_CTL, 8, 0, 0x7f, 0, adc_tlv),
 
 SOC_SINGLE("ADC HPF Switch", PMU3_ADC_DAC, 11, 1, 0),
@@ -418,7 +418,7 @@ SND_SOC_DAPM_MIXER("MIXINR", PMU3_BLOCK_ENABLE_1, 6, 0,
 SND_SOC_DAPM_MICBIAS("Mic Bias1", PMU3_BLOCK_ENABLE_2, 15, 0),
 SND_SOC_DAPM_MICBIAS("Mic Bias2", PMU3_BLOCK_ENABLE_2, 14, 0),
 
-SND_SOC_DAPM_ADC_E("ADCL", "Capture", PMU3_BLOCK_ENABLE_2, 5, 0,
+SND_SOC_DAPM_ADC_E("ADCL", "Capture", PMU3_BLOCK_ENABLE_2, 5, 0, 
 			pmu3_adc_event, SND_SOC_DAPM_POST_PMU|SND_SOC_DAPM_PRE_PMD),
 SND_SOC_DAPM_ADC_E("ADCR", "Capture", PMU3_BLOCK_ENABLE_2, 4, 0,
 			pmu3_adc_event, SND_SOC_DAPM_POST_PMU|SND_SOC_DAPM_PRE_PMD),
@@ -444,7 +444,7 @@ SND_SOC_DAPM_MUX("Lineout1 Right in",
 			SND_SOC_NOPM, 0, 0, &lor1_mux_controls),
 SND_SOC_DAPM_MUX("Lineout2 Right in",
 			SND_SOC_NOPM, 0, 0, &lor2_mux_controls),
-
+			
 SND_SOC_DAPM_MIXER("HPINL Mixer", SND_SOC_NOPM, 0, 0,
 		   &pmu3_dapm_hpin_mixer_l_controls[0],
 		   ARRAY_SIZE(pmu3_dapm_hpin_mixer_l_controls)),
@@ -558,19 +558,11 @@ static const struct snd_soc_dapm_route pmu3_intercon[] = {
 static int pmu3_set_bias_level(struct snd_soc_codec *codec,
 				 enum snd_soc_bias_level level)
 {
-	int value = 0;
 	switch (level) {
 	case SND_SOC_BIAS_ON:
 		break;
 
 	case SND_SOC_BIAS_PREPARE:
-		if (codec->dapm.bias_level == SND_SOC_BIAS_STANDBY){
-			value = snd_soc_read(codec,PMU3_SIDETONE_MIXING);
-			if(value & 0x20)
-				snd_soc_write(codec,PMU3_BLOCK_ENABLE_1,0xbc00);
-			else
-				snd_soc_write(codec,PMU3_BLOCK_ENABLE_1,0xbf00);
-		}
 		break;
 
 	case SND_SOC_BIAS_STANDBY:
@@ -582,11 +574,6 @@ static int pmu3_set_bias_level(struct snd_soc_codec *codec,
 			/* Clear Fast Charge */
 			snd_soc_update_bits(codec, PMU3_BLOCK_ENABLE_1,
 						0x4000, 0x0);
-			value = snd_soc_read(codec,PMU3_SIDETONE_MIXING);
-			if(value & 0x20)
-				snd_soc_write(codec,PMU3_BLOCK_ENABLE_1,0xbc00);
-			else
-				snd_soc_write(codec,PMU3_BLOCK_ENABLE_1,0xbf00);
 		}
 		break;
 
@@ -703,7 +690,7 @@ static int pmu3_hw_params(struct snd_pcm_substream *substream,
 	int fs = params_rate(params);
 	u16 reg = 0;
 	int i;
-
+	
 	for (i = 0;i < ARRAY_SIZE(sample_rates); i++){
 		if (sample_rates[i].rate == fs){
 			reg = sample_rates[i].value;
@@ -715,7 +702,7 @@ static int pmu3_hw_params(struct snd_pcm_substream *substream,
 	} else {
 		snd_soc_update_bits(codec, PMU3_ADC_DAC, 0xf, reg);
 	}
-
+	
 	return 0;
 }
 #if 0
@@ -819,7 +806,6 @@ static int pmu3_write(struct snd_soc_codec *codec, unsigned int reg,
 	uint32_t addr;
 
 	addr = PMU3_AUDIO_BASE + (reg<<1);
-	printk(KERN_DEBUG "pmu3_write,addr=0x%x, reg=0x%x, value=0x%x\n",addr,reg,value);
 	aml1218_write16(addr, value);
 
 	return 0;
@@ -830,7 +816,7 @@ static unsigned int pmu3_read(struct snd_soc_codec *codec,
 {
 	uint32_t addr;
 	uint16_t val;
-
+	
 	addr = PMU3_AUDIO_BASE + (reg<<1);
 	aml1218_read16(addr, &val);
 
@@ -853,7 +839,7 @@ static int pmu3_probe(struct snd_soc_codec *codec)
 
 	/* Enable ZC */
 	snd_soc_update_bits(codec, PMU3_BLOCK_ENABLE_2, 0x3c0, 0x0);
-
+	
 	snd_soc_add_codec_controls(codec, pmu3_snd_controls,
 				ARRAY_SIZE(pmu3_snd_controls));
 	/* ADC high pass filter Hi-fi mode */
@@ -920,11 +906,11 @@ static int pmu3_audio_codec_mute(void)
 
 static int aml_pmu3_audio_reboot_work(struct notifier_block *nb, unsigned long state, void *cmd)
 {
-
+    
     printk(KERN_DEBUG "\n%s\n", __func__);
 
     pmu3_audio_codec_mute();
-
+    
     return NOTIFY_DONE;
 }
 
@@ -936,7 +922,7 @@ static struct notifier_block aml_pmu3_audio_reboot_nb = {
 
 static int aml_pmu3_codec_probe(struct platform_device *pdev)
 {
-    int ret = snd_soc_register_codec(&pdev->dev,
+    int ret = snd_soc_register_codec(&pdev->dev, 
         &soc_codec_dev_pmu3, &pmu3_dai, 1);
     register_reboot_notifier(&aml_pmu3_audio_reboot_nb);
 
@@ -993,3 +979,4 @@ module_exit(aml_pmu3_exit);
 MODULE_DESCRIPTION("ASoC AML_PUM3 driver");
 MODULE_AUTHOR("Shuai Li <Shuai.li@amlogic.com>");
 MODULE_LICENSE("GPL");
+

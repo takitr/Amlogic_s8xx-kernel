@@ -89,7 +89,7 @@ void Set3DProcessPara(unsigned mode)
                 _3d_process._2d_3d_control_value = 0x10;
         }else{
             _3d_process._2d_3d_control_value = 0;
-
+            
         }
         //_3d_process.direction = (mode & PPMGR_3D_PROCESS_3D_ROTATE_DIRECTION_MASK)>>PPMGR_3D_PROCESS_3D_ROTATE_DIRECTION_VAULE_SHIFT;
         //printk("-- ppmgr 3d process 0x%x: mode:%d, src format:%d, switch flag:%d, 3d to 2d frame: %d,2d to 3d:%d, double type:%d, control mode: %d, control value: %d, rotate direction: %d,
@@ -130,7 +130,7 @@ int get_mid_process_type(vframe_t* vf)
                     process_type = TYPE_NONE;
                     break;
             }
-        }
+        }            
     }else if(_3d_process.mode == PPMGR_3D_PROCESS_MODE_3D_TO_2D){
         if(_3d_process.src_format == PPMGR_3D_PROCESS_SRC_FOMRAT_LR){
             process_type = TYPE_3D_TO_2D_LR;
@@ -154,7 +154,7 @@ int get_mid_process_type(vframe_t* vf)
                     process_type = TYPE_NONE;
                     break;
             }
-        }
+        }   
     }else if(_3d_process.mode == PPMGR_3D_PROCESS_MODE_2D_TO_3D){
         process_type = TYPE_2D_TO_3D;
     }else{
@@ -169,7 +169,7 @@ int is_mid_local_source(vframe_t* vf)
     if(vf->type&VIDTYPE_VIU_422){
         ret = 0;
     }else{
-	ret = 1;
+    	ret = 1;
     }
     return ret;
 }
@@ -451,7 +451,7 @@ static int get_input_l_frame(vframe_t* vf , display_frame_t* frame)
                 frame->frame_width=   vf->width;
                 frame->frame_height = vf->height;
                 break;
-        }
+        } 
     }
     return 0;
 }
@@ -641,7 +641,7 @@ static int get_output_rect_after_ratio(vframe_t* vf ,int* top , int*left , int* 
                     current_view_mode = VIEWMODE_FULL;
                 }
             }
-        }
+        }   
     }
 
     switch(current_view_mode){
@@ -708,7 +708,7 @@ static int get_output_rect_after_ratio(vframe_t* vf ,int* top , int*left , int* 
 */
 static void process_none(vframe_t* vf, ge2d_context_t *context,config_para_ex_t* ge2d_config)
 {
-
+	
 }
 
 //static int ratio_value = 10; // 0~255
@@ -749,7 +749,7 @@ void process_2d_to_3d_ex(vframe_t* vf, ge2d_context_t *context,config_para_ex_t*
     new_vf->duration_pulldown = vf->duration_pulldown;
     new_vf->pts = vf->pts;
     if(ppmgr_device.disp_width>ppmgr_device.disp_height)
-        new_vf->type = VIDTYPE_VIU_444 | VIDTYPE_VIU_SINGLE_PLANE | VIDTYPE_VIU_FIELD;
+        new_vf->type = VIDTYPE_VIU_444 | VIDTYPE_VIU_SINGLE_PLANE | VIDTYPE_VIU_FIELD;        
     else
         new_vf->type = VIDTYPE_VIU_444 | VIDTYPE_VIU_SINGLE_PLANE | VIDTYPE_VIU_FIELD | VIDTYPE_VSCALE_DISABLE;
     new_vf->canvas0Addr = new_vf->canvas1Addr = index2canvas(pp_vf->index);
@@ -758,7 +758,7 @@ void process_2d_to_3d_ex(vframe_t* vf, ge2d_context_t *context,config_para_ex_t*
 
     new_vf->width= ppmgr_device.disp_width;
     new_vf->height= ppmgr_device.disp_height;
-
+    
     if(ppmgr_3d_clear_count>0){
         //clear rect
         memset(ge2d_config,0,sizeof(config_para_ex_t));
@@ -766,7 +766,7 @@ void process_2d_to_3d_ex(vframe_t* vf, ge2d_context_t *context,config_para_ex_t*
         ge2d_config->bitmask_en  = 0;
         ge2d_config->src1_gb_alpha = 0;//0xff;
         ge2d_config->dst_xy_swap = 0;
-
+    
         canvas_read(new_vf->canvas0Addr&0xff,&cd);
         ge2d_config->src_planes[0].addr = cd.addr;
         ge2d_config->src_planes[0].w = cd.width;
@@ -806,7 +806,7 @@ void process_2d_to_3d_ex(vframe_t* vf, ge2d_context_t *context,config_para_ex_t*
         ge2d_config->dst_para.left = 0;
         ge2d_config->dst_para.width = canvas_width;
         ge2d_config->dst_para.height = canvas_height;
-
+        
         if(ge2d_context_config_ex(context,ge2d_config)<0) {
             printk("++ge2d configing error.\n");
             ppmgr_vf_put_dec(vf);
@@ -814,7 +814,7 @@ void process_2d_to_3d_ex(vframe_t* vf, ge2d_context_t *context,config_para_ex_t*
             return;
         }
         fillrect(context, 0, 0, canvas_width, canvas_height, 0x008080ff);
-        ppmgr_3d_clear_count--;
+        ppmgr_3d_clear_count--;        
     }
 
     if(vf->type & VIDTYPE_MVC){
@@ -889,7 +889,7 @@ void process_2d_to_3d_ex(vframe_t* vf, ge2d_context_t *context,config_para_ex_t*
         ge2d_config->dst_para.x_rev = 1;
     }else if(angle==2){
         ge2d_config->dst_para.x_rev = 1;
-        ge2d_config->dst_para.y_rev=1;
+        ge2d_config->dst_para.y_rev=1;        
     }else if(angle==3)  {
         ge2d_config->dst_xy_swap=1;
         ge2d_config->dst_para.y_rev=1;
@@ -905,7 +905,7 @@ void process_2d_to_3d_ex(vframe_t* vf, ge2d_context_t *context,config_para_ex_t*
     //printk("--first frame ex: %d,%d,%d,%d.out put:%d,%d,%d,%d. frame size: %d,%d.\n",
     //      input_frame.content_left,input_frame.content_top,input_frame.content_width,input_frame.content_height,
     //      l,t,w,h,new_vf->width,new_vf->height);
-
+   
     if(scale_down>1){
         if(angle&1){
             l = ((new_vf->width/scale_down) - (w/scale_down))/2;
@@ -991,7 +991,7 @@ void process_2d_to_3d_ex(vframe_t* vf, ge2d_context_t *context,config_para_ex_t*
         ge2d_config->dst_para.x_rev = 1;
     }else if(angle==2){
         ge2d_config->dst_para.x_rev = 1;
-        ge2d_config->dst_para.y_rev=1;
+        ge2d_config->dst_para.y_rev=1;        
     }else if(angle==3)  {
 
         ge2d_config->dst_xy_swap=1;
@@ -1005,19 +1005,19 @@ void process_2d_to_3d_ex(vframe_t* vf, ge2d_context_t *context,config_para_ex_t*
 
     get_output_rect_after_ratio(vf,&t,&l,&w,&h,vf->width,vf->height,new_vf->width,new_vf->height,angle);
 
-    if(x_offset){
+    if(x_offset){     
         if(angle&1){
             int dst_h = 0;
             if(dir){  //move down
                 if((t+x_offset+h)<=new_vf->height){ //only pan
                     if(angle == 3){
                         t = t - x_offset;
-                        t &= ~1;
+                        t &= ~1;    
                     }else{
                         t = t + x_offset;
-                        t &= ~1;
-                    }
-                }else if((t+x_offset)<new_vf->height){  //need cut
+                        t &= ~1;  
+                    }       
+                }else if((t+x_offset)<new_vf->height){  //need cut 
                     t = t + x_offset;
                     t &= ~1;
                     dst_h = new_vf->height - t;
@@ -1033,12 +1033,12 @@ void process_2d_to_3d_ex(vframe_t* vf, ge2d_context_t *context,config_para_ex_t*
                 if(t>=x_offset){ //only pan
                     if(angle == 3){
                         t = t + x_offset;
-                        t &= ~1;
+                        t &= ~1;    
                     }else{
                         t = t - x_offset;
-                        t &= ~1;
-                    }
-                }else if((t+h)>x_offset){  //need cut
+                        t &= ~1;  
+                    }        
+                }else if((t+h)>x_offset){  //need cut 
                     int src_w = 0, src_l = 0;
                     t = 0;
                     dst_h = h + t - x_offset;
@@ -1061,12 +1061,12 @@ void process_2d_to_3d_ex(vframe_t* vf, ge2d_context_t *context,config_para_ex_t*
                 if((l+x_offset+w)<=new_vf->width){ //only pan
                     if((angle == 1)||(angle == 2)){
                         l = l - x_offset;
-                        l &= ~1;
+                        l &= ~1;    
                     }else{
                         l = l + x_offset;
-                        l &= ~1;
-                    }
-                }else if((l+x_offset)<new_vf->width){  //need cut
+                        l &= ~1;  
+                    }       
+                }else if((l+x_offset)<new_vf->width){  //need cut 
                     l = l + x_offset;
                     l &= ~1;
                     dst_w = new_vf->width - l;
@@ -1082,12 +1082,12 @@ void process_2d_to_3d_ex(vframe_t* vf, ge2d_context_t *context,config_para_ex_t*
                 if(l>=x_offset){ //only pan
                     if((angle == 1)||(angle == 2)){
                         l = l + x_offset;
-                        l &= ~1;
+                        l &= ~1;    
                     }else{
                         l = l - x_offset;
-                        l &= ~1;
-                    }
-                }else if((l+w)>x_offset){  //need cut
+                        l &= ~1;  
+                    }        
+                }else if((l+w)>x_offset){  //need cut 
                     int src_w = 0, src_l = 0;
                     l = 0;
                     dst_w = w + l - x_offset;
@@ -1171,9 +1171,9 @@ static void process_2d_to_3d(vframe_t* vf, ge2d_context_t *context,config_para_e
     new_vf->duration_pulldown = vf->duration_pulldown;
     new_vf->pts = vf->pts;
     if(ppmgr_device.disp_width>ppmgr_device.disp_height)
-        new_vf->type = VIDTYPE_VIU_444 | VIDTYPE_VIU_SINGLE_PLANE | VIDTYPE_VIU_FIELD;
+        new_vf->type = VIDTYPE_VIU_444 | VIDTYPE_VIU_SINGLE_PLANE | VIDTYPE_VIU_FIELD;        
     else
-        new_vf->type = VIDTYPE_VIU_444 | VIDTYPE_VIU_SINGLE_PLANE | VIDTYPE_VIU_FIELD | VIDTYPE_VSCALE_DISABLE;
+        new_vf->type = VIDTYPE_VIU_444 | VIDTYPE_VIU_SINGLE_PLANE | VIDTYPE_VIU_FIELD | VIDTYPE_VSCALE_DISABLE;       
     new_vf->canvas0Addr = new_vf->canvas1Addr = index2canvas(pp_vf->index);
 
     get_input_frame(vf,&input_frame);
@@ -1188,7 +1188,7 @@ static void process_2d_to_3d(vframe_t* vf, ge2d_context_t *context,config_para_e
         ge2d_config->bitmask_en  = 0;
         ge2d_config->src1_gb_alpha = 0;//0xff;
         ge2d_config->dst_xy_swap = 0;
-
+    
         canvas_read(new_vf->canvas0Addr&0xff,&cd);
         ge2d_config->src_planes[0].addr = cd.addr;
         ge2d_config->src_planes[0].w = cd.width;
@@ -1228,7 +1228,7 @@ static void process_2d_to_3d(vframe_t* vf, ge2d_context_t *context,config_para_e
         ge2d_config->dst_para.left = 0;
         ge2d_config->dst_para.width = canvas_width;
         ge2d_config->dst_para.height = canvas_height;
-
+        
         if(ge2d_context_config_ex(context,ge2d_config)<0) {
             printk("++ge2d configing error.\n");
             ppmgr_vf_put_dec(vf);
@@ -1236,7 +1236,7 @@ static void process_2d_to_3d(vframe_t* vf, ge2d_context_t *context,config_para_e
             return;
         }
         fillrect(context, 0, 0, canvas_width, canvas_height, 0x008080ff);
-        ppmgr_3d_clear_count--;
+        ppmgr_3d_clear_count--;        
     }
 
     if(vf->type & VIDTYPE_MVC){
@@ -1331,7 +1331,7 @@ static void process_2d_to_3d(vframe_t* vf, ge2d_context_t *context,config_para_e
         ge2d_config->dst_para.x_rev = 1;
     }else if(angle==2){
         ge2d_config->dst_para.x_rev = 1;
-        ge2d_config->dst_para.y_rev=1;
+        ge2d_config->dst_para.y_rev=1;        
     }else if(angle==3)  {
         ge2d_config->dst_xy_swap=1;
         ge2d_config->dst_para.y_rev=1;
@@ -1454,7 +1454,7 @@ static void process_2d_to_3d(vframe_t* vf, ge2d_context_t *context,config_para_e
         ge2d_config->dst_para.x_rev = 1;
     }else if(angle==2){
         ge2d_config->dst_para.x_rev = 1;
-        ge2d_config->dst_para.y_rev=1;
+        ge2d_config->dst_para.y_rev=1;        
     }else if(angle==3)  {
         ge2d_config->dst_xy_swap=1;
         ge2d_config->dst_para.y_rev=1;
@@ -1467,19 +1467,19 @@ static void process_2d_to_3d(vframe_t* vf, ge2d_context_t *context,config_para_e
 
     get_output_rect_after_ratio(vf,&t,&l,&w,&h,vf->width,vf->height,new_vf->width,new_vf->height,angle);
 
-    if(x_offset){
+    if(x_offset){     
         if(angle&1){
             int dst_h = 0;
             if(dir){  //move down
                 if((t+x_offset+h)<=new_vf->height){ //only pan
                     if(angle == 3){
                         t = t - x_offset;
-                        t &= ~1;
+                        t &= ~1;    
                     }else{
                         t = t + x_offset;
-                        t &= ~1;
-                    }
-                }else if((t+x_offset)<new_vf->height){  //need cut
+                        t &= ~1;  
+                    }       
+                }else if((t+x_offset)<new_vf->height){  //need cut 
                     t = t + x_offset;
                     t &= ~1;
                     dst_h = new_vf->height - t;
@@ -1495,12 +1495,12 @@ static void process_2d_to_3d(vframe_t* vf, ge2d_context_t *context,config_para_e
                 if(t>=x_offset){ //only pan
                     if(angle == 3){
                         t = t + x_offset;
-                        t &= ~1;
+                        t &= ~1;    
                     }else{
                         t = t - x_offset;
-                        t &= ~1;
-                    }
-                }else if((t+h)>x_offset){  //need cut
+                        t &= ~1;  
+                    }        
+                }else if((t+h)>x_offset){  //need cut 
                     int src_w = 0, src_l = 0;
                     t = 0;
                     dst_h = h + t - x_offset;
@@ -1523,12 +1523,12 @@ static void process_2d_to_3d(vframe_t* vf, ge2d_context_t *context,config_para_e
                 if((l+x_offset+w)<=new_vf->width){ //only pan
                     if(angle == 2){
                         l = l - x_offset;
-                        l &= ~1;
+                        l &= ~1;    
                     }else{
                         l = l + x_offset;
-                        l &= ~1;
-                    }
-                }else if((l+x_offset)<new_vf->width){  //need cut
+                        l &= ~1;  
+                    }       
+                }else if((l+x_offset)<new_vf->width){  //need cut 
                     l = l + x_offset;
                     l &= ~1;
                     dst_w = new_vf->width - l;
@@ -1544,12 +1544,12 @@ static void process_2d_to_3d(vframe_t* vf, ge2d_context_t *context,config_para_e
                 if(l>=x_offset){ //only pan
                     if(angle == 2){
                         l = l + x_offset;
-                        l &= ~1;
+                        l &= ~1;    
                     }else{
                         l = l - x_offset;
-                        l &= ~1;
-                    }
-                }else if((l+w)>x_offset){  //need cut
+                        l &= ~1;  
+                    }        
+                }else if((l+w)>x_offset){  //need cut 
                     int src_w = 0, src_l = 0;
                     l = 0;
                     dst_w = w + l - x_offset;
@@ -1617,9 +1617,9 @@ void process_3d_ex(vframe_t* vf, ge2d_context_t *context,config_para_ex_t* ge2d_
     unsigned char switch_flag = _3d_process.switch_flag;
     int canvas_width = ppmgr_device.canvas_width;
     int canvas_height = ppmgr_device.canvas_height;
-    int scale_down = get_ppmgr_scaledown()+1;
+    int scale_down = get_ppmgr_scaledown()+1;    
     int pic_struct = 0;
-
+	
     new_vf = vfq_pop(&q_free);
     if (unlikely((!new_vf) || (!vf)))
         return;
@@ -1633,7 +1633,7 @@ void process_3d_ex(vframe_t* vf, ge2d_context_t *context,config_para_ex_t* ge2d_
     new_vf->duration_pulldown = vf->duration_pulldown;
     new_vf->pts = vf->pts;
     if(ppmgr_device.disp_width>ppmgr_device.disp_height)
-        new_vf->type = VIDTYPE_VIU_444 | VIDTYPE_VIU_SINGLE_PLANE | VIDTYPE_VIU_FIELD;
+        new_vf->type = VIDTYPE_VIU_444 | VIDTYPE_VIU_SINGLE_PLANE | VIDTYPE_VIU_FIELD;        
     else
         new_vf->type = VIDTYPE_VIU_444 | VIDTYPE_VIU_SINGLE_PLANE | VIDTYPE_VIU_FIELD | VIDTYPE_VSCALE_DISABLE;
     new_vf->canvas0Addr = new_vf->canvas1Addr = index2canvas(pp_vf->index);
@@ -1644,7 +1644,7 @@ void process_3d_ex(vframe_t* vf, ge2d_context_t *context,config_para_ex_t* ge2d_
 
     new_vf->width= ppmgr_device.disp_width;
     new_vf->height= ppmgr_device.disp_height;
-
+    
     if(ppmgr_3d_clear_count>0){
         //clear rect
         memset(ge2d_config,0,sizeof(config_para_ex_t));
@@ -1652,7 +1652,7 @@ void process_3d_ex(vframe_t* vf, ge2d_context_t *context,config_para_ex_t* ge2d_
         ge2d_config->bitmask_en  = 0;
         ge2d_config->src1_gb_alpha = 0;//0xff;
         ge2d_config->dst_xy_swap = 0;
-
+    
         canvas_read(new_vf->canvas0Addr&0xff,&cd);
         ge2d_config->src_planes[0].addr = cd.addr;
         ge2d_config->src_planes[0].w = cd.width;
@@ -1692,7 +1692,7 @@ void process_3d_ex(vframe_t* vf, ge2d_context_t *context,config_para_ex_t* ge2d_
         ge2d_config->dst_para.left = 0;
         ge2d_config->dst_para.width = canvas_width;
         ge2d_config->dst_para.height = canvas_height;
-
+        
         if(ge2d_context_config_ex(context,ge2d_config)<0) {
             printk("++ge2d configing error.\n");
             ppmgr_vf_put_dec(vf);
@@ -1776,7 +1776,7 @@ void process_3d_ex(vframe_t* vf, ge2d_context_t *context,config_para_ex_t* ge2d_
     }else if(angle==2){
 
         ge2d_config->dst_para.x_rev = 1;
-        ge2d_config->dst_para.y_rev=1;
+        ge2d_config->dst_para.y_rev=1;        
     }else if(angle==3)  {
         ge2d_config->dst_xy_swap=1;
         ge2d_config->dst_para.y_rev=1;
@@ -1883,7 +1883,7 @@ void process_3d_ex(vframe_t* vf, ge2d_context_t *context,config_para_ex_t* ge2d_
         ge2d_config->dst_para.x_rev = 1;
     }else if(angle==2){
         ge2d_config->dst_para.x_rev = 1;
-        ge2d_config->dst_para.y_rev=1;
+        ge2d_config->dst_para.y_rev=1;        
     }else if(angle==3)  {
         ge2d_config->dst_xy_swap=1;
         ge2d_config->dst_para.y_rev=1;
@@ -1934,7 +1934,7 @@ void process_3d(vframe_t* vf, ge2d_context_t *context,config_para_ex_t* ge2d_con
     unsigned char  switch_flag = _3d_process.switch_flag;
     int canvas_width = ppmgr_device.canvas_width;
     int canvas_height = ppmgr_device.canvas_height;
-    int scale_down = get_ppmgr_scaledown()+1;
+    int scale_down = get_ppmgr_scaledown()+1;    
     int pic_struct = 0;
 
     new_vf = vfq_pop(&q_free);
@@ -1951,7 +1951,7 @@ void process_3d(vframe_t* vf, ge2d_context_t *context,config_para_ex_t* ge2d_con
     new_vf->duration_pulldown = vf->duration_pulldown;
     new_vf->pts = vf->pts;
     if(ppmgr_device.disp_width>ppmgr_device.disp_height)
-        new_vf->type = VIDTYPE_VIU_444 | VIDTYPE_VIU_SINGLE_PLANE | VIDTYPE_VIU_FIELD;
+        new_vf->type = VIDTYPE_VIU_444 | VIDTYPE_VIU_SINGLE_PLANE | VIDTYPE_VIU_FIELD;        
     else
         new_vf->type = VIDTYPE_VIU_444 | VIDTYPE_VIU_SINGLE_PLANE | VIDTYPE_VIU_FIELD | VIDTYPE_VSCALE_DISABLE;
     new_vf->canvas0Addr = new_vf->canvas1Addr = index2canvas(pp_vf->index);
@@ -1970,7 +1970,7 @@ void process_3d(vframe_t* vf, ge2d_context_t *context,config_para_ex_t* ge2d_con
         ge2d_config->bitmask_en  = 0;
         ge2d_config->src1_gb_alpha = 0;//0xff;
         ge2d_config->dst_xy_swap = 0;
-
+    
         canvas_read(new_vf->canvas0Addr&0xff,&cd);
         ge2d_config->src_planes[0].addr = cd.addr;
         ge2d_config->src_planes[0].w = cd.width;
@@ -2010,7 +2010,7 @@ void process_3d(vframe_t* vf, ge2d_context_t *context,config_para_ex_t* ge2d_con
         ge2d_config->dst_para.left = 0;
         ge2d_config->dst_para.width = canvas_width;
         ge2d_config->dst_para.height = canvas_height;
-
+        
         if(ge2d_context_config_ex(context,ge2d_config)<0) {
             printk("++ge2d configing error.\n");
             ppmgr_vf_put_dec(vf);
@@ -2114,7 +2114,7 @@ void process_3d(vframe_t* vf, ge2d_context_t *context,config_para_ex_t* ge2d_con
         ge2d_config->dst_para.x_rev = 1;
     }else if(angle==2){
         ge2d_config->dst_para.x_rev = 1;
-        ge2d_config->dst_para.y_rev=1;
+        ge2d_config->dst_para.y_rev=1;        
     }else if(angle==3)  {
         ge2d_config->dst_xy_swap=1;
         ge2d_config->dst_para.y_rev=1;
@@ -2243,7 +2243,7 @@ void process_3d(vframe_t* vf, ge2d_context_t *context,config_para_ex_t* ge2d_con
         ge2d_config->dst_para.x_rev = 1;
     }else if(angle==2){
         ge2d_config->dst_para.x_rev = 1;
-        ge2d_config->dst_para.y_rev=1;
+        ge2d_config->dst_para.y_rev=1;        
     }else if(angle==3)  {
         ge2d_config->dst_xy_swap=1;
         ge2d_config->dst_para.y_rev=1;
@@ -2288,7 +2288,7 @@ void process_3d(vframe_t* vf, ge2d_context_t *context,config_para_ex_t* ge2d_con
 
 //void process_bt(vframe_t* vf, ge2d_context_t *context,config_para_ex_t* ge2d_config,int swith_flag)
 //{
-//
+//	
 //}
 
 static void process_field_depth(vframe_t* vf, ge2d_context_t *context,config_para_ex_t* ge2d_config)
@@ -2309,7 +2309,7 @@ void process_3d_to_2d(vframe_t* vf, ge2d_context_t *context,config_para_ex_t* ge
     unsigned angle = get_ppmgr_direction3d();//_3d_process.direction;
     int canvas_width = ppmgr_device.canvas_width;
     int canvas_height = ppmgr_device.canvas_height;
-    int scale_down = get_ppmgr_scaledown()+1;
+    int scale_down = get_ppmgr_scaledown()+1;   
     int pic_struct = 0;
 
     new_vf = vfq_pop(&q_free);
@@ -2339,13 +2339,13 @@ void process_3d_to_2d(vframe_t* vf, ge2d_context_t *context,config_para_ex_t* ge
     new_vf->height= ppmgr_device.disp_height;
 
     if(ppmgr_3d_clear_count>0){
-        //clear rect
+        //clear rect        
         memset(ge2d_config,0,sizeof(config_para_ex_t));
         ge2d_config->alu_const_color= 0;//0x000000ff;
         ge2d_config->bitmask_en  = 0;
         ge2d_config->src1_gb_alpha = 0;//0xff;
         ge2d_config->dst_xy_swap = 0;
-
+    
         canvas_read(new_vf->canvas0Addr&0xff,&cd);
         ge2d_config->src_planes[0].addr = cd.addr;
         ge2d_config->src_planes[0].w = cd.width;
@@ -2385,7 +2385,7 @@ void process_3d_to_2d(vframe_t* vf, ge2d_context_t *context,config_para_ex_t* ge
         ge2d_config->dst_para.left = 0;
         ge2d_config->dst_para.width = canvas_width;
         ge2d_config->dst_para.height = canvas_height;
-
+        
         if(ge2d_context_config_ex(context,ge2d_config)<0) {
             printk("++ge2d configing error.\n");
             ppmgr_vf_put_dec(vf);
@@ -2472,7 +2472,7 @@ void process_3d_to_2d(vframe_t* vf, ge2d_context_t *context,config_para_ex_t* ge
         ge2d_config->dst_para.x_rev = 1;
     }else if(angle==2){
         ge2d_config->dst_para.x_rev = 1;
-        ge2d_config->dst_para.y_rev=1;
+        ge2d_config->dst_para.y_rev=1;        
     }else if(angle==3)  {
         ge2d_config->dst_xy_swap=1;
         ge2d_config->dst_para.y_rev=1;
@@ -2507,7 +2507,7 @@ void process_3d_to_2d(vframe_t* vf, ge2d_context_t *context,config_para_ex_t* ge
 /********************************************************************/
 
 void ppmgr_vf_3d(vframe_t* vf, ge2d_context_t *context,config_para_ex_t* ge2d_config)
-{
+{  
     display_frame_t input_frame ;
     display_frame_t l_frame ,r_frame ;
     canvas_t cd;
@@ -2588,7 +2588,7 @@ int Init3DBuff(int canvas_id)
 {
     void __iomem * mask_start = NULL;
     unsigned char mask = 0xff;
-    canvas_t canvas_mask;
+    canvas_t canvas_mask;	
     int k = 0;
     unsigned char *buff = NULL;
 

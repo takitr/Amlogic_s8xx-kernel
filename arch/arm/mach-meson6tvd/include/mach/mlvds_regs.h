@@ -197,3 +197,4 @@
    #define     mLVDS_2nd_reset_start       0 // Bit 12:0
 
 #endif
+

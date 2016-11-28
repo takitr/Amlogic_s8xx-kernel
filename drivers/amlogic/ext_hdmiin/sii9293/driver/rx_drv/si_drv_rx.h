@@ -33,13 +33,13 @@ SiiRxTiming_t;
 typedef enum
 {
 	PATH__RGB,					// RGB, single edge clock
-	PATH__YCbCr444,				// YCbCr 4:4:4, single edge clock
+	PATH__YCbCr444,				// YCbCr 4:4:4, single edge clock 
 	PATH__YCbCr422_16B,			// YCbCr 4:2:2, single edge clock, Y is separate, Cb and Cr multiplexed, 16 bit bus
 	PATH__YCbCr422_20B,			// YCbCr 4:2:2, single edge clock, Y is separate, Cb and Cr multiplexed, 20 bit bus
 	PATH__YCbCr422_16B_SYNC,	// YCbCr 4:2:2, single edge clock, Y is separate, Cb and Cr multiplexed, 16 bit bus, embedded sync output
 	PATH__YCbCr422_20B_SYNC,	// YCbCr 4:2:2, single edge clock, Y is separate, Cb and Cr multiplexed, 20 bit bus, embedded sync output
 	PATH__YCbCr422_MUX8B,		// YCbCr 4:2:2, single edge at 2x clock, Y multiplexed with Cb and Cr, 8 bit bus
-	PATH__YCbCr422_MUX10B,		// YCbCr 4:2:2, single edge at 2x clock, Y multiplexed with Cb and Cr, 10 bit bus
+	PATH__YCbCr422_MUX10B,		// YCbCr 4:2:2, single edge at 2x clock, Y multiplexed with Cb and Cr, 10 bit bus 
 	PATH__YCbCr422_MUX8B_SYNC,	// YCbCr 4:2:2, single edge at 2x clock, Y multiplexed with Cb and Cr, 8 bit bus, embedded sync output
 	PATH__YCbCr422_MUX10B_SYNC,	// YCbCr 4:2:2, single edge at 2x clock, Y multiplexed with Cb and Cr, 10 bit bus , embedded sync output
 	PATH__MAXVALUE,
@@ -48,13 +48,13 @@ typedef enum
 VideoPath_t SiiDrvRxGetOutVideoPath(void);
 
 void SiiDrvRxTimingInfoSet(SiiRxTiming_t *pNewRxTimingInfo);
-
+ 
 SiiRxTiming_t *SiiDrvRxTimingInfoGet(void);
 
 uint8_t SiiDrvRxGetPixelReplicate(void);
 
 uint8_t SiiDrvRxGetVideoStatus(void);
-
+	
 uint16_t SiiDrvRxGetPixelFreq(void);
 
 void SiiDrvRxGetSyncInfo(sync_info_type *p_sync_info);
@@ -71,3 +71,4 @@ bool_t SiiDrvRxInitialize(void);
 
 void SiiDrvRxVideoPathSet(void);
 #endif // SII_DRV_RX_H
+

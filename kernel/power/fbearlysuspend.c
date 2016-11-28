@@ -151,3 +151,4 @@ static void  __exit android_power_exit(void)
 
 module_init(android_power_init);
 module_exit(android_power_exit);
+

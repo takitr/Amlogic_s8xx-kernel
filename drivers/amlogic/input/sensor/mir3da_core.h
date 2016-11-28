@@ -1,5 +1,5 @@
-/* Core header for MiraMEMS 3-Axis Accelerometer's driver.
- *
+/* Core header for MiraMEMS 3-Axis Accelerometer's driver. 
+ * 
  * mir3da_core.h - Linux kernel modules for MiraMEMS 3-Axis Accelerometer
  *
  * Copyright (C) 2011-2013 MiraMEMS Sensing Technology Co., Ltd.
@@ -20,9 +20,9 @@
 
 #define CUST_VER                            ""                                          /* for Custom debug version */
 #define CORE_VER                            "1.3.1_2014-05-26-17:00:00_"CUST_VER
-
+ 
 #define MIR3DA_SUPPORT_CHIP_LIST            MIR_SOCLE, MIR_NSA_NTO, MIR_NSA_MLM
-
+ 
 #define MIR3DA_BUFSIZE                      256
 
 #define MIR3DA_STK_TEMP_SOLUTION            1
@@ -43,7 +43,7 @@ typedef void*   PLAT_HANDLE;
 
 
 struct serial_manage_if_s {
-
+    
     int                         (*read)(PLAT_HANDLE handle, unsigned char addr, unsigned char *data);
     int                         (*write)(PLAT_HANDLE handle, unsigned char addr, unsigned char data);
     int                         (*read_block)(PLAT_HANDLE handle, unsigned char base_addr, unsigned char count, unsigned char *data);
@@ -52,19 +52,19 @@ struct serial_manage_if_s {
 struct general_op_s {
 
     struct serial_manage_if_s   smi;
-
+    
     int                         (*data_save)(unsigned char *data);
     int                         (*data_get)(unsigned char *data);
-
+    
     int                         (*myprintf)(const char *fmt, ...);
     int                         (*mysprintf)(char *buf, const char *fmt, ...);
-    void                        (*msdelay)(int ms);
-};
+    void                        (*msdelay)(int ms);                        
+};  
 
 #define MIR_GENERAL_OPS_DECLARE(OPS_HDL, SMI_RD, SMI_RDBL, SMI_WR, DAT_SAVE, DAT_GET, MDELAY, MYPRINTF, MYSPRINTF)                                      \
                                                                                                                                                         \
                                 struct general_op_s     OPS_HDL = { { SMI_RD, SMI_WR, SMI_RDBL }, DAT_SAVE, DAT_GET, MYPRINTF, MYSPRINTF, MDELAY }
-
+                                        
 enum interrupt_src {
 
     INTERRUPT_ACTIVITY     = 1,
@@ -78,7 +78,7 @@ typedef enum _int_op_type {
     INTERRUPT_OP_ENABLE,
     INTERRUPT_OP_CONFIG,
     INTERRUPT_OP_DISABLE,
-
+ 
 } mir_int_op_type;
 
 enum interrupt_pin {
@@ -108,19 +108,19 @@ struct int_clk_cfg_s {
 };
 
 typedef union _int_src_configuration {
-
+    
     struct int_act_cfg_s            act;
     struct int_clk_cfg_s            clk;
 
 } mir_int_src_cfg_t;
-
+    
 typedef struct _int_configuration {
 
     enum interrupt_pin              pin;
     enum interrupt_src              int_src;
-
-    mir_int_src_cfg_t               int_cfg;
-
+    
+    mir_int_src_cfg_t               int_cfg;  
+    
 } mir_int_cfg_t;
 
 typedef struct _int_init_data {
@@ -129,23 +129,23 @@ typedef struct _int_init_data {
 
     unsigned char                   level;      /* 1: high active, 0: low active */
     unsigned char                   latch;          /* >0: latch time, 0: no latch */
-
+     
 } mir_int_init_t ;
 
 typedef union _int_op_data {
 
     enum interrupt_src              int_src;
-
+ 
     mir_int_init_t                  init;
     mir_int_cfg_t                   cfg;
-
+    
 } mir_int_op_data;
 
 typedef struct _int_operations {
 
     mir_int_op_type                 type;
     mir_int_op_data                 data;
-
+    
 } mir_int_ops_t;
 
 
@@ -195,8 +195,8 @@ typedef struct _int_operations {
 #define SOCLE_REG_TEMP_OFF2             0x0128
 #define SOCLE_REG_TEMP_OFF3             0x0129
 #define SOCLE_REG_OTP_TRIM_THERM_H      0x011a
-
-
+                                         
+                                                        
 /* Register define for NSA asic */
 #define NSA_REG_SPI_I2C                 0x00
 #define NSA_REG_WHO_AM_I                0x01
@@ -205,7 +205,7 @@ typedef struct _int_operations {
 #define NSA_REG_ACC_Y_LSB               0x04
 #define NSA_REG_ACC_Y_MSB               0x05
 #define NSA_REG_ACC_Z_LSB               0x06
-#define NSA_REG_ACC_Z_MSB               0x07
+#define NSA_REG_ACC_Z_MSB               0x07 
 #define NSA_REG_G_RANGE                 0x0f
 #define NSA_REG_ODR_AXIS_DISABLE        0x10
 #define NSA_REG_POWERMODE_BW            0x11
@@ -237,7 +237,7 @@ typedef struct _int_operations {
 #define NSA_REG_FINE_OFFSET_TRIM_Z      0x88
 #define NSA_REG_SENS_COMP               0x8c
 #define NSA_REG_SENS_COARSE_TRIM        0xd1
-
+                                         
 #define MIR3DA_ODR_50HZ                  0
 #define MIR3DA_ODR_100HZ                 1
 #define MIR3DA_ODR_200HZ                 2
@@ -245,7 +245,7 @@ typedef struct _int_operations {
 #define MI_TAG                          "[MIR3DA] "
 enum{
 	DEBUG_ERR=1,
-	DEBUG_ASSERT=1<<1,
+	DEBUG_ASSERT=1<<1,	
 	DEBUG_MSG=1<<2,
 	DEBUG_FUNC=1<<3,
 	DEBUG_DATA=1<<4,
@@ -257,7 +257,7 @@ int mir3da_register_write(MIR_HANDLE handle, short reg, unsigned char data);
 int mir3da_register_read_continuously(MIR_HANDLE handle, short base_reg, unsigned char count, unsigned char *data);
 int mir3da_register_mask_write(MIR_HANDLE handle, short addr, unsigned char mask, unsigned char data);
 
-int mir3da_install_general_ops(struct general_op_s *ops);
+int mir3da_install_general_ops(struct general_op_s *ops);	
 /* chip init */
 int mir3da_module_detect(PLAT_HANDLE handle);
 MIR_HANDLE mir3da_core_init(PLAT_HANDLE handle);
@@ -307,3 +307,5 @@ int mir3da_set_odr(MIR_HANDLE handle, int delay);
 
 int mir3da_chip_resume(MIR_HANDLE handle);
 #endif    /* __MIR3DA_CORE_H__ */
+
+

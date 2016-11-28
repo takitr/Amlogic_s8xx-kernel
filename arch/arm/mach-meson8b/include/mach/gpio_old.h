@@ -83,7 +83,7 @@ static unsigned p_gpio_oen_addr[]={
 };
 #define NOT_EXIST -1
 struct pad_sig {pad_t pad;sig_t sig;unsigned enable; unsigned disable;};
-#define foreach_pad_sig_start(pad,sig) {int __i;for(__i=0;__i<sizeof(pad_sig_tab)/sizeof(pad_sig_tab[0]);__i++){ unsigned __pad=pad,__sig=sig;
+#define foreach_pad_sig_start(pad,sig) {int __i;for(__i=0;__i<sizeof(pad_sig_tab)/sizeof(pad_sig_tab[0]);__i++){ unsigned __pad=pad,__sig=sig;  
 #define case_pad_equal(enable,disable) if(pad_sig_tab[__i].pad==__pad&&pad_sig_tab[__i].sig!=__sig){ enable=pad_sig_tab[__i].enable;disable=pad_sig_tab[__i].disable
 #define case_sig_equal(enable,disable) if(pad_sig_tab[__i].pad!=__pad&&pad_sig_tab[__i].sig==__sig){enable=pad_sig_tab[__i].enable;disable=pad_sig_tab[__i].disable
 #define case_both_equal(enable,disable) if(pad_sig_tab[__i].pad==__pad&&pad_sig_tab[__i].sig==__sig){enable=pad_sig_tab[__i].enable;disable=pad_sig_tab[__i].disable

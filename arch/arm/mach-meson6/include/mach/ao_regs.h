@@ -79,3 +79,6 @@
 //#define AO_RTC_ADDR4              (((0x01 << 8) | (0xd4))<<2)
 
 #endif      //ALWAYS_ON_REGS_H
+
+
+

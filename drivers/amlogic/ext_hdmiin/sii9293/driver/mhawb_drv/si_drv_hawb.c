@@ -55,7 +55,7 @@ void SiiDrvHawbInit(void)
  *
  *****************************************************************************/
 bool_t SiiDrvHawbEnable(bool_t enableTx )
-{
+{  
     //since there's no work to do; don't waste time with I2C
     if (enableTx == false)
     {
@@ -159,3 +159,4 @@ void SiiDrvHawbProcessInterrupts(void)
         DEBUG_PRINT( MSG_ALWAYS, "[HAWB] ERROR: TX state machine error!\n" );
     }
 }
+

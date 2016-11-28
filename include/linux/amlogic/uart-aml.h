@@ -19,3 +19,4 @@ struct aml_uart_platform{
 };
 
 #endif
+

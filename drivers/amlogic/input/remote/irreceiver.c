@@ -65,7 +65,7 @@ static struct ir_window rec_win, send_win;
 static int rec_idx, send_idx;
 static unsigned int last_jiffies;
 static unsigned long int time_count = 0; //10us time base
-static unsigned long int shot_time = 0;
+static unsigned long int shot_time = 0; 
 
 static char logbuf[4096];
 
@@ -74,18 +74,18 @@ static ssize_t dbg_operate(struct device * dev, struct device_attribute *attr, c
 	dbg("Enter dbg mode ...\n");
     if(!strncmp(buf, "v", 1)) {
         printk("Test printk\n");
-	}
+    	}
 	else if(!strncmp(buf, "t", 1)) {
         printk("Test printk!!!!\n");
 		}
-    return 16;
+    return 16;    
 }
 
 static ssize_t switch_write(struct device * dev, struct device_attribute *attr, const char * buf, size_t count)
 {
 	int val = simple_strtoul(buf, NULL, 0);
     dbg("switch write [%d]\n", val);
-
+    
     if(val == 0)//off
     {
         CLEAR_CBUS_REG_MASK(PWM_MISC_REG_CD, (1 << 1));
@@ -138,7 +138,7 @@ static void oneshot_event(void)
         pwmSwitch = 0;
         CLEAR_CBUS_REG_MASK(PWM_MISC_REG_CD, (1 << 1));//off
     }
-
+    
     //set next window timer
     send_idx++;
     if(send_idx < send_win.winNum)
@@ -156,11 +156,11 @@ static void oneshot_event(void)
 
 static void timer_b_interrupt(void)
 {
-    char tmp[128];
+    char tmp[128];    
 
     time_count++;
     if(shot_time !=0 && (time_count*10) >= shot_time)
-    {
+    {    
         //sprintf(tmp, "[%lu][%lu]\n", shot_time, time_count*10);
         strcat(logbuf, tmp);
         oneshot_event();
@@ -173,7 +173,7 @@ static void init_timer_b(void)
 
     CLEAR_CBUS_REG_MASK(ISA_TIMER_MUX, TIMER_B_INPUT_MASK);
     SET_CBUS_REG_MASK(ISA_TIMER_MUX, TIMER_UNIT_10us << TIMER_B_INPUT_BIT);
-
+    
     /* Set up the fiq handler */
     request_fiq(INT_TIMER_B, &timer_b_interrupt);
 }
@@ -220,13 +220,13 @@ static int aml_ir_receiver_ioctl(struct inode *inode, struct file *filp,
     unsigned long flags;
     void __user *argp = (void __user *)args;
 	dbg("aml_ir_receiver_ioctl()\n");
-
+    
     switch(cmd)
     {
     case IRRECEIVER_IOC_SEND:
         if (copy_from_user(&send_win, argp, sizeof(struct ir_window)))
 		    return -EFAULT;
-
+        
         for(i=0; i<send_win.winNum; i++)
             dbg("idx[%d]:[%d]\n", i, send_win.winArray[i]);
 
@@ -256,12 +256,12 @@ static int aml_ir_receiver_ioctl(struct inode *inode, struct file *filp,
 	case IRRECEIVER_IOC_STUDY_E:
 		dbg("IRRECEIVER_IOC_STUDY_E\n");
 		break;
-
+        
     default:
         r = -ENOIOCTLCMD;
         break;
     }
-
+    
 	return r;
 }
 static int aml_ir_receiver_release(struct inode *inode, struct file *file)
@@ -269,13 +269,13 @@ static int aml_ir_receiver_release(struct inode *inode, struct file *file)
 	dbg("aml_ir_receiver_release()\n");
 	file->private_data = NULL;
 	return 0;
-
+	
 }
 static const struct file_operations aml_ir_receiver_fops = {
 	.owner		= THIS_MODULE,
-	.open		= aml_ir_receiver_open,
+	.open		= aml_ir_receiver_open,  
 	.ioctl		= aml_ir_receiver_ioctl,
-	.release	= aml_ir_receiver_release,
+	.release	= aml_ir_receiver_release, 	
 };
 
 static void ir_fiq_interrupt(void)
@@ -284,22 +284,22 @@ static void ir_fiq_interrupt(void)
     unsigned int current_jiffies = jiffies;
 
     if(current_jiffies - last_jiffies > 10)//means a new key
-    {
+    {   
         //dbg("it is a new ir key\n");
         rec_idx = 0;
         rec_win.winNum = 0;
         last_jiffies = current_jiffies;
         return;//ignore first falling or rising edge
     }
-
+    
     last_jiffies = current_jiffies;
-
+    
     pulse_width = ( (am_remote_read_reg(AM_IR_DEC_REG1)) & 0x1FFF0000 ) >> 16 ;
 
     rec_idx++;
     if(rec_idx >= MAX_PLUSE)
         return;
-
+    
     rec_win.winNum = rec_idx;
     rec_win.winArray[rec_idx-1] = (pulse_width<<1);
     //dbg("idx[%d]window width[%d]\n", rec_idx-1, pulse_width);
@@ -311,7 +311,7 @@ static void ir_hardware_init(void)
 
     rec_idx = 0;
     last_jiffies = 0xffffffff;
-
+    
     //mask--mux gpio_e21 to remote
     set_mio_mux(5, 1<<31);
 
@@ -347,7 +347,7 @@ static int __init aml_ir_receiver_probe(struct platform_device *pdev)
 	irreceiver_device.owner = THIS_MODULE;
 	cdev_add(&(irreceiver_device), irreceiver_id, DEIVE_COUNT);
 
-	irreceiver_dev = device_create(irreceiver_class, NULL, irreceiver_id, NULL, "irreceiver%d", 0); //kernel>=2.6.27
+	irreceiver_dev = device_create(irreceiver_class, NULL, irreceiver_id, NULL, "irreceiver%d", 0); //kernel>=2.6.27 
 
 	if (irreceiver_dev == NULL) {
 		dbg("irreceiver_dev create error\n");
@@ -359,22 +359,22 @@ static int __init aml_ir_receiver_probe(struct platform_device *pdev)
 	device_create_file(irreceiver_dev, &dev_attr_switch);
     device_create_file(irreceiver_dev, &dev_attr_keyvalue);
     device_create_file(irreceiver_dev, &dev_attr_log);
-
+    
     ir_hardware_init();
     init_pwm_d();
     init_timer_b();
-
+    
 	return 0;
 }
 
 static int aml_ir_receiver_remove(struct platform_device *pdev)
 {
 	dbg("remove IR Receiver\n");
-
+	
 	/* unregister everything */
     free_fiq(INT_REMOTE, &ir_fiq_interrupt);
     free_fiq(INT_TIMER_B, &timer_b_interrupt);
-
+    
     /* Remove the cdev */
     device_remove_file(irreceiver_dev, &dev_attr_debug);
 	device_remove_file(irreceiver_dev, &dev_attr_switch);
@@ -423,7 +423,7 @@ static int __devinit aml_ir_receiver_init(void)
         platform_device_put(aml_ir_receiver_device);
         return -ENODEV;
     }
-
+    
 	return 0;
 }
 
@@ -431,7 +431,7 @@ static void __exit aml_ir_receiver_exit(void)
 {
 	dbg("IR Receiver exit \n");
     platform_driver_unregister(&aml_ir_receiver_driver);
-    platform_device_unregister(aml_ir_receiver_device);
+    platform_device_unregister(aml_ir_receiver_device); 
     aml_ir_receiver_device = NULL;
 }
 
@@ -441,3 +441,4 @@ module_exit(aml_ir_receiver_exit);
 MODULE_AUTHOR("geng.li");
 MODULE_DESCRIPTION("IR Receiver Driver");
 MODULE_LICENSE("GPL");
+

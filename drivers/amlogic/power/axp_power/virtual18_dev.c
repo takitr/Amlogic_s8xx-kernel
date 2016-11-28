@@ -18,37 +18,37 @@ static struct platform_device virt[]={
 			.dev		= {
 				.platform_data = "axp18_analog/fm",
 			}
-	},{
+ 	},{
 			.name = "reg-18-cs-ldo3",
 			.id = -1,
 			.dev		= {
 				.platform_data = "axp18_flash",
 			}
-	},{
+ 	},{
 			.name = "reg-18-cs-ldo4",
 			.id = -1,
 			.dev		= {
 				.platform_data = "axp18_spdif",
 			}
-	},{
+ 	},{
 			.name = "reg-18-cs-ldo5",
 			.id = -1,
 			.dev		= {
 				.platform_data = "axp18_others",
 			}
-	},{
+ 	},{
 			.name = "reg-18-cs-buck1",
 			.id = -1,
 			.dev		= {
 				.platform_data = "axp18_io",
 			}
-	},{
+ 	},{
 			.name = "reg-18-cs-buck2",
 			.id = -1,
 			.dev		= {
 				.platform_data = "axp18_core",
 			}
-	},{
+ 	},{
 			.name = "reg-18-cs-buck3",
 			.id = -1,
 			.dev		= {
@@ -75,8 +75,8 @@ static struct platform_device virt[]={
 {
 	int j,ret;
 	for (j = 0; j < ARRAY_SIZE(virt); j++){
-		ret =  platform_device_register(&virt[j]);
-		if (ret)
+ 		ret =  platform_device_register(&virt[j]);
+  		if (ret)
 				goto creat_devices_failed;
 	}
 

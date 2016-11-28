@@ -103,11 +103,6 @@ int codec_power=1;
 unsigned int flag=0;
 //static int num=0;
 
-int output_volume = 100;  // volume control
-audio_tone_control_t audio_tone_control;
-
-#define VOL_CTL(s) ((unsigned int)(((signed short)(s))*(vol)) >> 15) // volume scaling from 0~100
-
 //static int codec_power_switch(struct snd_pcm_substream *substream, unsigned int status);
 
 EXPORT_SYMBOL(aml_i2s_playback_start_addr);
@@ -117,13 +112,6 @@ EXPORT_SYMBOL(aml_i2s_capture_buf_size);
 EXPORT_SYMBOL(aml_i2s_playback_phy_start_addr);
 EXPORT_SYMBOL(aml_i2s_capture_phy_start_addr);
 EXPORT_SYMBOL(aml_i2s_alsa_write_addr);
-static int trigger_underrun = 0;
-void aml_audio_hw_trigger(void)
-{
-    trigger_underrun = 1;
-}
-EXPORT_SYMBOL(aml_audio_hw_trigger);
-
 #if 0
 static void aml_codec_power_switch_queue(struct work_struct* work)
 {
@@ -165,7 +153,7 @@ static const struct snd_pcm_hardware aml_pcm_capture = {
 	.info			= SNDRV_PCM_INFO_INTERLEAVED|
 							SNDRV_PCM_INFO_BLOCK_TRANSFER|
 							SNDRV_PCM_INFO_MMAP |
-							SNDRV_PCM_INFO_MMAP_VALID |
+						 	SNDRV_PCM_INFO_MMAP_VALID |
 						  SNDRV_PCM_INFO_PAUSE,
 
 	.formats		= SNDRV_PCM_FMTBIT_S16_LE,
@@ -203,10 +191,10 @@ static void aml_audio_clock_gating_disable(void)
 	aml_clr_reg32_mask(P_HHI_GCLK_MPEG0, (1<<18));
 	aml_clr_reg32_mask(P_HHI_GCLK_MPEG1, (1<<2)
 										|(0xba<<6)
-									);
+								    	);
 	aml_clr_reg32_mask(P_HHI_GCLK_OTHER, (1<<18)
 										|(0x6<<14)
-									);
+								    	);
  */   aml_clr_reg32_mask( P_HHI_AUD_CLK_CNTL, (1 << 8));
 
 	//printk("P_HHI_GCLK_MPEG0=disable--%#x\n\n", aml_read_reg32(P_HHI_GCLK_MPEG0));
@@ -221,11 +209,11 @@ static void aml_audio_clock_gating_enable(void)
 #endif
 /*	aml_set_reg32_mask(P_HHI_GCLK_MPEG0, (1<<18));
 	aml_set_reg32_mask(P_HHI_GCLK_MPEG1, (1<<2)
-									|(0xba<<6)
-										 );
+								    	|(0xba<<6)
+								   		 );
 	aml_set_reg32_mask(P_HHI_GCLK_OTHER, (1<<18)
-									|(0x6<<14)
-									);
+								    	|(0x6<<14)
+								    	);
 */    aml_set_reg32_mask( P_HHI_AUD_CLK_CNTL, (1 << 8));
 	//printk("P_HHI_GCLK_MPEG0=enable--%#x\n\n", aml_read_reg32(P_HHI_GCLK_MPEG0));
 	//printk("P_HHI_GCLK_MPEG1=enable--%#x\n\n", aml_read_reg32(P_HHI_GCLK_MPEG1));
@@ -466,7 +454,7 @@ so notify HDMI to set audio parameter every time when HDMI AUDIO not ready
 */
 
 static void audio_notify_hdmi_info(int audio_type, void *v){
-	struct snd_pcm_substream *substream =(struct snd_pcm_substream*)v;
+    	struct snd_pcm_substream *substream =(struct snd_pcm_substream*)v;
 	if(substream->runtime->rate != audio_sr_info || audio_type_info != audio_type || !audio_hdmi_init_ready()
 		|| substream->runtime->channels != audio_ch_info)
 	{
@@ -512,7 +500,7 @@ static void aml_hw_iec958_init(struct snd_pcm_substream *substream)
     _aiu_958_raw_setting_t set;
     _aiu_958_channel_status_t chstat;
     unsigned start,size;
-    unsigned sr = 48000;
+    unsigned sr = 48000;	
 	memset((void*)(&set), 0, sizeof(set));
 	memset((void*)(&chstat), 0, sizeof(chstat));
 	set.chan_stat = &chstat;
@@ -520,10 +508,10 @@ static void aml_hw_iec958_init(struct snd_pcm_substream *substream)
 		struct snd_pcm_runtime *runtime = substream->runtime;
 		sr  = runtime->rate;
 	}
-	/* case 1,raw mode enabled */
+   	/* case 1,raw mode enabled */
 	if(IEC958_mode_codec){
 	  if(IEC958_mode_codec == 1){ //dts, use raw sync-word mode
-		IEC958_MODE = AIU_958_MODE_RAW;
+	    	IEC958_MODE = AIU_958_MODE_RAW;
 		printk("iec958 mode RAW\n");
 	  }
 	  else{ //ac3,use the same pcm mode as i2s configuration
@@ -532,12 +520,12 @@ static void aml_hw_iec958_init(struct snd_pcm_substream *substream)
 	  }
 	}else{	/* case 2,3 */
 	  if(I2S_MODE == AIU_I2S_MODE_PCM32)
-		IEC958_MODE = AIU_958_MODE_PCM32;
+	  	IEC958_MODE = AIU_958_MODE_PCM32;
 	  else if(I2S_MODE == AIU_I2S_MODE_PCM24)
-		IEC958_MODE = AIU_958_MODE_PCM24;
+	  	IEC958_MODE = AIU_958_MODE_PCM24;
 	  else
-		IEC958_MODE = AIU_958_MODE_PCM16;
-	  printk("iec958 mode %s\n",(I2S_MODE == AIU_I2S_MODE_PCM32)?"PCM32":((I2S_MODE == AIU_I2S_MODE_PCM24)?"PCM24":"PCM16"));
+	  	IEC958_MODE = AIU_958_MODE_PCM16;
+  	  printk("iec958 mode %s\n",(I2S_MODE == AIU_I2S_MODE_PCM32)?"PCM32":((I2S_MODE == AIU_I2S_MODE_PCM24)?"PCM24":"PCM16"));
 	}
 
 	if(IEC958_MODE == AIU_958_MODE_PCM16 || IEC958_MODE == AIU_958_MODE_PCM24 ||
@@ -566,25 +554,25 @@ static void aml_hw_iec958_init(struct snd_pcm_substream *substream)
 		}
 		else if(sr == 44100){
 			set.chan_stat->chstat1_l = 0xc00;
-			set.chan_stat->chstat1_r = 0xc00;
+			set.chan_stat->chstat1_r = 0xc00;			
 		}
 		else{
 			set.chan_stat->chstat1_l = 0Xe00;
-			set.chan_stat->chstat1_r = 0Xe00;
-		}
+			set.chan_stat->chstat1_r = 0Xe00;			
+		}		
 	}
-	else{
+	else{  
 		if(sr == 32000){
 			set.chan_stat->chstat1_l = 0x300;
 			set.chan_stat->chstat1_r = 0x300;
 		}
 		else if(sr == 44100){
 			set.chan_stat->chstat1_l = 0;
-			set.chan_stat->chstat1_r = 0;
+			set.chan_stat->chstat1_r = 0;			
 		}
 		else{
 			set.chan_stat->chstat1_l = 0X200;
-			set.chan_stat->chstat1_r = 0X200;
+			set.chan_stat->chstat1_r = 0X200;			
 		}
 	}
 	audio_set_958_mode(IEC958_MODE, &set);
@@ -605,8 +593,8 @@ void	aml_alsa_hw_reprepare(void)
 {
 	/* diable 958 module before call initiation */
 	//audio_hw_958_enable(0);
-	//aml_hw_iec958_init((struct snd_pcm_substream *)playback_substream_handle);
-	trigger_underun = 1;
+  	//aml_hw_iec958_init((struct snd_pcm_substream *)playback_substream_handle);
+  	trigger_underun = 1;
 
 }
 
@@ -682,7 +670,7 @@ static int aml_pcm_prepare(struct snd_pcm_substream *substream)
 	if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK){
 			trigger_underun = 0;
 			aml_hw_i2s_init(runtime);
-			aml_hw_iec958_init(substream);
+		  	aml_hw_iec958_init(substream);
 	}
 	else{
 			//printk("aml_pcm_prepare SNDRV_PCM_STREAM_CAPTURE: dma_addr=%x, dma_bytes=%x\n", runtime->dma_addr, runtime->dma_bytes);
@@ -755,7 +743,7 @@ static int aml_pcm_trigger(struct snd_pcm_substream *substream,
 			//codec_power_switch(substream, clock_gating_status);
 		    audio_enable_ouput(1);
 	  }else{
-			//printk("aml_pcm_trigger: capture start\n");
+	  		//printk("aml_pcm_trigger: capture start\n");
 			//clock_gating_status |= clock_gating_capture;
 			//aml_clock_gating(clock_gating_status);
 			//codec_power_switch(substream, clock_gating_status);
@@ -781,7 +769,7 @@ static int aml_pcm_trigger(struct snd_pcm_substream *substream,
 		s->xrun_num = 0;
 	    if(substream->stream == SNDRV_PCM_STREAM_PLAYBACK){
             //printk("aml_pcm_trigger: playback stop\n");
-			audio_enable_ouput(0);
+	  		audio_enable_ouput(0);
 		//	clock_gating_status &= ~clock_gating_playback;
 			//aml_clock_gating(clock_gating_status);
 			//codec_power_switch(substream, clock_gating_status);
@@ -935,9 +923,9 @@ static void aml_pcm_timer_callback(unsigned long data)
 				    } else {
 				        size = last_ptr - (s->last_ptr);
 				    }
-				s->last_ptr = last_ptr;
-				s->size += bytes_to_frames(substream->runtime, size);
-				if (s->size >= runtime->period_size) {
+    				s->last_ptr = last_ptr;
+    				s->size += bytes_to_frames(substream->runtime, size);
+    				if (s->size >= runtime->period_size) {
 				        s->size %= runtime->period_size;
 				        spin_unlock(&s->lock);
 				        snd_pcm_period_elapsed(substream);
@@ -945,7 +933,7 @@ static void aml_pcm_timer_callback(unsigned long data)
 				    }
 				    mod_timer(&prtd->timer, jiffies + 1);
 					//codec_power = 1;
-					spin_unlock(&s->lock);
+   					spin_unlock(&s->lock);
 				}else{
 
 						 mod_timer(&prtd->timer, jiffies + 1);
@@ -968,16 +956,16 @@ static void aml_pcm_timer_callback(unsigned long data)
 					} else {
 				        size = last_ptr - (s->last_ptr);
 				    }
-				s->last_ptr = last_ptr;
-				s->size += bytes_to_frames(substream->runtime, size);
-				if (s->size >= runtime->period_size) {
+    				s->last_ptr = last_ptr;
+    				s->size += bytes_to_frames(substream->runtime, size);
+    				if (s->size >= runtime->period_size) {
 				        s->size %= runtime->period_size;
 				        spin_unlock(&s->lock);
 				        snd_pcm_period_elapsed(substream);
 				        spin_lock(&s->lock);
 				    }
 				    mod_timer(&prtd->timer, jiffies + 1);
-					spin_unlock(&s->lock);
+   					spin_unlock(&s->lock);
 				}else{
 						 mod_timer(&prtd->timer, jiffies + 1);
 				}
@@ -985,23 +973,23 @@ static void aml_pcm_timer_callback(unsigned long data)
 	/*	if((codec_power==0) && (num==500))
 		{
 			num=0;
-			flag=1;
+	   		flag=1;
 			schedule_work(&aml_pcm_work.aml_codec_workqueue);
 		}
 	   else if((codec_power==1) && (num <= 500))
-		{
-			num=0;
+	   	{
+	   		num=0;
 			flag = 0;
-		}
+	   	}
 	   else if((codec_power==0) && (num<500))
-		{
-		    if(flag==1)
-		    {}
+	   	{
+	   	    if(flag==1)
+	   	    {}
 			else
 			{
 				num++;
 			}
-		} */
+	   	} */
 }
 
 
@@ -1069,7 +1057,7 @@ static int aml_pcm_open(struct snd_pcm_substream *substream)
 
     printk("hrtimer inited..\n");
 #endif
-
+	
 
 	spin_lock_init(&prtd->s.lock);
 	s = &prtd->s;
@@ -1092,7 +1080,7 @@ static int aml_pcm_close(struct snd_pcm_substream *substream)
 		prtd->buf = NULL;
 	}
 	if(prtd){
-		kfree(prtd);
+ 		kfree(prtd);
 		prtd = NULL;
 	}
 
@@ -1113,9 +1101,7 @@ static int aml_pcm_copy_playback(struct snd_pcm_runtime *runtime, int channel,
     char *hwbuf = runtime->dma_area + frames_to_bytes(runtime, pos);
     struct aml_runtime_data *prtd = runtime->private_data;
     void *ubuf = prtd->buf;
-    unsigned int vol;
-
-    aml_i2s_alsa_write_addr = frames_to_bytes(runtime, pos);
+	aml_i2s_alsa_write_addr = frames_to_bytes(runtime, pos);
     n = frames_to_bytes(runtime, count);
     if(aml_i2s_playback_enable == 0)
       return res;
@@ -1136,13 +1122,10 @@ static int aml_pcm_copy_playback(struct snd_pcm_runtime *runtime, int channel,
 		if (pos % align) {
 		    printk("audio data unligned: pos=%d, n=%d, align=%d\n", (int)pos, n, align);
 		}
-
-                vol = (output_volume * 0x8000) / 100;
-
 		for (j = 0; j < n; j += 64) {
 		    for (i = 0; i < 16; i++) {
-	          *left++ = (int16_t)(VOL_CTL(*tfrom++));
-	          *right++ = (int16_t)(VOL_CTL(*tfrom++));
+	          *left++ = (*tfrom++) ;
+	          *right++ = (*tfrom++);
 		    }
 		    left += 16;
 		    right += 16;
@@ -1190,25 +1173,25 @@ static int aml_pcm_copy_playback(struct snd_pcm_runtime *runtime, int channel,
 			sbl = to + 8*6;
 			sbr = to + 8*7;
 			for (j = 0; j < n; j += 256) {
-			for (i = 0; i < 8; i++) {
-				*lf++  = (*tfrom ++)>>8;
-				*cf++  = (*tfrom ++)>>8;
+		    	for (i = 0; i < 8; i++) {
+	         		*lf++  = (*tfrom ++)>>8;
+	          		*cf++  = (*tfrom ++)>>8;
 					*rf++  = (*tfrom ++)>>8;
 					*ls++  = (*tfrom ++)>>8;
 					*rs++  = (*tfrom ++)>>8;
 					*lef++ = (*tfrom ++)>>8;
 					*sbl++ = (*tfrom ++)>>8;
 					*sbr++ = (*tfrom ++)>>8;
-			}
-			lf  += 7*8;
-			cf  += 7*8;
+		    	}
+		    	lf  += 7*8;
+		    	cf  += 7*8;
 				rf  += 7*8;
 				ls  += 7*8;
 				rs  += 7*8;
 				lef += 7*8;
 				sbl += 7*8;
 				sbr += 7*8;
-			}
+		 	}
 		}
 		else {
         for(j=0; j< n; j+= 64){
@@ -1219,7 +1202,7 @@ static int aml_pcm_copy_playback(struct snd_pcm_runtime *runtime, int channel,
           left += 8;
           right += 8;
         }
-	}
+      	}
       }
 
 	}else{
@@ -1253,7 +1236,7 @@ static int aml_pcm_copy_capture(struct snd_pcm_runtime *runtime, int channel,
     void *ubuf = prtd->buf;
     if(audioin_mode&SPDIFIN_MODE) //spdif in
     {
-	r_shift = 12;
+    	r_shift = 12;
     }
     to = (unsigned short *)ubuf;//tmp buf;
     tfrom = (unsigned int *)hwbuf;	// 32bit buffer
@@ -1273,12 +1256,12 @@ static int aml_pcm_copy_capture(struct snd_pcm_runtime *runtime, int channel,
 		        printk("audio data unligned\n");
 		    }
 		    if((n*2)%64){
-				printk("audio data unaligned 64 bytes\n");
+		    		printk("audio data unaligned 64 bytes\n");
 		    }
 		    for (j = 0; j < n*2 ; j += 64) {
 		        for (i = 0; i < 8; i++) {
-				t1 = (*left++);
-				t2 = (*right++);
+		        	t1 = (*left++);
+		        	t2 = (*right++);
 	                *to++ = (unsigned short)((t1>>r_shift)&0xffff);
 	                *to++ = (unsigned short)((t2>>r_shift)&0xffff);
 		         }
@@ -1297,11 +1280,11 @@ static int aml_pcm_copy(struct snd_pcm_substream *substream, int channel,
     struct snd_pcm_runtime *runtime = substream->runtime;
     int ret = 0;
 
-	if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK){
-		ret = aml_pcm_copy_playback(runtime, channel,pos, buf, count);
-	}else{
-		ret = aml_pcm_copy_capture(runtime, channel,pos, buf, count);
-	}
+ 	if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK){
+ 		ret = aml_pcm_copy_playback(runtime, channel,pos, buf, count);
+ 	}else{
+ 		ret = aml_pcm_copy_capture(runtime, channel,pos, buf, count);
+ 	}
     return ret;
 }
 
@@ -1661,17 +1644,6 @@ static void aml_pcm_cleanup_debugfs(void)
 {
 }
 #endif
-
-
-int get_mixer_output_volume(void)
-{
-	return output_volume;
-}
-
-int set_mixer_output_volume(int volume)
-{
-	output_volume = volume;
-}
 
 struct aml_audio_interface aml_i2s_interface = {
     .id = AML_AUDIO_I2S,

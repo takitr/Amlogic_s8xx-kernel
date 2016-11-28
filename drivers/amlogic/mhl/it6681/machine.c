@@ -18,3 +18,4 @@ static struct i2c_board_info __initdata panda_i2c2_it6681[] = {
                 .platform_data = &pdata_it6681,
 	},
 };
+

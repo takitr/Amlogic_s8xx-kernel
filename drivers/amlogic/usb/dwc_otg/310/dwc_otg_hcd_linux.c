@@ -114,12 +114,12 @@ static struct hc_driver dwc_otg_hc_driver = {
 
 	.flags = HCD_MEMORY | HCD_USB2,
 
-	//.reset =
+	//.reset =              
 	.start = hcd_start,
 	.stop = hcd_stop,
 
 	.bus_suspend = hcd_suspend,
-	.bus_resume =  hcd_resume,
+	.bus_resume =  hcd_resume, 
 
 	.urb_enqueue = urb_enqueue,
 	.urb_dequeue = urb_dequeue,
@@ -288,8 +288,8 @@ int _hcd_isoc_complete(dwc_otg_hcd_t * hcd,void *urb_handle,
 					   urb);
 		}
 	}
-
-
+	
+	
 	DWC_FREE(dwc_otg_urb);
 
 	return 0;
@@ -340,8 +340,8 @@ static int _complete(dwc_otg_hcd_t * hcd, void *urb_handle,
 		status = -EOVERFLOW;
 		break;
 	case -DWC_E_SHUTDOWN:
-		status = -ESHUTDOWN;
-		break;
+ 		status = -ESHUTDOWN;
+ 		break;	
 	default:
 		if (status) {
 			DWC_PRINTF("Uknown urb status %d\n", status);
@@ -492,7 +492,7 @@ int _complete_in_tasklet(dwc_otg_hcd_t * hcd, void *urb_handle,
 #if LINUX_VERSION_CODE < KERNEL_VERSION(2,6,28)
 	usb_hcd_giveback_urb(dwc_otg_hcd_to_hcd(hcd), urb);
 #else
-		usb_hcd_giveback_urb(dwc_otg_hcd_to_hcd(hcd), urb, urb->status);
+		usb_hcd_giveback_urb(dwc_otg_hcd_to_hcd(hcd), urb, urb->status); 
 #endif
 	//DWC_SPINLOCK(hcd->lock);
 
@@ -535,7 +535,7 @@ int hcd_init(
 	int retval = 0;
 
 	DWC_DEBUGPL(DBG_HCD, "DWC OTG HCD INIT\n");
-
+	
 #if 0 /* move to dwc_otg_driver_probe*/
 	/* Set device flags indicating whether the HCD supports DMA. */
 	if (dwc_otg_is_dma_enable(otg_dev->core_if)) {
@@ -717,13 +717,11 @@ int hcd_suspend(struct usb_hcd *hcd)
 {
 	dwc_otg_hcd_t *dwc_otg_hcd = hcd_to_dwc_otg_hcd(hcd);
 	dwc_otg_hcd->auto_pm_suspend_flag = (hcd->flags>>31)&1;
-	dwc_otg_hcd->pm_freeze_flag = (hcd->flags >> 30) & 1;
 
 	DWC_DEBUGPL(DBG_HCD, "HCD SUSPEND\n");
 
 	dwc_otg_hcd_suspend(dwc_otg_hcd);
 	hcd->flags &= (~(1<<31));
-	hcd->flags &= (~(1<<30));
 
 	return 0;
 }
@@ -733,14 +731,11 @@ int hcd_resume(struct usb_hcd *hcd)
 {
 	dwc_otg_hcd_t *dwc_otg_hcd = hcd_to_dwc_otg_hcd(hcd);
 	dwc_otg_hcd->auto_pm_suspend_flag = (hcd->flags>>31)&1;
-	dwc_otg_hcd->pm_freeze_flag = (hcd->flags >> 30) & 1;
-
+	
 	DWC_DEBUGPL(DBG_HCD, "HCD RESUME\n");
-
+	
 	dwc_otg_hcd_resume(dwc_otg_hcd);
 	hcd->flags &= (~(1<<31));
-	hcd->flags &= (~(1<<30));
-
 	return 0;
 }
 
@@ -827,7 +822,7 @@ static int urb_enqueue(struct usb_hcd *hcd,
 	}
 #endif
 	DWC_SPINLOCK_IRQSAVE(dwc_otg_hcd->lock, &flags_lock);
-	DWC_SPINUNLOCK_IRQRESTORE(dwc_otg_hcd->lock, flags_lock);
+	DWC_SPINUNLOCK_IRQRESTORE(dwc_otg_hcd->lock, flags_lock);	
 	if (unlikely(atomic_read(&urb->reject))) {
 		printk("%s:urb(%p) had been killed\n",__func__,urb);
 		return -EPERM;
@@ -962,18 +957,18 @@ static int urb_dequeue(struct usb_hcd *hcd, struct urb *urb, int status)
 #endif
 	if(usb_pipeint(urb->pipe) && (dwc_otg_hcd->ssplit_lock == usb_pipedevice(urb->pipe))){
 		DWC_DEBUGPL(DBG_HCD, "addr=%d(%p)\n",usb_pipedevice(urb->pipe),urb->hcpriv);
-		dwc_otg_hcd->ssplit_lock = 0;
+		dwc_otg_hcd->ssplit_lock = 0;	
 	}
-
+		
 	if(urb->hcpriv == NULL){
 		DWC_WARN("urb->hcpriv == NULL! urb = %p status=%d\n",urb,status);
 		goto EXIT;
 	}
 	retval = dwc_otg_hcd_urb_dequeue(dwc_otg_hcd, urb->hcpriv);
 
-	if(!retval)
+	if(!retval) 
 	DWC_FREE(urb->hcpriv);
-
+	
 EXIT:
 	DWC_SPINUNLOCK_IRQRESTORE(dwc_otg_hcd->lock, flags);
 
@@ -1013,7 +1008,7 @@ static void endpoint_disable(struct usb_hcd *hcd, struct usb_host_endpoint *ep)
 }
 
 #if LINUX_VERSION_CODE >= KERNEL_VERSION(2,6,30)
-/* Resets endpoint specific parameter values, in current version used to reset
+/* Resets endpoint specific parameter values, in current version used to reset 
  * the data toggle(as a WA). This function can be called from usb_clear_halt routine */
 static void endpoint_reset(struct usb_hcd *hcd, struct usb_host_endpoint *ep)
 {
@@ -1021,7 +1016,7 @@ static void endpoint_reset(struct usb_hcd *hcd, struct usb_host_endpoint *ep)
 	dwc_otg_hcd_t *dwc_otg_hcd = hcd_to_dwc_otg_hcd(hcd);
 
 	DWC_SPINLOCK_IRQSAVE(dwc_otg_hcd->lock, &flags);
-
+	
 	if(usb_endpoint_xfer_int(&ep->desc))
 		dwc_otg_hcd->ssplit_lock = 0;
 

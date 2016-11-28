@@ -20,3 +20,5 @@ config MESON_SUSPEND_FIRMWARE_BASE
 	  The base address of 1MB of memory reserved for suspend firmware.
 
 endif # ARCH_MESONG9TV
+
+

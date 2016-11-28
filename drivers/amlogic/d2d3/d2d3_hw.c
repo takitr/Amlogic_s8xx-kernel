@@ -537,7 +537,7 @@ void d2d3_enable_hw(bool enable)
                 D2d3_Wr_reg_bits(D2D3_INTF_CTRL0,1,ON_CLK_D2D3_BIT,ON_CLK_D2D3_WID);
         }else {
                 //soft reset d2d3 unit
-		D2d3_Wr_reg_bits(D2D3_GLB_CTRL,1,SW_RST_NOBUF_BIT,SW_RST_NOBUF_WID);
+        	D2d3_Wr_reg_bits(D2D3_GLB_CTRL,1,SW_RST_NOBUF_BIT,SW_RST_NOBUF_WID);
 
                 // [27:26]  Enable d2d3 register clock    = 00/(auto, off, on, on)
                 // [ 25:24]  Disable dpg clock        = 01/(auto, off, on, on)
@@ -550,3 +550,4 @@ void d2d3_enable_hw(bool enable)
                 D2d3_Wr_reg_bits(D2D3_INTF_CTRL0,0,ON_CLK_D2D3_BIT,ON_CLK_D2D3_WID);
         }
 }
+

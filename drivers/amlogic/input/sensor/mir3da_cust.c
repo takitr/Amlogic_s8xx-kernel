@@ -50,7 +50,7 @@
 #define ABSMAX_2G                       (GRAVITY_EARTH * 2)
 
 #define POLL_INTERVAL_MAX               500
-#define POLL_INTERVAL                   50
+#define POLL_INTERVAL                   50 
 #define INPUT_FUZZ                      0
 #define INPUT_FLAT                      0
 
@@ -99,30 +99,30 @@ static void sensor_write_work( struct work_struct *work )
     struct work_info*   pWorkInfo;
     struct file         *filep;
     u32                 orgfs;
-    int                 ret;
+    int                 ret;   
 
     orgfs = get_fs();
     set_fs(KERNEL_DS);
 
     pWorkInfo = container_of((struct delayed_work*)work, struct work_info, write_work);
-    if (pWorkInfo == NULL){
-            MI_ERR("get pWorkInfo failed!");
+    if (pWorkInfo == NULL){            
+            MI_ERR("get pWorkInfo failed!");       
             return;
     }
-
+    
     filep = filp_open(OffsetFileName, O_RDWR|O_CREAT, 0600);
     if (IS_ERR(filep)){
         MI_ERR("write, sys_open %s error!!.\n", OffsetFileName);
         ret =  -1;
     }
     else
-    {
+    {   
         filep->f_op->write(filep, pWorkInfo->buffer, pWorkInfo->len, &filep->f_pos);
         filp_close(filep, NULL);
-        ret = 0;
+        ret = 0;        
     }
-
-    set_fs(orgfs);
+    
+    set_fs(orgfs);   
     pWorkInfo->rst = ret;
     complete( &pWorkInfo->completion );
 }
@@ -131,18 +131,18 @@ static void sensor_read_work( struct work_struct *work )
 {
     u32 orgfs;
     struct file *filep;
-    int ret;
+    int ret; 
     struct work_info* pWorkInfo;
-
+        
     orgfs = get_fs();
     set_fs(KERNEL_DS);
-
+    
     pWorkInfo = container_of((struct delayed_work*)work, struct work_info, read_work);
-    if (pWorkInfo == NULL){
-        MI_ERR("get pWorkInfo failed!");
+    if (pWorkInfo == NULL){            
+        MI_ERR("get pWorkInfo failed!");       
         return;
     }
-
+ 
     filep = filp_open(OffsetFileName, O_RDONLY, 0600);
     if (IS_ERR(filep)){
         MI_ERR("read, sys_open %s error!!.\n",OffsetFileName);
@@ -151,7 +151,7 @@ static void sensor_read_work( struct work_struct *work )
     }
     else{
         filep->f_op->read(filep, pWorkInfo->buffer,  sizeof(pWorkInfo->buffer), &filep->f_pos);
-        filp_close(filep, NULL);
+        filp_close(filep, NULL);    
         set_fs(orgfs);
         ret = 0;
     }
@@ -165,7 +165,7 @@ static int sensor_sync_read(u8* offset)
     int     err;
     int     off[MIR3DA_OFFSET_LEN] = {0};
     struct work_info* pWorkInfo = &m_work_info;
-
+     
     init_completion( &pWorkInfo->completion );
     queue_delayed_work( pWorkInfo->wq, &pWorkInfo->read_work, msecs_to_jiffies(0) );
     err = wait_for_completion_timeout( &pWorkInfo->completion, msecs_to_jiffies( 2000 ) );
@@ -177,7 +177,7 @@ static int sensor_sync_read(u8* offset)
     if (pWorkInfo->rst != 0){
         return pWorkInfo->rst;
     }
-
+    
     sscanf(m_work_info.buffer, "%x,%x,%x,%x,%x,%x,%x,%x,%x", &off[0], &off[1], &off[2], &off[3], &off[4], &off[5],&off[6], &off[7], &off[8]);
 
     offset[0] = (u8)off[0];
@@ -189,7 +189,7 @@ static int sensor_sync_read(u8* offset)
     offset[6] = (u8)off[6];
     offset[7] = (u8)off[7];
     offset[8] = (u8)off[8];
-
+    
     return 0;
 }
 
@@ -197,13 +197,13 @@ static int sensor_sync_write(u8* off)
 {
     int err = 0;
     struct work_info* pWorkInfo = &m_work_info;
-
+       
     init_completion( &pWorkInfo->completion );
-
+    
     sprintf(m_work_info.buffer, "%x,%x,%x,%x,%x,%x,%x,%x,%x\n", off[0],off[1],off[2],off[3],off[4],off[5],off[6],off[7],off[8]);
-
+    
     pWorkInfo->len = sizeof(m_work_info.buffer);
-
+        
     queue_delayed_work( pWorkInfo->wq, &pWorkInfo->write_work, msecs_to_jiffies(0) );
     err = wait_for_completion_timeout( &pWorkInfo->completion, msecs_to_jiffies( 2000 ) );
     if ( err == 0 ){
@@ -214,7 +214,7 @@ static int sensor_sync_write(u8* off)
     if (pWorkInfo->rst != 0){
         return pWorkInfo->rst;
     }
-
+    
     return 0;
 }
 #endif
@@ -223,12 +223,12 @@ static void report_abs(void)
 {
     short x=0,y=0,z=0;
     MIR_HANDLE handle = mir_handle;
-
+        
     if (mir3da_read_data(handle, &x,&y,&z) != 0) {
         MI_ERR("MIR3DA data read failed!\n");
         return;
     }
-
+    
     aml_sensor_report_acc(mir3da_i2c_client, mir3da_idev->input, x, y, z);
 }
 
@@ -255,7 +255,7 @@ static long mir3da_misc_ioctl( struct file *file,unsigned int cmd, unsigned long
 //    int             range = 0;
     short           xyz[3] = {0};
     MIR_HANDLE      handle = mir_handle;
-
+    
     if(_IOC_DIR(cmd) & _IOC_READ)
     {
         err = !access_ok(VERIFY_WRITE, (void __user *)arg, _IOC_SIZE(cmd));
@@ -271,7 +271,7 @@ static long mir3da_misc_ioctl( struct file *file,unsigned int cmd, unsigned long
     }
 
     switch (cmd)
-    {
+    {      
         case MIR3DA_ACC_IOCTL_GET_DELAY:
             interval = POLL_INTERVAL;
             if (copy_to_user(argp, &interval, sizeof(interval)))
@@ -295,44 +295,44 @@ static long mir3da_misc_ioctl( struct file *file,unsigned int cmd, unsigned long
                 return -EFAULT;
 
             is_enabled = (bEnable > 0) ? 1 : 0;
-
+			
             err = mir3da_set_enable(handle, bEnable);
             if (err < 0)
                 return EINVAL;
             break;
 
-        case MIR3DA_ACC_IOCTL_GET_ENABLE:
+        case MIR3DA_ACC_IOCTL_GET_ENABLE:        
             err = mir3da_get_enable(handle, &bEnable);
             if (err < 0){
                 return -EINVAL;
             }
 
             if (copy_to_user(argp, &bEnable, sizeof(bEnable)))
-                    return -EINVAL;
+                    return -EINVAL;            
             break;
 
 #if MIR3DA_OFFSET_TEMP_SOLUTION
         case MIR3DA_ACC_IOCTL_CALIBRATION:
             if(copy_from_user(&z_dir, argp, sizeof(z_dir)))
                 return -EFAULT;
-
+            
             if(mir3da_calibrate(handle, z_dir)) {
                 return -EFAULT;
-            }
+            } 
 
             if(copy_to_user(argp, &z_dir, sizeof(z_dir)))
                 return -EFAULT;
-            break;
+            break;        
 
         case MIR3DA_ACC_IOCTL_UPDATE_OFFSET:
             manual_load_cali_file(handle);
             break;
-#endif /* !MIR3DA_OFFSET_TEMP_SOLUTION */
+#endif /* !MIR3DA_OFFSET_TEMP_SOLUTION */ 
 
         case MIR3DA_ACC_IOCTL_GET_COOR_XYZ:
 
             if(mir3da_read_data(handle, &xyz[0],&xyz[1],&xyz[2]))
-                return -EFAULT;
+                return -EFAULT;        
 
             if(copy_to_user((void __user *)arg, xyz, sizeof(xyz)))
                 return -EFAULT;
@@ -364,8 +364,8 @@ static ssize_t mir3da_enable_show(struct device *dev,
     int             ret;
     char            bEnable;
     MIR_HANDLE      handle = mir_handle;
-
-    ret = mir3da_get_enable(handle, &bEnable);
+    
+    ret = mir3da_get_enable(handle, &bEnable);    
     if (ret < 0){
         ret = -EINVAL;
     }
@@ -389,7 +389,7 @@ static ssize_t mir3da_enable_store(struct device *dev,
         return -1;
     }
 
-    enable = simple_strtoul(buf, NULL, 10);
+    enable = simple_strtoul(buf, NULL, 10);    
     is_enabled = bEnable = (enable > 0) ? 1 : 0;
 
     ret = mir3da_set_enable(handle, bEnable);
@@ -410,10 +410,10 @@ static ssize_t mir3da_delay_show(struct device *dev, struct device_attribute *at
 
 static ssize_t mir3da_delay_store(struct device *dev, struct device_attribute *attr, const char *buf, size_t count)
 {
-    int interval = 0;
+    int interval = 0;   
 
-    interval = simple_strtoul(buf, NULL, 10);
-
+    interval = simple_strtoul(buf, NULL, 10);    
+    
     if (interval < 0 || interval > 1000)
         return -EINVAL;
 
@@ -422,7 +422,7 @@ static ssize_t mir3da_delay_store(struct device *dev, struct device_attribute *a
     }
 
     delayMs = interval;
-
+        
     return count;
 }
 
@@ -433,7 +433,7 @@ static ssize_t mir3da_axis_data_show(struct device *dev,
     short x,y,z;
     int count = 0;
     MIR_HANDLE      handle = mir_handle;
-
+    
     result = mir3da_read_data(handle, &x, &y, &z);
     if (result == 0)
         count += sprintf(buf+count, "x= %d;y=%d;z=%d\n", x,y,z);
@@ -447,31 +447,31 @@ static ssize_t mir3da_odr_show(struct device *dev,
                    struct device_attribute *attr, char *buf)
 {
     int ret;
-    int odr;
-
+    int odr; 
+    
     //ret = mir3da_get_odr(&odr);
     if (ret < 0){
         ret = -EINVAL;
     }else{
         ret = sprintf(buf, "%d\n", odr);
     }
-
+    
     return ret;
 }
 static ssize_t mir3da_odr_store(struct device *dev,struct device_attribute *attr,const char *buf, size_t count)
 {
     int ret;
     int odr;
-
+    
     sscanf(buf, "%d\n", &odr);
-
+    
     //ret = mir3da_set_odr(odr);
     if (ret < 0){
         ret = -EINVAL;
     }else{
         ret = count;
     }
-
+    
     return ret;
 }
 #endif
@@ -482,11 +482,11 @@ static ssize_t mir3da_reg_data_store(struct device *dev,
     int                 addr, data;
     int                 result;
     MIR_HANDLE          handle = mir_handle;
-
+        
     sscanf(buf, "0x%x, 0x%x\n", &addr, &data);
-
+    
     result = mir3da_register_write(handle, addr, data);
-
+    
     MI_ASSERT(result==0);
 
     return count;
@@ -496,7 +496,7 @@ static ssize_t mir3da_reg_data_show(struct device *dev,
            struct device_attribute *attr, char *buf)
 {
     MIR_HANDLE          handle = mir_handle;
-
+        
     return mir3da_get_reg_data(handle, buf);
 }
 
@@ -514,14 +514,14 @@ static ssize_t mir3da_average_enhance_show(struct device *dev,
 }
 
 static ssize_t mir3da_average_enhance_store(struct device *dev,struct device_attribute *attr,const char *buf, size_t count)
-{
+{ 
     int                             ret = 0;
     struct mir3da_filter_param_s    param = {0};
-
+    
     sscanf(buf, "%d %d %d\n", &param.filter_param_l, &param.filter_param_h, &param.filter_threhold);
-
+    
     ret = mir3da_set_filter_param(&param);
-
+    
     return count;
 }
 #endif //FILTER_AVERAGE_ENHANCE
@@ -533,7 +533,7 @@ static ssize_t mir3da_offset_show(struct device *dev, struct device_attribute *a
     int rst = 0;
     u8 off[9] = {0};
     MIR_HANDLE      handle = mir_handle;
-
+        
     rst = mir3da_read_offset(handle, off);
     if (!rst){
         count = sprintf(buf, "%d,%d,%d,%d,%d,%d,%d,%d,%d\n", off[0],off[1],off[2],off[3],off[4],off[5],off[6],off[7],off[8]);
@@ -548,7 +548,7 @@ static ssize_t mir3da_offset_store(struct device *dev, struct device_attribute *
     u8  offset[9] = {0};
     int rst = 0;
     MIR_HANDLE      handle = mir_handle;
-
+    
     sscanf(buf, "%d,%d,%d,%d,%d,%d,%d,%d,%d\n", &off[0], &off[1], &off[2], &off[3], &off[4], &off[5],&off[6], &off[7], &off[8]);
 
     offset[0] = (u8)off[0];
@@ -568,9 +568,9 @@ static ssize_t mir3da_offset_store(struct device *dev, struct device_attribute *
 int bCaliResult = -1;
 static ssize_t mir3da_calibrate_show(struct device *dev,struct device_attribute *attr,char *buf)
 {
-    int ret;
+    int ret;       
 
-    ret = sprintf(buf, "%d\n", bCaliResult);
+    ret = sprintf(buf, "%d\n", bCaliResult);   
     return ret;
 }
 
@@ -580,10 +580,10 @@ static ssize_t mir3da_calibrate_store(struct device *dev,
 {
     s8              z_dir = 0;
     MIR_HANDLE      handle = mir_handle;
-
+   
     z_dir = simple_strtol(buf, NULL, 10);
     bCaliResult = mir3da_calibrate(handle, z_dir);
-
+    
     return count;
 }
 #endif /* !MIR3DA_OFFSET_TEMP_SOLUTION */
@@ -602,14 +602,14 @@ static ssize_t mir3da_log_level_store(struct device *dev,
                     struct device_attribute *attr,
                     const char *buf, size_t count)
 {
-    Log_level = simple_strtoul(buf, NULL, 10);
+    Log_level = simple_strtoul(buf, NULL, 10);    
 
     return count;
 }
 
 
 static ssize_t mir3da_version_show(struct device *dev,
-                   struct device_attribute *attr, char *buf){
+                   struct device_attribute *attr, char *buf){    
 
 	return sprintf(buf, "%s_%s\n", DRI_VER, CORE_VER);
 
@@ -634,17 +634,17 @@ static DEVICE_ATTR(average_enhance, S_IWUGO | S_IRUGO,  mir3da_average_enhance_s
 #endif /* ! FILTER_AVERAGE_ENHANCE */
 
 static DEVICE_ATTR(version,         S_IRUGO,            mir3da_version_show,            NULL);
-static DEVICE_ATTR(vendor,          S_IRUGO,            mir3da_vendor_show,             NULL);
+static DEVICE_ATTR(vendor,          S_IRUGO,            mir3da_vendor_show,             NULL); 
 
 
-static struct attribute *mir3da_attributes[] = {
+static struct attribute *mir3da_attributes[] = { 
     &dev_attr_enable.attr,
     &dev_attr_delay.attr,
     &dev_attr_axis_data.attr,
     &dev_attr_reg_data.attr,
     &dev_attr_log_level.attr,
 #if MIR3DA_OFFSET_TEMP_SOLUTION
-    &dev_attr_offset.attr,
+    &dev_attr_offset.attr,    
     &dev_attr_calibrate_miraGSensor.attr,
 #endif
 #if FILTER_AVERAGE_ENHANCE
@@ -665,9 +665,9 @@ int i2c_smbus_read(PLAT_HANDLE handle, u8 addr, u8 *data)
 {
     int                 res = 0;
     struct i2c_client   *client = (struct i2c_client*)handle;
-
+    
     *data = i2c_smbus_read_byte_data(client, addr);
-
+    
     return res;
 }
 
@@ -675,9 +675,9 @@ int i2c_smbus_read_block(PLAT_HANDLE handle, u8 addr, u8 count, u8 *data)
 {
     int                 res = 0;
     struct i2c_client   *client = (struct i2c_client*)handle;
-
+    
     res = i2c_smbus_read_i2c_block_data(client, addr, count, data);
-
+    
     return res;
 }
 
@@ -685,9 +685,9 @@ int i2c_smbus_write(PLAT_HANDLE handle, u8 addr, u8 data)
 {
     int                 res = 0;
     struct i2c_client   *client = (struct i2c_client*)handle;
-
+    
     res = i2c_smbus_write_byte_data(client, addr, data);
-
+    
     return res;
 }
 
@@ -708,15 +708,15 @@ static int  mir3da_probe(struct i2c_client *client, const struct i2c_device_id *
     int                 result;
     struct input_dev    *idev;
     struct i2c_adapter  *adapter;
-
+ 
     mir3da_i2c_client = client;
-
+    
     adapter = to_i2c_adapter(client->dev.parent);
     result = i2c_check_functionality(adapter,
                      I2C_FUNC_SMBUS_BYTE |
                      I2C_FUNC_SMBUS_BYTE_DATA);
-    MI_ASSERT(result);
-
+    MI_ASSERT(result);  
+    
     if(mir3da_install_general_ops(&ops_handle)){
         MI_ERR("Install ops failed !\n");
         goto err_detach_client;
@@ -728,18 +728,18 @@ static int  mir3da_probe(struct i2c_client *client, const struct i2c_device_id *
         MI_ERR("Failed to create workqueue !");
         goto err_detach_client;
     }
-
+    
     INIT_DELAYED_WORK( &m_work_info.read_work, sensor_read_work );
     INIT_DELAYED_WORK( &m_work_info.write_work, sensor_write_work );
 #endif /* !MIR3DA_OFFSET_TEMP_SOLUTION */
-
+    
     /* Initialize the MIR3DA chip */
     mir_handle = mir3da_core_init((PLAT_HANDLE)client);
     if(NULL == mir_handle){
         MI_ERR("chip init failed !\n");
-        goto err_detach_client;
+        goto err_detach_client;        
     }
-
+  
     /* input poll device register */
     mir3da_idev = input_allocate_polled_device();
     if (!mir3da_idev) {
@@ -753,18 +753,18 @@ static int  mir3da_probe(struct i2c_client *client, const struct i2c_device_id *
     mir3da_idev->poll_interval_max = POLL_INTERVAL_MAX;
     idev = mir3da_idev->input;
 
-    idev->name = MIR3DA_INPUT_DEV_NAME;
+    idev->name = MIR3DA_INPUT_DEV_NAME;   
     idev->id.bustype = BUS_I2C;
     idev->evbit[0] = BIT_MASK(EV_ABS);
 
     input_set_abs_params(idev, ABS_X, -16384, 16383, INPUT_FUZZ, INPUT_FLAT);
     input_set_abs_params(idev, ABS_Y, -16384, 16383, INPUT_FUZZ, INPUT_FLAT);
-    input_set_abs_params(idev, ABS_Z, -16384, 16383, INPUT_FUZZ, INPUT_FLAT);
+    input_set_abs_params(idev, ABS_Z, -16384, 16383, INPUT_FUZZ, INPUT_FLAT);  
 
     result = input_register_polled_device(mir3da_idev);
     if (result) {
         MI_ERR("register poll device failed!\n");
-        goto err_free_polled_device;
+        goto err_free_polled_device; 
     }
 
     /* Sys Attribute Register */
@@ -781,19 +781,19 @@ static int  mir3da_probe(struct i2c_client *client, const struct i2c_device_id *
         MI_ERR("%s: mir3da_dev register failed", __func__);
         goto err_remove_sysfs_group;
     }
-
+	
     is_enabled =0;
-
+	
     return result;
 
 err_remove_sysfs_group:
-    sysfs_remove_group(&idev->dev.kobj, &mir3da_attr_group);
+    sysfs_remove_group(&idev->dev.kobj, &mir3da_attr_group);    
 err_unregister_polled_device:
     input_unregister_polled_device(mir3da_idev);
 err_free_polled_device:
     input_free_polled_device(mir3da_idev);
 err_hwmon_device_unregister:
-    //hwmon_device_unregister(&client->dev);
+    //hwmon_device_unregister(&client->dev);    
 err_detach_client:
     return result;
 }
@@ -805,13 +805,13 @@ static int  mir3da_remove(struct i2c_client *client)
     mir3da_set_enable(handle, 0);
 
     misc_deregister(&misc_mir3da);
-
+    
     sysfs_remove_group(&mir3da_idev->input->dev.kobj, &mir3da_attr_group);
-
+    
     input_unregister_polled_device(mir3da_idev);
-
+    
     input_free_polled_device(mir3da_idev);
-
+    
 #if MIR3DA_OFFSET_TEMP_SOLUTION
     flush_workqueue(m_work_info.wq);
 
@@ -826,7 +826,7 @@ static char bPreviousEnable = 0;
 static int mir3da_suspend(struct i2c_client *client, pm_message_t mesg)
 {
     int result = 0;
-    MIR_HANDLE      handle = mir_handle;
+    MIR_HANDLE      handle = mir_handle;        
 
     result |= mir3da_get_enable(handle, &bPreviousEnable);
     result |= mir3da_set_enable(handle, 0);
@@ -838,7 +838,7 @@ static int mir3da_resume(struct i2c_client *client)
 {
     int result = 0;
     MIR_HANDLE      handle = mir_handle;
-
+    
     result |= mir3da_set_enable(handle, bPreviousEnable);
     return result;
 }
@@ -916,10 +916,10 @@ int i2c_static_add_device(struct i2c_board_info *info)
 i2c_err:
     return ret;
 }
-#endif /* MODULE */
+#endif /* MODULE */ 
 
 static int __init mir3da_init(void)
-{
+{    
     int res;
 
 #if  DEVICE_CREATE_MODE == DEVICE_CREATE_BYSELF
@@ -928,7 +928,7 @@ static int __init mir3da_init(void)
         MI_ERR("%s: add i2c device error %d\n", __func__, res);
         return (res);
     }
-#endif
+#endif 
 
     res = i2c_add_driver(&mir3da_driver);
     if (res < 0){

@@ -44,7 +44,7 @@
 #define I2C_RETRY_COUNT 		10
 
 // TODO: to make sure ALS_POLLING_RATE is greater than als sensoring time
-#define ALS_POLLING_RATE 	    600
+#define ALS_POLLING_RATE 	    600	
 
 #define ALS_MAX_COUNT			60000
 #define ALS_MIN_COUNT			15  			//ambient light mode dynamic integration time ADC low threshold
@@ -1247,3 +1247,4 @@ module_exit(elan_sensor_exit);
 MODULE_AUTHOR("Cheng-Wei Lin <dusonlin@emc.com.tw>");
 MODULE_DESCRIPTION("ELAN epl6814 driver");
 MODULE_LICENSE("GPL");
+

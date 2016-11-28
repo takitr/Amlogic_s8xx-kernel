@@ -114,15 +114,13 @@ static int tsync_trickmode = 0;
 static int vpause_flag = 0;
 static int apause_flag = 0;
 static bool dobly_avsync_test = false;
-extern bool disable_slow_sync;
-static int slowsync_enable = 0;
-static int startsync_mode = 2; // used to set player start sync mode, 0-none; 1-smoothsync; 2-droppcm;  default drop pcm
+
 
 /*
                   threshold_min              threshold_max
-                         |                          |
+                         |                          |			
 AMASTER<-------------->  |<-----DYNAMIC VMASTER---->|	VMASTER
-static mode  | a dynamic  |            dynamic mode  |static mode
+static mode  | a dynamic  |            dynamic mode  |static mode 
 
 static mode(S), Amster and Vmaster..
 dynamic mode (D)  : discontinue....>min,< max,can switch to static mode,if diff is <min,and become to Sd mode if timerout.
@@ -273,7 +271,7 @@ static void tsync_pcr_recover_with_audio(void)
             printk("video: 0x%x+0x%x > 0x%x, ab_level 0x%x\n", vb_level, (vb_size >> PCR_DETECT_MARGIN_SHIFT_VIDEO_HI), vb_size, ab_level);
         }
     } else if (
-		((pcr_sync_stat == PCR_SYNC_LO) &&
+    		((pcr_sync_stat == PCR_SYNC_LO) &&
 #ifndef CALC_CACHED_TIME
                 (((!(pcr_recover_trigger & (1 << PCR_TRIGGER_AUDIO))) || (ab_level > (ab_size >> PCR_MAINTAIN_MARGIN_SHIFT_AUDIO)))
                 &&
@@ -381,7 +379,7 @@ static int tsync_mode_switch(int mode,unsigned long diff_pts,int jump_pts)
 	int old_tsync_av_mode=tsync_av_mode;
 	char VA[]="VA--";
        unsigned int oldtimeout=tsync_av_dynamic_timeout_ms;
-
+	
         if(tsync_mode == TSYNC_MODE_PCRMASTER){
                 printk("[tsync_mode_switch]tsync_mode is pcr master, do nothing \n");
                 return 0;
@@ -389,13 +387,12 @@ static int tsync_mode_switch(int mode,unsigned long diff_pts,int jump_pts)
 
 	printk("%c-discontinue,pcr=%d,vpts=%d,apts=%d,diff_pts=%lu,jump_Pts=%d\n",mode,timestamp_pcrscr_get(),timestamp_vpts_get(),timestamp_apts_get(),diff_pts,jump_pts);
 	if (!tsync_enable) {
-        if (tsync_mode != TSYNC_MODE_VMASTER) {
+        if(tsync_mode != TSYNC_MODE_VMASTER)
 			tsync_mode = TSYNC_MODE_VMASTER;
         tsync_av_mode=TSYNC_STATE_S;
 		tsync_av_dynamic_duration_ms=0;
         printk("tsync_enable [%d] \n",tsync_enable);
 		return 0;
-	}
     }
 	if(mode=='T'){/*D/A--> ...*/
 		if(tsync_av_mode==TSYNC_STATE_D){
@@ -461,12 +458,12 @@ static int tsync_mode_switch(int mode,unsigned long diff_pts,int jump_pts)
 	}
 
 
-
+	
 	if(oldtimeout!=tsync_av_latest_switch_time_ms+tsync_av_dynamic_duration_ms){/*duration changed,update new timeout.*/
 			tsync_av_dynamic_timeout_ms=tsync_av_latest_switch_time_ms+tsync_av_dynamic_duration_ms;
 	}
 	printk("discontinue-tsync_mode:%c->%c,state:%c->%c,debugcnt=0x%x,diff_pts=%lu,tsync_mode=%d\n",
-			VA[old_tsync_mode],VA[tsync_mode],old_tsync_av_mode,tsync_av_mode,debugcnt,diff_pts,tsync_mode);
+                	VA[old_tsync_mode],VA[tsync_mode],old_tsync_av_mode,tsync_av_mode,debugcnt,diff_pts,tsync_mode);	
 	return 0;
 }
 static void tsync_state_switch_timer_fun(unsigned long arg)
@@ -479,13 +476,13 @@ static void tsync_state_switch_timer_fun(unsigned long arg)
 				tsync_mode_switch('T',abs(timestamp_vpts_get()-timestamp_apts_get()),0);
 				if(tsync_mode == TSYNC_MODE_AMASTER && abs(timestamp_apts_get()-timestamp_pcrscr_get())>(TIME_UNIT90K*50/1000))
 					timestamp_pcrscr_set(timestamp_apts_get());
-			}
+			}	
 		}
 	}else{
 		//video&audio paused,changed the timeout time to latter.
 		tsync_av_dynamic_timeout_ms=jiffies_ms+tsync_av_dynamic_duration_ms;
 	}
-	tsync_state_switch_timer.expires = jiffies + 20;
+ 	tsync_state_switch_timer.expires = jiffies + 20;
 	add_timer(&tsync_state_switch_timer);
 }
 void tsync_mode_reinit(void)
@@ -500,7 +497,7 @@ void tsync_avevent_locked(avevent_t event, u32 param)
     u32 t;
 
     if(tsync_mode == TSYNC_MODE_PCRMASTER){
-	amlog_level(LOG_LEVEL_INFO,"[tsync_avevent_locked]PCR MASTER to use tsync pcr cmd deal ");
+    	amlog_level(LOG_LEVEL_INFO,"[tsync_avevent_locked]PCR MASTER to use tsync pcr cmd deal ");
 	tsync_pcr_avevent_locked(event,param);
 	return;
     }
@@ -509,8 +506,9 @@ void tsync_avevent_locked(avevent_t event, u32 param)
     case VIDEO_START:
         tsync_video_started = 1;
         /*set tsync mode to vmaster to avoid video block caused by avpts-diff too much
-          threshold 120s is an arbitrary value*/
-        if (tsync_enable && !get_vsync_pts_inc_mode()) {
+          threshold 120s is an arbitrary value*/  
+        t = abs(timestamp_apts_get()-timestamp_vpts_get())/TIME_UNIT90K;
+        if (tsync_enable && !get_vsync_pts_inc_mode() && t<120) {
             tsync_mode = TSYNC_MODE_AMASTER;
         } else {
             tsync_mode = TSYNC_MODE_VMASTER;
@@ -523,26 +521,26 @@ void tsync_avevent_locked(avevent_t event, u32 param)
             tsync_dec_reset_video_start = 1;
         }
 
-        if(slowsync_enable == 1) // slow sync enable
+#ifndef TSYNC_SLOW_SYNC
+        if (tsync_stat == TSYNC_STAT_PCRSCR_SETUP_NONE)
+#endif
         {
-            timestamp_pcrscr_set(param);
-            tsync_stat = TSYNC_STAT_PCRSCR_SETUP_VIDEO;
-        }
-        else
-        {
-            if (tsync_stat == TSYNC_STAT_PCRSCR_SETUP_NONE) {
-                if (tsync_syncthresh && (tsync_mode == TSYNC_MODE_AMASTER)) {
-                    timestamp_pcrscr_set(param - VIDEO_HOLD_THRESHOLD);
-                } else {
-                    timestamp_pcrscr_set(param);
-                }
-                tsync_stat = TSYNC_STAT_PCRSCR_SETUP_VIDEO;
+#ifndef TSYNC_SLOW_SYNC
+            if (tsync_syncthresh && (tsync_mode == TSYNC_MODE_AMASTER)) {
+                timestamp_pcrscr_set(param - VIDEO_HOLD_THRESHOLD);
+            } else {
+                timestamp_pcrscr_set(param);
             }
+#else
+            timestamp_pcrscr_set(param);
+#endif
+
+            tsync_stat = TSYNC_STAT_PCRSCR_SETUP_VIDEO;
+            amlog_level(LOG_LEVEL_INFO, "vpts to scr, apts = 0x%x, vpts = 0x%x\n",
+                        timestamp_apts_get(),
+                        timestamp_vpts_get());
         }
-        amlog_level(LOG_LEVEL_INFO, "vpts to scr, apts = 0x%x, vpts = 0x%x\n",
-                timestamp_apts_get(),
-                timestamp_vpts_get());
- 
+
         if (tsync_stat == TSYNC_STAT_PCRSCR_SETUP_AUDIO) {
             t = timestamp_pcrscr_get();
             if (abs(param - t) > tsync_av_threshold_max) {
@@ -557,7 +555,7 @@ void tsync_avevent_locked(avevent_t event, u32 param)
 
         if (!timestamp_firstvpts_get() && param) {
             timestamp_firstvpts_set(param);
-        }
+        }    
         break;
 
     case VIDEO_STOP:
@@ -585,10 +583,10 @@ void tsync_avevent_locked(avevent_t event, u32 param)
 		unsigned oldpts=timestamp_vpts_get();
 		int oldmod=tsync_mode;
 		if(tsync_mode == TSYNC_MODE_VMASTER)
-			t = timestamp_apts_get();
+        		t = timestamp_apts_get();
 		else
 			t = timestamp_pcrscr_get();
-		//amlog_level(LOG_LEVEL_ATTENTION, "VIDEO_TSTAMP_DISCONTINUITY, 0x%x, 0x%x\n", t, param);
+        	//amlog_level(LOG_LEVEL_ATTENTION, "VIDEO_TSTAMP_DISCONTINUITY, 0x%x, 0x%x\n", t, param);
 		if((abs(param-oldpts)>tsync_av_threshold_min) && (!get_vsync_pts_inc_mode())){
 			vpts_discontinue=1;
 			vpts_discontinue_diff = abs(param-t);
@@ -596,7 +594,7 @@ void tsync_avevent_locked(avevent_t event, u32 param)
 		}
 		timestamp_vpts_set(param);
 		if(tsync_mode == TSYNC_MODE_VMASTER){
-			timestamp_pcrscr_set(param);
+			timestamp_pcrscr_set(param);	
 		}else if(tsync_mode!=oldmod && tsync_mode == TSYNC_MODE_AMASTER){
 			timestamp_pcrscr_set(timestamp_apts_get());
 		}
@@ -607,18 +605,18 @@ void tsync_avevent_locked(avevent_t event, u32 param)
 	{
 		unsigned oldpts=timestamp_apts_get();
 		int oldmod=tsync_mode;
-		amlog_level(LOG_LEVEL_ATTENTION, "audio discontinue, reset apts, 0x%x\n", param);
-				timestamp_apts_set(param);
-		if (!tsync_enable) {
+        	amlog_level(LOG_LEVEL_ATTENTION, "audio discontinue, reset apts, 0x%x\n", param);	
+		 		timestamp_apts_set(param);	
+        	if (!tsync_enable) {
 			timestamp_apts_set(param);
-			break;
-		}
+            		break;
+        	}
 		if(tsync_mode == TSYNC_MODE_AMASTER)
                         t = timestamp_vpts_get();
                 else
                         t = timestamp_pcrscr_get();
-
-		amlog_level(LOG_LEVEL_ATTENTION, "AUDIO_TSTAMP_DISCONTINUITY, 0x%x, 0x%x\n", t, param);
+				
+        	amlog_level(LOG_LEVEL_ATTENTION, "AUDIO_TSTAMP_DISCONTINUITY, 0x%x, 0x%x\n", t, param);
 		if((abs(param-oldpts)>tsync_av_threshold_min) && (!get_vsync_pts_inc_mode())){
 			apts_discontinue=1;
 			apts_discontinue_diff = abs(param-t);
@@ -626,7 +624,7 @@ void tsync_avevent_locked(avevent_t event, u32 param)
 		}
 		timestamp_apts_set(param);
 		if( tsync_mode == TSYNC_MODE_AMASTER){
-			timestamp_pcrscr_set(param);
+			timestamp_pcrscr_set(param);		
 		}else if(tsync_mode!=oldmod && tsync_mode == TSYNC_MODE_VMASTER){
                         timestamp_pcrscr_set(timestamp_vpts_get());
                 }
@@ -637,19 +635,19 @@ void tsync_avevent_locked(avevent_t event, u32 param)
         timestamp_apts_start(0);
         break;
 
-    case AUDIO_START:
+    case AUDIO_START:		
         //reset discontinue var
         tsync_set_sync_adiscont(0);
         tsync_set_sync_adiscont_diff(0);
         tsync_set_sync_vdiscont(0);
         tsync_set_sync_vdiscont_diff(0);
-
+        
         timestamp_apts_set(param);
 
 		amlog_level(LOG_LEVEL_INFO, "audio start, reset apts = 0x%x\n", param);
 
         timestamp_apts_enable(1);
-
+		 
         timestamp_apts_start(1);
 
         if (!tsync_enable) {
@@ -679,7 +677,7 @@ void tsync_avevent_locked(avevent_t event, u32 param)
         {
             timestamp_pcrscr_set(param);
         }
-
+       
         tsync_stat = TSYNC_STAT_PCRSCR_SETUP_AUDIO;
 
         amlog_level(LOG_LEVEL_INFO, "apts reset scr = 0x%x\n", param);
@@ -690,12 +688,12 @@ void tsync_avevent_locked(avevent_t event, u32 param)
 
     case AUDIO_RESUME:
 	timestamp_apts_enable(1);
-	apause_flag = 0;
+	apause_flag = 0;	
         if (!tsync_enable) {
             break;
         }
         timestamp_pcrscr_enable(1);
-
+        
         break;
 
     case AUDIO_STOP:
@@ -709,13 +707,13 @@ void tsync_avevent_locked(avevent_t event, u32 param)
         }
         apause_flag = 0;
         timestamp_apts_start(0);
-
+       
         break;
 
     case AUDIO_PAUSE:
         apause_flag = 1;
 	timestamp_apts_enable(0);
-
+		
         if (!tsync_enable) {
             break;
         }
@@ -730,7 +728,7 @@ void tsync_avevent_locked(avevent_t event, u32 param)
             vpause_flag = 0;
         }
 		if(param == 1){
-		timestamp_pcrscr_enable(0);
+        	timestamp_pcrscr_enable(0);
 			amlog_level(LOG_LEVEL_INFO, "video pause!\n");
 		}else{
 		       if ((!apause_flag) || (!tsync_enable)) {
@@ -738,7 +736,7 @@ void tsync_avevent_locked(avevent_t event, u32 param)
 			amlog_level(LOG_LEVEL_INFO, "video resume\n");
                       }
 		}
-        break;
+        break;	
 
     default:
         break;
@@ -820,12 +818,6 @@ void tsync_set_dec_reset(void)
 }
 EXPORT_SYMBOL(tsync_set_dec_reset);
 
-int tsync_get_enable(void)
-{
-    return tsync_enable;
-}
-EXPORT_SYMBOL(tsync_get_enable);
-
 void tsync_set_enable(int enable)
 {
     tsync_enable = enable;
@@ -834,24 +826,24 @@ void tsync_set_enable(int enable)
 EXPORT_SYMBOL(tsync_set_enable);
 
 int tsync_get_sync_adiscont(void)
-{
+{	
     return apts_discontinue;
 }
 EXPORT_SYMBOL(tsync_get_sync_adiscont);
 
 int tsync_get_sync_vdiscont(void)
-{
+{	
     return vpts_discontinue;
 }
 EXPORT_SYMBOL(tsync_get_sync_vdiscont);
 u32 tsync_get_sync_adiscont_diff(void)
-{
+{	
     return apts_discontinue_diff;
 }
 EXPORT_SYMBOL(tsync_get_sync_adiscont_diff);
 
 u32 tsync_get_sync_vdiscont_diff(void)
-{
+{	
     return vpts_discontinue_diff;
 }
 EXPORT_SYMBOL(tsync_get_sync_vdiscont_diff);
@@ -898,16 +890,16 @@ int tsync_set_apts(unsigned pts)
         return 0;
     }
     if(tsync_mode == TSYNC_MODE_AMASTER)
-	t = timestamp_vpts_get();
-    else
+    	t = timestamp_vpts_get();
+    else 
 	t = timestamp_pcrscr_get();
-    if((abs(oldpts-pts)>tsync_av_threshold_min) && (!get_vsync_pts_inc_mode())){ //is discontinue
+    if((abs(oldpts-pts)>tsync_av_threshold_min) && (!get_vsync_pts_inc_mode())){ //is discontinue 
         apts_discontinue=1;
         tsync_mode_switch('A',abs(pts - t),pts-oldpts);/*if in VMASTER ,just wait */
     }
-    timestamp_apts_set(pts);
+    timestamp_apts_set(pts); 
 
-    if (get_vsync_pts_inc_mode() && (tsync_mode != TSYNC_MODE_VMASTER))
+    if (get_vsync_pts_inc_mode() && (tsync_mode != TSYNC_MODE_VMASTER)) 
     {
         tsync_mode = TSYNC_MODE_VMASTER;
     }
@@ -922,8 +914,8 @@ int tsync_set_apts(unsigned pts)
                 printk("[%d:avsync_test]reset apts:0x%x-->0x%x, pcr 0x%x, diff %d\n",__LINE__,oldpts,pts,t,pts-t);
                 timestamp_pcrscr_set(pts);
             } else if ((!get_vsync_pts_inc_mode())&&  \
-		((int)(timestamp_apts_get()-t)> 30*TIME_UNIT90K/1000 || (int)(t-timestamp_apts_get())> 80*TIME_UNIT90K/1000))
-		/* && (abs(timestamp_apts_get()-t)> 100*TIME_UNIT90K/1000)) */ {
+        	((int)(timestamp_apts_get()-t)> 30*TIME_UNIT90K/1000 || (int)(t-timestamp_apts_get())> 80*TIME_UNIT90K/1000))
+        	/* && (abs(timestamp_apts_get()-t)> 100*TIME_UNIT90K/1000)) */ {
                 //printk("[%d:avsync_test]reset apts:0x%x-->0x%x, pcr 0x%x, diff %d\n",__LINE__,oldpts,pts,t,pts-t);
                 timestamp_pcrscr_set(pts);
             }
@@ -935,7 +927,7 @@ int tsync_set_apts(unsigned pts)
             } else if ((!get_vsync_pts_inc_mode()) && (abs(timestamp_apts_get()-t)>100*TIME_UNIT90K/1000)) {
                 printk("[%d]reset apts:0x%x-->0x%x, pcr 0x%x, diff %d\n",__LINE__,oldpts,pts,t,pts-t);
                 timestamp_pcrscr_set(pts);
-            }
+            }        
         }
     }else if(oldmod!=tsync_mode && tsync_mode==TSYNC_MODE_VMASTER){
 	timestamp_pcrscr_set(timestamp_vpts_get());
@@ -957,7 +949,7 @@ void tsync_pcr_recover(void)
 {
 #if MESON_CPU_TYPE < MESON_CPU_TYPE_MESON6
 	unsigned long M_nom, N_nom;
-
+	
 	if (tsync_pcr_recover_enable) {
 
         WRITE_MPEG_REG(HHI_AUD_PLL_MOD_LOW_TCNT,  LOW_TOGGLE_TIME);       // Set low toggle time (oscillator clock cycles)
@@ -1015,26 +1007,26 @@ int tsync_get_debug_apts(void)
 EXPORT_SYMBOL(tsync_get_debug_apts);
 
 int tsync_get_av_threshold_min(void)
-{
+{ 
     return tsync_av_threshold_min;
 }
 EXPORT_SYMBOL(tsync_get_av_threshold_min);
 
 int tsync_get_av_threshold_max(void)
-{
+{ 
     return tsync_av_threshold_max;
 }
 EXPORT_SYMBOL(tsync_get_av_threshold_max);
 int tsync_set_av_threshold_min(int min)
 {
-
+     
     return tsync_av_threshold_min=min;
 }
 EXPORT_SYMBOL(tsync_set_av_threshold_min);
 
 int tsync_set_av_threshold_max(int max)
 {
-
+ 
     return tsync_av_threshold_max=max;
 }
 EXPORT_SYMBOL(tsync_set_av_threshold_max);
@@ -1050,30 +1042,6 @@ int tsync_set_vpause_flag(int mode)
     return vpause_flag=mode;
 }
 EXPORT_SYMBOL(tsync_set_vpause_flag);
-
-int tsync_get_slowsync_enable(void)
-{
-    return slowsync_enable;
-}
-EXPORT_SYMBOL(tsync_get_slowsync_enable);
-
-int tsync_set_slowsync_enable(int enable)
-{
-    return slowsync_enable=enable;
-}
-EXPORT_SYMBOL(tsync_set_slowsync_enable);
-
-int tsync_get_startsync_mode(void)
-{
-    return startsync_mode;
-}
-EXPORT_SYMBOL(tsync_get_startsync_mode);
-
-int tsync_set_startsync_mode(int mode)
-{
-    return startsync_mode=mode;
-}
-EXPORT_SYMBOL(tsync_set_startsync_mode);
 
 static ssize_t store_pcr_recover(struct class *class,
                                  struct class_attribute *attr,
@@ -1113,7 +1081,7 @@ static ssize_t store_pcr_recover(struct class *class,
                        ((M_nom - M_LOW_DIFF) << 0));  // M low value
         pcr_sync_stat = PCR_SYNC_UNSET;
         pcr_recover_trigger = 0;
-
+	
 	tsync_pcr_recover_timer_real();
 
     } else {
@@ -1285,12 +1253,12 @@ static ssize_t store_mode(struct class *class,
     }
 
     if(mode == TSYNC_MODE_PCRMASTER)
-	tsync_mode = TSYNC_MODE_PCRMASTER;
+    	tsync_mode = TSYNC_MODE_PCRMASTER;
     else if(mode == TSYNC_MODE_VMASTER)
-	tsync_mode=TSYNC_MODE_VMASTER;
+    	tsync_mode=TSYNC_MODE_VMASTER;
     else
-	tsync_mode=TSYNC_MODE_AMASTER;
-
+    	tsync_mode=TSYNC_MODE_AMASTER;
+    
     printk("[%s]tsync_mode=%d, buf=%s\n",__func__,tsync_mode,buf);
     return size;
 }
@@ -1479,7 +1447,7 @@ static ssize_t show_av_threshold_min(struct class *class,
 {
 
   return sprintf(buf, "tsync_av_threshold_min=%d\n", tsync_av_threshold_min);
-
+  
 }
 
 static ssize_t store_av_threshold_min(struct class *class,
@@ -1489,12 +1457,12 @@ static ssize_t store_av_threshold_min(struct class *class,
 {
     unsigned min;
     ssize_t r;
-
+	
     r = sscanf(buf, "%d", &min);
     if (r != 1) {
         return -EINVAL;
     }
-
+	
     tsync_set_av_threshold_min(min);
     return size;
 }
@@ -1504,7 +1472,7 @@ static ssize_t show_av_threshold_max(struct class *class,
 {
 
      return sprintf(buf, "tsync_av_threshold_max=%d\n", tsync_av_threshold_max);
-
+	 
 }
 
 static ssize_t store_av_threshold_max(struct class *class,
@@ -1539,6 +1507,8 @@ static ssize_t show_firstvpts(struct class *class,
 {
     return sprintf(buf, "0x%x\n", timestamp_firstvpts_get());
 }
+
+
 
 static ssize_t show_firstapts(struct class *class,
                          struct class_attribute *attr,
@@ -1596,53 +1566,6 @@ static ssize_t store_vpause_flag(struct class *class,
     return size;
 }
 
-static ssize_t show_slowsync_enable(struct class *class,
-        struct class_attribute *attr,
-        char *buf)
-{
-    return sprintf(buf, "slowsync enable:0x%x\n", tsync_get_slowsync_enable());
-}
-
-static ssize_t store_slowsync_enable(struct class *class,
-        struct class_attribute *attr,
-        const char *buf,
-        size_t size)
-{
-    unsigned mode;
-    ssize_t r;
-    r = sscanf(buf, "%d", &mode);
-    if (r != 1) {
-        return -EINVAL;
-    }
-
-    tsync_set_slowsync_enable(mode);
-    return size;
-}
-
-static ssize_t show_startsync_mode(struct class *class,
-        struct class_attribute *attr,
-        char *buf)
-{
-    return sprintf(buf, "0x%x\n", tsync_get_startsync_mode());
-}
-
-static ssize_t store_startsync_mode(struct class *class,
-        struct class_attribute *attr,
-        const char *buf,
-        size_t size)
-{
-    unsigned mode;
-    ssize_t r;
-
-    r = sscanf(buf, "%d", &mode);
-    if (r != 1) {
-        return -EINVAL;
-    }
-
-    tsync_set_startsync_mode(mode);
-    return size;
-}
-
 static struct class_attribute tsync_class_attrs[] = {
     __ATTR(pts_video,  S_IRUGO | S_IWUSR | S_IWGRP, show_vpts,    store_vpts),
     __ATTR(pts_audio,  S_IRUGO | S_IWUSR | S_IWGRP, show_apts,    store_apts),
@@ -1662,9 +1585,7 @@ static struct class_attribute tsync_class_attrs[] = {
     __ATTR(last_checkin_apts, S_IRUGO | S_IWUSR, show_last_checkin_apts, NULL),
     __ATTR(firstvpts, S_IRUGO | S_IWUSR, show_firstvpts, NULL),
     __ATTR(vpause_flag, S_IRUGO | S_IWUSR, show_vpause_flag, store_vpause_flag),
-    __ATTR(slowsync_enable, S_IRUGO | S_IWUSR, show_slowsync_enable, store_slowsync_enable),
-    __ATTR(startsync_mode, S_IRUGO | S_IWUSR, show_startsync_mode, store_startsync_mode),
-	__ATTR(firstapts,  S_IRUGO | S_IWUSR | S_IWGRP, show_firstapts,    store_firstapts),
+    __ATTR(firstapts,  S_IRUGO | S_IWUSR | S_IWGRP, show_firstapts,    store_firstapts),
     __ATTR(checkin_firstvpts, S_IRUGO | S_IWUSR, show_checkin_firstvpts, NULL),
     __ATTR_NULL
 };
@@ -1698,8 +1619,8 @@ static int __init tsync_init(void)
     pcr_recover_trigger = 0;
 
     add_timer(&tsync_pcr_recover_timer);
-
-
+    
+    
     init_timer(&tsync_state_switch_timer);
     tsync_state_switch_timer.function = tsync_state_switch_timer_fun;
     tsync_state_switch_timer.expires = jiffies + 1;

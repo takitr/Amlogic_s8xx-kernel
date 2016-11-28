@@ -283,21 +283,21 @@ void aml_sdhc_start_cmd(struct mmc_host* mmc, struct mmc_request* mrq)
         if(mrq->data->flags & MMC_DATA_WRITE)
             send.data_dir = 1;
 
-	/*Set package size*/
+    	/*Set package size*/
         if(mrq->data->blksz < 512)
             ctrl->pack_len = mrq->data->blksz;
         else
             ctrl->pack_len = 0;
 
-	/*Set blocks in package*/
+    	/*Set blocks in package*/
         send.total_pack = mrq->data->blocks - 1;
-
+        
         ictl.resp_ok = 0;
 
-	if(mrq->data->blocks > 1){ /*R/W multi block*/
-		ictl.data_xfer_ok = 1;
+    	if(mrq->data->blocks > 1){ /*R/W multi block*/
+    		ictl.data_xfer_ok = 1;
         }else{ /*R/W single block*/
-		ictl.data_1pack_ok = 1;
+    		ictl.data_1pack_ok = 1;
         }
     }
 
@@ -359,14 +359,14 @@ void aml_sdhc_timeout(unsigned long data)
 		return;
 	}
 
-    if ((host->xfer_step == XFER_IRQ_TASKLET_DATA) || (host->xfer_step == XFER_IRQ_TASKLET_CMD)
-            || (host->xfer_step == XFER_IRQ_TASKLET_BUSY)) { //
+    if ((host->xfer_step == XFER_IRQ_TASKLET_DATA) || (host->xfer_step == XFER_IRQ_TASKLET_CMD) 
+            || (host->xfer_step == XFER_IRQ_TASKLET_BUSY)) { // 
         mod_timer(&host->timeout_tlist, jiffies + 10);
         sdhc_err("%s: host->xfer_step=%d, irq have been occured and transfer is normal.\n",
                 mmc_hostname(host->mmc), host->xfer_step);
         // return;
     }
-
+    
 	aml_sdhc_disable_imask(host, ICTL_ALL);
 
 	BUG_ON(!mrq || !mrq->cmd);
@@ -384,7 +384,7 @@ void aml_sdhc_timeout(unsigned long data)
             host->mrq->cmd->opcode,
             host->mrq->cmd->arg,
             host->mrq->data?host->mrq->data->blksz*host->mrq->data->blocks:0,
-            host->xfer_step,
+            host->xfer_step, 
             host->cmd_is_stop,
             pdata->port,
             readl(host->base + SDHC_CLKC),
@@ -394,7 +394,7 @@ void aml_sdhc_timeout(unsigned long data)
     // if (pdata->port == MESON_SDIO_PORT_XC_A) {
         // sdhc_err("power_on_pin=%d\n",
                 // amlogic_get_value(185, "sdio_wifi")); // G24-113, G33-185
-    // } else
+    // } else  
     if (pdata->port != MESON_SDIO_PORT_XC_A) {
 #ifdef CONFIG_ARCH_MESON6
         if ((pdata->port == MESON_SDIO_PORT_XC_B) && (pdata->gpio_power != 0))
@@ -415,7 +415,7 @@ void aml_sdhc_timeout(unsigned long data)
 	if(R1_STATUS(host->mrq->cmd->resp[0]) & R1_COM_CRC_ERROR ){
 		mrq->cmd->error = -EILSEQ;
 		sdhc_err("Cmd CRC error\n");
-		vista = readl(host->base+SDHC_ISTA);
+        	vista = readl(host->base+SDHC_ISTA);
 		goto req_done;
 	}
 
@@ -535,7 +535,7 @@ void aml_sdhc_request(struct mmc_host *mmc, struct mmc_request *mrq)
 	/*clear pinmux & set pinmux*/
 	if(pdata->xfer_pre)
 		pdata->xfer_pre(pdata);
-
+		
 	aml_sdhc_host_reset(host);
 
     vista = readl(host->base+SDHC_ISTA);
@@ -568,7 +568,7 @@ void aml_sdhc_request(struct mmc_host *mmc, struct mmc_request *mrq)
 }
 
 /*sdhc controller irq*/
-static irqreturn_t aml_sdhc_irq(int irq, void *dev_id)
+static irqreturn_t aml_sdhc_irq(int irq, void *dev_id) 
 {
 	struct amlsd_host* host = dev_id;
 	struct mmc_host* mmc;
@@ -626,7 +626,7 @@ static irqreturn_t aml_sdhc_irq(int irq, void *dev_id)
                 "Xfer %d Bytes\n",
 				pdata->pinname, host->mrq->cmd->opcode, vista,
 				mrq->data?mrq->data->blksz*mrq->data->blocks:0);
-		goto req_done;
+    		goto req_done;
 	    }
 		if(ista->data_timeout || ista->resp_timeout){
 			BUG_ON(!pdata);
@@ -692,7 +692,7 @@ irqreturn_t aml_sdhc_data_thread(int irq, void *data)
 	if(host->xfer_step == XFER_INIT){
 		return IRQ_HANDLED;
 	}
-
+	
 	if(host->xfer_step == XFER_FINISHED){
 		sdhc_err("XFER_FINISHED Return\n");
 		return IRQ_HANDLED;
@@ -799,9 +799,9 @@ irqreturn_t aml_sdhc_data_thread(int irq, void *data)
 		default:
 			sdhc_err("BUG xfer_step %d\n", xfer_step);
 			BUG();
-
+			
 	}
-
+	
 	return IRQ_HANDLED;
 }
 
@@ -830,7 +830,7 @@ static void aml_sdhc_set_clk_rate(struct mmc_host *mmc, unsigned int clk_ios)
         */
     vclkc = readl(host->base + SDHC_CLKC);
     clkc = (struct sdhc_clkc*)&vclkc;
-    clkc->clk_ctl_enable = 0;
+    clkc->clk_ctl_enable = 0;    
     writel(vclkc, host->base+SDHC_CLKC);
 
     sdhc_dbg(AMLSD_DBG_IOS, "Clk IOS %d, Clk Src %d, Host Max Clk %d\n",
@@ -1027,7 +1027,7 @@ static const struct mmc_host_ops aml_sdhc_ops = {
     .get_cd = aml_sdhc_get_cd,
     .get_ro = aml_sdhc_get_ro,
 };
-
+	
 /*for multi host claim host*/
 static struct mmc_claim aml_sdhc_claim;
 
@@ -1047,7 +1047,7 @@ static struct amlsd_host* aml_sdhc_init_host(void)
     }
 
     host->bn_buf = dma_alloc_coherent(NULL, SDHC_BOUNCE_REQ_SIZE,
-						&host->bn_dma_buf, GFP_KERNEL);
+    						&host->bn_dma_buf, GFP_KERNEL);
     if(NULL == host->bn_buf){
         sdhc_err("Dma alloc Fail!\n");
         return NULL;
@@ -1176,7 +1176,7 @@ fail_init_host:
     free_irq(INT_WIFI_WATCHDOG, host);
     dma_free_coherent(NULL, SDHC_BOUNCE_REQ_SIZE, host->bn_buf,
         (dma_addr_t)host->bn_dma_buf);
-    kfree(host);
+    kfree(host);	
     return ret;
 }
 
@@ -1238,3 +1238,4 @@ module_exit(aml_sdhc_cleanup);
 
 MODULE_DESCRIPTION("Amlogic Multimedia Card driver");
 MODULE_LICENSE("GPL");
+

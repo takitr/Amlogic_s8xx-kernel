@@ -10,3 +10,6 @@ config SIMCARD_DETECT_AM
 	default n
 	help
 	  Say Y here if you want to use the amlogic ADC sim card detect.
+
+
+

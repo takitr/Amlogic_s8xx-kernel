@@ -7,7 +7,6 @@
 #define HW_OSD_COUNT					2
 #define HW_OSD_BLOCK_COUNT			4
 #define HW_OSD_BLOCK_REG_COUNT		(HW_OSD_BLOCK_COUNT*2)
-#define HIBERNATE_OSD_SAVE_REG_COUNT		9
 
 typedef  enum{
 	OSD1=0,
@@ -125,7 +124,7 @@ typedef  struct {
 	u32  			color_key[HW_OSD_COUNT];
 	u32				color_key_enable[HW_OSD_COUNT];
 	u32				enable[HW_OSD_COUNT];
-	u32				reg_status_save[HIBERNATE_OSD_SAVE_REG_COUNT];
+	u32				reg_status_save;
 	bridge_item_t 		fiq_handle_item;
 	osd_scale_t		scale[HW_OSD_COUNT];
 	osd_freescale_t	free_scale[HW_OSD_COUNT];
@@ -180,17 +179,17 @@ extern void osd_setup(struct osd_ctl_s *osd_ctl,
                 u32 disp_end_x,
                 u32 disp_end_y,
                 u32 fbmem,
-		  const color_bit_define_t *color,
+              	  const color_bit_define_t *color,
                 int index);
 extern void  osddev_update_disp_axis_hw(
 			u32 display_h_start,
-			u32 display_h_end,
-			u32 display_v_start,
-			u32 display_v_end,
+                  	u32 display_h_end,
+                  	u32 display_v_start,
+                  	u32 display_v_end,
 			u32 xoffset,
-			u32 yoffset,
-			u32 mode_change,
-			u32 index) ;
+                  	u32 yoffset,
+                  	u32 mode_change,
+                  	u32 index) ;
 extern void osd_change_osd_order_hw(u32 index,u32 order);
 extern u32 osd_get_osd_order_hw(u32 index);
 extern void osd_free_scale_enable_hw(u32 index,u32 enable);
@@ -222,8 +221,6 @@ extern void osd_set_osd_rotate_on_hw(u32 index, u32 on_off);
 extern void osd_get_osd_rotate_on_hw(u32 index, u32 *on_off);
 extern void osd_set_osd_antiflicker_hw(u32 index, u32 vmode, u32 yres);
 extern void osd_get_osd_antiflicker_hw(u32 index, u32 *on_off);
-extern void osd_set_osd_updatestate_hw(u32 index, u32 up_free);
-extern void osd_get_osd_updatestate_hw(u32 index,u32 *up_free);
 extern void osd_get_osd_angle_hw(u32 index, u32 *angle);
 extern void osd_set_osd_angle_hw(u32 index, u32 angle, u32  virtual_osd1_yres, u32 virtual_osd2_yres);
 extern void osd_get_osd_clone_hw(u32 index, u32 *clone);
@@ -248,4 +245,4 @@ extern void osd_init_hw(u32  logo_loaded);
 #if MESON_CPU_TYPE < MESON_CPU_TYPE_MESON8
 extern void osd_init_scan_mode(void);
 #endif
-#endif
+#endif 

@@ -26,8 +26,8 @@ extern int aes256_algorithm_decrypt(uint8_t data[16], uint8_t *key,int keylen);
 
 /* function: aml_algorithm_aes_enc_dec
  * encFlag: 1: encrypt, 0:decrypt
- * out:
- * outlen:
+ * out: 
+ * outlen: 
  * in:
  * inlen: 16byte align
  * */
@@ -71,3 +71,5 @@ int aml_algorithm_aes_enc_dec(int encFlag,unsigned char *out,int *outlen,unsigne
 	}while(inlen != *outlen);
 	return 0;
 }
+
+

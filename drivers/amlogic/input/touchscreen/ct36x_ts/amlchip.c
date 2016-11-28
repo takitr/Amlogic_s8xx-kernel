@@ -38,7 +38,7 @@ void ct36x_ts_reg_read(struct i2c_client *client, unsigned short addr, char *buf
 	struct i2c_msg msgs;
 
 	msgs.addr = addr;
-	msgs.flags = 0x01;  // 0x00: write 0x01:read
+	msgs.flags = 0x01;  // 0x00: write 0x01:read 
 	msgs.len = len;
 	msgs.buf = buf;
 	//msgs.scl_rate = CT36X_TS_I2C_SPEED;
@@ -51,7 +51,7 @@ void ct36x_ts_reg_write(struct i2c_client *client, unsigned short addr, char *bu
 	struct i2c_msg msgs;
 
 	msgs.addr = addr;
-	msgs.flags = 0x00;  // 0x00: write 0x01:read
+	msgs.flags = 0x00;  // 0x00: write 0x01:read 
 	msgs.len = len;
 	msgs.buf = buf;
 	//msgs.scl_rate = CT36X_TS_I2C_SPEED;

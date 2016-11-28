@@ -1,7 +1,7 @@
 /*
- *
+ * 
  * Copyright (C) 2011 Goodix, Inc.
- *
+ * 
  * Author: Scott
  * Date: 2012.01.05
  */
@@ -59,7 +59,7 @@ static s32 tool_i2c_read_no_extra(u8* buf, u16 len)
     s32 ret = -1;
     s32 i = 0;
     struct i2c_msg msgs[2];
-
+    
 //    DEBUG("[I2C READ:]");
 //    DEBUG_ARRAY(buf, len + cmd_head.addr_len);
 
@@ -68,7 +68,7 @@ static s32 tool_i2c_read_no_extra(u8* buf, u16 len)
     msgs[0].addr  = gt_client->addr;
     msgs[0].len   = cmd_head.addr_len;
     msgs[0].buf   = &buf[0];
-
+    
     //接收数据
     msgs[1].flags = I2C_M_RD;//读消息
     msgs[1].addr  = gt_client->addr;
@@ -139,7 +139,7 @@ static s32 tool_i2c_write_with_extra(u8* buf, u16 len)
 
 static void register_i2c_func(void)
 {
-    if (!strncmp(IC_TYPE,"GT818", 5) || !strncmp(IC_TYPE, "GT816", 5)
+    if (!strncmp(IC_TYPE,"GT818", 5) || !strncmp(IC_TYPE, "GT816", 5) 
         || !strncmp(IC_TYPE,"GT827", 5) || !strncmp(IC_TYPE,"GT828", 5)
         || !strncmp(IC_TYPE,"GT813", 5))
     {
@@ -225,7 +225,7 @@ void uninit_wr_node(void)
 static u8 relation(u8 src, u8 dst, u8 rlt)
 {
     u8 ret = 0;
-
+    
     switch (rlt)
     {
     case 0:
@@ -255,7 +255,7 @@ static u8 relation(u8 src, u8 dst, u8 rlt)
 
     default:
         ret = false;
-        break;
+        break;    
     }
 
     return ret;
@@ -265,10 +265,10 @@ static u8 comfirm(void)
 {
     s32 i = 0;
     u8 buf[32];
-
+    
 //    memcpy(&buf[ADDR_MAX_LENGTH - cmd_head.addr_len], &cmd_head.flag_addr, cmd_head.addr_len);
     memcpy(buf, &cmd_head.flag_addr, cmd_head.addr_len);
-
+    
     for (i = 0; i < cmd_head.times; i++)
     {
         if (tool_i2c_read(buf, 1) <= 0)
@@ -298,7 +298,7 @@ static u8 comfirm(void)
 static s32 goodix_tool_write(struct file *filp, const char __user *buff, unsigned long len, void *data)
 {
     DEBUG_ARRAY((u8*)buff, len);
-
+    
     copy_from_user(&cmd_head, buff, CMD_HEAD_LENGTH);
 
     DEBUG("wr  :0x%02x\n", cmd_head.wr);
@@ -315,7 +315,7 @@ static s32 goodix_tool_write(struct file *filp, const char __user *buff, unsigne
     DEBUG("addr:0x%02x%02x\n", cmd_head.addr[0], cmd_head.addr[1]);
     DEBUG("len:%d\n", (s32)len);
     DEBUG("buf[20]:0x%02x\n", buff[CMD_HEAD_LENGTH]);
-
+    
     if (1 == cmd_head.wr)
     {
       //  copy_from_user(&cmd_head.data[cmd_head.addr_len], &buff[CMD_HEAD_LENGTH], cmd_head.data_len);
@@ -324,7 +324,7 @@ static s32 goodix_tool_write(struct file *filp, const char __user *buff, unsigne
 
         DEBUG_ARRAY(cmd_head.data, cmd_head.data_len + cmd_head.addr_len);
         DEBUG_ARRAY((u8*)&buff[CMD_HEAD_LENGTH], cmd_head.data_len);
-
+        
         if (1 == cmd_head.flag)
         {
             if (fail == comfirm())
@@ -390,7 +390,7 @@ static s32 goodix_tool_read( char *page, char **start, off_t off, int count, int
         u16 len = 0;
         s16 data_len = 0;
         u16 loc = 0;
-
+        
         if (1 == cmd_head.flag)
         {
             if (fail == comfirm())
@@ -408,7 +408,7 @@ static s32 goodix_tool_read( char *page, char **start, off_t off, int count, int
 
         DEBUG("[CMD HEAD DATA] ADDR:0x%02x%02x\n", cmd_head.data[0], cmd_head.data[1]);
         DEBUG("[CMD HEAD ADDR] ADDR:0x%02x%02x\n", cmd_head.addr[0], cmd_head.addr[1]);
-
+        
         if (cmd_head.delay)
         {
             msleep(cmd_head.delay);
@@ -443,3 +443,4 @@ static s32 goodix_tool_read( char *page, char **start, off_t off, int count, int
 
     return cmd_head.data_len;
 }
+

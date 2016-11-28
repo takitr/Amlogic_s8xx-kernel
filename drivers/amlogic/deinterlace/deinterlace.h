@@ -16,6 +16,14 @@
 #define NEW_KEEP_LAST_FRAME
 #endif
 
+#if (MESON_CPU_TYPE==MESON_CPU_TYPE_MESON6TV)||(MESON_CPU_TYPE==MESON_CPU_TYPE_MESON6TVD)
+#ifndef CONFIG_POST_PROCESS_MANAGER_3D_PROCESS
+#define CONFIG_POST_PROCESS_MANAGER_3D_PROCESS
+#endif
+#define D2D3_SUPPORT
+#define DET3D
+//#define SUPPORT_MPEG_TO_VDIN
+#endif
 #define SUPPORT_MPEG_TO_VDIN //for all ic after m6c@20140731
 
 #if (MESON_CPU_TYPE==MESON_CPU_TYPE_MESON6TV)
@@ -28,33 +36,9 @@
 #elif (MESON_CPU_TYPE==MESON_CPU_TYPE_MESON8 || MESON_CPU_TYPE==MESON_CPU_TYPE_MESON8B)
 #define NEW_DI_V1 //from m6tvc
 #define NEW_DI_V2 //from m6tvd(noise meter bug fix,improvement for 2:2 pull down)
-#elif (MESON_CPU_TYPE==MESON_CPU_TYPE_MESONG9TV)
-#define NEW_DI_TV
+#elif (MESON_CPU_TYPE > MESON_CPU_TYPE_MESON8B)
 #define NEW_DI_V1 //from m6tvc
 #define NEW_DI_V2 //from m6tvd(noise meter bug fix,improvement for 2:2 pull down)
-#define NEW_DI_V3 //from g9tv(mcdi added,d2d3 removed)
-#elif (MESON_CPU_TYPE==MESON_CPU_TYPE_MESONG9BB)
-#define NEW_DI_TV
-#define NEW_DI_V1 //from m6tvc
-#define NEW_DI_V2 //from m6tvd(noise meter bug fix,improvement for 2:2 pull down)
-#define NEW_DI_V3 //from g9tv(mcdi added,d2d3 removed)
-#define NEW_DI_V4 //from g9tvbb(dnr added)
-#elif (MESON_CPU_TYPE > MESON_CPU_TYPE_MESONG9BB)
-#define NEW_DI_V1 //from m6tvc
-#define NEW_DI_V2 //from m6tvd(noise meter bug fix,improvement for 2:2 pull down)
-#define NEW_DI_V3 //from g9tv(mcdi added,d2d3 removed)
-#define NEW_DI_V4 //from g9tvbb(dnr added)
-#endif
-
-#if ((MESON_CPU_TYPE==MESON_CPU_TYPE_MESON6TV)||(MESON_CPU_TYPE==MESON_CPU_TYPE_MESON6TVD)||(MESON_CPU_TYPE==MESON_CPU_TYPE_MESONG9TV)||(MESON_CPU_TYPE==MESON_CPU_TYPE_MESONG9BB))
-#ifndef CONFIG_POST_PROCESS_MANAGER_3D_PROCESS
-#define CONFIG_POST_PROCESS_MANAGER_3D_PROCESS
-#endif
-#if (MESON_CPU_TYPE < MESON_CPU_TYPE_MESONG9TV)
-#define D2D3_SUPPORT
-#endif
-#define DET3D
-//#define SUPPORT_MPEG_TO_VDIN
 #endif
 
 #ifndef CONFIG_VSYNC_RDMA
@@ -75,13 +59,14 @@
 #if MESON_CPU_TYPE >= MESON_CPU_TYPE_MESON8
 #define Wr(adr, val) WRITE_VCBUS_REG(adr, val)
 #define Rd(adr) READ_VCBUS_REG(adr)
-#define Wr_reg_bits(adr, val, start, len) WRITE_VCBUS_REG_BITS(adr, val, start, len)
+//#define Wr_reg_bits(reg, val, start, len) WRITE_VCBUS_REG_BITS(adr, val, start, len)
 #else
 #define Wr(adr, val) WRITE_MPEG_REG(adr, val)
 #define Rd(adr) READ_MPEG_REG(adr)
-#define Wr_reg_bits(adr, val, start, len) WRITE_MPEG_REG_BITS(adr, val, start, len)
+//#define Wr_reg_bits(reg, val, start, len) WRITE_MPEG_REG_BITS(adr, val, start, len)
 #endif
-//Wr(reg, (Rd(reg) & ~(((1L<<(len))-1)<<(start)))|((unsigned int)(val) << (start)))
+#define Wr_reg_bits(reg, val, start, len) \
+  Wr(reg, (Rd(reg) & ~(((1L<<(len))-1)<<(start)))|((unsigned int)(val) << (start)))
 
 
 /************************************
@@ -155,7 +140,7 @@ typedef enum {
 }process_fun_index_t;
 
 typedef enum {
-    PULL_DOWN_BLEND_0 = 0,//buf1=dup[0]
+    PULL_DONW_BLEND_0 = 0,//buf1=dup[0]
     PULL_DOWN_BLEND_2 = 1,//buf1=dup[2]
     PULL_DOWN_MTN     = 2,//mtn only
     PULL_DOWN_BUF1    = 3,//do wave with dup[0]
@@ -192,25 +177,13 @@ typedef struct di_buf_s{
     unsigned int cnt_adr;
     int cnt_canvas_idx;
 #endif
-#ifdef NEW_DI_V3
-    unsigned int mcinfo_adr;
-    int mcinfo_canvas_idx;
-    unsigned int mcvec_adr;
-    int mcvec_canvas_idx;
-    struct mcinfo_pre_s{
-  	unsigned int highvertfrqflg;
- 	unsigned int motionparadoxflg;
-        unsigned int regs[26];/* reg 0x2fb0~0x2fc9 */
-    }curr_field_mcinfo;
-#endif
     unsigned int canvas_config_flag; /* 0, configed; 1, config type 1 (prog); 2, config type 2 (interlace) */
     unsigned int canvas_config_size; /* bit [31~16] width; bit [15~0] height */
     /* pull down information */
     pulldown_detect_info_t field_pd_info;
     pulldown_detect_info_t win_pd_info[MAX_WIN_NUM];
-#ifndef NEW_DI_V1
+
     unsigned long mtn_info[5];
-#endif
     pulldown_mode_t pulldown_mode;
     int win_pd_mode[5];
     process_fun_index_t process_fun_index;
@@ -232,7 +205,10 @@ extern uint ei_ctrl3;
 #ifdef DET3D
 extern bool det3d_en;
 #endif
-
+extern uint nr_ctrl0;
+extern uint nr_ctrl1;
+extern uint nr_ctrl2;
+extern uint nr_ctrl3;
 extern uint mtn_ctrl;
 extern uint mtn_ctrl_char_diff_cnt;
 extern uint mtn_ctrl_low_level;
@@ -245,7 +221,6 @@ extern uint blend_ctrl;
 extern uint kdeint0;
 extern uint kdeint1;
 extern uint kdeint2;
-#ifndef NEW_DI_V1
 extern uint reg_mtn_info0;
 extern uint reg_mtn_info1;
 extern uint reg_mtn_info2;
@@ -255,7 +230,6 @@ extern uint mtn_thre_1_low;
 extern uint mtn_thre_1_high;
 extern uint mtn_thre_2_low;
 extern uint mtn_thre_2_high;
-#endif
 
 extern uint blend_ctrl1;
 extern uint blend_ctrl1_char_level;
@@ -268,6 +242,8 @@ extern uint blend_ctrl2_mtn_no_mov;
 extern uint post_ctrl__di_blend_en;
 extern uint post_ctrl__di_post_repeat;
 extern uint di_pre_ctrl__di_pre_repeat;
+
+extern uint noise_reduction_level;
 
 extern uint field_32lvl;
 extern uint field_22lvl;
@@ -327,15 +303,6 @@ typedef struct DI_SIM_MIF_TYPE
    unsigned short  	canvas_num;
 } DI_SIM_MIF_t;
 
-typedef struct DI_MC_MIF_TYPE
-{
-    unsigned short start_x;
-    unsigned short start_y;
-    unsigned short size_x;
-    unsigned short size_y;
-    unsigned short canvas_num;
-    unsigned short blend_mode;
-} DI_MC_MIF_t;
 void disable_deinterlace(void);
 
 void disable_pre_deinterlace(void);
@@ -356,24 +323,20 @@ void enable_di_mode_check_2 (
 	);
 
 void enable_di_pre_aml (
-		DI_MIF_t        *di_inp_mif,
-		DI_MIF_t        *di_mem_mif,
-		DI_MIF_t        *di_chan2_mif,
-		DI_SIM_MIF_t    *di_nrwr_mif,
-		DI_SIM_MIF_t    *di_mtnwr_mif,
+   		DI_MIF_t        *di_inp_mif,
+   		DI_MIF_t        *di_mem_mif,
+   		DI_MIF_t        *di_chan2_mif,
+   		DI_SIM_MIF_t    *di_nrwr_mif,
+   		DI_SIM_MIF_t    *di_mtnwr_mif,
 #ifdef NEW_DI_V1
    DI_SIM_MIF_t    *di_contp2rd_mif,
    DI_SIM_MIF_t    *di_contprd_mif,
    DI_SIM_MIF_t    *di_contwr_mif,
 #endif
-		int nr_en, int mtn_en, int pd32_check_en, int pd22_check_en, int hist_check_en,
-   		int pre_field_num, int pre_vdin_link, int hold_line, int urgent
-	);
+   		int nr_en, int mtn_en, int pd32_check_en, int pd22_check_en, int hist_check_en,
+   		int pre_field_num, int pre_viu_link, int hold_line, int urgent
+   	);
 
-#ifdef NEW_DI_V3
-void enable_mc_di_pre(DI_MC_MIF_t *di_mcinford_mif,DI_MC_MIF_t *di_mcinfowr_mif,DI_MC_MIF_t *di_mcvecwr_mif,int urgent);
-void enable_mc_di_post(DI_MC_MIF_t *di_mcvecrd_mif,int urgent,bool reverse);
-#endif
 
 void enable_region_blend (
         int reg0_en, int reg0_start_x, int reg0_end_x, int reg0_start_y, int reg0_end_y, int reg0_mode,
@@ -396,35 +359,22 @@ void enable_di_post_2 (
    DI_MIF_t        *di_buf0_mif,
    DI_MIF_t        *di_buf1_mif,
    DI_SIM_MIF_t    *di_diwr_mif,
-   #ifndef NEW_DI_V2
    DI_SIM_MIF_t    *di_mtncrd_mif,
-   #endif
    DI_SIM_MIF_t    *di_mtnprd_mif,
    int ei_en, int blend_en, int blend_mtn_en, int blend_mode, int di_vpp_en, int di_ddr_en,
-   int post_field_num, int hold_line , int urgent
-   #ifndef NEW_DI_V1
-   , unsigned long * reg_mtn_info
-   #endif
-);
+   int post_field_num, int hold_line , int urgent,
+   unsigned long * reg_mtn_info);
 
 void di_post_switch_buffer (
    DI_MIF_t        *di_buf0_mif,
    DI_MIF_t        *di_buf1_mif,
    DI_SIM_MIF_t    *di_diwr_mif,
-   #ifndef NEW_DI_V2
    DI_SIM_MIF_t    *di_mtncrd_mif,
-   #endif
    DI_SIM_MIF_t    *di_mtnprd_mif,
-   #ifdef NEW_DI_V3
-   DI_MC_MIF_t     *di_mcvecrd_mif,
-   #endif
    int ei_en, int blend_en, int blend_mtn_en, int blend_mode, int di_vpp_en, int di_ddr_en,
-   int post_field_num, int hold_line, int urgent
-   #ifndef NEW_DI_V1
-   , unsigned long * reg_mtn_info 
-   #endif
-);
-#if 0
+   int post_field_num, int hold_line, int urgent,
+   unsigned long * reg_mtn_info );
+
 void enable_di_post_pd(
     DI_MIF_t        *di_buf0_mif,
     DI_MIF_t        *di_buf1_mif,
@@ -442,12 +392,12 @@ void di_post_switch_buffer_pd(
     DI_SIM_MIF_t    *di_mtnprd_mif,
     int ei_en, int blend_en, int blend_mtn_en, int blend_mode, int di_vpp_en, int di_ddr_en,
     int post_field_num, int hold_line, int urgent);
-#endif
-bool read_pulldown_info(pulldown_detect_info_t* field_pd_info,
+
+void read_pulldown_info(pulldown_detect_info_t* field_pd_info,
                         pulldown_detect_info_t* win_pd_info);
-#ifndef NEW_DI_V1
+
 void read_mtn_info(unsigned long* mtn_info, unsigned long* );
-#endif
+
 void reset_pulldown_state(void);
 
 void cal_pd_parameters(pulldown_detect_info_t* cur_info, pulldown_detect_info_t* pre_info, pulldown_detect_info_t* next_info, pd_detect_threshold_t* pd_th);
@@ -472,6 +422,10 @@ extern unsigned int pd32_debug_th;
 extern unsigned int pd32_diff_num_0_th;
 extern unsigned int pd22_th;
 extern unsigned int pd22_num_th;
+extern int nr_hfilt_en;
+
+/* init for nr */
+void di_load_nr_setting(void);
 
 #undef DI_DEBUG
 

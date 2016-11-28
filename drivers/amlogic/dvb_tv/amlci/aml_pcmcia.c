@@ -188,3 +188,7 @@ module_init(aml_pcmcia_mod_init);
 module_exit(aml_pcmcia_mod_exit);
 
 MODULE_LICENSE("GPL");
+
+
+
+

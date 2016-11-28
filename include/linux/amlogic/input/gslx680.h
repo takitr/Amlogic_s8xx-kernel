@@ -42,7 +42,7 @@ extern void gsl_DataInit(int *ret);
 #endif
 static unsigned int gsl_config_data_id[] =
 {
-	0x731b2f,
+	0x731b2f,  
 	0x200,
 	0,0,
 	0,

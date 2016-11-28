@@ -41,10 +41,10 @@ typedef struct logo_output_dev logo_output_dev_t ;
 
 typedef  struct{
 	logo_output_dev_t *dev;
-	struct list_head  list;
+	struct list_head  list;	
 }output_dev_list_t;
 
-//function define
+//function define 
 extern int  setup_output_device(logo_object_t *plogo);
 extern int dev_osd_setup(void);
 extern int dev_vid_setup(void) ;

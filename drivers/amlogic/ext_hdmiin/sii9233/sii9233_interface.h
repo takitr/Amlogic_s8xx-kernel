@@ -48,3 +48,4 @@ int sii_get_audio_sampling_freq(void);
 int sii_get_chip_id(void);
 
 #endif
+

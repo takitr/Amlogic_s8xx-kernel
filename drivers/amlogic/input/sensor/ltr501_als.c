@@ -216,8 +216,8 @@ static int ltr501_ps_enable(int gainrange)
 	 * ** IMPORTANT **
 	 * ===============
 	 * Other settings like timing and threshold to be set here, if required.
-	 * Not set and kept as device default for now.
-	 */
+ 	 * Not set and kept as device default for now.
+ 	 */
 
 	return ret;
 }
@@ -277,8 +277,8 @@ static int ltr501_als_enable(int gainrange)
 	 * ** IMPORTANT **
 	 * ===============
 	 * Other settings like timing and threshold to be set here, if required.
-	 * Not set and kept as device default for now.
-	 */
+ 	 * Not set and kept as device default for now.
+ 	 */
 
 	return ret;
 }
@@ -307,7 +307,7 @@ static int ltr501_als_read(int gainrange)
 	alsval_ch1_lo = ltr501_i2c_read_reg(LTR501_ALS_DATA_CH1_0);
 	alsval_ch1_hi = ltr501_i2c_read_reg(LTR501_ALS_DATA_CH1_1);
 	alsval_ch1 = (alsval_ch1_hi <<8)|alsval_ch1_lo ;
-
+        
 	alsval_ch0_lo = ltr501_i2c_read_reg(LTR501_ALS_DATA_CH0_0);
 	alsval_ch0_hi = ltr501_i2c_read_reg(LTR501_ALS_DATA_CH0_1);
 	alsval_ch0 = (alsval_ch0_hi <<8) | alsval_ch0_lo;
@@ -397,10 +397,10 @@ static void ltr501_schedwork(struct work_struct *work)
 		}
 		/******************************************************************************
 		NOT SUITABLE TO USE THIS METHOD
-		Because there is a bug when the value is not changed,the HAL sensor.amlogic.so
-		will not report the value to framework,so when users switch from manual mode to
+		Because there is a bug when the value is not changed,the HAL sensor.amlogic.so 
+		will not report the value to framework,so when users switch from manual mode to 
 		auto mode and the lux val not changed,the framework not adjust the backlight!
-		So I record the pre_final_lux_val and add it one when it is the same as the new
+		So I record the pre_final_lux_val and add it one when it is the same as the new 
 		final_lux_val.the HAL will continue to report the value the framework
 		******************************************************************************/
 		if(pre_final_lux_val == final_lux_val){
@@ -497,16 +497,16 @@ static ssize_t als_enable_store(struct device *dev,
 
     mutex_lock(&the_data->als_mutex);
 	if (!!ls_auto) {
-
+        
         unsigned long delay = msecs_to_jiffies(atomic_read(&the_data->delay));
         ltr501_als_enable(als_gainrange);
         schedule_delayed_work(&the_data->work, delay);
-        the_data->als_enabled = 1;
-
+        the_data->als_enabled = 1;    
+                
 	} else {
         ret = ltr501_als_disable();
         cancel_delayed_work(&the_data->work);
-        the_data->als_enabled = 0;
+        the_data->als_enabled = 0;    
 	}
 
     mutex_unlock(&the_data->als_mutex);
@@ -605,7 +605,7 @@ static int ltr501_probe(struct i2c_client *client, const struct i2c_device_id *i
 	if (ret) {
 		printk(KERN_ALERT "%s: LTR501-ALS device init failed.\n", __func__);
 		goto kfree_exit;
-	}
+	}	
 
 	INIT_DELAYED_WORK(&the_data->work, ltr501_schedwork);
 	atomic_set(&the_data->delay, LTR501_SCHE_DELAY);
@@ -615,7 +615,7 @@ static int ltr501_probe(struct i2c_client *client, const struct i2c_device_id *i
 		printk(KERN_ALERT "%s: LTR501-ALS allocate input device failed.\n", __func__);
 		goto kfree_exit;
 	}
-
+    
 	idev->name = LTR501_DEVICE_NAME;
 	idev->id.bustype = BUS_I2C;
 	input_set_capability(idev, EV_ABS, ABS_MISC);
@@ -752,3 +752,4 @@ MODULE_AUTHOR("Amlogic 2012");
 MODULE_DESCRIPTION("LTR501-ALS Driver");
 MODULE_LICENSE("Dual BSD/GPL");
 MODULE_VERSION(DRIVER_VERSION);
+

@@ -13,3 +13,4 @@ struct aml_bl_platform_data {
 };
 
 #endif
+

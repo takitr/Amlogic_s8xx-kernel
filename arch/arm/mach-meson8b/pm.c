@@ -56,8 +56,9 @@ static int early_suspend_flag = 0;
 #define ON  1
 #define OFF 0
 
-static unsigned int  cec_config = 0;       // 4 bytes: use to control cec switch on/off,distinguish between Mbox and Tablet. bit[0]:1:Mbox; 0:Tablet
+static unsigned int  cec_config;       // 4 bytes: use to control cec switch on/off,distinguish between Mbox and Tablet. bit[0]:1:Mbox; 0:Tablet
 static struct meson_pm_config *pdata;
+static struct device_node *cec_np = NULL;
 
 #define CLK(addr)  \
 { \
@@ -80,12 +81,11 @@ static void uart_change_buad(unsigned reg,unsigned clk_rate){
 	aml_clr_reg32_mask(reg, 0x7FFFFF);
 	aml_set_reg32_bits(reg, (((clk_rate / (115200 * 4)) - 1) & 0x7fffff)|(1<<23), 0, 24);
 }
-
 static void wait_uart_empty(void)
 {
 	do{
 		udelay(100);
-	}while((aml_read_reg32(P_AO_UART_STATUS) & (1<<22)) == 0);
+	}while((aml_read_reg32(P_AO_UART_STATUS) & (1<<22)) == 0);	
 }
 struct clk* clk81;
 struct clk* clkxtal;
@@ -105,16 +105,15 @@ void clk_switch(int flag)
 					udelay(10);
 					aml_set_reg32_mask(clks[i].clk_addr,(1<<8));//switch to pll
 					udelay(10);
-					if(!(aml_read_reg32(P_AO_UART_REG5) & (1 << 24)))//Not from crystal pad
-						uart_change_buad(P_AO_UART_REG5,uart_rate_clk);
+					uart_change_buad(P_AO_UART_REG5,uart_rate_clk);
 					clks[i].clk_flag = 0;
 				}
-			printk(KERN_INFO "clk %s(%x) on\n", clks[i].clk_name, ((clks[i].clk_addr)&0xffff)>>2);
+                	printk(KERN_INFO "clk %s(%x) on\n", clks[i].clk_name, ((clks[i].clk_addr)&0xffff)>>2);
 			}
 		}
 	} else {
 	        for (i = 0; i < clk_count; i++) {
-			if (clks[i].clk_addr == P_HHI_MPEG_CLK_CNTL) {
+	 		if (clks[i].clk_addr == P_HHI_MPEG_CLK_CNTL) {
 				if (aml_read_reg32(clks[i].clk_addr) & (1 << 8)) {
 					uart_rate_clk = clk_get_rate(clkxtal);
 					clks[i].clk_flag  = 1;
@@ -123,11 +122,10 @@ void clk_switch(int flag)
 					udelay(10);
 					aml_clr_reg32_mask(clks[i].clk_addr, (1 << 7)); // switch to 24M
 					udelay(10);
-					if(!(aml_read_reg32(P_AO_UART_REG5) & (1 << 24)))//Not from crystal pad
-						uart_change_buad(P_AO_UART_REG5,uart_rate_clk);
+					uart_change_buad(P_AO_UART_REG5,uart_rate_clk);
 					clks[i].clk_flag=1;
 				}
-			}
+			} 
 			if (clks[i].clk_flag) {
 				printk(KERN_INFO "clk %s(%x) off\n", clks[i].clk_name, ((clks[i].clk_addr)&0xffff)>>2);
 			}
@@ -174,7 +172,7 @@ void analog_switch(int flag)
         for (i = 0; i < ANALOG_COUNT; i++) {
             if (analog_regs[i].enable && (analog_regs[i].set_bits || analog_regs[i].clear_bits)) {
                 if (analog_regs[i].enable == 1) {
-				aml_write_reg32(analog_regs[i].reg_addr, analog_regs[i].reg_value);
+                		aml_write_reg32(analog_regs[i].reg_addr, analog_regs[i].reg_value);
                 } else if (analog_regs[i].enable == 2) {
                     aml_write_reg32(analog_regs[i].reg_addr, analog_regs[i].reg_value);
                 } else if (analog_regs[i].enable == 3) {
@@ -203,11 +201,11 @@ void analog_switch(int flag)
                     analog_regs[i].reg_value = aml_read_reg32(analog_regs[i].reg_addr);
                     printk("%s(0x%x):0x%x", analog_regs[i].name, analog_regs[i].reg_addr, analog_regs[i].reg_value);
                     if (analog_regs[i].clear_bits) {
-				aml_clr_reg32_mask(analog_regs[i].reg_addr, analog_regs[i].clear_bits);
+                    		aml_clr_reg32_mask(analog_regs[i].reg_addr, analog_regs[i].clear_bits);
                         printk(" & ~0x%x", analog_regs[i].clear_bits);
                     }
                     if (analog_regs[i].set_bits) {
-				aml_set_reg32_mask(analog_regs[i].reg_addr, analog_regs[i].set_bits);
+                    		aml_set_reg32_mask(analog_regs[i].reg_addr, analog_regs[i].set_bits);
                         printk(" | 0x%x", analog_regs[i].set_bits);
                     }
                     reg_value = aml_read_reg32(analog_regs[i].reg_addr);
@@ -258,130 +256,63 @@ static void meson_system_late_resume(struct early_suspend *h)
 #endif
 
 #ifdef CONFIG_AO_TRIG_CLK
-int run_arc_program_rtc(void)
-{
-	//int i;
-	unsigned v;
-
-	if (cec_config & 0x1)// 4 bytes: use to control cec switch on/off,distinguish between Mbox and Tablet. bit[0]:1:Mbox; 0:Tablet
-	{
-		aml_write_reg32(P_AO_REMAP_REG0,0);
-		udelay(10);
-
-		v = ((IO_SRAM_PHY_BASE & 0xFFFFF)>>12);
-#ifdef CONFIG_MESON_TRUSTZONE
-		meson_secure_reg_write(P_AO_SECURE_REG0, v<<8 | meson_secure_reg_read(P_AO_SECURE_REG0)); //TEST_N : 1->output mode; 0->input mode
-#else
-		aml_write_reg32(P_AO_SECURE_REG0, v<<8 | aml_read_reg32(P_AO_SECURE_REG0)); //TEST_N : 1->output mode; 0->input mode
-#endif
-
-		aml_write_reg32(P_AO_RTI_STATUS_REG1, 0);//clean status
-
-		//    	writel(0x200,P_AO_CPU_CNTL);//halt first
-		aml_write_reg32(P_RESET2_REGISTER, aml_read_reg32(P_RESET2_REGISTER)|(1<<13));//reset AO_CPU
-
-		udelay(10);
-
-		//      enable arc
-		aml_write_reg32(P_AO_CPU_CNTL, 0x0c900101);//remap is right?
-
-		udelay(20);
-		if (aml_read_reg32(P_AO_RTI_STATUS_REG1) == 0xeeeeaaaa) {
-			printk("AO cpu runs ok.\n");
-			return 0;
-		}
-		else{
-			printk("AO cpu runs fail. 0x%x\n",aml_read_reg32(P_AO_RTI_STATUS_REG1));
-			return -1;
-		}
-	}
-	return -1;
-}
-
 int run_arc_program(void)
 {
 //	int i;
 	unsigned vaddr2,v;
-#ifndef CONFIG_MESON_TRUSTZONE
 	unsigned* pbuffer;
-#endif
-
-#ifdef CONFIG_MESON_TRUSTZONE
-	int ret_val;
-	struct sram_hal_api_arg arg;
-
-	vaddr2 = IO_SRAM_PHY_BASE;
-#else
 	vaddr2 = IO_SRAM_BASE;
-#endif
-
-	/* Get the cec_config from DEBUG register. */
-	cec_config = aml_read_reg32(P_AO_DEBUG_REG0);
-
+	
 	if(cec_config & 0x1)// 4 bytes: use to control cec switch on/off,distinguish between Mbox and Tablet. bit[0]:1:Mbox; 0:Tablet
-	{
-		aml_write_reg32(P_AO_REMAP_REG0,0);
-		udelay(10);
-
-
-#ifdef CONFIG_MESON_TRUSTZONE
-		arg.cmd = (unsigned int)TRUSTZONE_HAL_API_SRAM_WR_ADDR;
-		arg.req_len = sizeof(arc_code);
-		arg.res_len = sizeof(arc_code);
-		arg.req_phy_addr = vaddr2;
-		arg.res_phy_addr = virt_to_phys(arc_code);
-		arg.ret_phy_addr = virt_to_phys(&ret_val);
-		meson_secure_sram_copy(&arg);
-#else
-		pbuffer = (unsigned*)vaddr2;
-		memcpy(pbuffer,arc_code,sizeof(arc_code));//need not flush cache for sram. Sram locates at io mapping.
-#endif
-
-		//    	for(i = 0; i<sizeof(arc_code)/4; i+=4,pbuffer+=4)
-		//    		printk(" 0x%x	0x%x	0x%x	0x%x \n",*(pbuffer),*(pbuffer+1),*(pbuffer+2),*(pbuffer+3));
-		v = ((IO_SRAM_PHY_BASE & 0xFFFFF)>>12);
-#ifdef CONFIG_MESON_TRUSTZONE
-		meson_secure_reg_write(P_AO_SECURE_REG0, v<<8 | meson_secure_reg_read(P_AO_SECURE_REG0)); //TEST_N : 1->output mode; 0->input mode
-#else
-		aml_write_reg32(P_AO_SECURE_REG0, v<<8 | aml_read_reg32(P_AO_SECURE_REG0)); //TEST_N : 1->output mode; 0->input mode
-#endif
-
-		aml_write_reg32(P_AO_RTI_STATUS_REG1, 0);//clean status
-
-		//    	writel(0x200,P_AO_CPU_CNTL);//halt first
-		aml_write_reg32(P_RESET2_REGISTER, aml_read_reg32(P_RESET2_REGISTER)|(1<<13));//reset AO_CPU
-
-		udelay(10);
-		//      enable arc
-		aml_write_reg32(P_AO_CPU_CNTL, 0x0c900101);//remap is right?
-
-		udelay(20);
-		if (aml_read_reg32(P_AO_RTI_STATUS_REG1) == 0xeeeeaaaa) {
-			printk("AO cpu runs ok.\n");
-			return 0;
-		}
-		else {
-			printk("AO cpu runs fail. 0x%x\n",aml_read_reg32(P_AO_RTI_STATUS_REG1));
-			return -1;
-		}
-	}
-	return -1;
+    {
+    	aml_write_reg32(P_AO_REMAP_REG0,0);
+    	udelay(10);
+    	pbuffer = (unsigned*)vaddr2;
+    
+    	memcpy(pbuffer,arc_code,sizeof(arc_code));//need not flush cache for sram. Sram locates at io mapping.
+    
+//    	for(i = 0; i<sizeof(arc_code)/4; i+=4,pbuffer+=4)
+//    		printk(" 0x%x	0x%x	0x%x	0x%x \n",*(pbuffer),*(pbuffer+1),*(pbuffer+2),*(pbuffer+3));
+        v = ((IO_SRAM_PHY_BASE & 0xFFFFF)>>12);
+        aml_write_reg32(P_AO_SECURE_REG0, v<<8 | aml_read_reg32(P_AO_SECURE_REG0)); //TEST_N : 1->output mode; 0->input mode
+    
+        aml_write_reg32(P_AO_RTI_STATUS_REG1, 0);//clean status
+    
+//    	writel(0x200,P_AO_CPU_CNTL);//halt first
+    	aml_write_reg32(P_RESET2_REGISTER, aml_read_reg32(P_RESET2_REGISTER)|(1<<13));//reset AO_CPU
+    
+    	udelay(10);
+    
+//      enable arc
+        aml_write_reg32(P_AO_CPU_CNTL, 0x0c900101);//remap is right?
+    
+    	udelay(20);
+    	if(aml_read_reg32(P_AO_RTI_STATUS_REG1) == 0xeeeeaaaa){
+    		printk("AO cpu runs ok.\n");
+    		return 0;
+    	}
+    	else{
+    		printk("AO cpu runs fail. 0x%x\n",aml_read_reg32(P_AO_RTI_STATUS_REG1));
+    		return -1;
+    	}
+    }
+    return -1;
 }
 
 int stop_ao_cpu(void)
 {
 	if(cec_config & 0x1)// 4 bytes: use to control cec switch on/off,distinguish between Mbox and Tablet. bit[0]:1:Mbox; 0:Tablet
     {
-	aml_write_reg32(P_AO_RTI_STATUS_REG1, 0xddddeeee); //ask ao to halt.
+    	aml_write_reg32(P_AO_RTI_STATUS_REG1, 0xddddeeee); //ask ao to halt.
 		udelay(40);
-	if(aml_read_reg32(P_AO_RTI_STATUS_REG1) == 0x0){
-		printk("AO cpu stop ok.\n");
-		return 0;
-	}
-	else{
-		printk("AO cpu stop fail.\n");
-		return -1;
-	}
+    	if(aml_read_reg32(P_AO_RTI_STATUS_REG1) == 0x0){
+    		printk("AO cpu stop ok.\n");
+    		return 0;
+    	}
+    	else{
+    		printk("AO cpu stop fail.\n");
+    		return -1;
+    	}
     }
     return -1;
 }
@@ -395,7 +326,7 @@ static void meson_pm_suspend(void)
 	printk(KERN_INFO "enter meson_pm_suspend!\n");
 #ifdef CONFIG_SUSPEND_WATCHDOG
 	ENABLE_SUSPEND_WATCHDOG;
-#endif
+#endif    
 
 #ifdef CONFIG_AO_TRIG_CLK
 	stop_ao_cpu();
@@ -406,7 +337,7 @@ static void meson_pm_suspend(void)
 	}
 
 	clk_switch(OFF);
-	//power_gate_switch(OFF);
+	//power_gate_switch(OFF);	
 	//switch_mod_gate_by_type(MOD_MEDIA_CPU, 1);
 	printk(KERN_INFO "sleep ...\n");
 	//switch A9 clock to xtal 24MHz
@@ -543,10 +474,21 @@ static int __init meson_pm_probe(struct platform_device *pdev)
 		return -ENOENT;
 	}
 	suspend_set_ops(&meson_pm_ops);
-
+	
 	clk81 = clk_get_sys("clk81", NULL);
 	clkxtal = clk_get_sys("xtal", NULL);
-
+	
+	cec_np = of_find_node_by_name(NULL, "vend_data");
+	if(cec_np){
+	    if(of_property_read_u32(cec_np, "cec_config", &cec_config))
+	        cec_config = 0x0;
+	}
+	else
+	{
+	    cec_config = 0x0;
+	}
+    printk("hdmi: cec_pm: cec config:0x%x\n", cec_config);
+    
 	printk(KERN_INFO "meson_pm_probe done !\n");
 
 #ifdef CONFIG_AO_TRIG_CLK
@@ -587,3 +529,4 @@ static int __init meson_pm_init(void)
 	return platform_driver_probe(&meson_pm_driver, meson_pm_probe);
 }
 late_initcall(meson_pm_init);
+

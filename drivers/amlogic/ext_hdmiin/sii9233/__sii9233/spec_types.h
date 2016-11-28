@@ -57,7 +57,7 @@ typedef enum {
 	, LineAlternative				=	2
 	, SiedBySideFull				=	3
 	, LDepth						=	4
-	, LDepthGraphGraphDepth	=	5
+	, LDepthGraphGraphDepth	=	5	
 	, SideBySideHalf				=	8
 }_3DStructute_t;
 
@@ -70,7 +70,7 @@ typedef enum {
 
 
 typedef enum {
-	ExtnColorimSel	= 0x70
+	ExtnColorimSel	= 0x70	
 	, xvYCC601		= 0x00
 	, xvYCC709		= 0x10
 	, cYCC601
@@ -79,8 +79,8 @@ typedef enum {
 } ExtendColorimetry_t;
 
 typedef enum {
-	ITContSel		= 0x80
-	, ContTypeSel	= 0x30
+	ITContSel		= 0x80	
+	, ContTypeSel	= 0x30	
 	, Graphics	= 0x00
 	, Photo		= 0x10
 	, Cinema

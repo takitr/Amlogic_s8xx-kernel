@@ -20,3 +20,4 @@ extern int aml_ci_init(struct platform_device *pdev, struct aml_dvb *dvb, struct
 extern void aml_ci_exit(struct aml_ci *ci);
 
 #endif /* __AML_CI_H_ */
+

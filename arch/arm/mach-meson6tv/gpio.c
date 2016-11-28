@@ -669,3 +669,4 @@ static int __init m6tv_gpio_init(void)
 	return platform_driver_register(&m6tv_gpio_driver);
 }
 postcore_initcall(m6tv_gpio_init);
+

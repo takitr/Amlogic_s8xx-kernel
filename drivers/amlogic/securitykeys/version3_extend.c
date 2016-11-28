@@ -79,7 +79,7 @@ struct v3_key_storage_head storage_head={
 #else
 	.version = 1,   /* version 1: key was encrypted with aml_key_encrypt(aes),
 					 * version 2: key is encrypted with aml_keysafety_encrypt(aes)
-					 * above two aes way is different,
+					 * above two aes way is different, 
 					 */
 #endif
 };
@@ -270,7 +270,7 @@ static int32_t v3_key_write(aml_key_t * key, uint8_t *data)
 		version3.state=KEYTOLOAD;
 		version3.init(&version3,secure_device);
 	}
-
+		
     strcpy(storage[key_slot].name,key->name);
     storage[key_slot].type=key->type;
     storage[key_slot].storage_size=key->storage_size;
@@ -288,7 +288,7 @@ static int32_t v3_key_read(aml_key_t * key, uint8_t *data)
 	{
 		version3.state=KEYTOLOAD;
 		version3.init(&version3,secure_device);
-	}
+	}		
 
     if (strcmp(storage[key_slot].name, key->name)
             || storage[key_slot].type != key->type
@@ -400,7 +400,7 @@ static int32_t hash_read(aml_key_t * key,uint32_t id, char * buf)
 	{
 		version3.state=KEYTOLOAD;
 		version3.init(&version3,secure_device);
-	}
+	}	
 
     memcpy(buf,&hash_buf[id*36],34);
     return 0;
@@ -409,13 +409,13 @@ static int32_t hash_write(aml_key_t * key,uint32_t id, char * buf)
 {
     char * hash_buf = (char*) &storage[KEYS_V3_MAX_COUNT];
 	key_schem_print("#hash_write id=%d !!!\n",id);
-
+ 
 	if(version3.state!=KEYDATATRUE)
 	{
 		version3.state=KEYTOLOAD;
 		version3.init(&version3,secure_device);
-	}
-
+	}	
+	
     memcpy(&hash_buf[id * 36], buf, 34);
     return 0;
 }
@@ -566,21 +566,21 @@ static int32_t version3_init(aml_keys_schematic_t * schematic, char * secure_dev
     uint32_t headsize;
     if (IS_ERR_OR_NULL(prov))
     {
-	printk("device name=%s open error \n",secure_dev);
+    	printk("device name=%s open error \n",secure_dev);
         return -EINVAL;
     }
-#if 0
+#if 0    
     else if(schematic->state==KEYDATANOTTRUE){
         strcpy(secure_device,secure_dev);
 		for(i=0;i<schematic->count;i++)
 		{
 			schematic->keys[i].read=v3_key_read;
 			schematic->keys[i].write=v3_key_write;
-			schematic->keys[i].update_status=v3_key_update_status;
+			schematic->keys[i].update_status=v3_key_update_status;		
 		}
-	return 0;
+    	return 0;
     }
-#endif
+#endif    
     else
     {
 #ifdef KEY_NEW_METHOD
@@ -591,7 +591,7 @@ static int32_t version3_init(aml_keys_schematic_t * schematic, char * secure_dev
 			printk("kzalloc mem fail,%s\n",__func__);
 			return -ENOMEM;
 		}
-
+		
 		if(prov->read){
 			prov->read(prov,(uint8_t *)head,1024,0);
 		}
@@ -691,7 +691,7 @@ static int32_t version3_flush(aml_keys_schematic_t * schematic)
 		return -EINVAL;
 
 	} else 	if(version3.state!=KEYDATATRUE){
-		return 0;
+ 		return 0;
 	}else{
 		for(i=0;i<schematic->count;i++)
 		 {
@@ -806,7 +806,7 @@ static int32_t version3_dump(aml_keys_schematic_t * schematic)
 
 static aml_keys_schematic_t version3 =
 {
-  .name = "version3",
+  .name = "version3", 
   .description = " First test version",
 #ifdef KEY_NEW_METHOD
   .count=Keys_V4_MAX_COUNT,

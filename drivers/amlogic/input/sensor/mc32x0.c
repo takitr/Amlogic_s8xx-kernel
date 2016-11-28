@@ -1,6 +1,6 @@
 /*
  *  mc32x9.c - Linux kernel modules for 3-Axis Orientation/Motion
- *  Detection Sensor
+ *  Detection Sensor 
  *
  *  Copyright (C) 2009-2010 MCube Semiconductor Ltd.
  *
@@ -89,7 +89,7 @@ static struct mutex sensor_lock;
 
 #define MODE_CHANGE_DELAY_MS 100
 
-#define MAX_POLL_INTERVAL		200
+#define MAX_POLL_INTERVAL		200	
 #define DEFAULT_POLL_INTERVAL		50
 
 #define MCUBE_1_5G_8BIT 0x20
@@ -119,7 +119,7 @@ static SENSOR_DEVICE_ATTR(y_axis_force, S_IRUGO, show_axis_force, NULL, 1);
 static SENSOR_DEVICE_ATTR(z_axis_force, S_IRUGO, show_axis_force, NULL, 2);
 static SENSOR_DEVICE_ATTR(orientation, S_IRUGO, show_orientation, NULL, 0);
 
-static struct attribute* mc32x0_attrs[] =
+static struct attribute* mc32x0_attrs[] = 
 {
 	&sensor_dev_attr_all_axis_force.dev_attr.attr,
 	&sensor_dev_attr_x_axis_force.dev_attr.attr,
@@ -158,14 +158,14 @@ ssize_t	show_orientation(struct device *dev, struct device_attribute *attr, char
 
 	switch((orientation>>2)&0x07)
 	{
-	case 1:
+	case 1: 
 		result = sprintf(buf, "Left\n");
 		break;
 
 	case 2:
 		result = sprintf(buf, "Right\n");
 		break;
-
+	
 	case 5:
 		result = sprintf(buf, "Downward\n");
 		break;
@@ -195,20 +195,20 @@ ssize_t	show_orientation(struct device *dev, struct device_attribute *attr, char
 ssize_t show_xyz_force(struct device *dev, struct device_attribute *attr, char *buf)
 {
 	int i;
-	s8 xyz[3];
+	s8 xyz[3]; 
 
 	for(i=0; i<3; i++)
 		mc32x0_read_xyz(i, &xyz[i]);
-	return sprintf(buf, "(%d,%d,%d)\n", xyz[0], xyz[1], xyz[2]);
+	return sprintf(buf, "(%d,%d,%d)\n", xyz[0], xyz[1], xyz[2]);	
 }
 
 ssize_t	show_axis_force(struct device *dev, struct device_attribute *attr, char *buf)
 {
 	s8 force;
-	int n = ((struct sensor_device_attribute *)to_sensor_dev_attr(attr))->index;
+    	int n = ((struct sensor_device_attribute *)to_sensor_dev_attr(attr))->index;
 
 	mc32x0_read_xyz(n, &force);
-	return sprintf(buf, "%d\n", force);
+	return sprintf(buf, "%d\n", force);	
 }
 
 ssize_t mc32x0_resolution_show(struct device *dev,
@@ -322,16 +322,16 @@ static irqreturn_t mmx7660_irq_handler(int irq, void *dev_id)
 /*
  * Initialization function
  */
- int mc32x0_set_image (struct i2c_client *client)
+ int mc32x0_set_image (struct i2c_client *client) 
 {
 	int comres = 0;
 	unsigned char data;
 
     if (client == NULL) {
 		return -1;
-     }
-
-	data = i2c_smbus_read_byte_data(client, 0x3B);
+     } 
+	  
+	data = i2c_smbus_read_byte_data(client, 0x3B);	
 	if(data == 0x19 || data == 0x29)
 		McubeID = 0x22;
 	else if(data == 0x90 || data == 0xa8 || data == 0x88)
@@ -350,7 +350,7 @@ static irqreturn_t mmx7660_irq_handler(int irq, void *dev_id)
 		comres += i2c_smbus_write_byte_data(client, MC32X0_Mode_Feature_REG, data );
 
 		data = 0x00;
-		comres += i2c_smbus_write_byte_data(client, MC32X0_Sleep_Count_REG, data );
+		comres += i2c_smbus_write_byte_data(client, MC32X0_Sleep_Count_REG, data );	
 
 		data = 0x00;
 		comres += i2c_smbus_write_byte_data(client, MC32X0_Sample_Rate_REG, data );
@@ -366,12 +366,12 @@ static irqreturn_t mmx7660_irq_handler(int irq, void *dev_id)
 	//#endif
 	}
 	else if(McubeID &MCUBE_1_5G_8BIT)
-	{
+	{		
 		data = MC32X0_MODE_SLEEP;
 		comres += i2c_smbus_write_byte_data(client, MC32X0_Mode_Feature_REG, data );
 
 		data = 0x00;
-		comres += i2c_smbus_write_byte_data(client, MC32X0_Sleep_Count_REG, data );
+		comres += i2c_smbus_write_byte_data(client, MC32X0_Sleep_Count_REG, data );	
 
 		data = 0x00;
 		comres += i2c_smbus_write_byte_data(client, MC32X0_Sample_Rate_REG, data );
@@ -389,11 +389,11 @@ static irqreturn_t mmx7660_irq_handler(int irq, void *dev_id)
 	data = MC32X0_MODE_WAKEUP;
 	comres += i2c_smbus_write_byte_data(client, MC32X0_Mode_Feature_REG, data );
 
-	data = i2c_smbus_read_byte_data(client, MC32X0_Mode_Feature_REG);
+	data = i2c_smbus_read_byte_data(client, MC32X0_Mode_Feature_REG);	
 
 #if DEBUG
 	printk("mcube %s reg0x07 = 0x%x  ,comres = %d\n",__FUNCTION__,data,comres);
-#endif
+#endif	
 	return comres;
 }
 static int mc32x0_init_client(struct i2c_client *client)
@@ -430,7 +430,7 @@ static int mc32x0_init_client(struct i2c_client *client)
 static void report_abs(void)
 {
 	int i;
-	s8 xyz[3];
+	s8 xyz[3]; 
 	s16 x, y, z;
 
 	if(!is_enabled)
@@ -474,7 +474,7 @@ static void report_abs(void)
 static void mc32x0_dev_poll(struct input_polled_dev *dev)
 {
 	report_abs();
-}
+} 
 /////////////////////////end//////
 
 /*
@@ -492,8 +492,8 @@ static int mc32x0_probe(struct i2c_client *client,
 #if DEBUG
 	printk("probing mc32x0 \n");
 #endif
-	mutex_init(&sensor_lock);
-	result = i2c_check_functionality(adapter,
+	mutex_init(&sensor_lock);	
+	result = i2c_check_functionality(adapter, 
 		I2C_FUNC_SMBUS_BYTE|I2C_FUNC_SMBUS_BYTE_DATA);
 	assert(result);
 
@@ -510,7 +510,7 @@ static int mc32x0_probe(struct i2c_client *client,
 	assert(!(IS_ERR(hwmon_dev)));
 
 	dev_info(&client->dev, "build time %s %s\n", __DATE__, __TIME__);
-
+  
 
 	/*input poll device register */
 	mc32x0_idev = input_allocate_polled_device();
@@ -572,11 +572,11 @@ static int mc32x0_remove(struct i2c_client *client)
 static int mc32x0_suspend(struct device *dev)
 {
 	int result;
-
+	
 	if(!is_enabled)
 		return 0;
 	mutex_lock(&sensor_lock);
-	result = i2c_smbus_write_byte_data(mc32x0_i2c_client,
+	result = i2c_smbus_write_byte_data(mc32x0_i2c_client, 
 	MC32X0_Mode_Feature_REG, MC32X0_MODE_SLEEP);
 	assert(result==0);
 	is_enabled = 0;
@@ -590,7 +590,7 @@ static int mc32x0_resume(struct device *dev)
 	if(is_enabled)
 		return 0;
 	mutex_lock(&sensor_lock);
-	result = i2c_smbus_write_byte_data(mc32x0_i2c_client,
+	result = i2c_smbus_write_byte_data(mc32x0_i2c_client, 
 	MC32X0_Mode_Feature_REG, MC32X0_MODE_WAKEUP);
 	assert(result==0);
 	is_enabled = 1;

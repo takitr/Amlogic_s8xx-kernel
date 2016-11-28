@@ -198,7 +198,7 @@ struct hi2056_fmt {
 	int   depth;
 };
 
-static struct hi2056_fmt formats[] =
+static struct hi2056_fmt formats[] = 
 {
 	{
 		.name     = "RGB565",
@@ -239,7 +239,7 @@ static struct hi2056_fmt formats[] =
 };
 
 #if 0
-static struct hi2056_fmt input_formats_mem[] =
+static struct hi2056_fmt input_formats_mem[] = 
 {
     // mem path format
     {
@@ -255,7 +255,7 @@ static struct hi2056_fmt input_formats_mem[] =
 };
 #endif
 
-static struct hi2056_fmt input_formats_vdin[] =
+static struct hi2056_fmt input_formats_vdin[] = 
 {
     // vdin path format
     {
@@ -341,7 +341,7 @@ struct hi2056_device {
 
 	/* platform device data from board initting. */
     aml_cam_info_t  cam_info;
-
+	
 	/* wake lock */
 	struct wake_lock	wake_lock;
 
@@ -404,9 +404,9 @@ struct aml_camera_i2c_fig2_s HI2056_script[] = {
     {0x000D,0x11},   // 20120220 to fix morie
     {0x000E,0x11},   // Binning ON
     {0x000F,0x00},   // IMGCFG
-    {0x0011,0x02},   //
+    {0x0011,0x02},   //   
     {0x0012,0x1C},   // 2012.02.08
-    {0x0013,0x01},   //
+    {0x0013,0x01},   // 
     {0x0015,0x02},   //
     {0x0016,0x80},   //
     {0x0018,0x00},   //
@@ -426,8 +426,8 @@ struct aml_camera_i2c_fig2_s HI2056_script[] = {
     {0x004B,0x72},   //
     {0x0075,0x01},   // in OMUX data swap for debug usage
     {0x002A,0x1F},   // Output=48MHz
-    {0x0070,0x5F},   //
-    {0x0071,0xFF},   //
+    {0x0070,0x5F},   // 
+    {0x0071,0xFF},   // 
     {0x0072,0x55},   //
     {0x0073,0x50},   //      ;
     {0x0080,0xC8},   // 2012.02.08
@@ -437,7 +437,7 @@ struct aml_camera_i2c_fig2_s HI2056_script[] = {
     {0x0086,0x02},   // K.Kim 2011.12.09
     {0x0087,0x80},   // K.Kim 2011.12.09
     {0x0088,0x66},   //
-    {0x0089,0x2E},   //
+    {0x0089,0x2E},   // 
     {0x008A,0x7D},   // 20120224 for BLC stable
     {0x008D,0x20},   //
     {0x0090,0x00},   // 1.5x(Change Gain Table )
@@ -446,11 +446,11 @@ struct aml_camera_i2c_fig2_s HI2056_script[] = {
     {0x0093,0x12},   // 12x (3x CTIA + 4x PGA)
     {0x0094,0x16},   // 24x (3x CTIA + 8x PGA)
     {0x0095,0x08},   // 1.5x  20120217 for color shift
-    {0x0096,0x00},   // 3x    20120217 for color shift
+    {0x0096,0x00},   // 3x    20120217 for color shift 
     {0x0097,0x10},   // 6x    20120217 for color shift
     {0x0098,0x11},   // 12x   20120217 for color shift
     {0x0099,0x12},   // 24x   20120217 for color shift
-    {0x009A,0x06},   // 24x
+    {0x009A,0x06},   // 24x  
     {0x009B,0x34},   //
     {0x00A0,0x00},   //
     {0x00A1,0x04},   // 2012.02.06(for Ver.C)
@@ -465,7 +465,7 @@ struct aml_camera_i2c_fig2_s HI2056_script[] = {
     {0x0126,0x70},   //
     {0x0128,0x1F},   //
     {0x0132,0x10},   //
-    {0x0131,0xBD},   // simle bpc enable[4]
+    {0x0131,0xBD},   // simle bpc enable[4]  
     {0x0140,0x14},   //
     {0x0141,0x0A},   //
     {0x0142,0x14},   //
@@ -921,12 +921,12 @@ struct aml_camera_i2c_fig2_s HI2056_script[] = {
 };
 
 struct aml_camera_i2c_fig2_s HI2056_mipi_script1[] = {
-    //MIPI Setting
+    //MIPI Setting		
     {0x0023,0x00},    //	; Disable Parallel Interface
-    //{0x0026,0x10},    //	; FPGA 24, CbYCrY
+    //{0x0026,0x10},    //	; FPGA 24, CbYCrY 
     //{0x0025,0x80},    //	; bypass PLL
     {0x0026,0x87},    //	; For 15fps @ 24MHz MCLK, MIPI 576bps
-    {0x002A,0x2F},    //	;
+    {0x002A,0x2F},    //	; 
     {0x002B,0x00},    //	; sys_div = 00, 1/4 ; op_div = 00, 1/1
     {0x002C,0x0A},    //	; Set default vaule for CP and resistance of LPF to 1010
     {0x0025,0x00},    //	; digital block selects PLL clock
@@ -951,7 +951,7 @@ struct aml_camera_i2c_fig2_s HI2056_mipi_script2[] = {
     //{0x0B20,0xaE},
     {0x0B30,0x0F},    //	; D-PHY Reset, set to 1 for normal operation
     {0x0B31,0x02},    // 	; [1]: PHASE_SEL = 1 First Data at rising edge
-    {0x0B32,0x00},    //	; [4]: DBG_ULPM
+    {0x0B32,0x00},    //	; [4]: DBG_ULPM 
     {0x0B33,0x00},    // 	; DBG_SEL
     {0x0B39,0x0F},    //  ; CLK_HS_EXIT, Add by Wilson, 20111114
     {0x0B3B,0x12},    //  ; Turn on PHY LDO
@@ -969,11 +969,11 @@ void HI2056_init_regs(struct hi2056_device *dev)
     int i=0;
     while(1){
         if (HI2056_script[i].val==0xff&&HI2056_script[i].addr==0xffff){
-		printk("HI2056_script_write_regs success in initial HI2056.\n");
-		break;
+        	printk("HI2056_script_write_regs success in initial HI2056.\n");
+        	break;
         }
         if((i2c_put_byte(client,HI2056_script[i].addr, HI2056_script[i].val)) < 0){
-		printk("HI2056_script fail in initial HI2056. \n");
+        	printk("HI2056_script fail in initial HI2056. \n");
 		return;
 	 }
         i++;
@@ -982,11 +982,11 @@ void HI2056_init_regs(struct hi2056_device *dev)
     i = 0;
     while(1){
         if (HI2056_mipi_script1[i].val==0xff&&HI2056_mipi_script1[i].addr==0xffff){
-		printk("HI2056_mipi_script1_write_regs success in initial HI2056.\n");
-		break;
+        	printk("HI2056_mipi_script1_write_regs success in initial HI2056.\n");
+        	break;
         }
         if((i2c_put_byte(client,HI2056_mipi_script1[i].addr, HI2056_mipi_script1[i].val)) < 0){
-		printk("HI2056_mipi_script1 fail in initial HI2056. \n");
+        	printk("HI2056_mipi_script1 fail in initial HI2056. \n");
 		return;
 	 }
         i++;
@@ -995,11 +995,11 @@ void HI2056_init_regs(struct hi2056_device *dev)
     i = 0;
     while(1){
         if (HI2056_mipi_script2[i].val==0xff&&HI2056_mipi_script2[i].addr==0xffff){
-		printk("HI2056_mipi_script2_write_regs success in initial HI2056.\n");
-		break;
+        	printk("HI2056_mipi_script2_write_regs success in initial HI2056.\n");
+        	break;
         }
         if((i2c_put_byte(client,HI2056_mipi_script2[i].addr, HI2056_mipi_script2[i].val)) < 0){
-		printk("HI2056_mipi_script2 fail in initial HI2056. \n");
+        	printk("HI2056_mipi_script2 fail in initial HI2056. \n");
 		return;
 	 }
         i++;
@@ -1092,11 +1092,11 @@ void HI2056_set_param_exposure(struct hi2056_device *dev,enum camera_exposure_e 
         case EXPOSURE_N3_STEP:
         case EXPOSURE_N2_STEP:
         case EXPOSURE_N1_STEP:
-        case EXPOSURE_0_STEP:
-        case EXPOSURE_P1_STEP:
+        case EXPOSURE_0_STEP:	
+        case EXPOSURE_P1_STEP:			
         case EXPOSURE_P2_STEP:
-        case EXPOSURE_P3_STEP:
-        case EXPOSURE_P4_STEP:
+        case EXPOSURE_P3_STEP:					
+        case EXPOSURE_P4_STEP:	
         default:
             break;
     }
@@ -1192,11 +1192,11 @@ void HI2056_set_resolution(struct hi2056_device *dev,int height,int width)
         i2c_put_byte(client,0x05EA,0xb9);
         i2c_put_byte(client,0x05EB,0x04);
 
-        i2c_put_byte(client,0x0078,0x00);
+        i2c_put_byte(client,0x0078,0x00); 
         i2c_put_byte(client,0x007c,0x17);
         //i2c_put_byte(client,0x0B3E,0x01);
-        //i2c_put_byte(client,0x0B09,0x06);// Vertical_H
-        //i2c_put_byte(client,0x0B08,0x40);// Vertical_L
+        //i2c_put_byte(client,0x0B09,0x06);// Vertical_H 
+        //i2c_put_byte(client,0x0B08,0x40);// Vertical_L 
         //i2c_put_byte(client,0x0B0B,0x04);// Horizotal_H
         //i2c_put_byte(client,0x0B0A,0xb0);// Horizotal_L
 
@@ -1244,11 +1244,11 @@ void HI2056_set_resolution(struct hi2056_device *dev,int height,int width)
         i2c_put_byte(client,0x05EA,0xc5);
         i2c_put_byte(client,0x05EB,0x03);
 
-        i2c_put_byte(client,0x0078,0x00);
+        i2c_put_byte(client,0x0078,0x00); 
         i2c_put_byte(client,0x007c,0x17);
         //i2c_put_byte(client,0x0B3E,0x01);
-        //i2c_put_byte(client,0x0B09,0x03);// Vertical_H
-        //i2c_put_byte(client,0x0B08,0xc0);// Vertical_L
+        //i2c_put_byte(client,0x0B09,0x03);// Vertical_H 
+        //i2c_put_byte(client,0x0B08,0xc0);// Vertical_L 
         //i2c_put_byte(client,0x0B0B,0x05);// Horizotal_H
         //i2c_put_byte(client,0x0B0A,0x00);// Horizotal_L
 
@@ -1295,12 +1295,12 @@ void HI2056_set_resolution(struct hi2056_device *dev,int height,int width)
         i2c_put_byte(client,0x05EA,0x5f);
         i2c_put_byte(client,0x05EB,0x02);
 
-        i2c_put_byte(client,0x0078,0x00);
-        i2c_put_byte(client,0x007c,0x17);
+        i2c_put_byte(client,0x0078,0x00); 
+        i2c_put_byte(client,0x007c,0x17); 
 
         //i2c_put_byte(client,0x0B3E,0x01);
-        //i2c_put_byte(client,0x0B09,0x02);// Vertical_H
-        //i2c_put_byte(client,0x0B08,0x58);// Vertical_L
+        //i2c_put_byte(client,0x0B09,0x02);// Vertical_H 
+        //i2c_put_byte(client,0x0B08,0x58);// Vertical_L 
         //i2c_put_byte(client,0x0B0B,0x03);// Horizotal_H
         //i2c_put_byte(client,0x0B0A,0x20);// Horizotal_L
 
@@ -1351,11 +1351,11 @@ void HI2056_set_resolution(struct hi2056_device *dev,int height,int width)
         i2c_put_byte(client,0x05EA,0xe5);
         i2c_put_byte(client,0x05EB,0x01);
 
-        i2c_put_byte(client,0x0078,0x00);
-        i2c_put_byte(client,0x007c,0x45);
+        i2c_put_byte(client,0x0078,0x00); 
+        i2c_put_byte(client,0x007c,0x45); 
         //i2c_put_byte(client,0x0B3E,0x01);
-        //i2c_put_byte(client,0x0B09,0x01);// Vertical_H
-        //i2c_put_byte(client,0x0B08,0xe0);// Vertical_L
+        //i2c_put_byte(client,0x0B09,0x01);// Vertical_H 
+        //i2c_put_byte(client,0x0B08,0xe0);// Vertical_L 
         //i2c_put_byte(client,0x0B0B,0x02);// Horizotal_H
         //i2c_put_byte(client,0x0B0A,0x80);// Horizotal_L
 
@@ -1412,7 +1412,7 @@ static int hi2056_setting(struct hi2056_device *dev,int PROP_ID,int value )
                 hi2056_qctrl[0].default_value=value;
                 HI2056_set_param_wb(dev,value);
 	         printk(KERN_INFO " set camera  white_balance=%d. \n ",value);
-            }
+            } 
             break;
         case V4L2_CID_EXPOSURE:
             if(hi2056_qctrl[1].default_value!=value){
@@ -1924,7 +1924,7 @@ static int vidioc_streamon(struct file *file, void *priv, enum v4l2_buf_type i)
     ret = videobuf_streamon(&fh->vb_vidq);
     printk(KERN_INFO " vidioc_streamon+++ ,size:%dx%d,ret=%d\n",hi2056_h_active,hi2056_v_active,ret);
     if(ret == 0){
-        ret = start_mipi_csi2_service(&hi2056_para);
+        ret = start_mipi_csi2_service(&hi2056_para);	
         if(ret<0)
             videobuf_streamoff(&fh->vb_vidq);
         else
@@ -2103,7 +2103,7 @@ static int hi2056_open(struct file *file)
 #endif
 	aml_cam_init(&dev->cam_info);
 	hi2056_h_active=0;
-	hi2056_v_active=0;
+ 	hi2056_v_active=0;
 	hi2056_h_output=0;
 	hi2056_v_output=0;
 	hi2056_para.ui_val = 0; // 2 ns
@@ -2122,7 +2122,7 @@ static int hi2056_open(struct file *file)
 		video_device_node_name(dev->vdev),
 		v4l2_type_names[V4L2_BUF_TYPE_VIDEO_CAPTURE], dev->users);
 
-	/* init video dma queues */
+    	/* init video dma queues */
 	INIT_LIST_HEAD(&dev->vidq.active);
 	init_waitqueue_head(&dev->vidq.wq);
 	spin_lock_init(&dev->slock);
@@ -2344,25 +2344,25 @@ static int hi2056_probe(struct i2c_client *client,
 	memcpy(t->vdev, &hi2056_template, sizeof(*t->vdev));
 
 	video_set_drvdata(t->vdev, t);
-
+	
 	wake_lock_init(&(t->wake_lock),WAKE_LOCK_SUSPEND, "hi2056");
 
 	/* Register it */
 	if (plat_dat) {
-	memcpy(&t->cam_info, plat_dat, sizeof(aml_cam_info_t));
-        if (plat_dat->front_back >=0)
-		video_nr = plat_dat->front_back;
+    	memcpy(&t->cam_info, plat_dat, sizeof(aml_cam_info_t));
+        if (plat_dat->front_back >=0)  
+        	video_nr = plat_dat->front_back;
     } else {
-	printk("camera hi2056: have no platform data\n");
+    	printk("camera hi2056: have no platform data\n");
         kfree(t);
         kfree(client);
         return -1;
     }
-
-	t->cam_info.version = HI2056_DRIVER_VERSION;
+    
+    	t->cam_info.version = HI2056_DRIVER_VERSION;
 	if (aml_cam_info_reg(&t->cam_info) < 0)
 		printk("reg caminfo error\n");
-
+    	
 	err = video_register_device(t->vdev, VFL_TYPE_GRABBER, video_nr);
 	if (err < 0) {
 		video_device_release(t->vdev);
@@ -2398,3 +2398,4 @@ static struct v4l2_i2c_driver_data v4l2_i2c_data = {
 	.remove = hi2056_remove,
 	.id_table = hi2056_id,
 };
+

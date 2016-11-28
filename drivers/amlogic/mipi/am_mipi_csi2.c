@@ -148,8 +148,8 @@ static void stop_mipi_dev(am_csi2_t *dev)
     memset(&dev->output, 0,sizeof(am_csi2_output_t));
     dev->ops = NULL;
     dev->client = NULL;
-    dev->status &= (~AM_CSI2_FLAG_STARTED);
-    dev->status &= (~AM_CSI2_FLAG_DEV_READY);
+    dev->status &= (~AM_CSI2_FLAG_STARTED);  
+    dev->status &= (~AM_CSI2_FLAG_DEV_READY); 
     return;
 }
 
@@ -301,10 +301,10 @@ int start_mipi_csi2_service(struct am_csi2_camera_para *para)
     dev->status |= AM_CSI2_FLAG_DEV_READY;
     if(dev->ops->streamon(dev)<0){
         mipi_error("[am_mipi_csi2]:start mipi csi2 service fail with ops stream on fail. \n");
-        goto err_exit;
+        goto err_exit;   
     }
 
-    msleep(10);
+    msleep(10);  
     dev->status |= AM_CSI2_FLAG_STARTED;
     ret = 0;
 err_exit:
@@ -333,7 +333,7 @@ int stop_mipi_csi2_service(struct am_csi2_camera_para *para)
     memset(&dev->output, 0,sizeof(am_csi2_output_t));
     dev->ops = NULL;
     dev->client = NULL;
-    dev->status &= (~AM_CSI2_FLAG_STARTED);
+    dev->status &= (~AM_CSI2_FLAG_STARTED); 
     mutex_unlock(&dev->lock);
     return 0;
 }

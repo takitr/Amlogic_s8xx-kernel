@@ -1,2 +1,2 @@
 
-obj-y				+= encoder_mc.o
+obj-y				+= encoder_mc.o 

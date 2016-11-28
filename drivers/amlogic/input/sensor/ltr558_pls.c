@@ -1,13 +1,13 @@
-/* Lite-On LTR-558ALS Linux Driver
- *
- * Copyright (C) 2011 Lite-On Technology Corp (Singapore)
- *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- *
- */
-
+/* Lite-On LTR-558ALS Linux Driver 
+ * 
+ * Copyright (C) 2011 Lite-On Technology Corp (Singapore) 
+ *  
+ * This program is distributed in the hope that it will be useful, but 
+ * WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+ * 
+ */ 
+ 
 
 #include <linux/kernel.h>
 #include <linux/init.h>
@@ -39,27 +39,27 @@ static int ltr558_probed = 0;
 static int calibrate_high_ltr558 = 0;	//add for calibrate
 static int calibrate_low_ltr558 = 0;
 static int calibrate_status_ltr558 = 0;	// add for calibrate
-//static int ps_opened_ltr558;
-static int als_opened_ltr558;
-//static struct work_struct irq_workqueue;
-static int ps_data_changed_ltr558;
-static int als_data_changed_ltr558;
-static int ps_active_ltr558;
-static int als_active_ltr558;
-
-static int ps_gainrange_ltr558;
-static int als_gainrange_ltr558;
-
-static int final_prox_val_ltr558;
-static int final_lux_val_ltr558 =0;
-
-static int ltr558_irq;
+//static int ps_opened_ltr558; 
+static int als_opened_ltr558; 
+//static struct work_struct irq_workqueue; 
+static int ps_data_changed_ltr558; 
+static int als_data_changed_ltr558; 
+static int ps_active_ltr558; 
+static int als_active_ltr558; 
+ 
+static int ps_gainrange_ltr558; 
+static int als_gainrange_ltr558; 
+ 
+static int final_prox_val_ltr558; 
+static int final_lux_val_ltr558 =0; 
+ 
+static int ltr558_irq; 
 static unsigned char suspend_flag_ltr558=0; //0: sleep out; 1: sleep in
-static DECLARE_WAIT_QUEUE_HEAD(ps_waitqueue_ltr558);
-static DECLARE_WAIT_QUEUE_HEAD(als_waitqueue_ltr558);
+static DECLARE_WAIT_QUEUE_HEAD(ps_waitqueue_ltr558); 
+static DECLARE_WAIT_QUEUE_HEAD(als_waitqueue_ltr558); 
+ 
 
-
-static ltr558_pls_struct *the_data_ltr558 = NULL;
+static ltr558_pls_struct *the_data_ltr558 = NULL; 
 static struct i2c_client *this_client = NULL;
 static struct i2c_client *this_client_ltr558 = NULL;
 static int ltr558_als_read(int gainrange);
@@ -70,10 +70,10 @@ static ssize_t ltr558_show_version(struct device* cd,struct device_attribute *at
 static void ltr558_early_suspend(struct early_suspend *handler);
 static void ltr558_early_resume(struct early_suspend *handler);
 
-#define CMD_CLR_PS_ALS_INT	0xE7
-
-static int pls_rx_data(char *buf, int len)
-{
+#define CMD_CLR_PS_ALS_INT	0xE7 
+ 
+static int pls_rx_data(char *buf, int len) 
+{ 
 
 	int ret;
 
@@ -93,12 +93,12 @@ static int pls_rx_data(char *buf, int len)
 	};
 
 	ret = i2c_transfer(this_client->adapter, msgs, 2);
-	if (ret < 0)
+    	if (ret < 0)
             printk(KERN_ERR "%s i2c read error: %d\n", __func__, ret);
 
 
 	return ret;
-}
+} 
 static int i2c_read_reg(unsigned char addr, unsigned char *data)
 {
 	int ret;
@@ -110,15 +110,15 @@ static int i2c_read_reg(unsigned char addr, unsigned char *data)
 
 	return ret;
 }
-/*
- * #########
- * ## I2C ##
- * #########
- */
-
-// I2C Read
-static int ltr558_pls_rx_data(char *buf, int len)
-{
+/*  
+ * ######### 
+ * ## I2C ## 
+ * ######### 
+ */ 
+ 
+// I2C Read 
+static int ltr558_pls_rx_data(char *buf, int len) 
+{ 
 
 	int ret;
 
@@ -138,12 +138,12 @@ static int ltr558_pls_rx_data(char *buf, int len)
 	};
 
 	ret = i2c_transfer(this_client_ltr558->adapter, msgs, 2);
-	if (ret < 0)
+    	if (ret < 0)
             printk(KERN_ERR "%s i2c read error: %d\n", __func__, ret);
 
 
 	return ret;
-}
+} 
 static int ltr558_i2c_read_reg(unsigned char addr, unsigned char *data)
 {
 	int ret;
@@ -155,9 +155,9 @@ static int ltr558_i2c_read_reg(unsigned char addr, unsigned char *data)
 
 	return ret;
 }
-// I2C Write
-static int ltr558_pls_tx_data(char *buf, int len)
-{
+// I2C Write 
+static int ltr558_pls_tx_data(char *buf, int len) 
+{ 
 	int ret;
 
 	struct i2c_msg msg[] = {
@@ -167,7 +167,7 @@ static int ltr558_pls_tx_data(char *buf, int len)
 			.len	= len,
 			.buf	= buf,
 		}
-	};
+	};	
 
 	//LTR558_DEBUG(KERN_INFO "%s: this_client_ltr558 = 0x%x, this_client_ltr558->addr = 0x%x\n", __func__,this_client_ltr558, this_client_ltr558->addr);
 
@@ -176,7 +176,7 @@ static int ltr558_pls_tx_data(char *buf, int len)
 		printk(KERN_ERR "%s i2c write error: %d\n", __func__, ret);
 
 	return ret;
-}
+} 
 
 static int ltr558_i2c_write_reg(unsigned char addr, unsigned char data)
 {
@@ -186,15 +186,15 @@ static int ltr558_i2c_write_reg(unsigned char addr, unsigned char data)
 	return ltr558_pls_tx_data(buf, 2);
 }
 
-/*
- * ###############
- * ## PS CONFIG ##
- * ###############
- */
-
-static int ltr558_ps_enable(int gainrange)
-{
- int error;
+/*  
+ * ############### 
+ * ## PS CONFIG ## 
+ * ############### 
+ */ 
+ 
+static int ltr558_ps_enable(int gainrange) 
+{ 
+ int error; 
  int setgain;
  unsigned char intval;
  int i = 0;
@@ -202,49 +202,49 @@ static int ltr558_ps_enable(int gainrange)
  int avarage = 0;
  int nums = 10;
  int sum = 0;
-
- switch (gainrange) {
-  case PS_RANGE1:
-   setgain = MODE_PS_ON_Gain1;
-   break;
-
-  case PS_RANGE2:
-   setgain = MODE_PS_ON_Gain2;
-   break;
-
-  case PS_RANGE4:
-   setgain = MODE_PS_ON_Gain4;
-   break;
-
-  case PS_RANGE8:
-   setgain = MODE_PS_ON_Gain8;
-   break;
-
-  default:
-   setgain = MODE_PS_ON_Gain1;
-   break;
- }
- LTR558_DEBUG("%s: gainrange = %d, setgain = %d\n",__func__,  gainrange, setgain );
+ 
+ switch (gainrange) { 
+  case PS_RANGE1: 
+   setgain = MODE_PS_ON_Gain1; 
+   break; 
+ 
+  case PS_RANGE2: 
+   setgain = MODE_PS_ON_Gain2; 
+   break; 
+ 
+  case PS_RANGE4: 
+   setgain = MODE_PS_ON_Gain4; 
+   break; 
+ 
+  case PS_RANGE8: 
+   setgain = MODE_PS_ON_Gain8; 
+   break; 
+ 
+  default: 
+   setgain = MODE_PS_ON_Gain1; 
+   break; 
+ } 
+ LTR558_DEBUG("%s: gainrange = %d, setgain = %d\n",__func__,  gainrange, setgain ); 
 // ltr558_i2c_write_reg(0x8f, 0x03);
- error = ltr558_i2c_write_reg(LTR558_PS_CONTR, setgain);
+ error = ltr558_i2c_write_reg(LTR558_PS_CONTR, setgain);  
  ltr558_i2c_read_reg(LTR558_PS_CONTR, &intval);
- mdelay(50);
+ mdelay(50); 
  //gionee: liudj add for calibrate begin
  if(error < 0 )
-	return error;
+ 	return error;
  else
  {
-	if(0 == calibrate_status_ltr558)
-	{
+ 	if(0 == calibrate_status_ltr558)
+ 	{
 		//gionee liudj add 1130 begin
 		ltr558_i2c_write_reg(0x80, 0x00);
 		//gionee liudj add 1130 end
-		for(i = 0; i < nums; i++)
-		{
+ 		for(i = 0; i < nums; i++)
+ 		{
 			data=ltr558_ps_read();
 			mdelay(50);
 			sum+= data;
-		}
+ 		}
 		avarage = sum/nums;
 		if(avarage > 0xff)
 		{
@@ -271,90 +271,90 @@ static int ltr558_ps_enable(int gainrange)
 	ltr558_i2c_read_reg(0x80, &intval);
 	ltr558_i2c_write_reg(0x81, 0x03);
 	ltr558_i2c_read_reg(0x81, &intval);
-	}
+ 	}
 	input_report_abs(the_data_ltr558->input, ABS_DISTANCE, 1);
 	input_sync(the_data_ltr558->input);
 
  }
  //gionee: liudj add for calibrate end
- /* ===============
-  * ** IMPORTANT **
-  * ===============
-  * Other settings like timing and threshold to be set here, if required.
-   * Not set and kept as device default for now.
-   */
-
- LTR558_DEBUG("%s: ltr558_ps_enable over, error = %d avarage =%d calibrate_status_ltr558=%d\n", __func__, error, avarage, calibrate_status_ltr558);
- return error;
+ /* ===============  
+  * ** IMPORTANT ** 
+  * =============== 
+  * Other settings like timing and threshold to be set here, if required. 
+   * Not set and kept as device default for now. 
+   */ 
+ 
+ LTR558_DEBUG("%s: ltr558_ps_enable over, error = %d avarage =%d calibrate_status_ltr558=%d\n", __func__, error, avarage, calibrate_status_ltr558); 
+ return error; 
 }
 
-// Put PS into Standby mode
-static int ltr558_ps_disable(void)
-{
- int error;
+// Put PS into Standby mode 
+static int ltr558_ps_disable(void) 
+{ 
+ int error; 
  error = ltr558_i2c_write_reg(LTR558_PS_CONTR, MODE_PS_StdBy);
- LTR558_DEBUG_LIUDJ("ltr558_ps_disable ++++++++\n");
- return error;
-}
-
-
-static int ltr558_ps_read(void)
-{
+ LTR558_DEBUG_LIUDJ("ltr558_ps_disable ++++++++\n");  
+ return error; 
+} 
+ 
+ 
+static int ltr558_ps_read(void) 
+{ 
 	unsigned char psval_lo, psval_hi; //psdata;
 	int psdata;
 	//unsigned int psval_lo, psval_hi, psdata;
 	//int psval_lo, psval_hi, psdata;
-	ltr558_i2c_read_reg(LTR558_PS_DATA_0, &psval_lo);
-	if (psval_lo < 0){
-		psdata = psval_lo;
-		goto out;
-	}
+	ltr558_i2c_read_reg(LTR558_PS_DATA_0, &psval_lo); 
+	if (psval_lo < 0){ 
+		psdata = psval_lo; 
+		goto out; 
+	} 
 
-	ltr558_i2c_read_reg(LTR558_PS_DATA_1, &psval_hi);
-	if (psval_hi < 0){
-		psdata = psval_hi;
-		goto out;
-	}
+	ltr558_i2c_read_reg(LTR558_PS_DATA_1, &psval_hi); 
+	if (psval_hi < 0){ 
+		psdata = psval_hi; 
+		goto out; 
+	} 
 	LTR558_DEBUG(" ltr558_ps_read psval_hi = %x psval_lo = %x\n", psval_hi, psval_lo);
-	psdata = ((psval_hi & 7)* 256) + psval_lo;
+	psdata = ((psval_hi & 7)* 256) + psval_lo; 
 	LTR558_DEBUG_LIUDJ(" ltr558_ps_read psdata = %d", psdata);
 
-out:
-	final_prox_val_ltr558 = psdata;
-	return psdata;
-}
-
-static int ltr558_ps_read_status(void)
-{
-  unsigned char intval;
-
-  ltr558_i2c_read_reg(LTR558_ALS_PS_STATUS, &intval);
-  if (intval < 0)
-  goto out;
-
- intval = intval & 0x02;
-
- out:
+out: 
+	final_prox_val_ltr558 = psdata; 
+	return psdata; 
+} 
+ 
+static int ltr558_ps_read_status(void) 
+{ 
+  unsigned char intval; 
+ 
+  ltr558_i2c_read_reg(LTR558_ALS_PS_STATUS, &intval);  
+  if (intval < 0) 
+  goto out; 
+ 
+ intval = intval & 0x02; 
+ 
+ out: 
  return intval;
 }
 
-#if 0
-static int ltr558_ps_open(struct inode *inode, struct file *file)
-{
- if (ps_opened_ltr558) {
-  LTR558_DEBUG(KERN_ALERT "%s: already opened\n", __func__);
-  return -EBUSY;
- }
- ps_opened_ltr558 = 1;
- return 0;
-}
-
-static int ltr558_ps_release(struct inode *inode, struct file *file)
-{
- LTR558_DEBUG(KERN_ALERT "%s\n", __func__);
- ps_opened_ltr558 = 0;
- return ltr558_ps_disable();
-}
+#if 0 
+static int ltr558_ps_open(struct inode *inode, struct file *file) 
+{ 
+ if (ps_opened_ltr558) { 
+  LTR558_DEBUG(KERN_ALERT "%s: already opened\n", __func__); 
+  return -EBUSY; 
+ } 
+ ps_opened_ltr558 = 1; 
+ return 0; 
+} 
+ 
+static int ltr558_ps_release(struct inode *inode, struct file *file) 
+{ 
+ LTR558_DEBUG(KERN_ALERT "%s\n", __func__); 
+ ps_opened_ltr558 = 0; 
+ return ltr558_ps_disable(); 
+} 
 #endif
 //gionee liudj add for debug begin
 /*----------------------------------------------------------------------------*/
@@ -368,11 +368,11 @@ static ssize_t ltr558_show_ps(struct device* cd, struct device_attribute *attr, 
 		printk("ltr558 devices  is null!!\n");
 		return 0;
 	}
-	dat = ltr558_ps_read();
+ 	dat = ltr558_ps_read();
 	ltr558_i2c_read_reg(0x8c, (unsigned char *)&dat1);
 	if(0 > dat)
 		dat = ltr558_ps_read();
-	return snprintf(buf,PAGE_SIZE,"ps_data %d     0x%x    high=0x%x   low=0x%x  0x8c=0x%x\n",dat, dat, calibrate_high_ltr558, calibrate_low_ltr558, dat1);
+	return snprintf(buf,PAGE_SIZE,"ps_data %d     0x%x    high=0x%x   low=0x%x  0x8c=0x%x\n",dat, dat, calibrate_high_ltr558, calibrate_low_ltr558, dat1);		
 }
 static ssize_t ltr558_show_als(struct device* cd, struct device_attribute *attr, char* buf)
 {
@@ -383,10 +383,10 @@ static ssize_t ltr558_show_als(struct device* cd, struct device_attribute *attr,
 		printk("ltr558 devices is null!!\n");
 		return 0;
 	}
-	dat = ltr558_als_read(als_gainrange_ltr558);
+ 	dat = ltr558_als_read(als_gainrange_ltr558);
 	if(0 > dat)
 		dat = ltr558_als_read(als_gainrange_ltr558);
-	return snprintf(buf,PAGE_SIZE,"als_data %d     0x%x\n",dat , dat);
+	return snprintf(buf,PAGE_SIZE,"als_data %d     0x%x\n",dat , dat);		
 }
 /*
 static ssize_t ltr558_ps_status(struct device* cd, struct device_attribute *attr, char* buf)
@@ -398,7 +398,7 @@ static ssize_t ltr558_ps_status(struct device* cd, struct device_attribute *attr
 	}
 	 ltr558_i2c_read_reg( LTR558_PS_CONTR, &dat);
 	 if(0 > dat)
-		ltr558_i2c_read_reg(LTR558_PS_CONTR, &dat);
+	 	ltr558_i2c_read_reg(LTR558_PS_CONTR, &dat);
 	 return snprintf(buf,PAGE_SIZE,"ps_status  %d 0x%x\n", dat, dat);
 }*/
 static ssize_t ltr558_ps_status(struct device* cd, struct device_attribute *attr, char* buf)
@@ -412,16 +412,16 @@ static ssize_t ltr558_ps_status(struct device* cd, struct device_attribute *attr
 	}
 	for(i = 0;i < 31; i++)
 	{
-		ltr558_i2c_read_reg(0x80+i, &bufdata);
+		ltr558_i2c_read_reg(0x80+i, &bufdata);		
 		count+=sprintf(buf+count,"[%x] = (%x)\n",0x80+i,bufdata);
 	}
 
 	return count;
 /**//*	 ltr558_i2c_read_reg( LTR558_PS_CONTR, &dat);
 	 if(0 > dat)
-		ltr558_i2c_read_reg(LTR558_PS_CONTR, &dat);
+	 	ltr558_i2c_read_reg(LTR558_PS_CONTR, &dat);
 	 return snprintf(buf,PAGE_SIZE,"ps_status  %d 0x%x\n", dat, dat);
-
+	
 	for(i = 0;i < 31 ;i++)
 	{
 		if(hwmsen_read_byte_sr(ltr501_obj->client,0x80+i,&bufdata))
@@ -498,7 +498,7 @@ static ssize_t ltr558_als_status(struct device* cd, struct device_attribute *att
 	}
 	 ltr558_i2c_read_reg( LTR558_ALS_CONTR, &dat);
 	 if(0 > dat)
-		ltr558_i2c_read_reg(LTR558_ALS_CONTR, &dat);
+	 	ltr558_i2c_read_reg(LTR558_ALS_CONTR, &dat);
 	 return snprintf(buf,PAGE_SIZE,"als_status %d 0x%x\n", dat, dat);
 }
 
@@ -519,7 +519,7 @@ static ssize_t ltr558_show_suspend(struct device* cd,
 		sprintf(buf, "ltr558 Resume\n");
 	else
 		sprintf(buf, "ltr558 Suspend\n");
-
+	
 	ret = strlen(buf) + 1;
 
 	return ret;
@@ -530,7 +530,7 @@ static ssize_t ltr558_store_suspend(struct device* cd, struct device_attribute *
 {
 	unsigned long on_off = simple_strtoul(buf, NULL, 10);
 	suspend_flag_ltr558 = on_off;
-
+	
 	if(on_off==1)
 	{
 		LTR558_DEBUG("ltr558 Entry Resume\n");
@@ -541,7 +541,7 @@ static ssize_t ltr558_store_suspend(struct device* cd, struct device_attribute *
 		LTR558_DEBUG("ltr558 Entry Suspend\n");
 		ltr558_ps_disable();
 	}
-
+	
 	return len;
 }
 
@@ -550,7 +550,7 @@ static ssize_t ltr558_show_version(struct device* cd,
 {
 	ssize_t ret = 0;
 
-	sprintf(buf, "ltr558");
+	sprintf(buf, "ltr558");	
 	ret = strlen(buf) + 1;
 
 	return ret;
@@ -562,7 +562,7 @@ static ssize_t ltr558_show_version(struct device* cd,
 	struct device *dev = &(client->dev);
 
 	LTR558_DEBUG("%s", __func__);
-
+	
 	err = device_create_file(dev, &dev_attr_suspend_ltr558);
 	err = device_create_file(dev, &dev_attr_version_ltr558);
 	err = device_create_file(dev, &dev_attr_ps_data_ltr558);
@@ -574,142 +574,142 @@ static ssize_t ltr558_show_version(struct device* cd,
 	return err;
 }
 #if 0
-static long ltr558_ps_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
-{
-	int ret = 0;
-	int buffer = 0;
-	void __user *argp = (void __user *)arg;
+static long ltr558_ps_ioctl(struct file *file, unsigned int cmd, unsigned long arg) 
+{ 
+	int ret = 0; 
+	int buffer = 0; 
+	void __user *argp = (void __user *)arg; 
 
 	LTR558_DEBUG("%s: cmd = %u, arg = %lu\n", __func__, cmd, arg);
 	switch (cmd)
-	{
-		case LTR_IOCTL_SET_PFLAG:
-			if (copy_from_user(&buffer, argp, 1))
-			{
-				ret = -EFAULT;
-				break;
-			}
-			ps_active_ltr558 = buffer;
-			if (ps_active_ltr558)
-			{
+	{ 
+		case LTR_IOCTL_SET_PFLAG: 
+			if (copy_from_user(&buffer, argp, 1)) 
+			{ 
+				ret = -EFAULT; 
+				break; 
+			} 
+			ps_active_ltr558 = buffer; 
+			if (ps_active_ltr558) 
+			{ 
 				ret = ltr558_ps_enable(ps_gainrange_ltr558);
-				if(ret < 0)
-					break;
-				//else
-				///  enable_irq_wake(ltr558_irq);
+				if(ret < 0) 
+					break; 
+				//else 
+				///  enable_irq_wake(ltr558_irq); 
 			}
 			break;
-		case LTR_IOCTL_GET_PS_DATA:
-			buffer = ltr558_ps_read();
-			if (buffer < 0)
-			{
-				ret = -EFAULT;
-				break;
-			}
-			ret = copy_to_user(argp, &buffer, 1);
-			break;
+		case LTR_IOCTL_GET_PS_DATA: 
+			buffer = ltr558_ps_read(); 
+			if (buffer < 0) 
+			{ 
+				ret = -EFAULT; 
+				break; 
+			} 
+			ret = copy_to_user(argp, &buffer, 1); 
+			break; 
 
-		case LTR_IOCTL_GET_PFLAG:
-			buffer = ltr558_ps_read_status();
-			if (&buffer < 0)
-			{
-				ret = -EFAULT;
-				break;
-			}
-			ret = copy_to_user(argp, &buffer, 1);
+		case LTR_IOCTL_GET_PFLAG: 
+			buffer = ltr558_ps_read_status(); 
+			if (&buffer < 0) 
+			{ 
+				ret = -EFAULT; 
+				break; 
+			} 
+			ret = copy_to_user(argp, &buffer, 1); 
 			break;
 	}
 	return ret;
 }
 #endif
 
-#if 0
-static struct file_operations ltr558_ps_fops = {
- .owner  = THIS_MODULE,
- .open  = ltr558_ps_open,
- .release = ltr558_ps_release,
- .unlocked_ioctl  = ltr558_ps_ioctl,
- //.poll  = ltr558_ps_poll,
-};
-#endif
-
+#if 0 
+static struct file_operations ltr558_ps_fops = { 
+ .owner  = THIS_MODULE, 
+ .open  = ltr558_ps_open, 
+ .release = ltr558_ps_release, 
+ .unlocked_ioctl  = ltr558_ps_ioctl, 
+ //.poll  = ltr558_ps_poll, 
+}; 
+#endif 
+ 
 /*
-* ################
- * ## ALS CONFIG ##
- * ################
- */
-
-static int ltr558_als_enable(int gainrange)
-{
- int error;
+* ################ 
+ * ## ALS CONFIG ## 
+ * ################ 
+ */ 
+ 
+static int ltr558_als_enable(int gainrange) 
+{ 
+ int error; 
  unsigned char intval;
-
+ 
 printk("%s: enter\n", __func__);
- if (gainrange == 1)
+ if (gainrange == 1) 
  {
   error = ltr558_i2c_write_reg(LTR558_ALS_CONTR, MODE_ALS_ON_Range1);
   ltr558_i2c_read_reg(LTR558_ALS_CONTR, &intval);
 LTR558_DEBUG("%s: set MODE_ALS_ON_Range1 , error = %d\n", __func__, error);
-}
-else if (gainrange == 2)
-{
+} 
+else if (gainrange == 2) 
+{ 
  error = ltr558_i2c_write_reg(LTR558_ALS_CONTR, MODE_ALS_ON_Range2);
  ltr558_i2c_read_reg(LTR558_ALS_CONTR, &intval);
 LTR558_DEBUG("%s: set MODE_ALS_ON_Range2 , error = %d\n", __func__, error);
 }
- else
-  error = -1;
+ else 
+  error = -1; 
 LTR558_DEBUG("%s: over, error = %d\n", __func__, error);
-
- mdelay(WAKEUP_DELAY);
-
- /* ===============
-  * ** IMPORTANT **
-  * ===============
-  * Other settings like timing and threshold to be set here, if required.
-   * Not set and kept as device default for now.
-   */
-
+ 
+ mdelay(WAKEUP_DELAY); 
+ 
+ /* ===============  
+  * ** IMPORTANT ** 
+  * =============== 
+  * Other settings like timing and threshold to be set here, if required. 
+   * Not set and kept as device default for now. 
+   */ 
+ 
  return error;
 }
 
-// Put ALS into Standby mode
-static int ltr558_als_disable(void)
-{
- int error;
- error = ltr558_i2c_write_reg(LTR558_ALS_CONTR, MODE_ALS_StdBy);
- return error;
-}
-
-
-static int ltr558_als_read(int gainrange)
-{
+// Put ALS into Standby mode 
+static int ltr558_als_disable(void) 
+{ 
+ int error; 
+ error = ltr558_i2c_write_reg(LTR558_ALS_CONTR, MODE_ALS_StdBy);  
+ return error; 
+} 
+ 
+ 
+static int ltr558_als_read(int gainrange) 
+{ 
  int alsval_ch0_lo =0;
- int alsval_ch0_hi =0;//, alsval_ch0;
+ int alsval_ch0_hi =0;//, alsval_ch0; 
  int alsval_ch1_lo =0;
- int alsval_ch1_hi =0;//, alsval_ch1;
+ int alsval_ch1_hi =0;//, alsval_ch1; 
  int alsval_ch0 =0;
  int alsval_ch1 =0;
- int luxdata_int=0;
+ int luxdata_int=0; 
  int ratio=0;
  int ch0_coeff=0;
- int ch1_coeff=0;
+ int ch1_coeff=0; 
   #if 0
- ltr558_i2c_read_reg(LTR558_ALS_DATA_CH0_0, &alsval_ch0_lo);
- ltr558_i2c_read_reg(LTR558_ALS_DATA_CH0_1, &alsval_ch0_hi);
- alsval_ch0 = (alsval_ch0_hi * 256) + alsval_ch0_lo;
-
- ltr558_i2c_read_reg(LTR558_ALS_DATA_CH1_0, &alsval_ch1_lo);
- ltr558_i2c_read_reg(LTR558_ALS_DATA_CH1_1, &alsval_ch1_hi);
- alsval_ch1 = (alsval_ch1_hi * 256) + alsval_ch1_lo;
+ ltr558_i2c_read_reg(LTR558_ALS_DATA_CH0_0, &alsval_ch0_lo); 
+ ltr558_i2c_read_reg(LTR558_ALS_DATA_CH0_1, &alsval_ch0_hi); 
+ alsval_ch0 = (alsval_ch0_hi * 256) + alsval_ch0_lo; 
+ 
+ ltr558_i2c_read_reg(LTR558_ALS_DATA_CH1_0, &alsval_ch1_lo); 
+ ltr558_i2c_read_reg(LTR558_ALS_DATA_CH1_1, &alsval_ch1_hi); 
+ alsval_ch1 = (alsval_ch1_hi * 256) + alsval_ch1_lo; 
  #else
-  ltr558_i2c_read_reg(LTR558_ALS_DATA_CH1_0, (unsigned char *)&alsval_ch1_lo);
-  ltr558_i2c_read_reg(LTR558_ALS_DATA_CH1_1, (unsigned char *)&alsval_ch1_hi);
- alsval_ch1 = (alsval_ch1_hi * 256) + alsval_ch1_lo;
-
-  ltr558_i2c_read_reg(LTR558_ALS_DATA_CH0_0, (unsigned char *)&alsval_ch0_lo);
-  ltr558_i2c_read_reg(LTR558_ALS_DATA_CH0_1, (unsigned char *)&alsval_ch0_hi);
- alsval_ch0 = (alsval_ch0_hi * 256) + alsval_ch0_lo;
+  ltr558_i2c_read_reg(LTR558_ALS_DATA_CH1_0, (unsigned char *)&alsval_ch1_lo); 
+  ltr558_i2c_read_reg(LTR558_ALS_DATA_CH1_1, (unsigned char *)&alsval_ch1_hi); 
+ alsval_ch1 = (alsval_ch1_hi * 256) + alsval_ch1_lo; 
+ 
+  ltr558_i2c_read_reg(LTR558_ALS_DATA_CH0_0, (unsigned char *)&alsval_ch0_lo); 
+  ltr558_i2c_read_reg(LTR558_ALS_DATA_CH0_1, (unsigned char *)&alsval_ch0_hi); 
+ alsval_ch0 = (alsval_ch0_hi * 256) + alsval_ch0_lo;  
  #endif
  LTR558_DEBUG("alsval_ch0[%d],alsval_ch1[%d]\n",alsval_ch0,alsval_ch1);
 // LTR558_DEBUG("alsval_ch0 = 0x%x, alsval_ch1 = 0x%x",alsval_ch0, alsval_ch1);
@@ -721,7 +721,7 @@ static int ltr558_als_read(int gainrange)
   }
   else
   {
-	ratio = (1000*alsval_ch1) /(alsval_ch1 + alsval_ch0);
+ 	ratio = (1000*alsval_ch1) /(alsval_ch1 + alsval_ch0); 
   }
   LTR558_DEBUG("ratio = %d ====================\n", ratio);
   if(ratio<450)
@@ -749,7 +749,7 @@ static int ltr558_als_read(int gainrange)
   else if(ratio >= 850)
   {
 	ch0_coeff = 0;
-	ch1_coeff = 0;
+	ch1_coeff = 0;	
 	luxdata_int  = ((alsval_ch0*ch0_coeff) - (alsval_ch1*ch1_coeff))/10000;
   }
   //luxdata_int  = ((alsval_ch0*ch0_coeff) - (alsval_ch1*ch1_coeff))/10000;
@@ -758,239 +758,239 @@ static int ltr558_als_read(int gainrange)
 	luxdata_int = luxdata_int/15;
 	//luxdata_int = luxdata_int;
   }
-	luxdata_int = 3 * luxdata_int;
+	luxdata_int = 3 * luxdata_int; 
     return luxdata_int;
 
 }
 
-static int ltr558_als_read_status(void)
-{
- unsigned char intval;
-
- ltr558_i2c_read_reg(LTR558_ALS_PS_STATUS,&intval);
- if (intval < 0)
-  goto out;
-
- intval = intval & 0x08;
-
- out:
- return intval;
-}
-
-#if 0
-static int ltr558_als_open(struct inode *inode, struct file *file)
-{
- if (als_opened_ltr558) {
-//  LTR558_DEBUG(KERN_ALERT "%s: already opened\n", __func__);
-  return -EBUSY;
- }
- als_opened_ltr558 = 1;
- return 0;
-}
+static int ltr558_als_read_status(void) 
+{ 
+ unsigned char intval; 
+ 
+ ltr558_i2c_read_reg(LTR558_ALS_PS_STATUS,&intval);  
+ if (intval < 0) 
+  goto out; 
+ 
+ intval = intval & 0x08; 
+ 
+ out: 
+ return intval; 
+} 
+ 
+#if 0 
+static int ltr558_als_open(struct inode *inode, struct file *file) 
+{ 
+ if (als_opened_ltr558) { 
+//  LTR558_DEBUG(KERN_ALERT "%s: already opened\n", __func__); 
+  return -EBUSY; 
+ } 
+ als_opened_ltr558 = 1; 
+ return 0; 
+} 
 #endif
 
-#if 0
-static int ltr558_als_release(struct inode *inode, struct file *file)
-{
- LTR558_DEBUG(KERN_ALERT "%s\n", __func__);
- als_opened_ltr558 = 0;
- return ltr558_als_disable();
+#if 0 
+static int ltr558_als_release(struct inode *inode, struct file *file) 
+{ 
+ LTR558_DEBUG(KERN_ALERT "%s\n", __func__); 
+ als_opened_ltr558 = 0; 
+ return ltr558_als_disable(); 
+} 
+ 
+ 
+static long ltr558_als_ioctl(struct file *file, unsigned int cmd, unsigned long arg) 
+{ 
+ int ret = 0; 
+ int buffer = 1; 
+ void __user *argp = (void __user *)arg; 
+ 
+ 
+ switch (cmd){ 
+  case LTR_IOCTL_SET_LFLAG: 
+   if (copy_from_user(&buffer, argp, 1)) 
+   { 
+    ret = -EFAULT; 
+    break; 
+   } 
+ 
+   als_active_ltr558 = buffer; 
+   if (als_active_ltr558) 
+   { 
+    ret = ltr558_als_enable(als_gainrange_ltr558); 
+    if (ret < 0) 
+     break; 
+    //else 
+    // enable_irq_wake(pls->client->irq); 
+   } 
+   break; 
+ case LTR_IOCTL_GET_ALS_DATA: 
+  buffer = ltr558_als_read(als_gainrange_ltr558); 
+  if (buffer < 0) 
+  { 
+   ret = -EFAULT; 
+   break; 
+  } 
+  ret = copy_to_user(argp, &buffer, 1); 
+  break; 
+ case LTR_IOCTL_GET_LFLAG: 
+  buffer = ltr558_als_read_status(); 
+  if (buffer < 0) 
+  { 
+   ret = -EFAULT; 
+   break; 
+  } 
+  ret = copy_to_user(argp, &buffer, 1); 
+  break; 
+ } 
+ return ret; 
 }
-
-
-static long ltr558_als_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
-{
- int ret = 0;
- int buffer = 1;
- void __user *argp = (void __user *)arg;
-
-
- switch (cmd){
-  case LTR_IOCTL_SET_LFLAG:
-   if (copy_from_user(&buffer, argp, 1))
-   {
-    ret = -EFAULT;
-    break;
-   }
-
-   als_active_ltr558 = buffer;
-   if (als_active_ltr558)
-   {
-    ret = ltr558_als_enable(als_gainrange_ltr558);
-    if (ret < 0)
-     break;
-    //else
-    // enable_irq_wake(pls->client->irq);
-   }
-   break;
- case LTR_IOCTL_GET_ALS_DATA:
-  buffer = ltr558_als_read(als_gainrange_ltr558);
-  if (buffer < 0)
-  {
-   ret = -EFAULT;
-   break;
-  }
-  ret = copy_to_user(argp, &buffer, 1);
-  break;
- case LTR_IOCTL_GET_LFLAG:
-  buffer = ltr558_als_read_status();
-  if (buffer < 0)
-  {
-   ret = -EFAULT;
-   break;
-  }
-  ret = copy_to_user(argp, &buffer, 1);
-  break;
- }
- return ret;
-}
-#endif
+#endif 
 
 /*
-static unsigned int ltr558_als_poll(struct file *fp, poll_table * wait)
-{
- if(als_data_changed_ltr558)
- {
-  als_data_changed_ltr558 = 0;
-  return POLLIN | POLLRDNORM;
- }
- poll_wait(fp, &als_waitqueue_ltr558, wait);
-
- return 0;
-}
+static unsigned int ltr558_als_poll(struct file *fp, poll_table * wait) 
+{ 
+ if(als_data_changed_ltr558) 
+ { 
+  als_data_changed_ltr558 = 0; 
+  return POLLIN | POLLRDNORM; 
+ }  
+ poll_wait(fp, &als_waitqueue_ltr558, wait); 
+ 
+ return 0; 
+} 
 
  */
  #if 0
-static struct file_operations ltr558_als_fops = {
- .owner  = THIS_MODULE,
- .open  = ltr558_als_open,
- .release = ltr558_als_release,
- .unlocked_ioctl  = ltr558_als_ioctl,
- //.poll        = ltr558_als_poll,
-};
-#endif
+static struct file_operations ltr558_als_fops = { 
+ .owner  = THIS_MODULE, 
+ .open  = ltr558_als_open, 
+ .release = ltr558_als_release, 
+ .unlocked_ioctl  = ltr558_als_ioctl, 
+ //.poll        = ltr558_als_poll, 
+}; 
+#endif 
 
 //=================
-static int ltr558_open(struct inode *inode, struct file *file)
-{
- if (als_opened_ltr558) {
-  LTR558_DEBUG(KERN_ALERT "%s: already opened\n", __func__);
-  return -EBUSY;
- }
- als_opened_ltr558 = 1;
+static int ltr558_open(struct inode *inode, struct file *file) 
+{ 
+ if (als_opened_ltr558) { 
+  LTR558_DEBUG(KERN_ALERT "%s: already opened\n", __func__); 
+  return -EBUSY; 
+ } 
+ als_opened_ltr558 = 1; 
 /*
- if (ps_opened_ltr558) {
-  LTR558_DEBUG(KERN_ALERT "%s: already opened\n", __func__);
-  return -EBUSY;
- }
- ps_opened_ltr558 = 1;
+ if (ps_opened_ltr558) { 
+  LTR558_DEBUG(KERN_ALERT "%s: already opened\n", __func__); 
+  return -EBUSY; 
+ } 
+ ps_opened_ltr558 = 1; 
  */
- return 0;
-}
+ return 0; 
+} 
 
-static int ltr558_release(struct inode *inode, struct file *file)
-{
- LTR558_DEBUG(KERN_ALERT "%s\n", __func__);
- als_opened_ltr558 = 0;
+static int ltr558_release(struct inode *inode, struct file *file) 
+{ 
+ LTR558_DEBUG(KERN_ALERT "%s\n", __func__); 
+ als_opened_ltr558 = 0; 
  //return
- //ltr558_als_disable();
-  LTR558_DEBUG(KERN_ALERT "%s\n", __func__);
- //ps_opened_ltr558 = 0;
+ //ltr558_als_disable(); 
+  LTR558_DEBUG(KERN_ALERT "%s\n", __func__); 
+ //ps_opened_ltr558 = 0; 
  //return
- //ltr558_ps_disable();
+ //ltr558_ps_disable(); 
  return 0;
-}
+} 
 
 
-static long ltr558_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
-{
-	int ret = 0;
-	int buffer = 0;
-	void __user *argp = (void __user *)arg;
+static long ltr558_ioctl(struct file *file, unsigned int cmd, unsigned long arg) 
+{ 
+	int ret = 0; 
+	int buffer = 0; 
+	void __user *argp = (void __user *)arg; 
 
 	LTR558_DEBUG("%s: cmd = 0x%u, arg = %lu\n", __func__, cmd, arg);
 	switch (cmd)
-	{
-		case LTR_IOCTL_SET_PFLAG:
+	{ 
+		case LTR_IOCTL_SET_PFLAG: 
 			LTR558_DEBUG_LIUDJ(" SET_PFLAG ===========\n");
-			if (copy_from_user(&buffer, argp, sizeof(buffer)))
-			{
-				return -EFAULT;
-			}
-
-			if (1 == buffer)
-			{
+			if (copy_from_user(&buffer, argp, sizeof(buffer))) 
+			{ 
+				return -EFAULT; 
+			} 
+ 
+			if (1 == buffer) 
+			{ 
 				if(ltr558_ps_enable(ps_gainrange_ltr558) < 0)
-					return -EIO;
+					return -EIO; 
 			}else if(0 == buffer)
 			{
 				if(ltr558_ps_disable() < 0)
 					return -EIO;
 			}else
 				return -EINVAL;
-			ps_active_ltr558 = buffer;
+			ps_active_ltr558 = buffer;			
 			break;
 
-		/*case LTR_IOCTL_GET_PS_DATA:
-			buffer = ltr558_ps_read();
-			if (buffer < 0)
-			{
-				ret = -EFAULT;
-				break;
-			}
-			ret = copy_to_user(argp, &buffer, 1);
+		/*case LTR_IOCTL_GET_PS_DATA: 
+			buffer = ltr558_ps_read(); 
+			if (buffer < 0) 
+			{ 
+				ret = -EFAULT; 
+				break; 
+			} 
+			ret = copy_to_user(argp, &buffer, 1); 
 			break; */
 
 		case LTR_IOCTL_GET_PFLAG:
-			LTR558_DEBUG_LIUDJ(" GET_PFLAG ===========\n");
-			buffer = ltr558_ps_read_status();
-			if (&buffer < 0)
-			{
-				return -EFAULT;
-				break;
-			}
+			LTR558_DEBUG_LIUDJ(" GET_PFLAG ===========\n"); 
+			buffer = ltr558_ps_read_status(); 
+			if (&buffer < 0) 
+			{ 
+				return -EFAULT; 
+				break; 
+			} 
 			if(copy_to_user(argp, &buffer, 1))
-				return -EFAULT;
+				return -EFAULT; 
 			break;
-		case LTR_IOCTL_SET_LFLAG:
+		case LTR_IOCTL_SET_LFLAG: 
 			LTR558_DEBUG_LIUDJ(" SET_LFLAG =====++++++======\n");
-			if (copy_from_user(&buffer, argp, 1))
-			{
-				return -EFAULT;
-				break;
-			}
+			if (copy_from_user(&buffer, argp, 1)) 
+			{ 
+				return -EFAULT; 
+				break; 
+			} 
 
-			als_active_ltr558 = buffer;
-			if (1 == als_active_ltr558)
-			{
-				ret = ltr558_als_enable(als_gainrange_ltr558);
-				if (ret < 0)
+			als_active_ltr558 = buffer; 
+			if (1 == als_active_ltr558) 
+			{ 
+				ret = ltr558_als_enable(als_gainrange_ltr558); 
+				if (ret < 0) 
 					return ret;
 			}else if(0 == als_active_ltr558)
-			{
-				ret = ltr558_als_disable();
-				if (ret < 0)
+			{ 
+				ret = ltr558_als_disable(); 
+				if (ret < 0) 
 					return ret;
 			}else
-				return -EINVAL;
-			break;
-		/*case LTR_IOCTL_GET_ALS_DATA:
-			buffer = ltr558_als_read(als_gainrange_ltr558);
-			if (buffer < 0)
-			{
-				ret = -EFAULT;
-				break;
-			}
-			ret = copy_to_user(argp, &buffer, 1);
+				return -EINVAL;		 
+			break; 
+		/*case LTR_IOCTL_GET_ALS_DATA: 
+			buffer = ltr558_als_read(als_gainrange_ltr558); 
+			if (buffer < 0) 
+			{ 
+				ret = -EFAULT; 
+				break; 
+			} 
+			ret = copy_to_user(argp, &buffer, 1); 
 			break; */
-		case LTR_IOCTL_GET_LFLAG:
+		case LTR_IOCTL_GET_LFLAG: 
 			LTR558_DEBUG_LIUDJ(" GET_LFLAG =====+++++++======\n");
-			buffer = ltr558_als_read_status();
-			if (buffer < 0)
-			{
-				return -EFAULT;
-				break;
-			}
+			buffer = ltr558_als_read_status(); 
+			if (buffer < 0) 
+			{ 
+				return -EFAULT; 
+				break; 
+			} 
 			if(copy_to_user(argp, &buffer, 1))
 				return -EFAULT;
 			break;
@@ -998,19 +998,19 @@ static long ltr558_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 			{
 				LTR558_DEBUG(" ltr558_ioctrl cmd error \n");
 				return -EFAULT;
-			}
+			}   
 	}
 	return 0;
 }
 
 
-static struct file_operations ltr558_fops = {
- .owner  = THIS_MODULE,
- .open  = ltr558_open,
- .release = ltr558_release,
- .unlocked_ioctl  = ltr558_ioctl,
- //.poll        = ltr558_als_poll,
-};
+static struct file_operations ltr558_fops = { 
+ .owner  = THIS_MODULE, 
+ .open  = ltr558_open, 
+ .release = ltr558_release, 
+ .unlocked_ioctl  = ltr558_ioctl, 
+ //.poll        = ltr558_als_poll, 
+}; 
 
 
 static struct miscdevice ltr558_dev = {
@@ -1020,7 +1020,7 @@ static struct miscdevice ltr558_dev = {
 };
 
 //=================
-
+ 
  static void ltr558_report_dps(int data, struct input_dev *input)
 {
 	unsigned char dps_data = (data >= calibrate_high_ltr558 )? 1: 0;
@@ -1032,7 +1032,7 @@ static struct miscdevice ltr558_dev = {
 	input_report_abs(input, ABS_DISTANCE, dps_data);
 	input_sync(input);
 }
-
+ 
 static void ltr558_report_dls(int data, struct input_dev *input)
 {
 	LTR558_DEBUG("%s:  lux=%d", __func__, data);
@@ -1040,19 +1040,19 @@ static void ltr558_report_dls(int data, struct input_dev *input)
 	input_sync(input);
 }
 
-static void ltr558_pls_work(struct work_struct *work)
-{
-	unsigned char als_ps_status;
-	int interrupt, newdata ;
+static void ltr558_pls_work(struct work_struct *work) 
+{ 
+	unsigned char als_ps_status; 
+	int interrupt, newdata ; 
 	ltr558_pls_struct *pls = container_of(work,ltr558_pls_struct, work);
 
-	ltr558_i2c_read_reg(LTR558_ALS_PS_STATUS, &als_ps_status);
-	interrupt = als_ps_status & 10;
+	ltr558_i2c_read_reg(LTR558_ALS_PS_STATUS, &als_ps_status); 
+	interrupt = als_ps_status & 10; 
 	newdata = als_ps_status & 5;
-	LTR558_DEBUG(" interrupt = %d  newdata = %d als_ps_status = 0x%x\n", interrupt, newdata, als_ps_status);
+	LTR558_DEBUG(" interrupt = %d  newdata = %d als_ps_status = 0x%x\n", interrupt, newdata, als_ps_status); 
 	if(0x03 == (als_ps_status & 0x03))
 	{
-		final_prox_val_ltr558 = ltr558_ps_read();
+		final_prox_val_ltr558 = ltr558_ps_read(); 
 		ltr558_report_dps(final_prox_val_ltr558,pls->input);
 		if(final_prox_val_ltr558 >= calibrate_high_ltr558)   //0xaa
 		{
@@ -1069,31 +1069,31 @@ static void ltr558_pls_work(struct work_struct *work)
 			ltr558_i2c_write_reg(0x90, calibrate_high_ltr558);//upper threshold lower byte
 			ltr558_i2c_write_reg(0x91, 0x00);//upper threshold upper byte
 			ltr558_i2c_write_reg(0x92, 0x00);//lower threshold lower byte
-			ltr558_i2c_write_reg(0x93, 0x00);//lower  threshold upper byte
+			ltr558_i2c_write_reg(0x93, 0x00);//lower  threshold upper byte		
 		}
-		ps_data_changed_ltr558 = 1;
+		ps_data_changed_ltr558 = 1; 		
 	}
 	if(0x0c == (als_ps_status & 0x0c))
 	{
-		// ALS interrupt
-		final_lux_val_ltr558 = ltr558_als_read(als_gainrange_ltr558);
+		// ALS interrupt 
+		final_lux_val_ltr558 = ltr558_als_read(als_gainrange_ltr558); 
 		ltr558_report_dls(final_lux_val_ltr558,pls->input);
-		als_data_changed_ltr558 = 1;
-		LTR558_DEBUG("ALS interrupt ++++++++++\n");
+		als_data_changed_ltr558 = 1; 
+		LTR558_DEBUG("ALS interrupt ++++++++++\n");	
 	}
 	if((0x0c != (als_ps_status & 0x0c)) && (0x03 != (als_ps_status & 0x03)))
 	{
 		printk("LTR558 inturrept error !!!\n");
 		LTR558_DEBUG(" interrupt = %d  newdata = %d als_ps_status = 0x%x\n", interrupt, newdata, als_ps_status);
-	}
+	} 
+	
+	enable_irq(pls->client->irq); 
+} 
+ 
 
-	enable_irq(pls->client->irq);
-}
-
-
-
-static irqreturn_t ltr558_irq_handler(int irq, void *dev_id)
-{
+ 
+static irqreturn_t ltr558_irq_handler(int irq, void *dev_id) 
+{ 
 	ltr558_pls_struct *pls = (ltr558_pls_struct *)dev_id;
 
 	LTR558_DEBUG("%s: irq happend\n", __func__);
@@ -1101,30 +1101,30 @@ static irqreturn_t ltr558_irq_handler(int irq, void *dev_id)
 	disable_irq_nosync(pls->client->irq);
 	queue_work(pls->ltr_work_queue,&pls->work);
 	return IRQ_HANDLED;
-}
+} 
 
-
-static int ltr558_devinit(void)
-{
+ 
+static int ltr558_devinit(void) 
+{ 
 	int error;
 	int num = 0;
-	int ps_data = 1;
-	int init_ps_gain;
+	int ps_data = 1; 
+	int init_ps_gain; 
 
-	int init_als_gain;
+	int init_als_gain; 
 	LTR558_DEBUG("%s begin\n",__func__);
-	mdelay(PON_DELAY);
+	mdelay(PON_DELAY); 
 //gionee liudj add soft reset begin
 reset:
 	ltr558_i2c_write_reg(0x80, 0x04);
 //gionee liudj add soft reset end
-	// Enable PS to Gain1 at startup
-	init_ps_gain = PS_RANGE1;
-	//init_als_gain = ALS_RANGE2_64K;
-	init_als_gain = ALS_RANGE1_320;
+	// Enable PS to Gain1 at startup 
+	init_ps_gain = PS_RANGE1; 
+	//init_als_gain = ALS_RANGE2_64K; 
+	init_als_gain = ALS_RANGE1_320; 
 
-	als_gainrange_ltr558 = init_als_gain;
-	ps_gainrange_ltr558 = init_ps_gain;
+	als_gainrange_ltr558 = init_als_gain;   
+	ps_gainrange_ltr558 = init_ps_gain; 
 /*
 	error = ltr558_als_disable();
 	if(error < 0)
@@ -1136,7 +1136,7 @@ reset:
 	if(error < 0)
 	{
 		goto out;
-	}
+	} 
 */
 	ltr558_i2c_write_reg(0x82, 0x6b);
 	ltr558_i2c_write_reg(0x83, 0x0f);
@@ -1144,7 +1144,7 @@ reset:
 	//ltr558_i2c_write_reg(0x85, 0x13);
 	ltr558_i2c_write_reg(0x85, 0x03);//0x02 2_64k 0x13 0_320
 	ltr558_i2c_write_reg(0x9e, 0x20);
-	///============================ps interrupt threshold
+	///============================ps interrupt threshold 
 	ltr558_i2c_write_reg(0x90, 0x83);//upper threshold lower byte
 	ltr558_i2c_write_reg(0x91, 0x07);//upper threshold upper byte
 	ltr558_i2c_write_reg(0x92, 0x00);//lower threshold lower byte
@@ -1170,17 +1170,17 @@ reset:
 	}
 	ltr558_i2c_write_reg(0x81, 0x00);
 	//gionee liudj add 1130 end
-	// Enable ALS to Full Range at startup
+	// Enable ALS to Full Range at startup 
 
-//	error = ltr558_als_enable(init_als_gain);
-/*	if (error < 0)
+//	error = ltr558_als_enable(init_als_gain); 
+/*	if (error < 0) 
 	{
-        return error;
+        return error; 
 	}
-*/	error = 0;
+*/	error = 0; 
 
-	return error;
-}
+	return error; 
+} 
 
 static void ltr558_pls_pininit(int irq_pin)
 {
@@ -1191,34 +1191,34 @@ static void ltr558_pls_pininit(int irq_pin)
 static void ltr558_early_suspend(struct early_suspend *handler)
 {
 	int ret;
-
+	
 	LTR558_DEBUG("%s\n", __func__);
-
-	//ret=ltr558_ps_disable();
+ 
+ 	//ret=ltr558_ps_disable(); 
 	if(1 == als_active_ltr558)
 	{
-		ret = ltr558_als_disable();
+  		ret = ltr558_als_disable(); 
 	}
 }
 
 
 static void ltr558_early_resume(struct early_suspend *handler)
-{
- //int ret;
- //ret = ltr558_devinit();
+{	
+ //int ret; 
+ //ret = ltr558_devinit(); 
  LTR558_DEBUG("%s\n", __func__);
- // ret = ltr558_ps_enable(PS_RANGE1);
-
- // Enable ALS to Full Range at startup
-
+ // ret = ltr558_ps_enable(PS_RANGE1); 
+ 
+ // Enable ALS to Full Range at startup 
+  
  //ret = ltr558_als_enable(ALS_RANGE1_320);
  if(1 == als_active_ltr558)
-	ltr558_als_enable(als_gainrange_ltr558);
+ 	ltr558_als_enable(als_gainrange_ltr558);
 }
 
-static int ltr558_probe(struct i2c_client *client, const struct i2c_device_id *id)
-{
-	int ret = 0;
+static int ltr558_probe(struct i2c_client *client, const struct i2c_device_id *id) 
+{ 
+	int ret = 0; 
 	unsigned char check_id;
 	this_client = client;
 
@@ -1227,9 +1227,9 @@ static int ltr558_probe(struct i2c_client *client, const struct i2c_device_id *i
 	{
 		ret = -EIO;
 		return ret;
-	}
-
-      //check whether the i2c address is 0x23
+	}	
+	
+      //check whether the i2c address is 0x23	
 	if(0x23 == client->addr)
 	{
 		LTR558_DEVICE_IC = 1;
@@ -1237,8 +1237,8 @@ static int ltr558_probe(struct i2c_client *client, const struct i2c_device_id *i
 	else
 	{
 		ret = -EIO;
-	}
-
+	}	
+	
 	//check whether the i2c communication is ok
 	if(!i2c_read_reg(0x87,&check_id))
 	{
@@ -1250,52 +1250,52 @@ static int ltr558_probe(struct i2c_client *client, const struct i2c_device_id *i
 
 	if(LTR558_DEVICE_IC)
 	{
-		unsigned char  check_i2c1 = 0;
+		unsigned char  check_i2c1 = 0; 
 		struct input_dev *input_dev;
 		struct i2c_adapter *adapter = to_i2c_adapter(client->dev.parent);
 		struct ltr558_pls_platform_data *pdata = client->dev.platform_data;
 
 		LTR558_DEBUG("%s:start probe",__func__);
-		/* Return 1 if adapter supports everything we need, 0 if not. */
-		if (!i2c_check_functionality(adapter, I2C_FUNC_I2C))
-		{
-			LTR558_DEBUG("%s: LTR-558ALS functionality check failed.\n", __func__);
-			ret = -EIO;
-			goto out;
-		}
+		/* Return 1 if adapter supports everything we need, 0 if not. */ 
+		if (!i2c_check_functionality(adapter, I2C_FUNC_I2C)) 
+		{ 
+			LTR558_DEBUG("%s: LTR-558ALS functionality check failed.\n", __func__); 
+			ret = -EIO; 
+			goto out; 
+		} 
 		else
 		{
 			LTR558_DEBUG("%s: LTR-558ALS functionality check success.\n", __func__);
 		}
 
-		/* data memory allocation */
-		the_data_ltr558 = kzalloc(sizeof(ltr558_pls_struct), GFP_KERNEL);
-		if (the_data_ltr558 == NULL) {
-			LTR558_DEBUG("%s: LTR-558ALS kzalloc failed.\n", __func__);
-			ret = -ENOMEM;
-			goto exit_alloc_data_failed;
-		}
+		/* data memory allocation */ 
+		the_data_ltr558 = kzalloc(sizeof(ltr558_pls_struct), GFP_KERNEL); 
+		if (the_data_ltr558 == NULL) { 
+			LTR558_DEBUG("%s: LTR-558ALS kzalloc failed.\n", __func__); 
+			ret = -ENOMEM; 
+			goto exit_alloc_data_failed; 
+		} 
 		else
 		{
-			LTR558_DEBUG("%s: LTR-558ALS kzalloc success.\n", __func__);
+			LTR558_DEBUG("%s: LTR-558ALS kzalloc success.\n", __func__); 
 		}
-
-		i2c_set_clientdata(client, the_data_ltr558);
-		the_data_ltr558->client = client;
+		
+		i2c_set_clientdata(client, the_data_ltr558); 
+		the_data_ltr558->client = client; 
 		this_client_ltr558 = client;
 
 		//create work queue for interrupt.
 		INIT_WORK(&the_data_ltr558->work, ltr558_pls_work);
-		the_data_ltr558->ltr_work_queue= create_singlethread_workqueue(LTR558_DEVICE);
+		the_data_ltr558->ltr_work_queue= create_singlethread_workqueue(LTR558_DEVICE);	
 	        if (!the_data_ltr558->ltr_work_queue) {
 	                ret = -ESRCH;
 	                goto exit_create_singlethread;
 	        }
 
 		//===============================================input device======================================
-		LTR558_DEBUG("before create the input device.\n");
+		LTR558_DEBUG("before create the input device.\n"); 
 		input_dev = input_allocate_device();
-		if (!input_dev)
+		if (!input_dev) 
 		{
 			LTR558_DEBUG("%s: input allocate device failed\n", __func__);
 			ret = -ENOMEM;
@@ -1311,7 +1311,7 @@ static int ltr558_probe(struct i2c_client *client, const struct i2c_device_id *i
 		input_dev->id.product = 0x0001;
 		input_dev->id.version = 0x0010;
 
-		__set_bit(EV_ABS, input_dev->evbit);
+		__set_bit(EV_ABS, input_dev->evbit);	
 		//for proximity
 		input_set_abs_params(input_dev, ABS_DISTANCE, 0, 1, 0, 0);
 		//for lightsensor
@@ -1329,16 +1329,16 @@ static int ltr558_probe(struct i2c_client *client, const struct i2c_device_id *i
 
 
 		//register misc devices
-		ret = misc_register(&ltr558_dev);
-		if (ret) {
-			LTR558_DEBUG("%s: LTR-558ALS misc_register failed.\n", __func__);
-
-			goto exit_miscreg_failed;
-		}
+		ret = misc_register(&ltr558_dev); 
+		if (ret) { 
+			LTR558_DEBUG("%s: LTR-558ALS misc_register failed.\n", __func__); 
+			
+			goto exit_miscreg_failed; 
+		} 
 		else
 		{
-			LTR558_DEBUG("%s: LTR-558ALS misc_register success.\n", __func__);
-		}
+			LTR558_DEBUG("%s: LTR-558ALS misc_register success.\n", __func__); 
+		} 
 		//the end of register misc devices
 
 		//request the interrupt for ltr558
@@ -1347,16 +1347,16 @@ static int ltr558_probe(struct i2c_client *client, const struct i2c_device_id *i
 
 		/*get irq*/
 		client->irq = INT_GPIO_1;//gpio_to_irq(pdata->irq_gpio_number);
-		the_data_ltr558->irq = client->irq;
-
+		the_data_ltr558->irq = client->irq;	                                             
+ 
 		LTR558_DEBUG("I2C name=%s, addr=0x%x, gpio=%d, irq=%d",client->name,client->addr, pdata->irq_gpio_number, client->irq);
 
 		ltr558_irq = client->irq ;
 
 		LTR558_DEBUG("%s: request irq, irq = %d\n",__func__, ltr558_irq);
 
-		if(client->irq > 0)
-		{
+		if(client->irq > 0) 
+		{  	
 			ret =  request_irq(client->irq, ltr558_irq_handler, IRQF_DISABLED/*IRQ_TYPE_LEVEL_LOW*/, client->name,the_data_ltr558);
 			//ret =  request_irq(client->irq, ltr558_irq_handler, IRQ_TYPE_EDGE_FALLING, client->name,the_data_ltr558);
 			if (ret <0)
@@ -1366,12 +1366,12 @@ static int ltr558_probe(struct i2c_client *client, const struct i2c_device_id *i
 			}
 			else
 			{
-				//disable irq
+				//disable irq 
 				disable_irq(client->irq);
-			}
-			LTR558_DEBUG("%s: LTR-558ALS request irq over\n", __func__);
+			}	
+			LTR558_DEBUG("%s: LTR-558ALS request irq over\n", __func__); 
 		}
-		LTR558_DEBUG("%s: LTR-558ALS request irq successfully\n", __func__);
+		LTR558_DEBUG("%s: LTR-558ALS request irq successfully\n", __func__); 
 
              //check whether the i2c communication is ok.
 		if(!ltr558_i2c_read_reg(0x86,&check_i2c1))
@@ -1380,19 +1380,19 @@ static int ltr558_probe(struct i2c_client *client, const struct i2c_device_id *i
 			ret = -EIO;
 			goto exit_devinit_failed;
 		}
-		LTR558_DEBUG("the i2c communication is ok, register 0x86: %d\n", check_i2c1);
-
-		ret = ltr558_devinit();
-		if (ret) {
-			LTR558_DEBUG(KERN_ALERT "%s: LTR-558ALS device init failed.\n", __func__);
-			goto exit_devinit_failed;
-		}
+		LTR558_DEBUG("the i2c communication is ok, register 0x86: %d\n", check_i2c1); 
+		
+		ret = ltr558_devinit(); 
+		if (ret) { 
+			LTR558_DEBUG(KERN_ALERT "%s: LTR-558ALS device init failed.\n", __func__); 
+			goto exit_devinit_failed; 
+		} 
 		else
 		{
-			LTR558_DEBUG(KERN_ALERT "%s: LTR-558ALS device init success.\n", __func__);
+			LTR558_DEBUG(KERN_ALERT "%s: LTR-558ALS device init success.\n", __func__); 
 		}
 		//register early suspend
-		the_data_ltr558->ltr_early_suspend.level = EARLY_SUSPEND_LEVEL_DISABLE_FB + 25;
+	    	the_data_ltr558->ltr_early_suspend.level = EARLY_SUSPEND_LEVEL_DISABLE_FB + 25;
 		the_data_ltr558->ltr_early_suspend.suspend = ltr558_early_suspend;
 		the_data_ltr558->ltr_early_suspend.resume = ltr558_early_resume;
 		register_early_suspend(&the_data_ltr558->ltr_early_suspend);
@@ -1427,15 +1427,15 @@ static int ltr558_probe(struct i2c_client *client, const struct i2c_device_id *i
 		exit_alloc_data_failed:
 		out:
 			LTR558_DEBUG("%s: Probe Fail!\n",__func__);
-			return ret;
+			return ret; 
 
-	}
+	}		
 	else
 		return ret;
-}
-
-static int ltr558_remove(struct i2c_client *client)
-{
+} 
+ 
+static int ltr558_remove(struct i2c_client *client) 
+{ 
 	if(LTR558_DEVICE_IC)
 	{
 		ltr558_pls_struct *ltr558_pls = i2c_get_clientdata(client);
@@ -1451,52 +1451,52 @@ static int ltr558_remove(struct i2c_client *client)
 		input_free_device(ltr558_pls->input);
 
 		free_irq(client->irq, ltr558_pls);
-
-		 misc_deregister(&ltr558_dev);
-		 ltr558_ps_disable();
-		 ltr558_als_disable();
-
-		kfree(i2c_get_clientdata(client));
-
-		return 0;
-	}
+	 
+		 misc_deregister(&ltr558_dev);	 
+		 ltr558_ps_disable(); 
+		 ltr558_als_disable(); 
+	  
+	 	kfree(i2c_get_clientdata(client)); 
+	 	
+		return 0; 
+	}	
 	return 0;
-}
+} 
+ 
+static const struct i2c_device_id ltr558_id[] = { 
+ { LTR558_DEVICE, 0 }, 
+ {} 
+}; 
+ 
+static struct i2c_driver ltr558_driver = { 
+ .driver = { 
+  .owner = THIS_MODULE, 
+  .name = LTR558_DEVICE, 
+ }, 	
+ .probe = ltr558_probe, 
+ .remove = ltr558_remove, 
+ .id_table = ltr558_id, 
+}; 
 
-static const struct i2c_device_id ltr558_id[] = {
- { LTR558_DEVICE, 0 },
- {}
-};
+static int __init ltr558_driverinit(void) 
+{ 
+     LTR558_DEBUG(KERN_ALERT "<<< %s: LTR-558ALS Driver Module LOADED >>>\n", __func__); 
+     return i2c_add_driver(&ltr558_driver); 
+} 
 
-static struct i2c_driver ltr558_driver = {
- .driver = {
-  .owner = THIS_MODULE,
-  .name = LTR558_DEVICE,
- },
- .probe = ltr558_probe,
- .remove = ltr558_remove,
- .id_table = ltr558_id,
-};
+static void __exit ltr558_driverexit(void) 
+{ 
+     i2c_del_driver(&ltr558_driver); 
+     LTR558_DEBUG(KERN_ALERT ">>> %s: LTR-558ALS Driver Module REMOVED <<<\n", __func__); 
+} 
 
-static int __init ltr558_driverinit(void)
-{
-     LTR558_DEBUG(KERN_ALERT "<<< %s: LTR-558ALS Driver Module LOADED >>>\n", __func__);
-     return i2c_add_driver(&ltr558_driver);
-}
-
-static void __exit ltr558_driverexit(void)
-{
-     i2c_del_driver(&ltr558_driver);
-     LTR558_DEBUG(KERN_ALERT ">>> %s: LTR-558ALS Driver Module REMOVED <<<\n", __func__);
-}
-
-
-module_init(ltr558_driverinit)
-module_exit(ltr558_driverexit)
-
-MODULE_AUTHOR("Lite-On Technology Corp");
-MODULE_DESCRIPTION("LTR-558ALS Driver");
-MODULE_LICENSE("Dual BSD/GPL");
-MODULE_VERSION(DRIVER_VERSION);
+ 
+module_init(ltr558_driverinit) 
+module_exit(ltr558_driverexit) 
+ 
+MODULE_AUTHOR("Lite-On Technology Corp"); 
+MODULE_DESCRIPTION("LTR-558ALS Driver"); 
+MODULE_LICENSE("Dual BSD/GPL"); 
+MODULE_VERSION(DRIVER_VERSION); 
 
 

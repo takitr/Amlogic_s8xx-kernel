@@ -121,7 +121,7 @@ static int axp_set_charge(struct axp20_supply *supply)
     if (axp_pmu_battery->pmu_init_chgvol < 4150000) {               // target charge voltage set to 4.10V
         val &= ~(0x03 << 5);
     } else if (axp_pmu_battery->pmu_init_chgvol < 4200000) {        // target charge voltage set to 4.15V
-        val |=  (0x01 << 5);
+        val |=  (0x01 << 5); 
     } else if (axp_pmu_battery->pmu_init_chgvol < 4360000) {        // target charge voltage set to 4.20V
         val |=  (0x02 << 5);
     } else {                                                        // target charge voltage set to 4.36V
@@ -137,15 +137,15 @@ static int axp_set_charge(struct axp20_supply *supply)
 
     val |= (((tmp - 200001) / 100000) & 0x0f);
     if (axp_pmu_battery->pmu_init_chgend_rate == 10) {              // set charge end rate
-        val &= ~(1 << 4);
+        val &= ~(1 << 4);    
     } else {
-        val |=  (1 << 4);
-    }
+        val |=  (1 << 4);    
+    } 
 
     if (axp_pmu_battery->pmu_init_chg_enabled) {                    // enable charger
         val |=  (1 << 7);
     } else {
-        AXP_PMU_DBG("something wrong with your config, do you sure not open charger?\n");
+        AXP_PMU_DBG("something wrong with your config, do you sure not open charger?\n");    
         val &= ~(1 << 7);
     }
     axp_write(supply->master, AXP20_CHARGE_CONTROL1, val);
@@ -153,16 +153,16 @@ static int axp_set_charge(struct axp20_supply *supply)
     val = 0;
     tmp = axp_pmu_battery->pmu_init_chg_pretime;
     if (tmp < 40) {                                                 // set pre-charge time out
-        tmp = 40;
+        tmp = 40;    
     } else if (tmp > 70) {
-        tmp = 70;
+        tmp = 70;    
     }
     val |= ((((tmp - 40) / 10) << 6) & 0xc0);
     tmp = axp_pmu_battery->pmu_init_chg_csttime;                    // set fast-charge time out
     if (tmp < 360) {
-        tmp = 360;
+        tmp = 360;    
     } else if (tmp > 720) {
-        tmp = 720;
+        tmp = 720;    
     }
     val |= (((tmp - 360) / 120) & 0x03);
 	return axp_update(supply->master, AXP20_CHARGE_CONTROL2, val, 0xc3);
@@ -220,8 +220,8 @@ static void axp_battery_check_status(struct axp20_supply *supply, union power_su
                     axp_update(supply->master, 0x32, 0x08, 0x38);
                     supply->led_control(AXP_LED_CTRL_BATTERY_FULL);
                 }
-            } else if (charger->rest_vol == 0 &&
-			   charger->charge_status == CHARGER_DISCHARGING &&
+            } else if (charger->rest_vol == 0 && 
+            		   charger->charge_status == CHARGER_DISCHARGING && 
                        charger->bat_det) {
                 // protect for over-discharging
                 val->intval = POWER_SUPPLY_STATUS_DISCHARGING;
@@ -253,7 +253,7 @@ static void axp_battery_check_health(struct axp20_supply *supply,
         val->intval = POWER_SUPPLY_HEALTH_DEAD;
     } else if (charger->fault & AXP20_FAULT_LOG_OVER_TEMP) {        // over temperature
         val->intval = POWER_SUPPLY_HEALTH_OVERHEAT;
-    } else if (charger->fault & AXP20_FAULT_LOG_COLD) {             // under temperature
+    } else if (charger->fault & AXP20_FAULT_LOG_COLD) {             // under temperature 
         val->intval = POWER_SUPPLY_HEALTH_COLD;
     } else {
         val->intval = POWER_SUPPLY_HEALTH_GOOD;
@@ -343,7 +343,7 @@ static int axp_ac_get_property(struct power_supply         *psy,
         val->intval = charger->dcin_valid;
         break;
     case POWER_SUPPLY_PROP_ONLINE:
-        val->intval = charger->dcin_valid;
+        val->intval = charger->dcin_valid;    
         break;
     case POWER_SUPPLY_PROP_VOLTAGE_NOW:
         val->intval = charger->v_dcin * 1000;
@@ -476,16 +476,16 @@ EXPORT_SYMBOL_GPL(axp20_reg_writes);
 
 int axp20_set_bits(int addr, uint8_t bits, uint8_t mask)
 {
-    uint8_t val;
-    int ret;
-
-    ret = axp20_reg_read(addr, &val);
-    if (ret) {
-        return ret;
-    }
-    val &= ~(mask);
-    val |=  (bits & mask);
-    return axp20_reg_write(addr, val);
+    uint8_t val; 
+    int ret; 
+ 
+    ret = axp20_reg_read(addr, &val); 
+    if (ret) { 
+        return ret; 
+    } 
+    val &= ~(mask); 
+    val |=  (bits & mask); 
+    return axp20_reg_write(addr, val); 
 }
 EXPORT_SYMBOL_GPL(axp20_set_bits);
 
@@ -516,7 +516,7 @@ int axp_charger_set_usbcur_limit_extern(int usbcur_limit)
 	        break;
 	}
 	axp_write(g_axp20_supply->master, AXP20_CHARGE_VBUS, val);
-
+	
     return 0;
 }
 EXPORT_SYMBOL_GPL(axp_charger_set_usbcur_limit_extern);
@@ -529,10 +529,10 @@ static int axp_battery_adc_set(struct axp20_supply *supply)
     int     freq;
 
     val = AXP20_ADC_BATVOL_ENABLE  |
-          AXP20_ADC_BATCUR_ENABLE  |
-          AXP20_ADC_DCINCUR_ENABLE |
-          AXP20_ADC_DCINVOL_ENABLE |
-          AXP20_ADC_USBVOL_ENABLE  |
+          AXP20_ADC_BATCUR_ENABLE  | 
+          AXP20_ADC_DCINCUR_ENABLE | 
+          AXP20_ADC_DCINVOL_ENABLE | 
+          AXP20_ADC_USBVOL_ENABLE  | 
           AXP20_ADC_USBCUR_ENABLE;                                      // enable ADC
 
     ret = axp_update(supply->master, AXP20_ADC_CONTROL1, val , val);
@@ -559,7 +559,7 @@ static int axp_battery_adc_set(struct axp20_supply *supply)
     case 8:                                                             // 200 Hz
         val |= 3 << 6;
         break;
-    default:
+    default: 
         val |= 2 << 6;                                                  // use 100Hz for default
         break;
     }
@@ -579,13 +579,13 @@ static int axp_battery_adc_set(struct axp20_supply *supply)
 static int axp_battery_first_init(struct axp20_supply *supply)
 {
     int ret;
-
+    
     ret  = axp_set_charge(supply);
     ret |= axp_battery_adc_set(supply);
     return ret;
 }
 
-int axp20_set_rdc(int rdc)
+int axp20_set_rdc(int rdc) 
 {
     uint32_t rdc_tmp = (rdc * 10000 + 5371) / 10742;
 
@@ -619,7 +619,7 @@ int axp_set_noe_delay(int delay)
     uint8_t val;
 
     if (delay < 128 || delay > 3000) {
-        AXP_PMU_DBG("%s, Invalid n_oe delay input:%d\n", __func__, delay);
+        AXP_PMU_DBG("%s, Invalid n_oe delay input:%d\n", __func__, delay);    
         return -1;
     }
     CHECK_DRIVER();
@@ -701,7 +701,7 @@ int axp_set_pek_off_time(int time)
     uint8_t val;
 
     if (time < 4000 || time > 10000) {
-        AXP_PMU_DBG("%s, invalid value of pmu_pekoff_time:%d\n", __func__, time);
+        AXP_PMU_DBG("%s, invalid value of pmu_pekoff_time:%d\n", __func__, time);    
     }
     CHECK_DRIVER();
     time = (time - 4000) / 2000;
@@ -714,7 +714,7 @@ EXPORT_SYMBOL_GPL(axp_set_pek_off_time);
 
 int axp_set_ot_power_off_en(int en)
 {
-    uint8_t val;
+    uint8_t val; 
 
     CHECK_DRIVER();
     axp_read(g_axp20_supply->master, POWER20_HOTOVER_CTL, &val);
@@ -784,7 +784,7 @@ static void axp_battery_para_init(struct axp20_supply *supply)
     axp_set_pek_long_time(axp_pmu_battery->pmu_peklong_time);           // set pek long press time
     axp_set_pek_off_en(axp_pmu_battery->pmu_pekoff_en);                 // set pek long press shut down system en
     axp_set_pwrok_delay(axp_pmu_battery->pmu_pwrok_time);               // set pwr button ok delay
-    axp_set_pek_off_time(axp_pmu_battery->pmu_pekoff_time);             // set pek long press shut down
+    axp_set_pek_off_time(axp_pmu_battery->pmu_pekoff_time);             // set pek long press shut down 
     axp_set_charge_current(axp_pmu_battery->pmu_init_chgcur);	        // set charging current
     axp_set_ot_power_off_en(axp_pmu_battery->pmu_intotp_en);            // set pmu_intotp_en en
     axp_set_poweroff_voltage(axp_pmu_battery->pmu_pwroff_vol);          // set pmu_pwroff_vol value
@@ -1003,18 +1003,18 @@ static ssize_t adcfreq_store(struct device *dev, struct device_attribute *attr, 
     axp_read(supply->master, AXP20_ADC_CONTROL3, &val);
     val &= ~(3 << 6);
     switch (var / 25) {
-    case 1:
+    case 1: 
         break;
-    case 2:
+    case 2: 
         val |= 1 << 6;
         break;
-    case 4:
+    case 4: 
         val |= 2 << 6;
         break;
-    case 8:
+    case 8: 
         val |= 3 << 6;
         break;
-    default:
+    default: 
         break;
     }
     axp_write(supply->master, AXP20_ADC_CONTROL3, val);
@@ -1160,12 +1160,12 @@ static ssize_t dbg_info_show(struct device *dev, struct device_attribute *attr, 
     struct power_supply *battery = dev_get_drvdata(dev);
     struct axp20_supply *supply  = container_of(battery, struct axp20_supply, batt);
     struct aml_pmu_api  *api;
-
+    
     api = aml_pmu_get_api();
     if (api && api->pmu_format_dbg_buffer) {
         return api->pmu_format_dbg_buffer(&supply->aml_charger, buf);
     } else {
-        return sprintf(buf, "api not found, please insert pmu.ko\n");
+        return sprintf(buf, "api not found, please insert pmu.ko\n"); 
     }
 }
 
@@ -1179,39 +1179,39 @@ static ssize_t battery_para_show(struct device *dev, struct device_attribute *at
     struct power_supply *battery = dev_get_drvdata(dev);
     struct axp20_supply *supply  = container_of(battery, struct axp20_supply, batt);
     struct aml_charger  *charger = &supply->aml_charger;
-    int    i = 0;
+    int    i = 0; 
     int    size;
 
     size = sprintf(buf, "\n i,      ocv,    charge,  discharge,\n");
     for (i = 0; i < 16; i++) {
         size += sprintf(buf + size, "%2d,     %4d,       %3d,        %3d,\n",
-                        i,
+                        i, 
                         axp_pmu_battery->pmu_bat_curve[i].ocv,
                         axp_pmu_battery->pmu_bat_curve[i].charge_percent,
                         axp_pmu_battery->pmu_bat_curve[i].discharge_percent);
     }
-    size += sprintf(buf + size, "\nBattery capability:%4d@3700mAh, RDC:%3d mohm\n",
-                                axp_pmu_battery->pmu_battery_cap,
+    size += sprintf(buf + size, "\nBattery capability:%4d@3700mAh, RDC:%3d mohm\n", 
+                                axp_pmu_battery->pmu_battery_cap, 
                                 axp_pmu_battery->pmu_battery_rdc);
-    size += sprintf(buf + size, "Charging efficiency:%3d%%, capability now:%3d%%\n",
+    size += sprintf(buf + size, "Charging efficiency:%3d%%, capability now:%3d%%\n", 
                                 axp_pmu_battery->pmu_charge_efficiency,
                                 charger->rest_vol);
     size += sprintf(buf + size, "ocv_empty:%4d, ocv_full:%4d\n\n",
-                                charger->ocv_empty,
+                                charger->ocv_empty, 
                                 charger->ocv_full);
     return size;
 }
 
 static ssize_t battery_para_store(struct device *dev, struct device_attribute *attr, const char *buf, size_t count)
 {
-    return 0;                                           /* nothing to do        */
+    return 0;                                           /* nothing to do        */    
 }
 
 static ssize_t report_delay_show(struct device *dev, struct device_attribute *attr, char *buf)
 {
     struct aml_pmu_api *api = aml_pmu_get_api();
     if (api && api->pmu_get_report_delay) {
-        return sprintf(buf, "report_delay = %d\n", api->pmu_get_report_delay());
+        return sprintf(buf, "report_delay = %d\n", api->pmu_get_report_delay()); 
     } else {
         return sprintf(buf, "error, api not found\n");
     }
@@ -1223,7 +1223,7 @@ static ssize_t report_delay_store(struct device *dev, struct device_attribute *a
     uint32_t tmp = simple_strtoul(buf, NULL, 10);
 
     if (tmp > 200) {
-        AXP_PMU_DBG("input too large, failed to set report_delay\n");
+        AXP_PMU_DBG("input too large, failed to set report_delay\n");    
         return count;
     }
     if (api && api->pmu_set_report_delay) {
@@ -1236,12 +1236,12 @@ static ssize_t report_delay_store(struct device *dev, struct device_attribute *a
 
 static ssize_t driver_version_show (struct device *dev, struct device_attribute *attr, char *buf)
 {
-    return sprintf(buf, "Amlogic AXP202 driver version is %s, build time:%s\n",
-                   AXP_DRIVER_VERSION, init_uts_ns.name.version);
+    return sprintf(buf, "Amlogic AXP202 driver version is %s, build time:%s\n", 
+                   AXP_DRIVER_VERSION, init_uts_ns.name.version);    
 }
 static ssize_t driver_version_store(struct device *dev, struct device_attribute *attr, const char *buf, size_t count)
 {
-    return 0;
+    return 0;    
 }
 
 static int find_idx(int start, int target, int step, int length)
@@ -1249,27 +1249,27 @@ static int find_idx(int start, int target, int step, int length)
     int i = 0;
     do {
         if (start >= target) {
-            break;
-        }
+            break;    
+        }    
         start += step;
         i++;
     } while (i < length);
     return i;
 }
 
-void axp20_dcdc_voltage(int dcdc, int target)
+void axp20_dcdc_voltage(int dcdc, int target) 
 {
     int idx_to = 0, idx_cur = 0;
     int addr = 0, val, mask = 0;
     if (dcdc == 2) {
         idx_to = find_idx(700, target, 25, 64);
-        addr   = 0x23;
+        addr   = 0x23; 
         mask   = 0x3f;
     } else if (dcdc == 3) {
         idx_to = find_idx(700, target, 25, 128);
-        addr   = 0x27;
+        addr   = 0x27; 
         mask   = 0x7f;
-    }
+    }   
     axp_read(g_axp20_supply->master, addr, (uint8_t *)&val);
     idx_cur = val & mask;
     while (idx_cur != idx_to) {
@@ -1302,7 +1302,7 @@ static ssize_t aml_pmu_vddao_store(struct device *dev, struct device_attribute *
     }
     AXP_PMU_DBG("Set VDD_AO to %4d mV\n", data);
     axp20_dcdc_voltage(3, data);
-    return count;
+    return count; 
 }
 
 static struct device_attribute axp_supply_attrs[] = {
@@ -1587,7 +1587,7 @@ int axp20_update_status(struct aml_charger *charger)
         axp_set_bits(supply->master, AXP20_CHARGE_VBUS, 0x03);
         usb_cur_limit_canceled = 1;
     } else if (!charger->usb_valid) {
-        usb_cur_limit_canceled = 0;
+        usb_cur_limit_canceled = 0;    
     }
     return 0;
 }
@@ -1599,7 +1599,7 @@ void axp_charger_update(struct axp20_supply *supply)
 
 	axp_read_adc(supply, &supply->adc);
 	charger->vbat   = axp_vbat_to_mV(supply->adc.vbat_res);
-	charger->ibat   = ABS(axp_ibat_to_mA(supply->adc.ichar_res) -
+	charger->ibat   = ABS(axp_ibat_to_mA(supply->adc.ichar_res) - 
                           axp_ibat_to_mA(supply->adc.idischar_res));
     charger->v_dcin = axp_vdc_to_mV(supply->adc.vac_res);
     charger->i_dcin = axp_iac_to_mA(supply->adc.iac_res);
@@ -1621,16 +1621,16 @@ int axp_call_back2(struct aml_charger *charger, void *pdata)
 {
     char *str = (char *)pdata;
     struct aml_pmu_driver *driver = aml_pmu_get_driver();
-    AXP_PMU_DBG("%s, %s, battery voltage:%d, cuurent:%d\n",
+    AXP_PMU_DBG("%s, %s, battery voltage:%d, cuurent:%d\n", 
                 __func__, str, charger->vbat, charger->ibat);
     /*
      * just for demo:
-     * when extern power is removed, set usb current limit to
+     * when extern power is removed, set usb current limit to 
      * 900mA to avoid large current sink form source
      */
     if (driver && !charger->ext_valid) {
         if (driver->pmu_set_usb_current_limit) {
-            driver->pmu_set_usb_current_limit(900);
+            driver->pmu_set_usb_current_limit(900); 
         }
     }
     return 0;
@@ -1656,9 +1656,9 @@ static void axp_charging_monitor(struct work_struct *work)
     if (api && !api_flag) {
         api_flag = true;
         if (api->pmu_probe_process) {
-            api->pmu_probe_process(charger, axp_pmu_battery);
+            api->pmu_probe_process(charger, axp_pmu_battery);    
         }
-    }
+    } 
     pre_chg_status = charger->ext_valid;
     pre_rest_cap   = charger->rest_vol;
 
@@ -1677,7 +1677,7 @@ static void axp_charging_monitor(struct work_struct *work)
         if (in_early_suspend && (pre_chg_status != charger->ext_valid)) {
             wake_lock(&axp202_lock);
             AXP_PMU_DBG("%s, usb power status changed in early suspend, wake up now\n", __func__);
-            input_report_key(powerkeydev, KEY_POWER, 1);                        // assume power key pressed
+            input_report_key(powerkeydev, KEY_POWER, 1);                        // assume power key pressed 
             input_sync(powerkeydev);
         }
     #endif
@@ -1689,7 +1689,7 @@ static void axp_charging_monitor(struct work_struct *work)
 
 
 #if defined CONFIG_HAS_EARLYSUSPEND
-static int early_power_status = -1;
+static int early_power_status = 0;
 static void axp_earlysuspend(struct early_suspend *h)
 {
     struct axp20_supply *supply = (struct axp20_supply *)h->param;
@@ -1698,7 +1698,7 @@ static void axp_earlysuspend(struct early_suspend *h)
     axp_set_charge_current(axp_pmu_battery->pmu_suspend_chgcur);    //set charging current
 #endif
     if (axp_pmu_battery) {
-        early_power_status = supply->aml_charger.ext_valid;
+        early_power_status = supply->aml_charger.ext_valid;    
     }
     in_early_suspend = 1;
 }
@@ -1707,14 +1707,14 @@ static void axp_lateresume(struct early_suspend *h)
 {
     struct axp20_supply *supply = (struct axp20_supply*)h->param;
 
-    schedule_work(&supply->work.work);
+    schedule_work(&supply->work.work); 
 
 #if defined (CONFIG_AXP_CHGCHANGE)
     axp_set_charge_current(axp_pmu_battery->pmu_resume_chgcur);     //set charging current
 #endif
     if (axp_pmu_battery) {
-        early_power_status = -1;
-        input_report_key(powerkeydev, KEY_POWER, 0);                    // cancel power key
+        early_power_status = supply->aml_charger.ext_valid;
+        input_report_key(powerkeydev, KEY_POWER, 0);                    // cancel power key 
         input_sync(powerkeydev);
     }
     in_early_suspend = 0;
@@ -1734,10 +1734,10 @@ static struct aml_pmu_driver axp20_pmu_driver = {
     .pmu_reg_write             = axp20_reg_write,
     .pmu_reg_reads             = axp20_reg_reads,
     .pmu_reg_writes            = axp20_reg_writes,
-    .pmu_set_bits              = axp20_set_bits,
+    .pmu_set_bits              = axp20_set_bits, 
     .pmu_set_usb_current_limit = axp_charger_set_usbcur_limit_extern,
     .pmu_set_charge_current    = axp_set_charge_current,
-    .pmu_power_off             = axp_power_off,
+    .pmu_power_off             = axp_power_off, 
 };
 
 static int axp_battery_probe(struct platform_device *pdev)
@@ -1776,10 +1776,10 @@ static int axp_battery_probe(struct platform_device *pdev)
 	}
 
     if (pdata == NULL) {
-        return -EINVAL;
+        return -EINVAL;    
     }
 
-#ifdef CONFIG_UBOOT_BATTERY_PARAMETERS
+#ifdef CONFIG_UBOOT_BATTERY_PARAMETERS 
     if (get_uboot_battery_para_status() == UBOOT_BATTERY_PARA_SUCCESS) {
         AXP_PMU_DBG("Battery parameters has got from uboot\n");
         axp_pmu_battery = get_uboot_battery_para();
@@ -1793,7 +1793,7 @@ static int axp_battery_probe(struct platform_device *pdev)
 #endif
 
     /*
-     * initialize parameters for supply
+     * initialize parameters for supply 
      */
 	supply = kzalloc(sizeof(*supply), GFP_KERNEL);
 	if (supply == NULL) {
@@ -1802,7 +1802,7 @@ static int axp_battery_probe(struct platform_device *pdev)
     supply->battery_info = kzalloc(sizeof(struct power_supply_info), GFP_KERNEL);
     if (supply->battery_info == NULL) {
         kfree(supply);
-        return -ENOMEM;
+        return -ENOMEM;    
     }
 	supply->master = pdev->dev.parent;
     charger        = &supply->aml_charger;
@@ -1811,7 +1811,7 @@ static int axp_battery_probe(struct platform_device *pdev)
             charger->ocv_empty = axp_pmu_battery->pmu_bat_curve[tmp2-1].ocv;
         }
         if (!charger->ocv_full && axp_pmu_battery->pmu_bat_curve[tmp2].discharge_percent == 100) {
-            charger->ocv_full = axp_pmu_battery->pmu_bat_curve[tmp2].ocv;
+            charger->ocv_full = axp_pmu_battery->pmu_bat_curve[tmp2].ocv;    
         }
     }
     aml_pmu_register_driver(&axp20_pmu_driver);
@@ -1857,10 +1857,10 @@ static int axp_battery_probe(struct platform_device *pdev)
 
     platform_set_drvdata(pdev, supply);
     axp_battery_para_init(supply);
-    axp_write(supply->master, AXP20_APS_WARNING1, 0x7A);               // 3.555V, warning to system
+    axp_write(supply->master, AXP20_APS_WARNING1, 0x7A);               // 3.555V, warning to system	
     axp20_update_status(charger);
 
-    if (charger->bat_det == 0) {                                        // no battery connect
+    if (charger->bat_det == 0) {                                        // no battery connect 
         AXP_PMU_DBG("%s, not dectected battery\n", __func__);
 	}
 
@@ -1896,9 +1896,9 @@ static int axp_battery_probe(struct platform_device *pdev)
         axp_read(supply->master,TS_CURRENT_REG, &val);
         tmp = axp_pmu_battery->pmu_ntc_ts_current << 4;
         val &= ~(3<<4);	//val &= 0xcf;
-        val |= tmp;
+        val |= tmp;		
         val &= ~(3<<0);
-        val |= 0x1;		//TS pin:charge output current
+        val |= 0x1;		//TS pin:charge output current	
         axp_write(supply->master,TS_CURRENT_REG,val); 	//set TS pin output current
 
         if(axp_pmu_battery->pmu_ntc_lowtempvol < 0)
@@ -1982,12 +1982,12 @@ static int axp20_suspend(struct platform_device *dev, pm_message_t state)
     irq_w[7] = POWER20_INTSTS5;
     irq_w[8] = 0xff;
     axp_writes(supply->master, POWER20_INTSTS1, 9, irq_w);
-
+    
     /* close all irqs*/
     axp_read(supply->master, POWER20_OFF_CTL, &tmp);
     extern_led_ctrl = tmp & 0x08;
     if (extern_led_ctrl) {
-	axp_clr_bits(supply->master, POWER20_OFF_CTL, 0x08);
+    	axp_clr_bits(supply->master, POWER20_OFF_CTL, 0x08);
     }
 
     api = aml_pmu_get_api();
@@ -1995,16 +1995,16 @@ static int axp20_suspend(struct platform_device *dev, pm_message_t state)
         api->pmu_suspend_process(charger);
     }
 #ifdef CONFIG_HAS_EARLYSUSPEND
-    if ((early_power_status != supply->aml_charger.ext_valid) && (early_power_status != -1)) {
+    if (early_power_status != supply->aml_charger.ext_valid) {
         AXP_PMU_DBG("%s, power status changed, prev:%x, now:%x, exit suspend process\n",
                     __func__, early_power_status, supply->aml_charger.ext_valid);
-        input_report_key(powerkeydev, KEY_POWER, 1);                    // assume power key pressed
+        input_report_key(powerkeydev, KEY_POWER, 1);                    // assume power key pressed 
         input_sync(powerkeydev);
         return -1;
     }
     in_early_suspend = 0;
 #endif
-
+	
     return 0;
 }
 
@@ -2033,7 +2033,7 @@ static void axp20_shutdown(struct platform_device *dev)
     struct axp20_supply *supply = platform_get_drvdata(dev);
 
     /* not limit usb  voltage*/
-	axp_clr_bits(supply->master, AXP20_CHARGE_VBUS,0x40);
+  	axp_clr_bits(supply->master, AXP20_CHARGE_VBUS,0x40);
 
 	axp_set_charge_current(axp_pmu_battery->pmu_shutdown_chgcur);	//set charging current
 }

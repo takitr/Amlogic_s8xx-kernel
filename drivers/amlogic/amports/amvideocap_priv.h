@@ -53,3 +53,4 @@ struct amvideocap_req {
 s32 amvideocap_register_memory(unsigned char *phybufaddr, int phybufsize);
 
 #endif
+

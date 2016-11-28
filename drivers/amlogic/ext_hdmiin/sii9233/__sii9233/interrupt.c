@@ -11,7 +11,7 @@
 #include <hal.h>
 #include <registers.h>
 #include <amf.h>
-#if (CONF__SUPPORT_3D == ENABLE)
+#if (CONF__SUPPORT_3D == ENABLE)	  
 #include "infofrm.h"
 #endif //#if (CONF__SUPPORT_3D == ENABLE)
 

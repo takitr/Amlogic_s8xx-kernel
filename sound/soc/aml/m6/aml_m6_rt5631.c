@@ -96,7 +96,7 @@ static void aml_audio_stop_timer(struct aml_audio_private_data *p_aml_audio)
 static int aml_audio_hp_detect(struct aml_audio_private_data *p_aml_audio)
 {
 	int val = amlogic_get_value(p_aml_audio->gpio_hp_det,"rt5631");
-	return p_aml_audio->det_pol_inv ? (!val):val;
+	return p_aml_audio->det_pol_inv ? (!val):val; 
 }
 
 
@@ -295,7 +295,7 @@ static int aml_asoc_init(struct snd_soc_pcm_runtime *rtd)
     struct snd_soc_dapm_context *dapm = &codec->dapm;
 	struct aml_audio_private_data * p_aml_audio;
     int ret = 0;
-
+	
     printk(KERN_DEBUG "enter %s \n", __func__);
 	p_aml_audio = snd_soc_card_get_drvdata(card);
 
@@ -311,7 +311,7 @@ static int aml_asoc_init(struct snd_soc_pcm_runtime *rtd)
             printk(KERN_WARNING "Failed to setup hp pins\n");
         }
     }
-#if HP_IRQ
+#if HP_IRQ	
 	p_aml_audio->gpio_hp_det = of_get_named_gpio(card->dev->of_node,"rt5631_gpio",0);
 
 	if (gpio_is_valid(p_aml_audio->gpio_hp_det)) {
@@ -426,7 +426,7 @@ static int aml_m6_audio_probe(struct platform_device *pdev)
 	ret = snd_soc_of_parse_card_name(card, "aml,sound_card");
 	if (ret)
 		goto err;
-
+	
 	ret = of_property_read_string_index(pdev->dev.of_node, "aml,codec_dai",
 			0, &aml_codec_dai_link[0].codec_dai_name);
 	if (ret)
@@ -533,3 +533,4 @@ MODULE_DESCRIPTION("AML_M6 audio machine Asoc driver");
 MODULE_LICENSE("GPL");
 MODULE_ALIAS("platform:" DRV_NAME);
 MODULE_DEVICE_TABLE(of, amlogic_audio_dt_match);
+

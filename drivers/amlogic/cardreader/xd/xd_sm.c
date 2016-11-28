@@ -162,7 +162,7 @@ void xd_sm_function_init(void)
 		xd_sm_data_input_cycle = xd_data_input_cycle;
 		xd_sm_serial_read_cycle = xd_serial_read_cycle;
 		xd_sm_test_ready = xd_test_ready;
-
+		
 		xd_gpio_enable();
 	}
 #endif
@@ -175,7 +175,7 @@ void xd_sm_function_init(void)
 		xd_sm_data_input_cycle = sm_data_input_cycle;
 		xd_sm_serial_read_cycle = sm_serial_read_cycle;
 		xd_sm_test_ready = sm_test_ready;
-
+		
 		sm_gpio_enable();
 	}
 #endif
@@ -184,31 +184,31 @@ void xd_sm_function_init(void)
 int xd_sm_wait_ready(unsigned long timeout)
 {
 	xd_sm_start_timer(timeout);
-
+	
 	do
 	{
 		if(xd_sm_test_ready() == XD_SM_STATUS_READY)
 			return XD_SM_NO_ERROR;
-
+			
 		xd_sm_check_timer();
 	} while(!xd_sm_check_timeout());
-
+	
 	return XD_SM_ERROR_TIMEOUT;
 }
 
 int xd_sm_wait_ready_ms(unsigned long timeout)
 {
 	unsigned long i, timecnt;
-
+	
 	timecnt = timeout / TIMER_1MS;
 	for(i=0; i<timecnt; i++)
 	{
 		if(xd_sm_test_ready() == XD_SM_STATUS_READY)
 			return XD_SM_NO_ERROR;
-
+		
 		xd_sm_delay_ms(1);
 	}
-
+	
 	return XD_SM_ERROR_TIMEOUT;
 }
 
@@ -216,7 +216,7 @@ int xd_sm_status_read(unsigned char cmd, unsigned char *status)
 {
 	if((cmd != XD_SM_STATUS_READ1) && (cmd != XD_STATUS_READ2))
 		return XD_SM_ERROR_PARAMETER;
-
+		
 	xd_sm_cmd_input_cycle(cmd, XD_SM_WRITE_DISABLED);
 
 #ifdef XD_CARD_SUPPORTED
@@ -233,9 +233,9 @@ int xd_sm_status_read(unsigned char cmd, unsigned char *status)
 		sm_set_dat0_7_input();
 	}
 #endif
-
+	
 	xd_sm_delay_20ns();		// Tcls = 20ns
-
+	
 	xd_sm_serial_read_cycle(status, 1, NULL, 0);
 
 #ifdef XD_CARD_SUPPORTED
@@ -246,7 +246,7 @@ int xd_sm_status_read(unsigned char cmd, unsigned char *status)
 	if(xd_sm_info->card_type == CARD_TYPE_SM)
 		sm_set_ce_disable();
 #endif
-
+		
 	return XD_SM_NO_ERROR;
 }
 
@@ -254,7 +254,7 @@ int xd_sm_read_cycle1(unsigned char column_addr, unsigned long page_addr, unsign
 {
 	int err;
 	unsigned long data_nums = 0, data_offset = 0, read_cnt;
-
+	
 	xd_sm_cmd_input_cycle(XD_SM_READ1, XD_SM_WRITE_DISABLED);
 
 	xd_sm_addr_input_cycle((page_addr << 8)|column_addr, xd_sm_buf->addr_cycles);
@@ -288,7 +288,7 @@ int xd_sm_read_cycle1(unsigned char column_addr, unsigned long page_addr, unsign
 			if(xd_sm_info->card_type == CARD_TYPE_SM)
 				sm_set_ce_disable();
 #endif
-
+				
 			return err;
 		}
 
@@ -296,7 +296,7 @@ int xd_sm_read_cycle1(unsigned char column_addr, unsigned long page_addr, unsign
 
 #ifdef XD_SM_ECC_CHECK
 		xd_sm_serial_read_cycle(xd_sm_buf->page_buf, read_cnt, redundant_buf, xd_sm_redundant_size);
-
+		
 		err = xd_sm_check_page_ecc(xd_sm_buf->page_buf, redundant_buf);
 		if(err)
 		{
@@ -314,7 +314,7 @@ int xd_sm_read_cycle1(unsigned char column_addr, unsigned long page_addr, unsign
 			#endif
 			}
 		}
-
+		
 		#ifdef AMLOGIC_CHIP_SUPPORT
 		if((unsigned long)data_buf == 0x3400000)
 		{
@@ -342,11 +342,11 @@ int xd_sm_read_cycle1(unsigned char column_addr, unsigned long page_addr, unsign
 #endif
 
 		redundant_buf += xd_sm_redundant_size;
-
+		
 		data_nums += read_cnt;
 		read_cnt = xd_sm_page_size;
 	}
-
+	
 #ifdef XD_CARD_SUPPORTED
 	if(xd_sm_info->card_type == CARD_TYPE_XD)
 	{
@@ -363,7 +363,7 @@ int xd_sm_read_cycle1(unsigned char column_addr, unsigned long page_addr, unsign
 #endif
 
 	err = xd_sm_wait_ready(BUSY_TIME_TCRY);
-
+	
 	return err;
 }
 
@@ -371,14 +371,14 @@ int xd_sm_read_cycle2(unsigned char column_addr, unsigned long page_addr, unsign
 {
 	int err;
 	unsigned long data_nums = 0, data_offset = 0, read_cnt;
-
+	
 	if(xd_sm_page_size != XD_SM_SECTOR_SIZE)
 		return XD_SM_ERROR_PARAMETER;
-
+		
 	xd_sm_cmd_input_cycle(XD_SM_READ2, XD_SM_WRITE_DISABLED);
-
+	
 	xd_sm_addr_input_cycle((page_addr << 8)|column_addr, xd_sm_buf->addr_cycles);
-
+	
 #ifdef XD_CARD_SUPPORTED
 	if(xd_sm_info->card_type == CARD_TYPE_XD)
 	{
@@ -393,7 +393,7 @@ int xd_sm_read_cycle2(unsigned char column_addr, unsigned long page_addr, unsign
 		xd_sm_delay_100ns(2);	// Tar2 = 150ns
 	}
 #endif
-
+	
 	read_cnt = xd_sm_page_size - (XD_SM_SECTOR_SIZE/2 + column_addr);
 	while(data_nums < data_cnt)
 	{
@@ -408,15 +408,15 @@ int xd_sm_read_cycle2(unsigned char column_addr, unsigned long page_addr, unsign
 			if(xd_sm_info->card_type == CARD_TYPE_SM)
 				sm_set_ce_disable();
 #endif
-
+				
 			return err;
 		}
-
+		
 		xd_sm_delay_20ns();		// Trr = 20ns
 
 #ifdef XD_SM_ECC_CHECK
 		xd_sm_serial_read_cycle(xd_sm_buf->page_buf, read_cnt, redundant_buf, xd_sm_redundant_size);
-
+		
 		err = xd_sm_check_page_ecc(xd_sm_buf->page_buf, redundant_buf);
 		if(err)
 		{
@@ -434,7 +434,7 @@ int xd_sm_read_cycle2(unsigned char column_addr, unsigned long page_addr, unsign
 			#endif
 			}
 		}
-
+		
 		#ifdef AMLOGIC_CHIP_SUPPORT
 		if((unsigned long)data_buf == 0x3400000)
 		{
@@ -449,10 +449,10 @@ int xd_sm_read_cycle2(unsigned char column_addr, unsigned long page_addr, unsign
 		{
 			memcpy(data_buf+data_offset, xd_sm_buf->page_buf, read_cnt);
 		}
-#else
+#else		
 		xd_sm_serial_read_cycle(data_buf+data_offset, read_cnt, redundant_buf, xd_sm_redundant_size);
 #endif
-
+		
 #ifdef AMLOGIC_CHIP_SUPPORT
 		data_offset += ((unsigned long)data_buf == 0x3400000 ? 0 : read_cnt);
 #else
@@ -460,11 +460,11 @@ int xd_sm_read_cycle2(unsigned char column_addr, unsigned long page_addr, unsign
 #endif
 
 		redundant_buf += xd_sm_redundant_size;
-
+		
 		data_nums += read_cnt;
 		read_cnt = xd_sm_page_size;
 	}
-
+	
 #ifdef XD_CARD_SUPPORTED
 	if(xd_sm_info->card_type == CARD_TYPE_XD)
 	{
@@ -479,9 +479,9 @@ int xd_sm_read_cycle2(unsigned char column_addr, unsigned long page_addr, unsign
 		xd_sm_delay_100ns(3);		// Tceh = 250ns
 	}
 #endif
-
+	
 	err = xd_sm_wait_ready(BUSY_TIME_TCRY);
-
+	
 	return err;
 }
 
@@ -490,11 +490,11 @@ int xd_sm_read_cycle3(unsigned char column_addr, unsigned long page_addr, unsign
 	int err;
 	unsigned long redundant_offset = column_addr;
 	unsigned long redundant_nums = 0;
-
+	
 	xd_sm_cmd_input_cycle(XD_SM_READ3, XD_SM_WRITE_DISABLED);
-
+	
 	xd_sm_addr_input_cycle((page_addr << 8)|column_addr, xd_sm_buf->addr_cycles);
-
+	
 #ifdef XD_CARD_SUPPORTED
 	if(xd_sm_info->card_type == CARD_TYPE_XD)
 	{
@@ -509,7 +509,7 @@ int xd_sm_read_cycle3(unsigned char column_addr, unsigned long page_addr, unsign
 		xd_sm_delay_100ns(2);	// Tar2 = 150ns
 	}
 #endif
-
+	
 	while(redundant_nums < redundant_cnt)
 	{
 		err = xd_sm_wait_ready(BUSY_TIME_R);
@@ -523,19 +523,19 @@ int xd_sm_read_cycle3(unsigned char column_addr, unsigned long page_addr, unsign
 			if(xd_sm_info->card_type == CARD_TYPE_SM)
 				sm_set_ce_disable();
 #endif
-
+				
 			return err;
 		}
-
+		
 		xd_sm_delay_20ns();		// Trr = 20ns
-
+		
 		xd_sm_serial_read_cycle(NULL, 0, redundant_buf, xd_sm_redundant_size-redundant_offset);
 		redundant_buf += (xd_sm_redundant_size - redundant_offset);
-
+		
 		redundant_nums += (xd_sm_redundant_size - redundant_offset);
 		redundant_offset = 0;
 	}
-
+	
 #ifdef XD_CARD_SUPPORTED
 	if(xd_sm_info->card_type == CARD_TYPE_XD)
 	{
@@ -550,9 +550,9 @@ int xd_sm_read_cycle3(unsigned char column_addr, unsigned long page_addr, unsign
 		xd_sm_delay_100ns(3);		// Tceh = 250ns
 	}
 #endif
-
+	
 	err = xd_sm_wait_ready(BUSY_TIME_TCRY);
-
+	
 	return err;
 }
 
@@ -561,17 +561,17 @@ int xd_sm_auto_page_program(unsigned long page_addr, unsigned char *data_buf, un
 	int err;
 	unsigned char column_addr = 0;
 	XD_SM_Status1_t status1;
-
+		
 	xd_sm_cmd_input_cycle(XD_SM_SERIAL_DATA_INPUT, XD_SM_WRITE_ENABLED);
-
+	
 	xd_sm_addr_input_cycle((page_addr << 8)|column_addr, xd_sm_buf->addr_cycles);
-
+	
 	xd_sm_delay_20ns();		// Tals = 20ns
-
+	
 	xd_sm_data_input_cycle(data_buf, xd_sm_page_size, redundant_buf, xd_sm_redundant_size);
-
+	
 	xd_sm_cmd_input_cycle(XD_SM_TRUE_PAGE_PROGRAM, XD_SM_WRITE_DISABLED);
-
+	
 	err = xd_sm_wait_ready_ms(BUSY_TIME_PROG);
 	if(err)
 	{
@@ -583,12 +583,12 @@ int xd_sm_auto_page_program(unsigned long page_addr, unsigned char *data_buf, un
 		if(xd_sm_info->card_type == CARD_TYPE_SM)
 			sm_set_wp_enable();
 #endif
-
+			
 		return XD_SM_ERROR_TIMEOUT;
 	}
-
+	
 	xd_sm_delay_100ns(1);		// Tww = 100ns
-
+	
 #ifdef XD_CARD_SUPPORTED
 	if(xd_sm_info->card_type == CARD_TYPE_XD)
 		xd_set_wp_enable();
@@ -599,14 +599,14 @@ int xd_sm_auto_page_program(unsigned long page_addr, unsigned char *data_buf, un
 #endif
 
 	xd_sm_delay_100ns(1);		// Tww = 100ns
-
+	
 	err = xd_sm_status_read(XD_SM_STATUS_READ1, (unsigned char *)&status1);
 	if(err)
 		return err;
-
+		
 	if((status1.Ready_Busy == XD_SM_STATUS_READY) && (status1.Pass_Fail == XD_SM_STATUS_PASS))
 		return XD_SM_NO_ERROR;
-
+		
 	return XD_SM_ERROR_PAGE_PROGRAM;
 }
 
@@ -614,13 +614,13 @@ int xd_sm_auto_block_erase(unsigned long page_addr)
 {
 	int err;
 	XD_SM_Status1_t status1;
-
+	
 	xd_sm_cmd_input_cycle(XD_SM_BLOCK_ERASE_SETUP, XD_SM_WRITE_ENABLED);
-
+	
 	xd_sm_addr_input_cycle(page_addr, xd_sm_buf->addr_cycles-1);
-
+	
 	xd_sm_cmd_input_cycle(XD_SM_BLOCK_ERASE_EXECUTE, XD_SM_WRITE_DISABLED);
-
+	
 	err = xd_sm_wait_ready_ms(BUSY_TIME_BERASE);
 	if(err)
 	{
@@ -632,12 +632,12 @@ int xd_sm_auto_block_erase(unsigned long page_addr)
 		if(xd_sm_info->card_type == CARD_TYPE_SM)
 			sm_set_wp_enable();
 #endif
-
+			
 		return XD_SM_ERROR_TIMEOUT;
 	}
-
+	
 	xd_sm_delay_100ns(1);		// Tww = 100ns
-
+	
 #ifdef XD_CARD_SUPPORTED
 	if(xd_sm_info->card_type == CARD_TYPE_XD)
 		xd_set_wp_enable();
@@ -650,37 +650,37 @@ int xd_sm_auto_block_erase(unsigned long page_addr)
 	err = xd_sm_status_read(XD_SM_STATUS_READ1, (unsigned char *)&status1);
 	if(err)
 		return err;
-
+		
 	if((status1.Ready_Busy == XD_SM_STATUS_READY) && (status1.Pass_Fail == XD_SM_STATUS_PASS))
 		return XD_SM_NO_ERROR;
-
+		
 	return XD_SM_ERROR_BLOCK_ERASE;
 }
 
 int xd_sm_reset(void)
 {
 	xd_sm_cmd_input_cycle(XD_SM_RESET, XD_SM_WRITE_DISABLED);
-
+	
 	return xd_sm_wait_ready(BUSY_TIME_RST);
 }
 
 int xd_sm_id_read(unsigned char cmd, unsigned char *data_buf)
 {
 	int data_cnt = 4;
-
+	
 	if((cmd != XD_SM_ID_READ90) && (cmd != XD_SM_ID_READ91) && (cmd != XD_ID_READ9A))
 		return XD_SM_ERROR_PARAMETER;
-
+		
 	if(cmd == XD_SM_ID_READ91)
 		data_cnt = 5;
-
+	
 	if(xd_sm_test_ready() == XD_SM_STATUS_BUSY)
 		return XD_SM_ERROR_BUSY;
-
+			
 	xd_sm_cmd_input_cycle(cmd, XD_SM_WRITE_DISABLED);
-
+	
 	xd_sm_addr_input_cycle(0x00, 1);
-
+	
 #ifdef XD_CARD_SUPPORTED
 	if(xd_sm_info->card_type == CARD_TYPE_XD)
 	{
@@ -697,7 +697,7 @@ int xd_sm_id_read(unsigned char cmd, unsigned char *data_buf)
 #endif
 
 	xd_sm_serial_read_cycle(data_buf, data_cnt, NULL, 0);
-
+	
 #ifdef XD_CARD_SUPPORTED
 	if(xd_sm_info->card_type == CARD_TYPE_XD)
 		xd_set_ce_disable();
@@ -706,7 +706,7 @@ int xd_sm_id_read(unsigned char cmd, unsigned char *data_buf)
 	if(xd_sm_info->card_type == CARD_TYPE_SM)
 		sm_set_ce_disable();
 #endif
-
+	
 	return XD_SM_NO_ERROR;
 }
 
@@ -714,7 +714,7 @@ int xd_sm_check_byte_bits(unsigned char value)
 {
 	unsigned char mask = 0x01;
 	int cnt,i;
-
+	
 	cnt = 0;
 	for(i=0; i<8; i++)
 	{
@@ -722,7 +722,7 @@ int xd_sm_check_byte_bits(unsigned char value)
 		if(value & mask)
 			cnt++;
 	}
-
+	
 	return cnt;
 }
 
@@ -731,24 +731,24 @@ int xd_sm_check_page_ecc(unsigned char *page_buf, unsigned char *redundant_buf)
 	int err;
 	unsigned char cal_ecc1, cal_ecc2, cal_ecc3;
 	XD_SM_Redundant_Area_t *redundant = (void *)redundant_buf;
-
+	
 	ecc_calculate_ecc(ecc_table, page_buf+STORING_AREA1_OFFSET, &cal_ecc1, &cal_ecc2, &cal_ecc3);
 	err = ecc_correct_data(page_buf+STORING_AREA1_OFFSET, redundant->ECC1, cal_ecc1, cal_ecc2, cal_ecc3);
 	if((err != ECC_NO_ERROR) && (err != ECC_ERROR_CORRECTED))
 		return err;
-
+		
 	ecc_calculate_ecc(ecc_table, page_buf+STORING_AREA2_OFFSET, &cal_ecc1, &cal_ecc2, &cal_ecc3);
 	err = ecc_correct_data(page_buf+STORING_AREA2_OFFSET, redundant->ECC2, cal_ecc1, cal_ecc2, cal_ecc3);
-
+	
 	return err;
 }
 
 int xd_sm_check_unit_ecc(unsigned char *data_buf, unsigned char *data_ecc)
 {
 	unsigned char cal_ecc1, cal_ecc2, cal_ecc3;
-
+	
 	ecc_calculate_ecc(ecc_table, data_buf, &cal_ecc1, &cal_ecc2, &cal_ecc3);
-
+	
 	return ecc_correct_data(data_buf, data_ecc, cal_ecc1, cal_ecc2, cal_ecc3);
 }
 
@@ -757,26 +757,26 @@ int xd_sm_format_redundant_area(unsigned char *page_buf, unsigned char *redundan
 	int i;
 	unsigned char cal_ecc1, cal_ecc2, cal_ecc3;
 	XD_SM_Redundant_Area_t *redundant = (void *)redundant_buf;
-
+	
 	for(i=0; i<xd_sm_redundant_size; i++)
 		redundant_buf[i] = 0xFF;
-
+		
 	ecc_calculate_ecc(ecc_table, page_buf+STORING_AREA1_OFFSET, &cal_ecc1, &cal_ecc2, &cal_ecc3);
 	redundant->ECC1[0] = cal_ecc2;
 	redundant->ECC1[1] = cal_ecc1;
 	redundant->ECC1[2] = cal_ecc3;
-
+	
 	redundant->Block_Address1[0] = (block_addr >> 8) & 0xFF;
 	redundant->Block_Address1[1] = block_addr & 0xFF;
-
+	
 	ecc_calculate_ecc(ecc_table, page_buf+STORING_AREA2_OFFSET, &cal_ecc1, &cal_ecc2, &cal_ecc3);
 	redundant->ECC2[0] = cal_ecc2;
 	redundant->ECC2[1] = cal_ecc1;
 	redundant->ECC2[2] = cal_ecc3;
-
+	
 	redundant->Block_Address2[0] = (block_addr >> 8) & 0xFF;
 	redundant->Block_Address2[1] = block_addr & 0xFF;
-
+	
 	return ECC_NO_ERROR;
 }
 
@@ -784,7 +784,7 @@ int xd_sm_copy_page(unsigned short zone_no, unsigned short block_src, unsigned s
 {
 	int err;
 	unsigned long page_addr;
-
+	
 	page_addr = (zone_no * xd_sm_physical_blks_perzone + block_src) * xd_sm_pages_per_blk + page_src;
 	err = xd_sm_read_cycle1(0, page_addr, xd_sm_buf->page_buf, xd_sm_page_size, xd_sm_buf->redundant_buf);
 	if(err)
@@ -794,42 +794,42 @@ int xd_sm_copy_page(unsigned short zone_no, unsigned short block_src, unsigned s
 	err = xd_sm_auto_page_program(page_addr, xd_sm_buf->page_buf, xd_sm_buf->redundant_buf);
 	if(err)
 		return err;
-
+		
 	return XD_SM_NO_ERROR;
 }
 
 void xd_sm_set_block_free(unsigned short zone, unsigned short block)
 {
 	unsigned short byte_offset, bit_offset, mask;
-
+	
 	byte_offset = block >> 3;
 	bit_offset = block % 8;
 	mask = 0x80 >> bit_offset;
-
+	
 	xd_sm_buf->free_block_table[zone][byte_offset] |= mask;
 }
 
 void xd_sm_clear_block_free(unsigned short zone, unsigned short block)
 {
 	unsigned short byte_offset, bit_offset, mask;
-
+	
 	byte_offset = block >> 3;
 	bit_offset = block % 8;
 	mask = 0x80 >> bit_offset;
-
+	
 	xd_sm_buf->free_block_table[zone][byte_offset] &= ~mask;
 }
 
 unsigned short xd_sm_find_free_block(unsigned short zone)
 {
 	unsigned short byte_offset, bit_offset, mask, block;
-
+	
 	for(block=0; block<xd_sm_physical_blks_perzone; block++)
 	{
 		byte_offset = block >> 3;
 		bit_offset = block % 8;
 		mask = 0x80 >> bit_offset;
-
+		
 		if(xd_sm_buf->free_block_table[zone][byte_offset] & mask)
 			return block;
 	}
@@ -840,12 +840,12 @@ unsigned short xd_sm_find_free_block(unsigned short zone)
 void xd_sm_convertion_table_init(void)
 {
 	unsigned short i,j;
-
+	
 	//Mark all logical address as not assigned
 	for(i=0; i<xd_sm_actually_zones; i++)
 		for(j=0; j<xd_sm_logical_blks_perzone; j++)
 			xd_sm_buf->logical_physical_table[i][j] = INVALID_BLOCK_ADDRESS;
-
+			
 	//Mark all physical blocks as assigned
 	for(i=0; i<xd_sm_actually_zones; i++)
 		for(j=0; j<(xd_sm_physical_blks_perzone/8); j++)
@@ -855,14 +855,14 @@ void xd_sm_convertion_table_init(void)
 int xd_sm_set_defective_block(unsigned short zone, unsigned short block)
 {
 	unsigned long page_addr;
-
+	
 	XD_SM_Redundant_Area_t *redundant = (void *)xd_sm_buf->redundant_buf;
-
+	
 	page_addr = (zone * xd_sm_physical_blks_perzone + block) * xd_sm_pages_per_blk;
 	memset(xd_sm_buf->page_buf, 0, xd_sm_page_size);
 	redundant->Data_Status_Flag = DATA_STATUS_INVALID;
 	redundant->Block_Status_Flag = BLOCK_STATUS_MARKED_DEFECTIVE;
-
+	
 	return xd_sm_auto_page_program(page_addr, xd_sm_buf->page_buf, xd_sm_buf->redundant_buf);
 }
 
@@ -871,14 +871,14 @@ int xd_sm_check_back_block(unsigned short zone, unsigned short block)
 	int err;
 	unsigned long page_addr;
 	unsigned short logical_addr, block_addr;
-
+	
 	memset(xd_sm_buf->page_buf, 0, xd_sm_page_size);
 	page_addr = (zone * xd_sm_physical_blks_perzone + block) * xd_sm_pages_per_blk;
-
+	
 	err = xd_sm_auto_block_erase(page_addr);
 	if(err)
 		return err;
-
+	
 	xd_sm_buf->page_buf[0] = 0xAA;
 	xd_sm_buf->page_buf[1] = 0x55;
 	logical_addr = xd_sm_physical_blks_perzone-1;
@@ -886,16 +886,16 @@ int xd_sm_check_back_block(unsigned short zone, unsigned short block)
 	err = xd_sm_format_redundant_area(xd_sm_buf->page_buf, xd_sm_buf->redundant_buf, block_addr);
 	if(err)
 		return err;
-
+	
 	xd_sm_buf->page_buf[0] = 0x00;
 	xd_sm_buf->page_buf[1] = 0x00;
 	err = xd_sm_read_cycle1(0, page_addr, xd_sm_buf->page_buf, xd_sm_page_size, xd_sm_buf->redundant_buf);
 	if(err)
 		return err;
-
+		
 	if((xd_sm_buf->page_buf[0] != 0xAA) || (xd_sm_buf->page_buf[1] != 0x55))
 		return XD_SM_ERROR_DATA;
-
+		
 	xd_sm_buf->page_buf[0] = 0x55;
 	xd_sm_buf->page_buf[1] = 0xAA;
 	logical_addr = xd_sm_physical_blks_perzone-1;
@@ -903,20 +903,20 @@ int xd_sm_check_back_block(unsigned short zone, unsigned short block)
 	err = xd_sm_format_redundant_area(xd_sm_buf->page_buf, xd_sm_buf->redundant_buf, block_addr);
 	if(err)
 		return err;
-
+	
 	xd_sm_buf->page_buf[0] = 0x00;
 	xd_sm_buf->page_buf[1] = 0x00;
 	err = xd_sm_read_cycle1(0, page_addr, xd_sm_buf->page_buf, xd_sm_page_size, xd_sm_buf->redundant_buf);
 	if(err)
 		return err;
-
+		
 	if((xd_sm_buf->page_buf[0] != 0x55) || (xd_sm_buf->page_buf[1] != 0xAA))
 		return XD_SM_ERROR_DATA;
-
+	
 	err = xd_sm_auto_block_erase(page_addr);
 	if(err)
 		return err;
-
+		
 	return XD_SM_NO_ERROR;
 }
 
@@ -924,7 +924,7 @@ int xd_sm_check_block_address_parity(unsigned short block_addr)
 {
 	int bit,i;
 	unsigned short mask;
-
+	
 	mask = 0x001;
 	bit = 0;
 	for(i=0; i<16; i++)
@@ -932,7 +932,7 @@ int xd_sm_check_block_address_parity(unsigned short block_addr)
 		if((mask << i) & block_addr)
 			bit ^= 1;
 	}
-
+	
 	if(bit)
 		return 0;
 	else
@@ -943,10 +943,10 @@ int xd_sm_check_block_address_range(unsigned short block_addr)
 {
 	if((block_addr & 0xF800) != 0x1000)
 		return 0;
-
+		
 	block_addr &= 0x07FF;
 	block_addr >>= 1;
-
+	
 	if(block_addr < xd_sm_logical_blks_perzone)
 		return 1;
 	else
@@ -956,10 +956,10 @@ int xd_sm_check_block_address_range(unsigned short block_addr)
 unsigned short xd_sm_parse_logical_address(unsigned short block_addr)
 {
 	unsigned long logical_addr = block_addr;
-
+	
 	logical_addr &= 0x07FF;
 	logical_addr >>= 1;
-
+	
 	return logical_addr;
 }
 
@@ -969,12 +969,12 @@ unsigned short xd_sm_trans_logical_address(unsigned short logical_addr)
 	int bit = 0;
 	unsigned short mask = 0x0001;
 	int i;
-
+	
 	block_addr <<= 1;
-
+	
 	block_addr &= 0x07FE;
 	block_addr |= 0x1000;
-
+	
 	for(i=1; i<16; i++)
 	{
 		if((mask << i) & block_addr)
@@ -990,7 +990,7 @@ int xd_sm_check_erased_block(unsigned char *redundant_buf)
 {
 	int err = 0;
 	int i;
-
+	
 	for(i=0; i<xd_sm_redundant_size; i++)
 	{
 		if(redundant_buf[i] != 0xFF)
@@ -999,7 +999,7 @@ int xd_sm_check_erased_block(unsigned char *redundant_buf)
 			break;
 		}
 	}
-
+	
 	if(err)
 		return 0;
 	else
@@ -1009,29 +1009,29 @@ int xd_sm_check_erased_block(unsigned char *redundant_buf)
 int xd_sm_check_defective_block(unsigned char *redundant_buf)
 {
 	XD_SM_Redundant_Area_t *redundant = (void *)redundant_buf;
-
+	
 	if((redundant->Block_Status_Flag != BLOCK_STATUS_NORMAL)
 		&& (xd_sm_check_byte_bits(redundant->Block_Status_Flag) < 2))
 	{
 		return 1;
 	}
-
+	
 	if((redundant->Data_Status_Flag != DATA_STATUS_VALID)
 		&& (xd_sm_check_byte_bits(redundant->Data_Status_Flag) < 4))
 	{
 		return 1;
 	}
-
+	
 	return 0;
 }
 
 int xd_sm_block_address_search(unsigned char *redundant_buf, unsigned short *block_addr)
 {
 	XD_SM_Redundant_Area_t *redundant = (void *)redundant_buf;
-
+	
 	unsigned short block_addr1 = (redundant->Block_Address1[0] << 8) | redundant->Block_Address1[1];
 	unsigned short block_addr2 = (redundant->Block_Address2[0] << 8) | redundant->Block_Address2[1];
-
+	
 	if(block_addr1 != block_addr2)
 	{
 		if(xd_sm_check_block_address_parity(block_addr2) && xd_sm_check_block_address_range(block_addr2))
@@ -1041,18 +1041,18 @@ int xd_sm_block_address_search(unsigned char *redundant_buf, unsigned short *blo
 				*block_addr = xd_sm_parse_logical_address(block_addr2);
 				return XD_SM_NO_ERROR;
 			}
-
+			
 			//Erase block or skip
 			return XD_SM_ERROR_BLOCK_ADDRESS;
 		}
 	}
-
+	
 	if(!xd_sm_check_block_address_parity(block_addr1) || !xd_sm_check_block_address_range(block_addr1))
 	{
 		//Erase block or skip
 		return XD_SM_ERROR_BLOCK_ADDRESS;
 	}
-
+	
 	*block_addr = xd_sm_parse_logical_address(block_addr1);
 	return XD_SM_NO_ERROR;
 }
@@ -1062,11 +1062,11 @@ int xd_sm_card_capacity_determin(void)
 	int err;
 	unsigned long temp;
 	XD_SM_ID_90_t id_90;
-
+	
 	err = xd_sm_id_read(XD_SM_ID_READ90, (unsigned char *)&id_90);
 	if(err)
 		return err;
-
+	
 #ifdef XD_CARD_SUPPORTED
 	if(xd_sm_info->card_type == CARD_TYPE_XD)
 	{
@@ -1085,7 +1085,7 @@ int xd_sm_card_capacity_determin(void)
 #endif
 	if(xd_sm_info->card_type == CARD_TYPE_NONE)
 		return XD_SM_ERROR_CARD_TYPE;
-
+	
 	if(xd_sm_total_zones > xd_sm_actually_zones)
 		return XD_SM_ERROR_UNSUPPORTED_CAPACITY;
 
@@ -1093,7 +1093,7 @@ int xd_sm_card_capacity_determin(void)
 	temp = xd_sm_totoal_logical_blks;
 	temp *= xd_sm_pages_per_blk;
 	xd_sm_info->blk_nums = temp;
-
+	
 	return XD_SM_NO_ERROR;
 }
 
@@ -1101,19 +1101,19 @@ int xd_sm_card_indentification(void)
 {
 	int err;
 	XD_ID_9A_t id_9a;
-
+	
 	if(xd_sm_info->card_type == CARD_TYPE_SM)
 		return XD_SM_NO_ERROR;
-
+		
 	err = xd_sm_id_read(XD_ID_READ9A, (unsigned char *)&id_9a);
 	if(err)
 		return err;
-
+	
 	if(id_9a.XD_CARD_ID != 0xB5)
 	{
 #ifdef  XD_SM_DEBUG
 		Debug_Printf("#XD_CARD_ID error\n");
-#endif
+#endif		
 		//return XD_SM_ERROR_CARD_ID;
 	}
 	xd_sm_info->raw_cid = id_9a;
@@ -1127,9 +1127,9 @@ int xd_sm_create_logical_physical_table(void)
 	unsigned short zone, block, block_temp;
 	unsigned short logical_addr, logical_temp;
 	unsigned long page_addr;
-
+	
 	xd_sm_convertion_table_init();
-
+				
 	for(zone=0; zone<xd_sm_total_zones; zone++)
 	{
 		for(block=0; block<xd_sm_physical_blks_perzone; block++)
@@ -1142,25 +1142,25 @@ int xd_sm_create_logical_physical_table(void)
 			page_addr = (zone * xd_sm_physical_blks_perzone + block) * xd_sm_pages_per_blk;
 			err = xd_sm_read_cycle3(0, page_addr, xd_sm_buf->redundant_buf, xd_sm_redundant_size);
 			if(err)
-			{
+			{	
 				err_count++;
 				if(err_count > 10)
 					return err;
 				else
 					continue;
 			}
-
+			
 			//Is it unused block?
 			if(xd_sm_check_erased_block(xd_sm_buf->redundant_buf))
 			{
 				xd_sm_set_block_free(zone, block);
 				continue;
 			}
-
+			
 			//Is is defective block?
 			if(xd_sm_check_defective_block(xd_sm_buf->redundant_buf))
 				continue;
-
+			
 			//Check the logical block address
 			err = xd_sm_block_address_search(xd_sm_buf->redundant_buf, &logical_addr);
 			if(err)
@@ -1168,19 +1168,19 @@ int xd_sm_create_logical_physical_table(void)
 				//xd_sm_set_block_free(zone, block);
 				continue;
 			}
-
+			
 			//Already entried on the convertsion table?
 			if(xd_sm_buf->logical_physical_table[zone][logical_addr] == INVALID_BLOCK_ADDRESS)
 			{
 				xd_sm_buf->logical_physical_table[zone][logical_addr] = block;
 				continue;
 			}
-
+			
 			//Read the data in the redundant area in the last sector
 			page_addr += (xd_sm_pages_per_blk - 1);
 			err = xd_sm_read_cycle3(0, page_addr, xd_sm_buf->redundant_buf, xd_sm_redundant_size);
 			if(err)
-			{
+			{	
 				err_count++;
 				if(err_count > 10)
 					return err;
@@ -1202,19 +1202,19 @@ int xd_sm_create_logical_physical_table(void)
 				{
 					xd_sm_set_block_free(zone, block);
 				}
-
+				
 				continue;
 			}
-
+			
 			block_temp = xd_sm_buf->logical_physical_table[zone][logical_addr];
-
+			
 			//Read the redundant area in the last sector of physical block entried on current convertsion table
 			page_addr = (zone * xd_sm_physical_blks_perzone + block_temp) * xd_sm_pages_per_blk;
 			page_addr += (xd_sm_pages_per_blk - 1);
 			err = xd_sm_read_cycle3(0, page_addr, xd_sm_buf->redundant_buf, xd_sm_redundant_size);
 			if(err)
 				continue;
-
+				
 			//Check the logical block address
 			err = xd_sm_block_address_search(xd_sm_buf->redundant_buf, &logical_temp);
 			if(err)
@@ -1253,42 +1253,42 @@ int xd_sm_logical_format_determin(void)
 	int err;
 	unsigned char *mbr_buf, *pbr_buf;
 	unsigned long pbr_sector;
-
+	
 	unsigned short bytes_per_sector, total_sectors;
 	unsigned char cluster_factor;
 	unsigned long cluster_number, extended_sectors, sectors_per_cluster;
-
+	
 	mbr_buf = xd_sm_buf->page_buf;
 	pbr_buf = xd_sm_buf->page_buf;
-
+	
 	memset(mbr_buf, 0, xd_sm_info->blk_len);
 	err = xd_sm_read_data(0, xd_sm_info->blk_len, mbr_buf);
 	if(err)
 		return err;
-
+		
 	if((mbr_buf[0x1FE] != 0x55) || (mbr_buf[0x1FF] != 0xAA))
 		return XD_SM_ERROR_LOGICAL_FORMAT;
-
+		
 	pbr_sector = (((((mbr_buf[0x1C9] << 8) | mbr_buf[0x1C8]) << 8) | mbr_buf[0x1C7]) << 8) | mbr_buf[0x1C6];
 	if(pbr_sector > xd_sm_totoal_logical_blks)
 		return XD_SM_ERROR_LOGICAL_FORMAT;
-
+		
 	err = xd_sm_read_data(pbr_sector, xd_sm_info->blk_len, pbr_buf);
 	if(err)
 		return err;
-
+	
 	if((pbr_buf[0x1FE] != 0x55) || (pbr_buf[0x1FF] != 0xAA))
 		return XD_SM_ERROR_LOGICAL_FORMAT;
-
+	
 	bytes_per_sector = (pbr_buf[0x0C] << 8) | pbr_buf[0x0B];
 	if(bytes_per_sector != 0x0200)
 		return XD_SM_ERROR_LOGICAL_FORMAT;
-
+		
 	cluster_factor = pbr_buf[0x0D];
 	sectors_per_cluster = cluster_factor;
 	if(sectors_per_cluster != xd_sm_pages_per_blk)
 		return XD_SM_ERROR_LOGICAL_FORMAT;
-
+	
 	total_sectors = (pbr_buf[0x14] << 8) | pbr_buf[0x13];
 	extended_sectors = (((((pbr_buf[0x23] << 8) | pbr_buf[0x22]) << 8) | pbr_buf[0x21]) << 8) | pbr_buf[0x20];
 	if(total_sectors)
@@ -1297,7 +1297,7 @@ int xd_sm_logical_format_determin(void)
 		cluster_number = extended_sectors / sectors_per_cluster;
 	if(cluster_number > 65525)
 		return XD_SM_ERROR_LOGICAL_FORMAT;
-
+		
 	return XD_SM_NO_ERROR;
 }
 
@@ -1307,59 +1307,59 @@ int xd_sm_reconstruct_logical_physical_table(void)
 	unsigned short zone, block, i;
 	unsigned short block_addr, logical_addr;
 	unsigned long page_addr;
-
+	
 	xd_sm_erase_all_blocks();
-
+	
 	for(zone=0; zone<xd_sm_total_zones; zone++)
 	{
 		logical_addr = 0;
-
+		
 		for(block=0; block<xd_sm_physical_blks_perzone; block++)
 		{
 			//Is it CIS area in case of Zone 0?
 			if((zone == 0) && (block == xd_sm_buf->cis_block_no))
 				continue;
-
+			
 			page_addr = (zone * xd_sm_physical_blks_perzone + block) * xd_sm_pages_per_blk;
 			//Read the data in the redundant area in the first sector
 			err = xd_sm_read_cycle3(0, page_addr, xd_sm_buf->redundant_buf, xd_sm_redundant_size);
 			if(err)
 				continue;
-
+			
 			//Is is defective block?
 			if(xd_sm_check_defective_block(xd_sm_buf->redundant_buf))
 				continue;
-
+			
 			//Erase this block
 			//err = xd_sm_auto_block_erase(page_addr);
-
+			
 			//Set logical address
 			if(logical_addr < xd_sm_logical_blks_perzone)
 			{
 				memset(xd_sm_buf->page_buf, 0xFF, xd_sm_page_size);
 				block_addr = xd_sm_trans_logical_address(logical_addr);
 				xd_sm_format_redundant_area(xd_sm_buf->page_buf, xd_sm_buf->redundant_buf, block_addr);
-
+				
 				for(i=0; i<xd_sm_pages_per_blk; i++)
 				{
 					page_addr = (zone * xd_sm_physical_blks_perzone + block) * xd_sm_pages_per_blk + i;
 					xd_sm_auto_page_program(page_addr, xd_sm_buf->page_buf, xd_sm_buf->redundant_buf);
 				}
-
+				
 				page_addr = (zone * xd_sm_physical_blks_perzone + block) * xd_sm_pages_per_blk;
 				//Read the data in the redundant area in the first sector
 				err = xd_sm_read_cycle3(0, page_addr, xd_sm_buf->redundant_buf, xd_sm_redundant_size);
 				if(err)
 					continue;
-
+				
 				if(xd_sm_check_defective_block(xd_sm_buf->redundant_buf))
 					continue;
-
+					
 				logical_addr++;
 			}
 		}
 	}
-
+	
 	return xd_sm_create_logical_physical_table();
 }
 
@@ -1374,11 +1374,11 @@ int xd_sm_erase_all_blocks(void)
 			//Is it CIS area in case of Zone 0?
 			if((zone == 0) && (block == xd_sm_buf->cis_block_no))
 				continue;
-
+			
 			xd_sm_check_back_block(zone, block);
 		}
 	}
-
+	
 	return XD_SM_NO_ERROR;
 }
 
@@ -1389,7 +1389,7 @@ int xd_sm_physical_format_determin(void)
 	XD_SM_Redundant_Area_t *redundant = (void *)xd_sm_buf->redundant_buf;
 	int cis_offset;
 	unsigned long page_addr;
-
+	
 	for(block=0; block<xd_sm_buf->cis_search_max; block++)
 	{
 		sector = 0;
@@ -1402,7 +1402,7 @@ int xd_sm_physical_format_determin(void)
 				sector++;
 				continue;
 			}
-
+			
 			if(xd_sm_check_defective_block(xd_sm_buf->redundant_buf))
 			{
 				sector++;
@@ -1415,12 +1415,12 @@ int xd_sm_physical_format_determin(void)
 		}
 		if(sector >= 8)
 			continue;
-
+		
 		page_addr = block * xd_sm_pages_per_blk + sector;
 		err = xd_sm_read_cycle1(0, page_addr, xd_sm_buf->page_buf, xd_sm_page_size, xd_sm_buf->redundant_buf);
 		if(err)
 			continue;
-
+		
 		cis_offset = CIS_FIELD1_OFFSET;
 		err = xd_sm_check_unit_ecc(xd_sm_buf->page_buf+cis_offset, redundant->ECC1);
 		if((err != ECC_NO_ERROR) && (err != ECC_ERROR_CORRECTED))
@@ -1432,7 +1432,7 @@ int xd_sm_physical_format_determin(void)
 				continue;
 			}
 		}
-
+		
 		err = 0;
 		for(i=0; i<sizeof(CIS_DATA_0_9); i++)
 		{
@@ -1448,7 +1448,7 @@ int xd_sm_physical_format_determin(void)
 			return XD_SM_NO_ERROR;
 		}
 	}
-
+	
 	xd_sm_buf->cis_block_no = INVALID_BLOCK_ADDRESS;
 	return XD_SM_ERROR_PHYSICAL_FORMAT;
 }
@@ -1458,7 +1458,7 @@ void xd_sm_staff_init(void)
 	xd_sm_power_on();
 
 	xd_sm_io_config();
-
+	
 	xd_sm_info->blk_len = 0;
 	xd_sm_info->blk_nums = 0;
 
@@ -1466,7 +1466,7 @@ void xd_sm_staff_init(void)
 	xd_sm_info->xd_removed_flag = 0;
 	xd_sm_info->sm_inited_flag = 0;
 	xd_sm_info->sm_removed_flag = 0;
-
+	
 	xd_sm_info->read_only_flag = 0;
 }
 
@@ -1474,12 +1474,12 @@ int xd_sm_cmd_test(void)
 {
 	int err;
 	XD_SM_Status1_t status1;
-
+		
 	xd_sm_io_config();
 	err = xd_sm_status_read(XD_SM_STATUS_READ1, (unsigned char *)&status1);
 	if(err)
 		return err;
-
+		
 	return XD_SM_NO_ERROR;
 }
 
@@ -1488,7 +1488,7 @@ int xd_sm_check_data_consistency(void)
 {
 	int error;
 	unsigned char *mbr_buf = xd_sm_buf->page_buf;
-
+	
 	memset(mbr_buf, 0, xd_sm_info->blk_len);
 	//read MBR information
 	error = xd_sm_read_data(0, xd_sm_info->blk_len, mbr_buf);
@@ -1499,7 +1499,7 @@ int xd_sm_check_data_consistency(void)
 		if(error)
 			return error;
 	}
-
+		
 	//check MBR data consistency
 	if((mbr_buf[510] != 0x55) || (mbr_buf[511] != 0xAA))
 	{
@@ -1507,14 +1507,14 @@ int xd_sm_check_data_consistency(void)
 		error = xd_sm_read_data(0, xd_sm_info->blk_len, mbr_buf);
 		if(error)
 			return error;
-
+			
 		//check MBR data consistency
 		if((mbr_buf[510] != 0x55) || (mbr_buf[511] != 0xAA))
 		{
 			return XD_SM_ERROR_LOGICAL_FORMAT;
 		}
 	}
-
+	
 	return XD_SM_NO_ERROR;
 }
 
@@ -1522,9 +1522,9 @@ int xd_sm_check_data_consistency(void)
 int xd_sm_init(XD_SM_Card_Info_t * card_info)
 {
 	int error;
-
+	
 	xd_sm_function_init();
-
+	
 #ifdef XD_CARD_SUPPORTED
 	if(xd_sm_info->card_type == CARD_TYPE_XD)
 	{
@@ -1534,7 +1534,7 @@ int xd_sm_init(XD_SM_Card_Info_t * card_info)
 			if(!error)
 				return error;
 		}
-
+		
 		if(++xd_sm_info->xd_init_retry > XD_SM_INIT_RETRY)
 			return XD_SM_ERROR_DRIVER_FAILURE;
 	}
@@ -1548,7 +1548,7 @@ int xd_sm_init(XD_SM_Card_Info_t * card_info)
 			if(!error)
 				return error;
 		}
-
+		
 		if(++xd_sm_info->sm_init_retry > XD_SM_INIT_RETRY)
 			return XD_SM_ERROR_DRIVER_FAILURE;
 	}
@@ -1559,7 +1559,7 @@ int xd_sm_init(XD_SM_Card_Info_t * card_info)
 #endif
 
 	xd_sm_staff_init();
-
+	
 	error = xd_sm_reset();
 	if(error)
 	{
@@ -1568,7 +1568,7 @@ int xd_sm_init(XD_SM_Card_Info_t * card_info)
 #endif
 		return error;
 	}
-
+	
 	error = xd_sm_card_capacity_determin();
 	if(error)
 	{
@@ -1578,18 +1578,18 @@ int xd_sm_init(XD_SM_Card_Info_t * card_info)
 		return error;
 	}
 
-#ifdef  XD_SM_DEBUG
+#ifdef  XD_SM_DEBUG	
 	#ifdef XD_CARD_SUPPORTED
 	if(xd_sm_info->card_type == CARD_TYPE_XD)
 		Debug_Printf("The capacitty of this XD card is %s!\n", xd_sm_buf->capacity_str);
 	#endif
-
+	
 	#ifdef SM_CARD_SUPPORTED
 	if(xd_sm_info->card_type == CARD_TYPE_SM)
 		Debug_Printf("The capacitty of this SM card is %s!\n", xd_sm_buf->capacity_str);
 #endif
 #endif
-
+	
 	error = xd_sm_card_indentification();
 	if(error)
 	{
@@ -1598,7 +1598,7 @@ int xd_sm_init(XD_SM_Card_Info_t * card_info)
 #endif
 		return error;
 	}
-
+	
 	error = xd_sm_physical_format_determin();
 	if(error)
 	{
@@ -1607,7 +1607,7 @@ int xd_sm_init(XD_SM_Card_Info_t * card_info)
 #endif
 		//return error;
 	}
-
+	
 	error = xd_sm_create_logical_physical_table();
 	if(error)
 	{
@@ -1630,7 +1630,7 @@ int xd_sm_init(XD_SM_Card_Info_t * card_info)
 		return error;
 		#endif
 	}
-
+	
 	error = xd_sm_check_data_consistency();
 	if(error)
 	{
@@ -1639,7 +1639,7 @@ int xd_sm_init(XD_SM_Card_Info_t * card_info)
 #endif
 		return error;
 	}
-
+	
 	error = xd_sm_logical_format_determin();
 	if(error)
 	{
@@ -1648,7 +1648,7 @@ int xd_sm_init(XD_SM_Card_Info_t * card_info)
 #endif
 		//return error;
 	}
-
+	
 #ifdef XD_SM_DEBUG
 	Debug_Printf("xd_sm_init() is completed successfully!\n\n");
 #endif
@@ -1667,9 +1667,9 @@ int xd_sm_init(XD_SM_Card_Info_t * card_info)
 		xd_sm_info->sm_init_retry = 0;
 	}
 #endif
-
+	
 	memcpy(card_info, xd_sm_info, sizeof(XD_SM_Card_Info_t));
-
+	
 	return XD_SM_NO_ERROR;
 }
 
@@ -1677,7 +1677,7 @@ int xd_sm_init(XD_SM_Card_Info_t * card_info)
 int xd_sm_read_data(unsigned long lba, unsigned long byte_cnt, unsigned char * data_buf)
 {
 	int error;
-
+	
 	unsigned long data_offset,page_addr;
 	unsigned short logical_no,physical_no,page_no,page_nums,zone_no,page_cnt;
 
@@ -1689,7 +1689,7 @@ int xd_sm_read_data(unsigned long lba, unsigned long byte_cnt, unsigned char * d
 #endif
 		return error;
 	}
-
+	
 	if(xd_reset_flag_read)
 	{
 		xd_power_on();
@@ -1703,37 +1703,37 @@ int xd_sm_read_data(unsigned long lba, unsigned long byte_cnt, unsigned char * d
 		if (error)
 			return error;
 	}
-
+	
 	data_offset = 0;
 	page_nums = (byte_cnt + xd_sm_page_size - 1) / xd_sm_page_size;
-
+	
 	while(page_nums)
 	{
 		logical_no = lba / xd_sm_pages_per_blk;
 		zone_no = logical_no / xd_sm_logical_blks_perzone;
 		logical_no %= xd_sm_logical_blks_perzone;
-
+		
 		if((logical_no >= xd_sm_logical_blks_perzone) || (zone_no >= xd_sm_actually_zones))
-		{
+		{		
 			error = XD_SM_ERROR_PARAMETER;
 #ifdef  XD_SM_DEBUG
 			Debug_Printf("#%s error occured in xd_sm_read_data()\n", xd_sm_error_to_string(error));
 #endif
 			return error;
 		}
-
+		
 		physical_no = xd_sm_buf->logical_physical_table[zone_no][logical_no];
-
+		
 		page_no = lba % xd_sm_pages_per_blk;
 		page_cnt = page_nums > (xd_sm_pages_per_blk - page_no) ? (xd_sm_pages_per_blk - page_no) : page_nums;
 		page_addr = (zone_no * xd_sm_physical_blks_perzone + physical_no) * xd_sm_pages_per_blk + page_no;
-
-		//In a flash memory device, there might be a logic block that is not allocate to a physcial
+		
+		//In a flash memory device, there might be a logic block that is not allocate to a physcial 
 		//block due to the block not being used. all data shoude be set to FFH when access this logical block
 		if(physical_no == INVALID_BLOCK_ADDRESS && xd_sm_search_free_block())
 		{
 			memset(data_buf+data_offset, 0xFF, page_cnt*xd_sm_page_size);
-
+			
 			data_offset += page_cnt*xd_sm_page_size;
 			lba += page_cnt;
 			page_nums -= page_cnt;
@@ -1748,7 +1748,7 @@ int xd_sm_read_data(unsigned long lba, unsigned long byte_cnt, unsigned char * d
 #endif
 			return error;
 		}
-
+		
 		error = xd_sm_read_cycle1(0, page_addr, data_buf+data_offset, page_cnt*xd_sm_page_size, xd_sm_buf->redundant_buf);
 		if(error)
 		{
@@ -1757,7 +1757,7 @@ int xd_sm_read_data(unsigned long lba, unsigned long byte_cnt, unsigned char * d
 #endif
 			return error;
 		}
-
+		
 #ifdef AMLOGIC_CHIP_SUPPORT
 		data_offset += ((unsigned long)data_buf == 0x3400000) ? 0 : page_cnt*xd_sm_page_size;
 #else
@@ -1773,12 +1773,12 @@ int xd_sm_read_data(unsigned long lba, unsigned long byte_cnt, unsigned char * d
 int xd_sm_write_data(unsigned long lba, unsigned long byte_cnt, unsigned char * data_buf)
 {
 	int error,i,j,k;
-
+	
 	unsigned long data_offset,page_addr,offset;
 	unsigned short logical_no,physical_no,page_no,page_nums,zone_no,page_max,page_cnt;
 	unsigned short free_blk_no,block_addr;
 	unsigned char *page_buf;
-
+	
 	if(byte_cnt == 0)
 	{
 		error = XD_SM_ERROR_PARAMETER;
@@ -1787,7 +1787,7 @@ int xd_sm_write_data(unsigned long lba, unsigned long byte_cnt, unsigned char * 
 #endif
 		return error;
 	}
-
+	
 	if(xd_sm_info->read_only_flag)
 	{
 		error = XD_SM_ERROR_DRIVER_FAILURE;
@@ -1796,7 +1796,7 @@ int xd_sm_write_data(unsigned long lba, unsigned long byte_cnt, unsigned char * 
 #endif
 		return error;
 	}
-
+	
 	if(xd_reset_flag_write)
 	{
 		xd_power_on();
@@ -1810,10 +1810,10 @@ int xd_sm_write_data(unsigned long lba, unsigned long byte_cnt, unsigned char * 
 		if (error)
 			return error;
 	}
-
+	
 	data_offset = 0;
 	page_nums = (byte_cnt + xd_sm_page_size - 1) / xd_sm_page_size;
-
+	
 	while(page_nums)
 	{
 		logical_no = lba / xd_sm_pages_per_blk;
@@ -1821,7 +1821,7 @@ int xd_sm_write_data(unsigned long lba, unsigned long byte_cnt, unsigned char * 
 		logical_no %= xd_sm_logical_blks_perzone;
 		page_no = lba % xd_sm_pages_per_blk;
 		block_addr = xd_sm_trans_logical_address(logical_no);
-
+		
 		if((logical_no >= xd_sm_logical_blks_perzone) || (zone_no >= xd_sm_actually_zones))
 		{
 			error = XD_SM_ERROR_PARAMETER;
@@ -1830,17 +1830,17 @@ int xd_sm_write_data(unsigned long lba, unsigned long byte_cnt, unsigned char * 
 #endif
 			return error;
 		}
-
+		
 		free_blk_no = xd_sm_find_free_block(zone_no);
 		if(free_blk_no == INVALID_BLOCK_ADDRESS)
-		{
+		{		
 			error = XD_SM_ERROR_NO_FREE_BLOCK;
 #ifdef  XD_SM_DEBUG
 			Debug_Printf("#%s error occured in xd_sm_write_data()\n", xd_sm_error_to_string(error));
 #endif
 			return error;
 		}
-
+		
 		page_addr = (zone_no * xd_sm_physical_blks_perzone + free_blk_no) * xd_sm_pages_per_blk;
 		error = xd_sm_auto_block_erase(page_addr);
 		if(error)
@@ -1849,12 +1849,12 @@ int xd_sm_write_data(unsigned long lba, unsigned long byte_cnt, unsigned char * 
 			//continue;
 			return error;
 		}
-
+		
 		physical_no = xd_sm_buf->logical_physical_table[zone_no][logical_no];
 		if(physical_no == INVALID_BLOCK_ADDRESS)
 		{
 			memset(xd_sm_buf->page_buf, 0xFF, xd_sm_page_size);
-
+			
 			page_max = (page_no+page_nums) < xd_sm_pages_per_blk ? (page_no+page_nums) : xd_sm_pages_per_blk;
 			page_cnt = 0;
 			offset = data_offset;
@@ -1872,7 +1872,7 @@ int xd_sm_write_data(unsigned long lba, unsigned long byte_cnt, unsigned char * 
 				{
 					page_buf = xd_sm_buf->page_buf;
 				}
-
+				
 				xd_sm_format_redundant_area(page_buf, xd_sm_buf->redundant_buf, block_addr);
 				error = xd_sm_auto_page_program(page_addr, page_buf, xd_sm_buf->redundant_buf);
 				if(error)
@@ -1886,11 +1886,11 @@ int xd_sm_write_data(unsigned long lba, unsigned long byte_cnt, unsigned char * 
 			}
 			if(error)
 				continue;
-
+			
 			data_offset = offset;
 			lba += page_cnt;
 			page_nums -= page_cnt;
-
+			
 			xd_sm_clear_block_free(zone_no, free_blk_no);
 			xd_sm_buf->logical_physical_table[zone_no][logical_no] = free_blk_no;
 		}
@@ -1899,7 +1899,7 @@ int xd_sm_write_data(unsigned long lba, unsigned long byte_cnt, unsigned char * 
 			page_max = (page_no+page_nums) < xd_sm_pages_per_blk ? (page_no+page_nums) : xd_sm_pages_per_blk;
 			page_cnt = 0;
 			offset = data_offset;
-
+			
 			for(i=0; i<page_no; i++)
 			{
 				error = xd_sm_copy_page(zone_no, physical_no, i, free_blk_no, i);
@@ -1913,11 +1913,11 @@ int xd_sm_write_data(unsigned long lba, unsigned long byte_cnt, unsigned char * 
 					break;
 				}
 			}
-
+		
 			for(j=page_no; j<page_max; j++)
 			{
 				xd_sm_format_redundant_area(data_buf+offset, xd_sm_buf->redundant_buf, block_addr);
-
+					
 				page_addr = (zone_no * xd_sm_physical_blks_perzone + free_blk_no) * xd_sm_pages_per_blk + j;
 				error = xd_sm_auto_page_program(page_addr, data_buf+offset, xd_sm_buf->redundant_buf);
 				if(error)
@@ -1928,7 +1928,7 @@ int xd_sm_write_data(unsigned long lba, unsigned long byte_cnt, unsigned char * 
 					//return error;
 					break;
 				}
-
+					
 				offset += xd_sm_page_size;
 				page_cnt++;
 			}
@@ -1950,11 +1950,11 @@ int xd_sm_write_data(unsigned long lba, unsigned long byte_cnt, unsigned char * 
 			}
 			if(error)
 				continue;
-
+			
 			data_offset = offset;
 			lba += page_cnt;
 			page_nums -= page_cnt;
-
+			
 			page_addr = (zone_no * xd_sm_physical_blks_perzone + physical_no) * xd_sm_pages_per_blk;
 			error = xd_sm_auto_block_erase(page_addr);
 			if(error)
@@ -1965,7 +1965,7 @@ int xd_sm_write_data(unsigned long lba, unsigned long byte_cnt, unsigned char * 
 #endif
 				//return error;
 			}
-
+			
 			xd_sm_set_block_free(zone_no, physical_no);
 			xd_sm_clear_block_free(zone_no, free_blk_no);
 			xd_sm_buf->logical_physical_table[zone_no][logical_no] = free_blk_no;
@@ -1981,7 +1981,7 @@ void xd_sm_power_on(void)
 	if(xd_sm_info->card_type == CARD_TYPE_XD)
 		xd_power_on();
 #endif
-
+		
 #ifdef SM_CARD_SUPPORTED
 	if(xd_sm_info->card_type == CARD_TYPE_SM)
 		sm_power_on();
@@ -1994,7 +1994,7 @@ void xd_sm_power_off()
 	if(xd_sm_info->card_type == CARD_TYPE_XD)
 		xd_power_off();
 #endif
-
+		
 #ifdef SM_CARD_SUPPORTED
 	if(xd_sm_info->card_type == CARD_TYPE_SM)
 		sm_power_off();
@@ -2004,7 +2004,7 @@ void xd_sm_power_off()
 int xd_sm_search_free_block(void)
 {
 	unsigned zone, block;
-
+	
 	for(zone=0; zone<xd_sm_total_zones; zone++)
 	{
 		for(block=0; block<xd_sm_physical_blks_perzone/8; block++)
@@ -2013,6 +2013,6 @@ int xd_sm_search_free_block(void)
 				return 1;
 		}
 	}
-
+	
 	return 0;
 }

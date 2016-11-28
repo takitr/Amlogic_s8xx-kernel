@@ -16,7 +16,7 @@ void ms_start_timer(unsigned long time_value)
 int ms_check_timer()
 {
 	cur_time = ms_get_timer_tick();
-
+	
 	if(cur_time < start_time)
 	{
 		time_diff = MS_MAX_TIMER_TICK - start_time + cur_time + 1;
@@ -25,7 +25,7 @@ int ms_check_timer()
 	{
 		time_diff = cur_time - start_time;
 	}
-
+	
 	if(last_time_diff > time_diff)
 	{
 		overflow_cnt++;
@@ -33,7 +33,7 @@ int ms_check_timer()
 	last_time_diff = time_diff;
 
 	time_diff += (overflow_cnt << 24);
-
+	
 	if(time_diff >= timeout_value)
 	{
 		timeout_flag = 1;

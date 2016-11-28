@@ -325,3 +325,4 @@ void osd_antiflicker_task_stop(void)
 	ge2d_osd_antiflicker.inited = false;
 }
 #endif
+

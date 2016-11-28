@@ -142,3 +142,4 @@ void __init meson6tv_map_default_io(void)
 {
 	iotable_init(meson6tv_io_desc, ARRAY_SIZE(meson6tv_io_desc));
 }
+

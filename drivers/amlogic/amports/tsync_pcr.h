@@ -10,3 +10,4 @@ extern void tsync_pcr_stop(void);
 extern int tsync_pcr_set_apts(unsigned pts);
 
 #endif
+

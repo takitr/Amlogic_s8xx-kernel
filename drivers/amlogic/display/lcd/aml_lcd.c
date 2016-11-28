@@ -1131,7 +1131,7 @@ static void venc_set_lvds(Lcd_Config_t *pConf)
 	aml_write_reg32(P_ENCL_VIDEO_MODE_ADV,     0x0418); // Sampling rate: 1
 
 	// bypass filter
-	aml_write_reg32(P_ENCL_VIDEO_FILT_CTRL	,0x1000);
+ 	aml_write_reg32(P_ENCL_VIDEO_FILT_CTRL	,0x1000);
 
 	aml_write_reg32(P_ENCL_VIDEO_MAX_PXCNT,	pConf->lcd_basic.h_period - 1);
 if(cur_lvds_index)
@@ -1179,7 +1179,7 @@ static void venc_set_mlvds(Lcd_Config_t *pConf)
 	aml_write_reg32(P_ENCL_VIDEO_MODE_ADV,         0x0008); // Sampling rate: 1
 
 	// bypass filter
-	aml_write_reg32(P_ENCL_VIDEO_FILT_CTRL,	0x1000);
+ 	aml_write_reg32(P_ENCL_VIDEO_FILT_CTRL,	0x1000);
 
 	aml_write_reg32(P_ENCL_VIDEO_YFP1_HTIME,       active_h_start);
 	aml_write_reg32(P_ENCL_VIDEO_YFP2_HTIME,       active_h_start + width);
@@ -1229,7 +1229,7 @@ static void set_control_lvds(Lcd_Config_t *pConf)
 	if(port_reverse_flag)
 	port_reverse = (pConf->lvds_mlvds_config.lvds_config->port_reverse) & 0x1;
     if(bit_num_flag)
-	{
+    	{
 		switch(pConf->lcd_basic.lcd_bits)
 			{
 			case 10:
@@ -1248,7 +1248,7 @@ static void set_control_lvds(Lcd_Config_t *pConf)
 				bit_num=1;
 				break;
 			}
-	}
+    	}
 	aml_write_reg32(P_MLVDS_CONTROL,  (aml_read_reg32(P_MLVDS_CONTROL) & ~(1 << 0)));  //disable mlvds
 
 	aml_write_reg32(P_LVDS_PACK_CNTL_ADDR,
@@ -1415,10 +1415,10 @@ static inline void _init_display_driver(Lcd_Config_t *pConf)
 			set_tcon_ttl(pConf);
             break;
         case LCD_DIGITAL_LVDS:
-		set_pll_lvds(pConf);
+        	set_pll_lvds(pConf);
             venc_set_lvds(pConf);
-		set_control_lvds(pConf);
-		init_lvds_phy(pConf);
+        	set_control_lvds(pConf);
+        	init_lvds_phy(pConf);
 			set_tcon_lvds(pConf);
             break;
         case LCD_DIGITAL_MINILVDS:
@@ -1518,15 +1518,15 @@ static void _lcd_module_enable(void)
 static const vinfo_t *lcd_get_current_info(void)
 {
     if(cur_lvds_index)
-	{
-	pDev->lcd_info.name = "lvds1080p50hz";
+    	{
+    	pDev->lcd_info.name = "lvds1080p50hz";
 		pDev->lcd_info.mode = VMODE_LVDS_1080P_50HZ;
 		pDev->lcd_info.sync_duration_num = 50;
 		pDev->lcd_info.sync_duration_den = 1;
-	}
+    	}
 	else
 		{
-	pDev->lcd_info.name = "lvds1080p";
+    	pDev->lcd_info.name = "lvds1080p";
 		pDev->lcd_info.mode = VMODE_LVDS_1080P;
 		pDev->lcd_info.sync_duration_num = 60;
 		pDev->lcd_info.sync_duration_den = 1;
@@ -1580,11 +1580,8 @@ static int lcd_module_disable(vmode_t cur_vmod)
     return 0;
 }
 #ifdef  CONFIG_PM
-static int lcd_suspend(int pm_event)
+static int lcd_suspend(void)
 {
-    /* in freeze process do not turn off the display devices */
-    if (pm_event == PM_EVENT_FREEZE)
-        return 0;
     BUG_ON(pDev==NULL);
     PRINT_INFO("lcd_suspend \n");
     //_disable_backlight();
@@ -1600,13 +1597,9 @@ static int lcd_suspend(int pm_event)
    // panel_power_off();
     return 0;
 }
-static int lcd_resume(int pm_event)
+static int lcd_resume(void)
 {
     PRINT_INFO("lcd_resume\n");
-    /* in thaw/restore process do not reset the display mode */
-    if (pm_event == PM_EVENT_THAW
-            || pm_event == PM_EVENT_RESTORE)
-        return 0;
 
     //panel_power_on();
    // mdelay(panel_power_on_delay);

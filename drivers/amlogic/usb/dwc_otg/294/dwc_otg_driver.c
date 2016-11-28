@@ -604,13 +604,13 @@ void set_usb_vbus_power(int pin,char is_power_on)
 {
     if(is_power_on){
         printk( "set usb port power on (board gpio %d)!\n",pin);
-
+	 
     }
     else    {
         printk("set usb port power off (board gpio %d)!\n",pin);
     }
 
-    amlogic_gpio_direction_output(pin,is_power_on,VBUS_POWER_GPIO_OWNER);
+    amlogic_gpio_direction_output(pin,is_power_on,VBUS_POWER_GPIO_OWNER);	
 }
 
 static void dwc_otg_id_change_timer_handler(void * parg)
@@ -859,10 +859,10 @@ static int dwc_otg_driver_probe(
 			{
 				gpio_vbus_power_pin= amlogic_gpio_name_map_num(gpio_name);
 				amlogic_gpio_request(gpio_vbus_power_pin,VBUS_POWER_GPIO_OWNER);
-
+				
 				prop = of_get_property(of_node, "gpio-work-mask", NULL);
 				if(prop)
-					gpio_work_mask = of_read_ulong(prop,1);
+					gpio_work_mask = of_read_ulong(prop,1);	
 			}
 			ctrl_reg_addr = (unsigned long)usb_platform_data.ctrl_regaddr[port_index];
 			phy_reg_addr = (unsigned long)usb_platform_data.phy_regaddr[port_index];

@@ -31,10 +31,10 @@ struct LDReg
     int reg_LD_pic_ColMax;
 	int reg_LD_pic_YUVsum[3];         // only output u16*3, (internal ACC will be u32x3)
     int reg_LD_pic_RGBsum[3];
-
+	
 	// -------------------------------------------------------------------------------------------------------------------------------------------------
     // Statistic options
-
+	
 	int reg_LD_BLK_Vnum;          //u4: Maximum to 10
     int reg_LD_BLK_Hnum;          //u4: Maximum to 10
 
@@ -53,11 +53,11 @@ struct LDReg
     int reg_LD_STAhist_mode;      //u3: histogram statistics on XX separately 20bits*16bins:  0: R-only,  1:G-only 2:B-only 3:Y-only; 4: MAX(R,G,B), 5/6/7: R&G&B
 
     int reg_LD_STAhist_Hidx[STA_LEN];  // U12* 9
-    int reg_LD_STAhist_Vidx[STA_LEN];  // u12x 9
+    int reg_LD_STAhist_Vidx[STA_LEN];  // u12x 9	
 
 	// -----------------------------------------------------------------------------------------------------------------------------------------------------------
-    // Backlit Modeling registers
-	int BL_matrix[BLKVMAX*BLKHMAX];  // Define the RAM Matrix
+    // Backlit Modeling registers	
+	int BL_matrix[BLKVMAX*BLKHMAX];  // Define the RAM Matrix    
     int reg_LD_BackLit_Xtlk;         //u1: 0 no block to block Xtalk model needed;   1: Xtalk model needed
     int reg_LD_BackLit_mode;         //u2: 0- LEFT/RIGHT Edge Lit; 1- Top/Bot Edge Lit; 2 - DirectLit modeled H/V independant; 3- DirectLit modeled HV Circle distribution
     int reg_LD_Reflect_Hnum;         //u3: numbers of band reflection considered in Horizontal direction; 0~4
@@ -133,7 +133,7 @@ typedef struct Ldim_dev_s{
 	int reg_LD_X_LUT_interp_mode[0];
 	int reg_LD_X_LUT_interp_mode[1];
 	int reg_LD_X_LUT_interp_mode[2];
-
+	
 }Ldim_dev_t;*/
 
 
@@ -145,7 +145,7 @@ typedef struct Ldim_dev_s{
 
 	//0: 17 pix, 1: 9 pix, 2: 5 pix, 3: 3 pix, 4: 0 pix
 #define HOVLP_NUM_SEL_BIT                   21
-#define HOVLP_NUM_SEL_WID                    2
+#define HOVLP_NUM_SEL_WID                    2 
 #define LPF_BEFORE_STATISTIC_EN_BIT         20
 #define LPF_BEFORE_STATISTIC_EN_WID          1
 
@@ -172,9 +172,9 @@ typedef struct Ldim_dev_s{
 #define LD_REFLECT_DGR_BASE  0xf0
 
 #define LD_RGB_LUT_BASE      0x2000
+ 
 
-
-#define LD_FRM_SIZE         0x0
+#define LD_FRM_SIZE         0x0  
 #define LD_RGB_MOD          0x1
 #define LD_BLK_HVNUM        0x2
 #define LD_HVGAIN           0x3
@@ -184,7 +184,7 @@ typedef struct Ldim_dev_s{
 #define LD_LIT_GAIN_COMP    0x7
 #define LD_FRM_RST_POS      0x8
 #define LD_FRM_BL_START_POS 0x9
-#define LD_MISC_CTRL0       0xa
+#define LD_MISC_CTRL0       0xa 
 
 #define LD_BLK_LEN   17
 #define LD_LUT_LEN   32
@@ -208,11 +208,12 @@ typedef struct _ldim_blk_hvnum{
     int Reflect_Vnum;   //3bits   //u3: numbers of band reflection considered in Horizontal direction; 0~4
     int Reflect_Hnum;   //3bits   //u3: numbers of band reflection considered in Horizontal direction; 0~4
     int BLK_Vnum;       //4bits
-    int BLK_Hnum;       //4bits
+    int BLK_Hnum;       //4bits  
 } sLDIM_BLK_HVNUM_Param;
 
 void LDIM_Initial(int pic_h, int pic_v, int BLK_Vnum, int BLK_Hnum, int BackLit_mode, int ldim_bl_en, int ldim_hvcnt_bypass);
-void LDIM_Updata_LUT(int blk_idx_update, int hdg_vhk_vdg_update, int bl_matrix_update, int bl_matrix_AVG_update, int reflect_dgr_update, int ld_rgb_update);
+void LDIM_Updata_LUT(int blk_idx_update, int hdg_vhk_vdg_update, int bl_matrix_update, int bl_matrix_AVG_update, int reflect_dgr_update, int ld_rgb_update); 
 int  get_blMtxAvg(int size, int mode);
 void ld_fw_cfg_once(void);
 //int  ldim_round(int ix, int ib);
+

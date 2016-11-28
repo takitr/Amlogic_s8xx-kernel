@@ -24,7 +24,7 @@
 
 #ifndef CONFIG_DISABLE_VCBUS_IO_FUNC
 ///VCBUS BUS io operation
-#define WRITE_VCBUS_REG(a...)        WRITE_REG(VCBUS,a)
+#define WRITE_VCBUS_REG(a...)        WRITE_REG(VCBUS,a) 
 #define READ_VCBUS_REG(a...)         READ_REG(VCBUS,a)
 #define WRITE_VCBUS_REG_BITS(a...)   WRITE_REG_BITS(VCBUS,a)
 #define READ_VCBUS_REG_BITS(a...)    READ_REG_BITS(VCBUS,a)
@@ -33,7 +33,7 @@
 #endif
 #ifndef CONFIG_DISABLE_CBUS_IO_FUNC
 ///CBUS BUS io operation
-#define WRITE_CBUS_REG(a...)        WRITE_REG(CBUS,a)
+#define WRITE_CBUS_REG(a...)        WRITE_REG(CBUS,a) 
 #define READ_CBUS_REG(a...)         READ_REG(CBUS,a)
 #define WRITE_CBUS_REG_BITS(a...)   WRITE_REG_BITS(CBUS,a)
 #define READ_CBUS_REG_BITS(a...)    READ_REG_BITS(CBUS,a)
@@ -42,7 +42,7 @@
 #endif
 #ifndef CONFIG_DISABLE_AXI_IO_FUNC
 ///AXI BUS io operation
-#define WRITE_AXI_REG(a...)         WRITE_REG(AXI,a)
+#define WRITE_AXI_REG(a...)         WRITE_REG(AXI,a) 
 #define READ_AXI_REG(a...)          READ_REG(AXI,a)
 #define WRITE_AXI_REG_BITS(a...)    WRITE_REG_BITS(AXI,a)
 #define READ_AXI_REG_BITS(a...)     READ_REG_BITS(AXI,a)
@@ -51,7 +51,7 @@
 #endif
 #ifndef CONFIG_DISABLE_AHB_IO_FUNC
 ///AHB BUS io operation
-#define WRITE_AHB_REG(a...)         WRITE_REG(AHB,a)
+#define WRITE_AHB_REG(a...)         WRITE_REG(AHB,a) 
 #define READ_AHB_REG(a...)          READ_REG(AHB,a)
 #define WRITE_AHB_REG_BITS(a...)    WRITE_REG_BITS(AHB,a)
 #define READ_AHB_REG_BITS(a...)     READ_REG_BITS(AHB,a)
@@ -60,7 +60,7 @@
 #endif
 #ifndef CONFIG_DISABLE_APB_IO_FUNC
 ///APB BUS io operation
-#define WRITE_APB_REG(a...)         WRITE_REG(APB,a)
+#define WRITE_APB_REG(a...)         WRITE_REG(APB,a) 
 #define READ_APB_REG(a...)          READ_REG(APB,a)
 #define WRITE_APB_REG_BITS(a...)    WRITE_REG_BITS(APB,a)
 #define READ_APB_REG_BITS(a...)     READ_REG_BITS(APB,a)
@@ -70,7 +70,7 @@
 
 #ifndef CONFIG_DISABLE_MMC_IO_FUNC
 ///APB BUS io operation
-#define WRITE_MMC_REG(a...)         WRITE_REG(MMC,a)
+#define WRITE_MMC_REG(a...)         WRITE_REG(MMC,a) 
 #define READ_MMC_REG(a...)          READ_REG(MMC,a)
 #define WRITE_MMC_REG_BITS(a...)    WRITE_REG_BITS(MMC,a)
 #define READ_MMC_REG_BITS(a...)     READ_REG_BITS(MMC,a)
@@ -80,7 +80,7 @@
 
 #ifndef CONFIG_DISABLE_AOBUS_IO_FUNC
 ///AOBUS BUS io operation
-#define WRITE_AOBUS_REG(a...)         WRITE_REG(AOBUS,a)
+#define WRITE_AOBUS_REG(a...)         WRITE_REG(AOBUS,a) 
 #define READ_AOBUS_REG(a...)          READ_REG(AOBUS,a)
 #define WRITE_AOBUS_REG_BITS(a...)    WRITE_REG_BITS(AOBUS,a)
 #define READ_AOBUS_REG_BITS(a...)     READ_REG_BITS(AOBUS,a)
@@ -89,7 +89,7 @@
 #endif
 #ifndef CONFIG_DISABLE_MPEG_IO_FUNC
 ///MPEG BUS io operation
-#define WRITE_MPEG_REG      WRITE_CBUS_REG
+#define WRITE_MPEG_REG      WRITE_CBUS_REG 
 #define READ_MPEG_REG       READ_CBUS_REG
 #define WRITE_MPEG_REG_BITS WRITE_CBUS_REG_BITS
 #define READ_MPEG_REG_BITS  READ_CBUS_REG_BITS

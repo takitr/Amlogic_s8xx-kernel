@@ -599,7 +599,7 @@ static int aml_ai_source_put_enum(struct snd_kcontrol *kcontrol,
     if (ucontrol->value.enumerated.item[0] == 0)
         WRITE_MPEG_REG(AUDIN_SOURCE_SEL, (1<<0)); // select audio codec output as I2S source
     else{
-	 WRITE_MPEG_REG(AUDIN_SOURCE_SEL,(0  <<12)   | // [14:12]cntl_hdmirx_chsts_sel: 0=Report chan1 status; 1=Report chan2 status; ...;
+  	 WRITE_MPEG_REG(AUDIN_SOURCE_SEL,(0  <<12)   | // [14:12]cntl_hdmirx_chsts_sel: 0=Report chan1 status; 1=Report chan2 status; ...;
 
                                             (0xf<<8)    | // [11:8] cntl_hdmirx_chsts_en
 

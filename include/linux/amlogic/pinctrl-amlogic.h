@@ -47,3 +47,4 @@ struct amlogic_pinctrl_soc_data {
 
 int  amlogic_pmx_probe(struct platform_device *pdev,struct amlogic_pinctrl_soc_data *soc_data);
 int amlogic_pmx_remove(struct platform_device *pdev);
+

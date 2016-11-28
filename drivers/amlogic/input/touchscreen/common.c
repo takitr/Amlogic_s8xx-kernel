@@ -1,8 +1,8 @@
 /*
  * drivers/amlogic/input/touchscreen/common.c
  *
- *
- *
+ * 
+ *	
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License version 2 as
@@ -75,12 +75,12 @@ int get_data_from_text_file(char *text_file, fill_buf_t fill_buf, void *priv)
 	int comment = NO_COMMENT;
 	char cur_char, last_char = 0;
 	int i;
-
+	
 	char scan_buf[64];
 	int scan_len;
 	int idx=0;
 	int ival=0;
-
+	
 	fp = filp_open(text_file, O_RDONLY, 0);
 	if (IS_ERR(fp)) {
 		return -1;
@@ -89,13 +89,13 @@ int get_data_from_text_file(char *text_file, fill_buf_t fill_buf, void *priv)
 	file_size = inode->i_size;
 	fs = get_fs();
 	set_fs(KERNEL_DS);
-
+	
 	scan_len = 0;
 	memset(scan_buf, 0 ,ARRAY_SIZE(scan_buf));
 	printk("open %s success, size=%d\n", text_file, (int)file_size);
 	while (offset < file_size) {
 		text_len = min_t(int, file_size-offset, ARRAY_SIZE(text_buf));
-		vfs_read(fp, text_buf, text_len, &offset);
+		vfs_read(fp, text_buf, text_len, &offset);		
 		for(i=0; i<text_len; i++) {
 			cur_char = text_buf[i];
 			/* comment judge*/
@@ -223,7 +223,7 @@ int upgrade_close(struct inode *inode, struct file *file)
 long upgrade_ioctl(struct file *filp,
                      unsigned int cmd, unsigned long args)
 {
-	switch (cmd) {
+	switch (cmd) {			
 		case 1:
 		if(ts_com->upgrade_touch)
 			ts_com->upgrade_touch();
@@ -252,7 +252,7 @@ int upgrade_resume(struct device *dev)
 }
 
 struct class upgrade_class = {
-
+    
 	.name = UPGRADE_TOUCH,
 	.owner = THIS_MODULE,
 	.suspend = upgrade_suspend,
@@ -322,7 +322,7 @@ GET_DT_ERR_TYPE get_dt_data(struct device_node* of_node, struct touch_pdata *pda
 			else if (!strncmp(str, "i2c_bus_ao", 10))
 				pdata->bus_type = AML_I2C_BUS_AO;
 			else
-				pdata->bus_type = AML_I2C_BUS_A;
+				pdata->bus_type = AML_I2C_BUS_A; 
 	}
 	printk("%s: bus_type=%d\n", pdata->owner, pdata->bus_type);
 	err = of_property_read_u32(of_node,"ic_type",&pdata->ic_type);
@@ -339,7 +339,7 @@ GET_DT_ERR_TYPE get_dt_data(struct device_node* of_node, struct touch_pdata *pda
   }
   pdata->irq += INT_GPIO_0;
 	printk("%s: IRQ number=%d\n",pdata->owner, pdata->irq);
-
+		
 	err = of_property_read_string(of_node,"irq_edge",&str);
 	if (err) {
 	  printk("%s info: get irq edge, set irq edge GPIO_IRQ_FALLING!\n", pdata->owner);
@@ -371,7 +371,7 @@ GET_DT_ERR_TYPE get_dt_data(struct device_node* of_node, struct touch_pdata *pda
 	if (err) {
 	  printk("%s info: get y resolution!\n",pdata->owner);
 	  return ERR_GET_DATA;
-  }
+  }	
 	err = of_property_read_u32(of_node,"pol",&pdata->pol);
 	if (err) {
 	  printk("%s info: get pol!\n", pdata->owner);
@@ -407,12 +407,12 @@ GET_DT_ERR_TYPE get_dt_data(struct device_node* of_node, struct touch_pdata *pda
     pdata->gpio_reset = amlogic_gpio_name_map_num(str);
     printk("%s: alloc gpio_reset(%s)!\n", pdata->owner, str);
     if (pdata->gpio_reset <= 0) {
-	pdata->gpio_reset = 0;
+    	pdata->gpio_reset = 0;
 		printk("%s info: alloc gpio_reset(%s)!\n", pdata->owner, str);
     }
   }
   else {
-	pdata->gpio_reset = 0;
+  	pdata->gpio_reset = 0;
   }
 
 	err = of_property_read_string(of_node, "gpio_power", &str);
@@ -420,12 +420,12 @@ GET_DT_ERR_TYPE get_dt_data(struct device_node* of_node, struct touch_pdata *pda
     pdata->gpio_power = amlogic_gpio_name_map_num(str);
     printk("%s: alloc gpio_power(%s)!\n", pdata->owner, str);
     if (pdata->gpio_power <= 0) {
-	pdata->gpio_power = 0;
+    	pdata->gpio_power = 0;
 		printk("%s info: alloc gpio_power(%s)!\n", pdata->owner, str);
     }
   }
   else {
-	pdata->gpio_power = 0;
+  	pdata->gpio_power = 0;
   }
 
   err = of_property_read_string(of_node,"fw_file",&str);
@@ -434,7 +434,7 @@ GET_DT_ERR_TYPE get_dt_data(struct device_node* of_node, struct touch_pdata *pda
   }
   else {
 	strcpy(pdata->fw_file, str);
-	printk("%s get fw_file, set firmware %s!\n",pdata->owner, pdata->fw_file);
+  	printk("%s get fw_file, set firmware %s!\n",pdata->owner, pdata->fw_file);
   }
 
   err = of_property_read_string(of_node,"config_file", &str);
@@ -443,7 +443,7 @@ GET_DT_ERR_TYPE get_dt_data(struct device_node* of_node, struct touch_pdata *pda
   }
   else {
 	strcpy(pdata->config_file, str);
-	printk("%s get config_file, set config_file %s!\n", pdata->owner, pdata->config_file);
+  	printk("%s get config_file, set config_file %s!\n", pdata->owner, pdata->config_file);
   }
   err = of_property_read_u32(of_node,"select_gpio_num",&pdata->select_gpio_num);
   if (err) {
@@ -494,18 +494,18 @@ int create_init(struct device dev, struct touch_pdata *pdata)
 	}
 	pdata->dev = device_create(&upgrade_class, NULL, pdata->upgrade_no, NULL, UPGRADE_TOUCH);
 	if (IS_ERR(pdata->dev)) {
-		printk(KERN_ERR "upgrade_cdev: failed to create device node\n");
+	 	printk(KERN_ERR "upgrade_cdev: failed to create device node\n");
 	  class_destroy(&upgrade_class);
     return -EEXIST;
 	}
-
+	
 	return 0;
 }
 
 GET_DT_ERR_TYPE request_touch_gpio(struct touch_pdata *pdata)
 {
 	int err, i;
-
+	 
 	if (pdata->gpio_interrupt) {
       err = aml_gpio_request(pdata->gpio_interrupt);
       if (err) {
@@ -532,7 +532,7 @@ GET_DT_ERR_TYPE request_touch_gpio(struct touch_pdata *pdata)
       }
 	    printk("%s: request gpio_power = (%d)\n",pdata->owner, pdata->gpio_power);
 	}
-
+	
 	if (pdata->select_gpio_num) {
 		for (i=0; i<pdata->select_gpio_num; i++)
 			if (pdata->select_fw_gpio[i] > 0) {
@@ -713,7 +713,7 @@ static int touch_ts_probe(struct platform_device *pdev)
 	class_register(&touch_class);
 	printk("==%s==end==\n", __func__);
 	return 0;
-
+	
 exit_alloc_data_failed:
 	if (pdata)
 		kfree(pdata);
@@ -723,13 +723,13 @@ exit_alloc_data_failed:
 static int touch_ts_remove(struct platform_device *pdev)
 {
 	if (pdev->dev.platform_data)
-		kfree (pdev->dev.platform_data);
+	 	kfree (pdev->dev.platform_data);
 	class_unregister(&touch_class);
     return 0;
 }
 
 static const struct of_device_id aml_touch_dt_match[]={
-	{
+	{	
 		.compatible = "amlogic,aml_touch",
 	},
 	{},

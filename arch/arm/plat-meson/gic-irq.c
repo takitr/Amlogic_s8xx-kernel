@@ -60,7 +60,7 @@ static void meson_gic_unmask(struct irq_data *data)
     if(data->state_use_accessors & IRQ_TYPE_LEVEL_MASK)
 	edge = 0x1;//level
 
-     if((irq == 62)||(irq == 63))
+     if((irq == 62)||(irq == 63))    
 	 edge = 0x1;//level
 
     /**

@@ -10,7 +10,7 @@ config MESON_CPU_TEMP_SENSOR
 	bool "meson temperature sensor cpu interface support"
 	default n
 	help
-		/sys/class/saradc/temperature can got the celius .
+		/sys/class/saradc/temperature can got the celius . 
 
 config MESON_SUSPEND_FIRMWARE_BASE
         hex
@@ -25,3 +25,5 @@ config MESON_TRUSTZONE
 	help
 		Enable ARM Trustzone secure extension
 endif # ARCH_MESON8
+
+

@@ -47,7 +47,7 @@
 #define	STK831X_OFSY	0x10	/* Y-Axis offset */
 #define	STK831X_OFSZ	0x11	/* Z-Axis offset */
 #define	STK831X_PLAT	0x12	/* Tap Latency */
-#define	STK831X_PWIN	0x13	/* Tap Window */
+#define	STK831X_PWIN	0x13	/* Tap Window */	
 #define	STK831X_FTH		0x14	/* Fre	e-Fall Threshold */
 #define	STK831X_FTM	0x15	/* Free-Fall Time */
 #define	STK831X_STH	0x16	/* Shake Threshold */

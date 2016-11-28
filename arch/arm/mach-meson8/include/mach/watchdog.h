@@ -25,11 +25,11 @@
 #include <mach/hardware.h>
 #include <mach/register.h>
 
-#ifdef CONFIG_ARCH_MESON8
+#ifdef CONFIG_ARCH_MESON8 
 #define WATCHDOG_ENABLE_BIT  22
 #define WATCHDOG_COUNT_MASK ((1<<WATCHDOG_ENABLE_BIT)-1)
 #define WDT_ONE_SECOND 100000
-#else
+#else 
 #define WATCHDOG_ENABLE_BIT  19
 #define WATCHDOG_COUNT_MASK ((1<<16)-1)
 #define WDT_ONE_SECOND 7812

@@ -22,9 +22,9 @@ typedef struct{
 	dma_addr_t paddr;
 	char* addr;
 	unsigned size;
-	unsigned wr;
-	unsigned rd;
-	unsigned level;
+	signed int wr;
+	signed int rd;
+	signed int level;
 	spinlock_t lock;
 }BUF;
 
@@ -34,7 +34,7 @@ typedef struct{
 	BUF sw;
 	BUF sw_read;
 	int type;
-
+	
 	/********** for debug ****************/
 	int cnt0, cnt1, cnt2, cnt3, cnt4, cnt5, cnt6, cnt7, cnt8;
 }amaudio_t;
@@ -51,14 +51,14 @@ static long amaudio_utils_ioctl(struct file *file, unsigned int cmd, unsigned lo
 
 static ssize_t amaudio_read(struct file *file, char __user *buf, size_t count, loff_t * pos);
 
-extern unsigned int aml_i2s_playback_start_addr;
+extern unsigned int aml_i2s_playback_start_addr;	
 extern unsigned int aml_i2s_playback_phy_start_addr;
 extern unsigned int aml_i2s_alsa_write_addr;
+	
+#define AMAUDIO_IOC_MAGIC  'A'                      
 
-#define AMAUDIO_IOC_MAGIC  'A'
-
-#define AMAUDIO_IOC_GET_SIZE			_IOW(AMAUDIO_IOC_MAGIC, 0x00, int)
-#define AMAUDIO_IOC_GET_PTR				_IOW(AMAUDIO_IOC_MAGIC, 0x01, int)
+#define AMAUDIO_IOC_GET_SIZE			_IOW(AMAUDIO_IOC_MAGIC, 0x00, int)       
+#define AMAUDIO_IOC_GET_PTR				_IOW(AMAUDIO_IOC_MAGIC, 0x01, int)  
 #define AMAUDIO_IOC_RESET				_IOW(AMAUDIO_IOC_MAGIC, 0x02, int)
 #define AMAUDIO_IOC_UPDATE_APP_PTR		_IOW(AMAUDIO_IOC_MAGIC, 0x03, int)
 #define AMAUDIO_IOC_AUDIO_OUT_MODE		_IOW(AMAUDIO_IOC_MAGIC, 0x04, int)
@@ -68,6 +68,6 @@ extern unsigned int aml_i2s_alsa_write_addr;
 #define AMAUDIO_IOC_GET_PTR_READ		_IOW(AMAUDIO_IOC_MAGIC, 0x08, int)
 #define AMAUDIO_IOC_UPDATE_APP_PTR_READ	_IOW(AMAUDIO_IOC_MAGIC, 0x09, int)
 #define AMAUDIO_IOC_OUT_READ_ENABLE		_IOW(AMAUDIO_IOC_MAGIC, 0x0a, int)
-#define AMAUDIO_IOC_SET_ANDROID_VOLUME_ENABLE		_IOW(AMAUDIO_IOC_MAGIC, 0x0b, int)
-#define AMAUDIO_IOC_SET_ANDROID_LEFT_VOLUME	        _IOW(AMAUDIO_IOC_MAGIC, 0x0c, int)
-#define AMAUDIO_IOC_SET_ANDROID_RIGHT_VOLUME		_IOW(AMAUDIO_IOC_MAGIC, 0x0d, int)
+
+
+

@@ -33,7 +33,7 @@
 			vertical_flip = <0>;
 			bt_path = "gpio";
 			status = "okay";
-		};
+		};	
 #endif
 
 #ifdef CONFIG_VIDEO_AMLOGIC_CAPTURE_GT2005
@@ -57,7 +57,7 @@
 			vertical_flip = <0>;
 			bt_path = "gpio";
 			status = "okay";
-		};
+		};	
 #endif
 
 #ifdef CONFIG_VIDEO_AMLOGIC_CAPTURE_GC0328
@@ -78,7 +78,7 @@
 			gpio_pwdn = "GPIOH_6";
 			gpio_rst = "GPIOH_4";
 			mirror_flip = <0>;
-			vertical_flip = <0>;
+			vertical_flip = <0>;	
 			bt_path = "gpio";
 			status = "okay";
 		};
@@ -102,7 +102,7 @@
 			gpio_pwdn = "GPIOH_6";
 			gpio_rst = "GPIOH_4";
 			mirror_flip = <1>;
-			vertical_flip = <0>;
+			vertical_flip = <0>;	
 			bt_path = "gpio";
 			status = "okay";
 		};
@@ -126,7 +126,7 @@
 			gpio_pwdn = "GPIOH_5";
 			gpio_rst = "GPIOH_4";
 			mirror_flip = <0>;
-			vertical_flip = <0>;
+			vertical_flip = <0>;	
 			bt_path = "gpio";
 			status = "okay";
 		};
@@ -150,7 +150,7 @@
 			gpio_pwdn = "GPIOH_5";
 			gpio_rst = "GPIOH_4";
 			mirror_flip = <0>;
-			vertical_flip = <0>;
+			vertical_flip = <0>;	
 			bt_path = "gpio";
 			status = "okay";
 		};
@@ -174,7 +174,7 @@
 			gpio_pwdn = "GPIOH_5";
 			gpio_rst = "GPIOH_4";
 			mirror_flip = <0>;
-			vertical_flip = <0>;
+			vertical_flip = <0>;	
 			config_path = "/system/etc/myconfig";
 			bt_path = "gpio";
 			status = "okay";
@@ -198,7 +198,7 @@
 			gpio_pwdn = "GPIOH_5";
 			gpio_rst = "GPIOH_4";
 			mirror_flip = <0>;
-			vertical_flip = <0>;
+			vertical_flip = <0>;	
 			bt_path = "gpio";
 			status = "okay";
 		};
@@ -221,7 +221,7 @@
 			gpio_pwdn = "GPIOH_5";
 			gpio_rst = "GPIOH_4";
 			mirror_flip = <0>;
-			vertical_flip = <0>;
+			vertical_flip = <0>;	
 			bt_path = "gpio";
 			status = "okay";
 		};
@@ -244,10 +244,10 @@
 			gpio_pwdn = "GPIOH_6";
 			gpio_rst = "GPIOH_4";
 			mirror_flip = <0>;
-			vertical_flip = <0>;
+			vertical_flip = <0>;	
 			bt_path = "gpio";
 			status = "okay";
 		};
 #endif
-	};
+	};	
 #endif

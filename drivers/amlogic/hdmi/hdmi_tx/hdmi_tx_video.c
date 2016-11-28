@@ -14,7 +14,6 @@
 
 #include <linux/amlogic/hdmi_tx/hdmi_info_global.h>
 #include <linux/amlogic/hdmi_tx/hdmi_tx_module.h>
-#include <linux/amlogic/hdmi_tx/hdmi_tx_compliance.h>
 
 static unsigned char hdmi_output_rgb = 0;
 static void hdmitx_set_spd_info(hdmitx_dev_t* hdmitx_device);
@@ -411,6 +410,15 @@ void hdmitx_init_parameters(HDMI_TX_INFO_t *info)
 //If not, treated as a DVI Device
 static int is_dvi_device(rx_cap_t* pRXCap)
 {
+    hdmitx_dev_t *hdmitx_device = container_of(pRXCap, struct hdmi_tx_dev_s, RXCap);
+
+#ifndef CONFIG_AML_HDMI_TX_CTS_DVI
+    hdmi_print(IMP, SYS "fixed HDMI mode output\n");
+    return 0;
+#endif
+    if(hdmitx_device->tv_no_edid)
+        return 0;
+
     if(pRXCap->IEEEOUI != 0x000c03)
         return 1;
     else
@@ -442,7 +450,7 @@ int hdmitx_set_display(hdmitx_dev_t* hdmitx_device, HDMI_Video_Codes_t VideoCode
         hdmitx_device->cur_VIC = vic;
         return 1;;
     }
-    hdmitx_special_handler_video(hdmitx_device);
+
     param = hdmi_get_video_param(VideoCode);
     hdmitx_device->cur_video_param = param;
     if(param){
@@ -606,3 +614,4 @@ static void hdmitx_set_spd_info(hdmitx_dev_t* hdmitx_device)
     }
     hdmitx_device->HWOp.SetPacket(HDMI_SOURCE_DESCRIPTION, SPD_DB, SPD_HB);
 }
+

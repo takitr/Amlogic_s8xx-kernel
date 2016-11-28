@@ -478,7 +478,7 @@ void __init l2x0_init(void __iomem *base, u32 aux_val, u32 aux_mask)
 	power=readl_relaxed(l2x0_base+ L2X0_POWER_CTRL);
 	tag_lan = readl_relaxed(l2x0_base + L2X0_TAG_LATENCY_CTRL);
 	data_lan = readl_relaxed(l2x0_base + L2X0_DATA_LATENCY_CTRL);
-
+	
 	/* Save the value for resuming. */
 	l2x0_saved_regs.aux_ctrl = aux;
 
@@ -730,7 +730,7 @@ static void aurora_save(void)
 	l2x0_saved_regs.aux_ctrl = readl_relaxed(l2x0_base + L2X0_AUX_CTRL);
 }
 
-void l2x0_resume(void)
+static void l2x0_resume(void)
 {
 	if (!(readl_relaxed(l2x0_base + L2X0_CTRL) & L2X0_CTRL_EN)) {
 		/* restore aux ctrl and enable l2 */
@@ -901,19 +901,19 @@ static void __init meson_of_setup(const struct device_node *np,
 #ifdef CONFIG_MESON_TRUSTZONE
 		meson_smc1(TRUSTZONE_MON_L2X0_PREFETCH_INDEX, prefetch_val);
 #else
-		writel_relaxed(prefetch_val,prefetch_reg);
+		writel_relaxed(prefetch_val,prefetch_reg);		
 #endif
 	}
 
 	if(of_property_read_bool(np, "aux-data_prefetch")){
 		val |= (1 << L2X0_AUX_CTRL_DATA_PREFETCH_SHIFT);
-		mask &= ~(1 << L2X0_AUX_CTRL_DATA_PREFETCH_SHIFT);
+		mask &= ~(1 << L2X0_AUX_CTRL_DATA_PREFETCH_SHIFT);		
 		prefetch_val = readl_relaxed(prefetch_reg);
 		prefetch_val |= (1 << L2X0_PREF_CTRL_DATA_PREFETCH_SHIFT);
 #ifdef CONFIG_MESON_TRUSTZONE
 		meson_smc1(TRUSTZONE_MON_L2X0_PREFETCH_INDEX, prefetch_val);
 #else
-		writel_relaxed(prefetch_val,prefetch_reg);
+		writel_relaxed(prefetch_val,prefetch_reg);		
 #endif
 	}
 
@@ -924,10 +924,10 @@ static void __init meson_of_setup(const struct device_node *np,
 
 	if(of_property_read_bool(np, "aux-cache_replace_policy_round_robin")){
 		val |= (1 << L2X0_AUX_CTRL_CACHE_REPLACE_POLICY_SHIFT);
-		mask &= ~(1 << L2X0_AUX_CTRL_CACHE_REPLACE_POLICY_SHIFT);
+		mask &= ~(1 << L2X0_AUX_CTRL_CACHE_REPLACE_POLICY_SHIFT);		
 	}else{
 		val &= ~(1 << L2X0_AUX_CTRL_CACHE_REPLACE_POLICY_SHIFT);
-		mask &= ~(1 << L2X0_AUX_CTRL_CACHE_REPLACE_POLICY_SHIFT);
+		mask &= ~(1 << L2X0_AUX_CTRL_CACHE_REPLACE_POLICY_SHIFT);	
 	}
 
 	if(of_property_read_bool(np, "aux-force_no_write_alloc")){
@@ -959,7 +959,7 @@ static void __init meson_of_setup(const struct device_node *np,
 		val |= (1 << L2X0_AUX_CTRL_SHARE_OVERRIDE_SHIFT);
 		mask &= ~(1 << L2X0_AUX_CTRL_SHARE_OVERRIDE_SHIFT);
 	}
-
+	
 	if(of_property_read_u32(np, "aux-way_size",&way_size) > 0){
 		switch(way_size){
 		case 16:
@@ -991,7 +991,7 @@ static void __init meson_of_setup(const struct device_node *np,
 	if(!of_property_read_u32(np, "aux-associativity",&associativity)){
 		if(associativity == 16)
 			assoc_value = 1;
-		else
+		else 
 			assoc_value = 0;
 		val |= (assoc_value << L2X0_AUX_CTRL_ASSOCIATIVITY_SHIFT);
 		mask &= ~(assoc_value << L2X0_AUX_CTRL_ASSOCIATIVITY_SHIFT);
@@ -1089,7 +1089,7 @@ static void __init meson_of_setup(const struct device_node *np,
 
 	*aux_val = val;
 	*aux_mask = mask;
-
+	
 	pl310_of_setup(np,aux_val,aux_mask);
 }
 
@@ -1189,7 +1189,7 @@ int __init l2x0_of_init(u32 aux_val, u32 aux_mask)
 
 	if (of_address_to_resource(np, 0, &res))
 		return -ENODEV;
-
+	
 #ifdef CONFIG_PLAT_MESON
 	l2x0_base = (void __iomem *)IO_PL310_BASE;
 #else

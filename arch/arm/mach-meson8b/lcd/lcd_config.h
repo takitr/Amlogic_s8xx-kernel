@@ -7,7 +7,7 @@
 //lcd driver version
 //**********************************
 #define LCD_DRV_TYPE      "c8b"
-#define LCD_DRV_DATE      "20150126"
+#define LCD_DRV_DATE      "20140903"
 //**********************************
 
 /* for GAMMA_CNTL_PORT */
@@ -93,13 +93,13 @@
 	#define LCD_PACK_RVS             1
 	#define LCD_PACK_LITTLE          0
 
- /* for LVDS_BLANK_DATA */
+ /* for LVDS_BLANK_DATA */  
 	#define LVDS_blank_data_reserved    30  // 31:30
 	#define LVDS_blank_data_r           20  // 29:20
 	#define LVDS_blank_data_g           10  // 19:10
 	#define LVDS_blank_data_b           0  //  9:0
-
-/* for LVDS_PACK_CNTL_ADDR */
+	
+/* for LVDS_PACK_CNTL_ADDR */  
 	#define LVDS_USE_TCON               7
 	#define LVDS_DUAL                   6
 	#define PN_SWP                      5
@@ -142,7 +142,7 @@ static const unsigned gamma_sel_table[3] = {
 	//clk_ctrl
 	#define CLK_CTRL_FRAC			16	//[27:16]
 	#define CLK_CTRL_LEVEL			12	//[14:12]
-
+	
 	#define PLL_WAIT_LOCK_CNT		200
 
 /**** clk frequency limit ***/
@@ -177,32 +177,6 @@ static const unsigned gamma_sel_table[3] = {
 
 static const unsigned od_table[4] = {1,2,4,8};
 static const unsigned div_pre_table[6] = {1,2,3,4,5,6};
-//********************************************//
-
-//********************************************//
-//DPHY Config
-//********************************************//
-#define BIT_DPHY_LANE            11 //[15:11]
-
-//LVDS
-#define LVDS_LANE_0              (1 << 4)
-#define LVDS_LANE_1              (1 << 3)
-#define LVDS_LANE_2              (1 << 1)
-#define LVDS_LANE_3              (1 << 0)
-#define LVDS_LANE_CLK            (1 << 2)
-#define LVDS_LANE_COUNT_3        (LVDS_LANE_CLK | LVDS_LANE_0 | LVDS_LANE_1 | LVDS_LANE_2)
-#define LVDS_LANE_COUNT_4        (LVDS_LANE_CLK | LVDS_LANE_0 | LVDS_LANE_1 | LVDS_LANE_2 | LVDS_LANE_3)
-
-//MIPI-DSI
-#define MIPI_DSI_LANE_0          (1 << 4)
-#define MIPI_DSI_LANE_1          (1 << 3)
-#define MIPI_DSI_LANE_2          (1 << 1)
-#define MIPI_DSI_LANE_3          (1 << 0)
-#define MIPI_DSI_LANE_CLK        (1 << 2)
-#define MIPI_DSI_LANE_COUNT_1    (MIPI_DSI_LANE_CLK | MIPI_DSI_LANE_0)
-#define MIPI_DSI_LANE_COUNT_2    (MIPI_DSI_LANE_CLK | MIPI_DSI_LANE_0 | MIPI_DSI_LANE_1)
-#define MIPI_DSI_LANE_COUNT_3    (MIPI_DSI_LANE_CLK | MIPI_DSI_LANE_0 | MIPI_DSI_LANE_1 | MIPI_DSI_LANE_2)
-#define MIPI_DSI_LANE_COUNT_4    (MIPI_DSI_LANE_CLK | MIPI_DSI_LANE_0 | MIPI_DSI_LANE_1 | MIPI_DSI_LANE_2 | MIPI_DSI_LANE_3)
 //********************************************//
 
 #endif

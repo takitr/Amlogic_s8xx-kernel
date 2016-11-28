@@ -27,7 +27,7 @@ BEGIN{
 #		return 1;
 #	}
 #	return 0;
-#
+#	
 #}
 /^TITLE/{
 	for(j=1;j<=NF;j++){
@@ -70,7 +70,7 @@ BEGIN{
 			reg_addr[a[1]]=a[1];
 			reg_addr_isnum[a[1]]=1;
 		}
-
+	
 	}
 }
 /^ALIAS/{
@@ -84,7 +84,7 @@ BEGIN{
 		{
 			if(length(idx[a[2]])==0)
 			{
-
+				
 				idx[a[2]]=0;
 			}
 		}
@@ -93,13 +93,13 @@ BEGIN{
 		if(n == 4)
 		{
 			reg_list[a[2],idx[a[2]]]=a[2]"_" a[3] ;
-
+			
 			reg_alias[a[1]]=a[2] "(" (idx[a[2]]);
-
+				
 			print "#define " reg_list[a[2],idx[a[2]]] " " a[4] "(" a[1] ")"
 			idx[a[2]]++;
 		}else if (n == 5){
-
+			
 			for(j=1;j<=strtonum(a[4]);j++)
 			{
 				if(reg_addr_isnum[a[1]])
@@ -109,14 +109,14 @@ BEGIN{
 					print "#define " ind " (" a[1] "+" (j-1)")"
 				}
 				reg_list[a[2],idx[a[2]]]=a[2]"_" (j-1) ;
-
+				
 #				print reg_list[a[2],0]
 				reg_alias[ind]=a[2] "(" (idx[a[2]]);
-
+				
 				print "#define " reg_list[a[2],idx[a[2]]] " " a[5] "(" ind ")"
 				idx[a[2]]++;
 			}
-
+			
 		}else{
 			continue;
 		}
@@ -147,7 +147,7 @@ BEGIN{
 		}
 		if(length(reg_alias[a[1]])==0)
 		{
-			print "use original name for reg=_" a[1] | "cat 1>&2"
+			print "use original name for reg=_" a[1] | "cat 1>&2" 
 			reg_alias[a[1]]="_" a[1];
 		}
 		if(match(a[2],/[\(|\[]([[:digit:]]+)[\)|\]]/,array) == 0)
@@ -166,7 +166,7 @@ BEGIN{
 		delete a;
 		n=split($i,a," ");
 		sig=null;
-
+		
 		for(j=1;j<=n;j++){
 			delete temp_arr;
 			enable="xxx";
@@ -177,7 +177,7 @@ BEGIN{
 				enable="disable";
 			}else if( a[j] ~ /^[a-zA-Z0-9_]*(\/)[[:digit:]]$/ )
 			{
-
+				
 				sig=a[j];
 				if(length(pads_pinmux[$2,sig,"enable"]) != 0 ||length(pads_pinmux[$2,sig,"disable"])!= 0)
 				{
@@ -187,31 +187,31 @@ BEGIN{
 							enable="enable";
 						else
 							enable="disable";
-
-						if(warning_on>=1)print "Waring found, pads conflict " | "cat 1>&2"
-						if(warning_on>=1)print "\tsig=" sig " pads_pinmux[" $2 "," sig "," enable "]="  pads_pinmux[$2,sig,enable] | "cat 1>&2"
+						
+						if(warning_on>=1)print "Waring found, pads conflict " | "cat 1>&2" 
+						if(warning_on>=1)print "\tsig=" sig " pads_pinmux[" $2 "," sig "," enable "]="  pads_pinmux[$2,sig,enable] | "cat 1>&2" 
 						sig=a[j] "_" module[i];
-						if(warning_on>=1)print "\treplace name is  " sig | "cat 1>&2"
+						if(warning_on>=1)print "\treplace name is  " sig | "cat 1>&2" 
 					}
 					else {
 						if(length(pads_pinmux[$2,sig,"enable"]) != 0)
 							enable="enable";
 						else
 							enable="disable";
-						print "error found, pads conflict " | "cat 1>&2"
-						print "\tsig=" sig " pads_pinmux[" $2 "," sig "," enable "]="  pads_pinmux[$2,sig,enable] | "cat 1>&2"
+						print "error found, pads conflict " | "cat 1>&2" 
+						print "\tsig=" sig " pads_pinmux[" $2 "," sig "," enable "]="  pads_pinmux[$2,sig,enable] | "cat 1>&2" 
 						ret=1;
 						break;
 					}
 				}
 				continue;
-			}else if(a[j] ~ /([[:alpha:]_][[:alnum:]_]*)[\(|\[]([[:digit:]]+)[\)|\]]$/)
+			}else if(a[j] ~ /([[:alpha:]_][[:alnum:]_]*)[\(|\[]([[:digit:]]+)[\)|\]]$/) 
 			{
 				str=a[j];
 				enable="enable";
 			}else if( a[j] ~ /^[a-zA-Z_][a-zA-Z0-9_]*$/ )
 			{
-
+				
 				sig=a[j];
 				if(length(pads_pinmux[$2,sig,"enable"]) != 0 ||length(pads_pinmux[$2,sig,"disable"])!= 0)
 				{
@@ -221,19 +221,19 @@ BEGIN{
 							enable="enable";
 						else
 							enable="disable";
-
-						if(warning_on>=1)print "Waring found, pads conflict " | "cat 1>&2"
-						if(warning_on>=1)print "\tsig=" sig " pads_pinmux[" $2 "," sig "," enable "]="  pads_pinmux[$2,sig,enable] | "cat 1>&2"
+						
+						if(warning_on>=1)print "Waring found, pads conflict " | "cat 1>&2" 
+						if(warning_on>=1)print "\tsig=" sig " pads_pinmux[" $2 "," sig "," enable "]="  pads_pinmux[$2,sig,enable] | "cat 1>&2" 
 						sig=a[j] "_" module[i];
-						if(warning_on>=1)print "\treplace name is  " sig | "cat 1>&2"
+						if(warning_on>=1)print "\treplace name is  " sig | "cat 1>&2" 
 					}
 					else {
 						if(length(pads_pinmux[$2,sig,"enable"]) != 0)
 							enable="enable";
 						else
 							enable="disable";
-						print "error found, pads conflict " | "cat 1>&2"
-						print "\tsig=" sig " pads_pinmux[" $2 "," sig "," enable "]="  pads_pinmux[$2,sig,enable] | "cat 1>&2"
+						print "error found, pads conflict " | "cat 1>&2" 
+						print "\tsig=" sig " pads_pinmux[" $2 "," sig "," enable "]="  pads_pinmux[$2,sig,enable] | "cat 1>&2" 
 						ret=1;
 						break;
 					}
@@ -249,19 +249,19 @@ BEGIN{
 			}
 			if( length(pads_pinmux[$2,sig,enable] ) != 0 )
 			{
-				print "fatal error found, pads conflict " | "cat 1>&2"
-				print "\tsig=" sig " pads_pinmux[" $2 "," sig "," enable "]="  pads_pinmux[$2,sig,enable] | "cat 1>&2"
+				print "fatal error found, pads conflict " | "cat 1>&2" 
+				print "\tsig=" sig " pads_pinmux[" $2 "," sig "," enable "]="  pads_pinmux[$2,sig,enable] | "cat 1>&2" 
 				ret=1;
 				break;
 			}
 			if(length(reg_alias[temp_arr[1]])==0){
 				str=temp_arr[1] "(" temp_arr[2] ")" ;
 				reg_alias[temp_arr[1]]=temp_arr[1] ;
-				print "use original name for reg=" temp_arr[1] | "cat 1>&2"
+				print "use original name for reg=" temp_arr[1] | "cat 1>&2" 
 			}
 			else
 				str=reg_alias[temp_arr[1]] "," temp_arr[2] ")" ;
-
+			
 			pads_pinmux[$2,sig,enable]=str;
 			if(sig in sigs)
 				continue;
@@ -289,7 +289,7 @@ END{
 	for(i in pads)
 	{
 		if(x!=0)
-			printf ",\n" | headfile;
+			printf ",\n" | headfile; 
 		printf ("\tPAD_%s=%d",i,pads[i]) | headfile;
 		if(i in sigs){
 			print "pad name " i " conflict" | "cat 1>&2" ;
@@ -297,9 +297,9 @@ END{
 		}
 		x++;
 	}
-
+	
 	print ",\n\tPAD_MAX_PADS="  x  "\n}pad_t;" | headfile
-
+	
 	print "typedef enum {" | headfile
 	x=0;
 	for(i in sigs)
@@ -319,7 +319,7 @@ END{
 	print "#endif /*__MACH_HEAD_GPIO_DATA__*/" | headfile
 	print "#define NOT_EXIST -1"
 	print "struct pad_sig {pad_t pad;sig_t sig;unsigned enable; unsigned disable;};"
-
+	
 	print "#define foreach_pad_sig_start(pad,sig) {int __i;for(__i=0;__i<sizeof(pad_sig_tab)/sizeof(pad_sig_tab[0]);__i++){ unsigned __pad=pad,__sig=sig;  "
 	print "#define case_pad_equal(enable,disable) if(pad_sig_tab[__i].pad==__pad&&pad_sig_tab[__i].sig!=__sig){ enable=pad_sig_tab[__i].enable;disable=pad_sig_tab[__i].disable"
 	print "#define case_sig_equal(enable,disable) if(pad_sig_tab[__i].pad!=__pad&&pad_sig_tab[__i].sig==__sig){enable=pad_sig_tab[__i].enable;disable=pad_sig_tab[__i].disable"
@@ -341,7 +341,7 @@ END{
 			enable=pads_pinmux[pad,sig,"enable"];
 			disable="NOT_EXIST";
 			if(length ( pads_pinmux[pad,sig,"disable"] )!=0)
-			{
+			{ 
 				disable=pads_pinmux[pad,sig,"disable"];
 			}
 		}
@@ -362,12 +362,12 @@ END{
 		x++;
 	}
 	print "\t[PAD_MAX_PADS]=NULL\n};"
-
+	
 	print "static const char * sig_name[]={"
 	x=0;
 	for(i in sigs)
 	{
-
+		
 		printf "\t[%d]=\"%s\",\n",sigs[i],i;
 		if(i in pads){
 			print "sig name " i " conflict" | "cat 1>&2" ;
@@ -378,7 +378,7 @@ END{
 	print "\t[SIG_GPIOIN]=\"GPIOIN\","
     print "\t[SIG_GPIOOUT]=\"GPIOOUT\","
 	print "\t[SIG_MAX_SIGS]=NULL\n};"
-
+	
 	print "/* GPIO operation part */"
 	x=0;
 	print "static unsigned pad_gpio_bit[]={"
@@ -395,7 +395,7 @@ END{
 		printf "\t[PAD_%s]=%s",pad,pads_gpio[pad,sig];
 		x++;
 	}
-
+	
 	print "\n};"
 	exit ret
 }

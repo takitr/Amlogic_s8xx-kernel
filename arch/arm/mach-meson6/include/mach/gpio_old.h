@@ -14,7 +14,7 @@
 typedef pinmux_item_t gpio_item_t;
 typedef gpio_item_t gpio_set_t;
 /**
- * @return 0, success ,
+ * @return 0, success , 
  * 		   SOMEPIN IS LOCKED, some pin is locked to the specail feature . You can not change it
  * 		   NOTAVAILABLE, not available .
  */
@@ -36,10 +36,10 @@ static inline int32_t gpio_out_low(uint32_t pin)
 
 	/**
 	 * Multi pin operation
-	 * @return 0, success ,
+	 * @return 0, success , 
 	 * 		   SOMEPIN IS LOCKED, some pin is locked to the specail feature . You can not change it
 	 * 		   NOTAVAILABLE, not available .
-	 *
+	 * 
 	 */
 
 gpio_set_t * gpio_out_group_cacl(uint32_t pin,uint32_t bits, ... );
@@ -53,10 +53,10 @@ int32_t gpio_in_get(uint32_t pin); ///one bit operation
 	 */
 	/**
 	 * Multi pin operation
-	 * @return 0, success ,
+	 * @return 0, success , 
 	 * 		   SOMEPIN IS LOCKED, some pin is locked to the specail feature . You can not change it
 	 * 		   NOTAVAILABLE, not available .
-	 *
+	 * 
 	 */
 gpio_set_t * gpio_in_group_cacl(uint32_t pin,uint32_t bits, ... );
 typedef int64_t gpio_in_t;

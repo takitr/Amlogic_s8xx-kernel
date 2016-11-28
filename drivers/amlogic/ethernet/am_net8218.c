@@ -48,20 +48,12 @@
 #include <linux/kthread.h>
 #include "am_net8218.h"
 #include <mach/mod_gate.h>
-#ifdef CONFIG_AML1220
-#include <linux/amlogic/aml_pmu.h>
-#endif
+
 #define MODULE_NAME "ethernet"
 #define DRIVER_NAME "ethernet"
 
 #define DRV_NAME	DRIVER_NAME
 #define DRV_VERSION	"v2.0.0"
-
-#ifdef CONFIG_LEDS_TRIGGER_NETWORK
-#include <linux/leds.h>
-extern void ledtrig_eth_linkup(struct led_classdev *led_cdev);
-extern void ledtrig_eth_linkdown(struct led_classdev *led_cdev);
-#endif
 
 #undef CONFIG_HAS_EARLYSUSPEND
 #ifdef CONFIG_HAS_EARLYSUSPEND
@@ -73,7 +65,7 @@ MODULE_DESCRIPTION("Amlogic Ethernet Driver");
 MODULE_AUTHOR("Platform-BJ@amlogic.com>");
 MODULE_LICENSE("GPL");
 MODULE_VERSION(DRV_VERSION);
-int aml1220_write(int32_t add, uint8_t val);
+
 // >0 basic init and remove info;
 // >1 further setup info;
 // >2 rx data dump
@@ -89,9 +81,6 @@ static int g_mdcclk = 2;
 static int g_rxnum = 64;
 static int g_txnum = 64;
 static int new_maclogic = 0;
-#ifdef CONFIG_AML1220
-static int used_pmu4_phy = 0;
-#endif
 static unsigned int ethbaseaddr = ETHBASE;
 static unsigned int savepowermode = 0;
 static int interruptnum = ETH_INTERRUPT;
@@ -902,7 +891,7 @@ static int mac_pmt_enable(unsigned int enable)
  */
 /* --------------------------------------------------------------------------*/
 //#undef CONFIG_AML_NAND_KEY
-#if defined (CONFIG_AML_NAND_KEY) || defined (CONFIG_SECURITYKEY)
+#ifdef CONFIG_AML_NAND_KEY
 extern int get_aml_key_kernel(const char* key_name, unsigned char* data, int ascii_flag);
 extern int extenal_api_key_set_version(char *devvesion);
 static char print_buff[1025];
@@ -912,13 +901,9 @@ void read_mac_from_nand(struct net_device *ndev)
 	u8 mac[ETH_ALEN];
 	char *endp;
 	int j;
-	for (j=0; j < 2; j++)
-	{
-		ret = get_aml_key_kernel("mac", print_buff, 0);
-		extenal_api_key_set_version("auto3");
-		printk("ret = %d\nprint_buff=%s\n", ret, print_buff);
-		if (ret >=0) break;
-	}
+	ret = get_aml_key_kernel("mac", print_buff, 0);
+	extenal_api_key_set_version("nand3");
+	printk("ret = %d\nprint_buff=%s\n", ret, print_buff);
 	if (ret >= 0) {
 		strcpy(ndev->dev_addr, print_buff);
 	for(j=0; j < ETH_ALEN; j++)
@@ -941,9 +926,8 @@ static int aml_mac_init(struct net_device *ndev)
 	printk("--1--write mac add to:");
 
 	data_dump(ndev->dev_addr, 6);
-#if defined (CONFIG_AML_NAND_KEY) || defined (CONFIG_SECURITYKEY)
-        if (!g_mac_addr_setup)
-		read_mac_from_nand(ndev);
+#ifdef CONFIG_AML_NAND_KEY
+	read_mac_from_nand(ndev);
 #endif
 	printk("--2--write mac add to:");
 	data_dump(ndev->dev_addr, 6);
@@ -991,36 +975,10 @@ static void aml_adjust_link(struct net_device *dev)
 		return;
 
 	spin_lock_irqsave(&priv->lock, flags);
-
-#ifdef CONFIG_LEDS_TRIGGER_NETWORK
-	if (phydev->link)
-		ledtrig_eth_linkup(NULL);
-	else
-		ledtrig_eth_linkdown(NULL);
-#endif
-
 	if(phydev->phy_id == INTERNALPHY_ID){
 		val = (8<<27)|(7 << 24)|(1<<16)|(1<<15)|(1 << 13)|(1 << 12)|(4 << 4)|(0 << 1);
 		PERIPHS_SET_BITS(P_PREG_ETHERNET_ADDR0, val);
 	}
-#ifdef CONFIG_AML1220
-	if(phydev->phy_id == PMU4_PHY_ID){
-		aml1220_write(0x98,0x47);
-/*
-eth_cfg_57	0x99	7:6	R/W	0	co_st_miimode[1:0]
-		5	R/W	0	co_smii_source_sync
-		4	R/W	0	co_st_pllbp
-		3	R/W	0	co_st_adcbp
-		2	R/W	0	co_st_fxmode
-		1	R/W	0	co_en_high
-		0	R/W	0	co_automdix_en
-*/
-		aml1220_write(0x99,0x40);
-
-		aml1220_write(0x9a,0x07);
-	}
-#endif
-
 	if (phydev->link) {
 		u32 ctrl = readl((void*)(priv->base_addr + ETH_MAC_0_Configuration));
 
@@ -1054,8 +1012,8 @@ eth_cfg_57	0x99	7:6	R/W	0	co_st_miimode[1:0]
 				PERIPHS_CLEAR_BITS(P_PREG_ETHERNET_ADDR0, 1);
 			switch (phydev->speed) {
 				case 1000:
-					ctrl &= ~((1 << 14)|(1 << 15));//1000m
-					ctrl |= (1 << 13);//1000m
+					ctrl &= ~((1 << 14)|(1 << 15));//1000m 
+					ctrl |= (1 << 13);//1000m 
 					break;
 				case 100:
 					ctrl |= (1 << 14)|(1 << 15);
@@ -1070,23 +1028,6 @@ eth_cfg_57	0x99	7:6	R/W	0	co_st_miimode[1:0]
 						val =0x4100b040;
 						WRITE_CBUS_REG(P_PREG_ETHERNET_ADDR0, val);
 					}
-#ifdef CONFIG_AML1220
-					if(phydev->phy_id == PMU4_PHY_ID){
-						aml1220_write(0x98,0x41);
-/*
-eth_cfg_57	0x99	7:6	R/W	0	co_st_miimode[1:0]
-		5	R/W	0	co_smii_source_sync
-		4	R/W	0	co_st_pllbp
-		3	R/W	0	co_st_adcbp
-		2	R/W	0	co_st_fxmode
-		1	R/W	0	co_en_high
-		0	R/W	0	co_automdix_en	
-*/
-						aml1220_write(0x99,0x40);
-
-						aml1220_write(0x9a,0x07);
-					}
-#endif
 					break;
 				default:
 					printk("%s: Speed (%d) is not 10"
@@ -1208,7 +1149,7 @@ static int reset_mac(struct net_device *dev)
 	int res;
 	unsigned long flags;
 	int tmp;
-	printk("----> reset_mac\n");
+
 	spin_lock_irqsave(&np->lock, flags);
 	res = alloc_ringdesc(dev);
 	spin_unlock_irqrestore(&np->lock, flags);
@@ -1318,7 +1259,7 @@ static int netdev_open(struct net_device *dev)
 	val |= (1 << 1); /*start receive*/
 	writel(val, (void*)(np->base_addr + ETH_DMA_6_Operation_Mode));
 	running = 1;
-	if(new_maclogic == 1){
+	if(new_maclogic == 1){	
 		writel(0xffffffff,(void*)(np->base_addr + ETH_MMC_ipc_intr_mask_rx));
 		writel(0xffffffff,(void*)(np->base_addr + ETH_MMC_intr_mask_rx));
 	}
@@ -1461,7 +1402,7 @@ static int start_tx(struct sk_buff *skb, struct net_device *dev)
 	}
 
 	writel(1,(void*)(np->base_addr + ETH_DMA_1_Tr_Poll_Demand));
-	writel(np->irq_mask, (void*)(np->base_addr + ETH_DMA_7_Interrupt_Enable));
+	writel(np->irq_mask, (void*)(np->base_addr + ETH_DMA_7_Interrupt_Enable));	
 	spin_unlock_irqrestore(&np->lock, flags);
 	tasklet_enable(&np->rx_tasklet);
 	return NETDEV_TX_OK;
@@ -1673,8 +1614,7 @@ static void config_mac_addr(struct net_device *dev, void *mac)
 	if(g_mac_addr_setup)
 		memcpy(dev->dev_addr, mac, 6);
 	else
-		memcpy(dev->dev_addr, &DEFMAC, 6);
-		// random_ether_addr(dev->dev_addr);
+		random_ether_addr(dev->dev_addr);
 
 	write_mac_addr(dev, dev->dev_addr);
 }
@@ -2838,7 +2778,7 @@ static int am_net_cali(int argc, char **argv,int gate)
 	for(ii=0;ii < cali_time;ii++){
 		value = aml_read_reg32(P_PREG_ETH_REG1);
 		if((value>>15) & 0x1){
-			printk("value == %x,  cali_len == %d, cali_idx == %d,  cali_sel =%d,  cali_rise = %d\n",value,(value>>5)&0x1f,(value&0x1f),(value>>11)&0x7,(value>>14)&0x1);
+ 			printk("value == %x,  cali_len == %d, cali_idx == %d,  cali_sel =%d,  cali_rise = %d\n",value,(value>>5)&0x1f,(value&0x1f),(value>>11)&0x7,(value>>14)&0x1);
 		}
 	}
 	return 0;
@@ -2880,9 +2820,9 @@ static ssize_t eth_cali_store(struct class *class, struct class_attribute *attr,
 		default:
 			goto end;
 		}
-
+	
 		return count;
-
+	
 	end:
 		kfree(buff);
 		return 0;
@@ -2958,156 +2898,6 @@ static int ethernet_late_resume(struct early_suspend *dev)
 	return 0;
 }
 #endif
-
-#ifdef CONFIG_AML1220
-//#define EXT_CLK
-/* --------------------------------------------------------------------------*/
-/**
- * @brief PMU4_PHY-CONFIG
- *
- * @param void
- *
- * @return void
- */
-/* --------------------------------------------------------------------------*/
-void pmu4_phy_conifg(void){
-		int i;
-		uint8_t value;
-		int data;
-		uint8_t data_lo;
-		uint8_t data_hi;
-		// eth ldo
-//		aml_clr_reg32_mask(P_PERIPHS_PIN_MUX_9, 0xf00000c0);
-//		aml_set_reg32_mask(P_PERIPHS_PIN_MUX_10, 0xc000);
-		aml1220_write(0x04,0x01);
-		aml1220_write(0x05,0x01);
-		mdelay(10);
-		// pinmux
-	/*	8a---33
-2c---51
-2d---41
-20---0
-21---3*/
-		aml1220_write(0x2c,0x51);
-		aml1220_write(0x2d,0x41);
-		aml1220_write(0x20,0x0);
-		aml1220_write(0x21,0x3);
-#ifdef EXT_CLK
-		aml1220_write(0x14,0x01);
-#else
-		aml1220_write(0x14,0x00);
-#endif
-
-		aml1220_write(0x15,0x3f);
-
-		// pll
-		aml1220_write(0x78,0x06);
-		aml1220_write(0x79,0x05);
-		aml1220_write(0x7a,0xa1);
-		aml1220_write(0x7b,0xac);
-		aml1220_write(0x7c,0x5b);
-		aml1220_write(0x7d,0xa0);
-		aml1220_write(0x7e,0x20);
-		aml1220_write(0x7f,0x49);
-		aml1220_write(0x80,0xd6);
-		aml1220_write(0x81,0x0b);
-		aml1220_write(0x82,0xd1);
-		aml1220_write(0x83,0x00);
-		aml1220_write(0x84,0x00);
-		aml1220_write(0x85,0x00);
-		/*cfg4- --- cfg 45*/
-		aml1220_write(0x88,0x0);
-		aml1220_write(0x89,0x0);
-		aml1220_write(0x8A,0x33);
-		aml1220_write(0x8B,0x01);
-		aml1220_write(0x8C,0xd0);
-
-		aml1220_write(0x8D,0x01);
-		//aml1220_write(0x8C,0x01);
-		//aml1220_write(0x8D,0xc0);
-		aml1220_write(0x8E,0x00);
-
-/* pmu4 phyid = 20142014*/
-		aml1220_write(0x94,0x14);
-		aml1220_write(0x95,0x20);
-
-		aml1220_write(0x96,0x14);
-		aml1220_write(0x97,0x20);
-
-/*phyadd & mode
-eth_cfg_56	0x98	7:3	R/W	0	co_st_phyadd[4:0]
-		2:0	R/W	0	co_st_mode[2:0]
-		eth_phy_co_st_mode
-    //           000 - 10Base-T Half Duplex, auto neg disabled
-    //           001 - 10Base-T Full Duplex, auto neg disabled
-    //           010 - 100Base-TX Half Duplex, auto neg disabled
-    //           011 - 100Base-TX Full Duplex, auto neg disabled
-    //           100 - 100Base-TX Half Duplex, auto neg enabled
-    //           101 - Repeater mode, auto neg enabled
-    //           110 - Power Down Mode
-    //           111 - All capable, auto neg enabled, automdix enabled
-
-*/
-#ifdef EXT_CLK
-		aml1220_write(0x98,0x73);
-#else
-		aml1220_write(0x98,0x47);
-#endif
-/*
-0x99	7:6	R/W	0	co_st_miimode[1:0]
-	5	R/W	0	co_smii_source_sync
-	4	R/W	0	co_st_pllbp
-	3	R/W	0	co_st_adcbp
-	2	R/W	0	co_st_fxmode
-	1	R/W	0	co_en_high
-	0	R/W	0	co_automdix_en
-0x9A	7			reserved
-	6	R/W	0	co_pwruprst_byp
-	5	R/W	0	co_clk_ext
-	4	R/W	0	co_st_scan
-	3	R/W	0	co_rxclk_inv
-	2	R/W	0	co_phy_enb
-	1	R/W	0	co_clkfreq
-	0	R/W	0	eth_clk_enable
-*/
-		aml1220_write(0x99,0x61);
-/*
-eth_cfg_58	0x9a
-*/
-		aml1220_write(0x9a,0x07);
-/*
-eth_cfg_59	0x9b
-*/
-//		aml1220_write(0x75,0x04);
-//		aml1220_write(0x63,0x22);
-		aml1220_write(0x04,0x01);
-		aml1220_write(0x05,0x01);
-		value = 0;
-		printk("--------> read 0x9c\n");
-		#if 0
-		while((value&0x01) == 0)
-			aml1220_read(0x9c,&value);
-		#endif
-		printk("----2----> read 0x9c over!\n");
-		aml1220_write(0x9b,0x00);
-		aml1220_write(0x9b,0x80);
-		aml1220_write(0x9b,0x00);
-		mdelay(4);
-		printk("phy init though i2c done\n");
-		for (i=0;i<0xb0;i++){
-			aml1220_read(i, &value);
-			printk("  i2c[%x]=0x%x\n",i,value);
-		}
-		printk("phy reg dump though i2c:\n");
-		for (i=0;i<0x20;i++){
-				aml1220_write(0xa6, i);
-				aml1220_read(0xa7,&data_lo);
-				aml1220_read(0xa8,&data_hi);
-			  data = (data_hi<<8)|data_lo;
-				printk("  phy[%x]=0x%x\n", i, data);
-		}
-}
-#endif
 /* --------------------------------------------------------------------------*/
 /**
  * @brief ethernet_probe
@@ -3166,15 +2956,7 @@ static int ethernet_probe(struct platform_device *pdev)
 		reset_pin_num = amlogic_gpio_name_map_num(reset_pin);
 		amlogic_gpio_request(reset_pin_num, OWNER_NAME);
 	}
-#ifdef CONFIG_AML1220
-	ret = of_property_read_u32(pdev->dev.of_node,"used_pmu4_phy",&used_pmu4_phy);
-	if (ret) {
-		printk("Please config used_pmu4_phy.\n");
-	}
-	if(used_pmu4_phy){
-		pmu4_phy_conifg();
-	}
-#endif
+
 #endif
 	printk(DRV_NAME "init(dbg[%p]=%d)\n", (&g_debug), g_debug);
 	switch_mod_gate_by_name("ethernet",1);
@@ -3200,6 +2982,12 @@ static int ethernet_probe(struct platform_device *pdev)
 	np = netdev_priv(my_ndev);
 	if(np->phydev && savepowermode)
 		np->phydev->drv->suspend(np->phydev);
+	//switch_mod_gate_by_name("ethernet",0);
+
+	//if (!eth_pdata) {
+	//	printk("\nethernet pm ops resource undefined.\n");
+	//	return -EFAULT;
+	//}
 
 	return 0;
 }
@@ -3237,7 +3025,7 @@ static int ethernet_remove(struct platform_device *pdev)
 static int ethernet_suspend(struct platform_device *dev, pm_message_t event)
 {
 	printk("ethernet_suspend!\n");
-	netdev_close(my_ndev);
+	netdev_close(my_ndev);	
 	return 0;
 }
 #endif
@@ -3348,3 +3136,5 @@ static void __exit am_net_exit(void)
 
 module_init(am_net_init);
 module_exit(am_net_exit);
+
+

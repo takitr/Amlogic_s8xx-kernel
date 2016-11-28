@@ -80,7 +80,7 @@ static void meson_secondary_set(unsigned int cpu)
 	meson_set_cpu_ctrl_addr(cpu,
 		(const uint32_t)virt_to_phys(meson_secondary_startup));
 	meson_set_cpu_ctrl_reg(cpu, 1);
-	smp_wmb();
+	smp_wmb();	
 	mb();
 }
 
@@ -93,11 +93,11 @@ void __cpuinit meson_secondary_init(unsigned int cpu)
 	 * for us: do so
 	 */
 //	gic_secondary_init(0);
-#ifdef CONFIG_MESON_ARM_GIC_FIQ
-extern void  init_fiq(void);
+#ifdef CONFIG_MESON_ARM_GIC_FIQ	
+extern void  init_fiq(void);	
 	init_fiq();
-#endif
-
+#endif	
+ 
 	/*
 	 * let the primary processor know we're out of the
 	 * pen, then head off into the C entry point
@@ -121,7 +121,7 @@ int __cpuinit meson_boot_secondary(unsigned int cpu, struct task_struct *idle)
 	* and the secondary one
 	*/
 	spin_lock(&boot_lock);
-
+	 
 	/*
 	 * The secondary processor is waiting to be released from
 	 * the holding pen - release it, then wait for it to flag
@@ -136,7 +136,7 @@ int __cpuinit meson_boot_secondary(unsigned int cpu, struct task_struct *idle)
 			(const uint32_t)virt_to_phys(meson_secondary_startup));
 	meson_set_cpu_power_ctrl(cpu, 1);
 	timeout = jiffies + (10* HZ);
-	while(meson_get_cpu_ctrl_addr(cpu))
+	while(meson_get_cpu_ctrl_addr(cpu));
 	{
 		if(!time_before(jiffies, timeout))
 			return -EPERM;
@@ -303,3 +303,4 @@ int try_exclu_cpu_exe(exl_call_func_t func, void * p_arg)
 	return func(p_arg);
 }
 #endif
+

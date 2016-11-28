@@ -20,29 +20,29 @@
     cpus {
         #address-cells = <1>;
         #size-cells = <0>;
-
+        
         cpu@0 {
-		device_type = "cpu";
-		compatible = "arm,cortex-a9";
-		reg = <0x200>;
+        	device_type = "cpu";
+        	compatible = "arm,cortex-a9";
+        	reg = <0x200>;
         };
         cpu@1 {
-		device_type = "cpu";
-		compatible = "arm,cortex-a9";
-		reg = <0x1>;
+        	device_type = "cpu";
+        	compatible = "arm,cortex-a9";
+        	reg = <0x1>;
         };
         cpu@2 {
-		device_type = "cpu";
-		compatible = "arm,cortex-a9";
-		reg = <0x2>;
+        	device_type = "cpu";
+        	compatible = "arm,cortex-a9";
+        	reg = <0x2>;
         };
         cpu@3 {
-		device_type = "cpu";
-		compatible = "arm,cortex-a9";
-		reg = <0x3>;
+        	device_type = "cpu";
+        	compatible = "arm,cortex-a9";
+        	reg = <0x3>;
         };
     };
-
+    
     cache-controller {
           compatible = "arm,meson-pl310-cache";
           reg = <0xc4200000 0x1000>;
@@ -63,7 +63,7 @@
           prefetch-prefetch_drop;
           prefetch-prefetch_offset = <7>;
     };
-
+	
 	/*start  memory config*/
 	memory{
 		device_type = "memory";
@@ -93,17 +93,17 @@
 		   compatible = "amlogic,ion_dev";
 		   dev_name = "ion_dev";
 	};
-
+	
 	vpu{
 		compatible = "amlogic,vpu";
 		dev_name = "vpu";
-
+		
 		clk_level = <4>;
 		/**    	0: 106.25M		1: 127.5M		2: 159.375M
 				3: 182.15M		4: 212.5M		5: 255M
-			6: 318.75M		7: 364.3M				 */
+		    	6: 318.75M		7: 364.3M				 */
 	};
-
+	
 	mesonfb{
         compatible = "amlogic,mesonfb";
         dev_name = "mesonfb";
@@ -112,7 +112,7 @@
         vmode = <3>; /*0:VMODE_720P 1:VMODE_LCD  2:VMODE_LVDS_1080P 3:VMODE_1080P*/
         display_size_default = <1920 1080 1920 2160 32>;
     };
-
+    
     mesonstream{
 		compatible = "amlogic,mesonstream";
 		dev_name = "mesonstream.0";
@@ -126,7 +126,7 @@
 		irq = <115>;
                 vdin_id = <0>;
 	};
-
+	
     vdin1{
 		compatible = "amlogic,vdin";
 		dev_name = "vdin1";
@@ -142,7 +142,7 @@
     ppmgr{
 		compatible = "amlogic,ppmgr";
 		dev_name = "ppmgr";
-	    reg = <	0x14500000 0x03000000>;
+	    reg = <	0x14500000 0x03000000>;    
     };
 	amvenc_avc{
 		compatible = "amlogic,amvenc_avc";
@@ -159,7 +159,7 @@
 		dev_name = "vm.0";
 		reg = <0x1a600000 0x01000000>;
 	};
-
+	
     mesonvout{
         compatible = "amlogic,mesonvout";
         dev_name = "mesonvout";
@@ -168,7 +168,7 @@
 	rtc{
 		compatible = "amlogic,aml_rtc";
 	};
-
+	
 	uart_ao{
 		compatible = "amlogic,aml_uart";
 		port_name = "uart_ao";
@@ -177,7 +177,7 @@
 		pinctrl-names = "default";
 		pinctrl-0 = <&ao_uart_pins>;
 	};
-
+	
 	uart_0{
 		compatible = "amlogic,aml_uart";
 		port_name = "uart_a";
@@ -186,21 +186,21 @@
 //        pinctrl-names = "default";
 //        pinctrl-0 = <&a_uart_pins>;
 	};
-
+	
 	uart_1{
 		compatible = "amlogic,aml_uart";
 		port_name = "uart_b";
 		status = "disabled";
 		dev_name = "uart_1";
 	};
-
+	
 	uart_2{
 		compatible = "amlogic,aml_uart";
 		port_name = "uart_c";
 		status = "disabled";
 		dev_name = "uart_2";
 	};
-
+	
 	uart_3{
 		compatible = "amlogic,aml_uart";
 		port_name = "uart_d";
@@ -273,7 +273,7 @@
 		pinctrl-1=<&sdhc_c_pins>;
 		pinctrl-2=<&sdhc_a_pins>;
 	};
-
+	
 		aml_cams{
 		compatible = "amlogic,cams_prober";
 		pinctrl-names = "gpio","csi";
@@ -286,7 +286,7 @@
 			gpio_pwdn = "GPIOH_5";
 			gpio_rst = "GPIOH_4";
 			mirror_flip = <0>;
-			vertical_flip = <0>;
+			vertical_flip = <0>;	
       config_path = "/system/etc/myconfig";
 			bt_path = "csi";
 		};
@@ -321,7 +321,7 @@
             irq_in = <3>;
             irq_out = <5>;
         };
-
+    
         emmc{
             port = <2>;          /*0:sdio_a, 1:sdio_b, 2:sdio_c, 3:sdhc_a, 4:sdhc_b, 5:sdhc_c */
             pinname = "emmc";
@@ -333,7 +333,7 @@
             max_req_size = <0x20000>;          /*128KB*/
             gpio_dat3 = "BOOT_3";
         };
-
+    
         // sdio{
             // port = <0>;          /*0:sdio_a, 1:sdio_b, 2:sdio_c, 3:sdhc_a, 4:sdhc_b, 5:sdhc_c */
             // pinname = "sdio";
@@ -345,7 +345,7 @@
             // max_req_size = <0x20000>;          /*128KB*/
         // };
     };
-
+    
     // sdhc{
         // compatible = "amlogic,aml_sdhc";
         // dev_name = "aml_sdhc.0";
@@ -353,7 +353,7 @@
         // pinctrl-names = "sdhc_sd_clk_cmd_pins", "sdhc_sd_all_pins";
         // pinctrl-0 = <&sdhc_sd_clk_cmd_pins>;
         // pinctrl-1 = <&sdhc_sd_all_pins>;
-
+        
         // sd{
             // port = <4>;
             // pinname = "sd";
@@ -371,7 +371,7 @@
 
 	usb_con {
 		lm-compatible = "logicmodule-bus";
-
+					
 		usb_b{
 			lm-compatible = "amlogic,usb";
 			lm-periph-id = <1>; /* lm name */
@@ -404,16 +404,16 @@
 		interface="edp";		/** lcd_interface(mipi, lvds, edp, ttl) */
 		active_area=<197 147>;	/** lcd active_area or display_area horizontal size, vertical size : (unit in mm, you can find them on the home page of lcd spec) */
 		lcd_bits_option=<8 0>;	/** lcd_bits(6,8), bits_option(0 for only support one mode as lcd_bits define, 1 for both support 6/8bit) */
-
+		
 		resolution=<2048 1536>;	/** horizontal resolution, vertical resolution */
 		period=<2219 1560>;		/** horizontal period(htotal), vertical period(vtotal) */
-
+		
 		clock_hz_pol=<207700000 0>;	/** clock_hz(unit in Hz, both support clk and frame_rate, >200 regard as clk, <200 regard as frame_rate), clk_pol(only valid for TTL) */
 		hsync_width_backporch=<5 120>;	/** hsync_width, hsync_backporch(include hsync_width) */
 		vsync_width_backporch=<1 22>;	/** vsync_width, vsync_backporch(include vsync_width) */
 		pol_hsync_vsync=<0 0>;	/** hsync_polarity, vsync_polarity : (0 for negative, 1 for positive) */
 	};
-
+	
 	lcd_B080XAN01:lcd_B080XAN01{	//k101
 		model_name="B080XAN01";	/** lcd model name */
 		interface="mipi";		/** lcd_interface(mipi, lvds, edp, ttl) */
@@ -434,52 +434,52 @@
                 dpi_color_type=<4 0>;
                 refresh_rate =<60 0>;// refresh rate available only for 2560x1600
 	};
-
+	
 	lcd_CLAP070NJ02:lcd_CLAP070NJ02{	//g33
 		model_name="CLAP070NJ02";	/** lcd model name */
 		interface="ttl";			/** lcd_interface(mipi, lvds, edp, ttl) */
 		active_area=<154 86>;		/** lcd active_area or display_area horizontal size, vertical size : (unit in mm, you can find them on the home page of lcd spec) */
 		lcd_bits_option=<8 1>;		/** lcd_bits(6,8), bits_option(0 for only support one mode as lcd_bits define, 1 for both support 6/8bit) */
-
+		
 		resolution=<1024 600>;	/** horizontal resolution, vertical resolution */
 		period=<1344 635>;		/** horizontal period(htotal), vertical period(vtotal) */
-
+		
 		clock_hz_pol=<42700000 0>;	/** clock_hz(unit in Hz, both support clk and frame_rate, >200 regard as clk, <200 regard as frame_rate), clk_pol(only valid for TTL) */
 		hsync_width_backporch=<10 160>;	/** hsync_width, hsync_backporch(include hsync_width) */
 		vsync_width_backporch=<5 23>;	/** vsync_width, vsync_backporch(include vsync_width) */
 		pol_hsync_vsync=<0 0>;	/** hsync_polarity, vsync_polarity : (0 for negative, 1 for positive) */
 	};
-
+	
 	lcd_TN070TN92:lcd_TN070TN92{	//800*480
 		model_name="TN070TN92";	/** lcd model name */
 		interface="ttl";		/** lcd_interface(mipi, lvds, edp, ttl) */
 		active_area=<154 86>;	/** lcd active_area or display_area horizontal size, vertical size : (unit in mm, you can find them on the home page of lcd spec) */
 		lcd_bits_option=<8 1>;	/** lcd_bits(6,8), bits_option(0 for only support one mode as lcd_bits define, 1 for both support 6/8bit) */
-
+		
 		resolution=<800 480>;	/** horizontal resolution, vertical resolution */
 		period=<1056 525>;		/** horizontal period(htotal), vertical period(vtotal) */
-
+		
 		clock_hz_pol=<33300000 0>;	/** clock_hz(unit in Hz, both support clk and frame_rate, >200 regard as clk, <200 regard as frame_rate), clk_pol(only valid for TTL) */
 		hsync_width_backporch=<10 46>;	/** hsync_width, hsync_backporch(include hsync_width) */
 		vsync_width_backporch=<5 23>;	/** vsync_width, vsync_backporch(include vsync_width) */
 		pol_hsync_vsync=<0 0>;	/** hsync_polarity, vsync_polarity : (0 for negative, 1 for positive) */
 	};
-
+	
 	lcd_LP097X02:lcd_LP097X02{	//g24
 		model_name="LP097X02";	/** lcd model name */
 		interface="lvds";		/** lcd_interface(mipi, lvds, edp, ttl) */
 		active_area=<197 147>;	/** lcd active_area or display_area horizontal size, vertical size : (unit in mm, you can find them on the home page of lcd spec) */
 		lcd_bits_option=<6 0>;	/** lcd_bits(6,8), bits_option(0 for only support one mode as lcd_bits define, 1 for both support 6/8bit) */
-
+		
 		resolution=<1024 768>;	/** horizontal resolution, vertical resolution */
 		period=<2084 810>;		/** horizontal period(htotal), vertical period(vtotal) */
-
+		
 		clock_hz_pol=<85700000 0>;	/** clock_hz(unit in Hz, both support clk and frame_rate, >200 regard as clk, <200 regard as frame_rate), clk_pol(only valid for TTL) */
 		hsync_width_backporch=<10 70>;	/** hsync_width, hsync_backporch(include hsync_width) */
 		vsync_width_backporch=<3 30>;	/** vsync_width, vsync_backporch(include vsync_width) */
 		pol_hsync_vsync=<0 0>;	/** hsync_polarity, vsync_polarity : (0 for negative, 1 for positive) */
 	};
-
+	
 	meson-remote{
 		compatible = "amlogic,aml_remote";
 		dev_name = "meson-remote";
@@ -488,8 +488,8 @@
 		pinctrl-0=<&remote_pins>;
 	};
 
-
-
+	
+    
     audio_platform{
         compatible = "amlogic,aml-audio";
         dev_name = "aml-audio.0";
@@ -523,14 +523,14 @@
         pinctrl-names = "aml_snd_m8";
         pinctrl-0 = <&audio_pins>;
         status = "okay";
-
+        
     };
-	gpio_keypad{
-		compatible = "amlogic,gpio_keypad";
-		scan_period = <20>;
-		key_num = <1>;
-		key_name = "power";
-		key_code = <116>;
+	gpio_keypad{        
+		compatible = "amlogic,gpio_keypad";        
+		scan_period = <20>;        
+		key_num = <1>;        
+		key_name = "power";        
+		key_code = <116>;        
 		key_pin = "GPIOAO_3";
 		irq_keyup = <6>;
 		irq_keydown = <7>;
@@ -564,9 +564,9 @@
 		dev_name = "nand";
 		reg = <0xd0048600 0x24>;
 		pinctrl-names = "nand_rb_mod","nand_norb_mod";
-		pinctrl-0 = <&nand_input_state &conf_nand_state &nand_base>;
-		pinctrl-1 = <&nand_input_state &conf_nand_state &nand_base>;
-		device_id = <0>;
+		pinctrl-0 = <&nand_input_state &conf_nand_state &nand_base>; 
+		pinctrl-1 = <&nand_input_state &conf_nand_state &nand_base>;							
+		device_id = <0>;			
 		plat-names = "nandnormal";
 		plat-num = <1>;
 		plat-part-0 = <&normal>;
@@ -575,8 +575,8 @@
 			enable_pad ="ce0","ce1","ce2","ce3";
 			busy_pad = "rb0";
 		};
-
-	};
+				
+	};	
 
 	amhdmitx{
 		compatible = "amlogic,amhdmitx";
@@ -611,7 +611,7 @@
 	//	compatible = "amlogic,crypto-device";
 	//	dev_name = "crypto_device";
 	//};
-
+	
 	gpio:gpio{
 		compatible = "amlogic,m8-gpio";
 		dev_name = "gpio";
@@ -626,7 +626,7 @@
 			amlogic,setmask=<10 0x1800>;
 			amlogic,pins="GPIOAO_0", "GPIOAO_1";
 		};
-
+		
 		/* ao_jtag_uart_pins:ao_jtag_uart{
 			amlogic,setmask=<8 0x600>;
 			// amlogic,clrmask=<2 0x3040 10 0x1800>;
@@ -638,7 +638,7 @@
 			amlogic,clrmask=<8 0x600>;
 			amlogic,pins="GPIOAO_0", "GPIOAO_1";
 		};*/
-
+		
 		nand_input_state:nand_input{
 			amlogic,pins = "BOOT_0","BOOT_1","BOOT_2","BOOT_3","BOOT_4",
 						"BOOT_5","BOOT_6","BOOT_7","BOOT_12","BOOT_13",
@@ -656,7 +656,7 @@
 					 9 0x37c>;
 			amlogic,pins = "GPIOH_9","GPIOY_6","GPIOY_7","GPIOY_8","GPIOY_9","GPIOY_10","GPIOY_11","GPIOY_12","GPIOY_13","GPIOY_14";
 		};
-
+		
 		aml_cam_csi_pins: aml_cam_csi_pins{
 			amlogic,setmask=<3 0x80000>;
 			amlogic,pins = "GPIOH_9";
@@ -706,14 +706,14 @@
 						"BOOT_10","BOOT_12","BOOT_13",
 						"BOOT_14","BOOT_15","BOOT_16","BOOT_17";
 		};
-
+		
 		sdhc_b_pins:sdhc_b_pin{
 			amlogic,setmask=<2 0xfc00>;
 			amlogic,clrmask=<2 0xf0 8 0x600>;
 			amlogic,pins="CARD_0","CARD_1","CARD_2","CARD_3","CARD_4","CARD_5";
-		//amlogic,enable-output=<1>; /* 0:output, 1:input */
-		//amlogic,pullup=<1>;
-			//amlogic,pullupen=<1>;
+      		//amlogic,enable-output=<1>; /* 0:output, 1:input */
+      		//amlogic,pullup=<1>;
+			//amlogic,pullupen=<1>;			
 		};
 		sdhc_c_pins:sdhc_c_pin{
 			amlogic,setmask=<6 0x3f000000>;
@@ -840,10 +840,11 @@
 			amlogic,clrmask=<2 0x380000>;
 			amlogic,pins = "BOOT_11","BOOT_12","BOOT_13","BOOT_18";
 		};
-	};
+   	};
 
     saradc{
         compatible = "amlogic,saradc";
     };
 
 }; /* end of / */
+

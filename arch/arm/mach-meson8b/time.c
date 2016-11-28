@@ -18,7 +18,6 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 #include <linux/kernel.h>
-#include <linux/device.h>
 #include <linux/init.h>
 #include <linux/interrupt.h>
 #include <linux/irq.h>
@@ -27,7 +26,6 @@
 #include <linux/clockchips.h>
 #include <linux/clocksource.h>
 #include <linux/delay.h>
-#include <linux/stat.h>
 #include <asm/memory.h>
 #include <asm/mach/map.h>
 #include <asm/mach/time.h>
@@ -125,7 +123,7 @@ struct meson_clock {
 	struct clock_event_device	clockevent;
 	struct irqaction	irq;
 	const char * name;	/*A,B,C,D,F,G,H,I*/
-	int	bit_enable;
+	int	bit_enable;	
 	int 	bit_mode;
 	int	bit_resolution;
 	unsigned int	mux_reg;
@@ -183,7 +181,7 @@ static struct meson_clock meson_timer_a = {
 static struct meson_clock meson_timer_f = {
         .clockevent={
             .name           = "MESON TIMER-F",
-            .rating         = 300,
+            .rating         = 300, 
 
             .features       = CLOCK_EVT_FEAT_PERIODIC | CLOCK_EVT_FEAT_ONESHOT,
             .shift          = 20,
@@ -233,7 +231,7 @@ static struct meson_clock meson_timer_b = {
 static struct meson_clock meson_timer_g = {
         .clockevent={
             .name           = "MESON TIMER-G",
-            .rating         = 300,
+            .rating         = 300, 
 
             .features       = CLOCK_EVT_FEAT_PERIODIC | CLOCK_EVT_FEAT_ONESHOT,
             .shift          = 20,
@@ -283,7 +281,7 @@ static struct meson_clock meson_timer_c = {
 static struct meson_clock meson_timer_h = {
         .clockevent={
             .name           = "MESON TIMER-H",
-            .rating         = 300,
+            .rating         = 300, 
 
             .features       = CLOCK_EVT_FEAT_PERIODIC | CLOCK_EVT_FEAT_ONESHOT,
             .shift          = 20,
@@ -333,7 +331,7 @@ static struct meson_clock meson_timer_d = {
 static struct meson_clock meson_timer_i = {
         .clockevent={
             .name           = "MESON TIMER-I",
-            .rating         = 300,
+            .rating         = 300, 
 
             .features       = CLOCK_EVT_FEAT_PERIODIC | CLOCK_EVT_FEAT_ONESHOT,
             .shift          = 20,
@@ -433,9 +431,9 @@ static void __init meson_timer_setup(struct clock_event_device *evt, struct meso
      * Enable Timer and setting the time base;
      */
     aml_set_reg32_mask(clk->mux_reg,
-		((1 << clk->bit_enable)
-		|(1 << clk->bit_mode)
-		|(TIMER_RESOLUTION_1us << clk->bit_resolution)) );
+    		((1 << clk->bit_enable)
+    		|(1 << clk->bit_mode)
+    		|(TIMER_RESOLUTION_1us << clk->bit_resolution)) );
     aml_write_reg32(clk->reg, 9999);
     meson_timer_init_device(&clk->clockevent);
     printk(KERN_ERR"Global timer: %s (%p) initialized\n",clk->clockevent.name,clk);
@@ -463,7 +461,7 @@ int  __cpuinit meson_local_timer_setup(struct clock_event_device *evt)
 	int cpu;
 	struct meson_clock * clk;
 	struct clock_event_device * meson_evt;
-
+	
 	if(!evt){
 		printk(KERN_ERR"meson_local_timer_setup: null evt!\n");
 		return -EINVAL;
@@ -472,15 +470,15 @@ int  __cpuinit meson_local_timer_setup(struct clock_event_device *evt)
 	cpu = smp_processor_id();
 	if(cpu == 0)
 		return 0;
-
+	
 	clk = meson8_smp_local_timer[cpu];
-
+	
 	aml_set_reg32_mask(clk->mux_reg,
 		((1 << clk->bit_enable)
 		|(1 << clk->bit_mode)
 		|(TIMER_RESOLUTION_1us << clk->bit_resolution)) );
 	aml_write_reg32(clk->reg, 9999);
-
+	
 	meson_timer_init_device(&(clk->clockevent));
 	//printk(KERN_ERR"Local timer: %s (%p) for CPU%d initialized\n",
 	//	clk->clockevent.name,clk,cpu);
@@ -500,13 +498,13 @@ int  __cpuinit meson_local_timer_setup(struct clock_event_device *evt)
 	clk->irq.dev_id=evt;
 
 	clockevents_register_device(evt);
-
+		
 	if(cpu){
 		irq_set_affinity(clk->irq.irq, cpumask_of(cpu));
 	}
 	/* Set up the IRQ handler */
 	enable_percpu_irq(clk->irq.irq, 0);
-
+	
 	return 0;
 }
 void  __cpuinit meson_local_timer_stop(struct clock_event_device *evt)
@@ -585,28 +583,3 @@ void __init meson_timer_init(void)
 	register_current_timer_delay(&aml_delay_timer);
 }
 
-#define ADD_CLOCKSOURCE_SYSFS
-#ifdef ADD_CLOCKSOURCE_SYSFS
-static ssize_t timere_show(struct class *cla, struct class_attribute *attr, char *buf)
-{
-	return sprintf(buf, "%u\n", aml_read_reg32(P_ISA_TIMERE));
-}
-
-static struct class_attribute clocksource_class_attrs[] = {
-	__ATTR(timere, S_IRUGO, timere_show, NULL),
-	__ATTR_NULL,
-};
-
-static struct class clocksource_class = {
-	.name = "clocksource",
-	.class_attrs = clocksource_class_attrs,
-};
-
-static int __init clocksource_sysfs_init(void)
-{
-	class_register(&clocksource_class);
-	return 0;
-}
-
-core_initcall(clocksource_sysfs_init);
-#endif //ADD_CLOCKSOURCE_SYSFS

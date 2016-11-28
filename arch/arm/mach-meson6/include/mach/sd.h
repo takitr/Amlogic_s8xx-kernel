@@ -211,7 +211,7 @@ struct amlsd_host {
     u32			opcode; // add by gch for debug
 	u32			arg; // add by gch for debug
     u32         cmd25_cnt;
-
+    
 #ifdef      CONFIG_MMC_AML_DEBUG
     u32         req_cnt;
     u32         trans_size;
@@ -219,7 +219,7 @@ struct amlsd_host {
     u32         reg_buf[16];
 #endif
     u32         time_req_sta; // request start time
-
+    
     struct pinctrl *pinctrl;
     char pinctrl_name[30];
 
@@ -659,3 +659,4 @@ extern struct mmc_host *sdio_host;
 }while(0)
 
 #endif
+

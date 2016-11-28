@@ -7,7 +7,7 @@
  * License terms: GNU General Public License (GPL) version 2
  * Platform machine definition.
  */
-
+ 
 #include <linux/module.h>
 #include <linux/platform_device.h>
 #include <linux/delay.h>
@@ -41,12 +41,12 @@ static void bt_device_init(struct bt_dev_data *pdata)
 {
     if(pdata->gpio_reset > 0 ) {
         amlogic_gpio_request(pdata->gpio_reset, BT_RFKILL);
-    }
-
+    }    
+        
     if(pdata->gpio_en > 0 ) {
         amlogic_gpio_request(pdata->gpio_en, BT_RFKILL);
     }
-
+        
     if(pdata->gpio_wake > 0 ) {
         amlogic_gpio_request(pdata->gpio_wake, BT_RFKILL);
         amlogic_gpio_direction_output(pdata->gpio_wake, 1, BT_RFKILL);
@@ -58,25 +58,25 @@ static void bt_device_deinit(struct bt_dev_data *pdata)
 {
       if(pdata->gpio_reset > 0 )
         amlogic_gpio_free(pdata->gpio_reset, BT_RFKILL);
-
+        
     if(pdata->gpio_en > 0 )
         amlogic_gpio_free(pdata->gpio_en, BT_RFKILL);
-
-    if(pdata->gpio_wake > 0 )
-        amlogic_gpio_free(pdata->gpio_wake, BT_RFKILL);
+        
+    if(pdata->gpio_wake > 0 ) 
+        amlogic_gpio_free(pdata->gpio_wake, BT_RFKILL);     
 }
 
 static void bt_device_on(struct bt_dev_data *pdata)
-{
+{	
 	if(pdata->gpio_reset > 0 )
 	    amlogic_gpio_direction_output(pdata->gpio_reset, 0, BT_RFKILL);
 	if(pdata->gpio_en > 0 )
-	    amlogic_gpio_direction_output(pdata->gpio_en, 0, BT_RFKILL);
-	msleep(20);
+	    amlogic_gpio_direction_output(pdata->gpio_en, 0, BT_RFKILL);	
+	msleep(20);	
 	if(pdata->gpio_reset > 0 )
 	    amlogic_gpio_direction_output(pdata->gpio_reset, 1, BT_RFKILL);
 	if(pdata->gpio_en > 0 )
-	    amlogic_gpio_direction_output(pdata->gpio_en, 1, BT_RFKILL);
+	    amlogic_gpio_direction_output(pdata->gpio_en, 1, BT_RFKILL);	
 	msleep(20);
 }
 
@@ -86,7 +86,7 @@ static void bt_device_off(struct bt_dev_data *pdata)
 	    amlogic_gpio_direction_output(pdata->gpio_reset, 0, BT_RFKILL);
 	if(pdata->gpio_en > 0 )
 	    amlogic_gpio_direction_output(pdata->gpio_en, 0, BT_RFKILL);
-	msleep(20);
+	msleep(20);	
 }
 
 static int bt_set_block(void *data, bool blocked)
@@ -107,8 +107,8 @@ static int bt_set_block(void *data, bool blocked)
 static const struct rfkill_ops bt_rfkill_ops = {
 	.set_block = bt_set_block,
 };
-#ifdef CONFIG_HAS_EARLYSUSPEND
-static void bt_earlysuspend(struct early_suspend *h)
+#ifdef CONFIG_HAS_EARLYSUSPEND 
+static void bt_earlysuspend(struct early_suspend *h)                                               
 {
 
     return;
@@ -121,7 +121,7 @@ static void bt_lateresume(struct early_suspend *h)
 }
 #endif
 
-static int bt_suspend(struct platform_device *pdev, pm_message_t state)
+static int bt_suspend(struct platform_device *pdev, pm_message_t state)                                               
 {
 
     return 0;
@@ -144,7 +144,7 @@ static int bt_probe(struct platform_device *pdev)
 	//plat = aml_get_driver_data(pdev);
 	if (pdev->dev.of_node) {
 	    const char *str;
-
+	    
 	    printk(KERN_DEBUG "enter bt_probe of_node\n");
 	    pdata = kzalloc(sizeof(struct bt_dev_data), GFP_KERNEL);
 		ret = of_property_read_string(pdev->dev.of_node,"gpio_reset",&str);
@@ -154,7 +154,7 @@ static int bt_probe(struct platform_device *pdev)
 		} else {
 		    pdata->gpio_reset = amlogic_gpio_name_map_num(str);
 		}
-
+		
         ret = of_property_read_string(pdev->dev.of_node,"gpio_en",&str);
 		if(ret){
 			printk(KERN_WARNING "not get gpio_en\n");
@@ -162,7 +162,7 @@ static int bt_probe(struct platform_device *pdev)
 		} else {
 		    pdata->gpio_en = amlogic_gpio_name_map_num(str);
 		}
-
+		
 		ret = of_property_read_string(pdev->dev.of_node,"gpio_wake",&str);
 		if(ret){
 			printk(KERN_WARNING "not get gpio_wake\n");
@@ -174,15 +174,15 @@ static int bt_probe(struct platform_device *pdev)
 #else
     pdata = (struct bt_dev_data *)(pdev->dev.platform_data);
 #endif
-
+    
     bt_device_init(pdata);
     /* default to bluetooth off */
     //rfkill_switch_all(RFKILL_TYPE_BLUETOOTH, 1);
     bt_device_off(pdata);
-
+    
 	bt_rfk = rfkill_alloc("bt-dev", &pdev->dev, RFKILL_TYPE_BLUETOOTH,
 			&bt_rfkill_ops, pdata);
-
+						   
 	if (!bt_rfk) {
         printk("rfk alloc fail\n");
 		ret = -ENOMEM;
@@ -205,11 +205,11 @@ static int bt_probe(struct platform_device *pdev)
     wifi_request_32k_clk(1, BT_RFKILL);
     msleep(100);
 #endif
-
+    
     prdata->bt_rfk = bt_rfk;
     prdata->pdata = pdata;
 	platform_set_drvdata(pdev, prdata);
-#ifdef CONFIG_HAS_EARLYSUSPEND
+#ifdef CONFIG_HAS_EARLYSUSPEND                                                                                        
         bt_early_suspend.level = EARLY_SUSPEND_LEVEL_DISABLE_FB;
         bt_early_suspend.suspend = bt_earlysuspend;
         bt_early_suspend.resume = bt_lateresume;
@@ -217,16 +217,14 @@ static int bt_probe(struct platform_device *pdev)
         register_early_suspend(&bt_early_suspend);
 #endif
 
-        bt_device_on(pdata);
-
-	return 0;
-
+	return 0;	
+	
 err_rfkill:
 	rfkill_destroy(bt_rfk);
 err_rfk_alloc:
     bt_device_deinit(pdata);
 	return ret;
-
+	
 }
 
 static int bt_remove(struct platform_device *pdev)

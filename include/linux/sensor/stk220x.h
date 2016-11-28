@@ -69,7 +69,7 @@ struct stkals_data {
     struct work_struct work;
     int32_t irq;
 	uint8_t enable_als_irq;
-#else
+#else	
 	uint8_t bThreadRunning;
 #endif	//#ifdef CONFIG_STK220X_INT_MODE
 	int32_t als_lux_last;
@@ -82,6 +82,6 @@ struct stk220x_platform_data {
 	uint8_t als_cmd;
 	int 	int_pin;
 };
-
+	
 
 #endif /*__STK_I2C_ALS220XGENERIC_H*/

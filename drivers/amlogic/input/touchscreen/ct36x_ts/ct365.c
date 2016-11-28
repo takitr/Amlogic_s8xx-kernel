@@ -98,7 +98,7 @@ static int ct36x_chip_set_code(unsigned int flash_addr, unsigned char *buf)
 
 	// Fill firmware source data
 	//if ( (sec == 1 && cod == 4) || (sec == 1 && cod == 5) ) {
-	//if ( flash_addr == (CT36X_CHIP_FLASH_SECTOR_SIZE + 32) ||
+	//if ( flash_addr == (CT36X_CHIP_FLASH_SECTOR_SIZE + 32) || 
 	//flash_addr == (CT36X_CHIP_FLASH_SECTOR_SIZE + 40) ) {
 	if ( flash_addr == (160) || flash_addr == (168) ) {
 		buf[6] = ~binary_data[flash_addr + 0];
@@ -119,8 +119,8 @@ static int ct36x_chip_set_code(unsigned int flash_addr, unsigned char *buf)
 		buf[12] = binary_data[flash_addr + 6];
 		buf[13] = binary_data[flash_addr + 7];
 	}
-
-	/* Calculate a checksum by Host controller.
+			
+	/* Calculate a checksum by Host controller. 
 	** Checksum =  ~(FLASH_ADRH+FLASH_ADRL+LENGTH+
 	** Binary_Data1+Binary_Data2+Binary_Data3+Binary_Data4+
 	** Binary_Data5+Binary_Data6+Binary_Data7+Binary_Data8) + 1
@@ -163,7 +163,7 @@ static int ct36x_chip_write_firmware(struct i2c_client *client, unsigned char *b
 			// Write firmware source data
 			ct36x_ts_reg_write(client, 0x7F, buf, 14);
 
-			//
+			// 
 			mdelay(1);
 
 			// Increase flash address 8bytes for each write command
@@ -255,7 +255,7 @@ static int ct36x_chip_write_infoblk(struct i2c_client *client)
 	buf[6] = 0x17;
 	else
 	buf[6] = 0x00;
-
+	
 	buf[7] = 0x00;
 	buf[8] = 0x00;
 	buf[9] = 0x00;
@@ -265,7 +265,7 @@ static int ct36x_chip_write_infoblk(struct i2c_client *client)
 	buf[13] = 0x00;
 
 	buf[5] = (~(buf[2]+buf[3]+buf[4]+buf[6]+buf[7]+buf[8]+buf[9]+buf[10]+buf[11]+buf[12]+buf[13]))+1;
-
+		
 	ct36x_ts_reg_write(client, 0x7F, buf, 14);
 	mdelay(10);
 

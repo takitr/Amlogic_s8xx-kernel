@@ -37,3 +37,4 @@ int sii_get_pwr5v_status(void);
 int sii_get_audio_sampling_freq(void);
 
 #endif
+

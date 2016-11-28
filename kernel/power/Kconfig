@@ -20,10 +20,10 @@ config SUSPEND_FREEZER
 
 config HAS_WAKELOCK
 	bool
-
+	
 config HAS_EARLYSUSPEND
 	bool
-
+	
 config WAKELOCK
 	bool "Wake lock"
 	depends on PM && RTC_CLASS
@@ -32,14 +32,14 @@ config WAKELOCK
 	---help---
 	  Enable wakelocks. When user space request a sleep state the
 	  sleep request will be delayed until no wake locks are held.
-
-config WAKELOCK_STAT
-	bool "Wake lock stats"
-	depends on WAKELOCK
-	default y
-	---help---
+	
+config WAKELOCK_STAT	
+	bool "Wake lock stats"	
+	depends on WAKELOCK	
+	default y	
+	---help---	  
 		Report wake lock stats in /proc/wakelocks
-
+		
 config USER_WAKELOCK
 	bool "Userspace wake locks"
 	depends on WAKELOCK
@@ -49,24 +49,16 @@ config USER_WAKELOCK
 	  to /sys/power/wake_lock lock and if needed create a wake lock.
 	  Write "lockname" to /sys/power/wake_unlock to unlock a user wake
 	  lock.
-
-config EARLYSUSPEND
-	bool "Early suspend"
-	depends on WAKELOCK
-	default y
-	select HAS_EARLYSUSPEND
-	---help---
-		Call early suspend handlers when the user requested sleep state
+	  
+config EARLYSUSPEND	
+	bool "Early suspend"	
+	depends on WAKELOCK	
+	default y	
+	select HAS_EARLYSUSPEND	
+	---help---	  
+		Call early suspend handlers when the user requested sleep state	  
 		changes.
-
-config FORCE_POWER_ON_STATE_AFTER_RESUME
-	bool "Force to request the Power ON state after a resume"
-	depends on WAKELOCK && EARLYSUSPEND
-	default n
-	help
-	  Force to request the Power ON state after a resume, causing to execute the late resume
-	  and prevent transition back into the suspended state.
-
+		
 choice
 	prompt "User-space screen access"
 	default FB_EARLYSUSPEND if !FRAMEBUFFER_CONSOLE
@@ -356,8 +348,3 @@ config SUSPEND_TIME
 	  Prints the time spent in suspend in the kernel log, and
 	  keeps statistics on the time spent in suspend in
 	  /sys/kernel/debug/suspend_time
-
-config MK_SNAPSHOT_ONLY
-	bool "make the snapshot image only"
-	depends on HIBERNATION
-	default n

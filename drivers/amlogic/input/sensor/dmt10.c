@@ -71,7 +71,7 @@ static int device_i2c_rxdata(struct i2c_client *client, unsigned char *buffer, i
 static int device_i2c_txdata(struct i2c_client *client, unsigned char *txData, int length);
 
 static int DMT_GetOpenStatus(void)
-{
+{	
 	dmtprintk(KERN_INFO "start active=%d\n",devdata.active.counter);
 	wait_event_interruptible(devdata.open_wq, (atomic_read(&devdata.active) != 0));
 	return 0;
@@ -96,7 +96,7 @@ static void DMT_sysfs_update_active_status(int en)
 		dmtprintk(KERN_INFO "schedule_delayed_work start with delay time=%lu\n",dmt_delay);
 		schedule_delayed_work(&devdata.delaywork,dmt_delay);
 	}
-	else
+	else 
 		cancel_delayed_work_sync(&devdata.delaywork);
 }
 
@@ -163,8 +163,8 @@ static ssize_t DMT_enable_acc_show(struct device *dev, struct device_attribute *
 {
 	char str[2][16]={"ACC enable OFF","ACC enable ON"};
 	int flag;
-	flag=atomic_read(&devdata.enable);
-
+	flag=atomic_read(&devdata.enable); 
+	
 	return sprintf(buf, "%s\n", str[flag]);
 }
 
@@ -206,14 +206,14 @@ static int create_device_attributes(struct device *dev,	struct device_attribute 
 {
 	int i;
 	int err = 0;
-	for (i = 0 ; NULL != attrs[i].attr.name ; ++i)
+	for (i = 0 ; NULL != attrs[i].attr.name ; ++i) 
 	{
 		err = device_create_file(dev, &attrs[i]);
 		if (0 != err)
 			break;
 	}
 
-	if (0 != err)
+	if (0 != err) 
 	{
 		for (; i >= 0 ; --i)
 			device_remove_file(dev, &attrs[i]);
@@ -256,99 +256,99 @@ int input_init(void)
 /*
 int gsensor_read_accel_avg(raw_data *avg_p )
 {
-	long xyz_acc[SENSOR_DATA_SIZE];
-	s16 xyz[SENSOR_DATA_SIZE];
-	int i, j;
-
+   	long xyz_acc[SENSOR_DATA_SIZE];   
+  	s16 xyz[SENSOR_DATA_SIZE];
+  	int i, j;
+	
 	//initialize the accumulation buffer
-	for(i = 0; i < SENSOR_DATA_SIZE; ++i)
+  	for(i = 0; i < SENSOR_DATA_SIZE; ++i) 
 		xyz_acc[i] = 0;
 
-	for(i = 0; i < AVG_NUM; i++)
-	{
+	for(i = 0; i < AVG_NUM; i++) 
+	{      
 		device_i2c_read_xyz(devdata.client, (s16 *)&xyz);
-		for(j = 0; j < SENSOR_DATA_SIZE; ++j)
+		for(j = 0; j < SENSOR_DATA_SIZE; ++j) 
 			xyz_acc[j] += xyz[j];
-	}
+  	}
 
 	// calculate averages
-	for(i = 0; i < SENSOR_DATA_SIZE; ++i)
+  	for(i = 0; i < SENSOR_DATA_SIZE; ++i) 
 		avg_p->v[i] = (s16) (xyz_acc[i] / AVG_NUM);
-
+		
 	if(avg_p->v[2] < 0)
 		return CONFIG_GSEN_CALIBRATION_GRAVITY_ON_Z_NEGATIVE;
 	else
 		return CONFIG_GSEN_CALIBRATION_GRAVITY_ON_Z_POSITIVE;
 }
-// calc delta offset
+// calc delta offset 
 int gsensor_calculate_offset(int gAxis,raw_data avg)
 {
 	switch(gAxis)
 	{
-		case CONFIG_GSEN_CALIBRATION_GRAVITY_ON_Z_NEGATIVE:
-			offset.u.x =  avg.u.x ;
+		case CONFIG_GSEN_CALIBRATION_GRAVITY_ON_Z_NEGATIVE:  
+			offset.u.x =  avg.u.x ;    
 			offset.u.y =  avg.u.y ;
 			offset.u.z =  avg.u.z + DEFAULT_SENSITIVITY;
 		  break;
-		case CONFIG_GSEN_CALIBRATION_GRAVITY_ON_X_POSITIVE:
-			offset.u.x =  avg.u.x + DEFAULT_SENSITIVITY;
+		case CONFIG_GSEN_CALIBRATION_GRAVITY_ON_X_POSITIVE:  
+			offset.u.x =  avg.u.x + DEFAULT_SENSITIVITY;    
 			offset.u.y =  avg.u.y ;
 			offset.u.z =  avg.u.z ;
 		  break;
-		case CONFIG_GSEN_CALIBRATION_GRAVITY_ON_Z_POSITIVE:
-			offset.u.x =  avg.u.x ;
+		case CONFIG_GSEN_CALIBRATION_GRAVITY_ON_Z_POSITIVE:  
+			offset.u.x =  avg.u.x ;    
 			offset.u.y =  avg.u.y ;
 			offset.u.z =  avg.u.z - DEFAULT_SENSITIVITY;
 		  break;
-		case CONFIG_GSEN_CALIBRATION_GRAVITY_ON_X_NEGATIVE:
-			offset.u.x =  avg.u.x - DEFAULT_SENSITIVITY;
+		case CONFIG_GSEN_CALIBRATION_GRAVITY_ON_X_NEGATIVE:  
+			offset.u.x =  avg.u.x - DEFAULT_SENSITIVITY;    
 			offset.u.y =  avg.u.y ;
 			offset.u.z =  avg.u.z ;
 		  break;
 		case CONFIG_GSEN_CALIBRATION_GRAVITY_ON_Y_NEGATIVE:
-			offset.u.x =  avg.u.x ;
+			offset.u.x =  avg.u.x ;    
 			offset.u.y =  avg.u.y + DEFAULT_SENSITIVITY;
 			offset.u.z =  avg.u.z ;
 		  break;
-		case CONFIG_GSEN_CALIBRATION_GRAVITY_ON_Y_POSITIVE:
-			offset.u.x =  avg.u.x ;
+		case CONFIG_GSEN_CALIBRATION_GRAVITY_ON_Y_POSITIVE: 
+			offset.u.x =  avg.u.x ;    
 			offset.u.y =  avg.u.y - DEFAULT_SENSITIVITY;
 			offset.u.z =  avg.u.z ;
 		  break;
-		default:
+		default:  
 			return -ENOTTY;
 	}
 	return 0;
 }
 */
 int gsensor_calibrate(void)
-{
+{	
 	raw_data avg;
 	int i, j;
-	long xyz_acc[SENSOR_DATA_SIZE];
-	s16 xyz[SENSOR_DATA_SIZE];
-
+	long xyz_acc[SENSOR_DATA_SIZE];   
+  	s16 xyz[SENSOR_DATA_SIZE];
+		
 	/* initialize the accumulation buffer */
-	for(i = 0; i < SENSOR_DATA_SIZE; ++i)
+  	for(i = 0; i < SENSOR_DATA_SIZE; ++i) 
 		xyz_acc[i] = 0;
 
-	for(i = 0; i < AVG_NUM; i++) {
+	for(i = 0; i < AVG_NUM; i++) {      
 		device_i2c_read_xyz(devdata.client, (s16 *)&xyz);
-		for(j = 0; j < SENSOR_DATA_SIZE; ++j)
+		for(j = 0; j < SENSOR_DATA_SIZE; ++j) 
 			xyz_acc[j] += xyz[j];
-	}
+  	}
 	/* calculate averages */
-	for(i = 0; i < SENSOR_DATA_SIZE; ++i)
+  	for(i = 0; i < SENSOR_DATA_SIZE; ++i) 
 		avg.v[i] = (s16) (xyz_acc[i] / AVG_NUM);
-
+		
 	if(avg.v[2] < 0){
-		offset.u.x =  avg.v[0] ;
+		offset.u.x =  avg.v[0] ;    
 		offset.u.y =  avg.v[1] ;
 		offset.u.z =  avg.v[2] + DEFAULT_SENSITIVITY;
 		return CONFIG_GSEN_CALIBRATION_GRAVITY_ON_Z_POSITIVE;
 	}
-	else{
-		offset.u.x =  avg.v[0] ;
+	else{	
+		offset.u.x =  avg.v[0] ;    
 		offset.u.y =  avg.v[1] ;
 		offset.u.z =  avg.v[2] - DEFAULT_SENSITIVITY;
 		return CONFIG_GSEN_CALIBRATION_GRAVITY_ON_Z_NEGATIVE;
@@ -363,14 +363,14 @@ int gsensor_reset(struct i2c_client *client)
 	/* 1. check D10 , VALUE_STADR = 0x55 , VALUE_STAINT = 0xAA */
 	buffer[0] = REG_STADR;
 	buffer2[0] = REG_STAINT;
-
+	
     err = device_i2c_rxdata(client, buffer, 2);
     if(err)
             return -1;
     err = device_i2c_rxdata(client, buffer2, 2);
     if(err)
             return -1;
-
+ 
 
 
 	if( buffer[0] == VALUE_STADR || buffer2[0] == VALUE_STAINT)
@@ -381,7 +381,7 @@ int gsensor_reset(struct i2c_client *client)
 	}
 	else
 	{
-		dmtprintk(KERN_INFO " %s gsensor I2C err @@@ REG_STADR_VALUE = %d , REG_STAINT_VALUE = %d \n",
+		dmtprintk(KERN_INFO " %s gsensor I2C err @@@ REG_STADR_VALUE = %d , REG_STAINT_VALUE = %d \n", 
 						__func__, buffer[0], buffer2[0]);
 		devdata.client = NULL;
 		return -1;
@@ -404,9 +404,9 @@ int gsensor_reset(struct i2c_client *client)
 	device_i2c_txdata(client, buffer, 2);
 	/* 5. AFEN = 1(AFE will powerdown after ADC) */
 	buffer[0] = REG_AFEM;
-	buffer[1] = VALUE_AFEM_AFEN_Normal;
-	buffer[2] = VALUE_CKSEL_ODR_100;
-	buffer[3] = VALUE_INTC;
+	buffer[1] = VALUE_AFEM_AFEN_Normal;	
+	buffer[2] = VALUE_CKSEL_ODR_100;	
+	buffer[3] = VALUE_INTC;	
 	buffer[4] = VALUE_TAPNS_Ave_2;
 	buffer[5] = 0x00;	// DLYC, no delay timing
 	buffer[6] = 0x07;	// INTD=1 (push-pull), INTA=1 (active high), AUTOT=1 (enable T)
@@ -425,7 +425,7 @@ void gsensor_set_offset(int val[3])
 		offset.v[i] = (s16) val[i];
 }
 
-struct file_operations dmt_g_sensor_fops =
+struct file_operations dmt_g_sensor_fops = 
 {
 	.owner = THIS_MODULE,
 	//.read = device_read,
@@ -436,12 +436,12 @@ struct file_operations dmt_g_sensor_fops =
 };
 
 static int sensor_close_dev(struct i2c_client *client)
-{
+{    	
 	char buffer[3];
 	buffer[0] = REG_ACTR;
 	buffer[1] = MODE_Standby;
 	buffer[2] = MODE_Off;
-	printk("%s\n",__FUNCTION__);
+	printk("%s\n",__FUNCTION__);	
 	return device_i2c_txdata(client,buffer, 3);
 }
 
@@ -464,12 +464,12 @@ static int device_i2c_remove(struct i2c_client *client)
 
 static const struct i2c_device_id device_i2c_ids[] = {
 	{DEVICE_I2C_NAME, 0},
-	{}
+	{}   
 };
 
 MODULE_DEVICE_TABLE(i2c, device_i2c_ids);
 
-static struct i2c_driver device_i2c_driver =
+static struct i2c_driver device_i2c_driver = 
 {
 	.driver	= {
 		.owner = THIS_MODULE,
@@ -482,13 +482,13 @@ static struct i2c_driver device_i2c_driver =
 #ifndef CONFIG_ANDROID_POWER
 	.suspend = device_i2c_suspend,
 	.resume	= device_i2c_resume,
-#endif
-
+#endif	
+	
 };
 
 static int device_open(struct inode *inode, struct file *filp)
 {
-	return 0;
+	return 0; 
 }
 /*
 static ssize_t device_write(struct file *filp, const char *buf, size_t count, loff_t *f_pos)
@@ -502,13 +502,13 @@ static ssize_t device_read(struct file *filp, char *buf, size_t count, loff_t *f
 	int i;
 
 	device_i2c_read_xyz(devdata.client, (s16 *)&xyz);
-	//offset compensation
+	//offset compensation 
 	for(i = 0; i < SENSOR_DATA_SIZE; i++)
 		xyz[i] -= offset.v[i];
-
-	if(copy_to_user(buf, &xyz, count))
+	
+	if(copy_to_user(buf, &xyz, count)) 
 		return -EFAULT;
-
+		
 	return count;
 }
 */
@@ -526,8 +526,8 @@ static long device_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
 	else if (_IOC_DIR(cmd) & _IOC_WRITE)
 		err =  !access_ok(VERIFY_READ, (void __user *)arg, _IOC_SIZE(cmd));
 	if (err) return -EFAULT;
-
-	switch(cmd)
+	
+	switch(cmd) 
 	{
 		case SENSOR_RESET:
 			gsensor_reset(devdata.client);
@@ -540,16 +540,16 @@ static long device_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
 			dmtprintk("Sensor_calibration:%d %d %d\n",offset.u.x,offset.u.y,offset.u.z);
 			// save file
 			gsensor_write_offset_to_file();
-
+			
 			// return the offset
 			for(i = 0; i < SENSOR_DATA_SIZE; ++i)
 				intBuf[i] = offset.v[i];
 
 			ret = copy_to_user((int *)arg, &intBuf, sizeof(intBuf));
 			return ret;
-
+		
 		case SENSOR_GET_OFFSET:
-			// get data from file
+			// get data from file 
 			gsensor_read_offset_from_file();
 			for(i = 0; i < SENSOR_DATA_SIZE; ++i)
 				intBuf[i] = offset.v[i];
@@ -563,19 +563,19 @@ static long device_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
 			// write in to file
 			gsensor_write_offset_to_file();
 			return ret;
-
+		
 		case SENSOR_READ_ACCEL_XYZ:
 			device_i2c_read_xyz(devdata.client, (s16 *)&xyz);
 			for(i = 0; i < SENSOR_DATA_SIZE; ++i)
 				intBuf[i] = xyz[i] - offset.v[i];
-
-			ret = copy_to_user((int*)arg, &intBuf, sizeof(intBuf));
+			
+		  	ret = copy_to_user((int*)arg, &intBuf, sizeof(intBuf));
 			//PRINT_X_Y_Z(intBuf[0], intBuf[1], intBuf[2]);
 			return ret;
 		case SENSOR_SETYPR:
-			if(copy_from_user(&intBuf, (int*)arg, sizeof(intBuf)))
+			if(copy_from_user(&intBuf, (int*)arg, sizeof(intBuf))) 
 			{
-				dmtprintk("%s:copy_from_user(&intBuf, (int*)arg, sizeof(intBuf)) ERROR, -EFAULT\n",__func__);
+				dmtprintk("%s:copy_from_user(&intBuf, (int*)arg, sizeof(intBuf)) ERROR, -EFAULT\n",__func__);			
 				return -EFAULT;
 			}
             aml_sensor_report_acc(devdata.client, devdata.input, intBuf[0], intBuf[1], intBuf[2]);
@@ -589,22 +589,22 @@ static long device_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
 			break;
 		case SENSOR_GET_CLOSE_STATUS:
 			dmtprintk(KERN_INFO "%s:Going into DMT_GetCloseStatus()\n",__func__);
-			DMT_GetCloseStatus();
+			DMT_GetCloseStatus();	
 			dmtprintk(KERN_INFO "%s:DMT_GetCloseStatus() finished\n",__func__);
 			return 1;
-			break;
+			break;		
 		case SENSOR_GET_DELAY:
-			ret = copy_to_user((int*)arg, &interval, sizeof(interval));
+		  	ret = copy_to_user((int*)arg, &interval, sizeof(interval));
 			return 1;
 			break;
-
+		
 		default:  /* redundant, as cmd was checked against MAXNR */
 			return -ENOTTY;
 	}
-
+	
 	return 0;
 }
-
+	
 static int device_close(struct inode *inode, struct file *filp)
 {
 	return 0;
@@ -613,9 +613,9 @@ static int device_close(struct inode *inode, struct file *filp)
 /***** I2C I/O function ***********************************************/
 static int device_i2c_rxdata( struct i2c_client *client, unsigned char *rxData, int length)
 {
-	struct i2c_msg msgs[] =
+	struct i2c_msg msgs[] = 
 	{
-		{.addr = client->addr, .flags = 0, .len = 1, .buf = rxData,},
+		{.addr = client->addr, .flags = 0, .len = 1, .buf = rxData,}, 
 		{.addr = client->addr, .flags = I2C_M_RD, .len = length, .buf = rxData,},
 	};
 	//unsigned char addr = rxData[0];
@@ -631,9 +631,9 @@ static int device_i2c_rxdata( struct i2c_client *client, unsigned char *rxData, 
 
 static int device_i2c_txdata( struct i2c_client *client, unsigned char *txData, int length)
 {
-	struct i2c_msg msg[] =
+	struct i2c_msg msg[] = 
 	{
-		{.addr = client->addr, .flags = 0, .len = length, .buf = txData,},
+		{.addr = client->addr, .flags = 0, .len = length, .buf = txData,}, 
 	};
 
 	if (i2c_transfer(client->adapter, msg, 1) < 0) {
@@ -652,18 +652,18 @@ static inline void device_i2c_correct_accel_sign(s16 *val)
 
 void device_i2c_merge_register_values(struct i2c_client *client, s16 *val, u8 msb, u8 lsb)
 {
-	*val = (((u16)msb) << 8) | (u16)lsb;
+	*val = (((u16)msb) << 8) | (u16)lsb; 
 	device_i2c_correct_accel_sign(val);
 }
 
 void device_i2c_read_xyz(struct i2c_client *client, s16 *xyz_p)
-{
+{	
 	u8 buffer[11];
 	int i;
 	/* get xyz high/low bytes, 0x12 */
 	buffer[0] = REG_STADR;
 	device_i2c_rxdata(client, buffer, 10);
-
+    
 	/* merge to 10-bits value */
 	for(i = 0; i < SENSOR_DATA_SIZE; ++i){
 		xyz_p[i] = 0;
@@ -678,26 +678,26 @@ static void DMT_work_func(struct work_struct *fakework)
 	int i;
 	static int firsttime=0;
 	s16 xyz[SENSOR_DATA_SIZE];
-
+	
 	unsigned long t=atomic_read(&devdata.delay);
-	unsigned long dmt_delay = msecs_to_jiffies(t);
+  	unsigned long dmt_delay = msecs_to_jiffies(t);
 	if(!firsttime)
 	{
-		gsensor_read_offset_from_file();
-		firsttime=1;
+		gsensor_read_offset_from_file();	
+	 	firsttime=1;
 	}
-
+	
 	dmtprintk(KERN_INFO "t=%lu , dmt_delay=%lu\n", t, dmt_delay);
-	device_i2c_read_xyz(devdata.client, (s16 *)&xyz);
-	for(i = 0; i < SENSOR_DATA_SIZE; ++i)
-		xyz[i] -= offset.v[i];
+  	device_i2c_read_xyz(devdata.client, (s16 *)&xyz);
+  	for(i = 0; i < SENSOR_DATA_SIZE; ++i)
+     		xyz[i] -= offset.v[i];
 
 	PRINT_X_Y_Z(xyz[0], xyz[1], xyz[2]);
 	PRINT_X_Y_Z(offset.u.x, offset.u.y, offset.u.z);
 
 
 	aml_sensor_report_acc(devdata.client, devdata.input, xyz[0], xyz[1], xyz[2]);
-
+		
 	if(dmt_delay<1)
 		dmt_delay=1;
 	schedule_delayed_work(&devdata.delaywork, dmt_delay);
@@ -709,33 +709,33 @@ static int device_i2c_probe(struct i2c_client *client,const struct i2c_device_id
 
     struct device *device;
     int ret = 0;
-    int err=-1;
+    int err=-1;     
     printk("*******d10-i2c_probe E\n");
 
 	for(i = 0; i < SENSOR_DATA_SIZE; ++i)
 		offset.v[i] = 0;
 	if(!i2c_check_functionality(client->adapter, I2C_FUNC_I2C))
 	{
-		dmtprintk(KERN_INFO "%s, functionality check failed\n", __func__);
+  		dmtprintk(KERN_INFO "%s, functionality check failed\n", __func__);
 		return -1;
-	}
+  	}
 
     ret = gsensor_reset(client);
     if(ret)
           return -1;
 
 	ret = alloc_chrdev_region(&devdata.devno, 0, 1, GSENSOR_DEVICE_NAME);
-	if(ret)
+  	if(ret)
 	{
 		dmtprintk(KERN_INFO "%s, can't allocate chrdev\n", __func__);
 		return ret;
 	}
 	dmtprintk(KERN_INFO "%s, register chrdev(%d, %d)\n", __func__, MAJOR(devdata.devno), MINOR(devdata.devno));
-
-	cdev_init(&devdata.cdev, &dmt_g_sensor_fops);
+	
+	cdev_init(&devdata.cdev, &dmt_g_sensor_fops);  
 	devdata.cdev.owner = THIS_MODULE;
-	ret = cdev_add(&devdata.cdev, devdata.devno, 1);
-	if(ret < 0)
+  	ret = cdev_add(&devdata.cdev, devdata.devno, 1);
+  	if(ret < 0)
 	{
 		dmtprintk(KERN_INFO "%s, add character device error, ret %d\n", __func__, ret);
 		return ret;
@@ -745,9 +745,9 @@ static int device_i2c_probe(struct i2c_client *client,const struct i2c_device_id
 	devdata.class = class_create(THIS_MODULE, ACCELEMETER_CLASS_NAME);
 	if(IS_ERR(devdata.class))
 	{
-		dmtprintk(KERN_INFO "%s, create class, error\n", __func__);
+   		dmtprintk(KERN_INFO "%s, create class, error\n", __func__);
 		return ret;
-	}
+  	}
 
 	device=device_create(devdata.class, NULL, devdata.devno, NULL, GSENSOR_DEVICE_NAME);
 
@@ -810,7 +810,7 @@ void gsensor_write_offset_to_file(void)
 	{
 		dmtprintk(KERN_INFO "filp_open %s SUCCESS!!.\n",OffsetFileName);
 		fp->f_op->write(fp,data,18, &fp->f_pos);
-		filp_close(fp,NULL);
+ 		filp_close(fp,NULL);
 	}
 
 	set_fs(orgfs);

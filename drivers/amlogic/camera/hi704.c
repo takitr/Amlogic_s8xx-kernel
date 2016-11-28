@@ -167,7 +167,7 @@ static struct v4l2_queryctrl HI704_qctrl[] = {
 		.step		= 90,
 		.default_value	= 0,
 		.flags         = V4L2_CTRL_FLAG_SLIDER,
-	}
+ 	}
 };
 
 static struct v4l2_frmivalenum hi704_frmivalenum[]={
@@ -316,7 +316,7 @@ struct HI704_device {
 
 	/* platform device data from board initting. */
 	aml_cam_info_t cam_info;
-
+	
 	/* wake lock */
 	struct wake_lock	wake_lock;
 
@@ -395,8 +395,8 @@ static struct v4l2_frmsize_discrete HI704_pic_resolution[]=
 	{0x41, 0x58},
 	{0x42, 0x00},//vblank
 	{0x43, 0x14},
-
-
+		
+	            
 	//BLC
 	{0x80, 0x2e},
 	{0x81, 0x7e},
@@ -407,7 +407,7 @@ static struct v4l2_frmsize_discrete HI704_pic_resolution[]=
 	{0x89, 0x48},
 
 	{0x90, 0x0b},
-	{0x91, 0x0b},
+	{0x91, 0x0b},    
 	{0x92, 0x48},
 	{0x93, 0x48},
 	{0x98, 0x38},
@@ -417,7 +417,7 @@ static struct v4l2_frmsize_discrete HI704_pic_resolution[]=
 
 	//PAGE 2
 	//Analog Circuit
-	{0x03, 0x02},
+	{0x03, 0x02},      
 	{0x13, 0x40},
 	{0x14, 0x04},
 	{0x1a, 0x00},
@@ -426,7 +426,7 @@ static struct v4l2_frmsize_discrete HI704_pic_resolution[]=
 	{0x20, 0x33},
 	{0x21, 0xaa},
 	{0x22, 0xa7},
-	{0x23, 0x32},       //For Sun Pot b1->32
+	{0x23, 0x32},       //For Sun Pot b1->32 
 
 	{0x3b, 0x48},
 
@@ -438,7 +438,7 @@ static struct v4l2_frmsize_discrete HI704_pic_resolution[]=
 	{0x56, 0x0c},
 	{0x59, 0x0F},
 
-	{0x60, 0xca}, // 54-ca
+	{0x60, 0xca}, // 54-ca 
 	{0x61, 0xdb},
 	{0x62, 0xca},
 	{0x63, 0xda},
@@ -501,7 +501,7 @@ static struct v4l2_frmsize_discrete HI704_pic_resolution[]=
 	{0x48, 0x88},
 
 	{0x50, 0x42},
-
+	   
 	{0x60, 0x7f},
 	{0x61, 0x00},
 	{0x62, 0x8e}, // sat blue
@@ -513,21 +513,21 @@ static struct v4l2_frmsize_discrete HI704_pic_resolution[]=
 	//PAGE 11
 	//Z-LPF
 	{0x03, 0x11},
-	{0x10, 0x25},
-	{0x11, 0x1f},
+	{0x10, 0x25},   
+	{0x11, 0x1f},   
 
-	{0x20, 0x00},
-	{0x21, 0x38},
+	{0x20, 0x00},   
+	{0x21, 0x38},   
 	{0x23, 0x0a},
 
-	{0x60, 0x10},
+	{0x60, 0x10},   
 	{0x61, 0x82},
-	{0x62, 0x00},
-	{0x63, 0x83},
-	{0x64, 0x83},
-	{0x67, 0xF0},
-	{0x68, 0x30},
-	{0x69, 0x10},
+	{0x62, 0x00},   
+	{0x63, 0x83},   
+	{0x64, 0x83},      
+	{0x67, 0xF0},   
+	{0x68, 0x30},   
+	{0x69, 0x10},   
 
 	//PAGE 12
 	//2D
@@ -555,10 +555,10 @@ static struct v4l2_frmsize_discrete HI704_pic_resolution[]=
 	//PAGE 13
 	//Edge Enhancement
 	{0x03, 0x13},
-	{0x10, 0x01},
-	{0x11, 0x89},
-	{0x12, 0x14},
-	{0x13, 0x19},
+	{0x10, 0x01},   
+	{0x11, 0x89},   
+	{0x12, 0x14},   
+	{0x13, 0x19},   
 	{0x14, 0x08},
 
 	{0x20, 0x05},
@@ -610,14 +610,14 @@ static struct v4l2_frmsize_discrete HI704_pic_resolution[]=
 	{0x23, 0x4d},
 	{0x24, 0x46},
 
-	//PAGE 15
+	//PAGE 15 
 	//Color Correction
-	{0x03, 0x15},
-	{0x10, 0x03},
+	{0x03, 0x15}, 
+	{0x10, 0x03},         
 	{0x14, 0x3c},
 	{0x16, 0x2c},
 	{0x17, 0x2f},
-
+	  
 	{0x30, 0xcb},
 	{0x31, 0x61},
 	{0x32, 0x16},
@@ -627,7 +627,7 @@ static struct v4l2_frmsize_discrete HI704_pic_resolution[]=
 	{0x36, 0x01},
 	{0x37, 0x34},
 	{0x38, 0x75},
-
+	   
 	{0x40, 0x87},
 	{0x41, 0x18},
 	{0x42, 0x91},
@@ -640,7 +640,7 @@ static struct v4l2_frmsize_discrete HI704_pic_resolution[]=
 
 	//PAGE 16
 	//Gamma Correction
-	{0x03,  0x16},
+	{0x03,  0x16},        
 	{0x30,  0x00},
 	{0x31,  0x0a},
 	{0x32,  0x1b},
@@ -657,27 +657,27 @@ static struct v4l2_frmsize_discrete HI704_pic_resolution[]=
 	{0x3d,  0xf5},
 	{0x3e,  0xff},
 
-	//PAGE 17
-	//Auto Flicker Cancellation
+	//PAGE 17 
+	//Auto Flicker Cancellation 
 	{0x03, 0x17},
 
 	{0xc4, 0x3c},
 	{0xc5, 0x32},
 
-	//PAGE 20
-	//AE
+	//PAGE 20 
+	//AE 
 	{0x03, 0x20},
 
 	{0x10, 0x0c},
 	{0x11, 0x04},
-
+	   
 	{0x20, 0x01},
 	{0x28, 0x27},
-	{0x29, 0xa1},
+	{0x29, 0xa1},   
 	{0x2a, 0xf0},
 	{0x2b, 0x34},
 	{0x2c, 0x2b},
-
+	   
 	{0x30, 0xf8},
 	{0x39, 0x22},
 	{0x3a, 0xde},
@@ -690,40 +690,40 @@ static struct v4l2_frmsize_discrete HI704_pic_resolution[]=
 	{0x6A, 0x28},
 	{0x6B, 0xc8},
 
-	{0x70, 0x42},   //For Y decay
+	{0x70, 0x42},   //For Y decay   
 	{0x76, 0x22},
-	{0x77, 0x02},
+	{0x77, 0x02},   
 	{0x78, 0x12},
 	{0x79, 0x27},
-	{0x7a, 0x23},
+	{0x7a, 0x23},  
 	{0x7c, 0x1d},
 	{0x7d, 0x22},
 
 	{0x83, 0x00},
 	{0x84, 0xaf},
-	{0x85, 0xc8},
+	{0x85, 0xc8}, 
 
 	{0x86, 0x00},
 	{0x87, 0xfa},
 
 	{0x88, 0x03}, // 7fps
 	{0x89, 0x34},
-	{0x8a, 0x50},
+	{0x8a, 0x50},    
 
 	{0x8b, 0x3a},
-	{0x8c, 0x98},
+	{0x8c, 0x98},  
 
 	{0x8d, 0x30},
 	{0x8e, 0xd4},
 
 	{0x91, 0x02},
 	{0x92, 0xdc},
-	{0x93, 0x6c},
+	{0x93, 0x6c},   
 	{0x94, 0x01},
 	{0x95, 0xb7},
-	{0x96, 0x74},
+	{0x96, 0x74},   
 	{0x98, 0x8C},
-	{0x99, 0x23},
+	{0x99, 0x23},  
 
 	{0x9c, 0x06},   //For Y decay: Exposure Time
 	{0x9d, 0xd6},   //For Y decay: Exposure Time
@@ -745,16 +745,16 @@ static struct v4l2_frmsize_discrete HI704_pic_resolution[]=
 
 	{0xc0, 0x16},   //0x1a->0x16
 	{0xc3, 0x48},
-	{0xc4, 0x48},
+	{0xc4, 0x48}, 
 
-	//PAGE 22
+	//PAGE 22 
 	//AWB
 	{0x03, 0x22},
 	{0x10, 0xe2},
 	{0x11, 0x26},
-	{0x20, 0x34},
+	{0x20, 0x34},   
 	{0x21, 0x40},
-
+	   
 	{0x30, 0x80},
 	{0x31, 0x80},
 	{0x38, 0x12},
@@ -767,7 +767,7 @@ static struct v4l2_frmsize_discrete HI704_pic_resolution[]=
 	{0x44, 0x55}, //88
 	{0x45, 0x44}, //66
 	{0x46, 0x02},
-
+	   
 	{0x80, 0x3a},
 	{0x81, 0x20},
 	{0x82, 0x40},
@@ -781,7 +781,7 @@ static struct v4l2_frmsize_discrete HI704_pic_resolution[]=
 	{0x8a, 0x29},
 	{0x8b, 0x02},
 	{0x8d, 0x22},
-	{0x8e, 0x71},
+	{0x8e, 0x71},  
 	{0x8f, 0x63},
 
 	{0x90, 0x60},
@@ -820,16 +820,16 @@ void HI704_init_regs(struct HI704_device *dev)
 
 	buf[0] = i2c_get_byte_add8(client, 0x04);
 	printk("#####[%s(%d)]:buf[0] = 0x%x\n", __FUNCTION__, __LINE__, buf[0]);
-
+	
 	while(1) {
 		buf[0] = HI704_script[i].addr;//(unsigned char)((HI704_script[i].addr >> 8) & 0xff);
 		//buf[1] = (unsigned char)(HI704_script[i].addr & 0xff);
 		buf[1] = HI704_script[i].val;
-
+		
 		if (HI704_script[i].val==0xff&&HI704_script[i].addr==0xff) {
 			printk("HI704_write_regs success in initial HI704.\n");
 			break;
-		}
+	 	}
 		if((i2c_put_byte_add8(client,buf, 2)) < 0) {
 			printk("fail in initial HI704. \n");
 			return;
@@ -877,7 +877,7 @@ void set_HI704_param_wb(struct HI704_device *dev,enum  camera_wb_flip_e para)
 	//temp_reg=i2c_get_byte_add8(client,buf);
 
 	printk(" camera set_HI704_param_wb=%d. \n ",para);
-
+	
 	#if 1
 	switch (para) {
 	case CAM_WB_AUTO:
@@ -904,23 +904,23 @@ void set_HI704_param_wb(struct HI704_device *dev,enum  camera_wb_flip_e para)
 				i++;
 			}
 		}
-
+		
 		break;
 
 	case CAM_WB_CLOUD:
 		{
 			struct aml_camera_i2c_fig_s regs[]=
 				{
-					{0x03, 0x22},
+					{0x03, 0x22},  									   
 					{0x10, 0x6a},
 					{0x80, 0x50},
-					{0x81, 0x20},
-					{0x82, 0x24},
+					{0x81, 0x20}, 
+					{0x82, 0x24}, 
 					{0x83, 0x6d},
-					{0x84, 0x65},
-					{0x85, 0x24},
-					{0x86, 0x1c},
-					{0xff, 0xff}
+					{0x84, 0x65}, 
+					{0x85, 0x24}, 
+					{0x86, 0x1c},   
+					{0xff, 0xff}    
 				};
 				i=0;
 			while (regs[i].addr!= 0xff && regs[i].val!= 0xff)
@@ -931,23 +931,23 @@ void set_HI704_param_wb(struct HI704_device *dev,enum  camera_wb_flip_e para)
 				i++;
 			}
 		}
-
+		
 		break;
 
-	case CAM_WB_DAYLIGHT:
+	case CAM_WB_DAYLIGHT:   
 		{
 			struct aml_camera_i2c_fig_s regs[]=
 				{
-					{0x03, 0x22},
+					{0x03, 0x22},  									   
 					{0x10, 0x6a},
 					{0x80, 0x40},
-					{0x81, 0x20},
-					{0x82, 0x28},
+					{0x81, 0x20}, 
+					{0x82, 0x28}, 
 					{0x83, 0x45},
-					{0x84, 0x35},
-					{0x85, 0x2d},
-					{0x86, 0x1c},
-					{0xff, 0xff}
+					{0x84, 0x35}, 
+					{0x85, 0x2d}, 
+					{0x86, 0x1c},   
+					{0xff, 0xff}    
 				};
 				i=0;
 			while (regs[i].addr!= 0xff && regs[i].val!= 0xff)
@@ -959,23 +959,23 @@ void set_HI704_param_wb(struct HI704_device *dev,enum  camera_wb_flip_e para)
 			}
 		}
 
-
+		
 		break;
 
 	case CAM_WB_INCANDESCENCE:   // bai re guang
 		{
 			struct aml_camera_i2c_fig_s regs[]=
 				{
-					{0x03, 0x22},
+					{0x03, 0x22},									   
 					{0x10, 0x6a},
 					{0x80, 0x35},
-					{0x81, 0x20},
-					{0x82, 0x32},
+					{0x81, 0x20}, 
+					{0x82, 0x32}, 
 					{0x83, 0x3c},
-					{0x84, 0x2c},
-					{0x85, 0x45},
-					{0x86, 0x35},
-					{0xff, 0xff}
+					{0x84, 0x2c}, 
+					{0x85, 0x45}, 
+					{0x86, 0x35}, 
+					{0xff, 0xff}    
 				};
 				i=0;
 			while (regs[i].addr!= 0xff && regs[i].val!= 0xff)
@@ -988,20 +988,20 @@ void set_HI704_param_wb(struct HI704_device *dev,enum  camera_wb_flip_e para)
 		}
 		break;
 
-	case CAM_WB_FLUORESCENT:
+	case CAM_WB_FLUORESCENT:  
 		{
 			struct aml_camera_i2c_fig_s regs[]=
 				{
-					{0x03, 0x22},
+					{0x03, 0x22}, 									   
 					{0x10, 0x6a},
 					{0x80, 0x23},
-					{0x81, 0x20},
-					{0x82, 0x3d},
+					{0x81, 0x20}, 
+					{0x82, 0x3d}, 
 					{0x83, 0x2e},
-					{0x84, 0x24},
-					{0x85, 0x43},
-					{0x86, 0x3d},
-					{0xff, 0xff}
+					{0x84, 0x24}, 
+					{0x85, 0x43}, 
+					{0x86, 0x3d},   
+					{0xff, 0xff}    
 				};
 				i=0;
 			while (regs[i].addr!= 0xff && regs[i].val!= 0xff)
@@ -1014,20 +1014,20 @@ void set_HI704_param_wb(struct HI704_device *dev,enum  camera_wb_flip_e para)
 		}
 		break;
 
-	case CAM_WB_TUNGSTEN:
+	case CAM_WB_TUNGSTEN:   
 		{
 			struct aml_camera_i2c_fig_s regs[]=
 				{
-					{0x03, 0x22},  		//U30
+					{0x03, 0x22},  		//U30							   
 					{0x10, 0x6a},
 					{0x80, 0x58},
-					{0x81, 0x10},
-					{0x82, 0x70},
+					{0x81, 0x10}, 
+					{0x82, 0x70}, 
 					{0x83, 0x58},
-					{0x84, 0x10},
-					{0x85, 0x70},
-					{0x86, 0x10},
-					{0xff, 0xff}
+					{0x84, 0x10}, 
+					{0x85, 0x70}, 
+					{0x86, 0x10},   
+					{0xff, 0xff}  
 				};
 				i=0;
 			while (regs[i].addr!= 0xff && regs[i].val!= 0xff)
@@ -1079,27 +1079,27 @@ void HI704_night_mode(struct HI704_device *dev,enum  camera_night_mode_flip_e en
 	//temp_reg=0xff;
 	#if 1
 	if (enable) {
-
+		
 		struct aml_camera_i2c_fig_s regs[]=
 			{
 			       {0x03, 0x20}, //Page 20
-				{0x83, 0x04}, //EXP Normal 5.00 fps
-				{0x84, 0x93},
-				{0x85, 0xe0},
+				{0x83, 0x04}, //EXP Normal 5.00 fps 
+				{0x84, 0x93}, 
+				{0x85, 0xe0}, 
 				{0x86, 0x00}, //EXPMin 6000.00 fps
-				{0x87, 0xfa},
-				{0x88, 0x04}, //EXP Max 5.00 fps
-				{0x89, 0x93},
-				{0x8a, 0xe0},
-				{0x8B, 0x3a}, //EXP100
-				{0x8C, 0x98},
-				{0x8D, 0x30}, //EXP120
-				{0x8E, 0xd4},
-				{0x9c, 0x08}, //EXP Limit 666.67 fps
-				{0x9d, 0xca},
-				{0x9e, 0x00}, //EXP Unit
-				{0x9f, 0xfa},
-
+				{0x87, 0xfa}, 
+				{0x88, 0x04}, //EXP Max 5.00 fps 
+				{0x89, 0x93}, 
+				{0x8a, 0xe0}, 
+				{0x8B, 0x3a}, //EXP100 
+				{0x8C, 0x98}, 
+				{0x8D, 0x30}, //EXP120 
+				{0x8E, 0xd4}, 
+				{0x9c, 0x08}, //EXP Limit 666.67 fps 
+				{0x9d, 0xca}, 
+				{0x9e, 0x00}, //EXP Unit 
+				{0x9f, 0xfa}, 
+		
 				{0xff , 0xff},
 			};
 		i=0;
@@ -1112,26 +1112,26 @@ void HI704_night_mode(struct HI704_device *dev,enum  camera_night_mode_flip_e en
 
 
 	} else {
-
+		
 		struct aml_camera_i2c_fig_s regs[]=
 			{
 				{0x03, 0x20}, //Page 20
-				{0x83, 0x00}, //EXP Normal 33.33 fps
-				{0x84, 0xaf},
-				{0x85, 0xc8},
+				{0x83, 0x00}, //EXP Normal 33.33 fps 
+				{0x84, 0xaf}, 
+				{0x85, 0xc8}, 
 				{0x86, 0x00}, //EXPMin 6000.00 fps
-				{0x87, 0xfa},
-				{0x88, 0x03}, //EXP Max 7.14 fps
-				{0x89, 0x34},
-				{0x8a, 0x50},
-				{0x8B, 0x3a}, //EXP100
-				{0x8C, 0x98},
-				{0x8D, 0x30}, //EXP120
-				{0x8E, 0xd4},
-				{0x9c, 0x08}, //EXP Limit 666.67 fps
-				{0x9d, 0xca},
-				{0x9e, 0x00}, //EXP Unit
-				{0x9f, 0xfa},
+				{0x87, 0xfa}, 
+				{0x88, 0x03}, //EXP Max 7.14 fps 
+				{0x89, 0x34}, 
+				{0x8a, 0x50}, 
+				{0x8B, 0x3a}, //EXP100 
+				{0x8C, 0x98}, 
+				{0x8D, 0x30}, //EXP120 
+				{0x8E, 0xd4}, 
+				{0x9c, 0x08}, //EXP Limit 666.67 fps 
+				{0x9d, 0xca}, 
+				{0x9e, 0x00}, //EXP Unit 
+				{0x9f, 0xfa}, 
 				{0xff , 0xff},
 			};
 		i=0;
@@ -1163,23 +1163,23 @@ void HI704_night_mode(struct HI704_device *dev,enum  camera_night_mode_flip_e en
 struct aml_camera_i2c_fig_s regs60hz[]=
 {
 	{0x03, 0x20}, //Page 20
-	{0x10, 0x8c},
-	{0x83, 0x00}, //EXP Normal 30.00 fps
-	{0x84, 0xc3},
-	{0x85, 0x50},
+	{0x10, 0x8c}, 
+	{0x83, 0x00}, //EXP Normal 30.00 fps 
+	{0x84, 0xc3}, 
+	{0x85, 0x50}, 
 	{0x86, 0x00}, //EXPMin 6000.00 fps
-	{0x87, 0xfa},
-	{0x88, 0x03}, //EXP Max 7.06 fps
-	{0x89, 0x3e},
-	{0x8a, 0x14},
-	{0x8B, 0x3a}, //EXP100
-	{0x8C, 0x98},
-	{0x8D, 0x30}, //EXP120
-	{0x8E, 0xd4},
-	{0x9c, 0x08}, //EXP Limit 666.67 fps
-	{0x9d, 0xca},
-	{0x9e, 0x00}, //EXP Unit
-	{0x9f, 0xfa},
+	{0x87, 0xfa}, 
+	{0x88, 0x03}, //EXP Max 7.06 fps 
+	{0x89, 0x3e}, 
+	{0x8a, 0x14}, 
+	{0x8B, 0x3a}, //EXP100 
+	{0x8C, 0x98}, 
+	{0x8D, 0x30}, //EXP120 
+	{0x8E, 0xd4}, 
+	{0x9c, 0x08}, //EXP Limit 666.67 fps 
+	{0x9d, 0xca}, 
+	{0x9e, 0x00}, //EXP Unit 
+	{0x9f, 0xfa}, 
 
 	{0xff , 0xff},
 };
@@ -1188,22 +1188,22 @@ struct aml_camera_i2c_fig_s regs50hz[]=
 {
 	{0x03, 0x20}, //Page 20
 	{0x10, 0x9c},
-	{0x83, 0x00}, //EXP Normal 33.33 fps
-	{0x84, 0xaf},
-	{0x85, 0xc8},
+	{0x83, 0x00}, //EXP Normal 33.33 fps 
+	{0x84, 0xaf}, 
+	{0x85, 0xc8}, 
 	{0x86, 0x00}, //EXPMin 6000.00 fps
-	{0x87, 0xfa},
-	{0x88, 0x03}, //EXP Max 7.14 fps
-	{0x89, 0x34},
-	{0x8a, 0x50},
-	{0x8B, 0x3a}, //EXP100
-	{0x8C, 0x98},
-	{0x8D, 0x30}, //EXP120
-	{0x8E, 0xd4},
-	{0x9c, 0x08}, //EXP Limit 666.67 fps
-	{0x9d, 0xca},
-	{0x9e, 0x00}, //EXP Unit
-	{0x9f, 0xfa},
+	{0x87, 0xfa}, 
+	{0x88, 0x03}, //EXP Max 7.14 fps 
+	{0x89, 0x34}, 
+	{0x8a, 0x50}, 
+	{0x8B, 0x3a}, //EXP100 
+	{0x8C, 0x98}, 
+	{0x8D, 0x30}, //EXP120 
+	{0x8E, 0xd4}, 
+	{0x9c, 0x08}, //EXP Limit 666.67 fps 
+	{0x9d, 0xca}, 
+	{0x9e, 0x00}, //EXP Unit 
+	{0x9f, 0xfa}, 
 
 	{0xff , 0xff},
 };
@@ -1363,11 +1363,11 @@ void set_HI704_param_effect(struct HI704_device *dev,enum camera_effect_flip_e p
 				{
 					{0x03,0x10},
 					{0x11,0x43},
-					{0x12,0X30},
-					{0x13,0x00},
-					{0x44,0x80},
-					{0x45,0x80},
-					{0x47,0x7f},
+					{0x12,0X30},                           
+					{0x13,0x00},                            
+					{0x44,0x80},                                        
+					{0x45,0x80},                                    
+					{0x47,0x7f}, 
 					{0xff,0xff},
 				};
 				i=0;
@@ -1403,8 +1403,8 @@ void set_HI704_param_effect(struct HI704_device *dev,enum camera_effect_flip_e p
 				i++;
 			}
 		}
-
-
+	    
+	  
 
 		break;
 	case CAM_EFFECT_ENC_SEPIA:
@@ -1450,7 +1450,7 @@ void set_HI704_param_effect(struct HI704_device *dev,enum camera_effect_flip_e p
 				i++;
 			}
 		}
-
+		
 		break;
 	case CAM_EFFECT_ENC_SEPIAGREEN:
 		{
@@ -1567,43 +1567,43 @@ static int HI704_setting(struct HI704_device *dev,int PROP_ID,int value )
 			HI704_qctrl[0].default_value=value;
 			set_HI704_param_wb(dev,value);
 			printk(KERN_INFO " set camera  white_balance=%d. \n ",value);
-		}
+        	}
 		break;
 	case V4L2_CID_EXPOSURE:
 		if(HI704_qctrl[1].default_value!=value){
 			HI704_qctrl[1].default_value=value;
 		      set_HI704_param_exposure(dev,value);
 			printk(KERN_INFO " set camera  exposure=%d. \n ",value);
-		}
+        	}
 		break;
 	case V4L2_CID_COLORFX:
 		if(HI704_qctrl[2].default_value!=value){
 			HI704_qctrl[2].default_value=value;
 			set_HI704_param_effect(dev,value);
 			printk(KERN_INFO " set camera  effect=%d. \n ",value);
-		}
+        	}
 		break;
 	case V4L2_CID_WHITENESS:
 		 if(HI704_qctrl[3].default_value!=value){
 			HI704_qctrl[3].default_value=value;
 			HI704_set_param_banding(dev,value);
 			printk(KERN_INFO " set camera  banding=%d. \n ",value);
-		}
+        	}
 	case V4L2_CID_BLUE_BALANCE:
 		if(HI704_qctrl[4].default_value!=value){
 			HI704_qctrl[4].default_value=value;
 			HI704_night_mode(dev,value);
 			printk(KERN_INFO " set camera  scene mode=%d. \n ",value);
-		}
+        	}
 		break;
-	case V4L2_CID_HFLIP:    /* set flip on H. */
+	case V4L2_CID_HFLIP:    /* set flip on H. */          
 		value = value & 0x3;
 		if(HI704_qctrl[5].default_value!=value){
 			HI704_qctrl[5].default_value=value;
 			printk(" set camera  h filp =%d. \n ",value);
 		}
 		break;
-	case V4L2_CID_VFLIP:    /* set flip on V. */
+	case V4L2_CID_VFLIP:    /* set flip on V. */         
 		break;
 	case V4L2_CID_ZOOM_ABSOLUTE:
 		if(HI704_qctrl[7].default_value!=value){
@@ -1950,10 +1950,10 @@ static int vidioc_enum_frameintervals(struct file *file, void *priv,
 					struct v4l2_frmivalenum *fival)
 {
 	unsigned int k;
-
+	
 	if(fival->index > ARRAY_SIZE(hi704_frmivalenum))
 		return -EINVAL;
-
+	
 	for(k =0; k< ARRAY_SIZE(hi704_frmivalenum); k++)
 	{
 		if( (fival->index==hi704_frmivalenum[k].index)&&
@@ -1964,7 +1964,7 @@ static int vidioc_enum_frameintervals(struct file *file, void *priv,
 			return 0;
 		}
 	}
-
+	
 	return -EINVAL;
 }
 
@@ -1991,14 +1991,14 @@ static int vidioc_g_parm(struct file *file, void *priv,
 	struct HI704_fh *fh = priv;
 	struct HI704_device *dev = fh->dev;
 	struct v4l2_captureparm *cp = &parms->parm.capture;
-
+	
 	dprintk(dev,3,"vidioc_g_parm\n");
 	if (parms->type != V4L2_BUF_TYPE_VIDEO_CAPTURE)
 		return -EINVAL;
-
+	
 	memset(cp, 0, sizeof(struct v4l2_captureparm));
 	cp->capability = V4L2_CAP_TIMEPERFRAME;
-
+	
 	cp->timeperframe = hi704_frmintervals_active;
 	printk("g_parm,deno=%d, numerator=%d\n", cp->timeperframe.denominator,
 	cp->timeperframe.numerator );
@@ -2158,11 +2158,11 @@ static int vidioc_streamon(struct file *file, void *priv, enum v4l2_buf_type i)
 	para.h_active = 640;//640
 	para.v_active = 480;//480
 	para.hsync_phase = 1;//0
-	para.vsync_phase  = 1;//1
+	para.vsync_phase  = 1;//1	
 	para.hs_bp = 0;
 	para.vs_bp = 2;
 	para.cfmt = TVIN_YUV422;
-	para.scan_mode = TVIN_SCAN_MODE_PROGRESSIVE;
+	para.scan_mode = TVIN_SCAN_MODE_PROGRESSIVE;	
 	para.skip_count =  2;//skip num
 	para.bt_path = dev->cam_info.bt_path;
 	ret =  videobuf_streamon(&fh->vb_vidq);
@@ -2335,13 +2335,13 @@ static int HI704_open(struct file *file)
     if(retval <0)
         return -1;
 #endif
-
+	
 #if MESON_CPU_TYPE >= MESON_CPU_TYPE_MESON6
 	switch_mod_gate_by_name("ge2d", 1);
-#endif
+#endif	
 
 	aml_cam_init(&dev->cam_info);
-
+	
 	HI704_init_regs(dev);
 	msleep(100);//40
 	mutex_lock(&dev->mutex);
@@ -2356,7 +2356,7 @@ static int HI704_open(struct file *file)
 		video_device_node_name(dev->vdev),
 		v4l2_type_names[V4L2_BUF_TYPE_VIDEO_CAPTURE], dev->users);
 
-	/* init video dma queues */
+    	/* init video dma queues */
 	INIT_LIST_HEAD(&dev->vidq.active);
 	init_waitqueue_head(&dev->vidq.wq);
 	spin_lock_init(&dev->slock);
@@ -2454,7 +2454,7 @@ static int HI704_close(struct file *file)
 	HI704_qctrl[2].default_value=0;
 	HI704_qctrl[3].default_value=0;
 	HI704_qctrl[4].default_value=0;
-
+	
 	HI704_qctrl[5].default_value=0;
 	HI704_qctrl[7].default_value=100;
 	HI704_qctrl[8].default_value=0;
@@ -2464,7 +2464,7 @@ static int HI704_close(struct file *file)
 	aml_cam_uninit(&dev->cam_info);
 #if MESON_CPU_TYPE >= MESON_CPU_TYPE_MESON6
 	switch_mod_gate_by_name("ge2d", 0);
-#endif
+#endif	
 	wake_unlock(&(dev->wake_lock));
 #ifdef CONFIG_CMA
     vm_deinit_buf();
@@ -2567,9 +2567,9 @@ static int HI704_probe(struct i2c_client *client,
 		return -ENOMEM;
 	sd = &t->sd;
 	v4l2_i2c_subdev_init(sd, client, &HI704_ops);
-
+	
 	plat_dat= (aml_cam_info_t*)client->dev.platform_data;
-
+	
 	/* Now create a video4linux device */
 	mutex_init(&t->mutex);
 
@@ -2596,11 +2596,11 @@ static int HI704_probe(struct i2c_client *client,
 		kfree(client);
 		return -1;
 	}
-
+	
 	t->cam_info.version = HI704_DRIVER_VERSION;
 	if (aml_cam_info_reg(&t->cam_info) < 0)
 		printk("reg caminfo error\n");
-
+	
 	err = video_register_device(t->vdev, VFL_TYPE_GRABBER, video_nr);
 	if (err < 0) {
 		video_device_release(t->vdev);
@@ -2640,3 +2640,4 @@ static struct i2c_driver HI704_i2c_driver = {
 };
 
 module_i2c_driver(HI704_i2c_driver);
+

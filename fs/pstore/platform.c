@@ -206,14 +206,14 @@ static void pstore_console_write(struct console *con, const char *s, unsigned c)
 			full_flag = 1;
 			printk("kkkk c=0x%x buffer_size=0x%x start=0x%x\n",c, cxt->cprz->buffer_size, atomic_read(cxt->cprz->buffer->start));
 		}
-	*/
+	*/	
 		if (oops_in_progress) {
 			if (!spin_trylock_irqsave(&psinfo->buf_lock, flags))
 				break;
 		} else {
 			spin_lock_irqsave(&psinfo->buf_lock, flags);
 		}
-
+			
 		memcpy(psinfo->buf, s, c);
 		psinfo->write(PSTORE_TYPE_CONSOLE, 0, &id, 0, 0, c, psinfo);
 		if(full_flag){
@@ -221,7 +221,7 @@ static void pstore_console_write(struct console *con, const char *s, unsigned c)
 			set_c_pstore_size(cxt, 0);
 			set_c_pstore_full_flag(cxt, 1);
 		}
-
+		
 		spin_unlock_irqrestore(&psinfo->buf_lock, flags);
 		s += c;
 		c = e - s;

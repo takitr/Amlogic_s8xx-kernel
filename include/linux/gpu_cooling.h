@@ -69,7 +69,7 @@ struct gpufreq_cooling_device * gpufreq_cooling_alloc(void);
 void gpufreq_cooling_unregister(struct thermal_cooling_device *cdev);
 #ifdef CONFIG_AML_VIRTUAL_THERMAL
 int register_gpu_freq_info(unsigned (*fun)(void));
-#else
+#else 
 static inline int register_gpu_freq_info(unsigned (*fun)(void))
 {
     return 0;

@@ -47,13 +47,13 @@
 	static struct early_suspend egalax_early_suspend;
 #endif
 
-#define irq_to_gpio(irq) ((GPIOA_bank_bit0_27(16)<<16) |GPIOA_bit_bit0_27(16))
+#define irq_to_gpio(irq) ((GPIOA_bank_bit0_27(16)<<16) |GPIOA_bit_bit0_27(16)) 
 
 // Global define to enable function
 #define _ENABLE_DBG_LEVEL
 //#define _IDLE_MODE_SUPPORT
 
-static int global_major = 0; // dynamic major by default
+static int global_major = 0; // dynamic major by default 
 static int global_minor = 0;
 
 #define MAX_I2C_LEN		10
@@ -159,7 +159,7 @@ static int wakeup_controller(int irq)
 	enable_irq(irq);
 	gpio_direction_input(gpio);
 	EGALAX_DBG(DBG_WAKEUP, " INT wakeup touch controller done\n");
-
+	
 	return ret;
 }
 
@@ -170,10 +170,10 @@ static int egalax_cdev_open(struct inode *inode, struct file *filp)
 	cdev = container_of(inode->i_cdev, struct egalax_char_dev, cdev);
 	if( cdev == NULL )
 	{
-		EGALAX_DBG(DBG_CDEV, " No such char device node \n");
+        	EGALAX_DBG(DBG_CDEV, " No such char device node \n");
 		return -ENODEV;
 	}
-
+	
 	if( !atomic_dec_and_test(&egalax_char_available) )
 	{
 		atomic_inc(&egalax_char_available);
@@ -233,7 +233,7 @@ static ssize_t egalax_cdev_read(struct file *file, char __user *buf, size_t coun
 {
 	int read_cnt, ret, fifoLen;
 	struct egalax_char_dev *cdev = file->private_data;
-
+	
 	if( down_interruptible(&cdev->sem) )
 		return -ERESTARTSYS;
 
@@ -275,7 +275,7 @@ static ssize_t egalax_cdev_read(struct file *file, char __user *buf, size_t coun
 	ret = copy_to_user(buf, fifo_read_buf, read_cnt)?-EFAULT:read_cnt;
 
 	up(&cdev->sem);
-
+	
 	return ret;
 }
 
@@ -304,7 +304,7 @@ static ssize_t egalax_cdev_write(struct file *file, const char __user *buf, size
 		kfree(tmp);
 		return -EFAULT;
 	}
-
+	
 	ret = i2c_master_send(p_egalax_i2c_dev->client, tmp, count);
 
 	up(&cdev->sem);
@@ -318,12 +318,12 @@ static ssize_t egalax_cdev_write(struct file *file, const char __user *buf, size
 static int egalax_proc_read(char *buffer, char **buffer_location, off_t offset, int buffer_length, int *eof, void *data )
 {
 	int ret;
-
+	
 	EGALAX_DBG(DBG_PROC, " \"%s\" call proc_read\n", current->comm);
-
+	
 	if(offset > 0)  /* we have finished to read, return 0 */
 		ret  = 0;
-	else
+	else 
 		ret = sprintf(buffer, "Debug Level: 0x%08X\n", DbgLevel);
 
 	return ret;
@@ -331,17 +331,17 @@ static int egalax_proc_read(char *buffer, char **buffer_location, off_t offset, 
 
 static int egalax_proc_write(struct file *file, const char *buffer, unsigned long count, void *data)
 {
-	char procfs_buffer_size = 0;
+	char procfs_buffer_size = 0; 
 	int i;
 	unsigned char procfs_buf[PROC_FS_MAX_LEN] = {0};
 
 	EGALAX_DBG(DBG_PROC, " \"%s\" call proc_write\n", current->comm);
 
 	procfs_buffer_size = count;
-	if(procfs_buffer_size > PROC_FS_MAX_LEN )
+	if(procfs_buffer_size > PROC_FS_MAX_LEN ) 
 		procfs_buffer_size = PROC_FS_MAX_LEN+1;
-
-	if( copy_from_user(procfs_buf, buffer, procfs_buffer_size) )
+	
+	if( copy_from_user(procfs_buf, buffer, procfs_buffer_size) ) 
 	{
 		EGALAX_DBG(DBG_PROC, " proc_write faied at copy_from_user\n");
 		return -EFAULT;
@@ -356,7 +356,7 @@ static int egalax_proc_write(struct file *file, const char *buffer, unsigned lon
 			DbgLevel |= (procfs_buf[i]-'A'+10);
 		else if( procfs_buf[i]>='a' && procfs_buf[i]<='f' )
 			DbgLevel |= (procfs_buf[i]-'a'+10);
-
+		
 		if(i!=procfs_buffer_size-2)
 			DbgLevel <<= 4;
 	}
@@ -371,7 +371,7 @@ static int egalax_proc_write(struct file *file, const char *buffer, unsigned lon
 
 #if LINUX_VERSION_CODE < KERNEL_VERSION(2,6,36)
 static int egalax_cdev_ioctl(struct inode *inode, struct file *filp, unsigned int cmd, unsigned long args)
-{
+{	
 	//struct egalax_char_dev *cdev = file->private_data;
 	int ret=0;
 
@@ -408,7 +408,7 @@ static unsigned int egalax_cdev_poll(struct file *filp, struct poll_table_struct
 	struct egalax_char_dev *cdev = filp->private_data;
 	unsigned int mask = 0;
 	int fifoLen;
-
+	
 	down(&cdev->sem);
 	poll_wait(filp, &cdev->fifo_inq,  wait);
 
@@ -438,7 +438,7 @@ static void ProcessReport(unsigned char *buf, struct _egalax_i2c *p_egalax_i2c)
 	ContactID = (buf[1]&0x7C)>>2;
 	X = ((buf[3]<<8) + buf[2])>>4;
 	Y = ((buf[5]<<8) + buf[4])>>4;
-
+	
 	if( !(ContactID>=0 && ContactID<MAX_SUPPORT_POINT) )
 	{
 		EGALAX_DBG(DBG_POINT, " Get I2C Point data error [%02X][%02X][%02X][%02X][%02X][%02X]\n", buf[0], buf[1], buf[2], buf[3], buf[4], buf[5]);
@@ -453,7 +453,7 @@ static void ProcessReport(unsigned char *buf, struct _egalax_i2c *p_egalax_i2c)
 			p_egalax_i2c->downCnt++;
 		else if( PointBuf[ContactID].Status>0 )
 			p_egalax_i2c->downCnt--;
-
+		
 		PointBuf[ContactID].Status = Status;
 		bNeedReport = true;
 	}
@@ -509,7 +509,7 @@ static struct input_dev * allocate_Input_Dev(void)
 	pInputDev->id.vendor = 0x0EEF;
 	pInputDev->id.product = 0x0020;
 	pInputDev->id.version = 0x0001;
-
+	
 	set_bit(EV_ABS, pInputDev->evbit);
 	input_set_abs_params(pInputDev, ABS_MT_POSITION_X, 0, 2047, 0, 0);
 	input_set_abs_params(pInputDev, ABS_MT_POSITION_Y, 0, 2047, 0, 0);
@@ -518,13 +518,13 @@ static struct input_dev * allocate_Input_Dev(void)
 	input_set_abs_params(pInputDev, ABS_MT_TRACKING_ID, 0, MAX_SUPPORT_POINT, 0, 0);
 
 	ret = input_register_device(pInputDev);
-	if(ret)
+	if(ret) 
 	{
 		EGALAX_DBG(DBG_MODULE, " Unable to register input device.\n");
 		input_free_device(pInputDev);
 		pInputDev = NULL;
 	}
-
+	
 	return pInputDev;
 }
 
@@ -569,7 +569,7 @@ static int egalax_i2c_measure(struct _egalax_i2c *egalax_i2c)
 	#else
 		kfifo_in_locked(&p_char_dev->DataKFiFo, x_buf, count, &p_char_dev->FiFoLock);
 	#endif
-		wake_up_interruptible( &p_char_dev->fifo_inq );
+	 	wake_up_interruptible( &p_char_dev->fifo_inq );
 	}
 
 	return count;
@@ -591,16 +591,16 @@ static void egalax_i2c_wq_irq(struct work_struct *work)
 		egalax_i2c_measure(egalax_i2c);
 		schedule();
 	}
-
+		
 	if( egalax_i2c->skip_packet > 0 )
 		egalax_i2c->skip_packet = 0;
-
+	
 #ifdef _IDLE_MODE_SUPPORT
 	if( p_char_dev->OpenCnts<=0 && egalax_i2c->work_state==MODE_WORKING )
 		mod_timer(&egalax_i2c->idle_timer, jiffies+HZ*IDLE_INTERVAL);
 #endif
 
-	mutex_unlock(&egalax_i2c->mutex_wq);
+	mutex_unlock(&egalax_i2c->mutex_wq);	
 
 	enable_irq(client->irq);
 
@@ -612,7 +612,7 @@ static irqreturn_t egalax_i2c_interrupt(int irq, void *dev_id)
 	struct _egalax_i2c *egalax_i2c = (struct _egalax_i2c *)dev_id;
 
 	EGALAX_DBG(DBG_INT, " INT with irq:%d\n", irq);
-
+	
 #ifdef _IDLE_MODE_SUPPORT
 	del_timer_sync(&egalax_i2c->idle_timer);
 	if(egalax_i2c->work_state == MODE_IDLE)
@@ -659,10 +659,10 @@ static void egalax_i2c_early_suspend(struct early_suspend *handler)
 	u8 cmdbuf[MAX_I2C_LEN]={0x03, 0x05, 0x0A, 0x03, 0x36, 0x3F, 0x02, 0, 0, 0};
 
 	EGALAX_DBG(DBG_SUSP, " Enter early_suspend state:%d\n", p_egalax_i2c_dev->work_state);
-
-	if(!p_egalax_i2c_dev)
+	
+	if(!p_egalax_i2c_dev) 
 		goto fail_suspend;
-
+	
 #ifdef _IDLE_MODE_SUPPORT
 	del_timer_sync(&p_egalax_i2c_dev->idle_timer);
 	cancel_work_sync(&p_egalax_i2c_dev->work_idle);
@@ -673,14 +673,14 @@ static void egalax_i2c_early_suspend(struct early_suspend *handler)
 		atomic_set(&wait_command_ack, 0);
 		if( wakeup_controller(p_egalax_i2c_dev->client->irq)!=0 )
 			goto fail_suspend2;
-
+		
 		while( !atomic_read(&wait_command_ack) )
 			mdelay(2);
 
 		EGALAX_DBG((DBG_SUSP|DBG_IDLE), " Device return to working\n");
 	}
 #endif
-
+	
 	if( MAX_I2C_LEN != i2c_master_send(p_egalax_i2c_dev->client, cmdbuf, MAX_I2C_LEN) )
 		goto fail_suspend2;
 
@@ -701,9 +701,9 @@ static void egalax_i2c_early_resume(struct early_suspend *handler)
 
 	EGALAX_DBG(DBG_SUSP, " Enter early_resume state:%d\n", p_egalax_i2c_dev->work_state);
 
-	if(!p_egalax_i2c_dev)
+	if(!p_egalax_i2c_dev) 
 		goto fail_resume;
-
+		
 	// re-init parameter
 	p_egalax_i2c_dev->downCnt=0;
 	for(i=0; i<MAX_SUPPORT_POINT; i++)
@@ -711,7 +711,7 @@ static void egalax_i2c_early_resume(struct early_suspend *handler)
 		PointBuf[i].Status = -1;
 		PointBuf[i].X = PointBuf[i].Y = 0;
 	}
-
+	
 	if( wakeup_controller(p_egalax_i2c_dev->client->irq)==0 )
 		p_egalax_i2c_dev->work_state = MODE_WORKING;
 	else
@@ -748,7 +748,7 @@ static int __devinit egalax_i2c_probe(struct i2c_client *client)
 	EGALAX_DBG(DBG_MODULE, " Start probe\n");
 
 	p_egalax_i2c_dev = (struct _egalax_i2c *)kzalloc(sizeof(struct _egalax_i2c), GFP_KERNEL);
-	if (!p_egalax_i2c_dev)
+	if (!p_egalax_i2c_dev) 
 	{
 		EGALAX_DBG(DBG_MODULE, "  Request memory failed\n");
 		ret = -ENOMEM;
@@ -759,11 +759,11 @@ static int __devinit egalax_i2c_probe(struct i2c_client *client)
 	if(input_dev==NULL)
 	{
 		EGALAX_DBG(DBG_MODULE, " allocate_Input_Dev failed\n");
-		ret = -EINVAL;
+		ret = -EINVAL; 
 		goto fail2;
 	}
 	EGALAX_DBG(DBG_MODULE, " Register input device done\n");
-
+	
 	for(i=0; i<MAX_SUPPORT_POINT;i++)
 	{
 		PointBuf[i].Status = -1;
@@ -795,7 +795,7 @@ static int __devinit egalax_i2c_probe(struct i2c_client *client)
 	p_egalax_i2c_dev->work_state = MODE_WORKING;
 	ret = request_irq(client->irq, egalax_i2c_interrupt, IRQF_DISABLED | IRQF_TRIGGER_LOW,
 		 client->name, p_egalax_i2c_dev);
-	if( ret )
+	if( ret ) 
 	{
 		EGALAX_DBG(DBG_MODULE, " Request irq(%d) failed\n", client->irq);
 		goto fail3;
@@ -815,13 +815,13 @@ static int __devinit egalax_i2c_probe(struct i2c_client *client)
 	register_early_suspend(&egalax_early_suspend);
 	EGALAX_DBG(DBG_MODULE, " Register early_suspend done\n");
 #endif
-
+	
 	EGALAX_DBG(DBG_MODULE, " I2C probe done\n");
 	return 0;
 
 fail3:
 	i2c_set_clientdata(client, NULL);
-	destroy_workqueue(p_egalax_i2c_dev->ktouch_wq);
+	destroy_workqueue(p_egalax_i2c_dev->ktouch_wq); 
 	free_irq(client->irq, p_egalax_i2c_dev);
 	input_unregister_device(input_dev);
 	input_dev = NULL;
@@ -851,9 +851,9 @@ static int __devexit egalax_i2c_remove(struct i2c_client *client)
 		disable_irq(client->irq);
 		free_irq(client->irq, egalax_i2c);
 	}
-
-	if(egalax_i2c->ktouch_wq)
-		destroy_workqueue(egalax_i2c->ktouch_wq);
+	
+	if(egalax_i2c->ktouch_wq) 
+		destroy_workqueue(egalax_i2c->ktouch_wq); 
 
 #ifdef CONFIG_HAS_EARLYSUSPEND
 	unregister_early_suspend(&egalax_early_suspend);
@@ -873,10 +873,10 @@ static int __devexit egalax_i2c_remove(struct i2c_client *client)
 	return 0;
 }
 
-static struct i2c_device_id egalax_i2c_idtable[] = {
-	{ "eeti", 0 },
-	{ }
-};
+static struct i2c_device_id egalax_i2c_idtable[] = { 
+	{ "eeti", 0 }, 
+	{ } 
+}; 
 
 MODULE_DEVICE_TABLE(i2c, egalax_i2c_idtable);
 
@@ -910,7 +910,7 @@ static void egalax_i2c_ts_exit(void)
 		EGALAX_DBG(DBG_MODULE,  " Unregister character device\n");
 		if( p_char_dev->pFiFoBuf )
 			kfree(p_char_dev->pFiFoBuf);
-
+	
 		cdev_del(&p_char_dev->cdev);
 		kfree(p_char_dev);
 		p_char_dev = NULL;
@@ -924,10 +924,10 @@ static void egalax_i2c_ts_exit(void)
 		class_device_destroy(egalax_class, devno);
 #else
 		device_destroy(egalax_class, devno);
-#endif
+#endif 
 		class_destroy(egalax_class);
 	}
-
+	
 	i2c_del_driver(&egalax_i2c_driver);
 
 #ifdef _ENABLE_DBG_LEVEL
@@ -943,7 +943,7 @@ static struct egalax_char_dev* setup_chardev(dev_t dev)
 	int result;
 
 	pCharDev = kmalloc(1*sizeof(struct egalax_char_dev), GFP_KERNEL);
-	if(!pCharDev)
+	if(!pCharDev) 
 		goto fail_cdev;
 	memset(pCharDev, 0, sizeof(struct egalax_char_dev));
 
@@ -962,7 +962,7 @@ static struct egalax_char_dev* setup_chardev(dev_t dev)
 	if( !kfifo_initialized(&pCharDev->DataKFiFo) )
 		goto fail_kfifo;
 #endif
-
+	
 	pCharDev->OpenCnts = 0;
 	cdev_init(&pCharDev->cdev, &egalax_cdev_fops);
 	pCharDev->cdev.owner = THIS_MODULE;
@@ -976,7 +976,7 @@ static struct egalax_char_dev* setup_chardev(dev_t dev)
 		goto fail_kfifo;
 	}
 
-	return pCharDev;
+	return pCharDev; 
 
 fail_kfifo:
 	kfree(pCharDev->pFiFoBuf);
@@ -992,12 +992,12 @@ static int egalax_i2c_ts_init(void)
 	dev_t devno = 0;
 
 	// Asking for a dynamic major unless directed otherwise at load time.
-	if(global_major)
+	if(global_major) 
 	{
 		devno = MKDEV(global_major, global_minor);
 		result = register_chrdev_region(devno, 1, "egalax_i2c");
-	}
-	else
+	} 
+	else 
 	{
 		result = alloc_chrdev_region(&devno, global_minor, 1, "egalax_i2c");
 		global_major = MAJOR(devno);
@@ -1011,7 +1011,7 @@ static int egalax_i2c_ts_init(void)
 
 	// allocate the character device
 	p_char_dev = setup_chardev(devno);
-	if(!p_char_dev)
+	if(!p_char_dev) 
 	{
 		result = -ENOMEM;
 		goto fail;
@@ -1034,7 +1034,7 @@ static int egalax_i2c_ts_init(void)
 
 #ifdef _ENABLE_DBG_LEVEL
 	dbgProcFile = create_proc_entry(PROC_FS_NAME, 0666, NULL);
-	if (dbgProcFile == NULL)
+	if (dbgProcFile == NULL) 
 	{
 		remove_proc_entry(PROC_FS_NAME, NULL);
 		EGALAX_DBG(DBG_MODULE, " Could not initialize /proc/%s\n", PROC_FS_NAME);
@@ -1050,7 +1050,7 @@ static int egalax_i2c_ts_init(void)
 	EGALAX_DBG(DBG_MODULE, " Driver init done!\n");
 	return i2c_add_driver(&egalax_i2c_driver);
 
-fail:
+fail:	
 	egalax_i2c_ts_exit();
 	return result;
 }

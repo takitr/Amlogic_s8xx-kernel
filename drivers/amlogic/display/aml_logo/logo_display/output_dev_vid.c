@@ -5,7 +5,7 @@
 #include <linux/amlogic/amlog.h>
 static  logo_output_dev_t   output_vid={
 	.idx=LOGO_DEV_VID,
-	.hw_initialized=0,
+	.hw_initialized=0,	
 	.op={
 		.init=vid_init,
 		.transfer=vid_transfer,
@@ -43,7 +43,7 @@ static int vid_deinit(void)
 static  int  vid_transfer(logo_object_t *plogo)
 {
 	amlog_mask_level(LOG_MASK_DEVICE,LOG_LEVEL_LOW,"start video transfer\n");;
-	SET_MPEG_REG_MASK(VPP_MISC, VPP_VD1_PREBLEND | VPP_PREBLEND_EN | VPP_VD1_POSTBLEND|VPP_POSTBLEND_EN);
+	SET_MPEG_REG_MASK(VPP_MISC, VPP_VD1_PREBLEND | VPP_PREBLEND_EN | VPP_VD1_POSTBLEND|VPP_POSTBLEND_EN); 
 	CLEAR_MPEG_REG_MASK(VPP_MISC, VPP_OSD1_POSTBLEND | VPP_OSD2_POSTBLEND);
 	return SUCCESS;
 }

@@ -8,13 +8,13 @@ config BT_DEVICE
     default n
     help
       Say Y here if you want to use the BT device.
-
+      
 config BT_WAKE_CTRL
     bool "BT Wake Control support"
     select BACKLIGHT_CLASS_DEVICE
     default n
     help
         Say Y here if you want to use the BT LPM fucnction.
-
-source "drivers/amlogic/bluetooth/rtk8723/Kconfig"
+		
+source "drivers/amlogic/bluetooth/rtk8723/Kconfig"		
 endmenu

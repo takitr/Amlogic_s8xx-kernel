@@ -44,3 +44,4 @@ int ld_notifier_call_chain(unsigned long val, void *v)
 	return blocking_notifier_call_chain(&ld_notifier_list, val, v);
 }
 EXPORT_SYMBOL_GPL(ld_notifier_call_chain);
+

@@ -9,7 +9,7 @@
  *
  * This program is distributed .as is. WITHOUT ANY WARRANTY of any
  * kind, whether express or implied; without even the implied warranty
- * of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
  * PURPOSE.  See the GNU General Public License for more details.
 */
 /**
@@ -109,7 +109,7 @@ static SII_INLINE const char * SiiOsStatusString(const SiiOsStatus_t status)
         case SII_OS_STATUS_ERR_QUEUE_EMPTY:
             return "Error-Queue Empty";
 		case SII_OS_STATUS_ERR_QUEUE_FULL:
-			return "Error-Queue Full";
+			return "Error-Queue Full";	
 
         default:
             return "UNKNOWN";
@@ -118,3 +118,4 @@ static SII_INLINE const char * SiiOsStatusString(const SiiOsStatus_t status)
 
 
 #endif /* _OS_TYPES_H */
+

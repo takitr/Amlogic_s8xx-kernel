@@ -63,12 +63,12 @@
 #define I2SIN_LRCLK_SKEW 4    // 6:4
 #define I2SIN_LRCLK_INVT 7
 #define I2SIN_SIZE       8    //9:8 : 0 16 bit. 1 : 18 bits 2 : 20 bits 3 : 24bits.
-#define I2SIN_CHAN_EN   10    //13:10.
+#define I2SIN_CHAN_EN   10    //13:10. 
 #define I2SIN_EN        15
 
 #define AUDIN_FIFO0_EN       0
 #define AUDIN_FIFO0_LOAD     2    //write 1 to load address to AUDIN_FIFO0.
-
+         
 #define AUDIN_FIFO0_DIN_SEL  3
             // 0     spdifIN
             // 1     i2Sin
@@ -91,7 +91,7 @@
 
 //#define BT_PORT_CTRL 0x2249 	///../ucode/register.h
 //    #define BT_VSYNC_MODE      23  //1: use  vsync  as the VBI start point. 0: use the regular vref.
-//    #define BT_HSYNC_MODE      22  //1: use hsync as the active video start point.  0. Use regular sav and eav.
+//    #define BT_HSYNC_MODE      22  //1: use hsync as the active video start point.  0. Use regular sav and eav. 
 #define BT_SOFT_RESET           31	// Soft reset
 //    #define BT_JPEG_START           30
 //    #define BT_JPEG_IGNORE_BYTES    18	//20:18

@@ -19,8 +19,8 @@
 #define HW_OSD_BLOCK_ENABLE_2			0x0004 /* osd blk2 enable */
 #define HW_OSD_BLOCK_ENABLE_3			0x0008 /* osd blk3 enable */
 #define HW_OSD_BLOCK_LAYOUT_MASK		0xFFFF0000
-/*
- * osd block layout horizontal:
+/* 
+ * osd block layout horizontal: 
  * -------------
  * |     0     |
  * |-----------|
@@ -32,8 +32,8 @@
  * -------------
  */
 #define HW_OSD_BLOCK_LAYOUT_HORIZONTAL 0x10000
-/*
- * osd block layout vertical:
+/* 
+ * osd block layout vertical: 
  * -------------
  * |  |  |  |  |
  * |  |  |  |  |
@@ -42,14 +42,14 @@
  * |  |  |  |  |
  * -------------
  *
- * NOTE:
+ * NOTE: 
  *     In this mode, just one of the OSD blocks can be enabled at the same time.
  *     Because the blocks must be sequenced in vertical display order if they
  *     want to be both enabled at the same time.
  */
 #define HW_OSD_BLOCK_LAYOUT_VERTICAL 0x20000
-/*
- * osd block layout grid:
+/* 
+ * osd block layout grid: 
  * -------------
  * |     |     |
  * |  0  |  1  |
@@ -58,7 +58,7 @@
  * |  2  |  3  |
  * -------------
  *
- * NOTE:
+ * NOTE: 
  *     In this mode, Block0 and Block1 cannot be enabled at the same time.
  *     Neither can Block2 and Block3.
  */
@@ -175,7 +175,7 @@ static update_func_t hw_func_array[HW_OSD_COUNT][HW_REG_INDEX_MAX]={
 #define add_to_update_list(osd_idx,cmd_idx) \
 	spin_lock_irqsave(&osd_lock, lock_flags); \
 	osd_hw.updated[osd_idx]|=(1<<cmd_idx); \
-	spin_unlock_irqrestore(&osd_lock, lock_flags);
+	spin_unlock_irqrestore(&osd_lock, lock_flags); 
 #endif
 #endif
 

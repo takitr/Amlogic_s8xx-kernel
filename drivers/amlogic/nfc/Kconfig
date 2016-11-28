@@ -14,3 +14,4 @@ config BCM2079X_NFC
     ---help---
       Say yes if you want bcm2079x Near Field Communication driver.
       This is for i2c connected version. If unsure, say N here.
+

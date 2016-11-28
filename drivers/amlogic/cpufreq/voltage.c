@@ -109,3 +109,4 @@ int meson_vcck_scale(struct regulator *reg, struct meson_opp *table,
     return regulator_set_voltage(reg, opp->min_uV, opp->max_uV);
 }
 EXPORT_SYMBOL(meson_vcck_scale);
+

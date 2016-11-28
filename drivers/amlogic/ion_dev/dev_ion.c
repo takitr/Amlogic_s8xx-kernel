@@ -65,8 +65,8 @@ int dev_ion_probe(struct platform_device *pdev) {
 	 name = of_get_property(of_node, "share-memory-name", NULL);
 	 if(!name)
 	 {
-		printk("\ndev_ion memory resource undefined1.\n");
-		return -EFAULT;
+        	printk("\ndev_ion memory resource undefined1.\n");
+        	return -EFAULT;
 	 }
 	 else
 	 {
@@ -74,7 +74,7 @@ int dev_ion_probe(struct platform_device *pdev) {
 		if(i<0)
 		{
 			printk("\ndev_ion memory resource undefined2.\n");
-			return -EFAULT;
+        		return -EFAULT;
 		}
 		name = of_get_property(of_node, "share-memory-offset", NULL);
 		if(name)
@@ -82,7 +82,7 @@ int dev_ion_probe(struct platform_device *pdev) {
 		else
 		{
 			printk("\ndev_ion memory resource undefined3.\n");
-			return -EFAULT;
+        		return -EFAULT;
 		}
 		name = of_get_property(of_node, "share-memory-size", NULL);
 		if(name)
@@ -90,19 +90,19 @@ int dev_ion_probe(struct platform_device *pdev) {
 		else
 		{
 			printk("\ndev_ion memory resource undefined4.\n");
-			return -EFAULT;
+        		return -EFAULT;
 		}
 
 
 		res->start = (phys_addr_t)get_reserve_block_addr(i)+offset;
-		res->end = res->start+ size-1;
+    		res->end = res->start+ size-1;
 
 	 }
     }
     else
     {
-	res->start = (phys_addr_t)get_reserve_block_addr(i);
-	res->end = res->start+ (phys_addr_t)get_reserve_block_size(i)-1;
+    	res->start = (phys_addr_t)get_reserve_block_addr(i);
+    	res->end = res->start+ (phys_addr_t)get_reserve_block_size(i)-1;
     }
 #endif
     if (res) {
@@ -178,3 +178,4 @@ static void __exit ion_exit(void)
 
 module_init(ion_init);
 module_exit(ion_exit);
+

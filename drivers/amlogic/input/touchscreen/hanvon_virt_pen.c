@@ -18,8 +18,8 @@
 #include <linux/version.h>
 #include <asm/uaccess.h>
 
-struct hanvon_char_dev
-{
+struct hanvon_char_dev 
+{ 
     struct cdev cdev;
 };
 
@@ -89,7 +89,7 @@ static const struct file_operations hanvon_cdev_fops = {
     .open      = hanvon_cdev_open,
     .read      = hanvon_cdev_read,
     .write     = hanvon_cdev_write,
-    .release   = hanvon_cdev_release,
+    .release   = hanvon_cdev_release,    
 };
 
 static struct hanvon_char_dev *hanvon_setup_cdev (dev_t dev)
@@ -128,7 +128,7 @@ static struct input_dev * allocate_Input_Dev(void)
     pInputDev->id.vendor = 0x0F0F;
     pInputDev->id.product = 0x0099;
     pInputDev->id.version = 0x001;
-
+	
     set_bit(EV_ABS, pInputDev->evbit);
 #if 0
     set_bit(EV_KEY, pInputDev->evbit);
@@ -147,7 +147,7 @@ static struct input_dev * allocate_Input_Dev(void)
 #endif
 
     ret = input_register_device(pInputDev);
-    if(ret)
+    if(ret) 
     {
 	printk(KERN_NOTICE, " Unable to register input device.\n");
 	input_free_device(pInputDev);
@@ -175,14 +175,14 @@ static int hanvon_pen_init (void)
     {
         return 0;
     }
-
+    
     p_char_dev = hanvon_setup_cdev (devno);
     if (!p_char_dev)
     {
         printk(KERN_NOTICE "%s: hanvon_setup_cdev failed .\n",__func__);
         result = -ENOMEM;
     }
-
+    
     hanvon_class = class_create(THIS_MODULE, "hanvon_pen");
     if (IS_ERR(hanvon_class))
     {

@@ -66,12 +66,12 @@ static void init_csi_dec_parameter(struct amcsi_dev_s *devp)
         enum tvin_sig_fmt_e fmt;
         const struct tvin_format_s * fmt_info_p;
         fmt = devp->para.fmt;
-        fmt_info_p = tvin_get_fmt_info(fmt);
+        fmt_info_p = tvin_get_fmt_info(fmt); 
 
         if(!fmt_info_p) {
                 printk("[amcsi..]%s:invaild fmt %d.\n",__func__, fmt);
                 return;
-        }
+        } 
 
         if(fmt < TVIN_SIG_FMT_MAX)
         {
@@ -100,12 +100,12 @@ static void reinit_csi_dec(struct amcsi_dev_s *devp)
 //static void start_amvdec_656_601_camera_in(struct amcsi_dev_s *devp)
 static void start_amvdec_csi(struct amcsi_dev_s *devp)
 {
-        enum tvin_port_e port =  devp->para.port;
+        enum tvin_port_e port =  devp->para.port; 
         if(devp->dec_status & TVIN_AMCSI_RUNNING){
             printk("[bt656..] %s bt656 have started alreadly.\n",__func__);
             return;
         }
-        devp->dec_status = TVIN_AMCSI_RUNNING;
+        devp->dec_status = TVIN_AMCSI_RUNNING; 
 	if(port == TVIN_PORT_MIPI){
 		init_csi_dec_parameter(devp);
 		reinit_csi_dec(devp);
@@ -169,7 +169,7 @@ static int amcsi_open(struct inode *node, struct file *file)
 
 }
 static int amcsi_release(struct inode *node, struct file *file)
-{
+{    
 	file->private_data = NULL;
 	return 0;
 }
@@ -216,19 +216,19 @@ int amcsi_isr(struct tvin_frontend_s *fe, unsigned int hcnt)
 	struct amcsi_dev_s *devp = container_of(fe, amcsi_dev_t, frontend);
         unsigned data1 = 0;
         unsigned data2 = 0;
-        am_csi2_frame_t frame;
+        am_csi2_frame_t frame; 
 
         frame.w = aml_get_reg32_bits( P_CSI2_PIC_SIZE_STAT, 0, 16);
         frame.h = aml_get_reg32_bits( P_CSI2_PIC_SIZE_STAT, 16,16);
         frame.err = aml_read_reg32( P_CSI2_ERR_STAT0 );
         data1 = aml_read_reg32( P_CSI2_DATA_TYPE_IN_MEM);
-        data2 = aml_read_reg32( P_CSI2_GEN_STAT0);
-
+        data2 = aml_read_reg32( P_CSI2_GEN_STAT0); 
+       
         if(frame.err){
                 mipi_error("%s,error---pixel cnt:%d, line cnt:%d. error state:0x%x.mem type:0x%x, status:0x%x\n",
                             __func__, frame.w, frame.h, frame.err, data1, data2);
                 devp->overflow_cnt ++;
-        }
+        } 
         if( devp->overflow_cnt > 20){
                 printk("should reset mipi\n");
         }
@@ -260,7 +260,7 @@ static void amcsi_feopen(struct tvin_frontend_s *fe, enum tvin_port_e port)
 *power off the 656 module,clear the parameters
 */
 static void amcsi_feclose(struct tvin_frontend_s *fe)
-{
+{ 
         struct amcsi_dev_s *devp = container_of(fe, amcsi_dev_t, frontend);
         enum tvin_port_e port = devp->para.port;
         if((port != TVIN_PORT_MIPI)){
@@ -363,7 +363,7 @@ fail_kmalloc_dev:
 }
 
 static int amvdec_csi_remove(struct platform_device *pdev)
-{
+{	
 	struct amcsi_dev_s *devp;
 
 	devp = (struct amcsi_dev_s *)platform_get_drvdata(pdev);
@@ -374,7 +374,7 @@ static int amvdec_csi_remove(struct platform_device *pdev)
 	kfree((const void *)devp);
 	/* free drvdata */
 	dev_set_drvdata(devp->dev, NULL);
-	platform_set_drvdata(pdev, NULL);
+	platform_set_drvdata(pdev, NULL);       
 	return 0;
 }
 
@@ -387,7 +387,7 @@ static struct platform_driver amvdec_csi_driver = {
 };
 
 static int __init amvdec_csi_init_module(void)
-{
+{       
         int ret = 0;
         struct platform_device *pdev;
         printk("amvdec_csi module: init.\n");
@@ -416,9 +416,9 @@ static int __init amvdec_csi_init_module(void)
                 printk("failed to register amvdec_csi driver\n");
                 goto fail_pdrv_register;
         }
-
+                        
         printk("amvdec_csi module: init. ok\n");
-        return 0;
+        return 0;        
 fail_pdrv_register:
         platform_device_unregister(pdev);
 fail_pdev_register:

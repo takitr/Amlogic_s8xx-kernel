@@ -34,7 +34,7 @@ unsigned char xd_insert_detector(void)
 unsigned char xd_open(void)
 {
 	int ret;
-
+	
 	xd_reset_flag_read = 0;
 	xd_reset_flag_write = 0;
 	ret = xd_card_init(&xd_info);
@@ -72,8 +72,8 @@ int xd_ioctl(dev_t dev, int req, void *argp)
 {
 /*	unsigned32 ret=0;
     int errno;
-    blkdev_request1 *req1 =(blkdev_request1 *) argp;
-    blkdev_request *r =&(req1->req);
+    blkdev_request1 *req1 =(blkdev_request1 *) argp;  
+    blkdev_request *r =&(req1->req); 
     blkdev_sg_buffer* psgbuf ;
     void * databuf;
     avfs_status_code status;
@@ -89,43 +89,43 @@ int xd_ioctl(dev_t dev, int req, void *argp)
             {
                 case BLKDEV_REQ_READ:
                 case BLKDEV_REQ_READ_DEV:
-			card_get_dev();
+                	card_get_dev();
                     ret = xd_read_data(r->start,r->count*512,(unsigned char *)databuf);
                     if (ret)
-			ret = xd_read_data(r->start,r->count*512,(unsigned char *)databuf);
+                    	ret = xd_read_data(r->start,r->count*512,(unsigned char *)databuf);
                     if (ret)
                     {
-			xd_reset_flag_read = 1;
-			ret = xd_read_data(r->start,r->count*512,(unsigned char *)databuf);
-			xd_reset_flag_read = 0;
+                    	xd_reset_flag_read = 1;
+                    	ret = xd_read_data(r->start,r->count*512,(unsigned char *)databuf);
+                    	xd_reset_flag_read = 0;
                     }
                     card_put_dev();
                     if(!ret)
                         status=AVFS_SUCCESSFUL;
                     else
-                        status=AVFS_IO_ERROR;
+                        status=AVFS_IO_ERROR;                   
                     if(r->req_done)
-                        r->req_done(r->done_arg, status, ret);
+                        r->req_done(r->done_arg, status, ret);       
                     break;
                 case BLKDEV_REQ_WRITE:
-                case BLKDEV_REQ_WRITE_DEV:
-			card_get_dev();
+                case BLKDEV_REQ_WRITE_DEV:                  
+                	card_get_dev();
                     ret = xd_write_data(r->start,r->count*512,(unsigned char *)databuf);
                     if (ret)
-			ret = xd_write_data(r->start,r->count*512,(unsigned char *)databuf);
+                    	ret = xd_write_data(r->start,r->count*512,(unsigned char *)databuf);
                     if (ret)
                     {
-			xd_reset_flag_write = 1;
-			ret = xd_write_data(r->start,r->count*512,(unsigned char *)databuf);
-			xd_reset_flag_write = 0;
+                    	xd_reset_flag_write = 1;
+                    	ret = xd_write_data(r->start,r->count*512,(unsigned char *)databuf);
+                    	xd_reset_flag_write = 0;
                     }
                     card_put_dev();
                     if(!ret)
                         status=AVFS_SUCCESSFUL;
                     else
-                        status=AVFS_IO_ERROR;
+                        status=AVFS_IO_ERROR;                       
                     if(r->req_done)
-                        r->req_done(r->done_arg, status, ret);
+                        r->req_done(r->done_arg, status, ret);       
                     break;
                 case BLKDEV_REQ_ASYREAD_DEV:
                 case BLKDEV_REQ_ASYREAD_MEM:
@@ -145,9 +145,9 @@ int xd_ioctl(dev_t dev, int req, void *argp)
         }
         case BLKIO_GET_TYPE_STR:
         {
-		*(char **)argp = "XD";
-		break;
-	}
+        	*(char **)argp = "XD";
+        	break;
+    	}
         default:
         {
             errno = EBADRQC;
@@ -155,7 +155,7 @@ int xd_ioctl(dev_t dev, int req, void *argp)
             break;
         }
     }*/
-    return 0;//ret;
+    return 0;//ret; 
 }
 
 void xd_init(void)
@@ -163,3 +163,4 @@ void xd_init(void)
 	xd_io_init();
 	xd_prepare_init();
 }
+

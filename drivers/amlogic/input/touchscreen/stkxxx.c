@@ -139,7 +139,7 @@ static int stkxxx_register_input(struct stkxxx *ts)
         input_free_device(dev);
         return -1;
     }
-
+    
     ts->input = dev;
     return 0;
 }
@@ -149,7 +149,7 @@ static int stkxxx_read_block(struct i2c_client *client, u8 addr, u8 len, u8 *dat
     u8 msgbuf0[1] = { addr };
     u16 slave = client->addr;
     u16 flags = client->flags;
-    struct i2c_msg msg[2] = {
+    struct i2c_msg msg[2] = { 
         { slave, flags, 1, msgbuf0 },
         { slave, flags|I2C_M_RD, len, data }
     };
@@ -179,7 +179,7 @@ static int stkxxx_write_reg(struct i2c_client *client, u8 addr,  u8 data)
         .len = 2,
         .buf = buf,
     };
-
+    
     return i2c_transfer(client->adapter, &msg, 1);
 }
 
@@ -187,7 +187,7 @@ static void stkxxx_reset(struct stkxxx *ts)
 {
     unsigned char data[6] = {0, 0, 0, 0 ,0, 0};
     int ret;
-
+    
     ret = stkxxx_read_block(ts->client, 26, 6, data);
     #ifdef STKXXX_DEBUG
     printk(" (26)=%d, (27)=%d,  (28)=%d, (29)=%d, (30)=%d,(31)=%d , kk=%d\n",
@@ -210,13 +210,13 @@ static void stkxxx_reset(struct stkxxx *ts)
     else if (data[4] ==SINTEK||data[4] ==SINTEK_NEW)
     {
         ts->lcd_xmax = 1024;
-        ts->lcd_ymax = 600;
+        ts->lcd_ymax = 600; 
         #ifdef STKXXX_DEBUG
         printk("SINTEK: xmax=%d, ymax=%d\n", ts->lcd_xmax, ts->lcd_ymax);
         #endif
         ts->vendor = SINTEK;
     }
-
+    
     if (stkxxx_write_reg(ts->client, 55, 0x03) < 0) {
         printk("calibration reg failed\n");
     }
@@ -239,7 +239,7 @@ static int stkxxx_read_sensor(struct stkxxx *ts)
     int ret,i;
     u8 data[STK_INFO_LEN];
     struct ts_event *event;
-
+    
     /* To ensure data coherency, read the sensor with a single transaction. */
     ret = stkxxx_read_block(ts->client, STK_INFO_ADDR, STK_INFO_LEN, data);
     if (ret < 0) {
@@ -266,7 +266,7 @@ static int stkxxx_read_sensor(struct stkxxx *ts)
         ba += 4;
         event++;
     }
-
+    
     return 0;
 }
 
@@ -284,7 +284,7 @@ static void stkxxx_work(struct work_struct *work)
     struct ts_event *event;
     int i;
 
-    if (stkxxx_get_pendown_state(ts)) {
+    if (stkxxx_get_pendown_state(ts)) { 
         if (stkxxx_read_sensor(ts) < 0) {
             printk(KERN_INFO "work read i2c failed\n");
             goto restart;
@@ -295,7 +295,7 @@ static void stkxxx_work(struct work_struct *work)
             //input_report_key(ts->input, BTN_TOUCH, 1);
             printk(KERN_INFO "DOWN\n");
         }
-
+        
         for (i=0; i<ts->touching_num; i++) {
             input_report_abs(ts->input, ABS_MT_TRACKING_ID, i);
             #ifdef STKXXX_DEBUG
@@ -334,7 +334,7 @@ restart:
         hrtimer_start(&ts->timer, ktime_set(0, TS_POLL_PERIOD), HRTIMER_MODE_REL);
 #endif
     }
-
+    
     else {
         /* enable IRQ after the pen was lifted */
         if (ts->pendown) {
@@ -354,7 +354,7 @@ restart:
 static void stkxxx_cal_work(struct work_struct *work)
 {
     struct stkxxx *ts = container_of(to_delayed_work(work), struct stkxxx, cal_work);
-
+    
     if (stkxxx_write_reg(ts->client, 55, 0x03) < 0) {
         printk("re-calibration reg failed\n");
     }
@@ -371,10 +371,10 @@ static enum hrtimer_restart stkxxx_timer(struct hrtimer *timer)
 {
     struct stkxxx *ts = container_of(timer, struct stkxxx, timer);
     unsigned long flags = 0;
-
+    
     spin_lock_irqsave(&ts->lock, flags);
 //  printk(KERN_INFO "enter timer\n");
-    queue_work(ts->workqueue, &ts->work);
+    queue_work(ts->workqueue, &ts->work);   
     spin_unlock_irqrestore(&ts->lock, flags);
     return HRTIMER_NORESTART;
 }
@@ -390,7 +390,7 @@ static irqreturn_t stkxxx_interrupt(int irq, void *dev_id)
     struct i2c_client *client = (struct i2c_client *)dev_id;
     struct stkxxx *ts = i2c_get_clientdata(client);
     unsigned long flags;
-
+    
     spin_lock_irqsave(&ts->lock, flags);
 //  printk(KERN_INFO "enter penirq\n");
     /* if the pen is down, disable IRQ and start timer chain */
@@ -416,7 +416,7 @@ static int stkxxx_probe(struct i2c_client *client,
 {
        struct stkxxx *ts;
        int err = 0;
-
+   
        ts = kzalloc(sizeof(struct stkxxx), GFP_KERNEL);
        if (!ts) {
                err = -ENOMEM;
@@ -425,7 +425,7 @@ static int stkxxx_probe(struct i2c_client *client,
 
     ts->client = client;
     stkxxx_reset(ts);
-
+    
     if (stkxxx_register_input(ts) < 0) {
         dev_err(&client->dev, "register input fail!\n");
         goto fail;
@@ -464,7 +464,7 @@ static int stkxxx_probe(struct i2c_client *client,
     }
     printk("work create: %x\n", ts->workqueue);
 #endif
-
+      
        ts->pendown = 0;
        ts->touching_num = 0;
        ts->pre_touching_num = 0;
@@ -557,3 +557,5 @@ MODULE_AUTHOR("");
 MODULE_DESCRIPTION("SINTEK I2C Capacitive Touch Screen driver");
 MODULE_LICENSE("GPL v2");
 MODULE_VERSION(DRIVER_VERSION);
+
+

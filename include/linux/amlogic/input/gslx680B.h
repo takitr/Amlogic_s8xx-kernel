@@ -14,7 +14,7 @@ struct gsl_touch_info
 	int x[10];
 	int y[10];
 	int id[10];
-	int finger_num;
+	int finger_num;	
 };
 extern unsigned int gsl_mask_tiaoping(void);
 extern unsigned int gsl_version_id(void);
@@ -23,7 +23,7 @@ extern void gsl_DataInit(int *ret);
 
 extern unsigned int gsl_config_data_idB[512] =
 {
-	0x731b2f,
+	0x731b2f,  
 	0x200,
 	0,0,
 	0,

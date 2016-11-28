@@ -2,8 +2,8 @@
 #define BMP_PARSER_H_
 
 //parser
-#define  U32   		unsigned int
-#define  U16   		unsigned short
+#define  U32   		unsigned int 
+#define  U16   		unsigned short 
 #define  U8			unsigned char
 #define  INT32		int
 #define	INT16		short
@@ -14,14 +14,14 @@
 typedef struct tagBITMAPFILEHEADER
 {
 	U16	bfType;  //BM
-	U32 bfSize;   //file size
+	U32 bfSize;   //file size 
 	U16	bfReserved1;  //0
 	U16	bfReserved2;  //0
-	U32 bfOffBits;  	//bitmap data offset to  file header
+	U32 bfOffBits;  	//bitmap data offset to  file header	
 } BITMAPFILEHEADER;
 
 typedef struct tagBITMAPINFOHEADER{
-	U32 biSize;  //this structure occupy size
+	U32 biSize;  //this structure occupy size 
 	U32	biWidth; //bitmap width (pixel unit)
 	U32 biHeight; //bitmap height (pixel unit)
 	U16 biPlanes; // 1
@@ -29,7 +29,7 @@ typedef struct tagBITMAPINFOHEADER{
 			// 4(16color) 8(256 color) 24(true color)
 	U32 biCompression; // bitmap compresstion type must be one of 0 (uncompress)
 					  // 1(BI_RLE8) 2(BI_RLE4)
-	U32 biSizeImage; 	// bitmap size
+	U32 biSizeImage; 	// bitmap size 
 	U32	biXPelsPerMeter; //bitmap horizontal resolution.
 	U32	biYPelsPerMeter; //bitmap vertical resolution.
 	U32 biClrUsed;	//bitmap used color number.

@@ -30,3 +30,4 @@ extern void meson_set_cpu_ctrl_reg(int value);
 /* pinctrl.c */
 extern unsigned p_pull_up_addr[];
 extern unsigned p_pin_mux_reg_addr[];
+

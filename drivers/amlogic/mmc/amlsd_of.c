@@ -197,3 +197,4 @@ int amlsd_get_platform_data(struct platform_device* pdev,
     }
     return 0;
 }
+

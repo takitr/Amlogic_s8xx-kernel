@@ -16,7 +16,7 @@ config V4L_AMLOGIC_VIDEO2
 	select VIDEO_V4L2_COMMON
 	select VIDEOBUF_RESOURCE
 	select AM_GE2D
-	default n
+    	default n
 	---help---
 	  Select to enable "Amlogic v4l video2 device support.
 

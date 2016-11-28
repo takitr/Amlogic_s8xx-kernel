@@ -6,7 +6,7 @@ menu "Power Management Support"
 # NOTE:
 #
 # AMLOGIC_BOARD_HAS_PMU is general switch to compile on-board
-# PMU drivers, ALL new added PMU driver should be depend on
+# PMU drivers, ALL new added PMU driver should be depend on 
 # this config
 #
 ############################################################
@@ -39,7 +39,7 @@ config SMBA10XX_BATTERY
 	default n
 	help
 	  Say Y if you want to add battery driver supoort for SMBA10XX
-
+	  
 config BQ27x00_BATTERY
 	bool "BQ27x00 Battery support"
     depends on AMLOGIC_BOARD_HAS_PMU

@@ -126,3 +126,4 @@ extern void osddev_ext_set_angle(u32 index, u32 angle);
 extern void osddev_ext_get_clone(u32 index, u32 *clone);
 extern void osddev_ext_set_clone(u32 index, u32 clone);
 #endif /* OSDFBDEV_H */
+
