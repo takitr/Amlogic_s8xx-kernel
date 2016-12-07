@@ -41,7 +41,6 @@ obj-$(CONFIG_DRM_MGAG200) += mgag200/
 obj-$(CONFIG_DRM_CIRRUS_QEMU) += cirrus/
 obj-$(CONFIG_DRM_SIS)   += sis/
 obj-$(CONFIG_DRM_SAVAGE)+= savage/
-obj-$(CONFIG_DRM_MALI)  += mali_drm/
 obj-$(CONFIG_DRM_VMWGFX)+= vmwgfx/
 obj-$(CONFIG_DRM_VIA)	+=via/
 obj-$(CONFIG_DRM_NOUVEAU) +=nouveau/
@@ -54,3 +53,5 @@ obj-$(CONFIG_DRM_OMAP)	+= omapdrm/
 obj-$(CONFIG_DRM_TILCDC)	+= tilcdc/
 obj-$(CONFIG_DRM_QXL) += qxl/
 obj-y			+= i2c/
+
+#obj-$(CONFIG_DRM_MALI)  += mali_drm/

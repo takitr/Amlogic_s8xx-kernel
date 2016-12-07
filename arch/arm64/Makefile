@@ -42,9 +42,11 @@ libs-y		+= $(LIBGCC)
 
 # Default target when executing plain make
 KBUILD_IMAGE	:= Image.gz
-KBUILD_DTBS	:= dtbs
+#KBUILD_DTBS	:= dtbs
 
-all:	$(KBUILD_IMAGE) $(KBUILD_DTBS)
+all:	$(KBUILD_IMAGE)
+
+# $(KBUILD_DTBS)
 
 boot := arch/arm64/boot
 
@@ -54,11 +56,11 @@ Image Image.gz: vmlinux
 zinstall install: vmlinux
 	$(Q)$(MAKE) $(build)=$(boot) $@
 
-%.dtb: scripts
-	$(Q)$(MAKE) $(build)=$(boot)/dts $(boot)/dts/$@
+#%.dtb: scripts
+#	$(Q)$(MAKE) $(build)=$(boot)/dts $(boot)/dts/$@
 
-dtbs: scripts
-	$(Q)$(MAKE) $(build)=$(boot)/dts dtbs
+#dtbs: scripts
+#	$(Q)$(MAKE) $(build)=$(boot)/dts dtbs
 
 # We use MRPROPER_FILES and CLEAN_FILES now
 archclean:
