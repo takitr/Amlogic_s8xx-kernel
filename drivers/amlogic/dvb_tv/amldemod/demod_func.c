@@ -288,7 +288,7 @@ extern struct si2176_device_s *si2176_devp;
 extern void si2176_set_frequency(unsigned int freq);
 #elif (defined CONFIG_AM_SI2177)
 //#include "si2177_func.h"
-#include "../../../../hardware/dvb/silabs/drivers/si2177/si2177_func.h"
+#include "../../../hardware/dvb/silabs/drivers/si2177/si2177_func.h"
 
 extern struct si2177_device_s *si2177_devp;
 extern void si2177_set_frequency(unsigned int freq);

@@ -11,7 +11,7 @@ obj-$(CONFIG_ARCH_MESON6TV)	+= m3_nand.o
 #ifeq ($(CONFIG_AML_NFTL_NEW), y)              
 	obj-$(CONFIG_AML_NFTL_NEW)	+= aml_nftl_new/
 
-#	obj-$(CONFIG_AML_NFTL_NEW)	+= ../../../hardware/amlogic/nand/nand/aml_nftl_new/
+#	obj-$(CONFIG_AML_NFTL_NEW)	+= ../../hardware/amlogic/nand/nand/aml_nftl_new/
 #else                                           
 #	obj-$(CONFIG_AML_NFTL)		+= aml_nftl/      
 #endif

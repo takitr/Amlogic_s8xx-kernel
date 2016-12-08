@@ -19,6 +19,6 @@ fb-objs += osd_ump.o
 endif
 
 ifeq ($(CONFIG_FB_AMLOGIC_UMP),y)
-EXTRA_CFLAGS += -I../hardware/arm/gpu/ump/include/
+EXTRA_CFLAGS += -Ihardware/arm/gpu/ump/include/
 endif
 

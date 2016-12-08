@@ -54,4 +54,4 @@ obj-$(CONFIG_DRM_TILCDC)	+= tilcdc/
 obj-$(CONFIG_DRM_QXL) += qxl/
 obj-y			+= i2c/
 
-#obj-$(CONFIG_DRM_MALI)  += mali_drm/
+###obj-$(CONFIG_DRM_MALI)  += mali_drm/

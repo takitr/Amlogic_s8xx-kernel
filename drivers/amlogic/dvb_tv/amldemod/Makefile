@@ -23,7 +23,7 @@ aml_fe-objs	+= aml_demod.o
 ##endif
 
 ifeq ($(CONFIG_AM_SI2177), y)
-##EXTRA_CFLAGS += -I../../../../hardware/dvb/silabs/drivers/si2177/
+##EXTRA_CFLAGS += -I../../../hardware/dvb/silabs/drivers/si2177/
 endif
 
 

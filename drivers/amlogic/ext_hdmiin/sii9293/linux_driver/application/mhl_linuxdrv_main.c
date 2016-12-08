@@ -43,7 +43,7 @@
 #include <linux/platform_device.h>
 
 #include <linux/amlogic/tvin/tvin_v4l2.h>
-#include "../../../../../../../../../hardware/tvin/tvin_frontend.h"
+#include "../../../../../../../../hardware/tvin/tvin_frontend.h"
 
 #include "vdin_interface.h"
 #include "sii5293_interface.h"
