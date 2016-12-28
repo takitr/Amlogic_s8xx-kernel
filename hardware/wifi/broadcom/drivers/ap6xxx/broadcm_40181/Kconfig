@@ -51,7 +51,6 @@ choice
 config BCMDHD_OOB
 	depends on SDIO_DHD_CDC_WIFI_40181_MODULE
 	bool "Out-of-Band Interrupt"
-	default y
 	---help---
 	  Interrupt from WL_HOST_WAKE.
 config SDIO_HARD_IRQ

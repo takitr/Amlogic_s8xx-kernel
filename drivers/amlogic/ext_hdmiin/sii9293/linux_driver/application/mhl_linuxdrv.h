@@ -29,7 +29,7 @@
 #define MHL_DRIVER_H
 
 #include <linux/amlogic/tvin/tvin_v4l2.h>
-#include "../../../../../../../../hardware/tvin/tvin_frontend.h"
+#include "../../../../../../../../../hardware/tvin/tvin_frontend.h"
 
 #include "sii_hal.h"
 #include <linux/device.h>

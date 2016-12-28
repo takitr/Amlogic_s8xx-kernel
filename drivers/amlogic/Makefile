@@ -71,7 +71,7 @@ obj-$(CONFIG_AML_RTC)+= rtc/
 
 obj-y += power/
 
-ifneq ($(wildcard $(srctree)/hardware/amlogic/pmu),)
+ifneq ($(wildcard $(srctree)/../hardware/amlogic/pmu),)
     obj-$(CONFIG_AML_PMU_ALGORITHM_SUPPORT) += ../../hardware/amlogic/pmu/
 endif
 
@@ -102,8 +102,8 @@ ifneq ($(wildcard $(srctree)/hardware/wifi),)
 	obj-$(CONFIG_RTL8188EU_MP) += ../../hardware/wifi/realtek/drivers/8188eu/rtl8xxx_EU_MP/
 	obj-$(CONFIG_RTL8192DU) += ../../hardware/wifi/realtek/drivers/8192du/rtl8xxx_DU/
 	obj-$(CONFIG_RTL8192EU) += ../../hardware/wifi/realtek/drivers/8192eu/rtl8192EU/
-	obj-$(CONFIG_RTL8189ES) += ../../hardware/wifi/realtek/drivers/8189es/rtl8189ES/
-	obj-$(CONFIG_RTL8723BS) += ../../hardware/wifi/realtek/drivers/8723bs/rtl8723BS/
+	obj-$(CONFIG_RTL8189ES) += ../../hardware/wifi/realtek/drivers/8189es/rtl8189ES/	
+	obj-$(CONFIG_RTL8723BS) += ../../hardware/wifi/realtek/drivers/8723bs/rtl8723BS/	
 	obj-$(CONFIG_RTL8723AU) += ../../hardware/wifi/realtek/drivers/8723au/rtl8723AU/
 	obj-$(CONFIG_RTL8821AU) += ../../hardware/wifi/realtek/drivers/8811au/rtl8811AU/
 	obj-$(CONFIG_RTL8812AU) += ../../hardware/wifi/realtek/drivers/8812au/rtl8812AU/

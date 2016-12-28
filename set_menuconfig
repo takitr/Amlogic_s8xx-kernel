@@ -1,0 +1,7 @@
+#!/bin/sh
+
+export ARCH=arm
+export CROSS_COMPILE=arm-linux-gnueabihf-
+export PATH=/opt/gcc-linaro-4.9-2016.02-x86_64_arm-linux-gnueabihf/bin/:$PATH
+
+make menuconfig
