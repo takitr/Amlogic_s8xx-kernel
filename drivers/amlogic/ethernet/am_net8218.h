@@ -13,7 +13,7 @@
 #define ETH_MAC_4_GMII_Addr_CR_P                2
 #define ETH_MAC_4_GMII_Addr_GR_P                6
 #define ETH_MAC_4_GMII_Addr_PA_P                11
-  
+
 #define ETH_MAC_4_GMII_Addr_CR_60_100           (0<<ETH_MAC_4_GMII_Addr_CR_P)
 #define ETH_MAC_4_GMII_Addr_CR_100_150          (1<<ETH_MAC_4_GMII_Addr_CR_P)
 #define ETH_MAC_4_GMII_Addr_CR_20_35            (2<<ETH_MAC_4_GMII_Addr_CR_P)
@@ -69,6 +69,7 @@
 #define RX_INTR_EN  1<<6
 #define EARLY_RX_INTR_EN 1<<14
 #define INTERNALPHY_ID 79898963
+#define PMU4_PHY_ID 20142014
 enum mii_reg_bits {
 	MDIO_ShiftClk = 0x10000, MDIO_DataIn = 0x80000, MDIO_DataOut = 0x20000,
 	MDIO_EnbOutput = 0x40000, MDIO_EnbIn = 0x00000,
@@ -178,7 +179,7 @@ struct am_net_private {
 	struct mii_bus *mii;
 	phy_interface_t phy_interface;
 	int phy_addr;
-	int phy_mask; 
+	int phy_mask;
 	struct phy_device *phydev;
 	int oldlink;
 	int speed;
@@ -188,4 +189,4 @@ struct am_net_private {
 
 };
 
-#endif			
+#endif
