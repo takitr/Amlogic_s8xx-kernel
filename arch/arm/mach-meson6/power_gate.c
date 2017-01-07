@@ -19,9 +19,7 @@ int  video_dac_disable()
 {
     SET_CBUS_REG_MASK(VENC_VDAC_SETTING, 0x1f);
     switch_mod_gate_by_name("venc", 0);
-  
+
     return 0;
 }
 EXPORT_SYMBOL(video_dac_disable);
-
-

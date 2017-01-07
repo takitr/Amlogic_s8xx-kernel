@@ -24,8 +24,8 @@ struct cm3217_data {
 	struct input_dev *input_dev;
         struct i2c_client *i2c_client;
 	int  delay;
-    	int  enable;
-    	struct mutex mutex;
+	int  enable;
+	struct mutex mutex;
 };
 struct cm3217_data *cm3217_data;
 static struct i2c_driver cm3217_driver;
@@ -90,17 +90,17 @@ static int lightsensor_enable(void)
 static int lightsensor_disable(void)
 {
 	int ret = 0;
-	
+
 	if(cm3217_data->enable == 0)
 		return ret;
-    	
+
 	mutex_lock(&cm3217_data->mutex);
-        
+
 	cancel_delayed_work(&cm3217_data->work);
-  	cm3217_data->enable=0;
-	
+	cm3217_data->enable=0;
+
 	mutex_unlock(&cm3217_data->mutex);
-	
+
 	return ret;
 }
 static ssize_t cm3217_enable_store(struct device *dev,
@@ -120,7 +120,7 @@ static ssize_t cm3217_enable_store(struct device *dev,
 	} else {
 		lightsensor_disable();
 	}
-	
+
 	return count;
 }
 
@@ -147,7 +147,7 @@ static ssize_t cm3217_poll_delay_store(struct device *dev,
 	cm3217_data->delay = new_delay;
 
 	if( cm3217_data->enable ){
-		lightsensor_disable(); 
+		lightsensor_disable();
 		lightsensor_enable();
 	}
 
@@ -176,7 +176,7 @@ static int cm3217_probe(struct i2c_client *client, const struct i2c_device_id *i
 	struct input_dev *idev;
 	struct i2c_adapter *adapter = to_i2c_adapter(client->dev.parent);
 	printk(" start cm3217 probe !!\n");
-	
+
 	if (!i2c_check_functionality(adapter, I2C_FUNC_SMBUS_WRITE_BYTE | I2C_FUNC_SMBUS_READ_BYTE_DATA))
 	{
 		ret = -EIO;
@@ -204,7 +204,7 @@ static int cm3217_probe(struct i2c_client *client, const struct i2c_device_id *i
 		printk(KERN_ALERT "%s: cm3217 allocate input device failed.\n", __func__);
 		goto kfree_exit;
 	}
-    
+
 	idev->name = CM3217_DEV_NAME;
 	idev->id.bustype = BUS_I2C;
 	input_set_capability(idev, EV_ABS, ABS_MISC);
@@ -217,7 +217,7 @@ static int cm3217_probe(struct i2c_client *client, const struct i2c_device_id *i
 		input_free_device(idev);
 		goto kfree_exit;
 	}
-	
+
 	mutex_init(&cm3217_data->mutex);
 	/* register the attributes */
 	ret = sysfs_create_group(&idev->dev.kobj, &light_attribute_group);
@@ -264,7 +264,7 @@ static int __init cm3217_init(void)
 {
 	i2c_add_driver(&cm3217_driver);
 	printk("cm3217 v.%s\n",DRV_VERSION);
-	
+
 	return 0;
 }
 

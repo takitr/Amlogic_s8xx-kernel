@@ -225,4 +225,3 @@ module_platform_driver(gpio_event_driver);
 
 MODULE_DESCRIPTION("GPIO Event Driver");
 MODULE_LICENSE("GPL");
-

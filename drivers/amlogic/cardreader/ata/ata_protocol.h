@@ -2,10 +2,10 @@
 #define __ATA_PROTOCOL_H
 
 #include "ata_misc.h"
-    
+
 //#define CF_USE_PIO_DMA
 //#define HD_USE_DMA
-    
+
 // ATA register defintions
 #define ATA_DATA_REG						0x1F0	// RW
 #define ATA_ERROR_REG						0x1F1	// R
@@ -20,20 +20,20 @@
 #define ATA_ALT_STATUS_REG					0x3F6	// R
 #define ATA_DEVICE_CONTROL_REG				0x3F6	// W
 #define ATA_DRIVE_ADDRESS_REG				0x3F7	// W
-    
+
 // ATA register defintions for operations
 #if 0
 #define ata_read_reg(reg)					read_pio_8(reg)
 #define ata_write_reg(reg, val)				write_pio_8(reg, val)
 #define ata_read_data()						read_pio_16(ATA_DATA_REG)
 #define ata_write_data(val)					write_pio_16(ATA_DATA_REG, val)
-#else				/*  */
+#else				/*  */
 #define ata_read_reg(reg)					READ_ATA_REG(reg)
 #define ata_write_reg(reg, val)				WRITE_ATA_REG(reg, val)
 #define ata_read_data()						READ_ATA_REG(ATA_DATA_REG)
 #define ata_write_data(val)					WRITE_ATA_REG(ATA_DATA_REG, val)
-#endif				/*  */
-    
+#endif				/*  */
+
 // ATA/ATAPI-4 command defintions
 #define ATA_CFA_ERASE_SECTORS				0xC0
 #define ATA_CFA_REQUEST_EXT_ERR_CODE		0x03
@@ -85,7 +85,7 @@
 #define ATA_WRITE_DMA_QUEUED				0xCC
 #define ATA_WRITE_MULTIPLE					0xC5
 #define ATA_WRITE_SECTORS					0x30
-    
+
 // ATA3 status bits defintions
 #define ATA_STATUS_BSY						0x80	// Busy
 #define ATA_STATUS_DRDY						0x40	// Device Ready
@@ -95,26 +95,26 @@
 #define ATA_STATUS_CORR						0x04	// Corrected Data
 #define ATA_STATUS_IDX						0x02	// Index
 #define ATA_STATUS_ERR						0x01	// Error
-    
+
 // ATA4 device control bits defintions
 #define ATA_DEV_CTL_nIEN					0x02
 #define ATA_DEV_CTL_SRST					0x04
-    
+
 // ATA4 device head bits defintions
 #define ATA_DRIVE0_MASK						0xA0	//0x00
 #define ATA_DRIVE1_MASK						0xB0	//0x10
 #define ATA_LBA_MODE						0xE0	//0x40
 #define ATA_CHS_MODE						0xA0	//0x00
-    
+
 #define ATA_CMD_READY_TIMEOUT				450	// unit: ms
 #define ATA_CMD_INIT_TIMEOUT				1000	// unit: ms
 //#define ATA_CMD_COMPLETE_TIMEOUT                      3000            // unit: ms
 //#define ATA_CMD_DATA_ACCESS_TIMEOUT                   5000            // unit: ms
 #define ATA_CMD_ISSUE_DELAY					(4*100)	// unit: 100ns, 400ns is enough according to spec
-    
+
 #define ATA_DRQ_BLK_LENGTH_BYTE				512
 #define ATA_DRQ_BLK_LENGTH_WORD				256
-    
+
 #define ATA_CMD_DEFAULT_RETRY	3
 /*#define ATA_CMD_RETRY(action, retry_time, ata_err) \
 	{\
@@ -128,10 +128,10 @@
 			else\
 				break;\
 		}\
-	}*/ 
-    
+	}*/
+
 #pragma pack(1)
-typedef struct _ATA_Identify_Information  {	// Word
+typedef struct _ATA_Identify_Information  {	// Word
 	unsigned short general_configuration;	// 0
 	unsigned short logical_cylinders;	// 1
 	unsigned short Reserved2;	// 2
@@ -186,14 +186,14 @@
 	unsigned short vendor_specific129[31];	// 129~159
 	unsigned short Reserved160[96];	// 160~255
 } ATA_Identify_Information_t;
-
+
 #pragma pack()
-typedef enum _ATA_Error_Status 
-    { ATA_NO_ERROR, ATA_ERROR_TIMEOUT, ATA_ERROR_HARDWARE_FAILURE,
-	ATA_ERROR_DEVICE_TYPE, ATA_ERROR_NO_DEVICE 
+typedef enum _ATA_Error_Status
+    { ATA_NO_ERROR, ATA_ERROR_TIMEOUT, ATA_ERROR_HARDWARE_FAILURE,
+	ATA_ERROR_DEVICE_TYPE, ATA_ERROR_NO_DEVICE
 } ATA_Error_Status_t;
-typedef struct _ATA_Parameter  {
-	unsigned char Features;	// Command specific
+typedef struct _ATA_Parameter  {
+	unsigned char Features;	// Command specific
 	unsigned char Sector_Count;	// Sector count
 	unsigned char Sector_Number;	// LBA: LBA7_0, CHS: Sector Number
 	unsigned char Cylinder_Low;	// LBA: LBA15_8, CHS: Cylinder Low
@@ -201,56 +201,56 @@
 	unsigned char Device_Head;	// LBA: LBA27_24, CHS: Head Number
 	unsigned char Command;	// Command code
 } ATA_Parameter_t;
-typedef struct _ATA_Device_Info  {
-	unsigned long sector_nums;
-	unsigned long sector_size;
-	int device_existed;
-	int device_inited;
-	ATA_Identify_Information_t identify_info;
-	char serial_number[21];
-	char model_number[41];
-} ATA_Device_Info_t;
-typedef struct _ATA_Device  {
-	unsigned char ata_buf[ATA_DRQ_BLK_LENGTH_BYTE];
-	unsigned char current_dev;
-	unsigned char current_addr_mode;
-	int master_disabled;
-	int slave_enabled;
-	ATA_Device_Info_t device_info[2];
-	ATA_Parameter_t ata_param;
-} ATA_Device_t;
-extern ATA_Device_t *ata_dev;
-extern int ATA_MASTER_DISABLED;
-extern int ATA_SLAVE_ENABLED;
-int ata_init_device(ATA_Device_t * ata_dev);
-int ata_sw_reset(ATA_Device_t * ata_dev);
-int ata_sw_reset_dev(ATA_Device_t * ata_dev);
-int ata_sleep_device(ATA_Device_t * ata_dev);
-int ata_identify_device(ATA_Device_t * ata_dev);
-int ata_identify_dev(ATA_Device_t * ata_dev, unsigned char *ata_identify_buf);
-int ata_select_device(ATA_Device_t * ata_dev, int dev_no);
-int ata_issue_pio_in_cmd(ATA_Device_t * ata_dev, unsigned long sector_cnt,
+typedef struct _ATA_Device_Info  {
+	unsigned long sector_nums;
+	unsigned long sector_size;
+	int device_existed;
+	int device_inited;
+	ATA_Identify_Information_t identify_info;
+	char serial_number[21];
+	char model_number[41];
+} ATA_Device_Info_t;
+typedef struct _ATA_Device  {
+	unsigned char ata_buf[ATA_DRQ_BLK_LENGTH_BYTE];
+	unsigned char current_dev;
+	unsigned char current_addr_mode;
+	int master_disabled;
+	int slave_enabled;
+	ATA_Device_Info_t device_info[2];
+	ATA_Parameter_t ata_param;
+} ATA_Device_t;
+extern ATA_Device_t *ata_dev;
+extern int ATA_MASTER_DISABLED;
+extern int ATA_SLAVE_ENABLED;
+int ata_init_device(ATA_Device_t * ata_dev);
+int ata_sw_reset(ATA_Device_t * ata_dev);
+int ata_sw_reset_dev(ATA_Device_t * ata_dev);
+int ata_sleep_device(ATA_Device_t * ata_dev);
+int ata_identify_device(ATA_Device_t * ata_dev);
+int ata_identify_dev(ATA_Device_t * ata_dev, unsigned char *ata_identify_buf);
+int ata_select_device(ATA_Device_t * ata_dev, int dev_no);
+int ata_issue_pio_in_cmd(ATA_Device_t * ata_dev, unsigned long sector_cnt,
 			  unsigned char *data_buf);
-int ata_issue_pio_out_cmd(ATA_Device_t * ata_dev, unsigned long sector_cnt,
+int ata_issue_pio_out_cmd(ATA_Device_t * ata_dev, unsigned long sector_cnt,
 			   unsigned char *data_buf);
-int ata_issue_no_data_cmd(ATA_Device_t * ata_dev);
-int ata_read_data_dma(unsigned long lba, unsigned long byte_cnt,
+int ata_issue_no_data_cmd(ATA_Device_t * ata_dev);
+int ata_read_data_dma(unsigned long lba, unsigned long byte_cnt,
 		       unsigned char *data_buf);
-int ata_issue_dma_out_cmd(ATA_Device_t * ata_dev, unsigned long sector_cnt,
+int ata_issue_dma_out_cmd(ATA_Device_t * ata_dev, unsigned long sector_cnt,
 			   unsigned char *data_buf);
-int ata_write_data_dma(unsigned long lba, unsigned long byte_cnt,
+int ata_write_data_dma(unsigned long lba, unsigned long byte_cnt,
 			unsigned char *data_buf);
-int ata_wait_status_bits(unsigned char bits_mask, unsigned char bits_value,
+int ata_wait_status_bits(unsigned char bits_mask, unsigned char bits_value,
 			   unsigned long timeout);
-void ata_clear_ata_param(ATA_Device_t * ata_dev);
-char *ata_error_to_string(int errcode);
-int ata_read_data_pio(unsigned long lba, unsigned long byte_cnt,
+void ata_clear_ata_param(ATA_Device_t * ata_dev);
+char *ata_error_to_string(int errcode);
+int ata_read_data_pio(unsigned long lba, unsigned long byte_cnt,
 		       unsigned char *data_buf);
-int ata_write_data_pio(unsigned long lba, unsigned long byte_cnt,
+int ata_write_data_pio(unsigned long lba, unsigned long byte_cnt,
 			unsigned char *data_buf);
-int ata_check_data_consistency(ATA_Device_t * ata_dev);
-void ata_remove_device(ATA_Device_t * ata_dev, int dev_no);
-int ata_check_cmd_validity(ATA_Device_t * ata_dev);
-int ata_set_features(ATA_Device_t * ata_dev);
-
+int ata_check_data_consistency(ATA_Device_t * ata_dev);
+void ata_remove_device(ATA_Device_t * ata_dev, int dev_no);
+int ata_check_cmd_validity(ATA_Device_t * ata_dev);
+int ata_set_features(ATA_Device_t * ata_dev);
+
 #endif				// __ATA_PROTOCOL_H

@@ -44,7 +44,6 @@ extern void __init chrdev_init(void);
 /*
  * namei.c
  */
-extern int __inode_permission(struct inode *, int);
 
 /*
  * namespace.c
@@ -74,9 +73,6 @@ extern void chroot_fs_refs(const struct path *, const struct path *);
 /*
  * file_table.c
  */
-extern void file_sb_list_add(struct file *f, struct super_block *sb);
-extern void file_sb_list_del(struct file *f);
-extern void mark_files_ro(struct super_block *);
 extern struct file *get_empty_filp(void);
 
 /*
@@ -130,12 +126,6 @@ extern struct dentry *__d_alloc(struct super_block *, const struct qstr *);
  * read_write.c
  */
 extern ssize_t __kernel_write(struct file *, const char *, size_t, loff_t *);
-
-/*
- * splice.c
- */
-extern long do_splice_direct(struct file *in, loff_t *ppos, struct file *out,
-		loff_t *opos, size_t len, unsigned int flags);
 
 /*
  * pipe.c

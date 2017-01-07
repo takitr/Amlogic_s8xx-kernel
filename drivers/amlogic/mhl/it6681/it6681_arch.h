@@ -17,7 +17,7 @@
 #define __ANDROID__
 #if defined(__ANDROID__)
     #define ENV_ANDROID
-    
+
 #elif defined(__linux__)
     #define ENV_LINUX
 
@@ -96,7 +96,7 @@
     void it6681_copy_edid_ite_demo_board(void);
 
     #define debug_6681 printf
-    //#define debug_6681 
+    //#define debug_6681
 
     typedef char BOOL;
     typedef char CHAR, *PCHAR ;
@@ -104,15 +104,15 @@
     typedef unsigned char UCHAR, *PUCHAR ;
     typedef unsigned char byte, *pbyte ;
     typedef unsigned char BYTE, *PBYTE ;
-    
+
     typedef short SHORT, *PSHORT ;
-    
+
     typedef unsigned short USHORT, *PUSHORT ;
     typedef unsigned short word, *pword ;
     typedef unsigned short WORD, *PWORD ;
-    
+
     typedef long LONG, *PLONG ;
-    
+
     typedef unsigned long ULONG, *PULONG ;
     typedef unsigned long dword, *pdword ;
     typedef unsigned long DWORD, *PDWORD ;

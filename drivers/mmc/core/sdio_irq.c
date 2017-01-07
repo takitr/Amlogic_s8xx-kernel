@@ -46,7 +46,7 @@ static int process_sdio_pending_irqs(struct mmc_host *host)
 		func->irq_handler(func);
 		return 1;
 	}
-#endif	
+#endif
 	ret = mmc_io_rw_direct(card, 0, 0, SDIO_CCCR_INTx, 0, &pending);
 	if (ret) {
 		pr_debug("%s: error %d reading SDIO_CCCR_INTx\n",
@@ -139,7 +139,7 @@ static int sdio_irq_thread(void *_host)
 		 * that an interrupt will be closely followed by more.
 		 * This has a substantial benefit for network devices.
 		 */
-		if (!(host->caps & MMC_CAP_SDIO_IRQ)) 
+		if (!(host->caps & MMC_CAP_SDIO_IRQ))
 		{
 			if (ret > 0)
 				period /= 2;

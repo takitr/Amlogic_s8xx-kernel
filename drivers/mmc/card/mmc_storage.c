@@ -37,9 +37,10 @@ void print_storage_node_info(void)
 		store_msg("node->offset_addr %llx , node->timestamp %d ,node->valid_node_flag %d",\
 			node->offset_addr, node->timestamp,node->valid_node_flag);
 	}
-	return;	
+	return;
 }
 
+#ifdef MMC_STORAGE_DEBUG
 static void show_data_buf(unsigned char *data_buf)
 {
 	int i= 0;
@@ -48,6 +49,7 @@ static void show_data_buf(unsigned char *data_buf)
 	}
 	return;
 }
+#endif
 
 struct mmc_card * storage_device = NULL;
 
@@ -77,7 +79,7 @@ static int check_data(void * cmp)
 	struct mmc_storage_head_t * head = (struct mmc_storage_head_t * )cmp;
 	int ret =0;
 	store_dbg("check_data :head->checksum = %d",head->checksum);
-	if(head->checksum != mmc_checksum(&(head->data[0]),MMC_STORAGE_AREA_VALID_SIZE)){
+	if(head->checksum != mmc_checksum((unsigned char *)&(head->data[0]),MMC_STORAGE_AREA_VALID_SIZE)){
 		ret = -1;
 		store_msg("mmc storage data check_sum failed\n");
 	}
@@ -105,7 +107,7 @@ static int check_magic(void * cmp, unsigned char * magic)
 	/*if(head->magic_checksum != mmc_checksum(&(head->magic),MMC_STORAGE_MAGIC_SIZE)){
 		ret = -2;
 	}*/
-	
+
 	return ret ;
 }
 
@@ -114,10 +116,10 @@ static int storage_check(struct mmc_card *device, void * buf)
 	struct mmc_storage_head_t * storage_data =(struct mmc_storage_head_t *)buf;
 	unsigned char magic[MMC_STORAGE_MAGIC_SIZE];
 	int ret = 0;
-	
+
 	init_magic(&magic[0]);
 	store_dbg("storage_check :source magic : %s",magic);
-	
+
 	ret = check_magic(storage_data,&magic[0]);
 	if(ret){
 		store_msg("mmc read storage check magic name failed and ret = %d\n",ret);
@@ -128,17 +130,17 @@ static int storage_check(struct mmc_card *device, void * buf)
 	if(ret){
 		store_msg("mmc check data failed");
 	}
-	
+
 	return ret;
 }
 
 // direct : 0 read  / 1 write
 int mmc_storage_rw_kernel(struct mmc_card *device, struct storage_node_t * storage_node, unsigned char * databuf, int len, int direct)
 {
-    int ret=0, start_blk, size, force_size,blk_cnt,tmp_size;
+    int ret=0, start_blk, size, force_size;
     int bit = device->csd.read_blkbits;
-    int blk_size = 1 << bit; // size of a block	
-    
+    //int blk_size = 1 << bit; // size of a block	
+
 	mmc_claim_host(device->host);
 
     ret = mmc_blk_main_md_part_switch(device);
@@ -152,7 +154,7 @@ int mmc_storage_rw_kernel(struct mmc_card *device, struct storage_node_t * stora
 	force_size = MMC_STORAGE_DEFAULT_SIZE >> bit;
 
 	if(direct == 0){
-		while(size > 0){	
+		while(size > 0){
 			ret = mmc_read_internal(device,start_blk,force_size,databuf);
 			if(ret != 0){
 				store_msg("mmc_storage_rw_kernel : read storage at block %d failed",start_blk);
@@ -173,7 +175,7 @@ int mmc_storage_rw_kernel(struct mmc_card *device, struct storage_node_t * stora
 		}
 	}
 
-exit_err: 
+exit_err:
     mmc_release_host(device->host);
 	return ret;
 }
@@ -194,15 +196,15 @@ int mmc_storage_read(struct mmc_card *device, unsigned char * buf, int len)
 		store_msg("mmc_storage_read : malloc failed !");
 		return -1;
 	}
-	
+
 	part_num = 0;
 	read_len = MMC_STORAGE_AREA_SIZE;
-	
+
 	// read vaild node
 	list_for_each_entry(storage_node,&storage_node_list,storage_list){
 		if((storage_node != NULL) && (storage_node->valid_node_flag == 1)){
 			memset((unsigned char *)storage_data,0x0,sizeof(struct mmc_storage_head_t));
-			ret = mmc_storage_rw_kernel(device, storage_node, storage_data, read_len,0);
+			ret = mmc_storage_rw_kernel(device, storage_node, (unsigned char *)storage_data, read_len,0);
 			if(ret){
 				store_msg("storage read failed");
 			}
@@ -223,7 +225,7 @@ int mmc_storage_read(struct mmc_card *device, unsigned char * buf, int len)
 		list_for_each_entry(storage_node,&storage_node_list,storage_list){
 			if((storage_node != NULL) && (storage_node->valid_node_flag == 0)){
 				memset((unsigned char *)storage_data,0x0,sizeof(struct mmc_storage_head_t));
-				ret = mmc_storage_rw_kernel(device, storage_node, storage_data, read_len,0);
+				ret = mmc_storage_rw_kernel(device, storage_node, (unsigned char *)storage_data, read_len,0);
 				if(ret){
 					store_msg("storage read failed");
 				}
@@ -252,7 +254,7 @@ int mmc_storage_read(struct mmc_card *device, unsigned char * buf, int len)
 		store_msg("mmc read storage failed at");
 		ret = -STORAGE_READ_FAILED;
 	}
-	
+
 	if(storage_data){
 		kfree(storage_data);
 		storage_data =NULL;
@@ -276,19 +278,19 @@ int mmc_storage_write(struct mmc_card *device, unsigned char * buf, int len)
 		store_msg("mmc_storage_write : malloc failed !");
 		return -1;
 	}
-	
+
 	init_magic(&storage_data->magic[0]);
-	
-	storage_data->magic_checksum = mmc_checksum(&storage_data->magic[0],MMC_STORAGE_MAGIC_SIZE);
+
+	storage_data->magic_checksum = mmc_checksum((unsigned char *)&storage_data->magic[0],MMC_STORAGE_MAGIC_SIZE);
 	storage_data->timestamp = 0;
 	storage_data->version = 0;
-	
+
 	memcpy(&storage_data->data[0], buf, len);
-#ifdef MMC_STORAGE_DEBUG	
+#ifdef MMC_STORAGE_DEBUG
 	store_msg("mmc_storage_write : show write buf : ");
 	show_data_buf(&storage_data->data[0]);
 #endif
-	storage_data->checksum = mmc_checksum(&storage_data->data[0],MMC_STORAGE_AREA_VALID_SIZE);
+	storage_data->checksum = mmc_checksum((unsigned char *)&storage_data->data[0],MMC_STORAGE_AREA_VALID_SIZE);
 
 	//show_data_buf(&storage_data);
 	list_for_each_entry(storage_node,&storage_node_list,storage_list){
@@ -296,24 +298,24 @@ int mmc_storage_write(struct mmc_card *device, unsigned char * buf, int len)
 			storage_data->timestamp = storage_node->timestamp +1; //valid node
 		}
 	}
-	
+
 	list_for_each_entry(storage_node,&storage_node_list,storage_list){
 		if((storage_node != NULL) && (part_num < MMC_STORAGE_AREA_COUNT)){
 			write_failed_flag = 0;
-			ret = mmc_storage_rw_kernel(device, storage_node, storage_data, write_len,1);
+			ret = mmc_storage_rw_kernel(device, storage_node, (unsigned char *)storage_data, write_len,1);
 			if(ret){
 				store_msg("storage write part %d failed at %llx",part_num,storage_node->offset_addr );
-				write_failed_flag = 1; 
+				write_failed_flag = 1;
 			}
 			part_num++;
-			
+
 			if(!write_failed_flag){
 				mmc_storage->secure_valid = 1;
 				store_msg("storage write part %d success at %llx", part_num,storage_node->offset_addr);
 			}
 		}
 	}
-	
+
 
 	if(storage_data){
 		kfree(storage_data);
@@ -328,22 +330,22 @@ int mmc_storage_init(struct mmc_card *device)
 	struct storage_node_t part0_node, part1_node,tmp_node;
 	int cnt_num = 0, part_num = 0,ret = 0;
 	uint64_t addr = 0;
-	
+
 	data_buf = kmalloc(sizeof(struct mmc_storage_head_t ),GFP_KERNEL);
 	if(data_buf == NULL){
 		store_msg("mmc_storage_init : data_buf malloc failed");
 		goto exit;
 	}
-	
+
 	//store_msg("sizeof(struct mmc_storage_head_t ) = %d, size = %d",sizeof(struct mmc_storage_head_t ),(sizeof(struct mmc_storage_head_t )>>9));
 	memset(data_buf,0x0,sizeof(struct mmc_storage_head_t ));
-	
+
 	mmc_storage->secure_init = 1;
 	part0_node.offset_addr = 0;
 	part0_node.valid_flag  = 0;
 	part1_node.valid_flag  = 0;
 	part_num = MMC_STORAGE_AREA_COUNT;
-	
+
 	addr = MMC_STORAGE_OFFSET;
 	for(cnt_num = 0; cnt_num < part_num; cnt_num++){
 
@@ -377,7 +379,7 @@ int mmc_storage_init(struct mmc_card *device)
 	}
 
 	if(mmc_storage->secure_valid == 1){
-		
+
 		if(part0_node.valid_flag && part1_node.valid_flag ){
 			if(part0_node.timestamp >= part1_node.timestamp){
 				memcpy(mmc_storage->valid_node,&part0_node,sizeof(struct storage_node_t));
@@ -386,8 +388,8 @@ int mmc_storage_init(struct mmc_card *device)
 				memcpy(mmc_storage->valid_node,&part1_node,sizeof(struct storage_node_t));
 				memcpy(mmc_storage->free_node,&part0_node,sizeof(struct storage_node_t));
 			}
-			mmc_storage->valid_node->valid_node_flag = 1; 
-			mmc_storage->free_node->valid_node_flag = 0; 
+			mmc_storage->valid_node->valid_node_flag = 1;
+			mmc_storage->free_node->valid_node_flag = 0;
 
 			list_add_tail(&mmc_storage->valid_node->storage_list,&storage_node_list);
 			list_add_tail(&mmc_storage->free_node->storage_list,&storage_node_list);
@@ -396,7 +398,7 @@ int mmc_storage_init(struct mmc_card *device)
 		}else if(part0_node.valid_flag && (!part1_node.valid_flag)){
 
 			memcpy(mmc_storage->valid_node,&part0_node,sizeof(struct storage_node_t));
-			mmc_storage->valid_node->valid_node_flag = 1; 
+			mmc_storage->valid_node->valid_node_flag = 1;
 			list_add_tail(&mmc_storage->valid_node->storage_list,&storage_node_list);
 
 			part1_node.offset_addr = MMC_STORAGE_OFFSET + MMC_STORAGE_AREA_SIZE;
@@ -405,14 +407,14 @@ int mmc_storage_init(struct mmc_card *device)
 			part1_node.valid_node_flag = 0;
 
 			memcpy(mmc_storage->free_node,&part1_node,sizeof(struct storage_node_t));
-			mmc_storage->free_node->valid_node_flag = 0; 
+			mmc_storage->free_node->valid_node_flag = 0;
 			list_add_tail(&mmc_storage->free_node->storage_list,&storage_node_list);
 
 			store_msg("mmc storage node0 in mmc addr = %llx",part0_node.offset_addr);
 		}else if(part1_node.valid_flag && (!part0_node.valid_flag)){
 
 			memcpy(mmc_storage->valid_node,&part1_node,sizeof(struct storage_node_t));
-			mmc_storage->valid_node->valid_node_flag = 1; 
+			mmc_storage->valid_node->valid_node_flag = 1;
 			list_add_tail(&mmc_storage->valid_node->storage_list,&storage_node_list);
 
 			part0_node.offset_addr = MMC_STORAGE_OFFSET;
@@ -421,7 +423,7 @@ int mmc_storage_init(struct mmc_card *device)
 			part0_node.valid_node_flag = 0;
 
 			memcpy(mmc_storage->free_node,&part0_node,sizeof(struct storage_node_t));
-			mmc_storage->free_node->valid_node_flag = 0; 
+			mmc_storage->free_node->valid_node_flag = 0;
 			list_add_tail(&mmc_storage->free_node->storage_list,&storage_node_list);
 
 			store_msg("mmc storage node1 in mmc addr = %llx",part1_node.offset_addr);
@@ -430,13 +432,13 @@ int mmc_storage_init(struct mmc_card *device)
 	else{
 		store_msg("##mmc do not find storage##");
 	}
-	
+
 exit:
 	if(data_buf){
 		kfree(data_buf);
 		data_buf = NULL;
 	}
-	
+
 	return 0;
 }
 
@@ -444,12 +446,12 @@ int mmc_storage_check(struct mmc_card *device)
 {
 	unsigned char *data_buf = NULL;
 	int ret = 0,len;
-	
+
 	store_dbg("%s %d",__func__,__LINE__);
 	mmc_storage->secure_valid = 0;
 	mmc_storage->secure_init= 0;
 	//device->storage_protect = 1;
-	
+
 	ret = mmc_storage_init(device);
 	if(ret){
 		store_msg("mmc_storage_init failed");
@@ -457,7 +459,7 @@ int mmc_storage_check(struct mmc_card *device)
 	}
 
 	if(mmc_storage->secure_valid == 0){
-		
+
 
 		mmc_storage->valid_node->offset_addr = MMC_STORAGE_OFFSET;
 		mmc_storage->valid_node->valid_node_flag = 1;
@@ -478,7 +480,7 @@ int mmc_storage_check(struct mmc_card *device)
 		}
 		memset(data_buf,0x0,MMC_STORAGE_AREA_VALID_SIZE);
 		len = MMC_STORAGE_AREA_VALID_SIZE;
-		
+
 		ret =  mmc_storage_write(device,data_buf,len);
 		if(ret){
 			store_msg("mmc_storage_write failed");
@@ -493,7 +495,7 @@ exit_error:
 		kfree(data_buf);
 		data_buf = NULL;
 	}
-	
+
 	return ret;
 }
 
@@ -529,7 +531,7 @@ static int storage_buf_malloc(struct mmc_card *device)
 		ret = -MMC_MALLOC_FAILED;
 		goto exit_error;
 	}
-	
+
 	memset(mmc_storage->valid_node ,0x0,sizeof(struct storage_node_t));
 	mmc_storage->free_node = kmalloc(sizeof(struct storage_node_t),GFP_KERNEL);
 	if(mmc_storage->free_node == NULL){
@@ -539,7 +541,7 @@ static int storage_buf_malloc(struct mmc_card *device)
 	memset(mmc_storage->free_node ,0x0,sizeof(struct storage_node_t));
 
 	return ret;
-	
+
 exit_error:
 
 
@@ -547,7 +549,7 @@ exit_error:
 		kfree(mmc_storage->free_node);
 		mmc_storage->free_node = NULL;
 	}
-	
+
 	if(mmc_storage->valid_node ){
 		kfree(mmc_storage->valid_node );
 		mmc_storage->valid_node  = NULL;
@@ -570,14 +572,14 @@ int mmc_storage_probe(struct mmc_card *card)
 		goto exit_error;
 	}
 	INIT_LIST_HEAD(&storage_node_list);
-	
+
 	ret = mmc_storage_check(card);
 	if(ret){
 		store_msg("mmc storage check failed");
 		goto exit_error;
 	}
 	storage_device = card;
-	
+
 #ifdef MMC_STORAGE_DEBUG
 	int err = mmc_storage_test(card);
 	if(err){
@@ -588,7 +590,7 @@ int mmc_storage_probe(struct mmc_card *card)
 #endif
 
 	return ret;
-	
+
 exit_error:
 
 	storage_buf_free();
@@ -599,7 +601,7 @@ exit_error:
 int mmc_storage_exit(void)
 {
 	int ret =0;
-	
+
 	storage_buf_free();
 
 	return ret;
@@ -609,12 +611,12 @@ int mmc_secure_storage_ops(unsigned char * buf, unsigned int len, int wr_flag)
 {
 	struct mmc_card *device= NULL;
 	int err = 0;
-	
+
 	if(len > MMC_STORAGE_AREA_VALID_SIZE){
 		store_msg("mmc secure storage write fail,len 0x%x is bigger than 0x%x,%s:%d",len,MMC_STORAGE_AREA_VALID_SIZE,__func__,__LINE__);
 		return -1;
 	}
-	
+
 	device =  storage_device;
 
 	if(!device){
@@ -633,7 +635,7 @@ int mmc_secure_storage_ops(unsigned char * buf, unsigned int len, int wr_flag)
 			store_msg("secure_storage_mmc_ops read failed");
 		}
 	}
-	
+
 	return err;
 }
 
@@ -666,7 +668,7 @@ int mmc_storage_test(struct mmc_card *card)
 		store_msg("mmc_storage_test : ops write failed");
 		return -1;
 	}
-	
+
 	store_msg("mmc_storage_test : read ");
 	//read
 	ret  = mmc_secure_storage_ops(cmp,MMC_STORAGE_AREA_VALID_SIZE,0);
@@ -687,4 +689,3 @@ int mmc_storage_test(struct mmc_card *card)
 }
 
 #endif
-

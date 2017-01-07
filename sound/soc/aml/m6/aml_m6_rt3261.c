@@ -186,7 +186,7 @@ static void rt3261_work_func(struct work_struct *work)
 	    jack_type = rt3261_headset_detect(codec, 1);
             dprintk(KERN_INFO "rt3261 hp pluged jack_type: %d\n", jack_type);
             snd_soc_jack_report(&pdata->jack, status, SND_JACK_HEADPHONE);
-            switch_set_state(&pdata->sdev, 1); 
+            switch_set_state(&pdata->sdev, 1);
         } else {
             dprintk(KERN_INFO "rt3261 hp unpluged\n");
 	    rt3261_headset_detect(codec, 0);

@@ -43,7 +43,7 @@ static void aml_sw_bit_setsda(void *data, int val)
 	unsigned int oe;
 
 	/*printk("d%d ",val);*/
-	
+
 	//set output
 	oe = readl(i2c->sw_pins->sda_oe);
 	oe &= ~(1<<i2c->sw_pins->sda_bit);
@@ -67,11 +67,11 @@ static int aml_sw_bit_getsda(void *data)
 	oe = readl(i2c->sw_pins->sda_oe);
 	oe |=  (1<<(i2c->sw_pins->sda_bit));
 	writel(oe, i2c->sw_pins->sda_oe);
-	
+
 	sda = readl(i2c->sw_pins->sda_reg_in) & (1<<(i2c->sw_pins->sda_bit));
 
 	/*printk("g%d ",sda? 1 : 0);*/
-	
+
 	return sda? 1 : 0;
 }
 
@@ -79,7 +79,7 @@ static int aml_sw_i2c_setup(void *data)
 {
 	struct aml_sw_i2c_pins* gdata = (struct aml_sw_i2c_pins*)data;
 	unsigned int oe;
-			
+
 	/* set scl output */
 	oe = readl(gdata->scl_oe);
 	oe &= ~(1<<(gdata->scl_bit));
@@ -123,7 +123,7 @@ static void aml_sw_bit_setsda(void *data, int val)
 	unsigned int oe;
 
 	/*printk("d%d ",val);*/
-	
+
 	if(val){
 		//set input
 		oe = readl(i2c->sw_pins->sda_oe);
@@ -134,7 +134,7 @@ static void aml_sw_bit_setsda(void *data, int val)
 		oe = readl(i2c->sw_pins->sda_oe);
 		oe &= ~(1<<i2c->sw_pins->sda_bit);
 		writel(oe, i2c->sw_pins->sda_oe);
-	
+
 		sda = readl(i2c->sw_pins->sda_reg_out);
 		if(val)
 			sda |= (1<<(i2c->sw_pins->sda_bit));
@@ -154,11 +154,11 @@ static int aml_sw_bit_getsda(void *data)
 /*	oe = readl(i2c->sw_pins->sda_oe);
 	oe |=  (1<<(i2c->sw_pins->sda_bit));
 	writel(oe, i2c->sw_pins->sda_oe);
-*/	
+*/
 	sda = readl(i2c->sw_pins->sda_reg_in) & (1<<(i2c->sw_pins->sda_bit));
 
 	/*printk("g%d ",sda? 1 : 0);*/
-	
+
 	return sda? 1 : 0;
 }
 
@@ -166,7 +166,7 @@ static int aml_sw_i2c_setup(void *data)
 {
 	struct aml_sw_i2c_pins* gdata = (struct aml_sw_i2c_pins*)data;
 	unsigned int oe;
-			
+
 	/* set scl output */
 	oe = readl(gdata->scl_oe);
 	oe &= ~(1<<(gdata->scl_bit));
@@ -183,7 +183,7 @@ static int aml_sw_i2c_setup(void *data)
 	writel(oe, gdata->sda_oe);
 
 	return 0;
-}	
+}
 
 
 #endif
@@ -212,14 +212,14 @@ static struct aml_sw_i2c aml_sw_i2cd = {
 static ssize_t show_i2c_info(struct class *class, struct class_attribute *attr, char *buf)
 {
 	struct aml_sw_i2c *i2c;
-	
+
 	i2c = container_of(class,struct aml_sw_i2c,class);
 
 	printk( "scl_reg_out 0x%x\n", i2c->sw_pins->scl_reg_out);
 	printk( "scl_reg_in  0x%x\n", i2c->sw_pins->scl_reg_in);
 	printk( "scl_bit  %d\n", i2c->sw_pins->scl_bit);
 	printk( "scl_oe  0x%x\n", i2c->sw_pins->scl_oe);
-	
+
 	printk( "sda_reg_out 0x%x\n", i2c->sw_pins->sda_reg_out);
 	printk( "sda_reg_in  0x%x\n", i2c->sw_pins->sda_reg_in);
 	printk( "sda_bit  %d\n", i2c->sw_pins->sda_bit);
@@ -238,20 +238,20 @@ static int aml_sw_i2c_class_create(struct aml_sw_i2c *drv_data)
 #define CLASS_NAME_LEN 48
 	int ret;
 	struct class *clp;
-	
+
 	clp = &(drv_data->class);
 
 	clp->name = kzalloc(CLASS_NAME_LEN,GFP_KERNEL);
 	if (!clp->name)
 		return -ENOMEM;
-	
+
 	snprintf((char *)clp->name, CLASS_NAME_LEN, "aml-sw-i2c-%d", drv_data->adapter.nr);
 	clp->owner = THIS_MODULE;
 	clp->class_attrs = i2c_class_attrs;
 	ret = class_register(clp);
 	if (ret )
 		kfree(clp->name);
-	
+
 	return 0;
 }
 
@@ -274,7 +274,7 @@ static int aml_sw_i2c_probe(struct platform_device *pdev)
 	drv_data = kzalloc(sizeof(struct aml_sw_i2c), GFP_KERNEL);
 	if (!drv_data)
 		return -ENOMEM;
-	
+
 	*drv_data = aml_sw_i2cd;
 	drv_data->sw_pins = &(plat->sw_pins);
 
@@ -295,21 +295,21 @@ static int aml_sw_i2c_probe(struct platform_device *pdev)
 	aml_sw_i2c_setup(drv_data->sw_pins);
 
 	/*add to i2c bit algos*/
-	if ((ret = i2c_bit_add_numbered_bus(&(drv_data->adapter)) != 0)) 
+	if ((ret = i2c_bit_add_numbered_bus(&(drv_data->adapter)) != 0))
 	{
-		printk(KERN_ERR "\033[0;40;36mERROR: Could not add %s to i2c bit" 
-							"algos\033[0m\r\n", drv_data->adapter.name);
+		printk(KERN_ERR "\033[0;40;36mERROR: Could not add %s to i2c bit"
+							"algos\033[0m\n", drv_data->adapter.name);
 		return ret;
 	}
 
 	platform_set_drvdata(pdev, drv_data);
-	
-   	if((ret = aml_sw_i2c_class_create(drv_data)) != 0)
+
+	if((ret = aml_sw_i2c_class_create(drv_data)) != 0)
 	{
 		printk(" class register sw_i2c_class[%d] fail![ret=0x%x]\n", drv_data->adapter.nr, ret);
 	}
-	
-	printk("aml gpio i2c bus [%d] initialized\r\n", drv_data->adapter.nr);
+
+	printk("aml gpio i2c bus [%d] initialized\n", drv_data->adapter.nr);
 	return 0;
 }
 
@@ -325,24 +325,24 @@ static int aml_sw_i2c_remove(struct platform_device *pdev)
 	return 0;
 }
 
-static struct platform_driver aml_sw_i2c_driver = { 
-	.probe = aml_sw_i2c_probe, 
-	.remove = aml_sw_i2c_remove, 
+static struct platform_driver aml_sw_i2c_driver = {
+	.probe = aml_sw_i2c_probe,
+	.remove = aml_sw_i2c_remove,
 	.driver = {
-			.name = "aml-sw-i2c",						
-			.owner = THIS_MODULE,						
-	}, 
+			.name = "aml-sw-i2c",
+			.owner = THIS_MODULE,
+	},
 };
 
-static int __init aml_sw_i2c_init(void) 
+static int __init aml_sw_i2c_init(void)
 {
 	return platform_driver_register(&aml_sw_i2c_driver);
 }
 
-static void __exit aml_sw_i2c_exit(void) 
+static void __exit aml_sw_i2c_exit(void)
 {
 	platform_driver_unregister(&aml_sw_i2c_driver);
-} 
+}
 
 module_init(aml_sw_i2c_init);
 module_exit(aml_sw_i2c_exit);
@@ -350,4 +350,3 @@ module_exit(aml_sw_i2c_exit);
 MODULE_AUTHOR("AMLOGIC");
 MODULE_DESCRIPTION("I2C software gpio driver for amlogic");
 MODULE_LICENSE("GPL");
-

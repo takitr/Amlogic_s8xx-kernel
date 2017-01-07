@@ -2,8 +2,8 @@ config  AM_LOGO
 	bool  "setup logo"
 	default n
 	depends on FB_AM && AM_GE2D
-	help 
-		setup logo support osd parameter offered by Uboot 
+	help
+		setup logo support osd parameter offered by Uboot
 
 config AM_HDMI_ONLY
 	bool  "hdmi only"

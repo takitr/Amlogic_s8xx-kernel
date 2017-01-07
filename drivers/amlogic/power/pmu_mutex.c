@@ -16,7 +16,7 @@
  */
 static int mutex_cnt = 0;
 const  char mutex_name[20] = {};
-static int    alarm_inited = 0; 
+static int    alarm_inited = 0;
 static struct alarm battery_alarm;
 
 void *pmu_alloc_mutex(void)
@@ -34,7 +34,7 @@ void *pmu_alloc_mutex(void)
         printk("%s, alloc key failed\n", __func__);
         return NULL;
     }
-    sprintf((char *)mutex_name, "pmu_mutex%d", mutex_cnt++); 
+    sprintf((char *)mutex_name, "pmu_mutex%d", mutex_cnt++);
     __mutex_init(pmutex, mutex_name, key);
     return (void *)pmutex;
 }
@@ -42,13 +42,13 @@ EXPORT_SYMBOL(pmu_alloc_mutex);
 
 void pmu_mutex_lock(void *mutex)
 {
-    mutex_lock((struct mutex *)mutex);    
+    mutex_lock((struct mutex *)mutex);
 }
 EXPORT_SYMBOL(pmu_mutex_lock);
 
 void pmu_mutex_unlock(void *mutex)
 {
-    mutex_unlock((struct mutex *)mutex);    
+    mutex_unlock((struct mutex *)mutex);
 }
 EXPORT_SYMBOL(pmu_mutex_unlock);
 
@@ -61,7 +61,7 @@ static enum alarmtimer_restart pmu_battery_alarm(struct alarm *alarm, ktime_t no
 int pmu_rtc_device_init(void)
 {
     if (alarm_inited) {
-        return 0;    
+        return 0;
     }
     alarm_init(&battery_alarm, ALARM_REALTIME, pmu_battery_alarm);
     alarm_inited = 1;
@@ -69,13 +69,13 @@ int pmu_rtc_device_init(void)
 }
 EXPORT_SYMBOL(pmu_rtc_device_init);
 
-int pmu_rtc_set_alarm(unsigned long seconds) 
+int pmu_rtc_set_alarm(unsigned long seconds)
 {
     int ret;
 
     if (!alarm_inited) {
         printk("%s, alarm is not inited\n", __func__);
-        return -ENODEV;    
+        return -ENODEV;
     }
 	ret = alarm_start(&battery_alarm,
                       ktime_add(ktime_get_real(), ktime_set(seconds, 0)));

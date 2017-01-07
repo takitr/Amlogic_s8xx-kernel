@@ -1,7 +1,7 @@
-/* 
+/*
  * drivers/input/touchscreen/novatek_ts.c
  *
- * Novatek TouchScreen driver. 
+ * Novatek TouchScreen driver.
  *
  * Copyright (c) 2010  Novatek tech Ltd.
  *
@@ -32,7 +32,7 @@
 struct tp_event {
 	u16	x;
 	u16	y;
-    	s16 id;
+	s16 id;
 	u16	pressure;
 	u8  touch_point;
 	u8  flag;
@@ -109,7 +109,7 @@ static int screen_max_y = 0;
 //	unsigned short dirty_addr_buf[2];
 //	const unsigned short normal_i2c[2];
 //}u_i2c_addr = {{0x00},};
-	
+
 //static __u32 twi_id = 0;
 
 #define SCREEN_MAX_X    (screen_max_x)
@@ -135,8 +135,8 @@ static int screen_max_y = 0;
 
 int m_inet_ctpState;
 
-struct ntp_ts_data 
-{	
+struct ntp_ts_data
+{
 	struct i2c_client *client;
 	struct input_dev	*input_dev;
 	struct work_struct 	pen_event_work;
@@ -149,7 +149,7 @@ struct ntp_ts_data
 };
 
 
-/*******************************************************	
+/*******************************************************
 Description:
 	Read data from the i2c slave device;
 	This operation consisted of 2 i2c_msgs,the first msg used
@@ -160,7 +160,7 @@ Parameter:
 	buf[0]:operate address.
 	buf[1]~buf[len]:read data buffer.
 	len:operate length.
-	
+
 return:
 	numbers of i2c_msgs to transfer
 *********************************************************/
@@ -189,7 +189,7 @@ static int i2c_read_bytes(struct i2c_client *client, uint8_t *buf, int len)
 	return ret;
 }
 
-/*******************************************************	
+/*******************************************************
 Description:
 	write data to the i2c slave device.
 
@@ -198,7 +198,7 @@ Parameter:
 	buf[0]:operate address.
 	buf[1]~buf[len]:write data buffer.
 	len:operate length.
-	
+
 return:
 	numbers of i2c_msgs to transfer.
 *********************************************************/
@@ -211,8 +211,8 @@ static int i2c_write_bytes(struct i2c_client *client,uint8_t *data,int len)
 	msg.flags=!I2C_M_RD;
 	msg.addr=client->addr;
 	msg.len=len;
-	msg.buf=data;		
-	
+	msg.buf=data;
+
 	while(retries<5)
 	{
 		ret=i2c_transfer(client->adapter,&msg, 1);
@@ -261,21 +261,21 @@ Description:
 
 Parameter:
 	priv:	i2c client private struct.
-	
+
 return:
 	Executive outcomes.0---succeed.
 *******************************************************/
 int ntp_flash_write(struct file *file, const char __user *buff, size_t count, loff_t *offp)
 {
-	struct i2c_msg msgs[2];	
+	struct i2c_msg msgs[2];
 	char *str;
 	int ret=-1;
 	int retries = 0;
-	
+
 	//file->private_data = (uint8_t *)kmalloc(64, GFP_KERNEL);
 	//str = file->private_data;
 	str = (uint8_t *)kmalloc(64, GFP_KERNEL);
-	
+
 	ret = copy_from_user(str, buff, count);
 
 	//set addr
@@ -287,7 +287,7 @@ int ntp_flash_write(struct file *file, const char __user *buff, size_t count, lo
 	{
 		msgs[0].addr = NOVATEK_TS_ADDR;
 	}
-	
+
 	msgs[0].flags = !I2C_M_RD;
 	//msgs[0].addr  = str[0];
 	msgs[0].len   = str[1];
@@ -297,29 +297,29 @@ int ntp_flash_write(struct file *file, const char __user *buff, size_t count, lo
 	{
 		ret = i2c_transfer(ntp_flash_priv->client->adapter, msgs, 1);
 		if(ret == 1)
-		{	
+		{
 			break;
 		}
 		else
 		{
 			pr_info("write error %d\n", retries);
 		}
-		
+
 		retries++;
 	}
 
 	kfree(str);
-	
+
 	return ret;
 }
 
 int ntp_flash_read(struct file *file, char __user *buff, size_t count, loff_t *offp)
 {
-	struct i2c_msg msgs[2];	 
+	struct i2c_msg msgs[2];
 	char *str;
 	int ret = -1;
 	int retries = 0;
-	
+
 	//file->private_data = (uint8_t *)kmalloc(64, GFP_KERNEL);
 	//str = file->private_data;
 	str = (uint8_t *)kmalloc(64, GFP_KERNEL);
@@ -340,7 +340,7 @@ int ntp_flash_read(struct file *file, char __user *buff, size_t count, loff_t *o
 		msgs[0].addr = NOVATEK_TS_ADDR;
 		msgs[1].addr = NOVATEK_TS_ADDR;
 	}
-	
+
 	msgs[0].flags = !I2C_M_RD;
 	//msgs[0].addr  = str[0];
 	msgs[0].len   = 1;
@@ -362,14 +362,14 @@ int ntp_flash_read(struct file *file, char __user *buff, size_t count, loff_t *o
 		{
 			pr_info("read error %d\n", retries);
 		}
-		
+
 		retries++;
 	}
-	
+
 	ret = copy_to_user(buff, str, count);
 
 	kfree(str);
-	
+
 	return ret;
 }
 
@@ -378,8 +378,8 @@ int ntp_flash_open(struct inode *inode, struct file *file)
 	struct ntp_flash_data *dev;
     //pr_info("ntp_flash_open\n");
 	dev = kmalloc(sizeof(struct ntp_flash_data), GFP_KERNEL);
-	
-	if (dev == NULL) 
+
+	if (dev == NULL)
 	{
 		return -ENOMEM;
 	}
@@ -395,20 +395,20 @@ int ntp_flash_open(struct inode *inode, struct file *file)
 int ntp_flash_close(struct inode *inode, struct file *file)
 {
 	struct ntp_flash_data *dev = file->private_data;
-	
+
     //pr_info("ntp_flash_close\n");
 
 	ntp_apk_mode = 0;
-	
-	if (dev) 
+
+	if (dev)
 	{
 		kfree(dev);
 	}
-	
-	return 0;   
+
+	return 0;
 }
 
-struct file_operations ntp_flash_fops = 
+struct file_operations ntp_flash_fops =
 {
 	.owner = THIS_MODULE,
 	.open = ntp_flash_open,
@@ -418,9 +418,9 @@ struct file_operations ntp_flash_fops =
 };
 
 static int ntp_flash_init(void)
-{		
+{
 	int ret = 0;
-	
+
 	ntp_proc_entry = proc_create(NTP_DEVICE_NAME, 0666, NULL, &ntp_flash_fops);
 	if(ntp_proc_entry == NULL)
 	{
@@ -429,12 +429,12 @@ static int ntp_flash_init(void)
 		return ret;
 	}
 
-	ntp_flash_priv = kzalloc(sizeof(*ntp_flash_priv), GFP_KERNEL);	
-	
+	ntp_flash_priv = kzalloc(sizeof(*ntp_flash_priv), GFP_KERNEL);
+
 	ntp_flash_priv->client = this_client;
-	
+
 	pr_info("NVT_flash driver loaded\n");
-	
+
 	return 0;
 }
 
@@ -506,7 +506,7 @@ static int ntp_bl_read_bytes(struct i2c_client *client, unsigned char addr, unsi
 		}
 		retries++;
 	}
-	
+
 	return ret;
 }
 
@@ -519,8 +519,8 @@ static int ntp_bl_write_bytes(struct i2c_client *client, unsigned char addr, uns
 	msg.flags = !I2C_M_RD;
 	msg.addr  = addr;
 	msg.len   = len;
-	msg.buf   = buf;		
-	
+	msg.buf   = buf;
+
 	while(retries < 3)
 	{
 		ret = i2c_transfer(client->adapter,&msg, 1);
@@ -530,7 +530,7 @@ static int ntp_bl_write_bytes(struct i2c_client *client, unsigned char addr, uns
 		}
 		retries++;
 	}
-	
+
 	return ret;
 }
 
@@ -577,7 +577,7 @@ static int ntp_bl_erase_flash_sector(struct i2c_client *client, int sec)
 		}
 
 		pr_info("ntp_bl_erase_flash_sector: sec = %x, cmd[1] = %x\n ", sec, cmd[1]);
-		
+
 		if(cmd[1] == 0xAA)
 		{
 			return 1;
@@ -592,17 +592,17 @@ static int ntp_bl_erase_flash(struct i2c_client *client)
 {
 	int i;
 	int ret= RS_ERAS_ER;
-	
+
 	for(i = 0; i < NTP_SECTOR_NUM; i++)
 	{
 		ret = ntp_bl_erase_flash_sector(client, i);
 		if (ret <= 0)
-    	{
+	{
 			pr_info("ntp_bl_erase_flash error\n ", ret);
 			return RS_ERAS_ER;
-    	}
 	}
-	
+	}
+
 	return RS_OK;
 }
 
@@ -624,10 +624,10 @@ static int ntp_bl_verify_fw(struct i2c_client *client)
 	ntp_bl_write_bytes(client, NOVATEK_TS_ADDR, cmd2, 2);
 	ntp_bl_delay_ms(1000);
 	ntp_bl_write_bytes(client, NOVATEK_TS_ADDR, cmd3, 3);
-	
+
 	buf[0] = 0;
 	ntp_bl_read_bytes(client, NOVATEK_TS_ADDR, buf, 3);
-	
+
 	checksum1 = (((unsigned int)buf[1])<<8)|((unsigned int)buf[2]);
 	checksum1 = (checksum1&0xFFFF);
 
@@ -663,36 +663,36 @@ static int ntp_bl_erase_flash_mass(struct i2c_client *client)
 	unsigned char i;
 	unsigned char buf[8] = {0};
 	int ret = RS_ERAS_ER;
-	
+
     buf[0] = 0x00;
     buf[1] = 0x33;
-	
+
 	for(i = 5; i > 0; i--)
 	{
 		buf[2] = 0x00;
-		
+
 		ret = ntp_bl_write_bytes(client, NOVATEK_HW_ADDR, buf, 3);
 		if (ret <= 0)
-    	{
+	{
 			pr_info("I2C transfer error!\n ");
-    	}
+	}
 		ntp_bl_delay_ms(25);
 
 		// Read status
-   		ret = ntp_bl_read_bytes(client, NOVATEK_HW_ADDR, buf, 2);
+		ret = ntp_bl_read_bytes(client, NOVATEK_HW_ADDR, buf, 2);
 		if (ret <= 0)
-    	{
+	{
 			pr_info("I2C transfer error!\n ");
-    	}
-   		if(buf[1] == 0xAA)
-   		{
-	   		ret = RS_OK;
+	}
+		if(buf[1] == 0xAA)
+		{
+			ret = RS_OK;
 			break;
-   		}
-		
+		}
+
 		ntp_bl_delay_ms(1);
 	}
-	
+
 	return ret;
 }
 
@@ -710,23 +710,23 @@ static int ntp_bl_verify_fw(struct i2c_client *client)
 	unsigned char buf[8];
 	unsigned int checksum1, checksum2;
 //	unsigned int i = 0;
-	
+
 	// get dynamic checksum from ic
-	
+
 	unsigned char cmd1[3] = {0xFF, 0x8F, 0xFF};
 	unsigned char cmd2[2] = {0x00, 0xE1};
 	unsigned char cmd3[3] = {0xFF, 0x8E, 0x0E};
 	ntp_bl_delay_ms(250);
 
-	ntp_bl_write_bytes(client, NOVATEK_TS_ADDR, cmd1, 3);	
+	ntp_bl_write_bytes(client, NOVATEK_TS_ADDR, cmd1, 3);
 	ntp_bl_write_bytes(client, NOVATEK_TS_ADDR, cmd2, 2);
 	ntp_bl_delay_ms(1000);
 	ntp_bl_write_bytes(client, NOVATEK_TS_ADDR, cmd3, 3);
-		
+
 	buf[0] = 0;
 	ntp_bl_read_bytes(client, NOVATEK_TS_ADDR, buf, 3);
-	
-	
+
+
 	checksum1 = (((unsigned int)buf[1])<<8)|((unsigned int)buf[2]);
 	checksum1 = checksum1&0xFFFF;
 
@@ -774,15 +774,15 @@ static int ntp_bl_init_bootloader(struct i2c_client *client)
 
 
 	ntp_bl_read_bytes(client, NOVATEK_HW_ADDR, buf, 2);
-	
+
 	pr_info("buf[1] = %x\n", buf[1]);
-	
+
 	if(buf[1] != 0xAA)
 	{
 		pr_info("ntp_bl_init_bootloader: Error\n");
 		ret = RS_INIT_ER;
 	}
-	
+
 	return ret;
 }
 
@@ -798,14 +798,14 @@ static int ntp_bl_write_data_to_flash(struct i2c_client *client)
 	unsigned int page;
 
 	pr_info("--%s--\n", __func__);
-	
-	
+
+
 	page = 0;
 	flash_addr = 0;
 
 	do{
 		pr_info("data writing ....... %d \n", page);
-  
+
 		for (i = 0; i < 16; i++)
 		{
 			/* Write Data to flash*/
@@ -828,19 +828,19 @@ static int ntp_bl_write_data_to_flash(struct i2c_client *client)
 			buf[5] = checksum;
 
 			ntp_bl_write_bytes(client, NOVATEK_HW_ADDR, buf, 14);
-			
+
 		//	ntp_bl_delay_ms(1);
 
-			flash_addr += 8;	
+			flash_addr += 8;
 		}
-		
+
 		ntp_bl_delay_ms(10);
 
 		page++;
 	}
 	while(flash_addr < NTP_UPDATE_SIZE);
-	
-	return ret;		        
+
+	return ret;
 }
 
 
@@ -849,7 +849,7 @@ static int ntp_bl_update_fw(struct i2c_client *client)
 //	int i;
 	int ret = RS_OK;
 	int count = 0;
-	
+
 	//pr_info("--%s--\n",__func__);
 
 START_UPDATE:
@@ -862,7 +862,7 @@ START_UPDATE:
 		pr_info("Init bootloader error \n");
 		return ret;
 	}
-	
+
 	// Erase flash
 	ret = ntp_bl_erase_flash(client);
 
@@ -871,7 +871,7 @@ START_UPDATE:
 		pr_info("Erase flash error \n");
 		return ret;
 	}
-	
+
 	//Write data to flash
 	ret = ntp_bl_write_data_to_flash(client);
 	if(ret != RS_OK)
@@ -897,7 +897,7 @@ START_UPDATE:
 	}
 
     pr_info("--%s-- ret = %d\n", __func__, ret);
-	
+
 	return ret;
 }
 
@@ -918,21 +918,21 @@ static int	ntp_bl_bootloader(struct i2c_client *client)
 #endif
 */
 	gpio_fw_value = get_gpio_fw(ts_com);
-	if (gpio_fw_value < 0) 
+	if (gpio_fw_value < 0)
 	{
 		printk("faild gpio_fw_value\n");
-		
+
 		return -1;
 	}
-	
-	for (i=0; i<sizeof(fw_index); i++) 
+
+	for (i=0; i<sizeof(fw_index); i++)
 	{
-		if (gpio_fw_value == fw_index[i]) 
+		if (gpio_fw_value == fw_index[i])
 		{
 			ntp_fw_data_ptr = fw_buf[i];
-			
+
 			printk("use fw_buf[%d]\n", i);
-			
+
 			break;
 		}
 	}
@@ -941,26 +941,26 @@ static int	ntp_bl_bootloader(struct i2c_client *client)
 	{
 		return -1;
 	}
-	
+
 	if(ntp_bl_verify_fw(client) != RS_OK)	// check if need update
 	{
 		pr_info("ntp_bl_bootloader: Start to update firmware\n");
-		
+
 		ntp_bl_update_fw(client);
 	}
 	else
 	{
 		unsigned char buf[2] = {0};
-			
+
 		pr_info("ntp_bl_bootloader: Firmware does not need to update\n");
-		
+
 		buf[0] = 0x00;
 		buf[1] = 0xA5;
-		ntp_bl_write_bytes(client, NOVATEK_HW_ADDR, buf, 2);										
+		ntp_bl_write_bytes(client, NOVATEK_HW_ADDR, buf, 2);
 	}
-	
+
 	ntp_bl_reset();
-	
+
 	return 0;
 }
 
@@ -971,7 +971,7 @@ static int	ntp_bl_bootloader(struct i2c_client *client)
 static int ntp_charger_enable(struct i2c_client *client)
 {
 	u8 cmd1[3] = {0xFF, 0x0F, 0xFF};
-  	u8 cmd2[2] = {0x00, 0xDE};
+	u8 cmd2[2] = {0x00, 0xDE};
 
 	i2c_write_bytes(client, cmd1, 3);
 	i2c_write_bytes(client, cmd2, 2);
@@ -980,7 +980,7 @@ static int ntp_charger_enable(struct i2c_client *client)
 static int ntp_charger_disable(struct i2c_client *client)
 {
 	u8 cmd1[3] = {0xFF,0x0F,0xFF};
-  	u8 cmd2[2] = {0x00,0xDF};
+	u8 cmd2[2] = {0x00,0xDF};
 
 	i2c_write_bytes(client, cmd1, 3);
 	i2c_write_bytes(client, cmd2, 2);
@@ -1003,13 +1003,13 @@ static void ntp_suspend(struct early_suspend *handler)
 	int ret;
 
 	pr_info("==ntp_suspend=\n");
-		
+
 	ret = i2c_write_bytes(ts->client, cmd1, (sizeof(cmd1)/sizeof(cmd1[0])));
 	if (ret <= 0)
 	{
 		dev_err(&(ts->client->dev),"I2C transfer error. Number:%d\n ", ret);
 	}
-	
+
 	ret = i2c_write_bytes(ts->client, cmd2, (sizeof(cmd2)/sizeof(cmd2[0])));
 	if (ret <= 0)
 	{
@@ -1026,7 +1026,7 @@ static void ntp_resume(struct early_suspend *handler)
 	int ret;
 
 	pr_info("==ntp_resume== \n");
-	
+
 	ret = i2c_write_bytes(ts->client, cmd, (sizeof(cmd)/sizeof(cmd[0])));
 	if (ret <= 0)
 	{
@@ -1049,9 +1049,9 @@ static int ntp_get_chipid(struct i2c_client *client)
 	pr_info( "I2C communication client->addr=%d\n",client->addr);
 
 	for(retry=0; retry < 30; retry++)
-	{		
+	{
 		msleep(5);
-		ret = i2c_read_bytes(client, test_data, 5); 
+		ret = i2c_read_bytes(client, test_data, 5);
 		if (ret > 0)
 			break;
 		pr_info("novatek i2c test failed ,ret =%d\n",ret);
@@ -1059,15 +1059,15 @@ static int ntp_get_chipid(struct i2c_client *client)
 	}
 	if(ret <= 0)
 	{
-		pr_info( "I2C communication ERROR!novatek touchscreen driver become invalid\n");	
+		pr_info( "I2C communication ERROR!novatek touchscreen driver become invalid\n");
 		m_inet_ctpState=0;
 		return 0;
 	}
 	else
 	{
 		pr_info( "I2C communication ok\n");
-		m_inet_ctpState=1;	
-		return 1;	
+		m_inet_ctpState=1;
+		return 1;
 	}
 }
 #if 0
@@ -1081,7 +1081,7 @@ static int ntp_button_event(u8 buf1, u8 buf2)
 			//p = &pointer[0];
 			//int yd1 = input_y, xd1 = input_x;
 			//pr_err(" NOVATEK KEY YD1:%d  \n ",yd1);
-	
+
 			if(point_data[1]&0x01)
 			{
 				//pr_info("enter key model\n");
@@ -1113,7 +1113,7 @@ static int ntp_button_event(u8 buf1, u8 buf2)
 					input_sync(ts->input_dev);
 					pr_info("KEY_HOME is press down %d\n", KEY_HOME);
 				}
-			} 
+			}
 			else
 			//report key up
 			{
@@ -1158,14 +1158,14 @@ Description:
 
 Parameter:
 	ts:	i2c client private struct.
-	
+
 return:
 	Executive outcomes.0---succeed.
 *******************************************************/
 static void ntp_work_func(struct work_struct *work)
 {
-	uint8_t  buf[IIC_BYTENUM*MAX_FINGER_NUM+3]={0}; 
-	int pos = 0;	
+	uint8_t  buf[IIC_BYTENUM*MAX_FINGER_NUM+3]={0};
+	int pos = 0;
 	int track_id;
 	int x,y;//,p;
 	int temp;
@@ -1173,7 +1173,7 @@ static void ntp_work_func(struct work_struct *work)
 	int touch_num = 0;
 	int ret = -1;
 	struct ntp_ts_data *ts = i2c_get_clientdata(this_client);
-	
+
 	buf[0] = 0;
 	ret = i2c_read_bytes(ts->client, buf, sizeof(buf)/sizeof(buf[0]));
 
@@ -1186,7 +1186,7 @@ static void ntp_work_func(struct work_struct *work)
 		for(index = 0; index < MAX_FINGER_NUM; index++)
 		{
 			pos = 1 + IIC_BYTENUM*index;
-			
+
 			if(((buf[pos]&0x03) == 0x01)||((buf[pos]&0x03) == 0x02))
 			{
 				#if defined(NT11002)
@@ -1210,7 +1210,7 @@ static void ntp_work_func(struct work_struct *work)
 
 					x = x * LCD_MAX_WIDTH / TP_MAX_WIDTH;
 					y = y * LCD_MAX_HEIGHT / TP_MAX_HEIGHT;
-					
+
 					#ifdef TP_COORDINATE_X_REVERSE
 					x = LCD_MAX_WIDTH - x;
 					#endif
@@ -1220,7 +1220,7 @@ static void ntp_work_func(struct work_struct *work)
 					#endif
 
 					//pr_info("tp down x = %d, y = %d\n", x, y);
-					
+
 					input_report_abs(ts->input_dev, ABS_MT_TRACKING_ID, track_id);
 					input_report_abs(ts->input_dev, ABS_MT_TOUCH_MAJOR, 1);
 					input_report_abs(ts->input_dev, ABS_MT_POSITION_X, x);
@@ -1232,7 +1232,7 @@ static void ntp_work_func(struct work_struct *work)
 		}
 
 	//	pr_info("touch_num = %d\n", touch_num);
-		
+
 		if(touch_num == 0)
 		{
 			//pr_info("tp up\n");
@@ -1256,21 +1256,21 @@ static irqreturn_t ntp_interrupt(int irq, void *dev_id)
 	static int irq_count = 0;
 	touch_dbg("irq count: %d\n", irq_count++);
 
-#if 0//def PRINT_INT_INFO		
-	pr_err("==========------NT1100x_ts TS Interrupt-----============\n"); 
+#if 0//def PRINT_INT_INFO
+	pr_err("==========------NT1100x_ts TS Interrupt-----============\n");
 #endif
 
 	//clear the IRQ_EINT21 interrupt pending
 	//reg_val = readl(gpio_addr + PIO_INT_STAT_OFFSET);
-	 
+
 //	if(reg_val&(1<<(IRQ_EINT21)))
 //	{
-//		#if 0 
+//		#if 0
 //		pr_info("==IRQ_EINT21=\n");
 //		#endif
-        
+
 		disable_irq_nosync(SW_INT_IRQNO_PIO);
-		if (!work_pending(&ntp_ts->pen_event_work)) 
+		if (!work_pending(&ntp_ts->pen_event_work))
 		{
 			queue_work(ntp_ts->ts_workqueue, &ntp_ts->pen_event_work);
 			//writel(reg_val&(1<<(IRQ_EINT21)),gpio_addr + PIO_INT_STAT_OFFSET);
@@ -1286,7 +1286,7 @@ static irqreturn_t ntp_interrupt(int irq, void *dev_id)
 //		#ifdef PRINT_INT_INFO
 //		pr_info("Other Interrupt\n");
 //		#endif
-		//For Debug 
+		//For Debug
 		//writel(reg_val,gpio_addr + PIO_INT_STAT_OFFSET);
 		//enable_irq(IRQ_EINT);
 //		return IRQ_NONE;
@@ -1302,31 +1302,31 @@ static int ntp_probe(struct i2c_client *client, const struct i2c_device_id *id)
 	struct input_dev *input_dev;
 	int err = 0;
 //	int ret = -1;
-	
+
 	printk("ntp_probe: novatek tp probe start\n");
-	
+
 #ifdef CONFIG_OF
-	if (ts_com->owner != NULL) 
-	{	
+	if (ts_com->owner != NULL)
+	{
 		return -ENODEV;
 	}
-	
+
 	memset(ts_com, 0 ,sizeof(struct touch_pdata));
 	ts_com = (struct touch_pdata *)client->dev.platform_data;
-	
+
 	pr_info("ts_com->owner = %s\n", ts_com->owner);
-	
+
 	if (request_touch_gpio(ts_com) != ERR_NO)
 	{
 		goto exit_get_dt_failed;
 	}
-	
+
 //	aml_gpio_direction_input(ts_com->gpio_interrupt);
 //	aml_gpio_to_irq(ts_com->gpio_interrupt, ts_com->irq, ts_com->irq_edge);
 	screen_max_x = ts_com->xres;
 	screen_max_y = ts_com->yres;
 #endif
-	
+
 	if (!i2c_check_functionality(client->adapter, I2C_FUNC_I2C))
 	{
 		err = -ENODEV;
@@ -1345,16 +1345,16 @@ static int ntp_probe(struct i2c_client *client, const struct i2c_device_id *id)
 //    if(!gpio_addr)
 //	{
 //	    err = -EIO;
-//	    goto exit_ioremap_failed;	
+//	    goto exit_ioremap_failed;
 //	}
 	//printk("touch panel gpio addr: = 0x%x", gpio_addr);
 	this_client = client;
-	
+
 	//printk("ntp_probe : client->addr = %d. \n", client->addr);
 	this_client->addr = client->addr;
 	printk("ntp_probe : client->addr = %d. \n", client->addr);
 	i2c_set_clientdata(client, ntp_ts);
-	
+
 	    //config gpio:
 //    gpio_int_hdle = gpio_request_ex("ctp_para", "ctp_int_port");
 //    if(!gpio_int_hdle)
@@ -1362,20 +1362,20 @@ static int ntp_probe(struct i2c_client *client, const struct i2c_device_id *id)
 //        pr_warning("touch panel IRQ_EINT21_para request gpio fail!\n");
 //        goto exit_gpio_int_request_failed;
 //    }
-//    
+//
 //    gpio_wakeup_hdle = gpio_request_ex("ctp_para", "ctp_wakeup");
 //    if(!gpio_wakeup_hdle)
 //	{
-//        ctp_wakeup_enable = 0; 
+//        ctp_wakeup_enable = 0;
 //    }
 //	else
 //	{
-//        ctp_wakeup_enable = 1; 
+//        ctp_wakeup_enable = 1;
 //    }
 //    pr_info("ctp_wakeup_enable = %d. \n", ctp_wakeup_enable);
-// 
+//
 //    gpio_reset_hdle = gpio_request_ex("ctp_para", "ctp_reset");
-//    if(!gpio_reset_hdle) 
+//    if(!gpio_reset_hdle)
 //	{
 //        ctp_reset_enable = 0;
 //    }
@@ -1388,10 +1388,10 @@ static int ntp_probe(struct i2c_client *client, const struct i2c_device_id *id)
 //    #ifdef TOUCH_KEY_LIGHT_SUPPORT
 //    gpio_light_hdle = gpio_request_ex("ctp_para", "ctp_light");
 //    #endif
-       
-		
+
+
 	ntp_reset();
-		
+
 	if(ntp_get_chipid(client) == 0)
 	{
 		goto exit_gpio_int_request_failed;
@@ -1401,37 +1401,37 @@ static int ntp_probe(struct i2c_client *client, const struct i2c_device_id *id)
 	INIT_WORK(&ntp_ts->pen_event_work, ntp_work_func);
 
 	ntp_ts->ts_workqueue = create_singlethread_workqueue(dev_name(&client->dev));
-	if (!ntp_ts->ts_workqueue) 
+	if (!ntp_ts->ts_workqueue)
 	{
 		err = -ESRCH;
 		goto exit_create_singlethread;
 	}
 
 	input_dev = input_allocate_device();
-	if (!input_dev) 
+	if (!input_dev)
 	{
 		err = -ENOMEM;
 		dev_err(&client->dev, "failed to allocate input device\n");
 		goto exit_input_dev_alloc_failed;
 	}
-	
+
 	ntp_ts->input_dev = input_dev;
 	ntp_ts->client = client;
-	
+
 	set_bit(ABS_MT_TOUCH_MAJOR, input_dev->absbit);
 	set_bit(ABS_MT_POSITION_X, input_dev->absbit);
 	set_bit(ABS_MT_POSITION_Y, input_dev->absbit);
-	set_bit(ABS_MT_WIDTH_MAJOR, input_dev->absbit);	
+	set_bit(ABS_MT_WIDTH_MAJOR, input_dev->absbit);
 	set_bit(ABS_MT_TRACKING_ID, input_dev->absbit);
 	set_bit(INPUT_PROP_DIRECT, input_dev->propbit);
-	
+
 	set_bit(KEY_MENU,ntp_ts->input_dev->keybit);
 	set_bit(KEY_BACK,ntp_ts->input_dev->keybit);
 	set_bit(KEY_SEARCH,ntp_ts->input_dev->keybit);
 	set_bit(KEY_HOME,ntp_ts->input_dev->keybit);
 	set_bit(KEY_VOLUMEDOWN,ntp_ts->input_dev->keybit);
 	set_bit(KEY_VOLUMEUP,ntp_ts->input_dev->keybit);
-	
+
 	input_set_abs_params(input_dev,ABS_MT_POSITION_X,  0, SCREEN_MAX_X, 0, 0);
 	input_set_abs_params(input_dev,ABS_MT_POSITION_Y,  0, SCREEN_MAX_Y, 0, 0);
 	input_set_abs_params(input_dev,ABS_MT_TOUCH_MAJOR, 0, PRESS_MAX, 0, 0);
@@ -1443,7 +1443,7 @@ static int ntp_probe(struct i2c_client *client, const struct i2c_device_id *id)
 
 	input_dev->name = NOVATEK_TS_NAME;
 	err = input_register_device(input_dev);
-	if (err) 
+	if (err)
 	{
 		dev_err(&client->dev, "ntp_probe: failed to register input device: %s\n", dev_name(&client->dev));
 		goto exit_input_register_device_failed;
@@ -1460,12 +1460,12 @@ static int ntp_probe(struct i2c_client *client, const struct i2c_device_id *id)
 	ntp_ts->early_suspend.resume  = ntp_resume;
 	register_early_suspend(&ntp_ts->early_suspend);
 #endif
-		
+
 
 	SW_INT_IRQNO_PIO = client->irq;
 	err = request_irq(SW_INT_IRQNO_PIO, ntp_interrupt, IRQF_DISABLED, "novatek", ntp_ts);
 	//err = request_irq(SW_INT_IRQNO_PIO, ntp_interrupt, IRQF_TRIGGER_LOW | IRQF_SHARED, "novatek", ntp_ts);
-   
+
 	if (err < 0)
 	{
 		dev_err(&client->dev, "ntp_probe: request irq failed\n");
@@ -1485,42 +1485,42 @@ exit_irq_request_failed:
 	cancel_work_sync(&ntp_ts->pen_event_work);
 	destroy_workqueue(ntp_ts->ts_workqueue);
 	enable_irq(SW_INT_IRQNO_PIO);
-	
+
 exit_input_register_device_failed:
 	input_free_device(input_dev);
-	
+
 exit_input_dev_alloc_failed:
 	free_irq(SW_INT_IRQNO_PIO, ntp_ts);
-	
+
 exit_gpio_int_request_failed:
 exit_create_singlethread:
 	printk("==singlethread error =\n");
 	i2c_set_clientdata(client, NULL);
 	kfree(ntp_ts);
-	
+
 //exit_ioremap_failed:
 //    if(gpio_addr)
 //	{
 //        iounmap(gpio_addr);
 //    }
-	
+
 exit_alloc_data_failed:
 exit_check_functionality_failed:
 exit_get_dt_failed:
 	free_touch_gpio(ts_com);
 	ts_com->owner = NULL;
-	printk("%s: probe failed!\n", __FUNCTION__);	
+	printk("%s: probe failed!\n", __FUNCTION__);
 	return err;
 }
 
 static int ntp_remove(struct i2c_client *client)
 {
     struct ntp_ts_data *ntp_ts = i2c_get_clientdata(client);
-    
-    //NT1100x_set_reg(FT5X0X_REG_PMODE, PMODE_HIBERNATE);	
+
+    //NT1100x_set_reg(FT5X0X_REG_PMODE, PMODE_HIBERNATE);
 
     printk("==ntp_remove=\n");
-	
+
 #ifdef CONFIG_HAS_EARLYSUSPEND
     unregister_early_suspend(&ntp_ts->early_suspend);
 #endif
@@ -1532,23 +1532,23 @@ static int ntp_remove(struct i2c_client *client)
 	kfree(ntp_ts);
 	cancel_work_sync(&ntp_ts->pen_event_work);
 	destroy_workqueue(ntp_ts->ts_workqueue);
-    
+
     i2c_set_clientdata(client, NULL);
-	
+
 //    if(gpio_addr)
 //    {
 //        iounmap(gpio_addr);
 //    }
-//	
+//
 //    gpio_release(gpio_int_hdle, 2);
 //    gpio_release(gpio_wakeup_hdle, 2);
-	
+
     return 0;
 }
 
 /**
  * ctp_detect - Device detection callback for automatic device creation
- * return value:  
+ * return value:
  *                    = 0; success;
  *                    < 0; err
  */
@@ -1561,7 +1561,7 @@ static int ntp_detect(struct i2c_client *client, struct i2c_board_info *info)
 	{
 		pr_info("%s: Detected chip %s at adapter %d, address 0x%02x\n",
 			 __func__, NOVATEK_TS_NAME, i2c_adapter_id(adapter), client->addr);
-		
+
 		strlcpy(info->type, NOVATEK_TS_NAME, I2C_NAME_SIZE);
 		return 0;
 	}
@@ -1578,13 +1578,13 @@ static const struct i2c_device_id ntp_id[] = {
 };
 MODULE_DEVICE_TABLE(i2c, ntp_id);
 
-static struct i2c_driver ntp_driver = 
+static struct i2c_driver ntp_driver =
 {
 	.class 		= I2C_CLASS_HWMON,
 	.probe		= ntp_probe,
 	.remove		= ntp_remove,
 	.id_table	= ntp_id,
-	.driver	= 
+	.driver	=
 	{
 		.name	= NOVATEK_TS_NAME,
 		.owner	= THIS_MODULE,
@@ -1593,29 +1593,29 @@ static struct i2c_driver ntp_driver =
 };
 
 static int __init ntp_init(void)
-{ 
+{
 	int ret = -1;
 //	int ctp_used = -1;
 //	char name[I2C_NAME_SIZE];
 //	__u32 twi_addr = 0;
 //	script_parser_value_type_t type = SCIRPT_PARSER_VALUE_TYPE_STRING;
 //
-//	pr_err("=========Novatek_TouchDriver============\n");	
+//	pr_err("=========Novatek_TouchDriver============\n");
 //	pr_err("VERSION =%s\n",VERSION);
-//		
+//
 //	if(SCRIPT_PARSER_OK != script_parser_fetch("ctp_para", "ctp_used", &ctp_used, 1))
 //	{
 //		pr_err("%s: script_parser_fetch err. \n", __func__);
 //		goto script_parser_fetch_err;
 //	}
-//	
+//
 //	if(1 != ctp_used)
 //	{
 //		pr_err("%s: ctp_unused. \n",  __func__);
 //		//ret = 1;
 //		return ret;
 //	}
-//	
+//
 //	if(SCRIPT_PARSER_OK != script_parser_fetch_ex("ctp_para", "ctp_name", (int *)(&name), &type, sizeof(name)/sizeof(int)))
 //	{
 //		pr_err("%s: script_parser_fetch err. \n", __func__);
@@ -1629,13 +1629,13 @@ static int __init ntp_init(void)
 //		//ret = 1;
 //		return ret;
 //	}
-//	
+//
 //	if(SCRIPT_PARSER_OK != script_parser_fetch("ctp_para", "ctp_twi_addr", &twi_addr, sizeof(twi_addr)/sizeof(__u32)))
 //	{
 //		pr_err("%s: script_parser_fetch err. \n", name);
 //		goto script_parser_fetch_err;
 //	}
-//		
+//
 //	//big-endian or small-endian?
 //	//pr_info("%s: before: ctp_twi_addr is 0x%x, dirty_addr_buf: 0x%hx. dirty_addr_buf[1]: 0x%hx \n", __func__, twi_addr, u_i2c_addr.dirty_addr_buf[0], u_i2c_addr.dirty_addr_buf[1]);
 //	u_i2c_addr.dirty_addr_buf[0] = twi_addr;
@@ -1663,7 +1663,7 @@ static int __init ntp_init(void)
 //		goto script_parser_fetch_err;
 //	}
 //	//pr_info("ntp_ts: revert_x_flag = %d. \n", revert_x_flag);
-// 
+//
 //	if(SCRIPT_PARSER_OK != script_parser_fetch("ctp_para", "ctp_revert_y_flag", &revert_y_flag, 1))
 //	{
 //		pr_err("6 !ntp_ts: script_parser_fetch err. \n");
@@ -1677,20 +1677,20 @@ static int __init ntp_init(void)
 //		goto script_parser_fetch_err;
 //	}
 //	//pr_info("ntp_ts: exchange_x_y_flag = %d. \n", exchange_x_y_flag);
-//    
+//
 //    if(SCRIPT_PARSER_OK != script_parser_fetch("ctp_para", "ctp_twi_id", &twi_id, sizeof(twi_id)/sizeof(__u32)))
 //	{
 //		pr_err("%s: script_parser_fetch err. \n", name);
 //		goto script_parser_fetch_err;
 //	}
 //	//pr_info("%s: ctp_twi_id is %d. \n", __func__, twi_id);
-	
+
 //	ntp_driver.detect = ntp_detect;
 
 	ret = i2c_add_driver(&ntp_driver);
 
 	pr_info("!!!ntp_ts: ret = %d. \n", ret);
-	
+
 //script_parser_fetch_err:
 	return ret;
 }
@@ -1698,7 +1698,7 @@ static int __init ntp_init(void)
 static void __exit ntp_exit(void)
 {
 	pr_info("==ntp_exit==\n");
-	
+
 	i2c_del_driver(&ntp_driver);
 }
 
@@ -1708,4 +1708,3 @@ module_exit(ntp_exit);
 MODULE_AUTHOR("<x_j_chen@novatek.com.cn>");
 MODULE_DESCRIPTION("Novatek TouchScreen driver");
 MODULE_LICENSE("GPL");
-

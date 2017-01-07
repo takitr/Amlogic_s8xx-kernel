@@ -1,7 +1,7 @@
 /*
- * 
+ *
  * Copyright (C) 2011 Goodix, Inc.
- * 
+ *
  * Author: Scott
  * Date: 2012.01.05
  */
@@ -52,7 +52,7 @@
 #define DEBUG_UPDATE(fmt, arg...) printk("<--GT update-->"fmt, ##arg)
 #else
 #define DEBUG_UPDATE(fmt, arg...)
-#endif 
+#endif
 
 #if 0
 #define DEBUG_COOR(fmt, arg...) printk(fmt, ##arg)
@@ -76,8 +76,8 @@
                                    printk("\n");\
                                   }while(0)
 #else
-#define DEBUG_ARRAY(array, num) 
-#endif 
+#define DEBUG_ARRAY(array, num)
+#endif
 
 #if 0
 #define DEBUG_REPORT(fmt, arg...) printk(fmt, ##arg)
@@ -91,7 +91,7 @@
 #define CREATE_WR_NODE
 //#define AUTO_UPDATE_GUITAR             //如果定义了则上电会自动判断是否需要升级
 
-      
+
 
 #define GOODIX_MULTI_TOUCH
 #ifdef GOODIX_MULTI_TOUCH

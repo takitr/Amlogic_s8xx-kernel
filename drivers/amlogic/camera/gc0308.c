@@ -61,7 +61,7 @@
 #define GC0308_CAMERA_RELEASE 0
 #define GC0308_CAMERA_VERSION \
 	KERNEL_VERSION(GC0308_CAMERA_MAJOR_VERSION, GC0308_CAMERA_MINOR_VERSION, GC0308_CAMERA_RELEASE)
-	
+
 #define GC0308_DRIVER_VERSION "GC0308-COMMON-01-140717"
 
 MODULE_DESCRIPTION("gc0308 On Board");
@@ -213,12 +213,12 @@ struct v4l2_querymenu gc0308_qmenu_wbmode[] = {
     },{
         .id         = V4L2_CID_DO_WHITE_BALANCE,
         .index      = CAM_WB_FLUORESCENT,
-        .name       = "fluorescent", 
+        .name       = "fluorescent",
         .reserved   = 0,
     },{
         .id         = V4L2_CID_DO_WHITE_BALANCE,
         .index      = CAM_WB_FLUORESCENT,
-        .name       = "warm-fluorescent", 
+        .name       = "warm-fluorescent",
         .reserved   = 0,
     },
 };
@@ -226,12 +226,12 @@ struct v4l2_querymenu gc0308_qmenu_wbmode[] = {
 struct v4l2_querymenu gc0308_qmenu_anti_banding_mode[] = {
     {
         .id         = V4L2_CID_POWER_LINE_FREQUENCY,
-        .index      = CAM_BANDING_50HZ, 
+        .index      = CAM_BANDING_50HZ,
         .name       = "50hz",
         .reserved   = 0,
     },{
         .id         = V4L2_CID_POWER_LINE_FREQUENCY,
-        .index      = CAM_BANDING_60HZ, 
+        .index      = CAM_BANDING_60HZ,
         .name       = "60hz",
         .reserved   = 0,
     },
@@ -375,7 +375,7 @@ struct gc0308_buffer {
 	struct videobuf_buffer vb;
 
 	struct gc0308_fmt        *fmt;
-	
+
 	unsigned int canvas_id;
 };
 
@@ -415,7 +415,7 @@ struct gc0308_device {
 
 	/* platform device data from board initting. */
 	aml_cam_info_t  cam_info;
-	
+
 	/* wake lock */
 	struct wake_lock	wake_lock;
 
@@ -950,7 +950,7 @@ void GC0308_init_regs(struct gc0308_device *dev)
 	int i=0;//,j;
 	unsigned char buf[2];
 	struct i2c_client *client = v4l2_get_subdevdata(&dev->sd);
-	
+
 	while (1) {
 		buf[0] = GC0308_script[i].addr;
 		buf[1] = GC0308_script[i].val;
@@ -972,20 +972,20 @@ void GC0308_init_regs(struct gc0308_device *dev)
 
 static struct aml_camera_i2c_fig1_s resolution_320x240_script[] = {
 	{0xfe,0x01},
-	{0x54,0x22},  //1/2 subsample 
-	{0x55,0x03}, 
-	{0x56,0x00}, 
-	{0x57,0x00}, 
-	{0x58,0x00}, 
-	{0x59,0x00}, 
-	
+	{0x54,0x22},  //1/2 subsample
+	{0x55,0x03},
+	{0x56,0x00},
+	{0x57,0x00},
+	{0x58,0x00},
+	{0x59,0x00},
+
 	{0xfe,0x00},
 	{0x46,0x80},//enable crop window mode
-	{0x47,0x00},  
-	{0x48,0x00},  
-	{0x49,0x00}, 
+	{0x47,0x00},
+	{0x48,0x00},
+	{0x49,0x00},
 	{0x4a,0xf0},//240
-	{0x4b,0x01},  
+	{0x4b,0x01},
 	{0x4c,0x40}, //320
 	{0xfe,0x00},
 	{0xff, 0xff}
@@ -993,22 +993,22 @@ static struct aml_camera_i2c_fig1_s resolution_320x240_script[] = {
 
 static struct aml_camera_i2c_fig1_s resolution_640x480_script[] = {
 	{0xfe,0x01},
-	{0x54,0x11},  
-	{0x55,0x03},  
-	{0x56,0x00}, 
-	{0x57,0x00}, 
-	{0x58,0x00}, 
-	{0x59,0x00}, 
+	{0x54,0x11},
+	{0x55,0x03},
+	{0x56,0x00},
+	{0x57,0x00},
+	{0x58,0x00},
+	{0x59,0x00},
 	{0xfe,0x00},
 	{0x46,0x00},
-	
+
 	{0xfe,0x00},
 	{0x46,0x00},//enable crop window mode
-	{0x47,0x00},  
-	{0x48,0x00},  
-	{0x49,0x01}, 
+	{0x47,0x00},
+	{0x48,0x00},
+	{0x49,0x01},
 	{0x4a,0xe0},
-	{0x4b,0x02},  
+	{0x4b,0x02},
 	{0x4c,0x80},
 	{0xfe,0x00},
 	{0xff, 0xff}
@@ -1059,12 +1059,12 @@ static void gc0308_set_resolution(struct gc0308_device *dev,int height,int width
 
 		resolution_script = resolution_320x240_script;
 	}
-	
+
 	while(1) {
 		buf[0] = resolution_script[i].addr;
 		buf[1] = resolution_script[i].val;
 		if(resolution_script[i].val==0xff&&resolution_script[i].addr==0xff) {
-		  	  break;
+			  break;
 		}
 		if((i2c_put_byte_add8(client,buf, 2)) < 0) {
 			printk("fail in setting resolution \n");
@@ -1072,7 +1072,7 @@ static void gc0308_set_resolution(struct gc0308_device *dev,int height,int width
 		}
 		i++;
 	}
-    	set_flip(dev);
+	set_flip(dev);
 }
 /*************************************************************************
 * FUNCTION
@@ -1714,9 +1714,9 @@ static int convert_canvas_index(unsigned int v4l2_format, unsigned int start_can
 	case V4L2_PIX_FMT_BGR24:
 	case V4L2_PIX_FMT_RGB24:
 		canvas = start_canvas;
-		break; 
+		break;
 	case V4L2_PIX_FMT_NV12:
-	case V4L2_PIX_FMT_NV21: 
+	case V4L2_PIX_FMT_NV21:
 		canvas = start_canvas | ((start_canvas+1)<<8);
 		break;
 	case V4L2_PIX_FMT_YVU420:
@@ -1811,14 +1811,14 @@ static int gc0308_setting(struct gc0308_device *dev,int PROP_ID,int value )
 			printk(KERN_INFO " set camera  scene mode=%d. \n ",value);
 		}
 		break;
-	case V4L2_CID_HFLIP:    /* set flip on H. */          
+	case V4L2_CID_HFLIP:    /* set flip on H. */
 		value = value & 0x3;
 		if(gc0308_qctrl[5].default_value!=value){
 			gc0308_qctrl[5].default_value=value;
 			printk(" set camera  h filp =%d. \n ",value);
 		}
 		break;
-	case V4L2_CID_VFLIP:    /* set flip on V. */         
+	case V4L2_CID_VFLIP:    /* set flip on V. */
 		break;
 	case V4L2_CID_ZOOM_ABSOLUTE:
 		if(gc0308_qctrl[7].default_value!=value){
@@ -1850,7 +1850,7 @@ static int gc0308_setting(struct gc0308_device *dev,int PROP_ID,int value )
 	buf[0]=0x25;
 	buf[1]=0x00;
 	i2c_put_byte_add8(client,buf,2);
-	
+
 	msleep(5);
 	return;
 }*/
@@ -2567,9 +2567,9 @@ static int gc0308_open(struct file *file)
 #endif
 #if MESON_CPU_TYPE >= MESON_CPU_TYPE_MESON6
 	switch_mod_gate_by_name("ge2d", 1);
-#endif	
-	aml_cam_init(&dev->cam_info);	
-	
+#endif
+	aml_cam_init(&dev->cam_info);
+
 	GC0308_init_regs(dev);
 	msleep(100);//40
 	mutex_lock(&dev->mutex);
@@ -2584,7 +2584,7 @@ static int gc0308_open(struct file *file)
 		video_device_node_name(dev->vdev),
 		v4l2_type_names[V4L2_BUF_TYPE_VIDEO_CAPTURE], dev->users);
 
-    	/* init video dma queues */
+	/* init video dma queues */
 	INIT_LIST_HEAD(&dev->vidq.active);
 	init_waitqueue_head(&dev->vidq.wq);
 	spin_lock_init(&dev->slock);
@@ -2697,11 +2697,11 @@ static int gc0308_close(struct file *file)
 	//power_down_gc0308(dev);
 #endif
 	aml_cam_uninit(&dev->cam_info);
-	
+
 #if MESON_CPU_TYPE >= MESON_CPU_TYPE_MESON6
 	switch_mod_gate_by_name("ge2d", 0);
-#endif	
-	wake_unlock(&(dev->wake_lock));	
+#endif
+	wake_unlock(&(dev->wake_lock));
 #ifdef CONFIG_CMA
     vm_deinit_buf();
 #endif
@@ -2806,7 +2806,7 @@ static int gc0308_probe(struct i2c_client *client,
 	v4l2_i2c_subdev_init(sd, client, &gc0308_ops);
 
 	plat_dat = (aml_cam_info_t*)client->dev.platform_data;
-	
+
 	/* Now create a video4linux device */
 	mutex_init(&t->mutex);
 
@@ -2822,11 +2822,11 @@ static int gc0308_probe(struct i2c_client *client,
 	video_set_drvdata(t->vdev, t);
 
 	wake_lock_init(&(t->wake_lock), WAKE_LOCK_SUSPEND, "gc0308");
-	
+
 	/* Register it */
 	if (plat_dat) {
 		memcpy(&t->cam_info, plat_dat, sizeof(aml_cam_info_t));
-		if (plat_dat->front_back >=0)  
+		if (plat_dat->front_back >=0)
 			video_nr = plat_dat->front_back;
 	} else {
 		printk("camera gc0308: have no platform data\n");
@@ -2834,11 +2834,11 @@ static int gc0308_probe(struct i2c_client *client,
 		kfree(client);
 		return -1;
 	}
-	
+
 	t->cam_info.version = GC0308_DRIVER_VERSION;
 	if (aml_cam_info_reg(&t->cam_info) < 0)
 		printk("reg caminfo error\n");
-	
+
 	err = video_register_device(t->vdev, VFL_TYPE_GRABBER, video_nr);
 	if (err < 0) {
 		video_device_release(t->vdev);
@@ -2878,4 +2878,3 @@ static struct i2c_driver gc0308_i2c_driver = {
 };
 
 module_i2c_driver(gc0308_i2c_driver);
-

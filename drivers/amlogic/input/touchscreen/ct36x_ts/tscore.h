@@ -56,7 +56,7 @@ struct ct36x_ts_info {
 	// Work thread settings
 	struct work_struct		event_work;
 	struct workqueue_struct 	*workqueue;
-	
+
 	// touch event data
 	union ct36x_i2c_data		data;
 
@@ -76,5 +76,3 @@ int ct36x_ts_init(void);
 void ct36x_ts_exit(void);
 
 #endif
-
-

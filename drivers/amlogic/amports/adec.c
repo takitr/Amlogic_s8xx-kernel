@@ -70,6 +70,7 @@ static char *astream_format[] = {
     "amadec_ape",
     "amadec_eac3",
     "amadec_pcm_widi",
+    "amadec_wmavoi"
 
 };
 
@@ -151,7 +152,7 @@ static struct uio_info astream_uio_info = {
 
     .mem = {
         [0] = {
-            .name = "AIFIFO",			
+            .name = "AIFIFO",
             .memtype = UIO_MEM_PHYS,
             .addr = (IO_CBUS_PHY_BASE + CBUS_REG_OFFSET(AIU_AIFIFO_CTRL)),
             .size = PAGE_SIZE,
@@ -166,19 +167,19 @@ static struct uio_info astream_uio_info = {
             .memtype = UIO_MEM_PHYS,
             .addr = (IO_SECBUS_PHY_BASE ),
             .size = PAGE_SIZE,
-        },  
+        },
         [3] = {
             .name = "CBUS",
             .memtype = UIO_MEM_PHYS,
             .addr = (IO_CBUS_PHY_BASE+ CBUS_REG_OFFSET(ASSIST_HW_REV)),
             .size = PAGE_SIZE,
-        },  
+        },
         [4] = {
             .name = "CBUS-START",
             .memtype = UIO_MEM_PHYS,
             .addr = (IO_CBUS_PHY_BASE+ CBUS_REG_OFFSET(0x1000)),
             .size = PAGE_SIZE*4,
-        },                  
+        },
     },
 };
 #endif

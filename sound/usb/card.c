@@ -332,44 +332,45 @@ struct usb_audio_source_config{
     int card;
     int device;
     u32 usbid;
-    struct mutex usb_audio_mutex;    
+    struct mutex usb_audio_mutex;
 };
 
 static struct snd_info_entry *snd_usb_audio_sourece_info_entry;
 static int usb_audio_info_exit = 0;
 static struct usb_audio_source_config * pstr,usbaudioinfo[9]; //usb_card_NUm=1 ~ 8
 //static struct usb_audio_source_config  snd_usb_config;
-// insert usb audio info to usb_audio_source_config which from user 
+// insert usb audio info to usb_audio_source_config which from user
 static int usb_audio_source_info_Insert(u32 usbid, int num)
 {
     int i = 0, j=0;
     struct mutex usb_audio_mutex2;
-    struct usb_audio_source_config *u1 = NULL;
-    
+    struct usb_audio_source_config u1;
+
+    memset(&u1, 0, sizeof(struct usb_audio_source_config));
     mutex_init(&usb_audio_mutex2);
     mutex_lock(&usb_audio_mutex2);
     for(i = 1; i <= num; i++)
     {
         if(usbaudioinfo[i].usbid == usbid)
         {
-            u1->usbid = usbid;
-            u1->card = usbaudioinfo[i].card;
-            u1->device = usbaudioinfo[i].device;
+            u1.usbid = usbid;
+            u1.card = usbaudioinfo[i].card;
+            u1.device = usbaudioinfo[i].device;
             for(j = i; j < num; j++)
             {
                 usbaudioinfo[j].card = usbaudioinfo[j+1].card;
                 usbaudioinfo[j].device = usbaudioinfo[j+1].device;
-                usbaudioinfo[j].usbid = usbaudioinfo[j+1].usbid;       
+                usbaudioinfo[j].usbid = usbaudioinfo[j+1].usbid;
             }
         }
     }
-    usbaudioinfo[num].usbid = u1->usbid;
-    usbaudioinfo[num].card = u1->card;
-    usbaudioinfo[num].device = u1->device;
-    
-    pstr->card = u1->card;
-    pstr->device = u1->device;
-    pstr->usbid = u1->usbid;
+    usbaudioinfo[num].usbid = u1.usbid;
+    usbaudioinfo[num].card = u1.card;
+    usbaudioinfo[num].device = u1.device;
+
+    pstr->card = u1.card;
+    pstr->device = u1.device;
+    pstr->usbid = u1.usbid;
     mutex_unlock(&usb_audio_mutex2);
     return 0;
 }
@@ -389,7 +390,7 @@ static int usb_audio_source_info_order(u32 usbid, int num)
             {
                 usbaudioinfo[j].card = usbaudioinfo[j+1].card;
                 usbaudioinfo[j].device = usbaudioinfo[j+1].device;
-                usbaudioinfo[j].usbid = usbaudioinfo[j+1].usbid;       
+                usbaudioinfo[j].usbid = usbaudioinfo[j+1].usbid;
             }
         }
     }
@@ -410,18 +411,18 @@ static void usb_audio_source_info_write(struct snd_info_entry *entry, struct snd
     char line[128], str[32];
     const char *cptr;
     int pos=0,i=0,idx;
-   
+
    // printk("***buffer->curr=%d,buffer->size=%d,buffer->len=%d,buffer->stop=%d,buffer->error=%d\n",
    //     buffer->curr,buffer->size,buffer->len,buffer->stop,buffer->error);
 
     while (!snd_info_get_line(buffer,line,sizeof(line))){
         mutex_lock(&pstr->usb_audio_mutex);
         cptr = snd_info_get_str(str, line, sizeof(str));
-        
+
     //    printk("***snd_info_get_str**str=%s, cptr=%s**\n",str,cptr);
-    
+
         //judge usb audio usbid whether true
-        
+
         idx = simple_strtoul(str, NULL, 16);
         for(i=1; i<=usb_audio_info_exit; i++)
         {
@@ -429,7 +430,7 @@ static void usb_audio_source_info_write(struct snd_info_entry *entry, struct snd
             {
                 pos = i;
                 break;
-            }               
+            }
         }
      //   printk("****i=%d**idx=%d***pos=%d**\n",i,idx,pos);
         if(i > usb_audio_info_exit)
@@ -447,7 +448,7 @@ static void usb_audio_source_info_write(struct snd_info_entry *entry, struct snd
             mutex_unlock(&pstr->usb_audio_mutex);
             return;
         }
-        //judge usb audio device whether true  
+        //judge usb audio device whether true
         idx = simple_strtoul(cptr,NULL,10);
         if(cptr)
         {
@@ -456,21 +457,110 @@ static void usb_audio_source_info_write(struct snd_info_entry *entry, struct snd
                 printk("****device number wrong !*****\n");
                 mutex_unlock(&pstr->usb_audio_mutex);
                 return;
-            }              
+            }
         }
 
         usb_audio_source_info_Insert(usbaudioinfo[pos].usbid, usb_audio_info_exit);
         mutex_unlock(&pstr->usb_audio_mutex);
 
     }
-    
-    
+
+
 }
 
+/* list to retrieve the usb id and card number */
+static LIST_HEAD(usb_entry_list);
+static DEFINE_MUTEX(audio_mutex);
+
+struct usb_id_info{
+	struct snd_info_entry *entry;
+	int card_num;
+	int usb_id;
+	struct list_head list;
+};
+
+static void usb_audio_id_card_info_read(struct snd_info_entry *entry, struct snd_info_buffer *buffer)
+{
+	struct usb_id_info *id_info = (struct usb_id_info *)entry->private_data;
+
+	snd_iprintf(buffer, "%d\n", id_info->card_num);
+}
+#define id_size 32
+static int usb_audio_id_card_init(int id, int card)
+{
+	struct snd_info_entry *entry = NULL;
+	struct usb_id_info *id_info = NULL;
+	char id_string[id_size];
+	int err = 0;
+
+	id_info = kzalloc(sizeof(struct usb_id_info), GFP_KERNEL);
+	if (id_info == NULL){
+		err = -ENOMEM;
+		goto err1;
+	}
+
+	snprintf(id_string, 13, "USB-%08x", id);
+	snd_printk("usb_audio_id_card_init, id_string== %s\n", id_string);
+	if((entry = snd_info_create_module_entry(THIS_MODULE, id_string, NULL)) == NULL){
+		err = -ENOMEM;
+		goto err2;
+	}
+
+	entry->private_data = id_info;
+	entry->content = SNDRV_INFO_CONTENT_TEXT;
+	entry->mode = S_IFREG | S_IRUGO;
+	entry->c.text.read = usb_audio_id_card_info_read;
+	if (snd_info_register(entry) < 0) {
+		err = -ENOMEM;
+		goto err3;
+	}
+
+	id_info->entry = entry;
+	id_info->usb_id = id;
+	id_info->card_num = card;
+	mutex_lock(&audio_mutex);
+	list_add(&id_info->list, &usb_entry_list);
+	mutex_unlock(&audio_mutex);
+
+	return 0;
+
+err3:
+	snd_info_free_entry(entry);
+err2:
+	kfree(id_info);
+err1:
+	return err;
+}
+
+static int usb_audio_id_card_deinit(int id)
+{
+	struct usb_id_info *id_info;
+	struct snd_info_entry *entry;
+
+	mutex_lock(&audio_mutex);
+	list_for_each_entry(id_info, &usb_entry_list, list) {
+		snd_printk(KERN_DEBUG "list_for_each_entry at usb_audio_id_card_deinit, usb_id = %x, id =%x\n", id_info->usb_id,id);
+		if (id_info->usb_id == id){
+			entry = id_info->entry;
+			goto found;
+		}
+	}
+	mutex_unlock(&audio_mutex);
+
+	return -EINVAL;
+
+found:
+	list_del(&id_info->list);
+	mutex_unlock(&audio_mutex);
+	snd_info_free_entry(entry);
+	kfree(id_info);
+	id_info = NULL;
+	return 0;
+}
 
 static int usb_audio_source_info_init(struct usb_audio_source_config * pstr)
 {
-    
+
     struct snd_info_entry *entry;
     usb_audio_info_exit += 1;
     if(usb_audio_info_exit >=8)
@@ -485,33 +575,33 @@ static int usb_audio_source_info_init(struct usb_audio_source_config * pstr)
     if(usb_audio_info_exit ==1)
     {
         entry = snd_info_create_module_entry(THIS_MODULE, "usb_audio_info", NULL);
-        
+
         if (entry == NULL)
             return -ENOMEM;
         entry->content = SNDRV_INFO_CONTENT_TEXT;
         entry->mode = S_IFREG | S_IRUGO | S_IWUSR;
         entry->c.text.read = usb_audio_source_info_read;
         entry->c.text.write = usb_audio_source_info_write;
-        //entry->private_data = pstr; 
+        //entry->private_data = pstr;
         if (snd_info_register(entry) < 0) {
             snd_info_free_entry(entry);
             return -ENOMEM;
         }
         snd_usb_audio_sourece_info_entry = entry;
     }
-    
+
     return 0;
 }
 
 static int usb_audio_source_info_done(u32 usbid)
 {
     usb_audio_info_exit -= 1;
-    
+
     if(!usb_audio_info_exit)
         snd_info_free_entry(snd_usb_audio_sourece_info_entry);
-    else 
+    else
         usb_audio_source_info_order(usbid, usb_audio_info_exit + 1);
-    
+
     return 0;
 }
 
@@ -567,6 +657,13 @@ static int snd_usb_audio_create(struct usb_device *dev, int idx,
 
 	chip->usb_id = USB_ID(le16_to_cpu(dev->descriptor.idVendor),
 			      le16_to_cpu(dev->descriptor.idProduct));
+
+	err = usb_audio_id_card_init(chip->usb_id, card->number);
+	if (err < 0) {
+		snd_printk(KERN_ERR "cannot create id card instance usb_id=(0x%08x)\n", chip->usb_id);
+		return err;
+	}
+
 	INIT_LIST_HEAD(&chip->pcm_list);
 	INIT_LIST_HEAD(&chip->ep_list);
 	INIT_LIST_HEAD(&chip->midi_list);
@@ -578,9 +675,9 @@ static int snd_usb_audio_create(struct usb_device *dev, int idx,
     }
     mutex_init(&pstr->usb_audio_mutex);
     pstr->card = card->number;
-    pstr->device = 0; 
-    pstr->usbid = chip->usb_id;  
-    
+    pstr->device = 0;
+    pstr->usbid = chip->usb_id;
+
    // add "usb_audio_info" node in path: /proc/asound/
     usb_audio_source_info_init(pstr);
 	if ((err = snd_device_new(card, SNDRV_DEV_LOWLEVEL, chip, &ops)) < 0) {
@@ -672,11 +769,13 @@ snd_usb_audio_probe(struct usb_device *dev,
 		    const struct usb_device_id *usb_id)
 {
 	const struct snd_usb_audio_quirk *quirk = (const struct snd_usb_audio_quirk *)usb_id->driver_info;
-	int i, err;
+	int i, err, send_env = 0;
 	struct snd_usb_audio *chip;
 	struct usb_host_interface *alts;
 	int ifnum;
 	u32 id;
+	char event_state[32], event_card[32], event_id[32];
+	char *envp[] = {event_state, event_card, event_id, NULL};
 
 	alts = &intf->altsetting[0];
 	ifnum = get_iface_desc(alts)->bInterfaceNumber;
@@ -725,6 +824,7 @@ snd_usb_audio_probe(struct usb_device *dev,
 			printk(KERN_ERR "no available usb audio device\n");
 			goto __error;
 		}
+		send_env = 1;
 	}
 
 	/*
@@ -755,7 +855,12 @@ snd_usb_audio_probe(struct usb_device *dev,
 	if (snd_card_register(chip->card) < 0) {
 		goto __error;
 	}
-
+	if (1 == send_env) {
+		snprintf(event_state, 32, "USB_AUDIO_DEVICE=ADD");
+		snprintf(event_card, 32, "USB_AUDIO_CARD=%01d", chip->card->number);
+		snprintf(event_id, 32, "USB_AUDIO_ID=%08x", chip->usb_id);
+		kobject_uevent_env(&(dev->dev.kobj), KOBJ_ADD, envp);
+	}
 	usb_chip[chip->index] = chip;
 	chip->num_interfaces++;
 	chip->probing = 0;
@@ -782,7 +887,8 @@ static void snd_usb_audio_disconnect(struct usb_device *dev,
 {
 	struct snd_card *card;
 	struct list_head *p, *n;
-
+	char event_state[32], event_card[32], event_id[32];
+	char *envp[] = {event_state, event_card, event_id, NULL};
 	if (chip == (void *)-1L)
 		return;
 
@@ -813,7 +919,13 @@ static void snd_usb_audio_disconnect(struct usb_device *dev,
 		}
 		usb_chip[chip->index] = NULL;
 		mutex_unlock(&register_mutex);
+		snprintf(event_state, 32, "USB_AUDIO_DEVICE=REMOVE");
+		snprintf(event_card, 32, "USB_AUDIO_CARD=%01d", chip->card->number);
+		snprintf(event_id, 32, "USB_AUDIO_ID=%08x", chip->usb_id);
+		kobject_uevent_env(&(dev->dev.kobj), KOBJ_REMOVE, envp);
 		snd_card_free_when_closed(card);
+		if(usb_audio_id_card_deinit(chip->usb_id) < 0)
+			snd_printk(KERN_ERR "failed to deinit the usb audio card id(0x%08x)\n", chip->usb_id);;
 	} else {
 		mutex_unlock(&register_mutex);
 	}
@@ -926,7 +1038,7 @@ err_out:
 	return err;
 }
 static int usb_audio_reset_resume(struct usb_interface *intf)
-{ 
+{
    return usb_audio_resume(intf);
 }
 #else

@@ -37,7 +37,7 @@ struct spicc {
 	spinlock_t lock;
 	struct list_head msg_queue;
 	struct workqueue_struct *wq;
-	struct work_struct work;			
+	struct work_struct work;
 	struct spi_master	*master;
 	struct spi_device	*spi;
 	struct class cls;
@@ -79,7 +79,7 @@ static void spicc_chip_select(struct spicc *spicc, bool select)
     amlogic_gpio_direction_output(cs_gpio, ss_pol ? select : !select, "spicc_cs");
   }
   else if (chip_select < spicc->master->num_chipselect) {
-  	cs_gpio = spicc->master->cs_gpios[chip_select];
+	cs_gpio = spicc->master->cs_gpios[chip_select];
 	  if ((cs_gpio = spicc->master->cs_gpios[chip_select]) > 0) {
 	    amlogic_gpio_direction_output(cs_gpio, ss_pol ? select : !select, "spicc_cs");
 	  }
@@ -92,8 +92,8 @@ static void spicc_chip_select(struct spicc *spicc, bool select)
 }
 
 
-static void spicc_set_mode(struct spicc *spicc, u8 mode) 
-{    
+static void spicc_set_mode(struct spicc *spicc, u8 mode)
+{
   spicc->regs->conreg.clk_pha = (mode & SPI_CPHA) ? 1:0;
   spicc->regs->conreg.clk_pol = (mode & SPI_CPOL) ? 1:0;
   spicc->regs->conreg.drctl = 0; //data ready, 0-ignore, 1-falling edge, 2-rising edge
@@ -101,16 +101,16 @@ static void spicc_set_mode(struct spicc *spicc, u8 mode)
 }
 
 
-static void spicc_set_clk(struct spicc *spicc, int speed) 
-{	
+static void spicc_set_clk(struct spicc *spicc, int speed)
+{
 	struct clk *sys_clk = clk_get_sys("clk81", NULL);
 	unsigned sys_clk_rate = clk_get_rate(sys_clk);
 	unsigned div, mid_speed;
-  
+
   // actually, speed = sys_clk_rate / 2^(conreg.data_rate_div+2)
   mid_speed = (sys_clk_rate * 3) >> 4;
   for(div=0; div<7; div++) {
-    if (speed >= mid_speed) break;    
+    if (speed >= mid_speed) break;
     mid_speed >>= 1;
   }
   spicc->regs->conreg.data_rate_div = div;
@@ -122,7 +122,7 @@ static int spicc_hw_xfer(struct spicc *spicc, u8 *txp, u8 *rxp, int len)
 {
 	u8 dat;
 	int i, num,retry;
-	
+
 	spicc_dbg("length = %d\n", len);
 	while (len > 0) {
 		num = (len > SPICC_FIFO_SIZE) ? SPICC_FIFO_SIZE : len;
@@ -188,16 +188,16 @@ static void spicc_handle_one_msg(struct spicc *spicc, struct spi_message *m)
   spicc_clk_gate_on();
   if (spicc->spi != spi) {
     spicc->spi = spi;
-    spicc_set_clk(spicc, spi->max_speed_hz);	    
+    spicc_set_clk(spicc, spi->max_speed_hz);
 	  spicc_set_mode(spicc, spi->mode);
 	}
   spicc_chip_select(spicc, 1); // select
   spicc->regs->conreg.enable = 1; // enable spicc
-  
+
 	list_for_each_entry(t, &m->transfers, transfer_list) {
-  	if((spi->max_speed_hz != t->speed_hz) && t->speed_hz) {
-  	  spicc_set_clk(spicc, t->speed_hz);	    
-  	}  
+	if((spi->max_speed_hz != t->speed_hz) && t->speed_hz) {
+	  spicc_set_clk(spicc, t->speed_hz);
+	}
 		if (spicc_hw_xfer(spicc,(u8 *)t->tx_buf, (u8 *)t->rx_buf, t->len) < 0) {
 			goto spicc_handle_end;
 		}
@@ -266,8 +266,8 @@ static ssize_t store_test(struct class *class, struct class_attribute *attr,	con
 		printk("echo cs_gpio speed num [wdata1 wdata2 wdata3 wdata4] >test\n");
 		return count;
 	}
-    
-	i = sscanf(buf, "%d%d%d%d%x%x%x%x", &cs_gpio, &speed, &mode, &num, 
+
+	i = sscanf(buf, "%d%d%d%d%x%x%x%x", &cs_gpio, &speed, &mode, &num,
 		(unsigned int *)&wbuf[0], (unsigned int *)&wbuf[1], (unsigned int *)&wbuf[2], (unsigned int *)&wbuf[3]);
 	printk("cs_gpio=%d, speed=%d, mode=%d, num=%d\n", cs_gpio, speed, mode, num);
 	if ((i<(num+4)) || (!cs_gpio) || (!speed) || (num > sizeof(wbuf))) {
@@ -275,28 +275,28 @@ static ssize_t store_test(struct class *class, struct class_attribute *attr,	con
 		return -EINVAL;
 	}
 
-	spin_lock_irqsave(&spicc->lock, flags);	
+	spin_lock_irqsave(&spicc->lock, flags);
 	amlogic_gpio_request(cs_gpio, "spicc_cs");
 	amlogic_gpio_direction_output(cs_gpio, 0, "spicc_cs");
   spicc_clk_gate_on();
- 	spicc_set_clk(spicc, speed);	    
+	spicc_set_clk(spicc, speed);
 	spicc_set_mode(spicc, mode);
   spicc->regs->conreg.enable = 1; // enable spicc
 //	spicc_dump(spicc);
-	
+
 	spicc_hw_xfer(spicc, wbuf, rbuf, num);
 	printk("read back data: ");
 	for (i=0; i<num; i++) {
 		printk("0x%x, ", rbuf[i]);
 	}
 	printk("\n");
-	
+
 	spicc->regs->conreg.enable = 0; // disable spicc
 	spicc_clk_gate_off();
 	amlogic_gpio_direction_input(cs_gpio, "spicc_cs");
 	amlogic_gpio_free(cs_gpio, "spicc_cs");
 	spin_unlock_irqrestore(&spicc->lock, flags);
-    
+
 	return count;
 }
 static struct class_attribute spicc_class_attrs[] = {
@@ -310,11 +310,11 @@ static int spicc_probe(struct platform_device *pdev)
 	struct spi_master	*master;
 	struct spicc *spicc;
 	int i, gpio, ret;
-	
+
 #ifdef CONFIG_OF
 	struct spicc_platform_data spicc_pdata;
 	const char *prop_name;
-	
+
 	BUG_ON(!pdev->dev.of_node);
 	pdata = &spicc_pdata;
 
@@ -336,13 +336,13 @@ static int spicc_probe(struct platform_device *pdev)
 		return -ENODEV;
 	}
 	dev_info(&pdev->dev, "pinctrl_name = %s\n", prop_name);
-	
+
 	ret = of_property_read_u32(pdev->dev.of_node,"num_chipselect",&pdata->num_chipselect);
 	if(ret) {
 		dev_err(&pdev->dev, "match num_chipselect failed!\n");
 		return -ENODEV;
 	}
- 	dev_info(&pdev->dev, "num_chipselect = %d\n", pdata->num_chipselect);
+	dev_info(&pdev->dev, "num_chipselect = %d\n", pdata->num_chipselect);
 
 	pdata->cs_gpios = kzalloc(sizeof(int)*pdata->num_chipselect, GFP_KERNEL);
 	for (i=0; i<pdata->num_chipselect; i++) {
@@ -353,16 +353,16 @@ static int spicc_probe(struct platform_device *pdev)
 			return -ENODEV;
 		}
 		else {
-   		*(pdata->cs_gpios+i) = gpio;
- 			dev_info(&pdev->dev, "cs_gpios[%d] = %s(%d)\n", i, prop_name, gpio);
+		*(pdata->cs_gpios+i) = gpio;
+			dev_info(&pdev->dev, "cs_gpios[%d] = %s(%d)\n", i, prop_name, gpio);
 		}
-	} 	
- 	
+	}
+
   pdata->regs = (struct spicc_regs __iomem *)of_iomap(pdev->dev.of_node, 0);
 	dev_info(&pdev->dev, "regs = %x\n", pdata->regs);
 #else
 	pdata = (struct spicc_platform_data *)pdev->dev.platform_data
-	BUG_ON(!pdata);	
+	BUG_ON(!pdata);
 #endif
 	for (i=0; i<pdata->num_chipselect; i++) {
 		gpio = pdata->cs_gpios[i];
@@ -373,7 +373,7 @@ static int spicc_probe(struct platform_device *pdev)
 		}
 		amlogic_gpio_direction_output(gpio, 1, "spicc_cs");
 	}
-	
+
 	master = spi_alloc_master(&pdev->dev, sizeof *spicc);
 	if (master == NULL) {
 		dev_err(&pdev->dev, "allocate spi master failed!\n");
@@ -390,9 +390,9 @@ static int spicc_probe(struct platform_device *pdev)
 			dev_err(&pdev->dev, "register spi master failed! (%d)\n", ret);
 			goto err;
 	}
-	
+
 	spicc = spi_master_get_devdata(master);
-	spicc->master = master;	
+	spicc->master = master;
 	spicc->regs = pdata->regs;
 	spicc->pinctrl = pdata->pinctrl;
 	dev_set_drvdata(&pdev->dev, spicc);
@@ -401,10 +401,10 @@ static int spicc_probe(struct platform_device *pdev)
 	if (spicc->wq == NULL) {
 		ret = -EBUSY;
 		goto err;
-	}		  		  
+	}
 	spin_lock_init(&spicc->lock);
 	INIT_LIST_HEAD(&spicc->msg_queue);
-		
+
 	spicc_hw_init(spicc);
 
   /*setup class*/
@@ -414,7 +414,7 @@ static int spicc_probe(struct platform_device *pdev)
   if ((ret = class_register(&spicc->cls)) < 0) {
 		dev_err(&pdev->dev, "register class failed! (%d)\n", ret);
 	}
-	
+
 	dev_info(&pdev->dev, "SPICC init ok \n");
 	return ret;
 err:
@@ -448,25 +448,25 @@ static const struct of_device_id spicc_of_match[]={
 #define spicc_of_match NULL
 #endif
 
-static struct platform_driver spicc_driver = { 
-	.probe = spicc_probe, 
-	.remove = spicc_remove, 
+static struct platform_driver spicc_driver = {
+	.probe = spicc_probe,
+	.remove = spicc_remove,
 	.driver = {
-			.name = "spicc", 
+			.name = "spicc",
       .of_match_table = spicc_of_match,
-			.owner = THIS_MODULE, 
-		}, 
+			.owner = THIS_MODULE,
+		},
 };
 
-static int __init spicc_init(void) 
-{	
+static int __init spicc_init(void)
+{
 	return platform_driver_register(&spicc_driver);
 }
 
-static void __exit spicc_exit(void) 
-{	
+static void __exit spicc_exit(void)
+{
 	platform_driver_unregister(&spicc_driver);
-} 
+}
 
 subsys_initcall(spicc_init);
 module_exit(spicc_exit);

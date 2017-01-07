@@ -44,7 +44,7 @@ static  emmc_init(struct memory_card * card)
 		card->card_io_init(card);
 		card->card_detector(card);
 		card->card_insert_process(card);
-		card_release_host(card->host);	
+		card_release_host(card->host);
 		card->unit_state |= CARD_UNIT_READY;
 	}
 }
@@ -54,11 +54,11 @@ static int32_t card_key_read(aml_keybox_provider_t * provider,uint8_t * buf,int 
 {
 	SD_MMC_Card_Info_t *sd_mmc_info = key_card->card_info;
 	int32_t ret=0;
-#if (EMMC_MODE==0)	
+#if (EMMC_MODE==0)
 	__card_claim_host(key_card->host, key_card);
 	ret= sd_mmc_read_data(sd_mmc_info,(unsigned long)(key_partitions->offset)/CARDSECTORSIZE,KEYSECTORSIZE,buf);
 	card_release_host(key_card->host);
-#elif (EMMC_MODE==1)	
+#elif (EMMC_MODE==1)
 	struct card_blk_request brq;
 	brq.crq.cmd=READ;
 	brq.card_data.lba = (unsigned long)(key_partitions->offset)/CARDSECTORSIZE;
@@ -71,21 +71,21 @@ static int32_t card_key_read(aml_keybox_provider_t * provider,uint8_t * buf,int 
 	card_release_host(key_card->host);
 	printk("card_key_read ret=%d\n",ret);
 #else
-	struct file *fp; 
-	mm_segment_t fs; 
-	loff_t pos; 
+	struct file *fp;
+	mm_segment_t fs;
+	loff_t pos;
 	char *file = provider->priv;
-	fp = filp_open(file, O_RDWR, 0644); 
-	if (IS_ERR(fp)) { 
-		printk("open file error\n"); 
-		return -1; 
-	} 
-	fs = get_fs(); 
-	set_fs(KERNEL_DS); 
-	pos = 0; 
-	vfs_read(fp, buf, bytes, &pos); 
-	filp_close(fp, NULL); 
-	set_fs(fs); 
+	fp = filp_open(file, O_RDWR, 0644);
+	if (IS_ERR(fp)) {
+		printk("open file error\n");
+		return -1;
+	}
+	fs = get_fs();
+	set_fs(KERNEL_DS);
+	pos = 0;
+	vfs_read(fp, buf, bytes, &pos);
+	filp_close(fp, NULL);
+	set_fs(fs);
 	PRINT_HASH(buf);
 #endif
 	return	ret;
@@ -95,7 +95,7 @@ static int32_t card_key_write(aml_keybox_provider_t * provider,uint8_t * buf,int
 	SD_MMC_Card_Info_t *sd_mmc_info = key_card->card_info;
 	int32_t ret=0;
 
-#if (EMMC_MODE==0)		
+#if (EMMC_MODE==0)
 	__card_claim_host(key_card->host, key_card);
 	ret= sd_mmc_write_data(sd_mmc_info,(unsigned long)(key_partitions->offset)/CARDSECTORSIZE,KEYSECTORSIZE,buf);
 	card_release_host(key_card->host);
@@ -113,21 +113,21 @@ static int32_t card_key_write(aml_keybox_provider_t * provider,uint8_t * buf,int
 	card_release_host(key_card->host);
 	printk("card_key_write ret=%d\n",ret);
 #else
-	struct file *fp; 
-	mm_segment_t fs; 
-	loff_t pos; 
+	struct file *fp;
+	mm_segment_t fs;
+	loff_t pos;
 	char *file = provider->priv;
-	fp = filp_open(file, O_RDWR, 0644); 
-	if (IS_ERR(fp)) { 
-		printk("open file error\n"); 
-		return -1; 
-	} 
-	fs = get_fs(); 
-	set_fs(KERNEL_DS); 
-	pos = 0; 
-	vfs_write(fp, buf, bytes, &pos); 
-	filp_close(fp, NULL); 
-	set_fs(fs); 
+	fp = filp_open(file, O_RDWR, 0644);
+	if (IS_ERR(fp)) {
+		printk("open file error\n");
+		return -1;
+	}
+	fs = get_fs();
+	set_fs(KERNEL_DS);
+	pos = 0;
+	vfs_write(fp, buf, bytes, &pos);
+	filp_close(fp, NULL);
+	set_fs(fs);
 	PRINT_HASH(buf);
 #endif
 	return	ret;
@@ -144,14 +144,14 @@ int card_key_init(struct memory_card *card)
 		if(card->card_plat_info->nr_partitions>0)
 		{
 			int  i;
-		    int err;	
+		    int err;
 			char *file;
 
 			err = aml_keybox_provider_register(&nand_provider);
 			if(err){
 				BUG();
 			}
-			
+
 			for(i=0;i<card->card_plat_info->nr_partitions;i++){
 				if(strcmp(card->card_plat_info->partitions[i].name,SELECTPART)==0)
 					break;
@@ -159,26 +159,23 @@ int card_key_init(struct memory_card *card)
 			if(i>=card->card_plat_info->nr_partitions){
 				printk("nand_key partition is not exist\n");
 				return -1;
-			} 
+			}
 
 			file=kzalloc(256, GFP_KERNEL);
 			if(!file){
 				printk("kzalloc nand_provider->priv \n");
 				return -1;
-			} 
+			}
 			sprintf(file, "/dev/block/cardblk%s%d", card->name,1+i);
-			nand_provider.priv=file;	
+			nand_provider.priv=file;
 			key_card=card;
 			key_partitions = card->card_plat_info->partitions+i;
 
-			printk("aml_keybox_provider_register nand_key partition ok!\n");			
+			printk("aml_keybox_provider_register nand_key partition ok!\n");
 		}
-		
+
 	return 0;
 }
 
 
 #endif
-
-
-

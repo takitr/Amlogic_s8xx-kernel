@@ -632,6 +632,8 @@ static int fat_remount(struct super_block *sb, int *flags, char *data)
 	struct msdos_sb_info *sbi = MSDOS_SB(sb);
 	*flags |= MS_NODIRATIME | (sbi->options.isvfat ? 0 : MS_NOATIME);
 
+	sync_filesystem(sb);
+
 	/* make sure we update state on remount. */
 	new_rdonly = *flags & MS_RDONLY;
 	if (new_rdonly != (sb->s_flags & MS_RDONLY)) {
@@ -971,7 +973,8 @@ static int parse_options(struct super_block *sb, char *options, int is_vfat,
 	}
 	opts->name_check = 'n';
 	opts->quiet = opts->showexec = opts->sys_immutable = opts->dotsOK =  0;
-	opts->utf8 = opts->unicode_xlate = 0;
+	opts->utf8 = 1;
+	opts->unicode_xlate = 0;
 	opts->numtail = 1;
 	opts->usefree = opts->nocase = 0;
 	opts->tz_set = 0;

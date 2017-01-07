@@ -20,7 +20,7 @@ struct wm8960_data {
 
 	bool shared_lrclk;  /* DAC and ADC LRCLKs are wired together */
     /* Disable Headphone detect through codec*/
-	bool dis_hp_det; 
+	bool dis_hp_det;
 	/* Headphone detect polarity, only be useful when hp_jack_det=1
 	* 0----High = Speaker; 1---High = Headphone;
 	*/

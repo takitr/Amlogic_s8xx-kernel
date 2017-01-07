@@ -44,10 +44,12 @@ struct am_smc_param {
 	int     recv_invert;
 	int     recv_lsb_msb;
 	int     recv_no_parity;
+	int     recv_parity;
 	int     xmit_invert;
 	int     xmit_lsb_msb;
 	int     xmit_retries;
 	int     xmit_repeat_dis;
+	int     xmit_parity;
 };
 
 #define AMSMC_IOC_MAGIC  'C'
@@ -60,4 +62,3 @@ struct am_smc_param {
 #define AMSMC_IOC_SET_PARAM    _IOW(AMSMC_IOC_MAGIC, 0x05, struct am_smc_param)
 
 #endif
-

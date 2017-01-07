@@ -322,5 +322,3 @@ static void  __exit dcc_tty_exit(void)
 
 module_init(dcc_tty_init);
 module_exit(dcc_tty_exit);
-
-

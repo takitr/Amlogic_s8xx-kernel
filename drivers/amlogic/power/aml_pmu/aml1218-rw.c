@@ -79,7 +79,7 @@ int aml1218_write16(int32_t add, uint16_t val)
     };
 
     CHECK_DRIVER();
-    pdev = g_aml1218_client; 
+    pdev = g_aml1218_client;
 
     buf[0] = add & 0xff;
     buf[1] = (add >> 8) & 0x0f;
@@ -109,7 +109,7 @@ int aml1218_writes(int32_t add, uint8_t *buff, int len)
     };
 
     CHECK_DRIVER();
-    pdev = g_aml1218_client; 
+    pdev = g_aml1218_client;
 
     buf[0] = add & 0xff;
     buf[1] = (add >> 8) & 0x0f;
@@ -144,7 +144,7 @@ int aml1218_read(int add, uint8_t *val)
     };
 
     CHECK_DRIVER();
-    pdev = g_aml1218_client; 
+    pdev = g_aml1218_client;
 
     buf[0] = add & 0xff;
     buf[1] = (add >> 8) & 0x0f;
@@ -172,13 +172,13 @@ int aml1218_read16(int add, uint16_t *val)
         {
             .addr  = AML1218_ADDR,
             .flags = I2C_M_RD,
-            .len   = 2, 
+            .len   = 2,
             .buf   = (uint8_t *)val,
         }
     };
 
     CHECK_DRIVER();
-    pdev = g_aml1218_client; 
+    pdev = g_aml1218_client;
 
     buf[0] = add & 0xff;
     buf[1] = (add >> 8) & 0x0f;
@@ -212,7 +212,7 @@ int aml1218_reads(int add, uint8_t *buff, int len)
     };
 
     CHECK_DRIVER();
-    pdev = g_aml1218_client; 
+    pdev = g_aml1218_client;
 
     buf[0] = add & 0xff;
     buf[1] = (add >> 8) & 0x0f;
@@ -227,36 +227,36 @@ EXPORT_SYMBOL_GPL(aml1218_reads);
 
 int aml1218_set_bits(int addr, uint8_t bits, uint8_t mask)
 {
-    uint8_t val; 
-    int ret; 
- 
-    ret = aml1218_read(addr, &val); 
-    if (ret) { 
-        return ret; 
-    } 
-    val &= ~(mask); 
-    val |=  (bits & mask); 
-    return aml1218_write(addr, val); 
-} 
-EXPORT_SYMBOL_GPL(aml1218_set_bits); 
+    uint8_t val;
+    int ret;
+
+    ret = aml1218_read(addr, &val);
+    if (ret) {
+        return ret;
+    }
+    val &= ~(mask);
+    val |=  (bits & mask);
+    return aml1218_write(addr, val);
+}
+EXPORT_SYMBOL_GPL(aml1218_set_bits);
 
 static int find_idx(uint32_t start, uint32_t target, uint32_t step, int size)
 {
-    int i = 0; 
+    int i = 0;
 
     if (start < target) {
-        AML1218_DBG("%s, invalid input of voltage:%u\n", __func__, target);    
+        AML1218_DBG("%s, invalid input of voltage:%u\n", __func__, target);
         return -1;
     }
-    do { 
+    do {
         if ((start - step) < target) {
-            break;    
-        }    
+            break;
+        }
         start -= step;
-        i++; 
+        i++;
     } while (i < size);
     if (i >= size) {
-        AML1218_DBG("%s, input voltage %u outof range\n", __func__, target);    
+        AML1218_DBG("%s, input voltage %u outof range\n", __func__, target);
         return -1;
     }
 
@@ -264,10 +264,10 @@ static int find_idx(uint32_t start, uint32_t target, uint32_t step, int size)
 }
 
 static unsigned int VDDEE_voltage_table[] = {                   // voltage table of VDDEE
-    1184, 1170, 1156, 1142, 1128, 1114, 1100, 1086, 
-    1073, 1059, 1045, 1031, 1017, 1003, 989, 975, 
-    961,  947,  934,  920,  906,  892,  878, 864, 
-    850,  836,  822,  808,  794,  781,  767, 753  
+    1184, 1170, 1156, 1142, 1128, 1114, 1100, 1086,
+    1073, 1059, 1045, 1031, 1017, 1003, 989, 975,
+    961,  947,  934,  920,  906,  892,  878, 864,
+    850,  836,  822,  808,  794,  781,  767, 753
 };
 
 int find_idx_by_vddEE_voltage(int voltage, unsigned int *table)
@@ -276,16 +276,16 @@ int find_idx_by_vddEE_voltage(int voltage, unsigned int *table)
 
     for (i = 0; i < 32; i++) {
         if (voltage >= table[i]) {
-            break;    
-        }    
-    }    
+            break;
+        }
+    }
     if (voltage == table[i]) {
-        return i;    
-    }    
+        return i;
+    }
     if (i == 0) {
         return 0;
     } else {
-        return i - 1; 
+        return i - 1;
     }
 }
 
@@ -293,7 +293,7 @@ int aml1218_set_vddEE_voltage(int voltage)
 {
     int addr = 0x005d;
     int idx_to, idx_cur;
-    unsigned char val; 
+    unsigned char val;
 
     aml1218_read(addr, &val);
     idx_cur = ((val & 0x7c) >> 2);
@@ -317,26 +317,26 @@ int aml1218_set_dcdc_voltage(int dcdc, uint32_t voltage)
 {
     int addr;
     int idx_to;
-    int range    = 64; 
-    int step     = 1875 * 10; 
+    int range    = 64;
+    int step     = 1875 * 10;
     int start    = 1881 * 1000;
     int idx_cur;
     uint8_t val = 0;
     static uint8_t dcdc_val[3] = {};
 
     if (dcdc == 4) {
-        aml1218_set_vddEE_voltage(voltage / 1000);            
+        aml1218_set_vddEE_voltage(voltage / 1000);
         return 0;
     }
     if (dcdc > 3 || dcdc < 0) {
-        return -1;    
-    }   
+        return -1;
+    }
     addr = 0x34+(dcdc-1)*9;
     if (dcdc == 3) {
-        step     = 50 * 1000; 
-        range    = 32; 
+        step     = 50 * 1000;
+        range    = 32;
         start    = 3600 * 1000;
-    }   
+    }
     if (dcdc_val[dcdc] == 0) {
         aml1218_read(addr, &val);                               // read first time
     } else {
@@ -364,25 +364,25 @@ int aml1218_get_dcdc_voltage(int dcdc, uint32_t *uV)
     uint8_t val;
     int ret;
     //int start;
-	
+
     if (dcdc == 4) {
         addr = 0x5d;
         ret = aml1218_read(addr, &val);
         if (ret) {
-            return ret;    
+            return ret;
         }
         *uV = VDDEE_voltage_table[(val >> 2) & 0x1f] * 1000;
         return 0;
     }
     if (dcdc > 3 || dcdc < 0) {
-        return -EINVAL;    
+        return -EINVAL;
     }
 
     addr = 0x34+(dcdc-1)*9;
-    
+
     ret = aml1218_read(addr, &val);
     if (ret) {
-        return ret;    
+        return ret;
     }
     val &= 0x7e;
     val >>= 1;
@@ -394,7 +394,7 @@ int aml1218_get_dcdc_voltage(int dcdc, uint32_t *uV)
     {
         *uV = (1881300 - val * 18750); //step: 20 mv
     }
-    
+
     return 0;
 }
 EXPORT_SYMBOL_GPL(aml1218_get_dcdc_voltage);

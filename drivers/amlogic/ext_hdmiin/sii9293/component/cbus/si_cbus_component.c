@@ -106,7 +106,7 @@ bool_t SiiMhlRxCbusConnected ()
 
 static int_t CBusSendNextInQueue (void)
 {
-    int_t   result = SUCCESS;    
+    int_t   result = SUCCESS;
 
     if (SiiCbusAbortStateGet())
     {
@@ -242,32 +242,32 @@ bool_t SiiCbusWriteCommand ( cbus_req_t *pReq  )
 
     if( SiiMhlRxCbusConnected() )
     {
-        //In Abort state, discard any cbus command need to transmit. 
+        //In Abort state, discard any cbus command need to transmit.
         if (SiiCbusAbortStateGet() == false)
         {
-    		//DEBUG_PRINT( MSG_DBG, "CBUS:: SiiCbusWriteCommand:: Channel State: %02X", (int)pCbus->chState[ channel].state );
-    		for ( i = 0; i < CBUS_MAX_COMMAND_QUEUE; i++ )
-    		{
+		//DEBUG_PRINT( MSG_DBG, "CBUS:: SiiCbusWriteCommand:: Channel State: %02X", (int)pCbus->chState[ channel].state );
+		for ( i = 0; i < CBUS_MAX_COMMAND_QUEUE; i++ )
+		{
                 queueIndex = (CH_ACTIVE_INDEX + i) % CBUS_MAX_COMMAND_QUEUE;
-    			if ( pCbus->chState.request[ queueIndex].reqStatus == CBUS_REQ_IDLE )
-    			{
-    				// Found an idle queue entry, copy the request and set to pending.
+			if ( pCbus->chState.request[ queueIndex].reqStatus == CBUS_REQ_IDLE )
+			{
+				// Found an idle queue entry, copy the request and set to pending.
 
-    				memcpy( &pCbus->chState.request[ queueIndex], pReq, sizeof( cbus_req_t ));
-    				pCbus->chState.request[ queueIndex].reqStatus = CBUS_REQ_PENDING;
+				memcpy( &pCbus->chState.request[ queueIndex], pReq, sizeof( cbus_req_t ));
+				pCbus->chState.request[ queueIndex].reqStatus = CBUS_REQ_PENDING;
                     pCbus->chState.request[ queueIndex].retry = 1;
-    				success = true;
-    				break;
-    			}
-    		}
+				success = true;
+				break;
+			}
+		}
             if (i == CBUS_MAX_COMMAND_QUEUE)
             {
                 DEBUG_PRINT(
-    				MSG_ERR,
-    				"CBUS:: Queue full - Request0: %02X Request1: %02X",
-    				(int)pCbus->chState.request[ 0].reqStatus,
-    				(int)pCbus->chState.request[ 1].reqStatus
-    				);
+				MSG_ERR,
+				"CBUS:: Queue full - Request0: %02X Request1: %02X",
+				(int)pCbus->chState.request[ 0].reqStatus,
+				(int)pCbus->chState.request[ 1].reqStatus
+				);
             }
         }
 #if 0
@@ -315,7 +315,7 @@ bool_t SiiCbusWriteCommand ( cbus_req_t *pReq  )
     }
     else
     {
-    	DEBUG_PRINT( MSG_DBG, "CBus is not connected yet! MHL command could not be sent!" );
+	DEBUG_PRINT( MSG_DBG, "CBus is not connected yet! MHL command could not be sent!" );
     }
 
     return( success );
@@ -525,9 +525,9 @@ static uint8_t CBusCheckInterruptStatus ( void )
         //CBUS connction change
         if ( SiiDrvCbusBusStatusGet( &busStatus ) )
         {
-        	/* The connection change interrupt has been received.   */
+		/* The connection change interrupt has been received.   */
 			pCbus->chState.connected = busStatus ? true : false;
-        	DEBUG_PRINT( MSG_DBG, "CBUS:: ----Connection Change---- %s \n", pCbus->chState.connected ? "Connected" : "Disconnected" );
+		DEBUG_PRINT( MSG_DBG, "CBUS:: ----Connection Change---- %s \n", pCbus->chState.connected ? "Connected" : "Disconnected" );
 			if( pCbus->chState.connected )
 			{
 				SiiDrvCbusTermCtrl( true );
@@ -548,7 +548,7 @@ static uint8_t CBusCheckInterruptStatus ( void )
 			}
 			else
 			{
-				SiiDrvCbusTermCtrl( false );       
+				SiiDrvCbusTermCtrl( false );
 				//set the cbus to idle
 				CBusResetToIdle();
 			}
@@ -599,24 +599,24 @@ static uint8_t CBusCheckInterruptStatus ( void )
             }
         }
 
-    	// request received from peer to write into scratchpad
-    	if ( SiiDrvCbusReqWrtGet() )
-    	{
-    		DEBUG_PRINT( MSG_DBG, "Grant peer's request to write scratchpad\n");
-    		SiiCbusGrtWrt();
+	// request received from peer to write into scratchpad
+	if ( SiiDrvCbusReqWrtGet() )
+	{
+		DEBUG_PRINT( MSG_DBG, "Grant peer's request to write scratchpad\n");
+		SiiCbusGrtWrt();
 	    }
 
-    	// scratchpad write notification received from peer
-    	if ( SiiDrvCbusScratchpadWrtnGet() )
-    	{
-    		// send it to app layer
-    		SiiMhlRxScratchpadWrittenNtfy();
-    	}
+	// scratchpad write notification received from peer
+	if ( SiiDrvCbusScratchpadWrtnGet() )
+	{
+		// send it to app layer
+		SiiMhlRxScratchpadWrittenNtfy();
+	}
 
-    	// request to write into peer's scratchpad is granted
-    	if ( SiiDrvCbusGrtWrtGet() && pCbus->chState.burstWaitState )
-    	{
-    		DEBUG_PRINT( MSG_DBG, "Peer sent grant write\n");
+	// request to write into peer's scratchpad is granted
+	if ( SiiDrvCbusGrtWrtGet() && pCbus->chState.burstWaitState )
+	{
+		DEBUG_PRINT( MSG_DBG, "Peer sent grant write\n");
             SiiCbusWriteBurst();
             //Recieve grt, stop burst timer.
             pCbus->chState.burst [CH_ACTIVE_BURST].burstStatus = CBUS_BURST_IDLE;
@@ -629,8 +629,8 @@ static uint8_t CBusCheckInterruptStatus ( void )
         }
 
 
-    	if ( SiiDrvCbus3DReqGet() )
-    	{
+	if ( SiiDrvCbus3DReqGet() )
+	{
             DEBUG_PRINT( MSG_DBG, "Peer request 3D infomation\n");
             SiiDrvCbusBuild3DData();
             SiiDrv3DWriteBurst();
@@ -713,11 +713,11 @@ static void CBusBurstNextInQueue (void)
     }
     if (success)
     {
-    	// send REQ_WRT interrupt to peer
-    	if( !(SiiCbusReqWrt()) )
-    	{
-    		DEBUG_PRINT( MSG_ERR, "Couldn't send REQ_WRT to peer" );
-    	}
+	// send REQ_WRT interrupt to peer
+	if( !(SiiCbusReqWrt()) )
+	{
+		DEBUG_PRINT( MSG_ERR, "Couldn't send REQ_WRT to peer" );
+	}
         else
         {
             pCbus->chState.burstWaitState = true;
@@ -782,15 +782,15 @@ bool_t SiiCbusWriteBurst()
     memcpy(req.msgData, pCbus->chState.burst [CH_ACTIVE_BURST].burstData, req.length);
     if( !(SiiCbusWriteCommand(&req)) )
     {
-    	DEBUG_PRINT( MSG_ERR, "Couldn't send Write Burst to peer" );
-    	return false;
+	DEBUG_PRINT( MSG_ERR, "Couldn't send Write Burst to peer" );
+	return false;
     }
 
     // send DSCR_CHG interrupt to peer
     if( !(SiiCbusSendDscrChange()) )
     {
-    	DEBUG_PRINT( MSG_ERR, "Couldn't send DSCR_CHG to peer" );
-    	return false;
+	DEBUG_PRINT( MSG_ERR, "Couldn't send DSCR_CHG to peer" );
+	return false;
     }
     success = true;
 
@@ -1036,9 +1036,9 @@ void SiiCbusAbortTimerStart (void)
 
 /*****************************************************************************/
 /**
- * @brief Check the cbus timers, if cbus need to be wait until timeout. 
+ * @brief Check the cbus timers, if cbus need to be wait until timeout.
  *
- * @note: 
+ * @note:
  *
  *****************************************************************************/
 void SiiCbuschkTimers (void)
@@ -1063,7 +1063,7 @@ void SiiCbuschkTimers (void)
         }
     }
     if (pCbus->chState.connected && (!pCbus->chState.dcap_ready) && (SiiTimerTotalElapsed() - pCbus->chState.dcapTimer >  CBUS_DCAP_READY_TIMER))
-    {        
+    {
         DEBUG_PRINT(MSG_ERR, ("CBUS Dcap ready timer expired.\n"));
         pCbus->chState.dcap_ready = true;
         // Read Dcap
@@ -1199,7 +1199,7 @@ uint8_t SiiMhlRxIntrHandler ()
         }
         else
         {
-            // retry failed, skip the current index, and move on. 
+            // retry failed, skip the current index, and move on.
             pCbus->chState.request[ CH_ACTIVE_INDEX ].reqStatus = CBUS_REQ_IDLE;
             CH_ACTIVE_INDEX = (CH_ACTIVE_INDEX + 1)% CBUS_MAX_COMMAND_QUEUE;
         }

@@ -1,7 +1,3 @@
-typedef struct reg_s {
-    uint reg;
-    uint val;
-} reg_t;
 
 static  reg_t hdmi_tvenc_regs_480i[] = {
     /*1st col: recommmended, but eof/sof/vs_lines +/- 1 from spec; 2nd col: from simu */
@@ -69,9 +65,9 @@ static  reg_t hdmi_tvenc_regs_1080i[] = {
     {ENCP_DVI_VSO_BEGIN_ODD,             0x00000928},
     {ENCP_DVI_VSO_END_ODD,               0x00000928},
     {VENC_DVI_SETTING,                   0x000080ad},
-    {VENC_DVI_SETTING_MORE,              0x00000000}, 
+    {VENC_DVI_SETTING_MORE,              0x00000000},
     {0,0}
-};    
+};
 
 static  reg_t hdmi_tvenc_regs_1080i50[] = {
     {ENCP_VIDEO_MODE,                    0x00005ffc},
@@ -92,9 +88,9 @@ static  reg_t hdmi_tvenc_regs_1080i50[] = {
     {ENCP_DVI_VSO_BEGIN_ODD,             0x00000ae0},
     {ENCP_DVI_VSO_END_ODD,               0x00000ae0},
     {VENC_DVI_SETTING,                   0x000080ad},
-    {VENC_DVI_SETTING_MORE,              0x00000000}, 
+    {VENC_DVI_SETTING_MORE,              0x00000000},
     {0,0}
-};    
+};
 
 static  reg_t hdmi_tvenc_regs_480p[] = {
     {ENCP_VIDEO_MODE,                   /*0x4000 */ 0x00004000},
@@ -111,7 +107,7 @@ static  reg_t hdmi_tvenc_regs_480p[] = {
     {VENC_DVI_SETTING_MORE,             /*0x0    */ 0x00000000},
     {VENC_DVI_SETTING,                  /*0x80ad */ 0x000080ad},
     {0,0}
-};    
+};
 
 static  reg_t hdmi_tvenc_regs_576p[] = {
     {ENCP_VIDEO_MODE,                    0x00004000},
@@ -128,7 +124,7 @@ static  reg_t hdmi_tvenc_regs_576p[] = {
     {VENC_DVI_SETTING_MORE,              0x00000000},
     {VENC_DVI_SETTING,                   0x000080ad},
     {0,0}
-};    
+};
 
 static  reg_t hdmi_tvenc_regs_720p[] = {
     {ENCP_VIDEO_MODE,                    0x00004040},
@@ -145,7 +141,7 @@ static  reg_t hdmi_tvenc_regs_720p[] = {
     {VENC_DVI_SETTING_MORE,              0x00000000},
     {VENC_DVI_SETTING,                   0x000080ad},
     {0,0}
-};    
+};
 
 static  reg_t hdmi_tvenc_regs_1080p[] = {
     {ENCP_VIDEO_MODE,                    0x00004040},
@@ -162,7 +158,7 @@ static  reg_t hdmi_tvenc_regs_1080p[] = {
     {VENC_DVI_SETTING_MORE,              0x00000000},
     {VENC_DVI_SETTING,                   0x0000809d},
     {0,0}
-};    
+};
 
 static  reg_t hdmi_tvenc_regs_720p50[] = {
     {ENCP_VIDEO_MODE,                    0x00004040},
@@ -179,7 +175,7 @@ static  reg_t hdmi_tvenc_regs_720p50[] = {
     {VENC_DVI_SETTING_MORE,              0x00000000},
     {VENC_DVI_SETTING,                   0x000080ad},
     {0,0}
-};    
+};
 
 static  reg_t hdmi_tvenc_regs_1080p50[] = {
     {ENCP_VIDEO_MODE,                    0x00004040},
@@ -196,7 +192,7 @@ static  reg_t hdmi_tvenc_regs_1080p50[] = {
     {VENC_DVI_SETTING_MORE,              0x00000000},
     {VENC_DVI_SETTING,                   0x0000809d},
     {0,0}
-};    
+};
 
 typedef struct hdmi_tvenc_config_
 {
@@ -227,5 +223,3 @@ static const hdmi_tvenc_config_t hdmi_tvenc_configs[] = {
     {HDMI_1080p30,               hdmi_tvenc_regs_1080p},
     {HDMI_Unkown,               NULL},
 };
-
-

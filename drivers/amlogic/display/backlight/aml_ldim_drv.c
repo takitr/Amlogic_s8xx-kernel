@@ -1,7 +1,7 @@
 /*
  * Amlogic Ldim Driver for Meson Chip
  *
- * Author: 
+ * Author:
  *
  * Copyright (C) 2012 Amlogic Inc.
  *
@@ -70,7 +70,7 @@ int Round(int iX, int iB)
     else {
         Rst = (iX-iB/2)/iB;
     }
-    
+
     return Rst;
 }
 
@@ -79,9 +79,9 @@ static sLDIM_RGB_MODE_Param  ldim_param_rgbMode = { 0, //RGBmapping_demo;
                                                     0, //b_ldlut_ip_mode;   //0: linear, 1: nearest
                                                     0, //g_ldlut_ip_mode;   //0: linear, 1: nearest
                                                     0, //r_ldlut_ip_mode;   //0: linear, 1: nearest
-                                                    7, //BkLit_LPFmod; u3:0 no LPF, 1:[1 14 1]/16, ...  
-                                                    1, //BackLit_Xtlk; u1 
-                                                    1, //BkLit_Intmod; u1 
+                                                    7, //BkLit_LPFmod; u3:0 no LPF, 1:[1 14 1]/16, ...
+                                                    1, //BackLit_Xtlk; u1
+                                                    1, //BkLit_Intmod; u1
                                                     1, //BkLUT_Intmod; u1
                                                     0, //BkLit_curmod; u1
                                                     0  //BackLit_mode;  u2: 0 LEFT/RIGHT edge, ...
@@ -114,7 +114,7 @@ static int ldim_lut_vdg_lext = 257;
 static int ldim_lut_vhk_lext = 220;
 
 static int ldim_pic_rowmax = 1080;
-static int ldim_pic_colmax = 1920; 
+static int ldim_pic_colmax = 1920;
 
 static int ldim_param_frm_rst_pos = 0;;
 static int ldim_param_frm_bl_start_pos = 0;
@@ -132,24 +132,24 @@ static int gVDG_LUT[32] = {256, 255, 254, 251, 248, 244, 238, 232, 225, 218, 210
 static int gVHK_LUT[32] = {201, 174, 155, 141, 122, 110, 101,  94,  88,  84,  80,  76,  74,  71,  69,  67,
                             65,  63,  62,  60,  59,  58,  57,  56,  55,  54,  53,  52,  51,  51,  50,  49}; //u10
 static int gMatrix_LUT[64] = {0}; //s12
-static int gLD_REFLECT_DGR_LUT[20+20+4] = {0}; //u6: 20 LD_REFLECT_HDGR +  20 LD_REFLECT_VDGR + 4 LD_REFLECT_XDGR 
+static int gLD_REFLECT_DGR_LUT[20+20+4] = {0}; //u6: 20 LD_REFLECT_HDGR +  20 LD_REFLECT_VDGR + 4 LD_REFLECT_XDGR
 static int gLD_RGB_IDX_LUT[16] = {0}; //12bits
 //static int gLD_G_IDX_LUT[32] = {0}; //12bits
 //static int gLD_B_IDX_LUT[32] = {0}; //12bits
 static int gLD_NRMW_LUT[16]  = {0};   //4bits
-static int gLD_RGB_LUT[3*16*32] = {0};  //12bits 
+static int gLD_RGB_LUT[3*16*32] = {0};  //12bits
 
 void LDIM_WR_32Bits(int addr, int data)
 {
    Wr(LDIM_BL_ADDR_PORT,addr);
    Wr(LDIM_BL_DATA_PORT,data);
-} 
+}
 
 int LDIM_RD_32Bits(int addr)
 {
    Wr(LDIM_BL_ADDR_PORT,addr);
    return(Rd(LDIM_BL_DATA_PORT));
-} 
+}
 
 void LDIM_wr_reg_bits(int addr, int val, int start, int len)
 {
@@ -157,7 +157,7 @@ void LDIM_wr_reg_bits(int addr, int val, int start, int len)
    data = LDIM_RD_32Bits (addr);
    data = (data & (~((1 << len) - 1)<<start))  |  ((val & ((1 << len) -1)) << start);
    LDIM_WR_32Bits(addr, data);
-} 
+}
 
 void LDIM_WR_BASE_LUT(int base,int* pData, int size_t, int len)
 {
@@ -165,13 +165,13 @@ void LDIM_WR_BASE_LUT(int base,int* pData, int size_t, int len)
   int addr,data;
   int mask,subCnt;
   int cnt;
-  
+
   addr   = base;//(base<<4);
   mask   = (1<<size_t)-1;
   subCnt = 32/size_t;
   cnt  = 0;
   data = 0;
-  
+
   Wr(LDIM_BL_ADDR_PORT,addr);
 
   for(i=0;i<len;i++)
@@ -189,7 +189,7 @@ void LDIM_WR_BASE_LUT(int base,int* pData, int size_t, int len)
   }
   if(cnt!=0)
      Wr(LDIM_BL_DATA_PORT,data);
-} 
+}
 
 
 //========================================
@@ -224,7 +224,7 @@ void ld_fw_cfg_once()
     //	}
 
     if (ldim_param_rgbMode.BackLit_mode ==0) // Left/right EdgeLit
-    { 
+    {
     ldim_param_blk_hvnum.Reflect_Vnum = 3;
     ldim_param_blk_hvnum.Reflect_Hnum = 0;
 	// config reg_LD_BLK_Hidx
@@ -232,15 +232,15 @@ void ld_fw_cfg_once()
 	    dlt = ldim_pic_colmax/ldim_param_blk_hvnum.BLK_Hnum*2;
 	    gBLK_Hidx_LUT[k] = -(dlt/2) + (k-hofst)*dlt;
             gBLK_Hidx_LUT[k] =  (gBLK_Hidx_LUT[k]>8191) ? 8191 : (gBLK_Hidx_LUT[k]<-8192) ? (-8192) : gBLK_Hidx_LUT[k]; // Clip to S14
- 
+
 	}
 	// config reg_LD_BLK_Vidx
 	for (k=0;k<LD_BLK_LEN;k++){
 	    dlt = ldim_pic_rowmax/ldim_param_blk_hvnum.BLK_Vnum;
-            gBLK_Vidx_LUT[k] = 0 + (k-vofst)*dlt;         
+            gBLK_Vidx_LUT[k] = 0 + (k-vofst)*dlt;
             gBLK_Vidx_LUT[k] = (gBLK_Vidx_LUT[k]>8191) ? 8191: (gBLK_Vidx_LUT[k]<-8192) ? (-8192) : gBLK_Vidx_LUT[k]; // Clip to S14
-         }	
-		
+         }
+
         // configure  Hgain/Vgain
         ldim_param_hgain = (128*1920/ldim_pic_colmax); //u12
         ldim_param_vgain = (256*1080/ldim_pic_rowmax); //u12
@@ -257,12 +257,12 @@ void ld_fw_cfg_once()
 	    dlt = ldim_pic_colmax/ldim_param_blk_hvnum.BLK_Hnum;
 	    gBLK_Hidx_LUT[k] =  0 + (k-hofst)*dlt;
             gBLK_Hidx_LUT[k] =  (gBLK_Hidx_LUT[k]>8191) ? 8191: (gBLK_Hidx_LUT[k]<-8192) ? (-8192) : gBLK_Hidx_LUT[k]; // Clip to S14
- 
+
 	}
 	// config reg_LD_BLK_Vidx
 	for (k=0;k<LD_BLK_LEN;k++){
 	    dlt = ldim_pic_rowmax/ldim_param_blk_hvnum.BLK_Vnum*2;
-            gBLK_Vidx_LUT[k] = -(dlt/2) + (k-vofst)*dlt;         
+            gBLK_Vidx_LUT[k] = -(dlt/2) + (k-vofst)*dlt;
             gBLK_Vidx_LUT[k] = (gBLK_Vidx_LUT[k]>8191) ? 8191: (gBLK_Vidx_LUT[k]<-8192) ? (-8192) : gBLK_Vidx_LUT[k]; // Clip to S14
          }
          // configure  Hgain/Vgain
@@ -283,12 +283,12 @@ void ld_fw_cfg_once()
 	    dlt = ldim_pic_colmax/ldim_param_blk_hvnum.BLK_Hnum;
 	    gBLK_Hidx_LUT[k] =  0 + (k-hofst)*dlt;
             gBLK_Hidx_LUT[k] =  (gBLK_Hidx_LUT[k]>8191) ? 8191: (gBLK_Hidx_LUT[k]<-8192) ? -8192 : gBLK_Hidx_LUT[k]; // Clip to S14
- 
+
 	}
 	// config reg_LD_BLK_Vidx
 	for (k=0;k<LD_BLK_LEN;k++){
 	    dlt = ldim_pic_rowmax/ldim_param_blk_hvnum.BLK_Vnum;
-            gBLK_Vidx_LUT[k] =  0 + (k-vofst)*dlt;         
+            gBLK_Vidx_LUT[k] =  0 + (k-vofst)*dlt;
             gBLK_Vidx_LUT[k] = (gBLK_Vidx_LUT[k]>8191) ? 8191: (gBLK_Vidx_LUT[k]<-8192) ? -8192 : gBLK_Vidx_LUT[k]; // Clip to S14
          }
          // configure  Hgain/Vgain
@@ -296,14 +296,14 @@ void ld_fw_cfg_once()
         ldim_param_vgain = (424*1080/ldim_pic_rowmax); //u12
         ldim_param_hgain = (ldim_param_hgain > 4095) ? 4095 : ldim_param_hgain;
         ldim_param_vgain = (ldim_param_vgain > 4095) ? 4095 : ldim_param_vgain;
- 
+
 	// configure
         for(k=0;k<LD_LUT_LEN;k++)
         {
 	   gHDG_LUT[k] = drt_LD_LUT_dg[k];
            gVDG_LUT[k] = drt_LD_LUT_dg[k];
            gVHK_LUT[k] = 64;
-	 }  
+	 }
        }
 }
 
@@ -338,10 +338,10 @@ static void ldming_stts(void)
 	 }
 */
     for(i=0;i<1024;i++)
-    	{
+	{
 	hist_matrix[i] = READ_CBUS_REG(LDIM_STTS_HIST_READ_REGION);
 	//a[i] = hist_matrix[i];
-    	}
+	}
 	if(cnt)
 		{
 		WRITE_CBUS_REG(ASSIST_SPARE8_REG1, 0);
@@ -374,26 +374,26 @@ void LDIM_Initial(int pic_h, int pic_v, int BLK_Vnum, int BLK_Hnum, int BackLit_
                                    2092,3524,
                                    2436,3444};
 
-   static int matrix_dbg_lr_1080[16] = {1780, 1780, 4095, 1964, 4012, 2096, 4095, 4095 , 
+   static int matrix_dbg_lr_1080[16] = {1780, 1780, 4095, 1964, 4012, 2096, 4095, 4095 ,
                                         3512, 4095, 4095, 4095, 2772, 2752, 1780, 1784 };
 
    static int matrix_dbg_tb[16] = {4095, 2764, 4095, 2004, 4095, 2256, 2540, 2368,
                                    4095, 2424, 4095, 2092, 4095, 4095, 4095, 4095};
 
-   static int matrix_dbg_drt[64] = {4095, 4095, 4095, 3004, 4095, 4095, 4095, 4095, 
-                                    4095, 4095, 4095, 2964, 4095, 4095, 4095, 4095, 
-                                    4095, 4095, 4095, 2804, 4095, 4095, 4095, 4095, 
-                                    4095, 4095, 4095, 2184, 2844, 4095, 4095, 4095, 
-                                    
-                                    2196, 2384, 2168, 2224, 1636, 2212, 4095, 4095, 
-                                    4095, 1844, 2480, 2468, 4095, 1784, 4095, 4095, 
-                                    2004, 1316, 2308, 3324, 4095, 2224, 4095, 2864, 
+   static int matrix_dbg_drt[64] = {4095, 4095, 4095, 3004, 4095, 4095, 4095, 4095,
+                                    4095, 4095, 4095, 2964, 4095, 4095, 4095, 4095,
+                                    4095, 4095, 4095, 2804, 4095, 4095, 4095, 4095,
+                                    4095, 4095, 4095, 2184, 2844, 4095, 4095, 4095,
+
+                                    2196, 2384, 2168, 2224, 1636, 2212, 4095, 4095,
+                                    4095, 1844, 2480, 2468, 4095, 1784, 4095, 4095,
+                                    2004, 1316, 2308, 3324, 4095, 2224, 4095, 2864,
                                     4095, 2472, 2072, 2044, 2008, 2140, 4095, 4095};
 
    int k,l,blkRow,blkCol,R_idx;
 
    ldim_pic_rowmax = pic_v;
-   ldim_pic_colmax = pic_h; 
+   ldim_pic_colmax = pic_h;
    ldim_param_rgbMode.BackLit_mode = BackLit_mode;
    ldim_param_blk_hvnum.BLK_Vnum = BLK_Vnum; //8;
    ldim_param_blk_hvnum.BLK_Hnum = BLK_Hnum; //2;
@@ -429,7 +429,7 @@ void LDIM_Initial(int pic_h, int pic_v, int BLK_Vnum, int BLK_Hnum, int BackLit_
    WRITE_CBUS_REG_BITS(LDIM_STTS_HIST_REGION_IDX,1,BLK_HV_POS_IDXS_BIT,BLK_HV_POS_IDXS_WID);
    WRITE_CBUS_REG(LDIM_STTS_HIST_SET_REGION,nPRM.reg_LD_STAhist_Hidx[2]<<12|nPRM.reg_LD_STAhist_Hidx[1]);
    WRITE_CBUS_REG_BITS(LDIM_STTS_HIST_REGION_IDX,2,BLK_HV_POS_IDXS_BIT,BLK_HV_POS_IDXS_WID);
-   WRITE_CBUS_REG(LDIM_STTS_HIST_SET_REGION,nPRM.reg_LD_STAhist_Vidx[2]<<12|nPRM.reg_LD_STAhist_Vidx[1]);   
+   WRITE_CBUS_REG(LDIM_STTS_HIST_SET_REGION,nPRM.reg_LD_STAhist_Vidx[2]<<12|nPRM.reg_LD_STAhist_Vidx[1]);
    WRITE_CBUS_REG_BITS(LDIM_STTS_HIST_REGION_IDX,3,BLK_HV_POS_IDXS_BIT,BLK_HV_POS_IDXS_WID);
    WRITE_CBUS_REG(LDIM_STTS_HIST_SET_REGION,nPRM.reg_LD_STAhist_Hidx[4]<<12|nPRM.reg_LD_STAhist_Hidx[3]);
    WRITE_CBUS_REG_BITS(LDIM_STTS_HIST_REGION_IDX,4,BLK_HV_POS_IDXS_BIT,BLK_HV_POS_IDXS_WID);
@@ -460,7 +460,7 @@ void LDIM_Initial(int pic_h, int pic_v, int BLK_Vnum, int BLK_Hnum, int BackLit_
    for(i=0;i<16;i++)
    {  gLD_RGB_IDX_LUT[i] =  4095-256*i;
       gLD_NRMW_LUT[i]   = 8;
-      for(j=0;j<32;j++) 
+      for(j=0;j<32;j++)
       {
         //gLD_RGB_LUT[i*32+j] = (32*(j+1)*16)/(16-i);//(64*(j+1)*32)/(16-i); //
         //gLD_RGB_LUT[i*32+j] = (64*(j+1)*32)/(16-i); //
@@ -469,16 +469,16 @@ void LDIM_Initial(int pic_h, int pic_v, int BLK_Vnum, int BLK_Hnum, int BackLit_
           gLD_RGB_LUT[i*32+j] = 4095;
       }
    }
-   
+
    for(i=0;i<16;i++)
-   {  
-      for(j=0;j<32;j++) 
+   {
+      for(j=0;j<32;j++)
         gLD_RGB_LUT[16*32+i*32+j] = gLD_RGB_LUT[i*32+j];
    }
-   
+
    for(i=0;i<16;i++)
-   {  
-      for(j=0;j<32;j++) 
+   {
+      for(j=0;j<32;j++)
         gLD_RGB_LUT[2*16*32+i*32+j] = gLD_RGB_LUT[i*32+j];
    }
 
@@ -492,28 +492,28 @@ void LDIM_Initial(int pic_h, int pic_v, int BLK_Vnum, int BLK_Hnum, int BackLit_
    //ldim_param_bl_matrix_avg = get_blMtxAvg(matrixNum,1);
    //ldim_param_bl_matrix_compen = ldim_param_bl_matrix_avg;
    //
-  
+
    //enable the CBUS configure the RAM
    //LD_MISC_CTRL0  {ram_clk_gate_en,2'h0,ldlut_ram_sel,ram_clk_sel,reg_hvcnt_bypass,reg_ldim_bl_en,soft_bl_start,reg_soft_rst)
    data = LDIM_RD_32Bits(LD_MISC_CTRL0);
    data = data & (~(3<<4));
    LDIM_WR_32Bits(LD_MISC_CTRL0,data);
-    
+
    //change here: gBLK_Hidx_LUT: s14*19
    LDIM_WR_BASE_LUT(LD_BLK_HIDX_BASE,gBLK_Hidx_LUT,16,19);
-   
+
    //change here: gBLK_Vidx_LUT: s14*19
    LDIM_WR_BASE_LUT(LD_BLK_VIDX_BASE,gBLK_Vidx_LUT,16,19);
- 
+
    //change here: gHDG_LUT: u10*32
    LDIM_WR_BASE_LUT(LD_LUT_HDG_BASE,gHDG_LUT,16,32);
- 
+
    //change here: gVHK_LUT: u10*32
    LDIM_WR_BASE_LUT(LD_LUT_VHK_BASE,gVHK_LUT,16,32);
-   
+
    //change here: gVDG_LUT: u10*32
    LDIM_WR_BASE_LUT(LD_LUT_VDG_BASE,gVDG_LUT,16,32);
-   
+
    //gMatrix_LUT: s12*100
    LDIM_WR_BASE_LUT(LD_MATRIX_R0_BASE,&gMatrix_LUT[0] ,16,32);
    LDIM_WR_BASE_LUT(LD_MATRIX_R1_BASE,&gMatrix_LUT[32],16,32);
@@ -526,7 +526,7 @@ void LDIM_Initial(int pic_h, int pic_v, int BLK_Vnum, int BLK_Hnum, int BackLit_
 
    //gLD_RGB_IDX_LUT: 12 * 16
    LDIM_WR_BASE_LUT(LD_RGB_IDX_BASE,gLD_RGB_IDX_LUT,16,16);
-   
+
    //gLD_BRM_LUT: 4 * 16
    LDIM_WR_BASE_LUT(LD_RGB_NRMW_BASE,gLD_NRMW_LUT,4,16);
 
@@ -548,21 +548,21 @@ void LDIM_Initial(int pic_h, int pic_v, int BLK_Vnum, int BLK_Hnum, int BackLit_
           ((ldim_param_rgbMode.BkLUT_Intmod &0x1)    <<5)  |
           ((ldim_param_rgbMode.BkLit_curmod &0x1)    <<4)  |
           ((ldim_param_rgbMode.BackLit_mode &0x3)      )  ;
-    LDIM_WR_32Bits(LD_RGB_MOD,data); 
-  
+    LDIM_WR_32Bits(LD_RGB_MOD,data);
+
    //LD_BLK_HVNUM
     data = ((ldim_param_blk_hvnum.frm_hblank_num &0xfff) << 16) |
            ((ldim_param_blk_hvnum.Reflect_Vnum & 0x7)    << 12) |
            ((ldim_param_blk_hvnum.Reflect_Hnum & 0x7)    << 8 ) |
            ((ldim_param_blk_hvnum.BLK_Vnum & 0xf )       << 4 ) |
-           ((ldim_param_blk_hvnum.BLK_Hnum & 0xf )            ) ;   
+           ((ldim_param_blk_hvnum.BLK_Hnum & 0xf )            ) ;
     LDIM_WR_32Bits(LD_BLK_HVNUM,data);
 
     //LD_HVGAIN
     data = ((ldim_param_vgain&0xfff)<<16) | (ldim_param_hgain&0xfff);
     LDIM_WR_32Bits(LD_HVGAIN,data);
 
-    //LD_BKLIT_VLD 
+    //LD_BKLIT_VLD
     LDIM_WR_32Bits(LD_BKLIT_VLD,ldim_param_bklit_valid);
 
     //LD_BKLIT_PARAM
@@ -577,7 +577,7 @@ void LDIM_Initial(int pic_h, int pic_v, int BLK_Vnum, int BLK_Hnum, int BackLit_
     //LD_LIT_GAIN_COMP
     data = ((ldim_param_litgain&0xfff)<<16) | (ldim_param_bl_matrix_compen & 0xfff);
     LDIM_WR_32Bits(LD_LIT_GAIN_COMP,data);
-   
+
     //LD_FRM_RST_POS
     ldim_param_frm_rst_pos = (16<<16) | (3); //h=16,v=3
     data = ldim_param_frm_rst_pos;
@@ -643,9 +643,9 @@ static irqreturn_t vsync_isr(int irq, void *dev_id)
 }
 
 static struct class_attribute aml_ldim_class_attrs[] = {
-	//__ATTR(gamma_proc, S_IRUGO | S_IWUSR, 
+	//__ATTR(gamma_proc, S_IRUGO | S_IWUSR,
 	//	gamma_proc_show, gamma_proc_store),
-	//__ATTR(env_backlight, S_IRUGO | S_IWUSR, 
+	//__ATTR(env_backlight, S_IRUGO | S_IWUSR,
 	//	env_backlight_show, env_backlight_store),
 	__ATTR_NULL,
 };
@@ -659,14 +659,14 @@ static int aml_ldim_probe(struct platform_device *pdev)
 	  ret = - ENODEV;
 	  goto err;
 	}
-	
+
 	aml_ldim_clsp = class_create(THIS_MODULE, "aml_ldim");
 	if(IS_ERR(aml_ldim_clsp)){
 		ret = PTR_ERR(aml_ldim_clsp);
 		return ret;
 	}
 	for(i = 0; aml_ldim_class_attrs[i].attr.name; i++){
-		if(class_create_file(aml_ldim_clsp, 
+		if(class_create_file(aml_ldim_clsp,
 				&aml_ldim_class_attrs[i]) < 0)
 			goto err1;
 	}
@@ -704,16 +704,16 @@ err3:
 	 kfree(aml_ldim_cdevp);
 err2:
 	for(i=0; aml_ldim_class_attrs[i].attr.name; i++){
-		class_remove_file(aml_ldim_clsp, 
+		class_remove_file(aml_ldim_clsp,
 				&aml_ldim_class_attrs[i]);
 	}
-	class_destroy(aml_ldim_clsp); 
+	class_destroy(aml_ldim_clsp);
 err1:
     unregister_chrdev_region(aml_ldim_devno, 1);
 err:
   return ret;
 
-	return -1;  
+	return -1;
 }
 
 static int aml_ldim_remove(struct platform_device *pdev)
@@ -726,10 +726,10 @@ static int aml_ldim_remove(struct platform_device *pdev)
 	cdev_del(aml_ldim_cdevp);
 	kfree(aml_ldim_cdevp);
 	for(i=0; aml_ldim_class_attrs[i].attr.name; i++){
-		class_remove_file(aml_ldim_clsp, 
+		class_remove_file(aml_ldim_clsp,
 				&aml_ldim_class_attrs[i]);
 	}
-	class_destroy(aml_ldim_clsp); 
+	class_destroy(aml_ldim_clsp);
     unregister_chrdev_region(aml_ldim_devno, 1);
 
     pr_info("%s, driver remove ok\n", __func__);
@@ -764,4 +764,3 @@ module_exit(aml_ldim_exit);
 MODULE_AUTHOR("");
 MODULE_DESCRIPTION("Driver for ldim");
 MODULE_LICENSE("GPL");
-

@@ -80,4 +80,3 @@ ifneq ($(CONFIG_MHAWB_SUPPORT),)
 $(DRIVER_NAME)-objs  += ../driver/mhawb_drv/si_drv_hawb.o
 $(DRIVER_NAME)-objs  += ../driver/mhawb_drv/si_drv_mhawb.o
 endif
-

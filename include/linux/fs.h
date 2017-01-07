@@ -10,6 +10,7 @@
 #include <linux/stat.h>
 #include <linux/cache.h>
 #include <linux/list.h>
+#include <linux/llist.h>
 #include <linux/radix-tree.h>
 #include <linux/rbtree.h>
 #include <linux/init.h>
@@ -243,6 +244,12 @@ struct iattr {
  * Includes for diskquotas.
  */
 #include <linux/quota.h>
+
+/*
+ * Maximum number of layers of fs stack.  Needs to be limited to
+ * prevent kernel stack overflow
+ */
+#define FILESYSTEM_MAX_STACK_DEPTH 2
 
 /** 
  * enum positive_aop_returns - aop return codes with specific semantics
@@ -761,12 +768,8 @@ static inline int ra_has_index(struct file_ra_state *ra, pgoff_t index)
 #define FILE_MNT_WRITE_RELEASED	2
 
 struct file {
-	/*
-	 * fu_list becomes invalid after file_free is called and queued via
-	 * fu_rcuhead for RCU freeing
-	 */
 	union {
-		struct list_head	fu_list;
+		struct llist_node	fu_llist;
 		struct rcu_head 	fu_rcuhead;
 	} f_u;
 	struct path		f_path;
@@ -779,9 +782,6 @@ struct file {
 	 * Must not be taken from IRQ context.
 	 */
 	spinlock_t		f_lock;
-#ifdef CONFIG_SMP
-	int			f_sb_list_cpu;
-#endif
 	atomic_long_t		f_count;
 	unsigned int 		f_flags;
 	fmode_t			f_mode;
@@ -1257,11 +1257,6 @@ struct super_block {
 
 	struct list_head	s_inodes;	/* all inodes */
 	struct hlist_bl_head	s_anon;		/* anonymous dentries for (nfs) exporting */
-#ifdef CONFIG_SMP
-	struct list_head __percpu *s_files;
-#else
-	struct list_head	s_files;
-#endif
 	struct list_head	s_mounts;	/* list of mounts; _not_ for fs use */
 	/* s_dentry_lru, s_nr_dentry_unused protected by dcache.c lru locks */
 	struct list_head	s_dentry_lru;	/* unused dentry lru */
@@ -1322,6 +1317,11 @@ struct super_block {
 
 	/* Being remounted read-only */
 	int s_readonly_remount;
+
+	/*
+	 * Indicates how deep in a filesystem stack this SB is
+	 */
+	int s_stack_depth;
 };
 
 /* superblock cache pruning functions */
@@ -1506,6 +1506,17 @@ int fiemap_check_flags(struct fiemap_extent_info *fieinfo, u32 fs_flags);
  * to have different dirent layouts depending on the binary type.
  */
 typedef int (*filldir_t)(void *, const char *, int, loff_t, u64, unsigned);
+struct dir_context {
+	const filldir_t actor;
+	loff_t pos;
+};
+
+static inline bool dir_emit(struct dir_context *ctx,
+			    const char *name, int namelen,
+			    u64 ino, unsigned type)
+{
+	return ctx->actor(ctx, name, namelen, ctx->pos, ino, type) == 0;
+}
 struct block_device_operations;
 
 /* These macros are for out of kernel modules to test that
@@ -1522,6 +1533,7 @@ struct file_operations {
 	ssize_t (*aio_read) (struct kiocb *, const struct iovec *, unsigned long, loff_t);
 	ssize_t (*aio_write) (struct kiocb *, const struct iovec *, unsigned long, loff_t);
 	int (*readdir) (struct file *, void *, filldir_t);
+	int (*iterate) (struct file *, struct dir_context *);
 	unsigned int (*poll) (struct file *, struct poll_table_struct *);
 	long (*unlocked_ioctl) (struct file *, unsigned int, unsigned long);
 	long (*compat_ioctl) (struct file *, unsigned int, unsigned long);
@@ -1575,6 +1587,7 @@ struct inode_operations {
 	int (*atomic_open)(struct inode *, struct dentry *,
 			   struct file *, unsigned open_flag,
 			   umode_t create_mode, int *opened);
+	int (*dentry_open)(struct dentry *, struct file *, const struct cred *);
 } ____cacheline_aligned;
 
 ssize_t rw_copy_check_uvector(int type, const struct iovec __user * uvector,
@@ -2008,6 +2021,7 @@ extern struct file *file_open_name(struct filename *, int, umode_t);
 extern struct file *filp_open(const char *, int, umode_t);
 extern struct file *file_open_root(struct dentry *, struct vfsmount *,
 				   const char *, int);
+extern int vfs_open(const struct path *, struct file *, const struct cred *);
 extern struct file * dentry_open(const struct path *, int, const struct cred *);
 extern int filp_close(struct file *, fl_owner_t id);
 
@@ -2208,6 +2222,7 @@ extern sector_t bmap(struct inode *, sector_t);
 #endif
 extern int notify_change(struct dentry *, struct iattr *);
 extern int inode_permission(struct inode *, int);
+extern int __inode_permission(struct inode *, int);
 extern int generic_permission(struct inode *, int);
 
 static inline bool execute_ok(struct inode *inode)
@@ -2414,6 +2429,9 @@ extern ssize_t generic_file_splice_write(struct pipe_inode_info *,
 		struct file *, loff_t *, size_t, unsigned int);
 extern ssize_t generic_splice_sendpage(struct pipe_inode_info *pipe,
 		struct file *out, loff_t *, size_t len, unsigned int flags);
+extern long do_splice_direct(struct file *in, loff_t *ppos, struct file *out,
+		loff_t *opos, size_t len, unsigned int flags);
+
 
 extern void
 file_ra_state_init(struct file_ra_state *ra, struct address_space *mapping);
@@ -2489,11 +2507,13 @@ extern void generic_fillattr(struct inode *, struct kstat *);
 extern int vfs_getattr(struct path *, struct kstat *);
 void __inode_add_bytes(struct inode *inode, loff_t bytes);
 void inode_add_bytes(struct inode *inode, loff_t bytes);
+void __inode_sub_bytes(struct inode *inode, loff_t bytes);
 void inode_sub_bytes(struct inode *inode, loff_t bytes);
 loff_t inode_get_bytes(struct inode *inode);
 void inode_set_bytes(struct inode *inode, loff_t bytes);
 
 extern int vfs_readdir(struct file *, filldir_t, void *);
+extern int iterate_dir(struct file *, struct dir_context *);
 
 extern int vfs_stat(const char __user *, struct kstat *);
 extern int vfs_lstat(const char __user *, struct kstat *);
@@ -2542,6 +2562,7 @@ extern int simple_write_begin(struct file *file, struct address_space *mapping,
 extern int simple_write_end(struct file *file, struct address_space *mapping,
 			loff_t pos, unsigned len, unsigned copied,
 			struct page *page, void *fsdata);
+extern struct inode *alloc_anon_inode(struct super_block *);
 
 extern struct dentry *simple_lookup(struct inode *, struct dentry *, unsigned int flags);
 extern ssize_t generic_read_dir(struct file *, char __user *, size_t, loff_t *);

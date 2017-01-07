@@ -40,7 +40,7 @@ typedef  struct picdec_device_s{
 	resource_size_t assit_buf_start;
 	const vinfo_t *vinfo;
 	int disp_width;
-	int disp_height;	
+	int disp_height;
 	int frame_render;
 	int frame_post;
 	ge2d_context_t *context;

@@ -165,7 +165,7 @@ struct amlsd_host {
 	// struct early_suspend amlsd_early_suspend;
 
     struct class            debug;
-    
+
 	unsigned int send;
 	unsigned int ctrl;
 	unsigned int clkc;
@@ -212,7 +212,7 @@ struct amlsd_host {
     u32			opcode;
 	u32			arg;
     u32         cmd25_cnt;
-    
+
 #ifdef      CONFIG_MMC_AML_DEBUG
     u32         req_cnt;
     u32         trans_size;
@@ -220,7 +220,7 @@ struct amlsd_host {
     u32         reg_buf[16];
 #endif
     u32         time_req_sta; // request start time
-    
+
     struct pinctrl  *pinctrl;
     char        pinctrl_name[30];
 
@@ -567,28 +567,28 @@ struct sdhc_srst{
 	u32 reserved:26; /*[31:6] reserved*/
 };
 
-struct  sdhc_enhc{	
-	union  {		
-		struct  {			
-			u32 wrrsp_mode:1; /*[0] 0:Wrrsp Check in DMA Rx FSM 1:No Check in FSM*/		    	
-			u32 chk_wrrsp:1; /*[1] Rx Done without checking if Wrrsp count is 0*/		    	
-			u32 chk_dma:1; /*[2] Rx Done without checking if DMA is IDLE*/		    	
-			u32 debug:3;  /*[5:3] debug only*/		    	
-			u32 reserved:2;		    	
-			u32 sdio_irq_period:8; /*[15:8] SDIO IRQ Period Setting*/		    	
-			u32 reserved1:2;		    	
-			u32 rxfifo_th:7; /*[24:18] RXFIFO Full Threshold,default 60*/		    	
-			u32 txfifo_th:7; /*[31:25] TXFIFO Empty Threshold,default 0*/				
-		}  meson8m2;		
-		struct  {			
-			u32 rx_timeout:8; /*[7:0] Data Rx Timeout Setting*/			
-			u32 sdio_irq_period:8; /*[15:8] SDIO IRQ Period Setting					
-				(IRQ checking window length)*/			
-			u32 dma_rd_resp:1; /*[16] No Read DMA Response Check*/			
-			u32 dma_wr_resp:1; /*[16] No Write DMA Response Check*/			
-			u32 rxfifo_th:7; /*[24:18] RXFIFO Full Threshold,default 60*/			
-			u32 txfifo_th:7; /*[31:25] TXFIFO Empty Threshold,default 0*/				
-		}  meson;		
+struct  sdhc_enhc{
+	union  {
+		struct  {
+			u32 wrrsp_mode:1; /*[0] 0:Wrrsp Check in DMA Rx FSM 1:No Check in FSM*/
+			u32 chk_wrrsp:1; /*[1] Rx Done without checking if Wrrsp count is 0*/
+			u32 chk_dma:1; /*[2] Rx Done without checking if DMA is IDLE*/
+			u32 debug:3;  /*[5:3] debug only*/
+			u32 reserved:2;
+			u32 sdio_irq_period:8; /*[15:8] SDIO IRQ Period Setting*/
+			u32 reserved1:2;
+			u32 rxfifo_th:7; /*[24:18] RXFIFO Full Threshold,default 60*/
+			u32 txfifo_th:7; /*[31:25] TXFIFO Empty Threshold,default 0*/
+		}  meson8m2;
+		struct  {
+			u32 rx_timeout:8; /*[7:0] Data Rx Timeout Setting*/
+			u32 sdio_irq_period:8; /*[15:8] SDIO IRQ Period Setting
+				(IRQ checking window length)*/
+			u32 dma_rd_resp:1; /*[16] No Read DMA Response Check*/
+			u32 dma_wr_resp:1; /*[16] No Write DMA Response Check*/
+			u32 rxfifo_th:7; /*[24:18] RXFIFO Full Threshold,default 60*/
+			u32 txfifo_th:7; /*[31:25] TXFIFO Empty Threshold,default 0*/
+		}  meson;
 	}reg;
 };
 
@@ -649,7 +649,7 @@ extern struct mmc_host *sdio_host;
 #define     SPI_EMMC_FLAG                   5
 
 #define R_BOOT_DEVICE_FLAG  READ_CBUS_REG(ASSIST_POR_CONFIG)
-#if MESON_CPU_TYPE >= MESON_CPU_TYPE_MESON8 
+#if MESON_CPU_TYPE >= MESON_CPU_TYPE_MESON8
 #define POR_BOOT_VALUE ((((R_BOOT_DEVICE_FLAG>>9)&1)<<2)|((R_BOOT_DEVICE_FLAG>>6)&3)) // {poc[9],poc[7:6]}
 #else
 #define POR_BOOT_VALUE (R_BOOT_DEVICE_FLAG & 7)
@@ -674,7 +674,7 @@ extern struct mmc_host *sdio_host;
 	printk("[%s]\033[0;40;35m " fmt "\033[0m", __FUNCTION__, ##args);  \
 }while(0)
 
-//for external codec status, if using external codec, jtag should not be set. 
+//for external codec status, if using external codec, jtag should not be set.
 extern int ext_codec;
 
 #ifndef CONFIG_MESON_TRUSTZONE
@@ -706,4 +706,3 @@ extern int ext_codec;
 }while(0)
 
 #endif
-

@@ -1,9 +1,9 @@
 #ifdef CONFIG_AMLOGIC_USB
     usb_con {
 		lm-compatible = "logicmodule-bus";
-									
+
 //$$ DEVICE="usb_b"
-//$$ L2 PROP_U32 = "lm-periph-id" 
+//$$ L2 PROP_U32 = "lm-periph-id"
 //$$ L2 PROP_STR = "clock-src"
 //$$ L2 PROP_U32 = "port-id"
 //$$ L2 PROP_U32 = "port-type"

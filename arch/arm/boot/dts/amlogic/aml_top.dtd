@@ -32,28 +32,28 @@ void root_func(){
         #size-cells = <0>;
 //$$ DEVICE="cpu0"
         cpu@0 {
-        	device_type = "cpu";
-        	compatible = "arm,cortex-a9";
-        	reg = <0x200>;
+		device_type = "cpu";
+		compatible = "arm,cortex-a9";
+		reg = <0x200>;
         };
 //$$ DEVICE="cpu1"
         cpu@1 {
-        	device_type = "cpu";
-        	compatible = "arm,cortex-a9";
-        	reg = <0x1>;
+		device_type = "cpu";
+		compatible = "arm,cortex-a9";
+		reg = <0x1>;
         };
 #ifdef CONFIG_ARCH_MESON8
 //$$ DEVICE="cpu2"
         cpu@2 {
-        	device_type = "cpu";
-        	compatible = "arm,cortex-a9";
-        	reg = <0x2>;
+		device_type = "cpu";
+		compatible = "arm,cortex-a9";
+		reg = <0x2>;
         };
 //$$ DEVICE="cpu3"
         cpu@3 {
-        	device_type = "cpu";
-        	compatible = "arm,cortex-a9";
-        	reg = <0x3>;
+		device_type = "cpu";
+		compatible = "arm,cortex-a9";
+		reg = <0x3>;
         };
 #endif
     };
@@ -149,7 +149,7 @@ void root_func(){
 		clk_level = <6>;	//for 4k2k
 		/**    	0: 106.25M		1: 127.5M		2: 159.375M
 				3: 182.15M		4: 212.5M		5: 255M
-		    	6: 318.75M		7: 364.3M					 */
+			6: 318.75M		7: 364.3M					 */
 	};
 #endif
 /// ***************************************************************************************
@@ -412,6 +412,16 @@ sub_file /arch/arm/mach-meson8/aml_pin.dtd
 #else
 sub_file /arch/arm/mach-meson6/aml_pin.dtd
 #endif
+
+/// ***************************************************************************************
+///	-	RNG
+//$$ MODULE="RNG"
+//$$ DEVICE="meson-rng"
+//$$ L2 PROP_STR = "status"
+	meson-rng{
+		compatible = "amlogic,meson-rng";
+		status = "ok";
+	};
 
 #the end of dtd file
 }; /* end of / */

@@ -42,4 +42,3 @@ void print_bri_final(void);
 
 
 #endif /* __IW7023_LPF_H */
-

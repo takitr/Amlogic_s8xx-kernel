@@ -66,6 +66,11 @@ module_param(mem_size, ulong, 0400);
 MODULE_PARM_DESC(mem_size,
 		"size of reserved RAM used to store oops/panic logs");
 
+static unsigned int mem_type;
+module_param(mem_type, uint, 0600);
+MODULE_PARM_DESC(mem_type,
+		"set to 1 to try to use unbuffered memory (default 0)");
+
 static int dump_oops = 1;
 module_param(dump_oops, int, 0600);
 MODULE_PARM_DESC(dump_oops,
@@ -78,6 +83,26 @@ MODULE_PARM_DESC(ramoops_ecc,
 		"ECC buffer size in bytes (1 is a special value, means 16 "
 		"bytes ECC)");
 
+struct ramoops_context {
+	struct persistent_ram_zone **przs;
+	struct persistent_ram_zone *cprz;
+	struct persistent_ram_zone *fprz;
+	phys_addr_t phys_addr;
+	unsigned long size;
+	unsigned int memtype;
+	size_t record_size;
+	size_t console_size;
+	size_t ftrace_size;
+	int dump_oops;
+	struct persistent_ram_ecc_info ecc_info;
+	unsigned int max_dump_cnt;
+	unsigned int dump_write_cnt;
+	/* _read_cnt need clear on ramoops_pstore_open */
+	unsigned int dump_read_cnt;
+	unsigned int console_read_cnt;
+	unsigned int ftrace_read_cnt;
+	struct pstore_info pstore;
+};
 
 static struct platform_device *dummy;
 static struct ramoops_platform_data *dummy_data;
@@ -88,6 +113,7 @@ static int ramoops_pstore_open(struct pstore_info *psi)
 
 	cxt->dump_read_cnt = 0;
 	cxt->console_read_cnt = 0;
+	cxt->ftrace_read_cnt = 0;
 	return 0;
 }
 
@@ -104,13 +130,15 @@ ramoops_get_next_prz(struct persistent_ram_zone *przs[], uint *c, uint max,
 		return NULL;
 
 	prz = przs[i];
+	if (!prz)
+		return NULL;
 
-	if (update) {
-		/* Update old/shadowed buffer. */
+	/* Update old/shadowed buffer. */
+	if (update)
 		persistent_ram_save_old(prz);
-		if (!persistent_ram_old_size(prz))
-			return NULL;
-	}
+
+	if (!persistent_ram_old_size(prz))
+		return NULL;
 
 	*typep = type;
 	*id = i;
@@ -354,7 +382,8 @@ static int ramoops_init_przs(struct device *dev, struct ramoops_context *cxt,
 		size_t sz = cxt->record_size;
 
 		cxt->przs[i] = persistent_ram_new(*paddr, sz, 0,
-						  &cxt->ecc_info);
+						  &cxt->ecc_info,
+						  cxt->memtype);
 		if (IS_ERR(cxt->przs[i])) {
 			err = PTR_ERR(cxt->przs[i]);
 			dev_err(dev, "failed to request mem region (0x%zx@0x%llx): %d\n",
@@ -384,7 +413,7 @@ static int ramoops_init_prz(struct device *dev, struct ramoops_context *cxt,
 		return -ENOMEM;
 	}
 
-	*prz = persistent_ram_new(*paddr, sz, sig, &cxt->ecc_info);
+	*prz = persistent_ram_new(*paddr, sz, sig, &cxt->ecc_info, cxt->memtype);
 	if (IS_ERR(*prz)) {
 		int err = PTR_ERR(*prz);
 
@@ -427,7 +456,7 @@ static ssize_t ram_console_read_old(struct file *file, char __user *buf,
 		kfree(buf_f);
 		buf_f = NULL;
 		record_size += size;
-		
+
 //		printk("size=0x%x old_log_size=0x%x record_size=0x%x\n",size,cxt->cprz->old_log_size,record_size);
 	}
 
@@ -438,7 +467,7 @@ static ssize_t ram_console_read_old(struct file *file, char __user *buf,
 
 	if(record_size > cxt->cprz->old_log_size)
 		record_size = cxt->cprz->old_log_size;
-	
+
 	count = min(len, (size_t)(record_size - pos));
 //	printk("old_log_size = 0x%x count=0x%x len=0x%x record_size=0x%x\n",cxt->cprz->old_log_size,count, len,record_size);
 	if (copy_to_user(buf, cxt->cprz->old_log + pos, count))
@@ -486,9 +515,9 @@ static int ramoops_probe(struct platform_device *pdev)
 	if (!is_power_of_2(pdata->ftrace_size))
 		pdata->ftrace_size = rounddown_pow_of_two(pdata->ftrace_size);
 
-	cxt->dump_read_cnt = 0;
 	cxt->size = pdata->mem_size;
 	cxt->phys_addr = pdata->mem_address;
+	cxt->memtype = pdata->mem_type;
 	cxt->record_size = pdata->record_size;
 	cxt->console_size = pdata->console_size;
 	cxt->ftrace_size = pdata->ftrace_size;
@@ -557,10 +586,10 @@ static int ramoops_probe(struct platform_device *pdev)
 
 	if(cxt->cprz->old_log){
 	//	pstore_iomap = ioremap(cxt->cprz->old_log,cxt->cprz->old_log_size);
-		printk("cprz old_log=0x%x\n",(unsigned int *)cxt->cprz->old_log);
+		printk("cprz old_log=0x%x\n",(unsigned int )cxt->cprz->old_log);
 		entry = proc_create_data("last_kmsg", S_IFREG | S_IRUGO, NULL,&ram_console_file_ops,NULL);
 	}
-	
+
 	if (!entry) {
 		printk(KERN_ERR "ram_console: failed to create proc entry\n");
 		return 0;
@@ -632,6 +661,7 @@ static void ramoops_register_dummy(void)
 
 	dummy_data->mem_size = mem_size;
 	dummy_data->mem_address = mem_address;
+	dummy_data->mem_type = 0;
 	dummy_data->record_size = record_size;
 	dummy_data->console_size = ramoops_console_size;
 	dummy_data->ftrace_size = ramoops_ftrace_size;

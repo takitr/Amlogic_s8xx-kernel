@@ -14,7 +14,7 @@
 
 
 struct dummy_codec_private {
-	struct snd_soc_codec codec;	
+	struct snd_soc_codec codec;
 };
 
 #define DUMMY_CODEC_RATES		(SNDRV_PCM_RATE_8000_192000)
@@ -48,7 +48,7 @@ static const struct snd_soc_dapm_widget dummy_codec_dapm_widgets[] = {
         SND_SOC_NOPM, 0, 0),
     SND_SOC_DAPM_DAC("Right DAC", "HIFI Playback",
         SND_SOC_NOPM, 7, 0),
-        
+
     /* Output Lines */
     SND_SOC_DAPM_OUTPUT("LOUTL"),
     SND_SOC_DAPM_OUTPUT("LOUTR"),
@@ -56,7 +56,7 @@ static const struct snd_soc_dapm_widget dummy_codec_dapm_widgets[] = {
 };
 
 static const struct snd_soc_dapm_route dummy_codec_dapm_routes[] = {
-    
+
     {"LOUTL", NULL, "Left DAC"},
     {"LOUTR", NULL, "Right DAC"},
 };
@@ -83,7 +83,7 @@ struct snd_soc_dai_driver dummy_codec_dai[] = {
 			.channels_max = 2,
 			.rates = DUMMY_CODEC_RATES,
 			.formats = DUMMY_CODEC_FORMATS,
-		},		
+		},
 		.ops = &dummy_codec_ops,
 	}
 };
@@ -94,7 +94,7 @@ static int dummy_codec_probe(struct snd_soc_codec *codec)
 
 
 static int dummy_codec_remove(struct snd_soc_codec *codec)
-{	
+{
 	return 0;
 };
 
@@ -124,7 +124,7 @@ static int dummy_codec_platform_probe(struct platform_device *pdev)
 {
 	struct dummy_codec_private *dummy_codec;
     int ret;
-    
+
     printk("dummy_codec_platform_probe\n");
 	dummy_codec = kzalloc(sizeof(struct dummy_codec_private), GFP_KERNEL);
 	if (dummy_codec == NULL) {
@@ -133,10 +133,10 @@ static int dummy_codec_platform_probe(struct platform_device *pdev)
 	platform_set_drvdata(pdev, dummy_codec);
     ret = snd_soc_register_codec(&pdev->dev, &soc_codec_dev_dummy_codec,
 			dummy_codec_dai, ARRAY_SIZE(dummy_codec_dai));
-    
+
 	if (ret < 0)
 		kfree(dummy_codec);
-    
+
 	return ret;
 }
 

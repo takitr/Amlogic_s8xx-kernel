@@ -3,7 +3,7 @@
 //$$ L2 PROP_STR = "status"
 //$$ L3 PROP_U32 2 ="reg"
 //$$ L3 PROP_STR = "pinctrl-names"
-//$$ L2 PROP_CHOICE "I2C_AO_pin_match" = "pinctrl-0"	
+//$$ L2 PROP_CHOICE "I2C_AO_pin_match" = "pinctrl-0"
 	i2c@c8100500{ /*I2C-AO*/
 		compatible = "amlogic,aml_i2c";
 		dev_name = "i2c-AO";
@@ -32,12 +32,12 @@
 		#address-cells = <1>;
 		#size-cells = <0>;
 	};
-	
+
 //$$ DEVICE="I2C_B"
 //$$ L2 PROP_STR = "status"
 //$$ L3 PROP_U32 2="reg"
 //$$ L3 PROP_STR = "pinctrl-names"
-//$$ L2 PROP_CHOICE "I2C_B_pin_match" = "pinctrl-0"	
+//$$ L2 PROP_CHOICE "I2C_B_pin_match" = "pinctrl-0"
 	i2c@c11087c0{ /*I2C-B*/
 		compatible = "amlogic,aml_i2c";
 		dev_name = "i2c-B";
@@ -48,13 +48,13 @@
 		pinctrl-0=<&b_i2c_master>;
 		#address-cells = <1>;
 		#size-cells = <0>;
- 	};
+	};
 #ifdef CONFIG_ARCH_MESON8
 //$$ DEVICE="I2C_C"
 //$$ L2 PROP_STR = "status"
 //$$ L3 PROP_U32 2="reg"
 //$$ L3 PROP_STR = "pinctrl-names"
-// L2 PROP_CHOICE "I2C_C_pin_match" = "pinctrl-0"	
+// L2 PROP_CHOICE "I2C_C_pin_match" = "pinctrl-0"
     i2c@c11087e0{ /*I2C-C*/
 		compatible = "amlogic,aml_i2c";
 		dev_name = "i2c-C";
@@ -71,7 +71,7 @@
 //$$ L2 PROP_STR = "status"
 //$$ L3 PROP_U32 2="reg"
 //$$ L3 PROP_STR = "pinctrl-names"
-//$$ L2 PROP_CHOICE "I2C_D_pin_match" = "pinctrl-0"	
+//$$ L2 PROP_CHOICE "I2C_D_pin_match" = "pinctrl-0"
 	i2c@c1108d20{ /*I2C-D*/
 		compatible = "amlogic,aml_i2c";
 		dev_name = "i2c-D";

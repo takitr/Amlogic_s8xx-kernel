@@ -53,7 +53,7 @@ struct key_data {
 	u16 x_min;
 	u16 x_max;
 	u16 y_min;
-	u16 y_max;	
+	u16 y_max;
 };
 
 const u16 key_array[]={
@@ -61,12 +61,12 @@ const u16 key_array[]={
                                       KEY_HOME,
                                       KEY_MENU,
                                       KEY_SEARCH,
-                                     }; 
+                                     };
 #define MAX_KEY_NUM     (sizeof(key_array)/sizeof(key_array[0]))
 
 struct key_data gsl_key_data[MAX_KEY_NUM] = {
 	{KEY_BACK, 2048, 2048, 2048, 2048},
-	{KEY_HOME, 2048, 2048, 2048, 2048},	
+	{KEY_HOME, 2048, 2048, 2048, 2048},
 	{KEY_MENU, 2048, 2048, 2048, 2048},
 	{KEY_SEARCH, 2048, 2048, 2048, 2048},
 };
@@ -128,7 +128,7 @@ struct gsl_ts {
 
 static struct gsl_ts *Gts =NULL;
 
-#ifdef GSL_DEBUG 
+#ifdef GSL_DEBUG
 #define print_info(fmt, args...)   \
         do{                              \
                 printk(fmt, ##args);     \
@@ -170,9 +170,9 @@ static int gslX680_shutdown_low(struct touch_pdata *pdata)
   //gpio_set_status(GPIOZ_6, gpio_status_out);
   //gpio_out(GPIOZ_6, 0);
   aml_gpio_direction_output(GPIOZ_6, 0);
-  	//	aml_gpio_direction_input(g_pdata->gpio_interrupt);
+	//	aml_gpio_direction_input(g_pdata->gpio_interrupt);
 
-#endif 
+#endif
 	return 0;
 }
 
@@ -181,7 +181,7 @@ static int gslX680_shutdown_high(struct touch_pdata *pdata)
 
 #if 0 //hycui def CONFIG_OF
   if (pdata->gpio_reset) {
-    set_reset_pin(pdata, 1); 
+    set_reset_pin(pdata, 1);
   }
 #else
 	//gpio_set_status(PAD_GPIOC_3, gpio_status_out);
@@ -206,18 +206,18 @@ static void gslx680_software_reset(struct touch_pdata *pdata)
 }
 
 static int gslX680_chip_init(struct touch_pdata *pdata)
-{	
+{
 	gslX680_shutdown_low(pdata);
 	mdelay(10);  // > 10us
-	
+
 	gslX680_shutdown_high(pdata);
 	mdelay(120); // > 100ms
-	
+
 #ifdef CONFIG_OF
 	/* if (pdata->gpio_interrupt) {
        aml_gpio_direction_input(pdata->gpio_interrupt);
 	   aml_gpio_to_irq(pdata->gpio_interrupt, pdata->irq-INT_GPIO_0, pdata->irq_edge);
-	} 
+	}
 	*/
 #else
   gpio_set_status(PAD_GPIOA_16, gpio_status_in);
@@ -296,7 +296,7 @@ static void gsl_load_fw(struct i2c_client *client)
   if(file_size < 0) {
 		printk("%s: no fw file\n", ts_com->owner);
 		return;
-	}	
+	}
 	if (fw_d == NULL)
 		fw_d = kzalloc(sizeof(*fw_d), GFP_KERNEL);
 	if (fw_d == NULL) {
@@ -353,16 +353,16 @@ static int gsl_ts_write(struct i2c_client *client, u8 addr, u8 *pdata, int datal
 		printk("%s too big datalen = %d!\n", __func__, datalen);
 		return -1;
 	}
-	
+
 	tmp_buf[0] = addr;
 	bytelen++;
-	
+
 	if (datalen != 0 && pdata != NULL)
 	{
 		memcpy(&tmp_buf[bytelen], pdata, datalen);
 		bytelen += datalen;
 	}
-	
+
 	ret = i2c_master_send(client, tmp_buf, bytelen);
 	return ret;
 }
@@ -383,7 +383,7 @@ static int gsl_ts_read(struct i2c_client *client, u8 addr, u8 *pdata, unsigned i
 		printk("%s set data address fail!\n", __func__);
 		return ret;
 	}
-	
+
 	return i2c_master_recv(client, pdata, datalen);
 }
 
@@ -394,7 +394,7 @@ static int test_i2c(struct i2c_client *client)
 	u8 retry;
 	int ret;
 	ret = gsl_ts_read( client, 0xf0, &read_buf, sizeof(read_buf) );
-	if  (ret  < 0)  
+	if  (ret  < 0)
 	{
 		print_info("I2C transfer error!\n");
 	}
@@ -406,7 +406,7 @@ static int test_i2c(struct i2c_client *client)
 
 	for (retry=0; retry<3; retry++) {
 	ret = gsl_ts_write(client, 0xf0, &write_buf, sizeof(write_buf));
-	if  (ret  < 0)  
+	if  (ret  < 0)
 	{
 		print_info("I2C transfer error!\n");
 	}
@@ -440,7 +440,7 @@ static void startup_chip(struct i2c_client *client)
 {
 
 	u8 tmp = 0x00;
-	
+
   #ifdef GSL_NOID_VERSION
 	gsl_DataInit(gsl_config_data_idB);
 #endif
@@ -473,16 +473,16 @@ static void clr_reg(struct i2c_client *client)
 	u8 write_buf[4]	= {0};
 
 	write_buf[0] = 0x88;
-	gsl_ts_write(client, 0xe0, &write_buf[0], 1); 	
+	gsl_ts_write(client, 0xe0, &write_buf[0], 1);
 	msleep(20);
 	write_buf[0] = 0x03;
-	gsl_ts_write(client, 0x80, &write_buf[0], 1); 	
+	gsl_ts_write(client, 0x80, &write_buf[0], 1);
 	msleep(5);
 	write_buf[0] = 0x04;
-	gsl_ts_write(client, 0xe4, &write_buf[0], 1); 	
+	gsl_ts_write(client, 0xe4, &write_buf[0], 1);
 	msleep(5);
 	write_buf[0] = 0x00;
-	gsl_ts_write(client, 0xe0, &write_buf[0], 1); 	
+	gsl_ts_write(client, 0xe0, &write_buf[0], 1);
 	msleep(20);
 }
 
@@ -502,7 +502,7 @@ static void init_chip(struct i2c_client *client)
 	gsl_load_fw1(client);
 	startup_chip(client);
 	reset_chip(client);
-	startup_chip(client); 
+	startup_chip(client);
 	msleep(5);
 	enable_irq(client->irq);
 }
@@ -518,7 +518,7 @@ static void gsl_load_fw1(struct i2c_client *client)
 
 	printk("=============gsl_load_fw1 start==============\n");
 
-	for (source_line = 0; source_line < source_len; source_line++) 
+	for (source_line = 0; source_line < source_len; source_line++)
 	{
 		/* init page trans, set the page val */
 		if (GSL_PAGE_REG == GSLX680_FW[source_line].offset)
@@ -527,18 +527,18 @@ static void gsl_load_fw1(struct i2c_client *client)
 			gsl_write_interface(client, GSL_PAGE_REG, buf, 4);
 			send_flag = 1;
 		}
-		else 
+		else
 		{
 			if (1 == send_flag % (DMA_TRANS_LEN < 0x20 ? DMA_TRANS_LEN : 0x20))
-	    			buf[0] = (u8)GSLX680_FW[source_line].offset;
+				buf[0] = (u8)GSLX680_FW[source_line].offset;
 
 			fw2buf(cur, &GSLX680_FW[source_line].val);
 			cur += 4;
 
-			if (0 == send_flag % (DMA_TRANS_LEN < 0x20 ? DMA_TRANS_LEN : 0x20)) 
+			if (0 == send_flag % (DMA_TRANS_LEN < 0x20 ? DMA_TRANS_LEN : 0x20))
 			{
-	    			gsl_write_interface(client, buf[0], buf, cur - buf - 1);
-	    			cur = buf + 1;
+				gsl_write_interface(client, buf[0], buf, cur - buf - 1);
+				cur = buf + 1;
 			}
 
 			send_flag++;
@@ -561,17 +561,17 @@ static void init_chip1(struct i2c_client *client)
 	gsl_load_fw1(client);
 	startup_chip(client);
 	reset_chip(client);
-	startup_chip(client);		
+	startup_chip(client);
 }
 
 
 static void check_mem_data1(struct i2c_client *client, int force)
 {
 	u8 read_buf[4]  = {0};
-	
+
 	msleep(30);
 	gsl_ts_read(client,0xb0, read_buf, sizeof(read_buf));
-	
+
 	if (read_buf[3] != 0x5a || read_buf[2] != 0x5a || read_buf[1] != 0x5a || read_buf[0] != 0x5a || force)
 	{
 		printk("#########check mem read 0xb0 = %x %x %x %x #########\n", read_buf[3], read_buf[2], read_buf[1], read_buf[0]);
@@ -584,10 +584,10 @@ static void check_mem_data1(struct i2c_client *client, int force)
 static void check_mem_data(struct i2c_client *client)
 {
 	u8 read_buf[4]  = {0};
-	
+
 	msleep(30);
 	gsl_ts_read(client,0xb0, read_buf, sizeof(read_buf));
-	
+
 	if (read_buf[3] != 0x5a || read_buf[2] != 0x5a || read_buf[1] != 0x5a || read_buf[0] != 0x5a)
 	{
 		printk("#########check mem read 0xb0 = %x %x %x %x #########\n", read_buf[3], read_buf[2], read_buf[1], read_buf[0]);
@@ -602,14 +602,14 @@ static void filter_point(u16 x, u16 y , u8 id)
 	u16 x_err =0;
 	u16 y_err =0;
 	u16 filter_step_x = 0, filter_step_y = 0;
-	
+
 	id_sign[id] = id_sign[id] + 1;
 	if(id_sign[id] == 1)
 	{
 		x_old[id] = x;
 		y_old[id] = y;
 	}
-	
+
 	x_err = x > x_old[id] ? (x -x_old[id]) : (x_old[id] - x);
 	y_err = y > y_old[id] ? (y -y_old[id]) : (y_old[id] - y);
 
@@ -621,21 +621,21 @@ static void filter_point(u16 x, u16 y , u8 id)
 	else
 	{
 		if(x_err > FILTER_MAX)
-			filter_step_x = x_err; 
+			filter_step_x = x_err;
 		if(y_err> FILTER_MAX)
 			filter_step_y = y_err;
 	}
 
 	if(x_err <= 2*FILTER_MAX && y_err <= 2*FILTER_MAX)
 	{
-		filter_step_x >>= 2; 
+		filter_step_x >>= 2;
 		filter_step_y >>= 2;
 	}
 	else if(x_err <= 3*FILTER_MAX && y_err <= 3*FILTER_MAX)
 	{
-		filter_step_x >>= 1; 
+		filter_step_x >>= 1;
 		filter_step_y >>= 1;
-	}	
+	}
 
 	x_new = x > x_old[id] ? (x_old[id] + filter_step_x) : (x_old[id] - filter_step_x);
 	y_new = y > y_old[id] ? (y_old[id] + filter_step_y) : (y_old[id] - filter_step_y);
@@ -651,7 +651,7 @@ static void record_point(u16 x, u16 y , u8 id)
 	u16 y_err =0;
 
 	id_sign[id]=id_sign[id]+1;
-	
+
 	if(id_sign[id]==1){
 		x_old[id]=x;
 		y_old[id]=y;
@@ -659,7 +659,7 @@ static void record_point(u16 x, u16 y , u8 id)
 
 	x = (x_old[id] + x)/2;
 	y = (y_old[id] + y)/2;
-		
+
 	if(x>x_old[id]){
 		x_err=x -x_old[id];
 	}
@@ -695,7 +695,7 @@ static void record_point(u16 x, u16 y , u8 id)
 		x_new= x_old[id];
 		y_new= y_old[id];
 	}
-	
+
 }
 
 #ifdef HAVE_TOUCH_KEY
@@ -703,13 +703,13 @@ static void report_key(struct gsl_ts *ts, u16 x, u16 y)
 {
 	u16 i = 0;
 
-	for(i = 0; i < MAX_KEY_NUM; i++) 
+	for(i = 0; i < MAX_KEY_NUM; i++)
 	{
 		if((gsl_key_data[i].x_min < x) && (x < gsl_key_data[i].x_max)&&(gsl_key_data[i].y_min < y) && (y < gsl_key_data[i].y_max))
 		{
-			key = gsl_key_data[i].key;	
+			key = gsl_key_data[i].key;
 			input_report_key(ts->input, key, 1);
-			input_sync(ts->input); 		
+			input_sync(ts->input);
 			key_state_flag = 1;
 			break;
 		}
@@ -728,9 +728,9 @@ static void report_data(struct gsl_ts *ts, u16 x, u16 y, u8 pressure, u8 id)
 	#endif
 		return;
 	}
-	
+
 #ifdef REPORT_DATA_ANDROID_4_0
-	input_mt_slot(ts->input, id);		
+	input_mt_slot(ts->input, id);
 	 int x1 = (SCREEN_MAX_X-x);
 	 if (x1 < 0) x1 =0;
 	// int y1 = (SCREEN_MAX_Y-y);
@@ -739,13 +739,13 @@ static void report_data(struct gsl_ts *ts, u16 x, u16 y, u8 pressure, u8 id)
 	input_report_abs(ts->input, ABS_MT_TRACKING_ID, id);
 	input_report_abs(ts->input, ABS_MT_TOUCH_MAJOR, pressure);
 	input_report_abs(ts->input, ABS_MT_POSITION_X, y);
-	input_report_abs(ts->input, ABS_MT_POSITION_Y, x1);	
+	input_report_abs(ts->input, ABS_MT_POSITION_Y, x1);
 	input_report_abs(ts->input, ABS_MT_WIDTH_MAJOR, 1);
 #else
 	//input_report_key(ts->input, BTN_TOUCH, 1);
 	 int x1 = (SCREEN_MAX_X-y);
 	 if (x1 < 0) x1 =0;
-	 int y1 = (SCREEN_MAX_Y-x); 
+	 int y1 = (SCREEN_MAX_Y-x);
 	 if (y1 < 0) y1 =0;
 	input_report_abs(ts->input, ABS_MT_TRACKING_ID, id);
 	input_report_abs(ts->input, ABS_MT_TOUCH_MAJOR, pressure);
@@ -804,7 +804,7 @@ static void process_gslX680_data(struct gsl_ts *ts)
 	for(i=1;i<=MAX_CONTACTS;i++)
 	{
 		if(touches == 0)
-			id_sign[i] = 0;	
+			id_sign[i] = 0;
 		id_state_flag[i] = 0;
 	}
 	for(i= 0;i < (touches > MAX_FINGERS ? MAX_FINGERS : touches);i ++)
@@ -812,7 +812,7 @@ static void process_gslX680_data(struct gsl_ts *ts)
 	#ifdef GSL_NOID_VERSION
 		id = cinfo.id[i];
 		x =  cinfo.x[i];
-		y =  cinfo.y[i];	
+		y =  cinfo.y[i];
 	#else
 		x = join_bytes( ( ts->touch_data[ts->dd->x_index  + 4 * i + 1] & 0xf),
 				ts->touch_data[ts->dd->x_index + 4 * i]);
@@ -828,13 +828,13 @@ static void process_gslX680_data(struct gsl_ts *ts)
     #else
 			record_point(x, y , id);
     #endif
-    
+
     if(g_pdata->pol & 0x4)
 			swap(x_new, y_new);
     if(g_pdata->pol & 0x1)
-    	x_new = SCREEN_MAX_X - x_new;
+	x_new = SCREEN_MAX_X - x_new;
     if(g_pdata->pol & 0x2)
-    	y_new = SCREEN_MAX_Y - y_new;
+	y_new = SCREEN_MAX_Y - y_new;
 
 			if ((((x_new>0 && x_new<X_SUB) && (y_new>0 && y_new<Y_SUB))
 				||((x_new>SCREEN_MAX_X-X_SUB && x_new<SCREEN_MAX_X) && (y_new>0 && y_new<Y_SUB))
@@ -853,7 +853,7 @@ static void process_gslX680_data(struct gsl_ts *ts)
 				//printk("2#####id=%d,x_temp=%d,y_temp=%d######\n",id,x_temp,y_temp);
 		  }
 	      else {
-		  		count = 0;
+				count = 0;
 				//printk("1#####id=%d,x_new=%d,y_new=%d######\n",id,x_new,y_new);
 				report_data(ts, x_new, y_new, 100, id);
 	      }
@@ -862,7 +862,7 @@ static void process_gslX680_data(struct gsl_ts *ts)
 		}
 	}
 	for(i=1;i<=MAX_CONTACTS;i++)
-	{	
+	{
 		if( (0 == touches) || ((0 != id_state_old_flag[i]) && (0 == id_state_flag[i])) )
 		{
 			count = 0;
@@ -877,7 +877,7 @@ static void process_gslX680_data(struct gsl_ts *ts)
 	}
 #ifndef REPORT_DATA_ANDROID_4_0
 	if(0 == touches)
-	{	
+	{
 		//input_report_key(ts->input, BTN_TOUCH, 0);
 		input_mt_sync(ts->input);
 	#ifdef HAVE_TOUCH_KEY
@@ -887,7 +887,7 @@ static void process_gslX680_data(struct gsl_ts *ts)
 			input_sync(ts->input);
 			key_state_flag = 0;
 		}
-	#endif			
+	#endif
 	}
 #endif
 	input_sync(ts->input);
@@ -902,13 +902,13 @@ static void gsl_ts_xy_worker(struct work_struct *work)
 
 	struct gsl_ts *ts = container_of(work, struct gsl_ts,work);
 
-	print_info("---gsl_ts_xy_worker---\n");				 
+	print_info("---gsl_ts_xy_worker---\n");
 
 	/* read data from DATA_REG */
 	rc = gsl_ts_read(ts->client, 0x80, ts->touch_data, ts->dd->data_size);
-	print_info("---touches: %d ---\n",ts->touch_data[0]);		
-		
-	if (rc < 0) 
+	print_info("---touches: %d ---\n",ts->touch_data[0]);
+
+	if (rc < 0)
 	{
 		dev_err(&ts->client->dev, "read failed\n");
 		goto schedule;
@@ -919,13 +919,13 @@ static void gsl_ts_xy_worker(struct work_struct *work)
 	}
 
 	rc = gsl_ts_read( ts->client, 0xbc, read_buf, sizeof(read_buf));
-	if (rc < 0) 
+	if (rc < 0)
 	{
 		dev_err(&ts->client->dev, "read 0xbc failed\n");
 		goto schedule;
 	}
 	print_info("//////// reg %x : %x %x %x %x\n",0xbc, read_buf[3], read_buf[2], read_buf[1], read_buf[0]);
-		
+
 	if (read_buf[3] == 0 && read_buf[2] == 0 && read_buf[1] == 0 && read_buf[0] == 0)
 	{
 		process_gslX680_data(ts);
@@ -935,26 +935,26 @@ static void gsl_ts_xy_worker(struct work_struct *work)
 		reset_chip(ts->client);
 		startup_chip(ts->client);
 	}
-	
+
 schedule:
 	enable_irq(ts->irq);
-		
+
 }
 
 static irqreturn_t gsl_ts_irq(int irq, void *dev_id)
-{	
+{
 	struct gsl_ts *ts = dev_id;
 	static int irq_count = 0;
-	
+
 	//printk("==========GSLX680 Interrupt============\n");
 	//print_info("irq count: %d\n", irq_count++);
 	disable_irq_nosync(ts->irq);
 
-	if (!work_pending(&ts->work)) 
+	if (!work_pending(&ts->work))
 	{
 		queue_work(ts->wq, &ts->work);
 	}
-	
+
 	return IRQ_HANDLED;
 
 }
@@ -963,10 +963,10 @@ static int gsl_ts_init_ts(struct i2c_client *client, struct gsl_ts *ts)
 {
 	struct input_dev *input_device;
 	int i, rc = 0;
-	
+
 	printk("[GSLX680] Enter %s\n", __func__);
 
-	
+
 	ts->dd = &devices[ts->device_id];
 
 	if (ts->device_id == 0) {
@@ -1031,7 +1031,7 @@ static int gsl_ts_init_ts(struct i2c_client *client, struct gsl_ts *ts)
 		dev_err(&client->dev, "Could not create workqueue\n");
 		goto error_wq_create;
 	}
-	flush_workqueue(ts->wq);	
+	flush_workqueue(ts->wq);
 
 	INIT_WORK(&ts->work, gsl_ts_xy_worker);
 
@@ -1056,13 +1056,13 @@ static void do_download(struct work_struct *work)
 	printk("gsl1680 call func start%s\n", __func__);
 
 	gslX680_shutdown_high(g_pdata);
-	msleep(20); 	
+	msleep(20);
 	reset_chip(ts->client);
-	startup_chip(ts->client);	
+	startup_chip(ts->client);
 	check_mem_data(ts->client);
 	printk("gsl1680 0000\n");
 	up(&ts->fw_sema);
-	
+
 	printk("gsl1680 call func end%s\n", __func__);
 }
 
@@ -1072,13 +1072,13 @@ static int gsl_ts_suspend(struct i2c_client *client, pm_message_t mesg)
 	int rc = 0;
 
 	printk("gsl1680 call func start%s #####################\n", __func__);
- 
+
     disable_irq_nosync(ts->irq); //hycui
 	reset_chip(ts->client);
 	gslX680_shutdown_low(ts->g_pdata);
-	//msleep(15); 		
+	//msleep(15);
 
-	return 0; 
+	return 0;
 }
 
 static int gsl_ts_resume(struct i2c_client *client)
@@ -1086,16 +1086,16 @@ static int gsl_ts_resume(struct i2c_client *client)
 	struct gsl_ts *ts = dev_get_drvdata(&(client->dev));
 	int rc = 0;
 
-  	printk("gsl1680 call func start%s ###########\n", __func__);
-	
+	printk("gsl1680 call func start%s ###########\n", __func__);
+
 	gslX680_shutdown_high(ts->g_pdata);
 	reset_chip(ts->client);
-	startup_chip(ts->client);	
+	startup_chip(ts->client);
 	check_mem_data1(ts->client, 0);
 	enable_irq(ts->irq);
-	
-  	//ts->dl_fw = 1;
-	 
+
+	//ts->dl_fw = 1;
+
 	return 0;
 }
 
@@ -1105,10 +1105,10 @@ static void gsl_ts_early_suspend(struct early_suspend *h)
 	struct gsl_ts *ts = container_of(h, struct gsl_ts, early_suspend);
 	printk("gsl1680 call func start%s %d#########\n", __func__, ts->irq);
 
-	disable_irq(ts->irq);	
+	disable_irq(ts->irq);
 	//reset_chip(ts->client);
 	gslX680_shutdown_low(g_pdata);
-	msleep(15); 			
+	msleep(15);
 }
 #if 0
 static void gslx680_late_upgrade1(void)
@@ -1126,9 +1126,9 @@ void  gsl_TS_GO()
   {
      Gts->dl_fw =0;
    gslX680_shutdown_high(g_pdata);
-	 msleep(20); 	
+	 msleep(20);
 	reset_chip(Gts->client);
-	startup_chip(Gts->client);	
+	startup_chip(Gts->client);
 		/**check_mem_data1(Gts->client);
 	*/
 	 //printk("test ##3##################\n");
@@ -1146,9 +1146,9 @@ static void gsl_ts_late_resume(struct early_suspend *h)
 	struct gsl_ts *ts = container_of(h, struct gsl_ts, early_suspend);
     gslX680_shutdown_high(g_pdata);
 	aml_gpio_direction_output(g_pdata->gpio_interrupt, 0);
-	msleep(20); 	
+	msleep(20);
 	reset_chip(ts->client);
-	startup_chip(ts->client);	
+	startup_chip(ts->client);
     aml_gpio_direction_input(g_pdata->gpio_interrupt);
 
 	check_mem_data1(ts->client,ts->dl_fw);
@@ -1156,7 +1156,7 @@ static void gsl_ts_late_resume(struct early_suspend *h)
 	enable_irq(ts->irq);
 	ts->dl_fw =0;
 	printk("###gsl_ts_late_resume end#################\n");
- 
+
 }
 #endif
 
@@ -1240,14 +1240,14 @@ static int gsl_ts_probe(struct i2c_client *client,
 
 	ts->is_suspended = false;
 	ts->int_pending = false;
-	
+
 	ts->g_pdata = g_pdata;
 	mutex_init(&ts->sus_lock);
-	
+
 	//INIT_WORK(&(ts->dl_work), do_download);
-	
+
 	sema_init(&ts->fw_sema,0);
-	
+
 	rc = gsl_ts_init_ts(client, ts);
 	if (rc < 0) {
 		dev_err(&client->dev, "GSLX680 init failed\n");
@@ -1293,9 +1293,9 @@ static int gsl_ts_probe(struct i2c_client *client,
 
 	return 0;
 
-//exit_set_irq_mode:	
+//exit_set_irq_mode:
 error_req_irq_fail:
-    free_irq(ts->irq, ts);	
+    free_irq(ts->irq, ts);
 
 error_mutex_destroy:
 	mutex_destroy(&ts->sus_lock);
@@ -1324,7 +1324,7 @@ static int gsl_ts_remove(struct i2c_client *client)
 	mutex_destroy(&ts->sus_lock);
 
 	//device_remove_file(&ts->input->dev, &dev_attr_debug_enable);
-	
+
 	kfree(ts->touch_data);
 	kfree(ts);
 

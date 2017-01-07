@@ -38,7 +38,7 @@ void meson_cpu_die(unsigned int cpu)
 	meson_set_cpu_ctrl_reg(cpu, 0);
 	flush_cache_all();
 	dsb();
-	dmb();	
+	dmb();
 
 	meson_cleanup();
 	aml_set_reg32_bits(MESON_CPU_POWER_CTRL_REG,0x3,(cpu << 3),2);
@@ -57,4 +57,3 @@ int meson_cpu_disable(unsigned int cpu)
 	 */
 	return cpu == 0 ? -EPERM : 0;
 }
-

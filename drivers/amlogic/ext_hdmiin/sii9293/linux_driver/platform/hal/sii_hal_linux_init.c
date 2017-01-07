@@ -9,7 +9,7 @@
  *
  * This program is distributed .as is. WITHOUT ANY WARRANTY of any
  * kind, whether express or implied; without even the implied warranty
- * of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR
  * PURPOSE.  See the GNU General Public License for more details.
 */
 
@@ -54,7 +54,7 @@ struct i2c_device_id gMhlI2cIdTable[2];
 /** @brief Semaphore used to prevent driver access from user mode from
  * colliding with the threaded interrupt handler */
 //DECLARE_MUTEX(gIsrLock);
-DEFINE_SEMAPHORE(gIsrLock); //2.6.39 use this style ,tiger qin 
+DEFINE_SEMAPHORE(gIsrLock); //2.6.39 use this style ,tiger qin
 mhlDeviceContext_t gMhlDevice;
 
 
@@ -192,4 +192,3 @@ halReturn_t HalReleaseIsrLock()
 
 	return retStatus;
 }
-

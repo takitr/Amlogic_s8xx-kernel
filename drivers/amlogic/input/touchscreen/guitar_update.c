@@ -1,7 +1,7 @@
 /*
- * 
+ *
  * Copyright (C) 2011 Goodix, Inc.
- * 
+ *
  * Author: Scott
  * Date: 2012.01.05
  */
@@ -18,7 +18,7 @@
 #include <linux/fs.h>
 #include <linux/string.h>
 #include <asm/uaccess.h>
-#include <linux/mm.h> 
+#include <linux/mm.h>
 #include <linux/init.h>
 #include <linux/kthread.h>
 #include <linux/slab.h>
@@ -60,7 +60,7 @@ static int guitar_update_mode(struct goodix_ts_data *);
 extern int goodix_init_panel(struct goodix_ts_data *, u8);
 
 #pragma pack(1)
-typedef struct 
+typedef struct
 {
     u8  type;          //产品类型//
     u16 version;       //FW版本号//
@@ -77,7 +77,7 @@ typedef struct
     u8 force_update;
     u8 fw_flag;
     loff_t gt_loc;
-    struct file *file; 
+    struct file *file;
     st_fw_head  ic_fw_msg;
     mm_segment_t old_fs;
 }st_update_msg;
@@ -107,14 +107,14 @@ static int i2c_read_bytes(struct i2c_client *client, uint8_t *buf, int len)
     return ret;
 }
 
-/*******************************************************	
+/*******************************************************
 功能：
 	向从机写数据
 参数：
 	client:	i2c设备，包含设备地址
 	buf[0]~buf[1]：	 首字节为写地址
 	buf[2]~buf[len]：数据缓冲区
-	len：	数据长度	
+	len：	数据长度
 return：
 	执行消息数
 *******************************************************/
@@ -123,12 +123,12 @@ static int i2c_write_bytes(struct i2c_client *client,uint8_t *data,int len)
 {
     struct i2c_msg msg;
     int ret=-1;
-    
+
     //发送设备地址
     msg.flags=!I2C_M_RD;//写消息
     msg.addr=client->addr;
     msg.len=len;
-    msg.buf=data;        
+    msg.buf=data;
 
     ret=i2c_transfer(client->adapter,&msg, 1);
 
@@ -138,7 +138,7 @@ static int i2c_write_bytes(struct i2c_client *client,uint8_t *data,int len)
 /*******************************************************
 功能：
 	发送后缀命令
-	
+
 	ts:	client私有数据结构体
 return：
 
@@ -147,7 +147,7 @@ return：
 static int i2c_end_cmd(struct goodix_ts_data *ts)
 {
     int ret;
-    u8 end_cmd_data[2]={0x80, 0x00};    
+    u8 end_cmd_data[2]={0x80, 0x00};
 
     ret=i2c_write_bytes(ts->client,end_cmd_data,2);
     return ret;//*/
@@ -198,11 +198,11 @@ static u8 clear_mix_flag(struct goodix_ts_data *ts)
 {
     s32 i = 0;
     u8 buf[3];
-    
+
     buf[0] = 0x14;
     buf[1] = 0x00;
     buf[2] = 0x80;
-    
+
     for (i = 0; i < 5; i++)
     {
         if (i2c_write_bytes(ts->client, buf, 3) > 0)
@@ -226,19 +226,19 @@ static u8 get_ic_fw_msg(struct goodix_ts_data *ts)
     s32 ret = 0;
     s32 i = 0;
     u8 buf[32];
-    
+
     if (fail == clear_mix_flag(ts))
     {
         return fail;
     }
-    
+
     //Get the mask version in rom of IC
     if (fail == get_ic_msg(ts, READ_MSK_VER_ADDR_H << 8 | READ_MSK_VER_ADDR_L, buf, 4))
     {
         DEBUG_UPDATE("Read mask version failed!\n");
         return fail;
     }
-    
+
     memcpy(update_msg.ic_fw_msg.msk_ver, &buf[ADDR_LENGTH], 4);
     DEBUG_UPDATE("IC The mask version in rom is %c%c%c%c.\n",
                  update_msg.ic_fw_msg.msk_ver[0],update_msg.ic_fw_msg.msk_ver[1],
@@ -283,7 +283,7 @@ static u8 get_ic_fw_msg(struct goodix_ts_data *ts)
         return fail;
     }
     i2c_end_cmd(ts);
-    
+
     //Get the pid at 0x4011 in nvram
     if (fail == get_ic_msg(ts, 0x4011, buf, 1))
     {
@@ -291,7 +291,7 @@ static u8 get_ic_fw_msg(struct goodix_ts_data *ts)
         return fail;
     }
     update_msg.ic_fw_msg.type = buf[ADDR_LENGTH];
-    
+
     DEBUG_UPDATE("IC PID:%x\n", update_msg.ic_fw_msg.type);
 
 //    guitar_reset(ts, 10);
@@ -356,7 +356,7 @@ u8 load_update_file(struct goodix_ts_data *ts, st_fw_head* fw_head, u8* data, u8
     if (path)
     {
         update_msg.file = filp_open(path, O_RDWR, 0666);
-        
+
         if (IS_ERR(update_msg.file))
         {
             DEBUG_UPDATE("Open update file(%s) error!\n", path);
@@ -395,7 +395,7 @@ u8 load_update_file(struct goodix_ts_data *ts, st_fw_head* fw_head, u8* data, u8
         }
         DEBUG_UPDATE("Find the update file.\n");
     }
-    
+
     update_msg.old_fs = get_fs();
     set_fs(KERNEL_DS);
 
@@ -412,10 +412,10 @@ u8 load_update_file(struct goodix_ts_data *ts, st_fw_head* fw_head, u8* data, u8
     {
         DEBUG_UPDATE("The flag is %s.Not equal!\n"
                      "The update file is incorrect!\n", buf);
-        goto load_failed; 
+        goto load_failed;
     }
     DEBUG_UPDATE("The file flag is :%s.\n", buf);
-    
+
     //Get the total number of masks
     update_msg.file->f_pos++; //ignore one byte.
     ret = update_msg.file->f_op->read(update_msg.file, &mask_num, 1, &update_msg.file->f_pos);
@@ -428,14 +428,14 @@ u8 load_update_file(struct goodix_ts_data *ts, st_fw_head* fw_head, u8* data, u8
     update_msg.file->f_pos = FILE_HEAD_LENGTH + IGNORE_LENGTH;
 
     //Get the correct nvram data
-    //The correct conditions: 
+    //The correct conditions:
     //1. the product id is the same
     //2. the mask id is the same
-    //3. the nvram version in update file is greater than the nvram version in ic 
+    //3. the nvram version in update file is greater than the nvram version in ic
     //or force update flag is marked or the check sum in ic is wrong
     update_msg.gt_loc = -1;
     for ( i = 0; i < mask_num; i++)
-    {        
+    {
         ret = update_msg.file->f_op->read(update_msg.file, (char*)buf, FW_HEAD_LENGTH, &update_msg.file->f_pos);
         if (ret < 0)
         {
@@ -453,7 +453,7 @@ u8 load_update_file(struct goodix_ts_data *ts, st_fw_head* fw_head, u8* data, u8
         DEBUG_UPDATE("FILE start address:0x%02x%02x.\n", fw_head->st_addr[0], fw_head->st_addr[1]);
         DEBUG_UPDATE("FILE length:%d\n", (int)fw_head->lenth);
         DEBUG_UPDATE("FILE force update flag:%s\n", fw_head->force_update);
-        DEBUG_UPDATE("FILE chksum:0x%02x%02x%02x\n", fw_head->chk_sum[0], 
+        DEBUG_UPDATE("FILE chksum:0x%02x%02x%02x\n", fw_head->chk_sum[0],
                                  fw_head->chk_sum[1], fw_head->chk_sum[2]);
 
         //First two conditions
@@ -463,7 +463,7 @@ u8 load_update_file(struct goodix_ts_data *ts, st_fw_head* fw_head, u8* data, u8
             DEBUG_UPDATE("Get the same mask version and same pid.\n");
             //The third condition
             if (fw_head->version > update_msg.ic_fw_msg.version
-                || is_equal(fw_head->force_update, "GOODIX", 6) 
+                || is_equal(fw_head->force_update, "GOODIX", 6)
                 || update_msg.force_update == 0xAA)
             {
                // DEBUG_UPDATE("FILE read position:%d\n", file->f_pos);
@@ -473,7 +473,7 @@ u8 load_update_file(struct goodix_ts_data *ts, st_fw_head* fw_head, u8* data, u8
                 {
                     update_msg.gt_loc = update_msg.file->f_pos - FW_HEAD_LENGTH + sizeof(st_fw_head) - sizeof(fw_head->force_update);
                 }
-                
+
                 ret = update_msg.file->f_op->read(update_msg.file, (char*)data, fw_head->lenth, &update_msg.file->f_pos);
                 if (ret <= 0)
                 {
@@ -493,7 +493,7 @@ u8 load_update_file(struct goodix_ts_data *ts, st_fw_head* fw_head, u8* data, u8
         update_msg.file->f_pos += UPDATE_DATA_LENGTH;
     }
 
-load_failed:    
+load_failed:
     set_fs(update_msg.old_fs);
     filp_close(update_msg.file, NULL);
     return fail;
@@ -608,7 +608,7 @@ static u8 guitar_update_nvram(struct goodix_ts_data *ts, st_fw_head* fw_head, u8
             r_buf[1] = 0x00;
             i2c_read_bytes(ts->client, r_buf, 3);
             DEBUG_UPDATE("I2CCS:0x%x\n", r_buf[2]);//*/
-            
+
             r_buf[0] = w_buf[0];
             r_buf[1] = w_buf[1];
 
@@ -628,7 +628,7 @@ static u8 guitar_update_nvram(struct goodix_ts_data *ts, st_fw_head* fw_head, u8
             }
 //            DEBUG_UPDATE("r_buf:\n");
 //            DEBUG_ARRAY(r_buf, ADDR_LENGTH + write_bytes);
-#if 0            
+#if 0
             if (fail == guitar_nvram_store(ts))
             {
                 DEBUG_UPDATE("Store nvram failed.\n");
@@ -637,7 +637,7 @@ static u8 guitar_update_nvram(struct goodix_ts_data *ts, st_fw_head* fw_head, u8
             return fail;
 #endif
             if (false == is_equal(r_buf, w_buf, ADDR_LENGTH + write_bytes))
-            {   
+            {
                 if (comp ++ > 10)
                 {
                     DEBUG_UPDATE("Compare error!\n");
@@ -648,7 +648,7 @@ static u8 guitar_update_nvram(struct goodix_ts_data *ts, st_fw_head* fw_head, u8
                 DEBUG_UPDATE("r_buf:\n");
                 DEBUG_ARRAY(r_buf, ADDR_LENGTH + write_bytes);
 
-                
+
                 DEBUG_UPDATE("w_buf:\n");
 //                DEBUG_ARRAY(w_buf, ADDR_LENGTH + write_bytes);
                 continue;
@@ -814,7 +814,7 @@ static int guitar_update_proc(void *v_ts)
         DEBUG_UPDATE("data failed apply for memory.\n");
         return fail;
     }
-    
+
     ic_nvram = kzalloc(UPDATE_DATA_LENGTH, GFP_KERNEL);
     if (NULL == ic_nvram)
     {
@@ -857,7 +857,7 @@ static int guitar_update_proc(void *v_ts)
         DEBUG_UPDATE("Set update mode failed.\n");
         return fail;
     }
-    
+
     retry = 0;
     while(retry++ < 5)
     {
@@ -896,7 +896,7 @@ static int guitar_update_proc(void *v_ts)
             continue;
         }
         msleep(5);
-        
+
         if (fail == get_ic_msg(ts, 0x1201, buf, 1))
         {
             DEBUG_UPDATE("Read NVRCS failed.(Recall)\n");
@@ -935,7 +935,7 @@ static int guitar_update_proc(void *v_ts)
             continue;
         }
         DEBUG_UPDATE("Check nvram by byte successfully!\n");
-        
+
         if (update_msg.gt_loc > 0)
         {
             DEBUG_UPDATE("Location:%d, Ret:%d.\n", (s32)update_msg.gt_loc, (s32)ret);
@@ -953,12 +953,12 @@ static int guitar_update_proc(void *v_ts)
         DEBUG_UPDATE("Update successfully!\n");
         break;
     }
-    
+
     set_fs(update_msg.old_fs);
     filp_close(update_msg.file, NULL);
     guitar_leave_update_mode(ts);
     DEBUG_UPDATE("Leave update mode!\n");
-    
+
     //Reset guitar
     DEBUG_UPDATE("Reset IC and send config!\n");
     guitar_reset(ts, 10);
@@ -975,7 +975,7 @@ static int guitar_update_proc(void *v_ts)
     {
         DEBUG_UPDATE("Send config data failed.\n");
     }
-    
+
     msleep(10);
         ts->irq_is_disable = 0;
         enable_irq(ts->client->irq);
@@ -991,7 +991,7 @@ app_mem_failed:
     }
 
     DEBUG_UPDATE("Update failed!\n");
-    return fail;    
+    return fail;
 }
 
 s32 init_update_proc(struct goodix_ts_data *ts)

@@ -9,7 +9,7 @@
 
 
 #define MAX_BITBLT_WORK_CONFIG 4
-#define MAX_GE2D_CMD  32   //64  
+#define MAX_GE2D_CMD  32   //64
 
 #define GE2D_STATE_IDLE          0
 #define GE2D_STATE_RUNNING       1
@@ -88,7 +88,7 @@
 #define LOGIC_OPERATION_XOR         12
 #define LOGIC_OPERATION_EQUIV       13
 #define LOGIC_OPERATION_AND_INVERT  14
-#define LOGIC_OPERATION_OR_INVERT   15 
+#define LOGIC_OPERATION_OR_INVERT   15
 
 #define DST_CLIP_MODE_INSIDE    0
 #define DST_CLIP_MODE_OUTSIDE   1
@@ -172,7 +172,7 @@
 #define GE2D_FORMAT_YUV             0x20000
 #define GE2D_FORMAT_COMP_RANGE      0x10000
 /*bit8(2)  format   bi6(2) mode_8b_sel  bit5(1)lut_en   bit2 sep_en*/
-/*M  seperate block S one block.*/ 
+/*M  seperate block S one block.*/
 
 #define GE2D_FMT_S8_Y            	0x00000 /* 00_00_0_00_0_00 */
 #define GE2D_FMT_S8_CB           	0x00040 /* 00_01_0_00_0_00 */
@@ -205,13 +205,13 @@
 #define GE2D_FMT_S24_YUV444B     	0x20218 /* 10_00_0_11_0_00 */
 
 /* back compatible defines */
-#define GE2D_FORMAT_S8_Y            (GE2D_FORMAT_YUV|GE2D_FMT_S8_Y)            
-#define GE2D_FORMAT_S8_CB          (GE2D_FORMAT_YUV|GE2D_FMT_S8_CB)          
-#define GE2D_FORMAT_S8_CR          (GE2D_FORMAT_YUV|GE2D_FMT_S8_CR)          
-#define GE2D_FORMAT_S8_R            GE2D_FMT_S8_R            
-#define GE2D_FORMAT_S8_G            GE2D_FMT_S8_G            
-#define GE2D_FORMAT_S8_B            GE2D_FMT_S8_B            
-#define GE2D_FORMAT_S8_A            GE2D_FMT_S8_A            
+#define GE2D_FORMAT_S8_Y            (GE2D_FORMAT_YUV|GE2D_FMT_S8_Y)
+#define GE2D_FORMAT_S8_CB          (GE2D_FORMAT_YUV|GE2D_FMT_S8_CB)
+#define GE2D_FORMAT_S8_CR          (GE2D_FORMAT_YUV|GE2D_FMT_S8_CR)
+#define GE2D_FORMAT_S8_R            GE2D_FMT_S8_R
+#define GE2D_FORMAT_S8_G            GE2D_FMT_S8_G
+#define GE2D_FORMAT_S8_B            GE2D_FMT_S8_B
+#define GE2D_FORMAT_S8_A            GE2D_FMT_S8_A
 #define GE2D_FORMAT_S8_LUT          GE2D_FMT_S8_LUT
 /* nv12 &nv21, only works on m6. */
 #define GE2D_FORMAT_M24_NV12	    (GE2D_FMT_M24_YUV420SP| GE2D_COLOR_MAP_NV12)
@@ -223,42 +223,42 @@
 
 
 
-#define GE2D_FORMAT_S12_RGB_655         (GE2D_FMT_S16_RGB     | GE2D_COLOR_MAP_RGB655)      
+#define GE2D_FORMAT_S12_RGB_655         (GE2D_FMT_S16_RGB     | GE2D_COLOR_MAP_RGB655)
 #define GE2D_FORMAT_S16_YUV422      (GE2D_FMT_S16_YUV422  | GE2D_COLOR_MAP_YUV422)
-#define GE2D_FORMAT_S16_RGB_655         (GE2D_FMT_S16_RGB     | GE2D_COLOR_MAP_RGB655)  
-#define GE2D_FORMAT_S24_YUV444      (GE2D_FMT_S24_YUV444  | GE2D_COLOR_MAP_YUV444) 
-#define GE2D_FORMAT_S24_RGB         (GE2D_FMT_S24_RGB     | GE2D_COLOR_MAP_RGB888)   
-#define GE2D_FORMAT_S32_YUVA444     (GE2D_FMT_S32_YUVA444 | GE2D_COLOR_MAP_YUVA4444)   
-#define GE2D_FORMAT_S32_RGBA        (GE2D_FMT_S32_RGBA    | GE2D_COLOR_MAP_RGBA8888) 
-#define GE2D_FORMAT_M24_YUV420      GE2D_FMT_M24_YUV420    
+#define GE2D_FORMAT_S16_RGB_655         (GE2D_FMT_S16_RGB     | GE2D_COLOR_MAP_RGB655)
+#define GE2D_FORMAT_S24_YUV444      (GE2D_FMT_S24_YUV444  | GE2D_COLOR_MAP_YUV444)
+#define GE2D_FORMAT_S24_RGB         (GE2D_FMT_S24_RGB     | GE2D_COLOR_MAP_RGB888)
+#define GE2D_FORMAT_S32_YUVA444     (GE2D_FMT_S32_YUVA444 | GE2D_COLOR_MAP_YUVA4444)
+#define GE2D_FORMAT_S32_RGBA        (GE2D_FMT_S32_RGBA    | GE2D_COLOR_MAP_RGBA8888)
+#define GE2D_FORMAT_M24_YUV420      GE2D_FMT_M24_YUV420
 #define GE2D_FORMAT_M24_YUV422      GE2D_FMT_M24_YUV422
 #define GE2D_FORMAT_M24_YUV444      GE2D_FMT_M24_YUV444
 #define GE2D_FORMAT_M24_RGB         GE2D_FMT_M24_RGB
 #define GE2D_FORMAT_M24_YUV420T     GE2D_FMT_M24_YUV420T
 #define GE2D_FORMAT_M24_YUV420B     GE2D_FMT_M24_YUV420B
 #define GE2D_FORMAT_S16_YUV422T     (GE2D_FMT_S16_YUV422T | GE2D_COLOR_MAP_YUV422)
-#define GE2D_FORMAT_S16_YUV422B     (GE2D_FMT_S16_YUV422B | GE2D_COLOR_MAP_YUV422)   
-#define GE2D_FORMAT_S24_YUV444T     (GE2D_FMT_S24_YUV444T | GE2D_COLOR_MAP_YUV444)   
+#define GE2D_FORMAT_S16_YUV422B     (GE2D_FMT_S16_YUV422B | GE2D_COLOR_MAP_YUV422)
+#define GE2D_FORMAT_S24_YUV444T     (GE2D_FMT_S24_YUV444T | GE2D_COLOR_MAP_YUV444)
 #define GE2D_FORMAT_S24_YUV444B     (GE2D_FMT_S24_YUV444B | GE2D_COLOR_MAP_YUV444)
 //format added in A1H
 /*16 bit*/
-#define GE2D_FORMAT_S16_RGB_565         (GE2D_FMT_S16_RGB     | GE2D_COLOR_MAP_RGB565) 
-#define GE2D_FORMAT_S16_RGB_844         (GE2D_FMT_S16_RGB     | GE2D_COLOR_MAP_RGB844) 
+#define GE2D_FORMAT_S16_RGB_565         (GE2D_FMT_S16_RGB     | GE2D_COLOR_MAP_RGB565)
+#define GE2D_FORMAT_S16_RGB_844         (GE2D_FMT_S16_RGB     | GE2D_COLOR_MAP_RGB844)
 #define GE2D_FORMAT_S16_RGBA_6442        (GE2D_FMT_S16_RGB     | GE2D_COLOR_MAP_RGBA6442)
 #define GE2D_FORMAT_S16_RGBA_4444        (GE2D_FMT_S16_RGB     | GE2D_COLOR_MAP_RGBA4444)
 #define GE2D_FORMAT_S16_ARGB_4444        (GE2D_FMT_S16_RGB     | GE2D_COLOR_MAP_ARGB4444)
 #define GE2D_FORMAT_S16_ARGB_1555        (GE2D_FMT_S16_RGB     | GE2D_COLOR_MAP_ARGB1555)
 #define GE2D_FORMAT_S16_RGBA_4642        (GE2D_FMT_S16_RGB     | GE2D_COLOR_MAP_RGBA4642)
 /*24 bit*/
-#define GE2D_FORMAT_S24_RGBA_5658         (GE2D_FMT_S24_RGB | GE2D_COLOR_MAP_RGBA5658)  
-#define GE2D_FORMAT_S24_ARGB_8565         (GE2D_FMT_S24_RGB | GE2D_COLOR_MAP_ARGB8565) 
+#define GE2D_FORMAT_S24_RGBA_5658         (GE2D_FMT_S24_RGB | GE2D_COLOR_MAP_RGBA5658)
+#define GE2D_FORMAT_S24_ARGB_8565         (GE2D_FMT_S24_RGB | GE2D_COLOR_MAP_ARGB8565)
 #define GE2D_FORMAT_S24_RGBA_6666         (GE2D_FMT_S24_RGB | GE2D_COLOR_MAP_RGBA6666)
 #define GE2D_FORMAT_S24_ARGB_6666         (GE2D_FMT_S24_RGB | GE2D_COLOR_MAP_ARGB6666)
 #define GE2D_FORMAT_S24_BGR        	     	   (GE2D_FMT_S24_RGB | GE2D_COLOR_MAP_BGR888)
 /*32 bit*/
-#define GE2D_FORMAT_S32_ARGB        (GE2D_FMT_S32_RGBA    | GE2D_COLOR_MAP_ARGB8888) 
-#define GE2D_FORMAT_S32_ABGR        (GE2D_FMT_S32_RGBA    | GE2D_COLOR_MAP_ABGR8888) 
-#define GE2D_FORMAT_S32_BGRA        (GE2D_FMT_S32_RGBA    | GE2D_COLOR_MAP_BGRA8888) 
+#define GE2D_FORMAT_S32_ARGB        (GE2D_FMT_S32_RGBA    | GE2D_COLOR_MAP_ARGB8888)
+#define GE2D_FORMAT_S32_ABGR        (GE2D_FMT_S32_RGBA    | GE2D_COLOR_MAP_ABGR8888)
+#define GE2D_FORMAT_S32_BGRA        (GE2D_FMT_S32_RGBA    | GE2D_COLOR_MAP_BGRA8888)
 
 
 
@@ -281,14 +281,14 @@ typedef  struct {
 }ge2d_para_t ;
 
 typedef  struct  {
-	int  config_index ;//possible index OSD0 OSD1 VID0 VID1 
+	int  config_index ;//possible index OSD0 OSD1 VID0 VID1
 	int  handle[MAX_BITBLT_WORK_CONFIG] ;
 }ge2d_config_handle_t ;
 
 
 typedef struct {
     unsigned char     interrupt_ctrl;
-    
+
     unsigned char     dp_onoff_mode;
     unsigned char     vfmt_onoff_en;
     unsigned int      dp_on_cnt;
@@ -309,7 +309,7 @@ typedef struct {
 
 	unsigned char     endian;
 	unsigned char     color_map;
- 
+
     unsigned char     mode_8b_sel;
     unsigned char     lut_en;
     unsigned int      def_color;
@@ -340,7 +340,7 @@ typedef struct {
 
 	unsigned char     src2_endian;
 	unsigned char     src2_color_map;
-    
+
 	unsigned char     src2_mode_8b_sel;
 	unsigned int      src2_def_color;
 
@@ -349,18 +349,18 @@ typedef struct {
 
 	unsigned char     dst_endian;
 	unsigned char     dst_color_map;
-   
+
 	unsigned char     dst_mode_8b_sel;
 
 	unsigned int      src2_format_all;
 	unsigned int      dst_format_all;
-	
+
 	/* only for m6 */
 	unsigned char	dst2_pixel_byte_width;
 	unsigned char	dst2_color_map;
 	unsigned char	dst2_discard_mode;
 	unsigned char	dst2_enable;
-	
+
 } ge2d_src2_dst_data_t;
 
 
@@ -389,9 +389,9 @@ typedef struct {
     unsigned char     src1_hsc_phase0_always_en;
     unsigned char     src1_hsc_rpt_ctrl;  //1bit, 0: using minus, 1: using repeat data
     unsigned char     src1_vsc_rpt_ctrl;  //1bit, 0: using minus  1: using repeat data
-    unsigned char     src1_hsc_nearest_en; 
-    unsigned char     src1_vsc_nearest_en; 
-    
+    unsigned char     src1_hsc_nearest_en;
+    unsigned char     src1_vsc_nearest_en;
+
     unsigned char     antiflick_en;
     unsigned char     antiflick_ycbcr_rgb_sel;
     unsigned char     antiflick_cbcr_en;
@@ -405,16 +405,16 @@ typedef struct {
     unsigned int      antiflick_alpha_filter_n1[4];
     unsigned int      antiflick_alpha_filter_n2[4];
     unsigned int      antiflick_alpha_filter_n3[4];
-    unsigned int      antiflick_alpha_filter_th[3];    
+    unsigned int      antiflick_alpha_filter_th[3];
     //matrix related
     unsigned char     use_matrix_default;
     unsigned char     conv_matrix_en;
-    unsigned char     matrix_sat_in_en;     
-    unsigned char     matrix_minus_16_ctrl; //3bit 
-    unsigned char     matrix_sign_ctrl;     //3bit 
+    unsigned char     matrix_sat_in_en;
+    unsigned char     matrix_minus_16_ctrl; //3bit
+    unsigned char     matrix_sign_ctrl;     //3bit
     int               matrix_offset[3];
     int               matrix_coef[9];
-    
+
     unsigned char     src1_gb_alpha;
     unsigned int      alu_const_color;
 
@@ -441,13 +441,13 @@ typedef struct {
     //unsigned char    src1_y_start_ex;
     //unsigned char    src1_x_end_ex;
     //unsigned char    src1_y_end_ex;
-   
+
     unsigned char    src1_x_rev;
-    unsigned char    src1_y_rev;    
+    unsigned char    src1_y_rev;
     //unsigned char    src1_x_chr_phase;
     //unsigned char    src1_y_chr_phase;
     unsigned char    src1_fill_color_en;
-     
+
     int              src2_x_start;
     int              src2_y_start;
     int              src2_x_end;
@@ -476,24 +476,24 @@ typedef struct {
     int              hsc_phase_slope;
     unsigned char    hsc_rpt_p0_num;
     int              hsc_ini_phase;
-    unsigned char    hsc_div_en; 
+    unsigned char    hsc_div_en;
     unsigned int    hsc_div_length;
     int              hsc_adv_num;
     int              hsc_adv_phase;
 
     unsigned char    src1_cmult_asel;
     unsigned char    src2_cmult_asel;
-    
+
     unsigned char    color_blend_mode;
-    unsigned char    color_src_blend_factor;        
-    unsigned char    color_dst_blend_factor;        
+    unsigned char    color_src_blend_factor;
+    unsigned char    color_dst_blend_factor;
     unsigned char    color_logic_op;
-    
+
     unsigned char    alpha_blend_mode;
-    unsigned char    alpha_src_blend_factor;        
-    unsigned char    alpha_dst_blend_factor;        
+    unsigned char    alpha_src_blend_factor;
+    unsigned char    alpha_dst_blend_factor;
     unsigned char    alpha_logic_op;
-    
+
     int (*cmd_cb)(unsigned);
     unsigned int     cmd_cb_param;
     unsigned int     src1_buffer;
@@ -509,8 +509,8 @@ typedef struct {
     ge2d_src2_dst_data_t  src2_dst_data;
     ge2d_src2_dst_gen_t   src2_dst_gen;
     ge2d_dp_gen_t         dp_gen;
-    unsigned              v_scale_coef_type; 
-    unsigned              h_scale_coef_type; 
+    unsigned              v_scale_coef_type;
+    unsigned              h_scale_coef_type;
     unsigned              update_flag;
 } ge2d_config_t;
 typedef   struct tasklet_struct   tasklet_struct_t;
@@ -538,10 +538,10 @@ extern void ge2d_soft_rst(void);
 extern int ge2d_is_busy (void);
 
 extern int ge2d_cmd_fifo_full(void);
-#define     	INT32S     signed  int 
-#define		INT32U	  unsigned int 	
+#define     	INT32S     signed  int
+#define		INT32U	  unsigned int
 #define 		INT16U	  unsigned short
-#define 		INT8U	  unsigned char 
+#define 		INT8U	  unsigned char
 #define 		INT8S	  signed char
 #include "ge2d_wq.h"
 #include "ge2dgen.h"
@@ -550,4 +550,3 @@ extern int ge2d_cmd_fifo_full(void);
 
 
 #endif
-

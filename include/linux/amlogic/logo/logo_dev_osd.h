@@ -11,7 +11,7 @@
 
 typedef  struct {
 	char *name;
-	int   info;	
+	int   info;
 }hdmi_only_info_t;
 #endif
 

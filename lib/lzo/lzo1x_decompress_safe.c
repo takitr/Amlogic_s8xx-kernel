@@ -10,7 +10,6 @@
  *  Nitin Gupta <nitingupta910@gmail.com>
  *  Richard Purdie <rpurdie@openedhand.com>
  */
-
 #ifndef STATIC
 #include <linux/module.h>
 #include <linux/kernel.h>
@@ -25,6 +24,16 @@
 #define NEED_OP(x)      if (!HAVE_OP(x)) goto output_overrun
 #define TEST_LB(m_pos)  if ((m_pos) < out) goto lookbehind_overrun
 
+/* This MAX_255_COUNT is the maximum number of times we can add 255 to a base
+ * count without overflowing an integer. The multiply will overflow when
+ * multiplying 255 by more than MAXINT/255. The sum will overflow earlier
+ * depending on the base count. Since the base count is taken from a u8
+ * and a few bits, it is safe to assume that it will always be lower than
+ * or equal to 2*255, thus we can always prevent any overflow by accepting
+ * two less 255 steps. See Documentation/lzo.txt for more information.
+ */
+#define MAX_255_COUNT      ((((size_t)~0) / 255) - 2)
+
 int lzo1x_decompress_safe(const unsigned char *in, size_t in_len,
 			  unsigned char *out, size_t *out_len)
 {
@@ -35,10 +44,8 @@ int lzo1x_decompress_safe(const unsigned char *in, size_t in_len,
 	const unsigned char *m_pos;
 	const unsigned char * const ip_end = in + in_len;
 	unsigned char * const op_end = out + *out_len;
-
 	op = out;
 	ip = in;
-
 	if (unlikely(in_len < 3))
 		goto input_overrun;
 	if (*ip > 17) {
@@ -49,18 +56,24 @@ int lzo1x_decompress_safe(const unsigned char *in, size_t in_len,
 		}
 		goto copy_literal_run;
 	}
-
 	for (;;) {
 		t = *ip++;
 		if (t < 16) {
 			if (likely(state == 0)) {
 				if (unlikely(t == 0)) {
+					size_t offset;
+					const unsigned char *ip_last = ip;
+
 					while (unlikely(*ip == 0)) {
-						t += 255;
 						ip++;
 						NEED_IP(1);
 					}
-					t += 15 + *ip++;
+					offset = ip - ip_last;
+					if (unlikely(offset > MAX_255_COUNT))
+						return LZO_E_ERROR;
+
+					offset = (offset << 8) - offset;
+					t += offset + 15 + *ip++;
 				}
 				t += 3;
 copy_literal_run:
@@ -72,9 +85,11 @@ copy_literal_run:
 						COPY8(op, ip);
 						op += 8;
 						ip += 8;
+#  if !defined(__arm__)
 						COPY8(op, ip);
 						op += 8;
 						ip += 8;
+#  endif
 					} while (ip < ie);
 					ip = ie;
 					op = oe;
@@ -116,12 +131,19 @@ copy_literal_run:
 		} else if (t >= 32) {
 			t = (t & 31) + (3 - 1);
 			if (unlikely(t == 2)) {
+				size_t offset;
+				const unsigned char *ip_last = ip;
+
 				while (unlikely(*ip == 0)) {
-					t += 255;
 					ip++;
 					NEED_IP(1);
 				}
-				t += 31 + *ip++;
+				offset = ip - ip_last;
+				if (unlikely(offset > MAX_255_COUNT))
+					return LZO_E_ERROR;
+
+				offset = (offset << 8) - offset;
+				t += offset + 31 + *ip++;
 				NEED_IP(2);
 			}
 			m_pos = op - 1;
@@ -134,12 +156,19 @@ copy_literal_run:
 			m_pos -= (t & 8) << 11;
 			t = (t & 7) + (3 - 1);
 			if (unlikely(t == 2)) {
+				size_t offset;
+				const unsigned char *ip_last = ip;
+
 				while (unlikely(*ip == 0)) {
-					t += 255;
 					ip++;
 					NEED_IP(1);
 				}
-				t += 7 + *ip++;
+				offset = ip - ip_last;
+				if (unlikely(offset > MAX_255_COUNT))
+					return LZO_E_ERROR;
+
+				offset = (offset << 8) - offset;
+				t += offset + 7 + *ip++;
 				NEED_IP(2);
 			}
 			next = get_unaligned_le16(ip);
@@ -159,9 +188,11 @@ copy_literal_run:
 					COPY8(op, m_pos);
 					op += 8;
 					m_pos += 8;
+#  if !defined(__arm__)
 					COPY8(op, m_pos);
 					op += 8;
 					m_pos += 8;
+#  endif
 				} while (op < oe);
 				op = oe;
 				if (HAVE_IP(6)) {
@@ -209,29 +240,23 @@ match_next:
 			}
 		}
 	}
-
 eof_found:
 	*out_len = op - out;
 	return (t != 3       ? LZO_E_ERROR :
 		ip == ip_end ? LZO_E_OK :
 		ip <  ip_end ? LZO_E_INPUT_NOT_CONSUMED : LZO_E_INPUT_OVERRUN);
-
 input_overrun:
 	*out_len = op - out;
 	return LZO_E_INPUT_OVERRUN;
-
 output_overrun:
 	*out_len = op - out;
 	return LZO_E_OUTPUT_OVERRUN;
-
 lookbehind_overrun:
 	*out_len = op - out;
 	return LZO_E_LOOKBEHIND_OVERRUN;
 }
 #ifndef STATIC
 EXPORT_SYMBOL_GPL(lzo1x_decompress_safe);
-
 MODULE_LICENSE("GPL");
 MODULE_DESCRIPTION("LZO1X Decompressor");
-
 #endif

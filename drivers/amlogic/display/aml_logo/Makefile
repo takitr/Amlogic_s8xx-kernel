@@ -16,7 +16,7 @@ amlogo-objs := ./loader/logo_setup_uboot.o  \
 			./logo_display/output_dev_vid.o \
 			./logo_parse/jpeg_parser.o
 
-EXTRA_CFLAGS += -Iinclude/linux/amlogic/logo/			  
+EXTRA_CFLAGS += -Iinclude/linux/amlogic/logo/
 EXTRA_CFLAGS += -Idrivers/amlogic/display/ge2d
 EXTRA_CFLAGS += -Idrivers/amlogic/amports/
 else

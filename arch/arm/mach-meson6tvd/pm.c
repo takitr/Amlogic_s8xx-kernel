@@ -50,11 +50,15 @@ static int early_suspend_flag = 0;
 //#define EARLY_SUSPEND_USE_XTAL
 //#define MESON_SUSPEND_DEBUG
 
+#ifndef CONFIG_MESON_SUSPEND
 static void (*meson_sram_suspend)(struct meson_pm_config *);
+#endif
+
 static struct meson_pm_config *pdata;
 //static int mask_save_0[5];
 //static int mask_save_1[5];
 
+#ifndef CONFIG_MESON_SUSPEND
 static void meson_sram_push(void *dest, void *src, unsigned int size)
 {
 	int res = 0;
@@ -63,6 +67,7 @@ static void meson_sram_push(void *dest, void *src, unsigned int size)
 	res = memcmp(dest, src, size);
 	printk("compare code in sram addr = 0x%x, size = 0x%x, result = %d", (unsigned)dest, size, res);
 }
+#endif
 
 #define M6TV_GATE_OFF(_MOD) do {power_gate_flag[GCLK_IDX_##_MOD] = IS_CLK_GATE_ON(_MOD);CLK_GATE_OFF(_MOD);} while(0)
 #define M6TV_GATE_ON(_MOD) do {if (power_gate_flag[GCLK_IDX_##_MOD]) CLK_GATE_ON(_MOD);} while(0)
@@ -571,10 +576,10 @@ void pll_switch(int flag)
     if (flag) {
          for (i = PLL_COUNT - 1; i >= 0; i--) {
             if (pll_flag[i]) {
- 					   		if(default_console_loglevel >= 7){
-	       	        printk(KERN_INFO "pll %s(%x) on\n", plls_name[i], plls[i]);
-	       	        udelay(2000);
-	       	        udelay(2000);
+							if(default_console_loglevel >= 7){
+		        printk(KERN_INFO "pll %s(%x) on\n", plls_name[i], plls[i]);
+		        udelay(2000);
+		        udelay(2000);
 								}
                 if ((plls[i]==P_HHI_VID_PLL_CNTL)||(plls[i]==P_HHI_VIID_PLL_CNTL)||(plls[i]==P_HHI_MPLL_CNTL)){
                     aml_clr_reg32_mask(plls[i],(1<<30));
@@ -590,10 +595,10 @@ void pll_switch(int flag)
         udelay(1000);
 	     } else {
         for (i = 0; i < PLL_COUNT; i++) {
-        	  if ((plls[i]==P_HHI_VID_PLL_CNTL)||(plls[i]==P_HHI_VIID_PLL_CNTL)||(plls[i]==P_HHI_MPLL_CNTL))
-        	  	pll_flag[i]=aml_get_reg32_bits(plls[i],30,1) ? 0:1;
-        	  else
-        	  	pll_flag[i]=aml_get_reg32_bits(plls[i],15,1) ? 0:1;
+		  if ((plls[i]==P_HHI_VID_PLL_CNTL)||(plls[i]==P_HHI_VIID_PLL_CNTL)||(plls[i]==P_HHI_MPLL_CNTL))
+			pll_flag[i]=aml_get_reg32_bits(plls[i],30,1) ? 0:1;
+		  else
+			pll_flag[i]=aml_get_reg32_bits(plls[i],15,1) ? 0:1;
             if (pll_flag[i]) {
                 printk(KERN_INFO "pll %s(%x) off\n", plls_name[i], plls[i]);
                 if ((plls[i]==P_HHI_VID_PLL_CNTL)||(plls[i]==P_HHI_VIID_PLL_CNTL)){
@@ -655,7 +660,7 @@ void early_pll_switch(int flag)//for MX only
         for (i = 0; i < EARLY_PLL_COUNT; i++) {
             if (early_plls[i]==P_HHI_VID_PLL_CNTL)
             {
-            	early_pll_flag[i] = aml_get_reg32_bits(early_plls[i],30,1) ? 0 : 1;
+		early_pll_flag[i] = aml_get_reg32_bits(early_plls[i],30,1) ? 0 : 1;
 				early_pll_settings[i][0]=aml_read_reg32(P_HHI_VID_PLL_CNTL);
 				early_pll_settings[i][1]=aml_read_reg32(P_HHI_VID_PLL_CNTL2);
 				early_pll_settings[i][2]=aml_read_reg32(P_HHI_VID_PLL_CNTL3);
@@ -853,12 +858,17 @@ EXPORT_SYMBOL(vout_pll_resume_early);
 #define         MODE_IRQ_DELAYED_WAKE   1
 #define         MODE_IRQ_ONLY_WAKE      2
 
+#ifndef CONFIG_MESON_SUSPEND
 static void auto_clk_gating_setup(
     unsigned long sleep_dly_tb, unsigned long mode, unsigned long clear_fiq, unsigned long clear_irq,
     unsigned long   start_delay, unsigned long   clock_gate_dly, unsigned long   sleep_time, unsigned long   enable_delay)
 {
 }
+#endif
 
+#ifdef CONFIG_MESON_SUSPEND
+extern int meson_power_suspend(void);
+#endif
 
 static void meson_pm_suspend(void)
 {
@@ -951,7 +961,6 @@ static void meson_pm_suspend(void)
 	}
 #else
 #ifdef CONFIG_MESON_SUSPEND
-	extern int meson_power_suspend(void);
 	meson_power_suspend();
 #else
 	/**

@@ -14,7 +14,7 @@
 #include <linux/dma-mapping.h>
 
 
- struct audiodsp_priv 
+ struct audiodsp_priv
 {
 	struct class *class;
 	struct device *dev;
@@ -58,14 +58,14 @@
 	int format_wait_count;
 	unsigned long stream_buffer_start;
 	unsigned long stream_buffer_end;
-	unsigned long stream_buffer_size;	
+	unsigned long stream_buffer_size;
 	struct mutex	stream_buffer_mutex;
 
 	struct completion	decode_completion;
-    void __iomem *p;	
+    void __iomem *p;
 // for power management
     struct wake_lock wakelock;
-	unsigned dsp_abnormal_count;  
+	unsigned dsp_abnormal_count;
 	unsigned last_ablevel;
 	unsigned last_pcmlevel;
 };
@@ -75,5 +75,3 @@ struct audiodsp_priv *audiodsp_privdata(void);
 
 #define DSP_PRNT(fmt,args...)  printk(KERN_INFO "[dsp]" fmt,##args)
 #endif
-
-

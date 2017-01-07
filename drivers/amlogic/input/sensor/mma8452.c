@@ -39,7 +39,7 @@
 #include <linux/sensor/sensor_common.h>
 
 #define MMA8452_DEVICE_ID	0x2a
-#define MMA8452_NAME        "mma8452"    
+#define MMA8452_NAME        "mma8452"
 
 #define LOW_G_INTERRUPT				REL_Z
 #define HIGH_G_INTERRUPT 			REL_HWHEEL
@@ -58,7 +58,7 @@
 
 #define MMA8452_MAX_DELAY		200
 #define MODE_CHANGE_DELAY_MS	100
-#define MMA8452_DELAY_PWRON		10	
+#define MMA8452_DELAY_PWRON		10
 #define MMA8452_DELAY_PWRDN		1	/* ms */
 #define MMA8452_DELAY_SETDETECTION	MMA8452_DELAY_PWRON
 
@@ -115,7 +115,7 @@ static int mma8452_i2c_tx_data(char *buf, int len)
 			.buf	= buf,
 		}
 	};
-	
+
 	for (i = 0; i < MMA8452_RETRY_COUNT; i++) {
 		if (i2c_transfer(this_client->adapter, msg, 1) > 0) {
 			break;
@@ -160,7 +160,7 @@ static short mma8452_charge(unsigned char Mdata, unsigned char Ldata)
 	short data;
 	data = Mdata << 8 | Ldata;
 	data = data >> 4;
-	
+
 	return data;
 }
 
@@ -174,16 +174,16 @@ static int mma8452_read_accel_xyz(struct i2c_client *client,
 		return -EFAULT;
 	}
 
-	if (buf[0] & MMA8452_STATUS_ZYXDR) { 
+	if (buf[0] & MMA8452_STATUS_ZYXDR) {
 		buf[0] = MMA8452_REG_DATA;
 		if (mma8452_i2c_rx_data(buf, MMA8452_BUF_SIZE) < 0) {
 			return -EFAULT;
 		}
 
-		acc->x = mma8452_charge(buf[0], buf[1]);		
-		acc->y = mma8452_charge(buf[2], buf[3]);		
+		acc->x = mma8452_charge(buf[0], buf[1]);
+		acc->y = mma8452_charge(buf[2], buf[3]);
 		acc->z = mma8452_charge(buf[4], buf[5]);
-		
+
 		return 0;
 	}
 	return -EFAULT;
@@ -199,7 +199,7 @@ static void mma8452_work_func(struct work_struct *work)
 
 	if (mma8452_read_accel_xyz(mma8452->mma8452_client, &acc) == 0) {
 
-        aml_sensor_report_acc(mma8452->mma8452_client, mma8452->input, acc.x, acc.y, acc.z);    
+        aml_sensor_report_acc(mma8452->mma8452_client, mma8452->input, acc.x, acc.y, acc.z);
 
 		mutex_lock(&mma8452->value_mutex);
 		mma8452->value = acc;
@@ -227,9 +227,9 @@ static int check_mma8452_device_id(void)
 static void mma8452_poweron(void)
 {
     char buf[4];
-	
+
 	buf[0] = MMA8452_REG_CTRL;
-	buf[1] = MMA8452_CTRL_PWRON_1_5MS; 
+	buf[1] = MMA8452_CTRL_PWRON_1_5MS;
 	if (mma8452_i2c_tx_data(buf, 2) < 0) {
 		printk("mma8452 power on fail...1\n");
 	}
@@ -251,7 +251,7 @@ static void mma8452_poweron(void)
 static void mma8452_powerdown(void)
 {
     char buf[4];
-	
+
 	buf[0] = MMA8452_REG_CTRL;
 	buf[1] = MMA8452_CTRL_PWRON_1_5MS;
 	buf[1] &= ~MMA8452_CTRL_ACTIVE;	//STANDBY
@@ -352,7 +352,7 @@ static ssize_t mma8452_debug_store(struct device *dev,
 	error = strict_strtoul(buf, 10, &data);
 	if (error)
 		return error;
-	
+
 	dbglevel = data;
 
 	return count;
@@ -365,7 +365,7 @@ static ssize_t mma8452_debug_show(struct device *dev,
 }
 
 /*change reg*/
-static void enable_change_mma8452_reg(int enable) 
+static void enable_change_mma8452_reg(int enable)
 {
 	char buf[4];
 	buf[0] = MMA8452_REG_CTRL;
@@ -413,10 +413,10 @@ static ssize_t mma8452_read_write_reg_store(struct device *dev,
 	unsigned long value;
 	unsigned char data[4];
 	int flag;  //  0: read 1:write
-	
+
 	strcpy(str, buf);
-	
-	// 1.Get operation        
+
+	// 1.Get operation
 	while (*start == ' ')
 			start++;
 	if (!strncmp(start, "r", 1) || !strncmp(start, "R", 1)) {
@@ -433,7 +433,7 @@ static ssize_t mma8452_read_write_reg_store(struct device *dev,
 	while (*start == ' ')
 			start++;
 	reg = simple_strtoul(start, &start, 16);
-	
+
 	data[0] = reg;
 
 	// wirte reg
@@ -441,8 +441,8 @@ static ssize_t mma8452_read_write_reg_store(struct device *dev,
 		// 3.reg value
 		while (*start == ' ')
 				start++;
-		value = simple_strtoul(start, &start, 16);	
-		data[1] = value;		
+		value = simple_strtoul(start, &start, 16);
+		data[1] = value;
 		printk("Write reg[0x%lx]=0x%x\n", reg, data[1]);
 		enable_change_mma8452_reg(1);
 		if (mma8452_i2c_tx_data(data, 2) < 0) {
@@ -457,14 +457,14 @@ static ssize_t mma8452_read_write_reg_store(struct device *dev,
 			return -EINVAL;
 		}
 		printk("Read reg[%lx]=0x%x\n", reg, data[0]);
-	} else { 
+	} else {
 		if (mma8452_i2c_rx_data(data, 1) < 0) {
 			printk("read reg[0x%lx] fail", reg);
 			return -EINVAL;
 		}
 		printk("Read reg[0x%lx]=0x%x\n", reg, data[0]);
 	}
-				
+
 	return count;
 }
 
@@ -477,7 +477,7 @@ static DEVICE_ATTR(debug, S_IRUGO|S_IWUSR|S_IWGRP,
 		mma8452_debug_show, mma8452_debug_store);
 static DEVICE_ATTR(reg, S_IRUGO|S_IWUSR|S_IWGRP,
 		NULL, mma8452_read_write_reg_store);
-		
+
 
 static struct attribute *mma8452_attributes[] = {
 	&dev_attr_delay.attr,
@@ -498,11 +498,11 @@ static void mma8452_early_suspend(struct early_suspend *h)
         container_of(h, struct mma8452_data, early_suspend);
 
     mutex_lock(&data->enable_mutex);
-	
+
 	mma8452_powerdown();
     cancel_delayed_work_sync(&data->work);
 	atomic_set(&data->enable, 0);
-	
+
     mutex_unlock(&data->enable_mutex);
 }
 
@@ -513,12 +513,12 @@ static void mma8452_late_resume(struct early_suspend *h)
     container_of(h, struct mma8452_data, early_suspend);
 
     mutex_lock(&data->enable_mutex);
-    
+
 	mma8452_poweron();
     schedule_delayed_work(&data->work,
         msecs_to_jiffies(atomic_read(&data->delay)));
 	atomic_set(&data->enable, 1);
-	
+
     mutex_unlock(&data->enable_mutex);
 }
 #endif
@@ -543,16 +543,16 @@ static int mma8452_probe(struct i2c_client *client,
 	i2c_set_clientdata(client, data);
 	data->mma8452_client = client;
 	this_client = client;
-		
+
 	if (check_mma8452_device_id()) {
 		printk("check device id error\n");
 		goto kfree_exit;
 	}
-	
+
 	mutex_init(&data->value_mutex);
 	mutex_init(&data->mode_mutex);
 	mutex_init(&data->enable_mutex);
-	
+
 	INIT_DELAYED_WORK(&data->work, mma8452_work_func);
 	atomic_set(&data->delay, MMA8452_MAX_DELAY);
 	atomic_set(&data->enable, 0);
@@ -665,4 +665,3 @@ module_exit(mma8452_exit);
 MODULE_AUTHOR("Robbie Cao<hjcao@memsic.com>");
 MODULE_DESCRIPTION("MEMSIC MMA8452 (DTOS) Accelerometer Sensor Driver");
 MODULE_LICENSE("GPL");
-

@@ -15,7 +15,7 @@ CF_Card_Info_t _ata_cf_info = {0,		//blk_len
 							   NULL,	//ata_cf_power
 							   NULL,	//ata_cf_reset
 							   NULL,	//ata_cf_get_ins
-							   NULL     //ata_cf_io_release					 
+							   NULL     //ata_cf_io_release
 							  };
 CF_Card_Info_t *ata_cf_info = &_ata_cf_info;
 
@@ -52,7 +52,7 @@ void set_atapi_io_low(void)
     *(volatile unsigned *)ATAPI_GPIO_OUTPUT &= 0xfc800000;
 #endif
 }
-   
+
 void restore_atapi_io_status(void)
 {
 #if (defined AML_NIKE || defined AML_NIKED) || defined(AML_NIKED3)
@@ -67,29 +67,29 @@ void restore_atapi_io_status(void)
 int cf_card_init(CF_Card_Info_t * card_info)
 {
 	int error, dev;
-	
+
 	//cf_atapi_enable();
 	//set_atapi_enable(0,cf_m2_enabled);
 	//set_atapi_enable(0,0);
 	if(ata_cf_info->inited_flag && !ata_cf_info->removed_flag)
 	{
 		cf_atapi_enable();
-		
+
 		error = cf_cmd_test();
 		if(!error)
 			return error;
 	}
-	
+
 	if(++ata_cf_info->init_retry > CF_INIT_RETRY)
 		return ATA_ERROR_HARDWARE_FAILURE;
-	
+
 #ifdef ATA_DEBUG
 	Debug_Printf("\nCF initialization started......\n");
 #endif
 
     //save_atapi_io_status();
    //if(cf_retry_init)
-    	//set_atapi_io_low();
+	//set_atapi_io_low();
 
 	cf_staff_init();
 
@@ -99,11 +99,11 @@ int cf_card_init(CF_Card_Info_t * card_info)
 	cf_hw_reset();
 
 	cf_atapi_enable();
-	
+
 	//restore_atapi_io_status();
-	
+
 	error = ata_init_device(ata_dev);
-			
+
 	if(error)
 	{
 #ifdef ATA_DEBUG
@@ -113,7 +113,7 @@ int cf_card_init(CF_Card_Info_t * card_info)
 	}
 
 	card_in_event_status[CARD_COMPACT_FLASH] = CARD_EVENT_INSERTED;
-	
+
 	error = ata_identify_device(ata_dev);
 	if(error)
 	{
@@ -127,14 +127,14 @@ int cf_card_init(CF_Card_Info_t * card_info)
 	{
 		if(!ata_dev->device_info[dev].device_existed || !ata_dev->device_info[dev].device_inited)
 			continue;
-			
+
 		//if((ata_dev->device_info[dev].identify_info.general_configuration != 0x848A)
 		//	&& !(ata_dev->device_info[dev].identify_info.general_configuration & 0x0080))	// Bit7: removable media device
 		//	continue;
-			
+
 		ata_cf_info->inited_flag = 1;
 		ata_cf_info->dev_no = dev;
-		
+
 		break;
 	}
 	if(!ata_cf_info->inited_flag)
@@ -157,16 +157,16 @@ int cf_card_init(CF_Card_Info_t * card_info)
 
 	ata_cf_info->blk_len = ata_dev->device_info[ata_cf_info->dev_no].sector_size;
 	ata_cf_info->blk_nums = ata_dev->device_info[ata_cf_info->dev_no].sector_nums;
-	
+
 	ata_dev->current_dev = ata_cf_info->dev_no;
 	ata_dev->current_addr_mode = ata_cf_info->addr_mode;
-	
+
 	error = ata_check_data_consistency(ata_dev);
 	if(error)
 	{
 		ata_remove_device(ata_dev, ata_cf_info->dev_no);
 		ata_cf_info->inited_flag = 0;
-		
+
 #ifdef ATA_DEBUG
 		Debug_Printf("#%s occured in ata_check_data_consistency()!\n", ata_error_to_string(error));
 #endif
@@ -176,10 +176,10 @@ int cf_card_init(CF_Card_Info_t * card_info)
 #ifdef ATA_DEBUG
 	Debug_Printf("cf_card_init() is completed successfully!\n\n");
 #endif
-	
+
 	ata_cf_info->inited_flag = 1;
 	ata_cf_info->init_retry = 0;
-	
+
 	memcpy(card_info, ata_cf_info, sizeof(CF_Card_Info_t));
 
 	return ATA_NO_ERROR;
@@ -188,7 +188,7 @@ int cf_card_init(CF_Card_Info_t * card_info)
 int cf_check_insert(void)
 {
 	int level;
-	
+
 	if(ata_cf_info->ata_cf_get_ins)
 	{
 		level = ata_cf_info->ata_cf_get_ins();
@@ -198,7 +198,7 @@ int cf_check_insert(void)
 		cf_set_ins_input();
 		level = cf_get_ins_value();
 	}
-	
+
 	if (level)
 	{
 		if(ata_cf_info->init_retry)
@@ -206,16 +206,16 @@ int cf_check_insert(void)
 			cf_power_off();
 			ata_cf_info->init_retry = 0;
 		}
-			
+
 		if(ata_cf_info->inited_flag)
 		{
 			cf_power_off();
 			ata_cf_info->removed_flag = 1;
 			ata_cf_info->inited_flag = 0;
-			
+
 			ata_remove_device(ata_dev, ata_cf_info->dev_no);
 		}
-			
+
 		return 0;       //No card is inserted
 	}
 	else
@@ -227,12 +227,12 @@ int cf_check_insert(void)
 int cf_read_data(unsigned long lba, unsigned long byte_cnt, unsigned char * data_buf)
 {
 	int error;
-	
+
 	cf_atapi_enable();
-	
+
 	ata_dev->current_dev = ata_cf_info->dev_no;
 	ata_dev->current_addr_mode = ata_cf_info->addr_mode;
-	
+
 	error = ata_read_data_pio(lba, byte_cnt, data_buf);
 	if(error)
 	{
@@ -241,19 +241,19 @@ int cf_read_data(unsigned long lba, unsigned long byte_cnt, unsigned char * data
 #endif
 		return error;
 	}
-	
+
 	return ATA_NO_ERROR;
 }
 
 int cf_write_data(unsigned long lba, unsigned long byte_cnt, unsigned char * data_buf)
 {
 	int error;
-	
+
 	cf_atapi_enable();
-	
+
 	ata_dev->current_dev = ata_cf_info->dev_no;
 	ata_dev->current_addr_mode = ata_cf_info->addr_mode;
-	
+
 	error = ata_write_data_pio(lba, byte_cnt, data_buf);
 	if(error)
 	{
@@ -262,7 +262,7 @@ int cf_write_data(unsigned long lba, unsigned long byte_cnt, unsigned char * dat
 #endif
 		return error;
 	}
-	
+
 	return ATA_NO_ERROR;
 }
 
@@ -315,7 +315,7 @@ void cf_hw_reset()
 		ata_cf_info->ata_cf_reset(1);
 	}
 	else
-	{	
+	{
 		cf_set_reset_output();
 		cf_set_reset_high();
 	}
@@ -328,12 +328,12 @@ void cf_hw_reset()
 	cf_power_on();
 	ata_delay_ms(300);
 #endif
-	
+
 	if(ata_cf_info->ata_cf_reset)
 	{
 		ata_cf_info->ata_cf_reset(0);
 	}
-	else	
+	else
 	{
 		cf_set_reset_output();
 		cf_set_reset_low();
@@ -361,7 +361,7 @@ int cf_cmd_test(void)
 {
 	ata_dev->current_dev = ata_cf_info->dev_no;
 	ata_dev->current_addr_mode = ata_cf_info->addr_mode;
-	
+
 	return ata_check_cmd_validity(ata_dev);
 }
 

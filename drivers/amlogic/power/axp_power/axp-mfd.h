@@ -91,7 +91,7 @@ struct axp_supply_init_data {
     /*led control*/
     void (*led_control)(int flag);
     int  (*pmu_call_back)(void *para);
-	struct battery_parameter *board_battery; 
+	struct battery_parameter *board_battery;
 };
 
 struct axp_funcdev_info {

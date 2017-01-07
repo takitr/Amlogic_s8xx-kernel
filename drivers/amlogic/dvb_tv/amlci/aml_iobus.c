@@ -510,7 +510,7 @@ static ssize_t aml_iobus_test_io_write(struct class *class,struct class_attribut
                 retval = aml_iobus_attr_read(addr);
                 break;
 	     default:
-		 	break;
+			break;
         }
         pr_info("%s: 0x%x --> 0x%x\n", parm[0], addr, retval);
     }
@@ -534,7 +534,7 @@ static ssize_t aml_iobus_test_io_write(struct class *class,struct class_attribut
 	        retval = aml_iobus_attr_write(addr, val);
                 break;
 	     default:
-		 	break;
+			break;
         }
         pr_info("%s: 0x%x <-- 0x%x\n", parm[0], addr, retval);
     }
@@ -576,5 +576,3 @@ module_init(aml_iobus_mod_init);
 module_exit(aml_iobus_mod_exit);
 
 MODULE_LICENSE("GPL");
-
-

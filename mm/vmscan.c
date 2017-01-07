@@ -792,20 +792,15 @@ static unsigned long shrink_page_list(struct list_head *page_list,
 			 * could easily OOM just because too many pages are in
 			 * writeback and there is nothing else to reclaim.
 			 *
-			 * Check __GFP_IO, certainly because a loop driver
+			 * Require may_enter_fs to wait on writeback, because
+			 * fs may not have submitted IO yet. And a loop driver
 			 * thread might enter reclaim, and deadlock if it waits
 			 * on a page for which it is needed to do the write
 			 * (loop masks off __GFP_IO|__GFP_FS for this reason);
 			 * but more thought would probably show more reasons.
-			 *
-			 * Don't require __GFP_FS, since we're not going into
-			 * the FS, just waiting on its writeback completion.
-			 * Worryingly, ext4 gfs2 and xfs allocate pages with
-			 * grab_cache_page_write_begin(,,AOP_FLAG_NOFS), so
-			 * testing may_enter_fs here is liable to OOM on them.
 			 */
 			if (global_reclaim(sc) ||
-			    !PageReclaim(page) || !(sc->gfp_mask & __GFP_IO)) {
+			    !PageReclaim(page) || !may_enter_fs) {
 				/*
 				 * This is slightly racy - end_page_writeback()
 				 * might have just cleared PageReclaim, then
@@ -992,7 +987,7 @@ cull_mlocked:
 		if (PageSwapCache(page))
 			try_to_free_swap(page);
 		unlock_page(page);
-		putback_lru_page(page);
+		list_add(&page->lru, &ret_pages);
 		continue;
 
 activate_locked:
@@ -2346,9 +2341,16 @@ static bool pfmemalloc_watermark_ok(pg_data_t *pgdat)
 
 	for (i = 0; i <= ZONE_NORMAL; i++) {
 		zone = &pgdat->node_zones[i];
+		if (!populated_zone(zone))
+			continue;
+
 		pfmemalloc_reserve += min_wmark_pages(zone);
 		free_pages += zone_page_state(zone, NR_FREE_PAGES);
 	}
+
+	/* If there are no reserves (unexpected config) then do not throttle */
+	if (!pfmemalloc_reserve)
+		return true;
 
 	wmark_ok = free_pages > pfmemalloc_reserve / 2;
 
@@ -2374,9 +2376,9 @@ static bool pfmemalloc_watermark_ok(pg_data_t *pgdat)
 static bool throttle_direct_reclaim(gfp_t gfp_mask, struct zonelist *zonelist,
 					nodemask_t *nodemask)
 {
+	struct zoneref *z;
 	struct zone *zone;
-	int high_zoneidx = gfp_zone(gfp_mask);
-	pg_data_t *pgdat;
+	pg_data_t *pgdat = NULL;
 
 	/*
 	 * Kernel threads should not be throttled as they may be indirectly
@@ -2395,10 +2397,34 @@ static bool throttle_direct_reclaim(gfp_t gfp_mask, struct zonelist *zonelist,
 	if (fatal_signal_pending(current))
 		goto out;
 
-	/* Check if the pfmemalloc reserves are ok */
-	first_zones_zonelist(zonelist, high_zoneidx, NULL, &zone);
-	pgdat = zone->zone_pgdat;
-	if (pfmemalloc_watermark_ok(pgdat))
+	/*
+	 * Check if the pfmemalloc reserves are ok by finding the first node
+	 * with a usable ZONE_NORMAL or lower zone. The expectation is that
+	 * GFP_KERNEL will be required for allocating network buffers when
+	 * swapping over the network so ZONE_HIGHMEM is unusable.
+	 *
+	 * Throttling is based on the first usable node and throttled processes
+	 * wait on a queue until kswapd makes progress and wakes them. There
+	 * is an affinity then between processes waking up and where reclaim
+	 * progress has been made assuming the process wakes on the same node.
+	 * More importantly, processes running on remote nodes will not compete
+	 * for remote pfmemalloc reserves and processes on different nodes
+	 * should make reasonable progress.
+	 */
+	for_each_zone_zonelist_nodemask(zone, z, zonelist,
+					gfp_mask, nodemask) {
+		if (zone_idx(zone) > ZONE_NORMAL)
+			continue;
+
+		/* Throttle based on the first usable node */
+		pgdat = zone->zone_pgdat;
+		if (pfmemalloc_watermark_ok(pgdat))
+			goto out;
+		break;
+	}
+
+	/* If no zone was usable by the allocation flags then do not throttle */
+	if (!pgdat)
 		goto out;
 
 	/* Account for the throttling */
@@ -2660,18 +2686,20 @@ static bool prepare_kswapd_sleep(pg_data_t *pgdat, int order, long remaining,
 		return false;
 
 	/*
-	 * There is a potential race between when kswapd checks its watermarks
-	 * and a process gets throttled. There is also a potential race if
-	 * processes get throttled, kswapd wakes, a large process exits therby
-	 * balancing the zones that causes kswapd to miss a wakeup. If kswapd
-	 * is going to sleep, no process should be sleeping on pfmemalloc_wait
-	 * so wake them now if necessary. If necessary, processes will wake
-	 * kswapd and get throttled again
+	 * The throttled processes are normally woken up in balance_pgdat() as
+	 * soon as pfmemalloc_watermark_ok() is true. But there is a potential
+	 * race between when kswapd checks the watermarks and a process gets
+	 * throttled. There is also a potential race if processes get
+	 * throttled, kswapd wakes, a large process exits thereby balancing the
+	 * zones, which causes kswapd to exit balance_pgdat() before reaching
+	 * the wake up checks. If kswapd is going to sleep, no process should
+	 * be sleeping on pfmemalloc_wait, so wake them now if necessary. If
+	 * the wake up is premature, processes will wake kswapd and get
+	 * throttled again. The difference from wake ups in balance_pgdat() is
+	 * that here we are under prepare_to_wait().
 	 */
-	if (waitqueue_active(&pgdat->pfmemalloc_wait)) {
-		wake_up(&pgdat->pfmemalloc_wait);
-		return false;
-	}
+	if (waitqueue_active(&pgdat->pfmemalloc_wait))
+		wake_up_all(&pgdat->pfmemalloc_wait);
 
 	return pgdat_balanced(pgdat, order, classzone_idx);
 }
@@ -2769,8 +2797,6 @@ loop_again:
 				zone_clear_flag(zone, ZONE_CONGESTED);
 			}
 		}
-		printk(KERN_DEBUG"%s end zone=%d, pgdat_is_balanced=%d\n", __func__,
-			   end_zone, pgdat_is_balanced);
 		if (i < 0) {
 			pgdat_is_balanced = true;
 			goto out;
@@ -2870,7 +2896,6 @@ loop_again:
 				 */
 				zone_clear_flag(zone, ZONE_CONGESTED);
 		}
-		printk(KERN_DEBUG"%s, nr_reclaimed=%lu\n",__func__, sc.nr_reclaimed);
 		/*
 		 * If the low watermark is met there is no need for processes
 		 * to be throttled on pfmemalloc_wait as they should not be
@@ -3115,7 +3140,10 @@ static int kswapd(void *p)
 		}
 	}
 
+	tsk->flags &= ~(PF_MEMALLOC | PF_SWAPWRITE | PF_KSWAPD);
 	current->reclaim_state = NULL;
+	lockdep_clear_current_reclaim_state();
+
 	return 0;
 }
 
@@ -3383,8 +3411,6 @@ static int __zone_reclaim(struct zone *zone, gfp_t gfp_mask, unsigned int order)
 	}
 
 	nr_slab_pages0 = zone_page_state(zone, NR_SLAB_RECLAIMABLE);
-	printk(KERN_DEBUG"%s, nr_slab_pags0=%d, min_slab_pages=%d\n", __func__, nr_slab_pages0,
-		   zone->min_slab_pages);
 	if (nr_slab_pages0 > zone->min_slab_pages) {
 		/*
 		 * shrink_slab() does not currently allow us to determine how
@@ -3398,7 +3424,6 @@ static int __zone_reclaim(struct zone *zone, gfp_t gfp_mask, unsigned int order)
 		 */
 		for (;;) {
 			unsigned long lru_pages = zone_reclaimable_pages(zone);
-			printk(KERN_DEBUG"%s,	lru_pages=%d\n", __func__, lru_pages);
 			/* No reclaimable slab or very low memory pressure */
 			if (!shrink_slab(&shrink, sc.nr_scanned, lru_pages))
 				break;
@@ -3415,7 +3440,6 @@ static int __zone_reclaim(struct zone *zone, gfp_t gfp_mask, unsigned int order)
 		 * reclaimed from this zone.
 		 */
 		nr_slab_pages1 = zone_page_state(zone, NR_SLAB_RECLAIMABLE);
-		printk(KERN_DEBUG"%s, nr_slab_pags0=%d\n", __func__, nr_slab_pages0);
 		if (nr_slab_pages1 < nr_slab_pages0)
 			sc.nr_reclaimed += nr_slab_pages0 - nr_slab_pages1;
 	}

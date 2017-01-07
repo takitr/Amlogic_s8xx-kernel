@@ -104,4 +104,3 @@ int get_meson_cpu_version(int level)
 	return 0;
 }
 EXPORT_SYMBOL(get_meson_cpu_version);
-

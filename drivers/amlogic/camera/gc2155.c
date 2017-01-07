@@ -211,25 +211,25 @@ struct v4l2_querymenu gc2155_qmenu_wbmode[] = {
 	},{
 		.id 		= V4L2_CID_DO_WHITE_BALANCE,
 		.index		= CAM_WB_FLUORESCENT,
-		.name		= "fluorescent", 
+		.name		= "fluorescent",
 		.reserved	= 0,
 	},{
 		.id 		= V4L2_CID_DO_WHITE_BALANCE,
 		.index		= CAM_WB_FLUORESCENT,
-		.name		= "warm-fluorescent", 
+		.name		= "warm-fluorescent",
 		.reserved	= 0,
 	},
 };
-	
+
 struct v4l2_querymenu gc2155_qmenu_anti_banding_mode[] = {
 	{
 		.id 		= V4L2_CID_POWER_LINE_FREQUENCY,
-		.index		= CAM_BANDING_50HZ, 
+		.index		= CAM_BANDING_50HZ,
 		.name		= "50hz",
 		.reserved	= 0,
 	},{
 		.id 		= V4L2_CID_POWER_LINE_FREQUENCY,
-		.index		= CAM_BANDING_60HZ, 
+		.index		= CAM_BANDING_60HZ,
 		.name		= "60hz",
 		.reserved	= 0,
 	},
@@ -384,10 +384,10 @@ struct gc2155_device {
 
 	/* platform device data from board initting. */
 	aml_cam_info_t  cam_info;
-	
+
 	/* current resolution param for preview and capture */
 	resolution_param_t* cur_resolution_param;
-	
+
 	/* wake lock */
 	struct wake_lock	wake_lock;
 
@@ -620,8 +620,8 @@ struct aml_camera_i2c_fig1_s gc2155_init_mipi_script[] = {
 	{0xb4 , 0x24},
 	{0xb6 , 0x50},
 	{0xb7 , 0x01},
-	{0xb9 , 0x28}, 
-	{0xfe , 0x00},	 
+	{0xb9 , 0x28},
+	{0xfe , 0x00},
 	///////////////////gamma1////////////////////
 {0xfe , 0x02},
 {0x10 , 0x0a},
@@ -670,9 +670,9 @@ struct aml_camera_i2c_fig1_s gc2155_init_mipi_script[] = {
 	{0x39 , 0xf6},
 	{0x3a , 0xfb},
 	{0x3b , 0xff},
-	/////////////////////////////////////////////// 
-	///////////YCP /////////////////////// 
-	/////////////////////////////////////////////// 
+	///////////////////////////////////////////////
+	///////////YCP ///////////////////////
+	///////////////////////////////////////////////
 	{0xfe , 0x02},
 {0xd1 , 0x24},
 {0xd2 , 0x24},
@@ -957,7 +957,7 @@ struct aml_camera_i2c_fig1_s gc2155_init_mipi_script[] = {
 	{0x4e , 0x07},
 	{0x4f , 0x01},
 	{0xfe , 0x01},
-	
+
 	{0x50 , 0x80},
 	{0x51 , 0xa8},
 	{0x52 , 0x57},
@@ -1014,13 +1014,13 @@ struct aml_camera_i2c_fig1_s gc2155_init_mipi_script[] = {
 	{0xcf , 0x00},
 	{0xe3 , 0xf0},
 	{0xe4 , 0x45},
-	{0xe5 , 0xe8}, 
+	{0xe5 , 0xe8},
 //////////////////////////////////////////
 ///////////ABS ////////////////////
 //////////////////////////////////////////
 	{0xfe , 0x01},
 	{0x9f , 0x42},
-	{0xfe , 0x00}, 
+	{0xfe , 0x00},
 //////////////////////////////////////////
 ///////////OUTPUT ////////////////////
 //////////////////////////////////////////
@@ -1035,14 +1035,14 @@ struct aml_camera_i2c_fig1_s gc2155_init_mipi_script[] = {
 	{0x08 , 0x32},
 	{0xfe , 0x01},
 	{0x25 , 0x00},
-	{0x26 , 0xfa}, 
-	{0x27 , 0x04}, 
-	{0x28 , 0xe2}, //20fps 
-	{0x29 , 0x06}, 
-	{0x2a , 0xd6}, //16fps 
-	{0x2b , 0x0a}, 
+	{0x26 , 0xfa},
+	{0x27 , 0x04},
+	{0x28 , 0xe2}, //20fps
+	{0x29 , 0x06},
+	{0x2a , 0xd6}, //16fps
+	{0x2b , 0x0a},
 	{0x2c , 0xbe}, //12fps
-	{0x2d , 0x0b}, 
+	{0x2d , 0x0b},
 	{0x2e , 0xb8}, //8fps
 	{0xfe , 0x00},
 
@@ -1062,7 +1062,7 @@ struct aml_camera_i2c_fig1_s gc2155_init_mipi_script[] = {
 	{0x13, 0x0c},
 	{0x15, 0x11},
 	{0x17, 0xf0},
-	
+
 	{0x21, 0x01},
 	{0x22, 0x02},
 	{0x23, 0x01},
@@ -1070,11 +1070,11 @@ struct aml_camera_i2c_fig1_s gc2155_init_mipi_script[] = {
 	{0x29, 0x07},
 	{0x2a, 0x03},
 	{0xfe, 0x00},
-	{0xff, 0xff}, 
+	{0xff, 0xff},
 };
 
 struct aml_camera_i2c_fig1_s gc2155_init_dvp_script[] = {
-	{0xff, 0xff}, 
+	{0xff, 0xff},
 };
 
 struct aml_camera_i2c_fig1_s gc2155_800x600_mipi_script[] = {
@@ -1082,19 +1082,19 @@ struct aml_camera_i2c_fig1_s gc2155_800x600_mipi_script[] = {
 	{0xfe, 0x00},
 	{0xf7, 0x35},
 	{0xfd, 0x01},
-	//// crop window             
+	//// crop window
 	{0xfe , 0x00},
-	{0x99 , 0x11},  
+	{0x99 , 0x11},
 	{0x9a , 0x06},
 	{0x9b , 0x00},
 	{0x9c , 0x00},
 	{0x9d , 0x00},
 	{0x9e , 0x00},
 	{0x9f , 0x00},
-	{0xa0 , 0x00},  
+	{0xa0 , 0x00},
 	{0xa1 , 0x00},
 	{0xa2  ,0x00},
-	{0x90 , 0x01}, 
+	{0x90 , 0x01},
 	{0x91 , 0x00},
 	{0x92 , 0x00},
 	{0x93 , 0x00},
@@ -1104,15 +1104,15 @@ struct aml_camera_i2c_fig1_s gc2155_800x600_mipi_script[] = {
 	{0x97 , 0x03},
 	{0x98 , 0x20},
 
-	//// AWB                      
+	//// AWB
 	{0xfe , 0x00},
-	{0xec , 0x01}, 
+	{0xec , 0x01},
 	{0xed , 0x02},
 	{0xee , 0x30},
 	{0xef , 0x48},
 	{0xfe , 0x01},
-	{0x74 , 0x00}, 
-	//// AEC                      
+	{0x74 , 0x00},
+	//// AEC
 	{0xfe , 0x01},
 	{0x01 , 0x04},
 	{0x02 , 0x60},
@@ -1122,10 +1122,10 @@ struct aml_camera_i2c_fig1_s gc2155_800x600_mipi_script[] = {
 	{0x06 , 0x4c},
 	{0x07 , 0x14},
 	{0x08 , 0x36},
-	{0x0a , 0xc0}, 
+	{0x0a , 0xc0},
 	{0x21 , 0x14},
 	{0xfe , 0x00},
-	//// gamma                     
+	//// gamma
 	{0xfe , 0x00},
 	{0xc3 , 0x11},
 	{0xc4 , 0x20},
@@ -1138,30 +1138,30 @@ struct aml_camera_i2c_fig1_s gc2155_800x600_mipi_script[] = {
 	{0x04 , 0x01},
 	{0x05 , 0x00},
 	{0xfe , 0x00},
-	{0xff, 0xff},	
+	{0xff, 0xff},
 };
 
 struct aml_camera_i2c_fig1_s gc2155_800x600_dvp_script[] = {
 
-	{0xff, 0xff},	
+	{0xff, 0xff},
 };
 
 struct aml_camera_i2c_fig1_s gc2155_1280x960_mipi_script[] = {
 	//{0xfe, 0x03},
 	//{0x10, 0x85}, // output disable
 	{0xfe, 0x00},
-	{0xf7, 0x1d},	
-	{0xfd, 0x00}, 
-	//// crop window           
+	{0xf7, 0x1d},
+	{0xfd, 0x00},
+	//// crop window
 	{0xfe , 0x00},
-	{0x99 , 0x55},  
+	{0x99 , 0x55},
 	{0x9a , 0x06},
 	{0x9b , 0x00},
 	{0x9c , 0x00},
 	{0x9d , 0x01},
 	{0x9e , 0x23},
 	{0x9f , 0x00},
-	{0xa0 , 0x00},  
+	{0xa0 , 0x00},
 	{0xa1 , 0x01},
 	{0xa2 , 0x23},
 	{0x90 , 0x01},
@@ -1173,15 +1173,15 @@ struct aml_camera_i2c_fig1_s gc2155_1280x960_mipi_script[] = {
 	{0x96 , 0xc0},
 	{0x97 , 0x05},
 	{0x98 , 0x00},
-	//// AWB                   
+	//// AWB
 	{0xfe , 0x00},
-	{0xec , 0x02}, 
+	{0xec , 0x02},
 	{0xed , 0x04},
 	{0xee, 0x60},
 	{0xef , 0x90},
 	{0xfe , 0x01},
-	{0x74 , 0x01}, 
-	//// AEC                    
+	{0x74 , 0x01},
+	//// AEC
 	{0xfe , 0x01},
 	{0x01 , 0x08},
 	{0x02 , 0xc0},
@@ -1193,7 +1193,7 @@ struct aml_camera_i2c_fig1_s gc2155_1280x960_mipi_script[] = {
 	{0x08 , 0x6c},
 	{0x0a , 0xc2},
 	{0x21 , 0x14},
-	//// gamma                     
+	//// gamma
 	{0xfe , 0x00},
 	{0xc3 , 0x11},
 	{0xc4 , 0x20},
@@ -1207,30 +1207,30 @@ struct aml_camera_i2c_fig1_s gc2155_1280x960_mipi_script[] = {
 	{0x05 , 0x01},
 	//{0x10 , 0x95}, // output enable
 	{0xfe , 0x00},
-	{0xff, 0xff},	
+	{0xff, 0xff},
 };
 
 struct aml_camera_i2c_fig1_s gc2155_1280x960_dvp_script[] = {
 
-	{0xff, 0xff},	
+	{0xff, 0xff},
 };
 
 struct aml_camera_i2c_fig1_s gc2155_1280x720_mipi_script[] = {
 	//{0xfe, 0x03},
 	//{0x10, 0x85}, // output disable
 	{0xfe, 0x00},
-	{0xf7, 0x1d},	
-	{0xfd, 0x00}, 
-	//// crop window           
+	{0xf7, 0x1d},
+	{0xfd, 0x00},
+	//// crop window
 	{0xfe , 0x00},
-	{0x99 , 0x55},  
+	{0x99 , 0x55},
 	{0x9a , 0x06},
 	{0x9b , 0x00},
 	{0x9c , 0x00},
 	{0x9d , 0x01},
 	{0x9e , 0x23},
 	{0x9f , 0x00},
-	{0xa0 , 0x00},  
+	{0xa0 , 0x00},
 	{0xa1 , 0x01},
 	{0xa2 , 0x23},
 	{0x90 , 0x01},
@@ -1242,15 +1242,15 @@ struct aml_camera_i2c_fig1_s gc2155_1280x720_mipi_script[] = {
 	{0x96 , 0xd0},
 	{0x97 , 0x05},
 	{0x98 , 0x00},
-	//// AWB                   
+	//// AWB
 	{0xfe , 0x00},
-	{0xec , 0x02}, 
+	{0xec , 0x02},
 	{0xed , 0x04},
 	{0xee, 0x60},
 	{0xef , 0x90},
 	{0xfe , 0x01},
-	{0x74 , 0x01}, 
-	//// AEC                    
+	{0x74 , 0x01},
+	//// AEC
 	{0xfe , 0x01},
 	{0x01 , 0x08},
 	{0x02 , 0xc0},
@@ -1262,7 +1262,7 @@ struct aml_camera_i2c_fig1_s gc2155_1280x720_mipi_script[] = {
 	{0x08 , 0x6c},
 	{0x0a , 0xc2},
 	{0x21 , 0x14},
-	//// gamma                     
+	//// gamma
 	{0xfe , 0x00},
 	{0xc3 , 0x11},
 	{0xc4 , 0x20},
@@ -1277,30 +1277,30 @@ struct aml_camera_i2c_fig1_s gc2155_1280x720_mipi_script[] = {
 	//{0x10 , 0x95}, // output enable
 	{0xfe , 0x00},
 
-	{0xff, 0xff},	
+	{0xff, 0xff},
 };
 
 struct aml_camera_i2c_fig1_s gc2155_1280x720_dvp_script[] = {
 
-	{0xff, 0xff},	
+	{0xff, 0xff},
 };
 
 struct aml_camera_i2c_fig1_s gc2155_1600x1200_mipi_script[] = {
 	//{0xfe, 0x03},
 	//{0x10, 0x85}, // output disable
 	{0xfe, 0x00},
-	{0xf7, 0x1d},	
-	{0xfd, 0x00}, 
-	//// crop window           
+	{0xf7, 0x1d},
+	{0xfd, 0x00},
+	//// crop window
 	{0xfe , 0x00},
-	{0x99 , 0x11},  
+	{0x99 , 0x11},
 	{0x9a , 0x06},
 	{0x9b , 0x00},
 	{0x9c , 0x00},
 	{0x9d , 0x00},
 	{0x9e , 0x00},
 	{0x9f , 0x00},
-	{0xa0 , 0x00},  
+	{0xa0 , 0x00},
 	{0xa1 , 0x00},
 	{0xa2  ,0x00},
 	{0x90 , 0x01},
@@ -1312,8 +1312,8 @@ struct aml_camera_i2c_fig1_s gc2155_1600x1200_mipi_script[] = {
 	{0x96 , 0xb0},
 	{0x97 , 0x06},
 	{0x98 , 0x40},
-	
-	//// AWB   
+
+	//// AWB
 	{0xfe , 0x00},
 	{0xec , 0x02},
 	{0xed , 0x04},
@@ -1321,7 +1321,7 @@ struct aml_camera_i2c_fig1_s gc2155_1600x1200_mipi_script[] = {
 	{0xef , 0x90},
 	{0xfe , 0x01},
 	{0x74 , 0x01},
-	//// AEC	  
+	//// AEC
 	{0xfe , 0x01},
 	{0x01 , 0x08},
 	{0x02 , 0xc0},
@@ -1331,9 +1331,9 @@ struct aml_camera_i2c_fig1_s gc2155_1600x1200_mipi_script[] = {
 	{0x06 , 0x98},
 	{0x07 , 0x28},
 	{0x08 , 0x6c},
-	{0x0a , 0xc2}, 
-	{0x21 , 0x14}, 
-	//// gamma                     
+	{0x0a , 0xc2},
+	{0x21 , 0x14},
+	//// gamma
 	{0xfe , 0x00},
 	{0xc3 , 0x11},
 	{0xc4 , 0x20},
@@ -1347,12 +1347,12 @@ struct aml_camera_i2c_fig1_s gc2155_1600x1200_mipi_script[] = {
 	{0x05 , 0x00},
 	//{0x10 , 0x95}, // output enable
 	{0xfe , 0x00},
-	{0xff, 0xff},	
+	{0xff, 0xff},
 };
 
 struct aml_camera_i2c_fig1_s gc2155_1600x1200_dvp_script[] = {
 
-	{0xff, 0xff},	
+	{0xff, 0xff},
 };
 
 #define GC2155_MIPI_2Lane
@@ -1382,7 +1382,7 @@ static uint32_t GC2155_MIPI_StreamOff(struct gc2155_device *dev)
 	i2c_put_byte_add8_new(client, 0xfe, 0x03);
 	i2c_put_byte_add8_new(client, 0x10, 0x85);
 	i2c_put_byte_add8_new(client, 0xfe, 0x00);
-#else   
+#else
 	i2c_put_byte_add8_new(client, 0xfe, 0x03);
 	i2c_put_byte_add8_new(client, 0x10, 0x84);
 	i2c_put_byte_add8_new(client, 0xfe, 0x00);
@@ -1450,7 +1450,7 @@ static resolution_param_t  prev_resolution_array[] = {
 		.reg_script[1]			= gc2155_1600x1200_mipi_script,
 	}
 };
-	
+
 
 static resolution_param_t  capture_resolution_array[] = {
 	{
@@ -1463,35 +1463,35 @@ static resolution_param_t  capture_resolution_array[] = {
 	}
 };
 
-//load gc2155 parameters 
+//load gc2155 parameters
 static void gc2155_init_regs(struct gc2155_device *dev)
 {
 	int i=0;//,j;
 	unsigned char buf[2];
 	struct aml_camera_i2c_fig1_s* init_script = NULL;
 	struct i2c_client *client = v4l2_get_subdevdata(&dev->sd);
-	if (CAM_MIPI == dev->cam_info.interface) 
+	if (CAM_MIPI == dev->cam_info.interface)
 		init_script = gc2155_init_mipi_script;
 	else
 		init_script = gc2155_init_dvp_script;
-	
+
 	while(1)
 	{
 		buf[0] = init_script[i].addr;//(unsigned char)((gc2155_init_mipi_script[i].addr >> 8) & 0xff);
 		//buf[1] = (unsigned char)(gc2155_init_mipi_script[i].addr & 0xff);
 		buf[1] = init_script[i].val;
-		if (init_script[i].val==0xff&&init_script[i].addr==0xff) 
-	 	{
-	    		printk("gc2155_write_regs success in initial gc2155.\n");
-	 		break;
-	 	}
-	 	//printk("addr:%x val:%x\n", buf[0], buf[1]);
+		if (init_script[i].val==0xff&&init_script[i].addr==0xff)
+		{
+			printk("gc2155_write_regs success in initial gc2155.\n");
+			break;
+		}
+		//printk("addr:%x val:%x\n", buf[0], buf[1]);
 		if((i2c_put_byte_add8(client, buf, 2)) < 0)
-	    	{
+		{
 			printk("fail in initial gc2155. \n");
 			return;
-	    	}
-		i++;	
+		}
+		i++;
 	}
 	msleep(20);
 	return;
@@ -1583,148 +1583,148 @@ void gc2155_set_param_wb(struct gc2155_device *dev,enum  camera_wb_flip_e para)/
 	unsigned char buf[4];
 	unsigned temp=0;
 
-	//buf[0]=0x82;  //0x00			
+	//buf[0]=0x82;  //0x00
 	temp=i2c_get_byte_add8(client, 0x82);
 	switch (para){
 	case CAM_WB_AUTO://auto
 		buf[0]=0xfe;
 		buf[1]=0x00;
-		i2c_put_byte_add8(client,buf,2);	
-	    	printk("CAM_WB_AUTO       \n");
+		i2c_put_byte_add8(client,buf,2);
+		printk("CAM_WB_AUTO       \n");
 		/*buf[0]=0xb3;
 		buf[1]=0x61;
-		i2c_put_byte_add8(client,buf,2);		
-	
+		i2c_put_byte_add8(client,buf,2);
+
 		buf[0]=0xb4;
 		buf[1]=0x40;
-		i2c_put_byte_add8(client,buf,2);	
-	
+		i2c_put_byte_add8(client,buf,2);
+
 		buf[0]=0xb5;
 		buf[1]=0x61;
 		i2c_put_byte_add8(client,buf,2);	*/
-	
+
 		buf[0]=0x82;
 		buf[1]=temp | 0x02;
-		i2c_put_byte_add8(client,buf,2);	
+		i2c_put_byte_add8(client,buf,2);
 		break;
-	
+
 	case CAM_WB_CLOUD: //cloud
-	
+
 		buf[0]=0xfe;
 		buf[1]=0x00;
-		i2c_put_byte_add8(client,buf,2);	
-		
+		i2c_put_byte_add8(client,buf,2);
+
 		printk("CAM_WB_CLOUD       \n");
 		buf[0]=0x82;
 		buf[1]=temp & (~0x02);
 		i2c_put_byte_add8(client,buf,2);
-	
+
 		buf[0]=0xb3;
 		buf[1]=0x58;
-		i2c_put_byte_add8(client,buf,2);		
-	
+		i2c_put_byte_add8(client,buf,2);
+
 		buf[0]=0xb4;
 		buf[1]=0x40;
-		i2c_put_byte_add8(client,buf,2);	
-	
+		i2c_put_byte_add8(client,buf,2);
+
 		buf[0]=0xb5;
 		buf[1]=0x50;
-		i2c_put_byte_add8(client,buf,2);			
+		i2c_put_byte_add8(client,buf,2);
 		break;
-	
+
 	case CAM_WB_DAYLIGHT: //
 		buf[0]=0xfe;
 		buf[1]=0x00;
-		i2c_put_byte_add8(client,buf,2);	
+		i2c_put_byte_add8(client,buf,2);
 		printk("CAM_WB_DAYLIGHT       \n");
 		buf[0]=0x82;
 		buf[1]=temp & (~0x02);
 		i2c_put_byte_add8(client,buf,2);
-	
+
 		buf[0]=0xb3;
 		buf[1]=0x70;
-		i2c_put_byte_add8(client,buf,2);		
-	
+		i2c_put_byte_add8(client,buf,2);
+
 		buf[0]=0xb4;
 		buf[1]=0x40;
-		i2c_put_byte_add8(client,buf,2);	
-	
+		i2c_put_byte_add8(client,buf,2);
+
 		buf[0]=0xb5;
 		buf[1]=0x50;
 		i2c_put_byte_add8(client,buf,2);
 		break;
-	
+
 	case CAM_WB_INCANDESCENCE:
 		buf[0]=0xfe;
 		buf[1]=0x00;
-		i2c_put_byte_add8(client,buf,2);	
-		
+		i2c_put_byte_add8(client,buf,2);
+
 		printk("CAM_WB_INCANDESCENCE       \n");
 		buf[0]=0x82;
 		buf[1]=temp & (~0x02);
 		i2c_put_byte_add8(client,buf,2);
-	
+
 		buf[0]=0xb3;
 		buf[1]=0x50;
-		i2c_put_byte_add8(client,buf,2);		
-	
+		i2c_put_byte_add8(client,buf,2);
+
 		buf[0]=0xb4;
 		buf[1]=0x40;
-		i2c_put_byte_add8(client,buf,2);	
-	
+		i2c_put_byte_add8(client,buf,2);
+
 		buf[0]=0xb5;
 		buf[1]=0xa8;
 		i2c_put_byte_add8(client,buf,2);
 		break;
-	
+
 	case CAM_WB_TUNGSTEN:
 		buf[0]=0xfe;
 		buf[1]=0x00;
-		i2c_put_byte_add8(client,buf,2);	
+		i2c_put_byte_add8(client,buf,2);
 	     printk("CAM_WB_TUNGSTEN       \n");
 		buf[0]=0x82;
 		buf[1]=temp & (~0x02);
 		i2c_put_byte_add8(client,buf,2);
-	
+
 		buf[0]=0xb3;
 		buf[1]=0xa0;
-		i2c_put_byte_add8(client,buf,2);		
-	
+		i2c_put_byte_add8(client,buf,2);
+
 		buf[0]=0xb4;
 		buf[1]=0x45;
-		i2c_put_byte_add8(client,buf,2);	
-	
+		i2c_put_byte_add8(client,buf,2);
+
 		buf[0]=0xb5;
 		buf[1]=0x40;
-		i2c_put_byte_add8(client,buf,2);	
+		i2c_put_byte_add8(client,buf,2);
 		break;
 
-      	case CAM_WB_FLUORESCENT:
-		
+	case CAM_WB_FLUORESCENT:
+
 		buf[0]=0xfe;
 		buf[1]=0x00;
-		i2c_put_byte_add8(client,buf,2);	
+		i2c_put_byte_add8(client,buf,2);
 		printk("CAM_WB_FLUORESCENT       \n");
 		buf[0]=0x82;
 		buf[1]=temp & (~0x02);
 		i2c_put_byte_add8(client,buf,2);
-		
+
 		buf[0]=0xb3;
 		buf[1]=0x48;
-		i2c_put_byte_add8(client,buf,2);		
-		
+		i2c_put_byte_add8(client,buf,2);
+
 		buf[0]=0xb4;
 		buf[1]=0x40;
-		i2c_put_byte_add8(client,buf,2);	
-		
+		i2c_put_byte_add8(client,buf,2);
+
 		buf[0]=0xb5;
 		buf[1]=0x68;
 		i2c_put_byte_add8(client,buf,2);
 		break;
 	case CAM_WB_MANUAL:
-	    	                      // TODO
+		                      // TODO
 		break;
-		
+
 	default:
 		break;
 	}
@@ -1750,160 +1750,160 @@ void gc2155_set_param_exposure(struct gc2155_device *dev,enum camera_exposure_e 
 {
 	struct i2c_client *client = v4l2_get_subdevdata(&dev->sd);
 	unsigned char buf[4];
-	switch (para) {	
-	case EXPOSURE_N4_STEP:	
+	switch (para) {
+	case EXPOSURE_N4_STEP:
 		buf[0]=0xfe;
 		buf[1]=0x01;
 		i2c_put_byte_add8(client,buf,2);
-	
+
 		buf[0]=0x13;
 		buf[1]=0x10;
 		i2c_put_byte_add8(client,buf,2);
-	
+
 		buf[0]=0xfe;
 		buf[1]=0x00;
 		i2c_put_byte_add8(client,buf,2);
 		break;
-	
-	
-	
-	case EXPOSURE_N3_STEP:	
+
+
+
+	case EXPOSURE_N3_STEP:
 		buf[0]=0xfe;
 		buf[1]=0x01;
 		i2c_put_byte_add8(client,buf,2);
-	
+
 		buf[0]=0x13;
 		buf[1]=0x18;
 		i2c_put_byte_add8(client,buf,2);
-	
+
 		buf[0]=0xfe;
 		buf[1]=0x00;
 		i2c_put_byte_add8(client,buf,2);
-	
+
 		break;
-	
-	
-	case EXPOSURE_N2_STEP:	
+
+
+	case EXPOSURE_N2_STEP:
 		buf[0]=0xfe;
 		buf[1]=0x01;
 		i2c_put_byte_add8(client,buf,2);
-	
+
 		buf[0]=0x13;
 		buf[1]=0x20;
 		i2c_put_byte_add8(client,buf,2);
-	
+
 		buf[0]=0xfe;
 		buf[1]=0x00;
 		i2c_put_byte_add8(client,buf,2);
-	
+
 		break;
-	
-	
-	case EXPOSURE_N1_STEP:	
+
+
+	case EXPOSURE_N1_STEP:
 		printk("EXPOSURE_N1_STEP       \n");
 		buf[0]=0xfe;
 		buf[1]=0x01;
 		i2c_put_byte_add8(client,buf,2);
-	
+
 		buf[0]=0x13;
 		buf[1]=0x25;
 		i2c_put_byte_add8(client,buf,2);
-	
+
 		buf[0]=0xfe;
 		buf[1]=0x00;
 		i2c_put_byte_add8(client,buf,2);
-	
+
 		break;
-	
+
 	case EXPOSURE_0_STEP:
 	     printk("EXPOSURE_0_STEP       \n");
 		buf[0]=0xfe;
 		buf[1]=0x01;
 		i2c_put_byte_add8(client,buf,2);
-	
+
 		buf[0]=0x13;
 		buf[1]=0x34;//target_y
-		i2c_put_byte_add8(client,buf,2);	
-	
+		i2c_put_byte_add8(client,buf,2);
+
 		buf[0]=0xfe;
 		buf[1]=0x00;
 		i2c_put_byte_add8(client,buf,2);
-	
+
 		break;
-	
+
 	case EXPOSURE_P1_STEP:
-	     printk("EXPOSURE_P1_STEP       \n");	
+	     printk("EXPOSURE_P1_STEP       \n");
 		buf[0]=0xfe;
 		buf[1]=0x01;
 		i2c_put_byte_add8(client,buf,2);
-	
+
 		buf[0]=0x13;
 		buf[1]=0x39;
 		i2c_put_byte_add8(client,buf,2);
-	
+
 		buf[0]=0xfe;
 		buf[1]=0x00;
 		i2c_put_byte_add8(client,buf,2);
-	
+
 		break;
-	
-	case EXPOSURE_P2_STEP:			
+
+	case EXPOSURE_P2_STEP:
 		buf[0]=0xfe;
 		buf[1]=0x01;
 		i2c_put_byte_add8(client,buf,2);
-	
+
 		buf[0]=0x13;
 		buf[1]=0x40;
 		i2c_put_byte_add8(client,buf,2);
-	
+
 		buf[0]=0xfe;
 		buf[1]=0x00;
 		i2c_put_byte_add8(client,buf,2);
-	
+
 		break;
-	
+
 	case EXPOSURE_P3_STEP:
 		buf[0]=0xfe;
 		buf[1]=0x01;
 		i2c_put_byte_add8(client,buf,2);
-	
+
 		buf[0]=0x13;
 		buf[1]=0x48;
 		i2c_put_byte_add8(client,buf,2);
-	
+
 		buf[0]=0xfe;
 		buf[1]=0x00;
 		i2c_put_byte_add8(client,buf,2);
-	
+
 		break;
-	
-	case EXPOSURE_P4_STEP:			
+
+	case EXPOSURE_P4_STEP:
 		buf[0]=0xfe;
 		buf[1]=0x01;
 		i2c_put_byte_add8(client,buf,2);
-	
+
 		buf[0]=0x13;
 		buf[1]=0x50;
 		i2c_put_byte_add8(client,buf,2);
-	
+
 		buf[0]=0xfe;
 		buf[1]=0x00;
 		i2c_put_byte_add8(client,buf,2);
 		break;
-	
-	default:			
+
+	default:
 		buf[0]=0xfe;
 		buf[1]=0x01;
 		i2c_put_byte_add8(client,buf,2);
-	
+
 		buf[0]=0x13;
 		buf[1]=0x2d;
 		i2c_put_byte_add8(client,buf,2);
-	
+
 		buf[0]=0xfe;
 		buf[1]=0x00;
 		i2c_put_byte_add8(client,buf,2);
-	
+
 		break;
 	}
 	mdelay(20);
@@ -1940,7 +1940,7 @@ void gc2155_set_param_effect(struct gc2155_device *dev,enum camera_effect_flip_e
 			buf[0]=0x83;
 			buf[1]=0xe0;
 			i2c_put_byte_add8(client,buf,2);
-				
+
 			break;
 
 		case CAM_EFFECT_ENC_GRAYSCALE:
@@ -1954,7 +1954,7 @@ void gc2155_set_param_effect(struct gc2155_device *dev,enum camera_effect_flip_e
 			i2c_put_byte_add8(client,buf,2);
 
 			break;
-			
+
 		case CAM_EFFECT_ENC_SEPIA:
 
 			buf[0]=0xfe;
@@ -1964,7 +1964,7 @@ void gc2155_set_param_effect(struct gc2155_device *dev,enum camera_effect_flip_e
 			buf[0]=0x83;
 			buf[1]=0x82;
 			i2c_put_byte_add8(client,buf,2);
-		
+
 			break;
 
 		case CAM_EFFECT_ENC_SEPIAGREEN:
@@ -1976,7 +1976,7 @@ void gc2155_set_param_effect(struct gc2155_device *dev,enum camera_effect_flip_e
 			buf[0]=0x83;
 			buf[1]=0x52;
 			i2c_put_byte_add8(client,buf,2);
-			
+
 			break;
 
 		case CAM_EFFECT_ENC_SEPIABLUE:
@@ -1988,7 +1988,7 @@ void gc2155_set_param_effect(struct gc2155_device *dev,enum camera_effect_flip_e
 			buf[0]=0x83;
 			buf[1]=0x62;
 			i2c_put_byte_add8(client,buf,2);
-		
+
 			break;
 
 		case CAM_EFFECT_ENC_COLORINV:
@@ -2000,7 +2000,7 @@ void gc2155_set_param_effect(struct gc2155_device *dev,enum camera_effect_flip_e
 			buf[1]=0x01;
 			i2c_put_byte_add8(client,buf,2);
 
-			break;		
+			break;
 
 		default:
 			buf[0]=0xfe;
@@ -2075,7 +2075,7 @@ void gc2155_set_param_banding(struct gc2155_device *dev,enum  camera_banding_fli
 	switch(banding){
 	case CAM_BANDING_50HZ:
 		buf[0]=0xfe;
-		buf[1]=0x00;   
+		buf[1]=0x00;
 		i2c_put_byte_add8(client,buf,2);
 
 		buf[0]=0x05;
@@ -2089,7 +2089,7 @@ void gc2155_set_param_banding(struct gc2155_device *dev,enum  camera_banding_fli
 		buf[0]=0x07;
 		buf[1]=0x00;
 		i2c_put_byte_add8(client,buf,2);
-		
+
 		buf[0]=0x08;
 		buf[1]=0x32;  //vb
 		i2c_put_byte_add8(client,buf,2);
@@ -2107,9 +2107,9 @@ void gc2155_set_param_banding(struct gc2155_device *dev,enum  camera_banding_fli
 		i2c_put_byte_add8(client,buf,2);
 
 		buf[0]=0x27;
-		buf[1]=0x04;  
+		buf[1]=0x04;
 		i2c_put_byte_add8(client,buf,2);
-		
+
 		buf[0]=0x28;
 		buf[1]=0xe2;  //level 1  16fps
 		i2c_put_byte_add8(client,buf,2);
@@ -2117,7 +2117,7 @@ void gc2155_set_param_banding(struct gc2155_device *dev,enum  camera_banding_fli
 		buf[0]=0x29;
 		buf[1]=0x06;
 		i2c_put_byte_add8(client,buf,2);
-		
+
 		buf[0]=0x2a;
 		buf[1]=0xd6;  //level 2
 		i2c_put_byte_add8(client,buf,2);
@@ -2135,10 +2135,10 @@ void gc2155_set_param_banding(struct gc2155_device *dev,enum  camera_banding_fli
 		i2c_put_byte_add8(client,buf,2);
 
 		buf[0]=0x2e;
-		buf[1]=0xb8;// 
+		buf[1]=0xb8;//
 		i2c_put_byte_add8(client,buf,2);
 
-		
+
 		buf[0]=0xfe;
 		buf[1]=0x00;
 		i2c_put_byte_add8(client,buf,2);
@@ -2159,7 +2159,7 @@ void gc2155_set_param_banding(struct gc2155_device *dev,enum  camera_banding_fli
 		buf[0]=0x07;
 		buf[1]=0x00;
 		i2c_put_byte_add8(client,buf,2);
-		
+
 		buf[0]=0x08;
 		buf[1]=0x32;  //vb
 		i2c_put_byte_add8(client,buf,2);
@@ -2177,9 +2177,9 @@ void gc2155_set_param_banding(struct gc2155_device *dev,enum  camera_banding_fli
 		i2c_put_byte_add8(client,buf,2);
 
 		buf[0]=0x27;
-		buf[1]=0x04;  
+		buf[1]=0x04;
 		i2c_put_byte_add8(client,buf,2);
-		
+
 		buf[0]=0x28;
 		buf[1]=0xe0;  //level 1  16fps
 		i2c_put_byte_add8(client,buf,2);
@@ -2205,10 +2205,10 @@ void gc2155_set_param_banding(struct gc2155_device *dev,enum  camera_banding_fli
 		i2c_put_byte_add8(client,buf,2);
 
 		buf[0]=0x2e;
-		buf[1]=0x60;// 
+		buf[1]=0x60;//
 		i2c_put_byte_add8(client,buf,2);
 
-		
+
 		buf[0]=0xfe;
 		buf[1]=0x00;
 		i2c_put_byte_add8(client,buf,2);
@@ -2230,16 +2230,16 @@ static int set_flip(struct gc2155_device *dev)
 	buf[0]=0xfe;
 	buf[1]= ps_reg & 0xfc;
 	i2c_put_byte_add8(client, buf, 2);
-	
+
 	temp = i2c_get_byte_add8(client, 0x17);
-	
+
 	temp |= dev->cam_info.m_flip << 0;
 	temp |= dev->cam_info.v_flip << 1;
 	buf[0] = 0x17;
 	buf[1] = temp;
 	if((i2c_put_byte_add8(client, buf, 2)) < 0) {
-        	printk("fail in setting sensor orientation\n");
-        	return -1;
+		printk("fail in setting sensor orientation\n");
+		return -1;
         }
 
         buf[0]=0xfe;
@@ -2295,7 +2295,7 @@ static resolution_param_t* get_resolution_param(struct gc2155_device *dev, int i
 		tmp_resolution_param = prev_resolution_array;
 		arry_size = sizeof(prev_resolution_array);
 	}
-	
+
 	for (i = 0; i < arry_size; i++) {
 		if (tmp_resolution_param[i].size_type == res_type) {
 			gc2155_frmintervals_active.denominator = tmp_resolution_param[i].active_fps;
@@ -2330,7 +2330,7 @@ static int set_resolution_param(struct gc2155_device *dev, resolution_param_t* r
 	}
 	dev->cur_resolution_param = res_param;
 	set_flip(dev);
-	
+
 	return 0;
 }
 
@@ -2355,9 +2355,9 @@ static int convert_canvas_index(unsigned int v4l2_format, unsigned int start_can
 	case V4L2_PIX_FMT_BGR24:
 	case V4L2_PIX_FMT_RGB24:
 		canvas = start_canvas;
-		break; 
+		break;
 	case V4L2_PIX_FMT_NV12:
-	case V4L2_PIX_FMT_NV21: 
+	case V4L2_PIX_FMT_NV21:
 		canvas = start_canvas | ((start_canvas+1)<<8);
 		break;
 	case V4L2_PIX_FMT_YVU420:
@@ -2382,7 +2382,7 @@ static int gc2155_setting(struct gc2155_device *dev,int PROP_ID,int value )
 	//unsigned char cur_val;
 	//struct i2c_client *client = v4l2_get_subdevdata(&dev->sd);
 
-	
+
 	switch(PROP_ID)  {
 	case V4L2_CID_BRIGHTNESS:
 		dprintk(dev, 1, "setting brightned:%d\n",v4l_2_gc2155(value));
@@ -2399,37 +2399,37 @@ static int gc2155_setting(struct gc2155_device *dev,int PROP_ID,int value )
 			gc2155_qctrl[0].default_value=value;
 			gc2155_set_param_wb(dev,value);
 			printk(KERN_INFO " set camera  white_balance=%d. \n ",value);
-        	}
+		}
 		break;
 	case V4L2_CID_EXPOSURE:
         if(gc2155_qctrl[1].default_value!=value){
 			gc2155_qctrl[1].default_value=value;
 			gc2155_set_param_exposure(dev,value);
 			printk(KERN_INFO " set camera  exposure=%d. \n ",value);
-        	}
+		}
 		break;
 	case V4L2_CID_COLORFX:
         if(gc2155_qctrl[2].default_value!=value){
 			gc2155_qctrl[2].default_value=value;
 			gc2155_set_param_effect(dev,value);
 			printk(KERN_INFO " set camera  effect=%d. \n ",value);
-        	}
+		}
 		break;
 	case V4L2_CID_WHITENESS:
 		 if(gc2155_qctrl[3].default_value!=value){
 			gc2155_qctrl[3].default_value=value;
 			gc2155_set_param_banding(dev,value);
 			printk(KERN_INFO " set camera  banding=%d. \n ",value);
-        	}
+		}
 		break;
 	case V4L2_CID_BLUE_BALANCE:
 		 if(gc2155_qctrl[4].default_value!=value){
 			gc2155_qctrl[4].default_value=value;
 			gc2155_set_night_mode(dev,value);
 			printk(KERN_INFO " set camera  scene mode=%d. \n ",value);
-        	}
+		}
 		break;
-	case V4L2_CID_HFLIP:    /* set flip on H. */          
+	case V4L2_CID_HFLIP:    /* set flip on H. */
 		value = value & 0x3;
 		if(gc2155_qctrl[5].default_value!=value){
 			gc2155_qctrl[5].default_value=value;
@@ -2442,7 +2442,7 @@ static int gc2155_setting(struct gc2155_device *dev,int PROP_ID,int value )
 		if(gc2155_qctrl[7].default_value!=value){
 			gc2155_qctrl[7].default_value=value;
 			//printk(KERN_INFO " set camera  zoom mode=%d. \n ",value);
-        	}
+		}
 		break;
 	case V4L2_CID_ROTATE:
 	    printk(" set camera111  rotate =%d. \n ",value);
@@ -2457,7 +2457,7 @@ static int gc2155_setting(struct gc2155_device *dev,int PROP_ID,int value )
 	}
 	return ret;
 
-	
+
 
 }
 
@@ -2693,10 +2693,10 @@ static int vidioc_enum_frameintervals(struct file *file, void *priv,
         struct v4l2_frmivalenum *fival)
 {
 	unsigned int k;
-	
+
 	if(fival->index > ARRAY_SIZE(gc2155_frmivalenum))
 		return -EINVAL;
-	
+
 	for(k =0; k< ARRAY_SIZE(gc2155_frmivalenum); k++) {
 		if( (fival->index==gc2155_frmivalenum[k].index)&&
 				(fival->pixel_format ==gc2155_frmivalenum[k].pixel_format )&&
@@ -2706,9 +2706,9 @@ static int vidioc_enum_frameintervals(struct file *file, void *priv,
 			return 0;
 		}
 	}
-	
+
 	return -EINVAL;
-	
+
 }
 #define norm_maxw() 3000
 #define norm_maxh() 3000
@@ -2859,14 +2859,14 @@ static int vidioc_g_parm(struct file *file, void *priv,
 	struct gc2155_fh *fh = priv;
 	struct gc2155_device *dev = fh->dev;
 	struct v4l2_captureparm *cp = &parms->parm.capture;
-	
+
 	dprintk(dev,3,"vidioc_g_parm\n");
 	if (parms->type != V4L2_BUF_TYPE_VIDEO_CAPTURE)
 		return -EINVAL;
-	
+
 	memset(cp, 0, sizeof(struct v4l2_captureparm));
 	cp->capability = V4L2_CAP_TIMEPERFRAME;
-	
+
 	cp->timeperframe = gc2155_frmintervals_active;
 	printk("g_parm,deno=%d, numerator=%d\n", cp->timeperframe.denominator,
 		cp->timeperframe.numerator );
@@ -2962,7 +2962,7 @@ static int vidioc_s_fmt_vid_cap(struct file *file, void *priv,
 		}
 		set_resolution_param(dev, res_param);
 	}
-	
+
 	ret = 0;
 out:
 	mutex_unlock(&q->vb_lock);
@@ -3031,9 +3031,9 @@ static int vidioc_streamon(struct file *file, void *priv, enum v4l2_buf_type i)
 	struct gc2155_device *dev = fh->dev;
 	vdin_parm_t para;
 	int ret = 0 ;
-	
+
 	GC2155_MIPI_StreamOn(dev);
-	
+
 	if (fh->type != V4L2_BUF_TYPE_VIDEO_CAPTURE)
 		return -EINVAL;
 	if (i != fh->type)
@@ -3055,7 +3055,7 @@ static int vidioc_streamon(struct file *file, void *priv, enum v4l2_buf_type i)
 	para.vs_bp = 2;
 	para.cfmt = TVIN_YUV422;
         para.dfmt = TVIN_NV21;
-	para.scan_mode = TVIN_SCAN_MODE_PROGRESSIVE;	
+	para.scan_mode = TVIN_SCAN_MODE_PROGRESSIVE;
 	para.skip_count = 4; //skip_num
 	para.bt_path = dev->cam_info.bt_path;
 	if (CAM_MIPI == dev->cam_info.interface)
@@ -3270,7 +3270,7 @@ static int gc2155_open(struct file *file)
 
 #if MESON_CPU_TYPE >= MESON_CPU_TYPE_MESON6
 	switch_mod_gate_by_name("ge2d", 1);
-#endif	
+#endif
 	aml_cam_init(&dev->cam_info);
 	gc2155_init_regs(dev);
 	mutex_lock(&dev->mutex);
@@ -3285,7 +3285,7 @@ static int gc2155_open(struct file *file)
 		video_device_node_name(dev->vdev),
 		v4l2_type_names[V4L2_BUF_TYPE_VIDEO_CAPTURE], dev->users);
 
-    	/* init video dma queues */
+	/* init video dma queues */
 	INIT_LIST_HEAD(&dev->vidq.active);
 	init_waitqueue_head(&dev->vidq.wq);
 	spin_lock_init(&dev->slock);
@@ -3393,11 +3393,11 @@ static int gc2155_close(struct file *file)
 	gc2155_frmintervals_active.numerator = 1;
 	gc2155_frmintervals_active.denominator = 15;
 	power_down_gc2155(dev);
-	
+
 	aml_cam_uninit(&dev->cam_info);
 #if MESON_CPU_TYPE >= MESON_CPU_TYPE_MESON6
 	switch_mod_gate_by_name("ge2d", 0);
-#endif	
+#endif
 	wake_unlock(&(dev->wake_lock));
 
 #ifdef CONFIG_CMA
@@ -3520,20 +3520,20 @@ static int gc2155_probe(struct i2c_client *client,
 	plat_dat= (aml_cam_info_t*)client->dev.platform_data;
 	if (plat_dat) {
 		memcpy(&t->cam_info, plat_dat, sizeof(aml_cam_info_t));
-		if (plat_dat->front_back >=0)  
+		if (plat_dat->front_back >=0)
 			video_nr = plat_dat->front_back;
 	} else {
 		printk("camera gc2155: have no platform data\n");
 		kfree(t);
 		return -1;
 	}
-	
+
 	t->cur_resolution_param = &prev_resolution_array[0];
-	
+
 	t->cam_info.version = GC2155_DRIVER_VERSION;
 	if (aml_cam_info_reg(&t->cam_info) < 0)
 		printk("reg caminfo error\n");
-	
+
 	err = video_register_device(t->vdev, VFL_TYPE_GRABBER, video_nr);
 	if (err < 0) {
 		video_device_release(t->vdev);
@@ -3573,5 +3573,3 @@ static struct i2c_driver gc2155_i2c_driver = {
 };
 
 module_i2c_driver(gc2155_i2c_driver);
-
-

@@ -137,14 +137,14 @@ struct file_operations ilitek_fops = {
     .release = ilitek_file_close,
 };
 
-static int 
+static int
 ilitek_file_open(
     struct inode *inode, struct file *filp)
 {
-    return 0; 
+    return 0;
 }
 
-static ssize_t 
+static ssize_t
 ilitek_file_write(
 	struct file *filp, const char *buf, size_t count, loff_t *f_pos)
 {
@@ -153,7 +153,7 @@ ilitek_file_write(
         struct i2c_msg msgs[] = {
 		{.addr = i2c.client->addr, .flags = 0, .len = count, .buf = buffer,}
 	};
-        
+
 	// before sending data to touch device, we need to check whether the device is working or not
 //	if(i2c.valid_i2c_register == 0){
 //		printk(ILITEK_ERROR_LEVEL "%s, i2c device driver doesn't be registered\n", __func__);
@@ -193,7 +193,7 @@ ilitek_file_write(
                         printk(ILITEK_DEBUG_LEVEL "%s, i2c calibration, failed\n", __func__);
                 }
 		else{
-                	printk(ILITEK_DEBUG_LEVEL "%s, i2c calibration, success\n", __func__);
+			printk(ILITEK_DEBUG_LEVEL "%s, i2c calibration, success\n", __func__);
 		}
 		msleep(1000);
                 return count;
@@ -216,9 +216,9 @@ ilitek_file_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
 	case ILITEK_IOCTL_I2C_WRITE_DATA:
 		ret = copy_from_user(buffer, (unsigned char*)arg, len);
 		if(ret < 0){
-                	printk(ILITEK_ERROR_LEVEL "%s, copy data from user space, failed\n", __func__);
-                	return -1;
-        	}
+			printk(ILITEK_ERROR_LEVEL "%s, copy data from user space, failed\n", __func__);
+			return -1;
+		}
 		ret = ilitek_i2c_transfer(i2c.client, msgs, 1);
 		if(ret < 0){
 			printk(ILITEK_ERROR_LEVEL "%s, i2c write, failed\n", __func__);
@@ -255,7 +255,7 @@ ilitek_file_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
 	default:
 		return -1;
 	}
-    	return 0;
+	return 0;
 }
 
 static ssize_t
@@ -264,7 +264,7 @@ ilitek_file_read(
 {
 	return 0;
 }
-static int 
+static int
 ilitek_file_close(
     struct inode *inode, struct file *filp)
 {
@@ -324,7 +324,7 @@ struct ts_event {
  * @tp_xmax:        max virtual resolution
  * @tp_ymax:        max virtual resolution
  * @pdata:          platform-specific information
- * @running:		workqueue is running 
+ * @running:		workqueue is running
  * @work_exit:		the workqueue need to exit
  */
 struct itk {
@@ -350,7 +350,7 @@ struct itk {
 		int work_exit;
 };
 
-static int 
+static int
 ilitek_i2c_transfer(
 	struct i2c_client *client, struct i2c_msg *msgs, int cnt)
 {
@@ -422,7 +422,7 @@ static int itk_register_input(struct itk *ts)
         input_free_device(dev);
         return -1;
     }
-    
+
     ts->input = dev;
     return 0;
 }
@@ -433,7 +433,7 @@ static int itk_read_block(struct i2c_client *client, u8 addr, u8 len, u8 *data)
     u8 msgbuf0[1] = { addr };
     u16 slave = client->addr;
     u16 flags = client->flags;
-    struct i2c_msg msg[2] = { 
+    struct i2c_msg msg[2] = {
         { slave, flags, 1, msgbuf0 },
         { slave, flags|I2C_M_RD, len, data }
     };
@@ -489,12 +489,12 @@ static int itk_read_sensor(struct itk *ts)
     ts->event[0].y = data[4]<<8|data[3];
     ts->event[1].x = data[6]<<8|data[5];
     ts->event[1].y = data[8]<<8|data[7];
-    
+
     if(status & 0x1)
     {
 	    if((ts->event[0].x > (ts->pdata->tp_max_width - 4)) || (ts->event[0].x < 4))
-	    		return 2;//status = status & 2; 
-			
+			return 2;//status = status & 2;
+
 			if((ts->event[0].y > (ts->pdata->tp_max_height - 4)) || (ts->event[0].y < 4))
 					return 2;//status = status & 2;
 		}
@@ -502,27 +502,27 @@ static int itk_read_sensor(struct itk *ts)
 		{
 			if((ts->event[1].x > (ts->pdata->tp_max_width - 4)) || (ts->event[1].x < 4))
 					return 2;//status = status & 1;
-			
+
 			if((ts->event[1].y > (ts->pdata->tp_max_height - 4)) || (ts->event[1].y < 4))
 					return 2;//status = status & 1;
 		}
 
-		
+
 		if (ts->pdata->swap_xy){
 			swap(ts->event[0].x, ts->event[0].y);
 			swap(ts->event[1].x, ts->event[1].y);
 		}
 		if (ts->pdata->xpol){
-    	ts->event[0].x = ts->pdata->tp_max_width - ts->event[0].x;
-    	ts->event[1].x = ts->pdata->tp_max_width - ts->event[1].x;
+	ts->event[0].x = ts->pdata->tp_max_width - ts->event[0].x;
+	ts->event[1].x = ts->pdata->tp_max_width - ts->event[1].x;
     }
 		if (ts->pdata->ypol){
-    	ts->event[0].y = ts->pdata->tp_max_height - ts->event[0].y;
-    	ts->event[1].y = ts->pdata->tp_max_height - ts->event[1].y;
+	ts->event[0].y = ts->pdata->tp_max_height - ts->event[0].y;
+	ts->event[1].y = ts->pdata->tp_max_height - ts->event[1].y;
 		}
     ts->touching_num = status;
     #ifdef ITK_TS_DEBUG_READ
-    printk(KERN_INFO "\nread_sensor status = %d, event[0]->x = %d, event[0]->y = %d, event[1]->x = %d, event[1]->y = %d\n", 
+    printk(KERN_INFO "\nread_sensor status = %d, event[0]->x = %d, event[0]->y = %d, event[1]->x = %d, event[1]->y = %d\n",
         ts->touching_num, ts->event[0].x, ts->event[0].y, ts->event[1].x, ts->event[1].y);
     #endif
     return 0;
@@ -549,18 +549,18 @@ static void itk_work(struct work_struct *work)
 		return;
 	}
 
-    if (itk_get_pendown_state(ts)) 
+    if (itk_get_pendown_state(ts))
     {
-    		ret = itk_read_sensor(ts);
+		ret = itk_read_sensor(ts);
         if (ret < 0) {
             printk(KERN_INFO "work read i2c failed\n");
             goto restart;
         }
         else if(ret == 2)  //有手超過邊界...所有點都不上報
         {
-        	ts->touching_num = 0;
+		ts->touching_num = 0;
         }
-    
+
         if (!ts->pendown) {
             ts->pendown = 1;
             #ifdef ITK_TS_DEBUG_INFO
@@ -636,7 +636,7 @@ restart:
 #endif
     }
     else {
-        /* enable IRQ after the pen was lifted */       
+        /* enable IRQ after the pen was lifted */
         if (ts->pendown) {
             ts->pendown = 0;
             #ifdef ITK_TS_DEBUG_INFO
@@ -695,7 +695,7 @@ static irqreturn_t itk_interrupt(int irq, void *dev_id)
     struct i2c_client *client = (struct i2c_client *)dev_id;
     struct itk *ts = i2c_get_clientdata(client);
     unsigned long flags;
-    
+
     spin_lock_irqsave(&ts->lock, flags);
     #ifdef ITK_TS_DEBUG_REPORT
     printk(KERN_INFO "itk_interrupt() enter penirq\n");
@@ -741,10 +741,10 @@ static void aml_itk_early_suspend(struct early_suspend *h)
     }
     else {
         disable_irq(i2c.client->irq);
-    }	
+    }
 
     printk(ILITEK_DEBUG_LEVEL "%s() Disable i2c IRQ\n", __func__);
-  
+
     ret = ilitek_i2c_transfer(i2c.client, msgs_cmd, 1);
     if (ret < 0)
         printk(KERN_ERR "%s() i2c write error %d\n", __func__, ret);
@@ -782,22 +782,22 @@ static void aml_itk_once_reset(void)
 	ret = ilitek_i2c_transfer(i2c.client, msgs_cmd, 1);
 	mdelay(5);
 
-	if(itk_data && itk_data->get_irq_level){	
+	if(itk_data && itk_data->get_irq_level){
 		itk_data->touch_on(0);
 		mdelay(20);
 		itk_data->touch_on(1);
 		mdelay(10);
 		printk("%s\n",__FUNCTION__);
-	}	
+	}
 }
 static void aml_itk_late_resume(struct early_suspend *h)
 {
 	printk("enter -----> %s \n",__FUNCTION__);
 	if(itk_data->touch_on){
-			
+
       itk_data->touch_on(0);
       msleep(20);
-      
+
       itk_data->touch_on(1);
       msleep(10);
       enable_irq(i2c.client->irq);
@@ -850,8 +850,8 @@ static int itk_probe(struct i2c_client *client,
 #endif
 	ts->running	= 0;
 	ts->work_exit	= 0;
-	
-	
+
+
     if (ts->pdata->init_irq) {
         err = ts->pdata->init_irq();
         if (err < 0) {
@@ -879,7 +879,7 @@ static int itk_probe(struct i2c_client *client,
     printk("work create: %x\n", ts->workqueue);
     #endif
 #endif
-      
+
     ts->pendown = 0;
     ts->touching_num = 0;
 
@@ -902,7 +902,7 @@ static int itk_probe(struct i2c_client *client,
     i2c_set_clientdata(client, ts);
     //schedule_delayed_work(&ts->cal_work, 20*HZ);
     err = 0;
-    goto out;	
+    goto out;
 
 fail_irq:
     free_irq(client->irq, client);
@@ -919,7 +919,7 @@ out:
     itk_reset(ts);
     itk_data->touch_on(0);
     msleep(10);
-      
+
     itk_data->touch_on(1);
     printk("itk touch screen driver ok\n");
     return err;
@@ -974,7 +974,7 @@ static int __init itk_init(void)
         printk("%s, can't alloc chrdev\n", __func__);
     }
     printk("%s, register chrdev(%d, %d)\n", __func__, MAJOR(dev.devno), MINOR(dev.devno));
-    
+
     cdev_init(&dev.cdev, &ilitek_fops);
     dev.cdev.owner = THIS_MODULE;
     ret |= cdev_add(&dev.cdev, dev.devno, 1);
@@ -1013,5 +1013,3 @@ MODULE_AUTHOR("");
 MODULE_DESCRIPTION("itk I2C Capacitive Touch Screen driver");
 MODULE_LICENSE("GPL v2");
 MODULE_VERSION(DRIVER_VERSION);
-
-

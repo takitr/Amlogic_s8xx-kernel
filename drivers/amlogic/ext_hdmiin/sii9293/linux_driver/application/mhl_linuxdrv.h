@@ -9,7 +9,7 @@
  *
  * This program is distributed .as is. WITHOUT ANY WARRANTY of any
  * kind, whether express or implied; without even the implied warranty
- * of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR
  * PURPOSE.  See the GNU General Public License for more details.
 */
 
@@ -38,8 +38,8 @@
 
 
 
-#ifdef __cplusplus 
-extern "C" { 
+#ifdef __cplusplus
+extern "C" {
 #endif  /* _defined (__cplusplus) */
 
 /***** macro definitions *****************************************************/
@@ -73,7 +73,7 @@ extern "C" {
 #define MHL_UCP_ACKED_EVENT	"received_ucpk"
 #define MHL_UCP_ERROR_EVENT	"received_ucpe"
 
-#else   
+#else
 
 #error "Need to add name and description strings for new drivers here!"
 
@@ -101,7 +101,7 @@ typedef struct {
     uint8_t debug_i2c_address;
     uint8_t debug_i2c_offset;
     uint8_t debug_i2c_xfer_length;
-    uint8_t devcap_remote_offset;   // last Device Capability register 
+    uint8_t devcap_remote_offset;   // last Device Capability register
     uint8_t devcap_local_offset;    // last Device Capability register
     uint8_t rap_in_keycode;         // last RAP key code received.
     uint8_t rap_out_keycode;        // last RAP key code transmitted.

@@ -249,7 +249,7 @@ static struct v4l2_queryctrl ov5647_qctrl[] = {
 		.step		= 1,
 		.default_value	= (1000 << 16) | 1000,
 		.flags         = V4L2_CTRL_FLAG_SLIDER,
- 	}
+	}
 };
 
 static struct v4l2_frmivalenum ov5647_frmivalenum[]={
@@ -357,22 +357,22 @@ struct v4l2_querymenu ov5647_qmenu_wbmode[] = {
     },{
         .id         = V4L2_CID_DO_WHITE_BALANCE,
         .index      = CAM_WB_FLUORESCENT,
-        .name       = "fluorescent", 
+        .name       = "fluorescent",
         .reserved   = 0,
     },{
         .id         = V4L2_CID_DO_WHITE_BALANCE,
         .index      = CAM_WB_MANUAL,
-        .name       = "manual", 
+        .name       = "manual",
         .reserved   = 0,
     },{
         .id         = V4L2_CID_DO_WHITE_BALANCE,
         .index      = CAM_WB_SHADE,
-        .name       = "shade", 
+        .name       = "shade",
         .reserved   = 0,
     },{
         .id         = V4L2_CID_DO_WHITE_BALANCE,
         .index      = CAM_WB_TWILIGHT,
-        .name       = "twilight", 
+        .name       = "twilight",
         .reserved   = 0,
     },{
         .id         = V4L2_CID_DO_WHITE_BALANCE,
@@ -409,12 +409,12 @@ struct v4l2_querymenu ov5647_qmenu_autofocus[] = {
 struct v4l2_querymenu ov5647_qmenu_anti_banding_mode[] = {
     {
         .id         = V4L2_CID_POWER_LINE_FREQUENCY,
-        .index      = CAM_BANDING_50HZ, 
+        .index      = CAM_BANDING_50HZ,
         .name       = "50hz",
         .reserved   = 0,
     },{
         .id         = V4L2_CID_POWER_LINE_FREQUENCY,
-        .index      = CAM_BANDING_60HZ, 
+        .index      = CAM_BANDING_60HZ,
         .name       = "60hz",
         .reserved   = 0,
     },
@@ -560,7 +560,7 @@ struct ov5647_buffer {
 	struct vb2_buffer 		vb;
 	struct list_head		list;
 	const struct ov5647_fmt        	*fmt;
-	
+
 	unsigned int canvas_id;
 };
 
@@ -648,8 +648,8 @@ static inline struct ov5647_device *to_dev(struct v4l2_subdev *sd)
 	reg spec of OV5647
    ------------------------------------------------------------------*/
 static struct aml_camera_i2c_fig_s OV5647_script[] = {
-	{0x0100,0x00}, // software standby        
-	{0x0103,0x01}, // software reset          
+	{0x0100,0x00}, // software standby
+	{0x0103,0x01}, // software reset
 	{0xffff, 0xff}
 };
 
@@ -682,7 +682,7 @@ struct aml_camera_i2c_fig_s OV5647_VGA_script_mipi[] = {
           {0x3b07, 0x0c},
           {0x3500, 0x00},
           {0x3501, 0x1c},
-          {0x3502, 0x60},		  	
+          {0x3502, 0x60},
           {0x380c, 0x07},
           {0x380d, 0x3c},
           {0x380e, 0x03},
@@ -831,7 +831,7 @@ struct aml_camera_i2c_fig_s OV5647_preview_VGA_script[] = {
 	{0x583d,0xce},
 	{0x5000,0x06},
 	{0x5001,0x00},
-	{0x5002,0x41},			
+	{0x5002,0x41},
 	{0x5180,0x08},
 	{0x5003,0x08},
 	{0x5a00,0x08},
@@ -902,7 +902,7 @@ struct aml_camera_i2c_fig_s OV5647_preview_VGA_script[] = {
 	{0x4050,0x6e},
 	{0x4051,0x8f},
 	{0x0100,0x01},
-	             
+
 	{0x3035,0x21},
 	{0x303c,0x12},
 	{0x3a08,0x00},
@@ -911,7 +911,7 @@ struct aml_camera_i2c_fig_s OV5647_preview_VGA_script[] = {
 	{0x3a0b,0x7e},
 	{0x3a0d,0x04},
 	{0x3a0e,0x03},
-	{0xffff,0xff},  
+	{0xffff,0xff},
 };
 
 struct aml_camera_i2c_fig_s OV5647_720P_script_mipi[] = {
@@ -1164,7 +1164,7 @@ struct aml_camera_i2c_fig_s OV5647_preview_720P_script[] = {
 	{0x4050,0x6e},
 	{0x4051,0x8f},
 	{0x0100,0x01},
-	             
+
 	{0x3035,0x21},
 	{0x303c,0x12},
 	{0x3a08,0x00},
@@ -1269,151 +1269,151 @@ struct aml_camera_i2c_fig_s OV5647_960P_script_mipi[] = {
 	  { 0xffff, 0xff},
 };
 struct aml_camera_i2c_fig_s OV5647_preview_960P_script[] = {
-	{0x0100,0x00},  
-	{0x0103,0x01},  
-	{0x3035,0x11},  
-	{0x3036,0x46},  
-	{0x303c,0x11},  
-	{0x3821,0x07},  
-	{0x3820,0x41},  
-	{0x370c,0x0f},  
-	{0x3612,0x59},  
-	{0x3618,0x00},  
-	{0x5000,0x06},  
-	{0x5800,0x1b},  
-	{0x5801,0x0d},  
-	{0x5802,0x09},  
-	{0x5803,0x0a},  
-	{0x5804,0x0b},  
-	{0x5805,0x1c},  
-	{0x5806,0x07},  
-	{0x5807,0x05},  
-	{0x5808,0x03},  
-	{0x5809,0x03},  
-	{0x580a,0x05},  
-	{0x580b,0x07},  
-	{0x580c,0x05},  
-	{0x580d,0x02},  
-	{0x580e,0x01},  
-	{0x580f,0x01},  
-	{0x5810,0x02},  
-	{0x5811,0x05},  
-	{0x5812,0x06},  
-	{0x5813,0x02},  
-	{0x5814,0x01},  
-	{0x5815,0x01},  
-	{0x5816,0x02},  
-	{0x5817,0x06},  
-	{0x5818,0x07},  
-	{0x5819,0x05},  
-	{0x581a,0x03},  
-	{0x581b,0x03},  
-	{0x581c,0x05},  
-	{0x581d,0x06},  
-	{0x581e,0x1f},  
-	{0x581f,0x0d},  
-	{0x5820,0x0a},  
-	{0x5821,0x0a},  
-	{0x5822,0x0c},  
-	{0x5823,0x1e},  
-	{0x5824,0x0e},  
-	{0x5825,0x08},  
-	{0x5826,0x0a},  
-	{0x5827,0x18},  
-	{0x5828,0x2a},  
-	{0x5829,0x0a},  
-	{0x582a,0x26},  
-	{0x582b,0x24},  
-	{0x582c,0x26},  
-	{0x582d,0x28},  
-	{0x582e,0x0a},  
-	{0x582f,0x22},  
-	{0x5830,0x40},  
-	{0x5831,0x42},  
-	{0x5832,0x2a},  
-	{0x5833,0x0a},  
-	{0x5834,0x26},  
-	{0x5835,0x26},  
-	{0x5836,0x26},  
-	{0x5837,0x2a},  
-	{0x5838,0x2c},  
-	{0x5839,0x08},  
-	{0x583a,0x09},  
-	{0x583b,0x28},  
-	{0x583c,0x2c},  
-	{0x583d,0xce},  
-	{0x5000,0x06},  
-	{0x5001,0x00},  
-	{0x5002,0x41},	
+	{0x0100,0x00},
+	{0x0103,0x01},
+	{0x3035,0x11},
+	{0x3036,0x46},
+	{0x303c,0x11},
+	{0x3821,0x07},
+	{0x3820,0x41},
+	{0x370c,0x0f},
+	{0x3612,0x59},
+	{0x3618,0x00},
+	{0x5000,0x06},
+	{0x5800,0x1b},
+	{0x5801,0x0d},
+	{0x5802,0x09},
+	{0x5803,0x0a},
+	{0x5804,0x0b},
+	{0x5805,0x1c},
+	{0x5806,0x07},
+	{0x5807,0x05},
+	{0x5808,0x03},
+	{0x5809,0x03},
+	{0x580a,0x05},
+	{0x580b,0x07},
+	{0x580c,0x05},
+	{0x580d,0x02},
+	{0x580e,0x01},
+	{0x580f,0x01},
+	{0x5810,0x02},
+	{0x5811,0x05},
+	{0x5812,0x06},
+	{0x5813,0x02},
+	{0x5814,0x01},
+	{0x5815,0x01},
+	{0x5816,0x02},
+	{0x5817,0x06},
+	{0x5818,0x07},
+	{0x5819,0x05},
+	{0x581a,0x03},
+	{0x581b,0x03},
+	{0x581c,0x05},
+	{0x581d,0x06},
+	{0x581e,0x1f},
+	{0x581f,0x0d},
+	{0x5820,0x0a},
+	{0x5821,0x0a},
+	{0x5822,0x0c},
+	{0x5823,0x1e},
+	{0x5824,0x0e},
+	{0x5825,0x08},
+	{0x5826,0x0a},
+	{0x5827,0x18},
+	{0x5828,0x2a},
+	{0x5829,0x0a},
+	{0x582a,0x26},
+	{0x582b,0x24},
+	{0x582c,0x26},
+	{0x582d,0x28},
+	{0x582e,0x0a},
+	{0x582f,0x22},
+	{0x5830,0x40},
+	{0x5831,0x42},
+	{0x5832,0x2a},
+	{0x5833,0x0a},
+	{0x5834,0x26},
+	{0x5835,0x26},
+	{0x5836,0x26},
+	{0x5837,0x2a},
+	{0x5838,0x2c},
+	{0x5839,0x08},
+	{0x583a,0x09},
+	{0x583b,0x28},
+	{0x583c,0x2c},
+	{0x583d,0xce},
+	{0x5000,0x06},
+	{0x5001,0x00},
+	{0x5002,0x41},
 	{0x5180,0x08},
-	{0x5003,0x08},  
-	{0x5a00,0x08},  
-	{0x3000,0xff},  
-	{0x3001,0xff},  
-	{0x3002,0xff},  
-	{0x301d,0xf0},  
-	{0x3a18,0x00},  
-	{0x3a19,0xf8},  
-	{0x3c01,0x80},  
-	{0x3b07,0x0c}, 
+	{0x5003,0x08},
+	{0x5a00,0x08},
+	{0x3000,0xff},
+	{0x3001,0xff},
+	{0x3002,0xff},
+	{0x301d,0xf0},
+	{0x3a18,0x00},
+	{0x3a19,0xf8},
+	{0x3c01,0x80},
+	{0x3b07,0x0c},
 	{0x3500,0x00},
 	{0x3501,0x37},
 	{0x3502,0x60},
-	{0x380c,0x07},  
-	{0x380d,0x68},  
-	{0x380e,0x03},  
-	{0x380f,0xd8},  
-	{0x3814,0x31},  
-	{0x3815,0x31},  
-	{0x3708,0x64},  
-	{0x3709,0x52},  
-	{0x3808,0x05},  
-	{0x3809,0x00},  
-	{0x380a,0x03},  
-	{0x380b,0xc0},  
-	{0x3800,0x00},  
-	{0x3801,0x18},  
-	{0x3802,0x00},  
-	{0x3803,0x0e},  
-	{0x3804,0x0a},  
-	{0x3805,0x27},  
-	{0x3806,0x07},  
-	{0x3807,0x95},  
-	{0x3630,0x2e},  
-	{0x3632,0xe2},  
-	{0x3633,0x23},  
-	{0x3634,0x44},  
-	{0x3620,0x64},  
-	{0x3621,0xe0},  
-	{0x3600,0x37},  
-	{0x3704,0xa0},  
-	{0x3703,0x5a},  
-	{0x3715,0x78},  
-	{0x3717,0x01},  
-	{0x3731,0x02},  
-	{0x370b,0x60},  
-	{0x3705,0x1a},  
-	{0x3f05,0x02},  
-	{0x3f06,0x10},  
-	{0x3f01,0x0a},  
-	{0x3503,0x03},  
-	{0x3a08,0x01},  
-	{0x3a09,0x27},  
-	{0x3a0a,0x00},  
-	{0x3a0b,0xf6},  
-	{0x3a0d,0x04},  
-	{0x3a0e,0x03},  
-	{0x3a0f,0x58},  
-	{0x3a10,0x50},  
-	{0x3a1b,0x58},  
-	{0x3a1e,0x50},  
-	{0x3a11,0x60},  
-	{0x3a1f,0x28},  
-	{0x4001,0x02},  
-	{0x4004,0x02},  
-	{0x4000,0x09},  
-	{0x4050,0x6e},  
-	{0x4051,0x8f},  
+	{0x380c,0x07},
+	{0x380d,0x68},
+	{0x380e,0x03},
+	{0x380f,0xd8},
+	{0x3814,0x31},
+	{0x3815,0x31},
+	{0x3708,0x64},
+	{0x3709,0x52},
+	{0x3808,0x05},
+	{0x3809,0x00},
+	{0x380a,0x03},
+	{0x380b,0xc0},
+	{0x3800,0x00},
+	{0x3801,0x18},
+	{0x3802,0x00},
+	{0x3803,0x0e},
+	{0x3804,0x0a},
+	{0x3805,0x27},
+	{0x3806,0x07},
+	{0x3807,0x95},
+	{0x3630,0x2e},
+	{0x3632,0xe2},
+	{0x3633,0x23},
+	{0x3634,0x44},
+	{0x3620,0x64},
+	{0x3621,0xe0},
+	{0x3600,0x37},
+	{0x3704,0xa0},
+	{0x3703,0x5a},
+	{0x3715,0x78},
+	{0x3717,0x01},
+	{0x3731,0x02},
+	{0x370b,0x60},
+	{0x3705,0x1a},
+	{0x3f05,0x02},
+	{0x3f06,0x10},
+	{0x3f01,0x0a},
+	{0x3503,0x03},
+	{0x3a08,0x01},
+	{0x3a09,0x27},
+	{0x3a0a,0x00},
+	{0x3a0b,0xf6},
+	{0x3a0d,0x04},
+	{0x3a0e,0x03},
+	{0x3a0f,0x58},
+	{0x3a10,0x50},
+	{0x3a1b,0x58},
+	{0x3a1e,0x50},
+	{0x3a11,0x60},
+	{0x3a1f,0x28},
+	{0x4001,0x02},
+	{0x4004,0x02},
+	{0x4000,0x09},
+	{0x4050,0x6e},
+	{0x4051,0x8f},
 	{0x0100,0x01},
 	{0xffff, 0xff},
 };
@@ -1666,7 +1666,7 @@ struct aml_camera_i2c_fig_s OV5647_preview_1080P_script[] = {
 	{0x4050,0x6e},
 	{0x4051,0x8f},
 	{0x0100,0x01},
-   
+
 	{0x3035,0x21},
 	{0x303c,0x12},
 	{0x3a08,0x00},
@@ -1921,7 +1921,7 @@ struct aml_camera_i2c_fig_s OV5647_capture_5M_script[] = {
 	{0x4050,0x6e},
 	{0x4051,0x8f},
 	{0x0100,0x01},
-	             
+
 	{0x3035,0x21},
 	{0x303c,0x12},
 	{0x3a08,0x00},
@@ -2164,7 +2164,7 @@ static resolution_param_t  prev_resolution_array[] = {
 		.reg_script[1]			= OV5647_5M_script_mipi,
 	}*/
 };
-	
+
 
 static resolution_param_t  capture_resolution_array[] = {
 	{
@@ -2226,7 +2226,7 @@ void OV5647_manual_set_aet(int exp, int ag, int vts){
 		vts_h = (unsigned char)((vts >> 8) & 0x000000ff);
 		vts_l = (unsigned char)(vts & 0x000000ff);
 	}
-	
+
 	adapter = i2c_get_adapter(4);
 	my_i2c_put_byte(adapter,0x36,0x3208, 0x00 );
 	if(exp != -1)
@@ -2272,15 +2272,15 @@ static ssize_t aet_manual_store(struct class *cls,struct class_attribute *attr, 
 	char *param[3] = {NULL};
 	unsigned int exp = 0, ag = 0, vts = 0;
 	parse_param(buf,&param[0]);
-	
+
 	if(param[0] == NULL || param[1] == NULL || param[2] == NULL){
 		printk("wrong param\n");
-		return len;	
-	}	
+		return len;
+	}
 	sscanf(param[0],"%x",&exp);
 	sscanf(param[1],"%x",&ag);
 	sscanf(param[2],"%x",&vts);
-	
+
 	OV5647_manual_set_aet(exp,ag,vts);
 	return len;
 }
@@ -2295,13 +2295,13 @@ static CLASS_ATTR(aet_debug, 0664, aet_manual_show, aet_manual_store);
 
 /* ov5647 uses exp+ag mode */
 static bool OV5647_set_aet_new_step(void *priv, unsigned int new_step, bool exp_mode, bool ag_mode){
-  	unsigned int exp = 0, ag = 0, vts = 0;
-	camera_priv_data_t *camera_priv_data = (camera_priv_data_t *)priv; 
+	unsigned int exp = 0, ag = 0, vts = 0;
+	camera_priv_data_t *camera_priv_data = (camera_priv_data_t *)priv;
 	sensor_aet_t *sensor_aet_table = camera_priv_data->sensor_aet_table;
 	sensor_aet_info_t *sensor_aet_info = camera_priv_data->sensor_aet_info;
-	
+
 	if(camera_priv_data == NULL || sensor_aet_table == NULL || sensor_aet_info == NULL)
-		return false;	
+		return false;
 	if (((!exp_mode) && (!ag_mode)) || (new_step > sensor_aet_info[aet_index].tbl_max_step))
 		return(false);
 	else
@@ -2324,7 +2324,7 @@ static bool OV5647_set_aet_new_step(void *priv, unsigned int new_step, bool exp_
 
 static bool OV5647_check_mains_freq(void *priv){// when the fr change,we need to change the aet table
 #if 0
-    int detection; 
+    int detection;
     struct i2c_adapter *adapter;
 #endif
     priv = priv;
@@ -2369,18 +2369,18 @@ void OV5647_set_new_format(void *priv,int width,int height,int fr){
     configure_t *configure = camera_priv_data->configure;
     current_fr = fr;
     if(camera_priv_data == NULL)
-    	return;
+	return;
     printk("sum:%d,mode:%d,fr:%d\n",configure->aet.sum,ov5647_work_mode,fr);
     while(index < configure->aet.sum){
         if(width == configure->aet.aet[index].info->fmt_hactive && height == configure->aet.aet[index].info->fmt_vactive \
                 && fr == configure->aet.aet[index].info->fmt_main_fr && ov5647_work_mode == configure->aet.aet[index].info->fmt_capture){
-            break;	
+            break;
         }
-        index++;	
+        index++;
     }
     if(index >= configure->aet.sum){
         printk("use default value\n");
-        index = 0;	
+        index = 0;
     }
     printk("current aet index :%d\n",index);
     camera_priv_data->sensor_aet_info = configure->aet.aet[index].info;
@@ -2394,18 +2394,18 @@ void OV5647_set_new_format(void *priv,int width,int height,int fr){
 void OV5647_ae_manual_set(char **param){
 	if(param[0] == NULL || param[1] == NULL || param[2] == NULL){
 		printk("wrong param\n");
-		return ;	
-	}	
+		return ;
+	}
 	sscanf(param[0],"%x",&g_ae_manual_exp);
 	sscanf(param[1],"%x",&g_ae_manual_ag);
 	sscanf(param[2],"%x",&g_ae_manual_vts);
-	
+
 	g_ae_manual_exp = (g_ae_manual_exp > 0x0000ffff) ? 0x0000ffff : g_ae_manual_exp;
 	g_ae_manual_ag = (g_ae_manual_ag > 0x000003ff) ? 0x000003ff : g_ae_manual_ag;
 	g_ae_manual_vts = (g_ae_manual_vts > 0x0000ffff) ? 0x0000ffff : g_ae_manual_vts;
-	
+
 	OV5647_manual_set_aet(g_ae_manual_exp,g_ae_manual_ag,g_ae_manual_vts);
-}           
+}
 
 static ssize_t ae_manual_store(struct class *cls,struct class_attribute *attr, const char* buf, size_t len)
 {
@@ -2437,7 +2437,7 @@ static ssize_t i2c_debug_store(struct class *cls,struct class_attribute *attr, c
 	printk("cmd:%c\n",cmd);
 	adapter = i2c_get_adapter(4);
     switch( cmd ){
-    	case 'w':
+	case 'w':
 			sscanf(param[1],"%x",&addr);
 			sscanf(param[2],"%x",&value);
 			my_i2c_put_byte(adapter,0x36,addr,value);
@@ -2462,7 +2462,7 @@ static ssize_t i2c_debug_store(struct class *cls,struct class_attribute *attr, c
         default :
                 break;
 	}
-	
+
 	return len;
 }
 
@@ -2489,15 +2489,15 @@ static ssize_t dg_manual_store(struct class *cls,struct class_attribute *attr, c
 	char *param[3] = {NULL};
 	struct i2c_adapter *adapter;
 	struct sensor_dg_s dg;
-	
+
 	parse_param(buf,&param[0]);
 	if(param[0] == NULL || param[1] == NULL || param[2] == NULL){
 		printk("wrong param\n");
-		return len;	
+		return len;
 	}
 	sscanf(param[0],"%x",(unsigned int *)&dg.r);
 	sscanf(param[1],"%x",(unsigned int *)&dg.g);
-	sscanf(param[2],"%x",(unsigned int *)&dg.b);	
+	sscanf(param[2],"%x",(unsigned int *)&dg.b);
 	adapter = i2c_get_adapter(4);
 	my_i2c_put_byte(adapter,0x36,0x5186, (unsigned char)((dg.r >> 8) & 0x000f));
 	my_i2c_put_byte(adapter,0x36,0x5187, (unsigned char)((dg.r >> 0) & 0x00ff));
@@ -2516,7 +2516,7 @@ static ssize_t dg_manual_show(struct class *cls,struct class_attribute *attr, ch
 	struct sensor_dg_s dg;
 	struct i2c_adapter *adapter;
 	unsigned char	dg_r_high,dg_r_low,dg_g_high,dg_g_low,dg_b_high,dg_b_low;
-	
+
 	adapter = i2c_get_adapter(4);
 	dg_r_high = my_i2c_get_byte(adapter,0x36,0x5186);
 	dg_r_low  = my_i2c_get_byte(adapter,0x36,0x5187);
@@ -2529,7 +2529,7 @@ static ssize_t dg_manual_show(struct class *cls,struct class_attribute *attr, ch
   dg.g = ((unsigned short)dg_g_high << 8) | ((unsigned short)dg_g_low << 0);
   dg.b = ((unsigned short)dg_b_high << 8) | ((unsigned short)dg_b_low << 0);
   dg.dg_default = 0x0400;
-  
+
 	printk("0x%x 0x%x 0x%x 0x%x\n",dg.r,dg.g,dg.b,dg.dg_default);
 	return len;
 }
@@ -2552,12 +2552,12 @@ static ssize_t vcm_manual_store(struct class *cls,struct class_attribute *attr, 
     if(diff < 256){
         codes = 1;
     }else if(diff < 512){
-        codes = 2;	
+        codes = 2;
     }else
         codes = 3;
     vcm_data |= (codes << 2); // bit[3:2]
     vcm_data |= (last_af_step << 4);  // bit[4:13]
-    printk("set vcm step :%x\n",vcm_data);   
+    printk("set vcm step :%x\n",vcm_data);
     byte_h  = (vcm_data >> 8) & 0x000000ff;
     byte_l  = (vcm_data >> 0) & 0x000000ff;
     buff[0] = byte_h;
@@ -2612,12 +2612,12 @@ void OV5647_init_regs(struct ov5647_device *dev)
 		}
 		if((i2c_put_byte(client,OV5647_script[i].addr, OV5647_script[i].val)) < 0)
 		{
-	 		printk("fail in initial OV5647. \n");
+			printk("fail in initial OV5647. \n");
 			return;
 		}
 		i++;
 	}
-	
+
 	return;
 }
 /*init for vcm  mode0:LSC mode1:DLC*/
@@ -2632,16 +2632,16 @@ static void dw9714_init(unsigned char mode)
 	if(mode){
 		buf[0]=dlc[0]>>8&&0xff;
 		buf[1]=dlc[0]&&0xff;
-    	        my_i2c_put_byte_add8(adapter,0x0c,buf,2);
+	        my_i2c_put_byte_add8(adapter,0x0c,buf,2);
 		buf[0]=dlc[1]>>8&&0xff;
 		buf[1]=dlc[1]&&0xff;
-    	        my_i2c_put_byte_add8(adapter,0x0c,buf,2);
+	        my_i2c_put_byte_add8(adapter,0x0c,buf,2);
 		buf[0]=dlc[2]>>8&&0xff;
 		buf[1]=dlc[2]&&0xff;
-    	        my_i2c_put_byte_add8(adapter,0x0c,buf,2);
+	        my_i2c_put_byte_add8(adapter,0x0c,buf,2);
 		buf[0]=dlc[3]>>8&&0xff;
 		buf[1]=dlc[3]&&0xff;
-    	        my_i2c_put_byte_add8(adapter,0x0c,buf,2);
+	        my_i2c_put_byte_add8(adapter,0x0c,buf,2);
 	}
 }
 /* power down for dw9714*/
@@ -2652,7 +2652,7 @@ static void dw9714_uninit(void)
 	buf[0] = 0x80;
 	buf[1] = 0x0;
 	adapter = i2c_get_adapter(4);
-	my_i2c_put_byte_add8(adapter,0x0c,buf,2);	
+	my_i2c_put_byte_add8(adapter,0x0c,buf,2);
 }
 
 
@@ -2670,7 +2670,7 @@ static ssize_t version_info_show(struct class *cls,struct class_attribute *attr,
     else{
         printk("Date %s",cf->version.date);
         printk("Module %s",cf->version.module);
-        printk("Version %s",cf->version.version);	
+        printk("Version %s",cf->version.version);
     }
     return len;
 }
@@ -2723,13 +2723,13 @@ void OV5647_set_param_wb(struct ov5647_device *dev,enum  camera_wb_flip_e para)/
     if(dev->configure != NULL && dev->configure->wb_valid == 1){
         while(index < dev->configure->wb.sum){
             if(strcmp(wb_pair[i].name, dev->configure->wb.wb[index].name) == 0){
-                break;	
+                break;
             }
             index++;
         }
         if(index == dev->configure->wb.sum){
             printk("invalid wb value\n");
-            return;	
+            return;
         }
         if(para == CAM_WB_AUTO){
             printk("auto wb\n");
@@ -2744,7 +2744,7 @@ void OV5647_set_param_wb(struct ov5647_device *dev,enum  camera_wb_flip_e para)/
         dev->fe_arg.arg = (void *)(dev->cam_para);
         dev->vops->tvin_fe_func(0,&dev->fe_arg);
     }else{
-        return;	
+        return;
     }
 
 
@@ -2774,11 +2774,11 @@ void OV5647_set_param_exposure(struct ov5647_device *dev,enum camera_exposure_e 
         dev->ae_on = true;
     }else{
         if(dev->ae_on == false){ // set ae on
-            dev->cam_para->cam_command = CAM_COMMAND_AE_ON;	
+            dev->cam_para->cam_command = CAM_COMMAND_AE_ON;
             dev->fe_arg.port = TVIN_PORT_ISP;
             dev->fe_arg.index = 0;
             dev->fe_arg.arg = (void *)(dev->cam_para);
-            dev->vops->tvin_fe_func(0,&dev->fe_arg);	
+            dev->vops->tvin_fe_func(0,&dev->fe_arg);
             dev->ae_on = true;
         }
         value = para < 8 ? para : 7;
@@ -2836,13 +2836,13 @@ void OV5647_set_param_effect(struct ov5647_device *dev,enum camera_effect_flip_e
     if(dev->configure != NULL && dev->configure->effect_valid == 1){
         while(index < dev->configure->eff.sum){
             if(strcmp(effect_pair[i].name, dev->configure->eff.eff[index].name) == 0){
-                break;	
+                break;
             }
             index++;
         }
         if(index == dev->configure->eff.sum){
             printk("invalid effect value\n");
-            return;	
+            return;
         }
         dev->cam_para->cam_command = CAM_COMMAND_EFFECT;
         memcpy(dev->cam_para->xml_effect_manual->csc.reg_map,dev->configure->eff.eff[index].export,EFFECT_MAX * sizeof(unsigned int));
@@ -2852,7 +2852,7 @@ void OV5647_set_param_effect(struct ov5647_device *dev,enum camera_effect_flip_e
         dev->fe_arg.arg = (void *)(dev->cam_para);
         dev->vops->tvin_fe_func(0,&dev->fe_arg);
         return;
-    } 
+    }
 
 } /* OV5647_set_param_effect */
 
@@ -2910,7 +2910,7 @@ static int OV5647_AutoFocus(struct ov5647_device *dev, int focus_mode)
     int ret = 0;
 
     switch (focus_mode) {
-        case CAM_FOCUS_MODE_AUTO:       
+        case CAM_FOCUS_MODE_AUTO:
             printk("auto focus mode start\n");
             bDoingAutoFocusMode = true;
             dev->cam_para->cam_command = CAM_COMMAND_FULLSCAN;
@@ -2971,7 +2971,7 @@ static int set_flip(struct ov5647_device *dev)
 		printk("fail in setting sensor orientation\n");
 		return -1;
         }
-        
+
         return 0;
 }
 
@@ -3069,7 +3069,7 @@ void set_resolution_param(struct ov5647_device *dev, resolution_param_t* res_par
     int index = 0;
 
     if(i_index != -1 && ov5647_work_mode != CAMERA_CAPTURE){
-    	printk("i_index is %d\n", i_index);
+	printk("i_index is %d\n", i_index);
         res_param = &debug_prev_resolution_array[i_index];
     }
     if (!res_param->reg_script[t]) {
@@ -3086,10 +3086,10 @@ void set_resolution_param(struct ov5647_device *dev, resolution_param_t* res_par
             break;
         }
         if(res_param->reg_script[t][i].addr == 0x0103) //soft reset,need 5ms delay
-        	msleep(5);
+		msleep(5);
         i++;
     }
-    
+
     set_flip(dev);
 
     if(dev->configure->wb_sensor_data_valid == 1){
@@ -3126,7 +3126,7 @@ static int set_focus_zone(struct ov5647_device *dev, int value)
 	//struct i2c_client *client = v4l2_get_subdevdata(&dev->sd);
 	//int retry_count = 10;
 	//int ret = -1;
-	
+
 	xc = (value >> 16) & 0xffff;
 	yc = (value & 0xffff);
 	if(xc == 1000 && yc == 1000)
@@ -3134,9 +3134,9 @@ static int set_focus_zone(struct ov5647_device *dev, int value)
 	tx = xc * ov5647_h_active /2000;
 	ty = yc * ov5647_v_active /2000;
 	printk("xc = %d, yc = %d, tx = %d , ty = %d \n", xc, yc, tx, ty);
-	
+
 	dev->cam_para->xml_scenes->af.x = tx;
-	dev->cam_para->xml_scenes->af.y = ty;	
+	dev->cam_para->xml_scenes->af.y = ty;
 	dev->cam_para->cam_command = CAM_COMMAND_TOUCH_FOCUS;
 	dev->fe_arg.port = TVIN_PORT_ISP;
 	dev->fe_arg.index = 0;
@@ -3168,9 +3168,9 @@ static int convert_canvas_index(unsigned int v4l2_format, unsigned int start_can
 	case V4L2_PIX_FMT_BGR24:
 	case V4L2_PIX_FMT_RGB24:
 		canvas = start_canvas;
-		break; 
+		break;
 	case V4L2_PIX_FMT_NV12:
-	case V4L2_PIX_FMT_NV21: 
+	case V4L2_PIX_FMT_NV21:
 		canvas = start_canvas | ((start_canvas+1)<<8);
 		break;
 	case V4L2_PIX_FMT_YVU420:
@@ -3248,7 +3248,7 @@ static int ov5647_setting(struct ov5647_device *dev,int PROP_ID,int value )
 			ov5647_qctrl[3].default_value=value;
 			printk(KERN_INFO " set camera  banding=%d. \n ",value);
 			OV5647_set_param_banding(dev,value);
-			
+
 		}
 		break;
 	case V4L2_CID_ZOOM_ABSOLUTE:
@@ -3281,13 +3281,13 @@ static int ov5647_setting(struct ov5647_device *dev,int PROP_ID,int value )
 				OV5647_AutoFocus(dev,value);
 			}
 		}
-	case V4L2_CID_PRIVACY:       
+	case V4L2_CID_PRIVACY:
 		break;
 	default:
-   		ret=-1;
+		ret=-1;
 		break;
 	}
-	
+
 	return ret;
 
 }
@@ -3564,11 +3564,11 @@ static int queue_setup(struct vb2_queue *vq, const struct v4l2_format *fmt,
 
         if (1080 == height)
                 height = 1088;
-				
+
         if (fmt)
                 size = fmt->fmt.pix.sizeimage;
         else
-                size = (width * height * dev->fmt->depth)>>3; 
+                size = (width * height * dev->fmt->depth)>>3;
 
         if (size == 0)
                 return -EINVAL;
@@ -3614,7 +3614,7 @@ static int buffer_prepare(struct vb2_buffer *vb)
          * should thus be moved to buffer_init and s_fmt.
          */
 				if (dev->width  < 48 || dev->width  > norm_maxw() ||
-	    			dev->height < 32 || dev->height > norm_maxh())
+				dev->height < 32 || dev->height > norm_maxh())
 									return -EINVAL;
 
 				size = (dev->width*dev->height*dev->fmt->depth)>>3;
@@ -3820,7 +3820,7 @@ static int vidioc_s_fmt_vid_cap(struct file *file, void *priv,
                         (f->fmt.pix.pixelformat==V4L2_PIX_FMT_YUV420)){
                 f->fmt.pix.width = (f->fmt.pix.width + (CANVAS_WIDTH_ALIGN*2-1) ) & (~(CANVAS_WIDTH_ALIGN*2-1));
         }
-        
+
         ret = vidioc_try_fmt_vid_cap(file, priv, f);
         if (ret < 0)
                 return ret;
@@ -3893,7 +3893,7 @@ static int vidioc_querybuf(struct file *file, void *priv, struct v4l2_buffer *p)
         }else{
                 p->reserved = 0;
         }
-#endif		
+#endif
         return ret;
 }
 
@@ -3913,10 +3913,10 @@ static int get_index(char *res){
 			break;
 		}
 		else
-			i++;	
+			i++;
 	}
 	if(i < ARRAY_SIZE(res_size)){
-		return i;	
+		return i;
 	}else
 		return -1;
 }
@@ -3927,11 +3927,11 @@ static ssize_t manual_format_store(struct class *cls,struct class_attribute *att
 	char target[20];
 	char *param[3] = {NULL};
 	resolution_param_t *res_param;
-	
+
 	parse_param(buf,&param[0]);
 	if(param[0] == NULL || param[1] == NULL){
 		printk("wrong param\n");
-		return len;	
+		return len;
 	}
 	sscanf(param[0],"%s",input);
 	sscanf(param[1],"%s",target);
@@ -3942,7 +3942,7 @@ static ssize_t manual_format_store(struct class *cls,struct class_attribute *att
 		printk("wrong res\n");
 		return len;
 	}
-	res_param = &debug_prev_resolution_array[t_index];	
+	res_param = &debug_prev_resolution_array[t_index];
 	dest_hactive = res_param->active_frmsize.width;
     dest_vactive = res_param->active_frmsize.height;
     printk("d_h:%d,d_v:%d\n",dest_hactive,dest_vactive);
@@ -4081,7 +4081,7 @@ static int vidioc_g_ctrl(struct file *file, void *priv,
                         break;
                     default:
                         printk("wrong state\n");
-                }	
+                }
                 return 0;
             }
             ctrl->value = dev->qctl_regs[i];
@@ -4160,7 +4160,7 @@ static int ov5647_open(struct file *file)
     dev->cam_para->cam_function.check_mains_freq = OV5647_check_mains_freq;
     dev->cam_para->cam_function.set_af_new_step = OV5647_set_af_new_step;
     dev->camera_priv_data.configure = dev->configure;
-    dev->cam_para->cam_function.priv_data = (void *)&dev->camera_priv_data;  
+    dev->cam_para->cam_function.priv_data = (void *)&dev->camera_priv_data;
     dev->ae_on = false;
     OV5647_init_regs(dev);
     msleep(40);
@@ -4202,8 +4202,8 @@ static int ov5647_open(struct file *file)
     dev->pindex.nr_index = 0;
     dev->pindex.peaking_index = 0;
     dev->pindex.lens_index = 0;
-    /**creat class file**/		
-    cam_class = class_create(THIS_MODULE,"camera"); 
+    /**creat class file**/
+    cam_class = class_create(THIS_MODULE,"camera");
     if(IS_ERR(cam_class)){
         return PTR_ERR(cam_class);
     }
@@ -4283,14 +4283,14 @@ static int ov5647_close(struct file *file)
     msleep(10);
 #if MESON_CPU_TYPE >= MESON_CPU_TYPE_MESON6
     switch_mod_gate_by_name("ge2d", 0);
-#endif		
+#endif
     wake_unlock(&(dev->wake_lock));
     class_remove_file(cam_class,&class_attr_ae_debug);
     class_remove_file(cam_class,&class_attr_camera_debug);
     class_remove_file(cam_class,&class_attr_aet_debug);
     class_remove_file(cam_class,&class_attr_dg_debug);
     class_remove_file(cam_class,&class_attr_vcm_debug);
-    class_remove_file(cam_class,&class_attr_resolution_debug);   
+    class_remove_file(cam_class,&class_attr_resolution_debug);
     class_remove_file(cam_class,&class_attr_version_debug);
     class_destroy(cam_class);
 #if 0
@@ -4503,18 +4503,18 @@ static int ov5647_probe(struct i2c_client *client,
         plat_dat = (aml_cam_info_t*)client->dev.platform_data;
         if (plat_dat) {
                 memcpy(&t->cam_info, plat_dat, sizeof(aml_cam_info_t));
-                if(plat_dat->front_back>=0)  
+                if(plat_dat->front_back>=0)
                         video_nr=plat_dat->front_back;
         }else {
                 printk("camera ov5647: have no platform data\n");
                 ret = -EINVAL;
                 goto unreg_dev;
         }
-        
+
         t->cam_info.version = OV5647_DRIVER_VERSION;
         if (aml_cam_info_reg(&t->cam_info) < 0)
 		printk("reg caminfo error\n");
-			
+
         ret = video_register_device(vfd, VFL_TYPE_GRABBER, video_nr);
         if (ret < 0) {
                 goto unreg_dev;
@@ -4562,4 +4562,3 @@ static struct i2c_driver ov5647_i2c_driver = {
 };
 
 module_i2c_driver(ov5647_i2c_driver);
-

@@ -59,13 +59,13 @@ enum {
 	SPDIFIN_MODE   = 1<<1,
 };
 enum {
-	AML_AUDIO_NA = 0,	
+	AML_AUDIO_NA = 0,
 	AML_AUDIO_SPDIFIN = 1<<0,
 	AML_AUDIO_SPDIFOUT = 1<<1,
 	AML_AUDIO_I2SIN = 1<<2,
 	AML_AUDIO_I2SOUT = 1<<3,
 	AML_AUDIO_PCMIN = 1<<4,
-	AML_AUDIO_PCMOUT = 1<<5,				
+	AML_AUDIO_PCMOUT = 1<<5,
 };
 
 #define AUDIO_CLK_256FS             0
@@ -105,7 +105,7 @@ extern unsigned IEC958_MODE;
 extern unsigned I2S_MODE;
 
 void audio_set_aiubuf(u32 addr, u32 size, unsigned int channel);
-void audio_set_958outbuf(u32 addr, u32 size, int flag);
+void audio_set_958outbuf(u32 addr, u32 size, int channels, int flag);
 void audio_in_i2s_set_buf(u32 addr, u32 size,u32 i2s_mode, u32 i2s_sync);
 void audio_in_spdif_set_buf(u32 addr, u32 size);
 void audio_in_i2s_enable(int flag);
@@ -140,6 +140,8 @@ unsigned int read_iec958_rd_ptr(void);
 void audio_in_spdif_enable(int flag);
 unsigned audio_spdifout_pg_enable(unsigned char enable);
 unsigned audio_aiu_pg_enable(unsigned char enable);
+void audio_mute_left_right(unsigned flag);
+void set_i2s_source(int source);
 
 #include "mach/cpu.h"
 
@@ -158,7 +160,7 @@ unsigned audio_aiu_pg_enable(unsigned char enable);
 #endif
 
 #define I2S_PLL_SRC         1   // MPLL0
-#define MPLL_I2S_CNTL		HHI_MPLL_CNTL7  
+#define MPLL_I2S_CNTL		HHI_MPLL_CNTL7
 
 #define I958_PLL_SRC        2   // MPLL1
 #define MPLL_958_CNTL		HHI_MPLL_CNTL8

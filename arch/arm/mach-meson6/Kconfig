@@ -29,7 +29,7 @@ config MESON_TIMERD
 	help
 		Enable EE Timer D . if enable the timer is 1Mhz
 endmenu
-choice 
+choice
 	prompt "Meson Local timer select"
 	depends on SMP
 	default MESON_LOCAL_TIMER
@@ -43,7 +43,7 @@ config MESON_CPU_TEMP_SENSOR
 	bool "meson temperature sensor cpu interface support"
 	default n
 	help
-		/sys/class/saradc/temperature can got the celius . 
+		/sys/class/saradc/temperature can got the celius .
 config CORE_FREQ_TRACK
     bool "trace for cpu frequence with kernel timestamp"
     default n
@@ -96,7 +96,5 @@ config MESON_TRUSTZONE
 	default n
 	help
 		Enable ARM Trustzone secure extension
-		
+
 endif # ARCH_MESON36
-
-

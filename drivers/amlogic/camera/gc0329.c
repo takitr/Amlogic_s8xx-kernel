@@ -204,7 +204,7 @@ static struct v4l2_queryctrl gc0329_qctrl[] = {
 		.step		= 90,
 		.default_value	= 0,
 		.flags         = V4L2_CTRL_FLAG_SLIDER,
- 	}
+	}
 };
 static struct v4l2_frmivalenum gc0329_frmivalenum[]={
 	{
@@ -373,7 +373,7 @@ struct gc0329_device {
 
 	/* platform device data from board initting. */
 	aml_cam_info_t cam_info;
-	
+
 	/* wake lock */
 	struct wake_lock	wake_lock;
 
@@ -458,8 +458,8 @@ struct aml_camera_i2c_fig1_s GC0329_script[] = {
 	{0x24, 0x16},
 
 	////////////////////blk////////////////////
-	{0x26, 0xf7}, 
-	{0x29, 0x80}, 
+	{0x26, 0xf7},
+	{0x29, 0x80},
 	{0x32, 0x04},
 	{0x33, 0x20},
 	{0x34, 0x20},
@@ -474,8 +474,8 @@ struct aml_camera_i2c_fig1_s GC0329_script[] = {
 	{0x46, 0x02},
 	{0x4b, 0xca},
 	{0x4d, 0x01},
-	{0x4f, 0x01},     
-	{0x03, 0x01}, 
+	{0x4f, 0x01},
+	{0x03, 0x01},
 	{0x04, 0xe0},
 	{0x70, 0x48},
 
@@ -484,8 +484,8 @@ struct aml_camera_i2c_fig1_s GC0329_script[] = {
 	//{0xbd, 0x00},
 	//{0xbe, 0x00},
 	////////////////////DNDD////////////////////
-	{0x80, 0xe7}, 
-	{0x82, 0x55}, 
+	{0x80, 0xe7},
+	{0x82, 0x55},
 	{0x83, 0x02}, // 03--dndd
 	{0x87, 0x4a},
 
@@ -533,7 +533,7 @@ struct aml_camera_i2c_fig1_s GC0329_script[] = {
 	{0xb7, 0x48},
 	{0xb8, 0xf0},
 
-	// crop 						   
+	// crop
 	{0x50, 0x01},
 
 	////////////////////YCP////////////////////
@@ -553,7 +553,7 @@ struct aml_camera_i2c_fig1_s GC0329_script[] = {
 	{0x22, 0x48},
 	{0x3c, 0x95},
 	{0x3d, 0x50},
-	{0x3e, 0x48}, 
+	{0x3e, 0x48},
 
 	////////////////////AWB////////////////////
 	{0xfe, 0x01},
@@ -602,7 +602,7 @@ struct aml_camera_i2c_fig1_s GC0329_script[] = {
 	//{0x76, 0x30},
 	//{0x77, 0x48},
 	//{0x7a, 0x50},
-	//{0x7b, 0x20}, 
+	//{0x7b, 0x20},
 
 	{0x80, 0x60},
 	{0x81, 0x50},
@@ -625,14 +625,14 @@ struct aml_camera_i2c_fig1_s GC0329_script[] = {
 	{0x7f, 0x08},
 
 	////////////////////ABS////////////////////
-	{0x9c, 0x02}, 
+	{0x9c, 0x02},
 	{0x9d, 0x20},
-	//{0x9f, 0x40},	
+	//{0x9f, 0x40},
 
 	////////////////////CC-AWB////////////////////
 	{0xd0, 0x00},
 	{0xd2, 0x2c},
-	{0xd3, 0x80}, 
+	{0xd3, 0x80},
 
 	////////////////////LSC///////////////////
 	{0xfe,0x01},
@@ -685,45 +685,45 @@ struct aml_camera_i2c_fig1_s GC0329_script[] = {
 	//{0xa0, 0xaf},
 	//{0xa2, 0xff},
 
-	////////////20120427/////////////               
-	{0xfe, 0x01}, 		
-	{0x18, 0x22}, 		
-	{0x21, 0xc0}, 		
-	{0x06, 0x12},		
-	{0x08, 0x9c},		
-	{0x51, 0x28},		
-	{0x52, 0x10},		
-	{0x53, 0x20},		
-	{0x54, 0x40},		
-	{0x55, 0x16},		
-	{0x56, 0x30},		
-	{0x58, 0x60},		
-	{0x59, 0x08},		
-	{0x5c, 0x35},		
-	{0x5d, 0x72},		
-	{0x67, 0x80},		
-	{0x68, 0x60},		
-	{0x69, 0x90},		
-	{0x6c, 0x30},		
-	{0x6d, 0x60},		
-	{0x70, 0x10},	        
+	////////////20120427/////////////
+	{0xfe, 0x01},
+	{0x18, 0x22},
+	{0x21, 0xc0},
+	{0x06, 0x12},
+	{0x08, 0x9c},
+	{0x51, 0x28},
+	{0x52, 0x10},
+	{0x53, 0x20},
+	{0x54, 0x40},
+	{0x55, 0x16},
+	{0x56, 0x30},
+	{0x58, 0x60},
+	{0x59, 0x08},
+	{0x5c, 0x35},
+	{0x5d, 0x72},
+	{0x67, 0x80},
+	{0x68, 0x60},
+	{0x69, 0x90},
+	{0x6c, 0x30},
+	{0x6d, 0x60},
+	{0x70, 0x10},
 
-	{0xfe, 0x00},		
-	{0x9c, 0x0a},		
-	{0xa0, 0xaf},		
-	{0xa2, 0xff},		
-	{0xa4, 0x60},		
-	{0xa5, 0x31},		
-	{0xa7, 0x35},		
-	{0x42, 0xfe},		
-	{0xd1, 0x30},// 34		
+	{0xfe, 0x00},
+	{0x9c, 0x0a},
+	{0xa0, 0xaf},
+	{0xa2, 0xff},
+	{0xa4, 0x60},
+	{0xa5, 0x31},
+	{0xa7, 0x35},
+	{0x42, 0xfe},
+	{0xd1, 0x30},// 34
 	{0xd2, 0x30},// 34
-	{0xfe, 0x00},	
-     ///////////// /////////////  /////////////       
+	{0xfe, 0x00},
+     ///////////// /////////////  /////////////
 	{0x44, 0xa3},// a2
 
-	{0x05, 0x02}, 	
-	{0x06, 0x2c}, 
+	{0x05, 0x02},
+	{0x06, 0x2c},
 	{0x07, 0x00},
 	{0x08, 0xb8},
 
@@ -733,19 +733,19 @@ struct aml_camera_i2c_fig1_s GC0329_script[] = {
 	{0x2a, 0x60},   //anti-flicker step [7:0]
 
 	{0x2b, 0x02},   //exp level 0  14.28fps
-	{0x2c, 0xa0}, 
+	{0x2c, 0xa0},
 	{0x2d, 0x03},   //exp level 1  12.50fps
-	{0x2e, 0x00}, 
+	{0x2e, 0x00},
 	{0x2f, 0x03},   //exp level 2  10.00fps
-	{0x30, 0xc0}, 
+	{0x30, 0xc0},
 	{0x31, 0x05},   //exp level 3  7.14fps
-	{0x32, 0x40}, 
+	{0x32, 0x40},
 	{0xfe, 0x00},
 
 
 	/*
-	{0x05, 0x03}, 	
-	{0x06, 0x26}, 
+	{0x05, 0x03},
+	{0x06, 0x26},
 	{0x07, 0x00},
 	{0x08, 0x48},
 
@@ -754,13 +754,13 @@ struct aml_camera_i2c_fig1_s GC0329_script[] = {
 	{0x2a, 0x50},   //anti-flicker step [7:0]
 
 	{0x2b, 0x02},   //exp level 0  14.28fps
-	{0x2c, 0x30}, 
+	{0x2c, 0x30},
 	{0x2d, 0x02},   //exp level 1  12.50fps
-	{0x2e, 0x80}, 
+	{0x2e, 0x80},
 	{0x2f, 0x03},   //exp level 2  10.00fps
-	{0x30, 0x20}, 
+	{0x30, 0x20},
 	{0x31, 0x06},   //exp level 3  7.14fps
-	{0x32, 0x40}, 
+	{0x32, 0x40},
 	{0xfe, 0x00},
 	*/
 	{0xfa, 0x00},
@@ -779,7 +779,7 @@ void GC0329_init_regs(struct gc0329_device *dev)
 	int i=0;//,j;
 	unsigned char buf[2];
 	struct i2c_client *client = v4l2_get_subdevdata(&dev->sd);
-	
+
 	while(1)
 	{
 		buf[0] = GC0329_script[i].addr;
@@ -794,7 +794,7 @@ void GC0329_init_regs(struct gc0329_device *dev)
 		}
 		i++;
 	}
-	
+
 	return;
 }
 
@@ -810,7 +810,7 @@ static struct aml_camera_i2c_fig1_s resolution_320x240_script[] = {
 	{0x60, 0x00},
 	{0x61, 0x00},
 	{0x62, 0x00},
-                
+
 	{0xff, 0xff}
 
 };
@@ -827,7 +827,7 @@ static struct aml_camera_i2c_fig1_s resolution_640x480_script[] = {
 	{0x60, 0x04},
 	{0x61, 0x00},
 	{0x62, 0x00},
-                
+
 	{0xff, 0xff}
 
 };
@@ -840,7 +840,7 @@ static int set_flip(struct gc0329_device *dev)
 	buf[0]=0xfe;
 	buf[1]=0x00;
 	i2c_put_byte_add8(client, buf, 2);
-	
+
 	temp = i2c_get_byte_add8(client, 0x17);
 	temp &= 0xfc;
 	temp |= dev->cam_info.m_flip << 0;
@@ -877,7 +877,7 @@ static void gc0329_set_resolution(struct gc0329_device *dev,int height,int width
 		gc0329_v_active = 238;
 		resolution_script = resolution_320x240_script;
 	}
-	
+
 	while(1) {
 		buf[0] = resolution_script[i].addr;
 		buf[1] = resolution_script[i].val;
@@ -996,9 +996,9 @@ void GC0329GammaSelect(struct gc0329_device *dev, GC0329_GAMMA_TAG GammaLvl)
 		i2c_put_byte_add8_new(client,(unsigned char)0xcD, (unsigned char)0xEE);
 		i2c_put_byte_add8_new(client,(unsigned char)0xcE, (unsigned char)0xF8);
 		i2c_put_byte_add8_new(client,(unsigned char)0xcF, (unsigned char)0xFF);
-		break;               
-		
-	case GC0329_RGB_Gamma_m3:			
+		break;
+
+	case GC0329_RGB_Gamma_m3:
 		i2c_put_byte_add8_new(client, (unsigned char)0xBF, (unsigned char)0x0B);
 		i2c_put_byte_add8_new(client, (unsigned char)0xc0, (unsigned char)0x16);
 		i2c_put_byte_add8_new(client, (unsigned char)0xc1, (unsigned char)0x29);
@@ -1016,8 +1016,8 @@ void GC0329GammaSelect(struct gc0329_device *dev, GC0329_GAMMA_TAG GammaLvl)
 		i2c_put_byte_add8_new(client, (unsigned char)0xcD, (unsigned char)0xF1);
 		i2c_put_byte_add8_new(client, (unsigned char)0xcE, (unsigned char)0xFA);
 		i2c_put_byte_add8_new(client, (unsigned char)0xcF, (unsigned char)0xFF);
-		break;                    
-		
+		break;
+
 	case GC0329_RGB_Gamma_m4:
 		i2c_put_byte_add8_new(client, (unsigned char)0xBF, (unsigned char)0x0E);
 		i2c_put_byte_add8_new(client, (unsigned char)0xc0, (unsigned char)0x1C);
@@ -1036,8 +1036,8 @@ void GC0329GammaSelect(struct gc0329_device *dev, GC0329_GAMMA_TAG GammaLvl)
 		i2c_put_byte_add8_new(client, (unsigned char)0xcD, (unsigned char)0xF7);
 		i2c_put_byte_add8_new(client, (unsigned char)0xcE, (unsigned char)0xFD);
 		i2c_put_byte_add8_new(client, (unsigned char)0xcF, (unsigned char)0xFF);
-		break;               
-		
+		break;
+
 	case GC0329_RGB_Gamma_m5:
 		i2c_put_byte_add8_new(client, (unsigned char)0xBF, (unsigned char)0x10);
 		i2c_put_byte_add8_new(client, (unsigned char)0xc0, (unsigned char)0x20);
@@ -1056,8 +1056,8 @@ void GC0329GammaSelect(struct gc0329_device *dev, GC0329_GAMMA_TAG GammaLvl)
 		i2c_put_byte_add8_new(client, (unsigned char)0xcD, (unsigned char)0xF8);
 		i2c_put_byte_add8_new(client, (unsigned char)0xcE, (unsigned char)0xFD);
 		i2c_put_byte_add8_new(client, (unsigned char)0xcF, (unsigned char)0xFF);
-		break;                   
-		
+		break;
+
 	case GC0329_RGB_Gamma_m6:										// largest gamma curve
 		i2c_put_byte_add8_new(client, (unsigned char)0xBF, (unsigned char)0x14);
 		i2c_put_byte_add8_new(client, (unsigned char)0xc0, (unsigned char)0x28);
@@ -1076,7 +1076,7 @@ void GC0329GammaSelect(struct gc0329_device *dev, GC0329_GAMMA_TAG GammaLvl)
 		i2c_put_byte_add8_new(client, (unsigned char)0xcD, (unsigned char)0xFB);
 		i2c_put_byte_add8_new(client, (unsigned char)0xcE, (unsigned char)0xFE);
 		i2c_put_byte_add8_new(client, (unsigned char)0xcF, (unsigned char)0xFF);
-		break;                 
+		break;
 	case GC0329_RGB_Gamma_night:									//Gamma for night mode
 		i2c_put_byte_add8_new(client, (unsigned char)0xBF, (unsigned char)0x0B);
 		i2c_put_byte_add8_new(client, (unsigned char)0xc0, (unsigned char)0x16);
@@ -1095,7 +1095,7 @@ void GC0329GammaSelect(struct gc0329_device *dev, GC0329_GAMMA_TAG GammaLvl)
 		i2c_put_byte_add8_new(client, (unsigned char)0xcD, (unsigned char)0xF1);
 		i2c_put_byte_add8_new(client, (unsigned char)0xcE, (unsigned char)0xFA);
 		i2c_put_byte_add8_new(client, (unsigned char)0xcF, (unsigned char)0xFF);
-		break;                   
+		break;
 	default:/*
 		//GC0329_RGB_Gamma_m1
 		i2c_put_byte_add8_new(client, (unsigned char)0xfe, (unsigned char)0x00);
@@ -1117,7 +1117,7 @@ void GC0329GammaSelect(struct gc0329_device *dev, GC0329_GAMMA_TAG GammaLvl)
 		i2c_put_byte_add8_new(client, (unsigned char)0xce, (unsigned char)0xf8);
 		i2c_put_byte_add8_new(client, (unsigned char)0xcf, (unsigned char)0xfd);
 		*/
-		// GC0329_RGB_Gamma_m3:			
+		// GC0329_RGB_Gamma_m3:
 		/*
 		i2c_put_byte_add8_new(client, (unsigned char)0xBF, (unsigned char)0x0B);
 		i2c_put_byte_add8_new(client, (unsigned char)0xc0, (unsigned char)0x16);
@@ -1137,7 +1137,7 @@ void GC0329GammaSelect(struct gc0329_device *dev, GC0329_GAMMA_TAG GammaLvl)
 		i2c_put_byte_add8_new(client, (unsigned char)0xcE, (unsigned char)0xFA);
 		i2c_put_byte_add8_new(client, (unsigned char)0xcF, (unsigned char)0xFF);
 		*/
-		
+
 		i2c_put_byte_add8_new(client, (unsigned char)0xbf, (unsigned char)0x06);
 		i2c_put_byte_add8_new(client, (unsigned char)0xc0, (unsigned char)0x14);
 		i2c_put_byte_add8_new(client, (unsigned char)0xc1, (unsigned char)0x27);
@@ -1155,15 +1155,15 @@ void GC0329GammaSelect(struct gc0329_device *dev, GC0329_GAMMA_TAG GammaLvl)
 		i2c_put_byte_add8_new(client, (unsigned char)0xcD, (unsigned char)0xf4);
 		i2c_put_byte_add8_new(client, (unsigned char)0xcE, (unsigned char)0xFc);
 		i2c_put_byte_add8_new(client, (unsigned char)0xcF, (unsigned char)0xFF);
-			
+
 		break;
 	}
 }
 
 void GC0329write_more_registers(struct gc0329_device *dev)
 {
-	//struct i2c_client *client = v4l2_get_subdevdata(&dev->sd);	
-	GC0329GammaSelect(dev,0);// GC0329_RGB_Gamma_m3);	
+	//struct i2c_client *client = v4l2_get_subdevdata(&dev->sd);
+	GC0329GammaSelect(dev,0);// GC0329_RGB_Gamma_m3);
 }
 
 /*************************************************************************
@@ -1205,9 +1205,9 @@ void set_GC0329_param_wb(struct gc0329_device *dev,enum  camera_wb_flip_e para)
 
 	case CAM_WB_DAYLIGHT:   // tai yang guang
 		GC0329AwbEnable(dev, 0);
-		i2c_put_byte_add8_new(client, (unsigned char)0x77, (unsigned char)0x74); 
+		i2c_put_byte_add8_new(client, (unsigned char)0x77, (unsigned char)0x74);
 		i2c_put_byte_add8_new(client, (unsigned char)0x78, (unsigned char)0x52);
-		i2c_put_byte_add8_new(client, (unsigned char)0x79, (unsigned char)0x40); 
+		i2c_put_byte_add8_new(client, (unsigned char)0x79, (unsigned char)0x40);
 		break;
 
 	case CAM_WB_INCANDESCENCE:   // bai re guang
@@ -1270,7 +1270,7 @@ void GC0329_night_mode(struct gc0329_device *dev,enum  camera_night_mode_flip_e 
 			i2c_put_byte_add8_new(client,0x33, 0x30);
 		i2c_put_byte_add8_new(client,0xfe, 0x00);
 		GC0329GammaSelect(dev,0);// GC0329_RGB_Gamma_night);
-	
+
 	} else {
 		i2c_put_byte_add8_new(client,0xfe, 0x01);
 		if(GC0329Sensor.VideoMode)
@@ -1278,10 +1278,10 @@ void GC0329_night_mode(struct gc0329_device *dev,enum  camera_night_mode_flip_e 
 		else
 			i2c_put_byte_add8_new(client,0x33, 0x20);
 		i2c_put_byte_add8_new(client,0xfe, 0x00);
-		GC0329GammaSelect(dev, GC0329_RGB_Gamma_m3); 	
-	
+		GC0329GammaSelect(dev, GC0329_RGB_Gamma_m3);
+
 	}
-	
+
 }
 /*************************************************************************
 * FUNCTION
@@ -1305,23 +1305,23 @@ void GC0329_set_param_banding(struct gc0329_device *dev,enum  camera_banding_fli
 	struct i2c_client *client = v4l2_get_subdevdata(&dev->sd);
 	switch(banding){
         case CAM_BANDING_60HZ:
-		i2c_put_byte_add8_new(client,0x05, 0x02); 	
-		i2c_put_byte_add8_new(client,0x06, 0x4c); 
+		i2c_put_byte_add8_new(client,0x05, 0x02);
+		i2c_put_byte_add8_new(client,0x06, 0x4c);
 		i2c_put_byte_add8_new(client,0x07, 0x00);
 		i2c_put_byte_add8_new(client,0x08, 0x88);
-		
+
 		i2c_put_byte_add8_new(client,0xfe, 0x01);
 		i2c_put_byte_add8_new(client,0x29, 0x00);   //anti-flicker step [11:8]
 		i2c_put_byte_add8_new(client,0x2a, 0x4e);   //anti-flicker step [7:0]
-		
+
 		i2c_put_byte_add8_new(client,0x2b, 0x02);   //exp level 0  15.00fps
-		i2c_put_byte_add8_new(client,0x2c, 0x70); 
+		i2c_put_byte_add8_new(client,0x2c, 0x70);
 		i2c_put_byte_add8_new(client,0x2d, 0x03);   //exp level 0  12.00fps
-		i2c_put_byte_add8_new(client,0x2e, 0x0c); 
+		i2c_put_byte_add8_new(client,0x2e, 0x0c);
 		i2c_put_byte_add8_new(client,0x2f, 0x03);   //exp level 0  10.00fps
-		i2c_put_byte_add8_new(client,0x30, 0xa8); 
+		i2c_put_byte_add8_new(client,0x30, 0xa8);
 		i2c_put_byte_add8_new(client,0x31, 0x05);   //exp level 0  7.05fps
-		i2c_put_byte_add8_new(client,0x32, 0x2e); 
+		i2c_put_byte_add8_new(client,0x32, 0x2e);
 		i2c_put_byte_add8_new(client,0xfe, 0x00);
 
 		break;
@@ -1329,42 +1329,42 @@ void GC0329_set_param_banding(struct gc0329_device *dev,enum  camera_banding_fli
 
 
 
-		i2c_put_byte_add8_new(client,0x05, 0x02); 	
-		i2c_put_byte_add8_new(client,0x06, 0x2c); 
+		i2c_put_byte_add8_new(client,0x05, 0x02);
+		i2c_put_byte_add8_new(client,0x06, 0x2c);
 		i2c_put_byte_add8_new(client,0x07, 0x00);
 		i2c_put_byte_add8_new(client,0x08, 0xb8);
-		
+
 		i2c_put_byte_add8_new(client, 0xfe, 0x01);
 		i2c_put_byte_add8_new(client,0x29, 0x00);   //anti-flicker step [11:8]
 		i2c_put_byte_add8_new(client,0x2a, 0x60);   //anti-flicker step [7:0]
-		
+
 		i2c_put_byte_add8_new(client,0x2b, 0x02);   //exp level 0  14.28fps
-		i2c_put_byte_add8_new(client,0x2c, 0xa0); 
+		i2c_put_byte_add8_new(client,0x2c, 0xa0);
 		i2c_put_byte_add8_new(client,0x2d, 0x03);   //exp level 1  12.50fps
-		i2c_put_byte_add8_new(client,0x2e, 0x00); 
+		i2c_put_byte_add8_new(client,0x2e, 0x00);
 		i2c_put_byte_add8_new(client,0x2f, 0x03);   //exp level 2  10.00fps
-		i2c_put_byte_add8_new(client,0x30, 0xc0); 
+		i2c_put_byte_add8_new(client,0x30, 0xc0);
 		i2c_put_byte_add8_new(client,0x31, 0x05);   //exp level 3  7.14fps
-		i2c_put_byte_add8_new(client,0x32, 0x40); 
+		i2c_put_byte_add8_new(client,0x32, 0x40);
 		i2c_put_byte_add8_new(client,0xfe, 0x00);
 /*
-			i2c_put_byte_add8_new(client,0x05, 0x03); 	
-			i2c_put_byte_add8_new(client,0x06, 0x26); 
+			i2c_put_byte_add8_new(client,0x05, 0x03);
+			i2c_put_byte_add8_new(client,0x06, 0x26);
 			i2c_put_byte_add8_new(client,0x07, 0x00);
 			i2c_put_byte_add8_new(client,0x08, 0x48);
 
 			i2c_put_byte_add8_new(client, 0xfe, 0x01);
 			i2c_put_byte_add8_new(client,0x29, 0x00);   //anti-flicker step [11:8]
 			i2c_put_byte_add8_new(client,0x2a, 0x50);   //anti-flicker step [7:0]
-			
+
 			i2c_put_byte_add8_new(client,0x2b, 0x02);   //exp level 0  14.28fps
-			i2c_put_byte_add8_new(client,0x2c, 0x30); 
+			i2c_put_byte_add8_new(client,0x2c, 0x30);
 			i2c_put_byte_add8_new(client,0x2d, 0x02);   //exp level 1  12.50fps
-			i2c_put_byte_add8_new(client,0x2e, 0x80); 
+			i2c_put_byte_add8_new(client,0x2e, 0x80);
 			i2c_put_byte_add8_new(client,0x2f, 0x03);   //exp level 2  10.00fps
-			i2c_put_byte_add8_new(client,0x30, 0x20); 
+			i2c_put_byte_add8_new(client,0x30, 0x20);
 			i2c_put_byte_add8_new(client,0x31, 0x06);   //exp level 3  7.14fps
-			i2c_put_byte_add8_new(client,0x32, 0x40); 
+			i2c_put_byte_add8_new(client,0x32, 0x40);
 			i2c_put_byte_add8_new(client,0xfe, 0x00);
 			*/
 		break;
@@ -1570,7 +1570,7 @@ static int gc0329_setting(struct gc0329_device *dev,int PROP_ID,int value )
 			printk(KERN_INFO " set camera  scene mode=%d. \n ",value);
 		}
 		break;
-	case V4L2_CID_HFLIP:    /* set flip on H. */          
+	case V4L2_CID_HFLIP:    /* set flip on H. */
 		value = value & 0x3;
 		if(gc0329_qctrl[5].default_value!=value){
 			gc0329_qctrl[5].default_value=value;
@@ -1919,7 +1919,7 @@ static int vidioc_enum_frameintervals(struct file *file, void *priv,
         struct v4l2_frmivalenum *fival)
 {
 	unsigned int k;
-	
+
 	if(fival->index > ARRAY_SIZE(gc0329_frmivalenum))
 		return -EINVAL;
 	for(k =0; k< ARRAY_SIZE(gc0329_frmivalenum); k++)
@@ -1932,9 +1932,9 @@ static int vidioc_enum_frameintervals(struct file *file, void *priv,
 			return 0;
 		}
 	}
-	
+
 	return -EINVAL;
-	
+
 }
 static int vidioc_g_fmt_vid_cap(struct file *file, void *priv,
 					struct v4l2_format *f)
@@ -1958,11 +1958,11 @@ static int vidioc_g_parm(struct file *file, void *priv,
 	struct gc0329_fh *fh = priv;
 	struct gc0329_device *dev = fh->dev;
 	struct v4l2_captureparm *cp = &parms->parm.capture;
-	
+
 	dprintk(dev,3,"vidioc_g_parm\n");
 	if (parms->type != V4L2_BUF_TYPE_VIDEO_CAPTURE)
 		return -EINVAL;
-	
+
 	memset(cp, 0, sizeof(struct v4l2_captureparm));
 	cp->capability = V4L2_CAP_TIMEPERFRAME;
 	cp->timeperframe = gc0329_frmintervals_active;
@@ -2108,10 +2108,10 @@ static int vidioc_streamon(struct file *file, void *priv, enum v4l2_buf_type i)
 	para.hs_bp = 0;
 	para.vs_bp = 2;
 	para.cfmt = TVIN_YUV422;
-	para.scan_mode = TVIN_SCAN_MODE_PROGRESSIVE;	
+	para.scan_mode = TVIN_SCAN_MODE_PROGRESSIVE;
 	para.skip_count =  2; //skip_num
 	para.bt_path = dev->cam_info.bt_path;
-	printk("gc0329,h=%d, v=%d, frame_rate=%d\n", 
+	printk("gc0329,h=%d, v=%d, frame_rate=%d\n",
 		gc0329_h_active, gc0329_v_active, gc0329_frmintervals_active.denominator);
 	ret =  videobuf_streamon(&fh->vb_vidq);
 	if(ret == 0){
@@ -2285,7 +2285,7 @@ static int gc0329_open(struct file *file)
 #endif
 #if MESON_CPU_TYPE >= MESON_CPU_TYPE_MESON6
 	switch_mod_gate_by_name("ge2d", 1);
-#endif		
+#endif
 	aml_cam_init(&dev->cam_info);
 	GC0329_init_regs(dev);
 	GC0329write_more_registers(dev);
@@ -2302,7 +2302,7 @@ static int gc0329_open(struct file *file)
 		video_device_node_name(dev->vdev),
 		v4l2_type_names[V4L2_BUF_TYPE_VIDEO_CAPTURE], dev->users);
 
-    	/* init video dma queues */
+	/* init video dma queues */
 	INIT_LIST_HEAD(&dev->vidq.active);
 	init_waitqueue_head(&dev->vidq.wq);
 	spin_lock_init(&dev->slock);
@@ -2316,7 +2316,7 @@ static int gc0329_open(struct file *file)
 
 	if (retval)
 		return retval;
-		
+
 	wake_lock(&(dev->wake_lock));
 	file->private_data = fh;
 	fh->dev      = dev;
@@ -2400,7 +2400,7 @@ static int gc0329_close(struct file *file)
 	gc0329_qctrl[2].default_value=0;
 	gc0329_qctrl[3].default_value=0;
 	gc0329_qctrl[4].default_value=0;
-	
+
 	gc0329_qctrl[5].default_value=0;
 	gc0329_qctrl[7].default_value=100;
 	gc0329_qctrl[8].default_value=0;
@@ -2411,7 +2411,7 @@ static int gc0329_close(struct file *file)
 	aml_cam_uninit(&dev->cam_info);
 #if MESON_CPU_TYPE >= MESON_CPU_TYPE_MESON6
 	switch_mod_gate_by_name("ge2d", 0);
-#endif		
+#endif
 	wake_unlock(&(dev->wake_lock));
 #ifdef CONFIG_CMA
     vm_deinit_buf();
@@ -2506,9 +2506,9 @@ static int gc0329_probe(struct i2c_client *client,
 	int err;
 	struct gc0329_device *t;
 	struct v4l2_subdev *sd;
-	
+
 	vops = get_vdin_v4l2_ops();
-	
+
 	v4l_info(client, "chip found @ 0x%x (%s)\n",
 			client->addr << 1, client->adapter->name);
 	t = kzalloc(sizeof(*t), GFP_KERNEL);
@@ -2516,7 +2516,7 @@ static int gc0329_probe(struct i2c_client *client,
 		return -ENOMEM;
 	sd = &t->sd;
 	v4l2_i2c_subdev_init(sd, client, &gc0329_ops);
-	
+
 	plat_dat= (aml_cam_info_t*)client->dev.platform_data;
 
 	/* Now create a video4linux device */
@@ -2532,7 +2532,7 @@ static int gc0329_probe(struct i2c_client *client,
 	memcpy(t->vdev, &gc0329_template, sizeof(*t->vdev));
 
 	video_set_drvdata(t->vdev, t);
-	
+
 	wake_lock_init(&(t->wake_lock),WAKE_LOCK_SUSPEND, "gc0329");
 
 	/* Register it */
@@ -2545,11 +2545,11 @@ static int gc0329_probe(struct i2c_client *client,
 		kfree(t);
 		return -1;
 	}
-	
+
 	t->cam_info.version = GC0329_DRIVER_VERSION;
 	if (aml_cam_info_reg(&t->cam_info) < 0)
 		printk("reg caminfo error\n");
-	
+
 	err = video_register_device(t->vdev, VFL_TYPE_GRABBER, video_nr);
 	if (err < 0) {
 		video_device_release(t->vdev);
@@ -2589,4 +2589,3 @@ static struct i2c_driver gc0329_i2c_driver = {
 };
 
 module_i2c_driver(gc0329_i2c_driver);
-

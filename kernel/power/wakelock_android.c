@@ -316,9 +316,12 @@ static void suspend(struct work_struct *work)
 	if (current_event_num == entry_event_num) {
 		if (debug_mask & DEBUG_SUSPEND)
 			pr_info("suspend: pm_suspend returned with no event\n");
-		
+
 	}
 	wake_lock_timeout(&unknown_wakeup,2* HZ);
+#ifdef CONFIG_FORCE_POWER_ON_STATE_AFTER_RESUME
+	request_suspend_state(PM_SUSPEND_ON);
+#endif
 }
 static DECLARE_WORK(suspend_work, suspend);
 

@@ -2,9 +2,9 @@
 //!file     si_drv_cra_cfg.c
 //!brief    Silicon Image 5293 Starter Kit Firmware CRA configuration data.
 //
-// No part of this work may be reproduced, modified, distributed, 
-// transmitted, transcribed, or translated into any language or computer 
-// format, in any form or by any means without written permission of 
+// No part of this work may be reproduced, modified, distributed,
+// transmitted, transcribed, or translated into any language or computer
+// format, in any form or by any means without written permission of
 // Silicon Image, Inc., 1140 East Arques Avenue, Sunnyvale, California 94085
 //
 // Copyright 2008-2013, Silicon Image, Inc.  All rights reserved.
@@ -40,7 +40,7 @@ pageConfig_t    g_addrDescriptor[SII_CRA_MAX_DEVICE_INSTANCES][SII_CRA_DEVICE_PA
     { DEV_I2C_2,        DEV_PAGE_OSD    },    // OSD
     { DEV_I2C_2_OFFSET,   0x0000 + DEV_PAGE_AUDIO },    // Audio Extraction instance 1
     }
-	
+
 #else
 
     // Instance 0

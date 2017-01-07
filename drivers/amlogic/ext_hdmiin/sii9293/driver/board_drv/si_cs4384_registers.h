@@ -24,4 +24,3 @@
 #define CS_4384_CTRL3            (PP_PAGE_AUDIO | 0x05)
 
 #endif  // __SI_CS4384_REGISTERS_H__
-

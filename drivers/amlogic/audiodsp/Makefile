@@ -1,5 +1,5 @@
 
-# Makefile for osd and tv 
+# Makefile for osd and tv
 
 audiodsp-objs=	audiodsp_module.o \
 				dsp_control.o 		\
@@ -8,7 +8,7 @@ audiodsp-objs=	audiodsp_module.o \
 				dsp_monitor.o			\
 				dsp_codec.o
 #audiodsp-objs += pcmenc_module.o pcmenc_stream.o
-#audiodsp-objs += spdif_module.o
+audiodsp-objs += spdif_module.o
 
 ifneq ($(KBUILD_SRC),)
 TOP_KBUILD_SRC := $(KBUILD_SRC)/

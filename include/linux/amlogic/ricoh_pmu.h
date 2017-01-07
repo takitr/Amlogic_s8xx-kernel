@@ -29,7 +29,7 @@
  */
 #define RN5T618_CHARGER_CHARGING            1
 #define RN5T618_CHARGER_DISCHARGING         2
-#define RN5T618_CHARGER_NONE                3 
+#define RN5T618_CHARGER_NONE                3
 
 #define RN5T618_CHARGE_OFF                  0x00
 #define RN5T618_CHARGE_ADP_READY            0x01
@@ -62,7 +62,7 @@
  * @pmu_call_back:   call back function for axp_charging_monitor, you can add anything you want to do
  *                   in this function, this funtion will be called every 2 seconds by default
  */
-struct ricoh_pmu_init_data { 
+struct ricoh_pmu_init_data {
     int   soft_limit_to99;                          // software limit battery volume to 99% when have charge current
     int   charge_timeout_retry;                     // retry charge count when charge timeout
     int   temp_to_stop_charger;                     // stop charger when temperature is higher than this value
@@ -85,7 +85,7 @@ struct rn5t618_supply {
 	struct power_supply	usb;
 	struct power_supply_info *battery_info;
 	struct delayed_work work;                                           // work struct
-    struct work_struct  irq_work;                                       // work for IRQ 
+    struct work_struct  irq_work;                                       // work for IRQ
 
 	struct device *master;
 };

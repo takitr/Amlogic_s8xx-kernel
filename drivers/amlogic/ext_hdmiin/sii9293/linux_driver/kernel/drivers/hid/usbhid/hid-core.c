@@ -266,7 +266,7 @@ static void hid_irq_in(struct urb *urb)
 			clear_bit(HID_KEYS_PRESSED, &usbhid->iofl);
 		#if defined(MDT_SUPPORT)
 		if (mdt_burst_sync_and_send)
-			mdt_burst_sync_and_send();		
+			mdt_burst_sync_and_send();
 		#endif
 		break;
 	case -EPIPE:		/* stall */
@@ -594,7 +594,7 @@ static int usb_hidinput_input_event(struct input_dev *dev, unsigned int type, un
 	int offset;
 
 	//MHAWB_SUPPORT
-	printk(KERN_ERR "usb_hid t:%x c:%x v:%x", (int)type, (int)code, (int)value); 
+	printk(KERN_ERR "usb_hid t:%x c:%x v:%x", (int)type, (int)code, (int)value);
 
 	if (type == EV_FF)
 		return input_ff_event(dev, type, code, value);
@@ -678,7 +678,7 @@ int usbhid_open(struct hid_device *hid)
 		usbhid->intf->needs_remote_wakeup = 1;
 		if (hid_start_in(hid))
 			hid_io_error(hid);
- 
+
 		usb_autopm_put_interface(usbhid->intf);
 	}
 	mutex_unlock(&hid_open_mut);

@@ -4,6 +4,11 @@ export ARCH=arm
 export CROSS_COMPILE=arm-linux-gnueabihf-
 export PATH=/opt/gcc-linaro-4.9-2016.02-x86_64_arm-linux-gnueabihf/bin/:$PATH
 
-make meson8m2_n200_2G.dtb meson8m2_n200_1G.dtb
-make meson8m2_n200C_2G.dtb meson8m2_n200C_1G.dtb
-make meson8_k200b_1G_emmc_sdio.dtb meson8_k200b_2G_emmc_sdio.dtb
+make meson8m2_n200_2G.dtb
+make meson8m2_n200_1G.dtb
+make meson8m2_n200C_2G.dtb
+make meson8m2_n200C_1G.dtb
+make meson8_k200b_1G_emmc_sdio.dtb
+make meson8_k200b_2G_emmc_sdio.dtb
+make meson8_k200b_1G_emmc_sdhc.dtb
+make meson8_k200b_2G_emmc_sdhc.dtb

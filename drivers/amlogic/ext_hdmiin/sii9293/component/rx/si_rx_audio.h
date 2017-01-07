@@ -40,4 +40,3 @@ void RxAudio_ReStart(void);
  void RxAudio_OnAcpPacketUpdate(acp_type_type acp_type);
 
 #endif // SIIRXAUDIO_H
-

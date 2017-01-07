@@ -27,4 +27,3 @@
 extern struct smp_operations meson6tv_smp_ops;
 
 #endif /* __MACH_MESON6TV_SMP_H */
-

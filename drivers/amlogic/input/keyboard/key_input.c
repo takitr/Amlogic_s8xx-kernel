@@ -144,9 +144,9 @@ void key_input_polling(unsigned long data)
             {
                 if((ki_data->key_hold_time_list[i] += ki_data->pdata->scan_period) > ki_data->pdata->fuzz_time)
                 {
-#ifdef AML_KEYINPUT_DBG                    
+#ifdef AML_KEYINPUT_DBG
                     print_dbg("key %d pressed.\n", ki_data->pdata->key_code_list[i]);
-#endif                    
+#endif
                     input_report_key(ki_data->input, ki_data->pdata->key_code_list[i], 1);
                     input_sync(ki_data->input);
                     ki_data->key_state_list_1[i] = 1;
@@ -157,9 +157,9 @@ void key_input_polling(unsigned long data)
             {
                 if(ki_data->key_state_list_1[i])
                 {
-#ifdef AML_KEYINPUT_DBG                         
+#ifdef AML_KEYINPUT_DBG
                     print_dbg("key %d released.\n", ki_data->pdata->key_code_list[i]);
-#endif                    
+#endif
                     input_report_key(ki_data->input, ki_data->pdata->key_code_list[i], 0);
                     input_sync(ki_data->input);
                     ki_data->key_state_list_1[i] = 0;
@@ -204,7 +204,7 @@ static int register_key_input_dev(struct key_input  *ki_data)
     printk(KERN_INFO "Meson KeyInput major=%d\n",ret);
     ki_data->class=class_create(THIS_MODULE,ki_data->name);
     ki_data->dev=device_create(ki_data->class, NULL,
-    		MKDEV(ki_data->major,0), NULL, ki_data->name);
+		MKDEV(ki_data->major,0), NULL, ki_data->name);
     return ret;
 }
 
@@ -254,8 +254,8 @@ static irqreturn_t am_key_interrupt(int irq, void *dev)
 		alarm = 1;
 	}
 #else
-    alarm = (READ_AOBUS_REG(AO_RTC_ADDR1)>>3)&1;    
-#endif 
+    alarm = (READ_AOBUS_REG(AO_RTC_ADDR1)>>3)&1;
+#endif
     if (READ_AOBUS_REG(AO_RTI_STATUS_REG2)==0xabcd1234){
         alarm = 1;
     }
@@ -292,10 +292,10 @@ static irqreturn_t am_key_interrupt(int irq, void *dev)
         }
     }
     WRITE_AOBUS_REG(AO_RTC_ADDR1, (READ_AOBUS_REG(AO_RTC_ADDR1) | (0x0000c000)));
-#endif    
+#endif
     if (!alarm)
         tasklet_schedule(&ki_tasklet);
-#else    
+#else
 	if (!alarm) {
         if (KeyInput->suspend) { // when suspend
             if (READ_AOBUS_REG(AO_RTI_STATUS_REG2)!=0x12345678) {
@@ -306,18 +306,18 @@ static irqreturn_t am_key_interrupt(int irq, void *dev)
         }
         else {
 #if MESON_CPU_TYPE >= MESON_CPU_TYPE_MESON6
- 			KeyInput->status = (AML_RTC_READ(P_AO_RTC_ADDR1)>>2)&1;
-#else        	
+			KeyInput->status = (AML_RTC_READ(P_AO_RTC_ADDR1)>>2)&1;
+#else
             KeyInput->status = (READ_AOBUS_REG(AO_RTC_ADDR1)>>2)&1;
-#endif            
+#endif
             tasklet_schedule(&ki_tasklet);
         }
     }
 #if MESON_CPU_TYPE >= MESON_CPU_TYPE_MESON6
 	AML_RTC_WRITE(P_AO_RTC_ADDR1, (AML_RTC_READ(P_AO_RTC_ADDR1) | (0x0000c000)));
-#else    
+#else
     WRITE_AOBUS_REG(AO_RTC_ADDR1, (READ_AOBUS_REG(AO_RTC_ADDR1) | (0x0000c000)));
-#endif    
+#endif
 #endif
     return IRQ_HANDLED;
 }
@@ -384,7 +384,7 @@ static int key_input_probe(struct platform_device *pdev)
         ret = -EINVAL;
         goto CATCH_ERR;
     }
-    
+
     ki_data = kzalloc(sizeof(struct key_input), GFP_KERNEL);
     input_dev = input_allocate_device();
     ki_data->key_state_list_0 = kzalloc((sizeof(int)*pdata->key_num), GFP_KERNEL);
@@ -431,7 +431,7 @@ static int key_input_probe(struct platform_device *pdev)
         set_bit(pdata->key_code_list[i], input_dev->keybit);
         printk(KERN_INFO "Key %d registed.\n", pdata->key_code_list[i]);
     }
-    
+
     input_dev->name = "key_input";
     input_dev->phys = "key_input/input0";
     input_dev->dev.parent = &pdev->dev;
@@ -465,9 +465,9 @@ static int key_input_probe(struct platform_device *pdev)
         }
 #if MESON_CPU_TYPE >= MESON_CPU_TYPE_MESON6
 		AML_RTC_WRITE(P_AO_RTC_ADDR0, (AML_RTC_READ(P_AO_RTC_ADDR0) | (0x0000f000)));
-#else        
+#else
         WRITE_AOBUS_REG(AO_RTC_ADDR0, (READ_AOBUS_REG(AO_RTC_ADDR0) | (0x0000c000)));
-#endif        
+#endif
         //enable_irq(INT_RTC);
     }
     register_key_input_dev(KeyInput);
@@ -551,7 +551,7 @@ static int key_input_resume(struct platform_device *dev)
     KeyInput->suspend = 0;
 #ifdef CONFIG_AML_RTC
     resume_jeff_num = jiffies;
-#endif 
+#endif
 #if MESON_CPU_TYPE >= MESON_CPU_TYPE_MESON6
     /* 0x1234abcd : woke by power button. set by uboot
      * 0x12345678 : woke by alarm. set in pm.c
@@ -565,7 +565,7 @@ static int key_input_resume(struct platform_device *dev)
 		//AML_RTC_WRITE(P_AO_RTC_ADDR0, (AML_RTC_READ(P_AO_RTC_ADDR0) | (0x0000f000)));
 		#ifdef CONFIG_SCREEN_ON_EARLY
 		power_key_pressed = 1;
-		#endif		
+		#endif
     }
     KeyInput->status = 1;
 #else

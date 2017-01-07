@@ -116,5 +116,3 @@
 
 
 void adac_wr_reg (unsigned long addr, unsigned long data);
-
-

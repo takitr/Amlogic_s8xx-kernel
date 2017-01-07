@@ -29,4 +29,5 @@ extern void early_clk_switch(int flag);
 #ifdef CONFIG_MESON_SUSPEND
 extern int meson_power_suspend(void);
 #endif /*CONFIG_MESON_SUSPEND*/
+void meson_pm_poweroff(void);
 #endif

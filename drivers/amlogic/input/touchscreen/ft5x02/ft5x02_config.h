@@ -37,7 +37,7 @@
 #define FT5X02_MAX_TOUCH_VALUE_LOW		0xb0
 
 
-#define FT5X02_THCAL 						16	
+#define FT5X02_THCAL 						16
 #define FT5X02_THWATER 					(-60)
 #define FT5X02_THFALSE_TOUCH_PEAK 		255
 #define FT5X02_THDIFF						160

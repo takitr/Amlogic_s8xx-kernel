@@ -255,8 +255,8 @@ typedef struct dwc_otg_qtd {
 	/** Number of DMA descriptors for this QTD */
 	uint8_t n_desc;
 
-	/** 
-	 * Last activated frame(packet) index. 
+	/**
+	 * Last activated frame(packet) index.
 	 * Used in Descriptor DMA mode only.
 	 */
 	uint16_t isoc_frame_index_last;
@@ -337,8 +337,8 @@ typedef struct dwc_otg_qh {
 
 	/** @} */
 
-	/** 
-	 * Used instead of original buffer if 
+	/**
+	 * Used instead of original buffer if
 	 * it(physical address) is not dword-aligned.
 	 */
 	uint8_t *dw_align_buf;
@@ -356,9 +356,9 @@ typedef struct dwc_otg_qh {
 	/** Descriptor List physical address. */
 	dwc_dma_t desc_list_dma;
 
-	/** 
+	/**
 	 * Xfer Bytes array.
-	 * Each element corresponds to a descriptor and indicates 
+	 * Each element corresponds to a descriptor and indicates
 	 * original XferSize size value for the descriptor.
 	 */
 	uint32_t *n_bytes;
@@ -576,6 +576,7 @@ struct dwc_otg_hcd {
 #endif
 	uint8_t  ssplit_lock;
 	uint8_t  auto_pm_suspend_flag;
+	uint8_t  pm_freeze_flag;
 };
 
 /** @name Transaction Execution Functions */
@@ -680,8 +681,8 @@ static inline void dwc_otg_hcd_qtd_remove(dwc_otg_hcd_t * hcd,
 	DWC_CIRCLEQ_REMOVE(&qh->qtd_list, qtd, qtd_list_entry);
 }
 
-/** Remove and free a QTD 
-  * Need to disable IRQ and hold hcd lock while calling this function out of 
+/** Remove and free a QTD
+  * Need to disable IRQ and hold hcd lock while calling this function out of
   * interrupt servicing chain */
 static inline void dwc_otg_hcd_qtd_remove_and_free(dwc_otg_hcd_t * hcd,
 						   dwc_otg_qtd_t * qtd,
@@ -695,7 +696,7 @@ static inline void dwc_otg_hcd_qtd_remove_and_free(dwc_otg_hcd_t * hcd,
 	dwc_otg_hcd_qtd_remove(hcd, qtd, qh);
 	dwc_otg_hcd_qtd_free(qtd);
 	if(urb && (pipe_type == DWC_OTG_EP_TYPE_ISOC))
-		urb->qtd = NULL;		
+		urb->qtd = NULL;
 }
 
 /** @} */

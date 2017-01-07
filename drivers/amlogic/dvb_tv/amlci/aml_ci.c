@@ -481,5 +481,3 @@ module_init(aml_ci_mod_init);
 module_exit(aml_ci_mod_exit);
 
 MODULE_LICENSE("GPL");
-
-

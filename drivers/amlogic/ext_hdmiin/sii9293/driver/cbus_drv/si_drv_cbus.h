@@ -147,7 +147,7 @@ typedef struct
 
     // CBUS transfer values read at last interrupt for each specific channel
     uint8_t     busConnected;
-    uint8_t     mhlConnected;	
+    uint8_t     mhlConnected;
     uint8_t     vsCmd;
     uint8_t     vsData;
     uint8_t     msgData0;

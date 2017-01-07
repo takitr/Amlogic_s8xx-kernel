@@ -69,9 +69,9 @@ static int pcm_pb_mute_put(struct snd_kcontrol *kcontrol,
 
      flag = uvalue->value.integer.value[0];
      if(flag)
-	 	audio_i2s_unmute();
+		audio_i2s_unmute();
 	 else
-	 	audio_i2s_mute();
+		audio_i2s_mute();
 
      return 0;
 }
@@ -100,7 +100,7 @@ static int pcm_left_mono_put(struct snd_kcontrol *kcontrol,
 
      flag = uvalue->value.integer.value[0];
      if(flag){
-	 	audio_i2s_swap_left_right(1);
+		audio_i2s_swap_left_right(1);
      }
 
      return 0;
@@ -130,7 +130,7 @@ static int pcm_right_mono_put(struct snd_kcontrol *kcontrol,
 
      flag = uvalue->value.integer.value[0];
      if(flag){
-	 	audio_i2s_swap_left_right(2);
+		audio_i2s_swap_left_right(2);
      }
 
      return 0;
@@ -160,7 +160,7 @@ static int pcm_stereo_put(struct snd_kcontrol *kcontrol,
 
      flag = uvalue->value.integer.value[0];
      if(flag){
-	 	audio_i2s_swap_left_right(0);
+		audio_i2s_swap_left_right(0);
      }
 
      return 0;
@@ -235,7 +235,7 @@ static int pcm_pb_tone_put(struct snd_kcontrol *kcontrol,
 				    struct snd_ctl_elem_value *uvalue)
 {
      audio_tone_control.tone_flag = 1;
-	
+
      return 0;
 }
 static int pcm_pb_tone_get(struct snd_kcontrol *kcontrol,
@@ -319,8 +319,8 @@ struct snd_kcontrol_new pcm_tone_play = {
 	.put = pcm_pb_tone_put,
 	.get = pcm_pb_tone_get,
 	.access = (SNDRV_CTL_ELEM_ACCESS_WRITE |
-	          SNDRV_CTL_ELEM_ACCESS_READ), 
-	          
+	          SNDRV_CTL_ELEM_ACCESS_READ),
+
 };
 
 int aml_alsa_create_ctrl(struct snd_card *card, void *p_value)
@@ -366,6 +366,6 @@ int aml_alsa_create_ctrl(struct snd_card *card, void *p_value)
          snd_ctl_add(card,
                      snd_ctl_new1(&pcm_tone_play, p_value))) < 0)
         return err;
-	
+
     return 0;
 }

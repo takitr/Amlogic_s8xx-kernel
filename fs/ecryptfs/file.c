@@ -68,6 +68,7 @@ static ssize_t ecryptfs_read_update_atime(struct kiocb *iocb,
 }
 
 struct ecryptfs_getdents_callback {
+	struct dir_context ctx;
 	void *dirent;
 	struct dentry *dentry;
 	filldir_t filldir;
@@ -126,7 +127,8 @@ static int ecryptfs_readdir(struct file *file, void *dirent, filldir_t filldir)
 	buf.filldir = filldir;
 	buf.filldir_called = 0;
 	buf.entries_written = 0;
-	rc = vfs_readdir(lower_file, ecryptfs_filldir, (void *)&buf);
+	buf.ctx.actor = ecryptfs_filldir;
+	rc = iterate_dir(lower_file, &buf.ctx);
 	file->f_pos = lower_file->f_pos;
 	if (rc < 0)
 		goto out;
@@ -196,23 +198,11 @@ static int ecryptfs_open(struct inode *inode, struct file *file)
 {
 	int rc = 0;
 	struct ecryptfs_crypt_stat *crypt_stat = NULL;
-	struct ecryptfs_mount_crypt_stat *mount_crypt_stat;
 	struct dentry *ecryptfs_dentry = file->f_path.dentry;
 	/* Private value of ecryptfs_dentry allocated in
 	 * ecryptfs_lookup() */
 	struct ecryptfs_file_info *file_info;
 
-	mount_crypt_stat = &ecryptfs_superblock_to_private(
-		ecryptfs_dentry->d_sb)->mount_crypt_stat;
-	if ((mount_crypt_stat->flags & ECRYPTFS_ENCRYPTED_VIEW_ENABLED)
-	    && ((file->f_flags & O_WRONLY) || (file->f_flags & O_RDWR)
-		|| (file->f_flags & O_CREAT) || (file->f_flags & O_TRUNC)
-		|| (file->f_flags & O_APPEND))) {
-		printk(KERN_WARNING "Mount has encrypted view enabled; "
-		       "files may only be read\n");
-		rc = -EPERM;
-		goto out;
-	}
 	/* Released in ecryptfs_release or end of function if failure */
 	file_info = kmem_cache_zalloc(ecryptfs_file_info_cache, GFP_KERNEL);
 	ecryptfs_set_file_private(file, file_info);

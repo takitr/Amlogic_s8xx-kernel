@@ -53,14 +53,14 @@ struct aml_i2s_dma_params{
 		char *name;			/* stream identifier */
 		struct snd_pcm_substream *substream;
 		void (*dma_intr_handler)(u32, struct snd_pcm_substream *);
-	
+
 };
 typedef struct aml_dai_info {
 	unsigned i2s_mode; //0:master, 1:slave,
 } aml_dai_info_t;
 enum {
 	I2S_MASTER_MODE = 0,
-	I2S_SLAVE_MODE,	
+	I2S_SLAVE_MODE,
 };
 /*--------------------------------------------------------------------------*\
  * Data types
@@ -72,7 +72,7 @@ struct aml_runtime_data {
 
 	struct snd_pcm *pcm;
 	struct snd_pcm_substream *substream;
-	audio_stream_t s;	
+	audio_stream_t s;
 	struct timer_list timer;	// timeer for playback and capture
 	struct hrtimer hrtimer;
 	void *buf; //tmp buffer for playback or capture

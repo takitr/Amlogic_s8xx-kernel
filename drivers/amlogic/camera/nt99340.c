@@ -59,7 +59,7 @@
 #define NT99340_CAMERA_RELEASE 0
 #define NT99340_CAMERA_VERSION \
 	KERNEL_VERSION(NT99340_CAMERA_MAJOR_VERSION, NT99340_CAMERA_MINOR_VERSION, NT99340_CAMERA_RELEASE)
-	
+
 #define NT99340_DRIVER_VERSION "NT99340-COMMON-01-140717"
 
 MODULE_DESCRIPTION("nt99340 On Board");
@@ -331,7 +331,7 @@ struct nt99340_device {
 
 	/* platform device data from board initting. */
 	aml_cam_info_t  cam_info;
-	
+
 	/* wake lock */
 	struct wake_lock	wake_lock;
 
@@ -371,7 +371,7 @@ static struct v4l2_frmsize_discrete nt99340_prev_resolution[]=
 };
 
 static struct v4l2_frmsize_discrete nt99340_pic_resolution[]=
-{		
+{
 	{800,600},
 	//{2048,1536},
 	{2592, 1944},
@@ -434,7 +434,7 @@ struct aml_camera_i2c_fig_s NT99340_script[] = {
 	{0x3253, 0x9D},
 	{0x3254, 0x00},
 	{0x3255, 0xE3},
-	{0x3256, 0x81}, 
+	{0x3256, 0x81},
 	{0x3257, 0x70},
 	{0x329B, 0x00}, // AWB Gain Limit
 	{0x32A1, 0x00},
@@ -466,18 +466,18 @@ struct aml_camera_i2c_fig_s NT99340_script[] = {
 	{0x3305, 0x96},
 	{0x3306, 0x00},
 	{0x3307, 0x1D},
-	{0x3308, 0x07}, 
-	{0x3309, 0xC7}, 
-	{0x330A, 0x07}, 
-	{0x330B, 0x0A}, 
-	{0x330C, 0x01}, 
-	{0x330D, 0x30}, 
-	{0x330E, 0x01}, 
-	{0x330F, 0x07}, 
-	{0x3310, 0x06}, 
-	{0x3311, 0xFF}, 
-	{0x3312, 0x07}, 
-	{0x3313, 0xFA}, 
+	{0x3308, 0x07},
+	{0x3309, 0xC7},
+	{0x330A, 0x07},
+	{0x330B, 0x0A},
+	{0x330C, 0x01},
+	{0x330D, 0x30},
+	{0x330E, 0x01},
+	{0x330F, 0x07},
+	{0x3310, 0x06},
+	{0x3311, 0xFF},
+	{0x3312, 0x07},
+	{0x3313, 0xFA},
 	{0x3210, 0x1E}, // Lens Correction
 	{0x3211, 0x20},
 	{0x3212, 0x20},
@@ -525,7 +525,7 @@ struct aml_camera_i2c_fig_s NT99340_script[] = {
 	{0x334C, 0x10},
 	{0x3363, 0x33}, // IQ_Auto_Control
 	{0x3360, 0x08}, // IQ Param Sel
-	{0x3361, 0x10}, 
+	{0x3361, 0x10},
 	{0x3362, 0x18},
 	{0x3364, 0x88}, // CC_Ctrl
 	{0x3365, 0x80},
@@ -534,24 +534,24 @@ struct aml_camera_i2c_fig_s NT99340_script[] = {
 	{0x3368, 0x50}, // Edge Enhancement
 	{0x3369, 0x40},
 	{0x336A, 0x30},
-	{0x336B, 0x20},  
+	{0x336B, 0x20},
 	{0x336C, 0x00},
 	{0x336D, 0x1A}, // DPC Ratio
-	{0x336E, 0x16}, 
-	{0x336F, 0x14}, 
+	{0x336E, 0x16},
+	{0x336F, 0x14},
 	{0x3370, 0x0C},
 	{0x3371, 0x3F}, // NR Weight
-	{0x3372, 0x3F}, 
-	{0x3373, 0x3F}, 
+	{0x3372, 0x3F},
+	{0x3373, 0x3F},
 	{0x3374, 0x3F},
 	{0x3375, 0x0E}, // NR Thr
-	{0x3376, 0x10}, 
-	{0x3377, 0x14}, 
-	{0x3378, 0x30}, 
-	{0x3012, 0x02},                                        
+	{0x3376, 0x10},
+	{0x3377, 0x14},
+	{0x3378, 0x30},
+	{0x3012, 0x02},
 	{0x3013, 0x58}, // 1/20 Sec (5x Flicker Base), 1/50: 0x00F0, 1/10: 0x04B0
 	{0x301D, 0x01},
-	
+
 	//SVGA
 	{0x32BF, 0x60},
 	{0x32C0, 0x78},
@@ -618,8 +618,8 @@ struct aml_camera_i2c_fig_s NT99340_script[] = {
 	{0x320A, 0x42},
 	{0x3021, 0x06},
 	{0x3060, 0x01},
-	
-	{0xffff,0xff}	
+
+	{0xffff,0xff}
 };
 
 int NT99340_preview(struct nt99340_device *dev)
@@ -709,10 +709,10 @@ int NT99340_preview(struct nt99340_device *dev)
 	{
 		i2c_put_byte(client,regPreview[i], regPreview[i+1]);
 	}
-		
+
 	temp_reg=i2c_get_byte(client,0x3201);
 	if(camera_wb_state)
-	{	
+	{
 		i2c_put_byte(client,0x3201, temp_reg&~0x10);  // select manual WB
 	}
 	else
@@ -721,7 +721,7 @@ int NT99340_preview(struct nt99340_device *dev)
 	}
 	temp_reg=i2c_get_byte(client,0x3201);
 	//printk("_GJL_  NT99340_get_AE_AWB_3201=%x\n",temp_reg);
-	
+
 	return 0;
 }
 int NT99340_capture(struct nt99340_device *dev)
@@ -759,7 +759,7 @@ int NT99340_capture(struct nt99340_device *dev)
 	    0x32E6, 0x00,
 	    0x32E7, 0x00,
 		0x3200, 0x3F,
-		
+
 		0x302A, 0x00,
 		0x302B, 0x01,
 		0x302C, 0x07,
@@ -789,7 +789,7 @@ int NT99340_capture(struct nt99340_device *dev)
 		0x32BB, 0x87,
 		0x32B8, 0x3B,
 		0x32B9, 0x2D,
-		0x32BC, 0x34,     
+		0x32BC, 0x34,
 		0x32BD, 0x38,
 		0x32BE, 0x30,
 		0x3201, 0xBF,
@@ -797,16 +797,16 @@ int NT99340_capture(struct nt99340_device *dev)
 		0x3530, 0xC0,
 		0x320A, 0x42,
 		0x3021, 0x06,
-		0x3060, 0x01,		
+		0x3060, 0x01,
 	};
-		
+
 	// Write preview table
 	for (i=0; i<sizeof(regCapture)/sizeof(int); i+=2)
 	{
 	i2c_put_byte(client, regCapture[i], regCapture[i+1]);
 	}
-		
-	msleep(300);	
+
+	msleep(300);
 	return 0;
 }
 
@@ -820,12 +820,12 @@ static void NT99340_init_regs(struct nt99340_device *dev)
     {
         if (NT99340_script[i].val==0xff&&NT99340_script[i].addr==0xffff)
         {
-        	printk("NT99340_write_regs success in initial NT99340.\n");
-        	break;
+		printk("NT99340_write_regs success in initial NT99340.\n");
+		break;
         }
         if((i2c_put_byte(client,NT99340_script[i].addr, NT99340_script[i].val)) < 0)
         {
-        	printk("fail in initial NT99340. ");
+		printk("fail in initial NT99340. ");
 		return;
 		}
 		i++;
@@ -862,7 +862,7 @@ void NT99340_set_param_wb(struct nt99340_device *dev,enum  camera_wb_flip_e para
 			i2c_put_byte(client,0x3201, temp_reg|0x10);   // select Auto WB
 			break;
 
-		case CAM_WB_CLOUD: /* Cloudy Colour Temperature : 6500K - 8000K  */		
+		case CAM_WB_CLOUD: /* Cloudy Colour Temperature : 6500K - 8000K  */
 			i2c_put_byte(client,0x3201, temp_reg&~0x10);  // select manual WB
 			i2c_put_byte(client,0x3290, 0x01);
 			i2c_put_byte(client,0x3291, 0x51);
@@ -870,7 +870,7 @@ void NT99340_set_param_wb(struct nt99340_device *dev,enum  camera_wb_flip_e para
 			i2c_put_byte(client,0x3297, 0x00);
 			break;
 
-		case CAM_WB_DAYLIGHT: /* ClearDay Colour Temperature : 5000K - 6500K	*/	
+		case CAM_WB_DAYLIGHT: /* ClearDay Colour Temperature : 5000K - 6500K	*/
 			i2c_put_byte(client,0x3201, temp_reg&~0x10);  // select manual WB
 			i2c_put_byte(client,0x3290, 0x01);
 			i2c_put_byte(client,0x3291, 0x38);
@@ -886,7 +886,7 @@ void NT99340_set_param_wb(struct nt99340_device *dev,enum  camera_wb_flip_e para
 			i2c_put_byte(client,0x3297, 0xcb);
 			break;
 
-		case CAM_WB_TUNGSTEN: /* Office Colour Temperature : 3500K - 5000K  */	
+		case CAM_WB_TUNGSTEN: /* Office Colour Temperature : 3500K - 5000K  */
 			i2c_put_byte(client,0x3201, temp_reg&~0x10);  // select manual WB
 			i2c_put_byte(client,0x3290, 0x01);
 			i2c_put_byte(client,0x3291, 0x00);
@@ -894,7 +894,7 @@ void NT99340_set_param_wb(struct nt99340_device *dev,enum  camera_wb_flip_e para
 			i2c_put_byte(client,0x3297, 0x30);
 			break;
 
-      	case CAM_WB_FLUORESCENT:			
+	case CAM_WB_FLUORESCENT:
 			i2c_put_byte(client,0x3201, temp_reg&~0x10);  // select manual WB
 			i2c_put_byte(client,0x3290, 0x01);
 			i2c_put_byte(client,0x3291, 0x70);
@@ -961,7 +961,7 @@ void NT99340_set_param_exposure(struct nt99340_device *dev,enum camera_exposure_
 			break;
 		default:
 			i2c_put_byte(client,0x32f2, 0x80);
-			break;	
+			break;
 
 	}
 
@@ -1054,10 +1054,10 @@ void NT99340_set_night_mode(struct nt99340_device *dev,enum  camera_night_mode_f
 }    /* NT99340_NightMode */
 void NT99340_set_param_banding(struct nt99340_device *dev,enum  camera_banding_flip_e banding)
 {
-	struct i2c_client *client = v4l2_get_subdevdata(&dev->sd);	
+	struct i2c_client *client = v4l2_get_subdevdata(&dev->sd);
 	//int temp;
 	switch(banding) {
-	case CAM_BANDING_50HZ:			
+	case CAM_BANDING_50HZ:
 		i2c_put_byte(client, 0x32BF, 0x60);
 		i2c_put_byte(client, 0x32C0, 0x78);
 		i2c_put_byte(client, 0x32C1, 0x78);
@@ -1075,9 +1075,9 @@ void NT99340_set_param_banding(struct nt99340_device *dev,enum  camera_banding_f
 		i2c_put_byte(client, 0x32CD, 0x98);
 		i2c_put_byte(client, 0x32DB, 0x6E);
 		i2c_put_byte(client, 0x32D0, 0x01);
-		printk(KERN_INFO "banding 50 in\n");			
+		printk(KERN_INFO "banding 50 in\n");
 		break;
-	case CAM_BANDING_60HZ:			
+	case CAM_BANDING_60HZ:
 		i2c_put_byte(client, 0x32BF, 0x60);
 		i2c_put_byte(client, 0x32C0, 0x7C);
 		i2c_put_byte(client, 0x32C1, 0x7C);
@@ -1095,7 +1095,7 @@ void NT99340_set_param_banding(struct nt99340_device *dev,enum  camera_banding_f
 		i2c_put_byte(client, 0x32CD, 0x9C);
 		i2c_put_byte(client, 0x32DB, 0x68);
 		i2c_put_byte(client, 0x32D0, 0x01);
-		printk(KERN_INFO " banding 60 in\n ");				
+		printk(KERN_INFO " banding 60 in\n ");
 		break;
 	default:
 			break;
@@ -1124,9 +1124,9 @@ void NT99340_set_resolution(struct nt99340_device *dev,int height,int width)
 	//int ret;
 	//struct i2c_client *client = v4l2_get_subdevdata(&dev->sd);
 
-#if 1	 
+#if 1
 	if(height&&width&&(height<=1536)&&(width<=2048))
-	{		
+	{
 	  if((height<=600)&&(width<=800))
 	  {
 	    #if 1
@@ -1134,8 +1134,8 @@ void NT99340_set_resolution(struct nt99340_device *dev,int height,int width)
                         nt99340_frmintervals_active.denominator = 15;
                         nt99340_frmintervals_active.numerator	= 1;
 			nt99340_h_active=800;
-			nt99340_v_active=598;		
-			#endif			
+			nt99340_v_active=598;
+			#endif
 		}
 		else
 		{
@@ -1153,7 +1153,7 @@ void NT99340_set_resolution(struct nt99340_device *dev,int height,int width)
 	i2c_put_byte(client,0x32e0, 0x03);
 	i2c_put_byte(client,0x32e1, 0x20);
 	i2c_put_byte(client,0x32e2 ,0x02);
-	i2c_put_byte(client,0x32e3, 0x58);//	
+	i2c_put_byte(client,0x32e3, 0x58);//
 #endif
        set_flip(dev);
 }    /* NT99340_set_resolution */
@@ -1227,14 +1227,14 @@ static int nt99340_setting(struct nt99340_device *dev,int PROP_ID,int value )
 			nt99340_qctrl[1].default_value=value;
 			NT99340_set_param_exposure(dev,value);
 			printk(KERN_INFO " set camera  exposure=%d. \n ",value);
-        	}
+		}
 		break;
 	case V4L2_CID_COLORFX:
         if(nt99340_qctrl[2].default_value!=value){
 			nt99340_qctrl[2].default_value=value;
 			NT99340_set_param_effect(dev,value);
 			printk(KERN_INFO " set camera  effect=%d. \n ",value);
-        	}
+		}
 		break;
 	case V4L2_CID_WHITENESS:
 		 if(nt99340_qctrl[3].default_value!=value){
@@ -1250,7 +1250,7 @@ static int nt99340_setting(struct nt99340_device *dev,int PROP_ID,int value )
 			printk(KERN_INFO " set camera  scene mode=%d. \n ",value);
 		}
 		break;
-	case V4L2_CID_HFLIP:    /* set flip on H. */          
+	case V4L2_CID_HFLIP:    /* set flip on H. */
 		value = value & 0x3;
 		if(nt99340_qctrl[5].default_value!=value){
 			nt99340_qctrl[5].default_value=value;
@@ -1327,7 +1327,7 @@ static void nt99340_thread_tick(struct nt99340_fh *fh)
 	unsigned long flags = 0;
 
 	dprintk(dev, 1, "Thread tick\n");
-   	if(!fh->stream_on){
+	if(!fh->stream_on){
             dprintk(dev, 1, "sensor doesn't stream on\n");
             return ;
 	}
@@ -1789,11 +1789,11 @@ static int vidioc_streamon(struct file *file, void *priv, enum v4l2_buf_type i)
 	para.h_active = nt99340_h_active;
 	para.v_active = nt99340_v_active;
 	para.hsync_phase = 0;
-	para.vsync_phase  = 0;	
+	para.vsync_phase  = 0;
 	para.hs_bp = 0;
 	para.vs_bp = 2;
 	para.cfmt = TVIN_YUV422;
-	para.scan_mode = TVIN_SCAN_MODE_PROGRESSIVE;	
+	para.scan_mode = TVIN_SCAN_MODE_PROGRESSIVE;
 	para.skip_count =  2;//skip num
 	ret =  videobuf_streamon(&fh->vb_vidq);
 	if(ret == 0){
@@ -1816,7 +1816,7 @@ static int vidioc_streamoff(struct file *file, void *priv, enum v4l2_buf_type i)
 	ret = videobuf_streamoff(&fh->vb_vidq);
 	if(ret == 0 ){
             vops->stop_tvin_service(0);
-            fh->stream_on        = 0; 
+            fh->stream_on        = 0;
 	}
 	return ret;
 }
@@ -1967,7 +1967,7 @@ static int nt99340_open(struct file *file)
 #endif
 #if MESON_CPU_TYPE >= MESON_CPU_TYPE_MESON6
 	switch_mod_gate_by_name("ge2d", 1);
-#endif		
+#endif
     aml_cam_init(&dev->cam_info);
 	NT99340_init_regs(dev);
 	msleep(40);
@@ -1983,7 +1983,7 @@ static int nt99340_open(struct file *file)
 		video_device_node_name(dev->vdev),
 		v4l2_type_names[V4L2_BUF_TYPE_VIDEO_CAPTURE], dev->users);
 
-    	/* init video dma queues */
+	/* init video dma queues */
 	INIT_LIST_HEAD(&dev->vidq.active);
 	init_waitqueue_head(&dev->vidq.wq);
     spin_lock_init(&dev->slock);
@@ -1997,7 +1997,7 @@ static int nt99340_open(struct file *file)
 
 	if (retval)
 		return retval;
-		
+
 	wake_lock(&(dev->wake_lock));
 	file->private_data = fh;
 	fh->dev      = dev;
@@ -2094,7 +2094,7 @@ static int nt99340_close(struct file *file)
         aml_cam_uninit(&dev->cam_info);
 #if MESON_CPU_TYPE >= MESON_CPU_TYPE_MESON6
 	switch_mod_gate_by_name("ge2d", 0);
-#endif		
+#endif
 	wake_unlock(&(dev->wake_lock));
 #ifdef CONFIG_CMA
     vm_deinit_buf();
@@ -2183,35 +2183,35 @@ static const struct v4l2_subdev_ops nt99340_ops = {
 };
 
 //****************************
-static ssize_t camera_ctrl(struct class *class, 
+static ssize_t camera_ctrl(struct class *class,
 			struct class_attribute *attr,	const char *buf, size_t count)
 {
-    unsigned int reg, val, ret;	
+    unsigned int reg, val, ret;
 	int n=1,i;
 	if(buf[0] == 'w'){
-		ret = sscanf(buf, "w %x %x", &reg, &val);		
+		ret = sscanf(buf, "w %x %x", &reg, &val);
 		printk("write camera reg 0x%x value %x\n", reg, val);
-		i2c_put_byte(this_client, reg, val);		
+		i2c_put_byte(this_client, reg, val);
 	}
 	else{
 		ret =  sscanf(buf, "r %x %d", &reg,&n);
 		printk("read %d camera register from reg: %x \n",n,reg);
 		for(i=0;i<n;i++)
-		{			
+		{
 			val = i2c_get_byte(this_client, reg+i);
 			printk("reg 0x%x : 0x%x\n", reg+i, val);
 		}
 	}
-	
+
 	if (ret != 1 || ret !=2)
 		return -EINVAL;
-	
+
 	return count;
 	//return 0;
 }
 
 static struct class_attribute camera_ctrl_class_attrs[] = {
-    __ATTR(reg,  S_IRUGO | S_IWUSR, NULL,    camera_ctrl), 
+    __ATTR(reg,  S_IRUGO | S_IWUSR, NULL,    camera_ctrl),
     __ATTR_NULL
 };
 
@@ -2252,7 +2252,7 @@ static int nt99340_probe(struct i2c_client *client,
 	memcpy(t->vdev, &nt99340_template, sizeof(*t->vdev));
 
 	video_set_drvdata(t->vdev, t);
-	
+
 	wake_lock_init(&(t->wake_lock),WAKE_LOCK_SUSPEND, "nt99340");
 	/* Register it */
 	if (plat_dat) {
@@ -2261,7 +2261,7 @@ static int nt99340_probe(struct i2c_client *client,
         } else {
             printk("camera nt99340: have no platform data\n");
             kfree(t);
-            return -1; 
+            return -1;
         }
 	err = video_register_device(t->vdev, VFL_TYPE_GRABBER, video_nr);
 	if (err < 0) {
@@ -2273,7 +2273,7 @@ static int nt99340_probe(struct i2c_client *client,
 	t->cam_info.version = NT99340_DRIVER_VERSION;
 	if (aml_cam_info_reg(&t->cam_info) < 0)
 		printk("reg caminfo error\n");
-	
+
 	ret = class_register(&camera_ctrl_class);
 	if(ret){
 		printk(" class register camera_ctrl_class fail!\n");
@@ -2310,4 +2310,3 @@ static struct i2c_driver nt99340_i2c_driver = {
 };
 
 module_i2c_driver(nt99340_i2c_driver);
-

@@ -19,4 +19,3 @@ extern struct audiodsp_microcode *  audiodsp_find_supoort_mcode(struct audiodsp_
 extern int audiodsp_microcode_load(struct audiodsp_priv*priv,struct audiodsp_microcode *pmcode);
 int audiodsp_microcode_free(struct audiodsp_priv*priv);
  #endif
-

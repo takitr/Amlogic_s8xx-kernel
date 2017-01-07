@@ -27,4 +27,3 @@
 #undef MicroCode
 #define MicroCode half_encoder_mc
 #include "half_encoder_linux.h"
-

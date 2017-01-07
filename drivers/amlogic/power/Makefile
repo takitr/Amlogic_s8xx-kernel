@@ -3,7 +3,7 @@
 # NOTE:
 #
 # AMLOGIC_BOARD_HAS_PMU is general switch to compile on-board
-# PMU drivers, ALL new added PMU driver should be depend on 
+# PMU drivers, ALL new added PMU driver should be depend on
 # this config
 #
 ############################################################
@@ -21,7 +21,7 @@ obj-$(CONFIG_AW_AXP)                        += axp_power/
 obj-$(CONFIG_AML_PMU)                       += aml_pmu/
 obj-$(CONFIG_RICOH_PMU)                     += ricoh/
 obj-$(CONFIG_UBOOT_BATTERY_PARAMETERS)      += battery_parameter.o
-obj-$(CONFIG_AMLOGIC_PMU_OF)                += aml_pmu_of_common.o pmu_mutex.o 
+obj-$(CONFIG_AMLOGIC_PMU_OF)                += aml_pmu_of_common.o pmu_mutex.o
 
 endif
 

@@ -138,7 +138,7 @@ extern int snapshot_image_loaded(struct snapshot_handle *handle);
 /* If unset, the snapshot device cannot be open. */
 extern atomic_t snapshot_device_available;
 
-extern sector_t alloc_swapdev_block(int swap);
+extern sector_t alloc_swapdev_block(void);
 extern void free_all_swap_pages(int swap);
 extern int swsusp_swap_in_use(void);
 
@@ -151,7 +151,7 @@ extern int swsusp_swap_in_use(void);
 #define SF_CRC32_MODE	        4
 
 /* kernel/power/hibernate.c */
-extern int swsusp_check(void);
+extern int swsusp_check(int wrapsnapshot);
 extern void swsusp_free(void);
 extern int swsusp_read(unsigned int *flags_p);
 extern int swsusp_write(unsigned int flags);
@@ -175,17 +175,20 @@ extern void swsusp_show_speed(struct timeval *, struct timeval *,
 				unsigned int, char *);
 
 #ifdef CONFIG_SUSPEND
-/* kernel/power/suspend.c */
-extern const char *const pm_states[];
+struct pm_sleep_state {
+	const char *label;
+	suspend_state_t state;
+};
 
-extern bool valid_state(suspend_state_t state);
+/* kernel/power/suspend.c */
+extern struct pm_sleep_state pm_states[];
+
 extern int suspend_devices_and_enter(suspend_state_t state);
 #else /* !CONFIG_SUSPEND */
 static inline int suspend_devices_and_enter(suspend_state_t state)
 {
 	return -ENOSYS;
 }
-static inline bool valid_state(suspend_state_t state) { return false; }
 #endif /* !CONFIG_SUSPEND */
 
 #ifdef CONFIG_PM_TEST_SUSPEND

@@ -45,7 +45,7 @@ typedef struct display_frame_s{
 	int frame_top;
 	int frame_left;
 	int frame_width;
-	int frame_height;	
+	int frame_height;
 	int content_top;
 	int content_left;
 	int content_width;

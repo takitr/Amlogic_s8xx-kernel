@@ -19,7 +19,7 @@
 
 
 //-------------------------------------------------------------------------------
-// Debug Print Macro 
+// Debug Print Macro
 //   Note: DEBUG_PRINT Requires double parenthesis
 //   Example:  DEBUG_PRINT(("hello, world!\n"));
 //-------------------------------------------------------------------------------

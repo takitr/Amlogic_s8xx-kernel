@@ -2,13 +2,13 @@
 #define	_VOUT_SERVE_H
 
 #ifdef CONFIG_AM_TV_OUTPUT
-#include  "tvoutc.h"	
+#include  "tvoutc.h"
 #endif
 #include  <linux/amlogic/vout/vout_notify.h>
 
 /*****************************************************************
 **
-**	type define part 
+**	type define part
 **
 ******************************************************************/
 
@@ -39,22 +39,22 @@ typedef struct {
 }vout_info_t;
 /*****************************************************************
 **
-**	macro define part 
+**	macro define part
 **
 ******************************************************************/
 #define  VOUT_CLASS_NAME  	"display"
 #define	MAX_NUMBER_PARA  10
 
 #define  SHOW_INFO(name)      \
-	{return snprintf(buf,40, "%s\n", name);}  	
+	{return snprintf(buf,40, "%s\n", name);}
 
 #define  STORE_INFO(name)\
 	{mutex_lock(&vout_mutex);\
 	snprintf(name,40,"%s",buf) ;\
-	mutex_unlock(&vout_mutex); }			
-		
+	mutex_unlock(&vout_mutex); }
+
 #define    SET_VOUT_CLASS_ATTR(name,op)    \
-static  char    name[40] ;				  \
+static  char    name[40] __nosavedata;				  \
 static ssize_t aml_vout_attr_##name##_show(struct class  * cla, struct class_attribute *attr, char *buf)   \
 {  											\
 	SHOW_INFO(name)  	\
@@ -67,10 +67,10 @@ static ssize_t  aml_vout_attr_##name##_store(struct class *cla,  struct class_at
 	return strnlen(buf, count);				\
 }											\
 struct  class_attribute  class_vout_attr_##name =  \
-__ATTR(name, S_IRUGO|S_IWUSR|S_IWGRP, aml_vout_attr_##name##_show, aml_vout_attr_##name##_store) ; 
+__ATTR(name, S_IRUGO|S_IWUSR|S_IWGRP, aml_vout_attr_##name##_show, aml_vout_attr_##name##_store) ;
 /*****************************************************************
 **
-**	function  declare  part 
+**	function  declare  part
 **
 ******************************************************************/
 static  void  read_reg(char *para);

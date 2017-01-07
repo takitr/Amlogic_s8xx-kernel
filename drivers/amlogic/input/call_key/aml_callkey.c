@@ -71,7 +71,7 @@ struct call_key_workdata {
 	int hp_status;
     int call_status;
     int first_boot;
-    
+
     struct timer_list wk_timer;
     struct wake_lock wk_lk ;
 	int wk_LK_flag;
@@ -117,7 +117,7 @@ static void callkey_work(struct call_key_workdata *ck_workdata)
 	static int cnt=0;
 	int callkey_status=0;
 	int hp_status = 0;
-	
+
 	if(ck_workdata->first_boot){
 		if(cnt++<50){
 			return ;
@@ -127,7 +127,7 @@ static void callkey_work(struct call_key_workdata *ck_workdata)
 			cnt =0 ;
 		}
 	}
-	
+
 	hp_status = ck_workdata->callkey_pdata->get_hp_status();
 	if(hp_status == ck_workdata->hp_status){
 		if(hp_status == ck_workdata->callkey_pdata->hp_in_value){
@@ -135,15 +135,15 @@ static void callkey_work(struct call_key_workdata *ck_workdata)
 				printk("callkey(%d) is pressed!!!\n",KEY_CODE);
 				//hp is in,and callkey is pressed
 				input_report_key(input, KEY_CODE, 1);
-		    	input_sync(input);
-		    	ck_workdata->call_status = 1 ;
+			input_sync(input);
+			ck_workdata->call_status = 1 ;
 			}
 			else if(ck_workdata->call_status==1){
 				printk("callkey(%d) is unpressed!!!\n",KEY_CODE);
 				//hp is in,and callkey is pressed
 				ck_workdata->call_status = 0;
 				input_report_key(input, KEY_CODE, 0);
-		    	input_sync(input);
+			input_sync(input);
 			}
 		}
 	}else{
@@ -214,10 +214,10 @@ int aml_callkey_resume(struct platform_device *pdev)
         v = gp_call_key_workdata->callkey_pdata->get_phone_ring_value();
         printk("aml_callkey_resume, get_phone_ring_value is %d\n",v);
     }
-    
+
     if(0 < v){
         printk("aml_callkey_resume, key %d pressed.\n", KEY_PHONERING);
-        requestWakeLock(gp_call_key_workdata);                   
+        requestWakeLock(gp_call_key_workdata);
         input_report_key(input, KEY_PHONERING, 1);
         input_sync(input);
 
@@ -238,7 +238,7 @@ static int __devinit callkey_probe(struct platform_device *pdev)
         dev_err(&pdev->dev, "platform data is required!\n");
         return -EINVAL;
     }
-   
+
     ck_workdata = kzalloc(sizeof(struct call_key_workdata), GFP_KERNEL);
     if (!ck_workdata ) {
         return -ENOMEM;
@@ -248,23 +248,23 @@ static int __devinit callkey_probe(struct platform_device *pdev)
     ck_workdata->call_status = 0;
     ck_workdata->first_boot = 1;
     ck_workdata->callkey_pdata = pdata ;
-	
+
 	InitWakeLock(ck_workdata);
 
     platform_set_drvdata(pdev, ck_workdata);
-    
+
     input = input_allocate_device();
     if(input == NULL){
-    	printk("callkey input_allocate_device failed\n");
-    	kfree(ck_workdata);
-    	return -ENOMEM;
+	printk("callkey input_allocate_device failed\n");
+	kfree(ck_workdata);
+	return -ENOMEM;
     }
     /* setup input device */
     set_bit(EV_KEY, input->evbit);
     set_bit(EV_REP, input->evbit);
     set_bit(KEY_CODE, input->keybit);
     set_bit(KEY_PHONERING, input->keybit);
-    
+
     input->name = "aml_callkey";
     input->phys = "aml_callkey/input0";
     input->dev.parent = &pdev->dev;
@@ -279,25 +279,25 @@ static int __devinit callkey_probe(struct platform_device *pdev)
 
     input->keycodesize = sizeof(unsigned short);
     input->keycodemax = 0x1ff;
-    
+
     ret = input_register_device(input);
     if (ret < 0) {
         printk(KERN_ERR "Unable to register keypad input device.\n");
-        	kfree(ck_workdata);
+		kfree(ck_workdata);
 		    input_free_device(input);
 		    return -EINVAL;
     }
-    
+
     INIT_WORK(&(ck_workdata->work_update), update_work_func);
-        
+
     setup_timer(&ck_workdata->timer, callkey_timer_sr, (unsigned long)ck_workdata) ;
     //mod_timer(&ck_workdata->timer, jiffies+msecs_to_jiffies(WORK_DELAYTIME));
-    
-    setup_timer(&ck_workdata->starter_timer, callkey_start_worktimer, (unsigned long)ck_workdata) ;   
+
+    setup_timer(&ck_workdata->starter_timer, callkey_start_worktimer, (unsigned long)ck_workdata) ;
     mod_timer(&ck_workdata->starter_timer, jiffies+msecs_to_jiffies(25000));
-    
-    setup_timer(&ck_workdata->wk_timer, callkey_wakelock_timer_fun, (unsigned long)ck_workdata) ; 
-    
+
+    setup_timer(&ck_workdata->wk_timer, callkey_wakelock_timer_fun, (unsigned long)ck_workdata) ;
+
     #ifdef CONFIG_HAS_EARLYSUSPEND
     callkey_early_suspend.level = EARLY_SUSPEND_LEVEL_STOP_DRAWING - 1;
     callkey_early_suspend.suspend = aml_callkey_earlysuspend;
@@ -305,8 +305,8 @@ static int __devinit callkey_probe(struct platform_device *pdev)
     callkey_early_suspend.param = gp_call_key_workdata;
     register_early_suspend(&callkey_early_suspend);
     #endif
-    
-    printk("CallKey register  completed.\r\n");
+
+    printk("CallKey register  completed.\n");
     return 0;
 }
 
@@ -353,7 +353,3 @@ module_exit(callkey_exit);
 MODULE_AUTHOR("Alex Deng");
 MODULE_DESCRIPTION("CallKey Driver");
 MODULE_LICENSE("GPL");
-
-
-
-

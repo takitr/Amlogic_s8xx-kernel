@@ -20,7 +20,7 @@
 #include "si_drv_cbus.h"
 
 #include "si_sii5293_registers.h"
-#if defined(INC_CEC)  
+#if defined(INC_CEC)
 #include "si_cec_config.h"
 #include "si_drv_cpi_internal.h"
 #endif
@@ -136,7 +136,7 @@ bool_t SiiDrvDeviceInitialize ( void )
         {
             //DEBUG_PRINT( MSG_ALWAYS, "\n Device Id check failed!\n" );
             //break;
-        }  
+        }
 
 #ifdef SK_TX_EVITA
         if ( !SiiDrvEvitaInit())
@@ -144,14 +144,14 @@ bool_t SiiDrvDeviceInitialize ( void )
             DEBUG_PRINT( MSG_ALWAYS, "\n SiiDrvEvitaInitialize failed!\n" );
             break;
         }
-#endif             
-        if ( !SiiMhlRxInitialize()) 
+#endif
+        if ( !SiiMhlRxInitialize())
         {
             DEBUG_PRINT( MSG_ALWAYS, "\n SkAppDeviceInitCbus failed!\n" );
             break;
         }
-        
-        if ( !SiiDrvRxInitialize()) 
+
+        if ( !SiiDrvRxInitialize())
         {
             DEBUG_PRINT( MSG_ALWAYS, "\n SkAppDeviceInitRx failed!\n" );
             break;
@@ -231,7 +231,7 @@ void SiiDrvSwitchDeviceHdcpDdcControl ( bool_t enableHDCP )
     // only one port in 5293, no need to check portIndex
     enableMask = RX_M__SYS_SWTCH__RX0_EN | RX_M__SYS_SWTCH__DDC0_EN | RX_M__SYS_SWTCH__DDC_DEL_EN;
 
-    SiiRegModify( RX_A__SYS_SWTCH, enableMask, enableVal );  
+    SiiRegModify( RX_A__SYS_SWTCH, enableMask, enableVal );
 }
 
 
@@ -337,7 +337,7 @@ void SiiSwitchConnectionCheck(void)
             SiiLedControl(LED_ID_2, false);
             SiiLedControl(LED_ID_3, false);
             DEBUG_PRINT( MSG_ALWAYS, "Cable connection change: cable out\n" );
-        } 
+        }
     }
 }
 
@@ -401,14 +401,14 @@ void SiiDrvDeviceManageInterrupts (void)
             SiiDrvCbusProcessInterrupts();
             SiiMhlRxIntrHandler();
         }
-#if defined(INC_CEC)        
+#if defined(INC_CEC)
         if(intStatus2 & BIT_CEC_INTR)
         {
             DrvCpiProcessInterrupts();
             DEBUG_PRINT(MSG_DBG, ("CEC Interrupt\n"));
         }
 #endif
-        
+
         SiiSwitchConnectionCheck();
 
     }
@@ -416,4 +416,3 @@ void SiiDrvDeviceManageInterrupts (void)
     //DEBUG_PRINT(MSG_STAT, ("-------------------SiiMhlTxDeviceIsr end -------------------\n"));
 #endif
 }
-

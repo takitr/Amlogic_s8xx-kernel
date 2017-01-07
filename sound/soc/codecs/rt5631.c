@@ -1759,7 +1759,7 @@ static int rt5631_remove(struct snd_soc_codec *codec)
 static int rt5631_suspend(struct device *dev)
 {
     struct rt5631_priv *rt5631 = dev_get_drvdata(dev);
-    
+
 	rt5631_set_bias_level(rt5631_codec, SND_SOC_BIAS_OFF);
     regcache_mark_dirty(rt5631->regmap);
 	return 0;
@@ -1769,7 +1769,7 @@ static int rt5631_resume(struct device *dev)
 {
     struct rt5631_priv *rt5631 = dev_get_drvdata(dev);
     regcache_sync(rt5631->regmap);
-    
+
 	rt5631_set_bias_level(rt5631_codec, SND_SOC_BIAS_STANDBY);
 	return 0;
 }

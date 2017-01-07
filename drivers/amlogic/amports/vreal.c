@@ -56,7 +56,7 @@
 #define DRIVER_NAME "amvdec_real"
 #define MODULE_NAME "amvdec_real"
 
-#if MESON_CPU_TYPE >= MESON_CPU_TYPE_MESON6  
+#if MESON_CPU_TYPE >= MESON_CPU_TYPE_MESON6
 #define NV21
 #endif
 
@@ -74,7 +74,7 @@
 #define INT_REASON      AV_SCRATCH_B
 #define WAIT_BUFFER     AV_SCRATCH_E
 
-#if MESON_CPU_TYPE >= MESON_CPU_TYPE_MESON6  
+#if MESON_CPU_TYPE >= MESON_CPU_TYPE_MESON6
 #define MDEC_WIDTH      AV_SCRATCH_I
 #define MDEC_HEIGHT     AV_SCRATCH_J
 #else
@@ -383,13 +383,13 @@ static int vreal_event_cb(int type, void *data, void *private_data)
         spin_lock_irqsave(&lock, flags);
         vreal_local_init();
         vreal_prot_init();
-        spin_unlock_irqrestore(&lock, flags); 
+        spin_unlock_irqrestore(&lock, flags);
 #ifndef CONFIG_POST_PROCESS_MANAGER
         vf_reg_provider(&vreal_vf_prov);
-#endif              
+#endif
         amvdec_start();
     }
-    return 0;        
+    return 0;
 }
 
 static int  vreal_vf_states(vframe_states_t *states, void* op_arg)
@@ -401,7 +401,7 @@ static int  vreal_vf_states(vframe_states_t *states, void* op_arg)
     states->buf_free_num = kfifo_len(&newframe_q);
     states->buf_avail_num = kfifo_len(&display_q);
     states->buf_recycle_num = kfifo_len(&recycle_q);
-    
+
     spin_unlock_irqrestore(&lock, flags);
 
     return 0;
@@ -417,7 +417,7 @@ static void vreal_ppmgr_reset(void)
     printk("vrealdec: vf_ppmgr_reset\n");
 }
 #endif
-#endif 
+#endif
 static void vreal_put_timer_func(unsigned long arg)
 {
     struct timer_list *timer = (struct timer_list *)arg;
@@ -575,7 +575,7 @@ static void vreal_canvas_init(void)
 
 static void vreal_prot_init(void)
 {
-#if MESON_CPU_TYPE >= MESON_CPU_TYPE_MESON6  
+#if MESON_CPU_TYPE >= MESON_CPU_TYPE_MESON6
     WRITE_VREG(DOS_SW_RESET0, (1<<7) | (1<<6));
     WRITE_VREG(DOS_SW_RESET0, 0);
 #else
@@ -600,7 +600,7 @@ static void vreal_prot_init(void)
     /* notify ucode the buffer offset */
     WRITE_VREG(AV_SCRATCH_F, buf_offset);
 
-#if MESON_CPU_TYPE >= MESON_CPU_TYPE_MESON6  
+#if MESON_CPU_TYPE >= MESON_CPU_TYPE_MESON6
     WRITE_VREG(DOS_SW_RESET0, (1<<9) | (1<<8));
     WRITE_VREG(DOS_SW_RESET0, 0);
 #else
@@ -773,10 +773,10 @@ s32 vreal_init(void)
     vf_provider_init(&vreal_vf_prov, PROVIDER_NAME, &vreal_vf_provider, NULL);
     vf_reg_provider(&vreal_vf_prov);
     vf_notify_receiver(PROVIDER_NAME,VFRAME_EVENT_PROVIDER_START,NULL);
-#else 
+#else
     vf_provider_init(&vreal_vf_prov, PROVIDER_NAME, &vreal_vf_provider, NULL);
     vf_reg_provider(&vreal_vf_prov);
-#endif 
+#endif
 
     vf_notify_receiver(PROVIDER_NAME, VFRAME_EVENT_PROVIDER_FR_HINT, (void *)vreal_amstream_dec_info.rate);
 
@@ -815,18 +815,20 @@ extern void AbortEncodeWithVdec2(int abort);
 
 static int amvdec_real_probe(struct platform_device *pdev)
 {
-    struct resource *mem;
+    struct vdec_dev_reg_s *pdata = (struct vdec_dev_reg_s *)pdev->dev.platform_data;
 
-    if (!(mem = platform_get_resource(pdev, IORESOURCE_MEM, 0))) {
+    if (pdata == NULL) {
         printk("amvdec_real memory resource undefined.\n");
         return -EFAULT;
     }
 
-    buf_start = mem->start;
-    buf_size = mem->end - mem->start + 1;
+    buf_start = pdata->mem_start;
+    buf_size = pdata->mem_end - pdata->mem_start + 1;
     buf_offset = buf_start - RM_DEF_BUFFER_ADDR;
 
-    memcpy(&vreal_amstream_dec_info, (void *)mem[1].start, sizeof(vreal_amstream_dec_info));
+    if (pdata->sys_info) {
+        vreal_amstream_dec_info = *pdata->sys_info;
+    }
 
 #if (MESON_CPU_TYPE == MESON_CPU_TYPE_MESON8)&&(HAS_HDEC)
     if(IS_MESON_M8_CPU){
@@ -838,7 +840,7 @@ static int amvdec_real_probe(struct platform_device *pdev)
             msleep(50);
             count++;
         }
-    
+
         if(get_vdec2_usage() != USAGE_NONE){
             printk("\namvdec_real_probe --- stop vdec2 fail.\n");
             return -EBUSY;
@@ -886,7 +888,7 @@ static int amvdec_real_remove(struct platform_device *pdev)
         dma_unmap_single(NULL, pic_sz_tbl_map, sizeof(pic_sz_tbl), DMA_TO_DEVICE);
     }
     rmparser_release();
-	
+
     amvdec_disable();
 #if (MESON_CPU_TYPE == MESON_CPU_TYPE_MESON8)&&(HAS_HDEC)
     if(IS_MESON_M8_CPU)

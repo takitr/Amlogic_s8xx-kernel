@@ -34,7 +34,7 @@
 /*
  * M chip USB clock setting
  */
- 
+
 /*
  * Clock source name index must sync with chip's spec
  * M1/M2/M3/M6 are different!
@@ -61,7 +61,7 @@ int clk_enable_usb(struct clk *clk)
 	//usb_dbg_uart_data_t uart;
 	int clk_sel,clk_div,clk_src;
 	int time_dly = 500; //usec
-	
+
 	if(!clk)
 		return -1;
 
@@ -82,7 +82,7 @@ int clk_enable_usb(struct clk *clk)
 		printk(KERN_ERR "bad usb clk name: %s\n",clk_name);
 		return -1;
 	}
-	
+
 	if(!init_count){
 		init_count++;
 		aml_set_reg32_bits(P_RESET1_REGISTER, 1, 2, 1);
@@ -94,15 +94,15 @@ int clk_enable_usb(struct clk *clk)
 		clk_src = 24000000;
 
 		config.d32 = peri_a->config;
-		config.b.clk_sel = clk_sel;	
-		config.b.clk_div = clk_div; 
-	  	config.b.clk_en = 1;
+		config.b.clk_sel = clk_sel;
+		config.b.clk_div = clk_div;
+		config.b.clk_en = 1;
 		peri_a->config = config.d32;
 
 		config.d32 = peri_b->config;
-		config.b.clk_sel = clk_sel;	
-		config.b.clk_div = clk_div; 
-	  	config.b.clk_en = 1;
+		config.b.clk_sel = clk_sel;
+		config.b.clk_div = clk_div;
+		config.b.clk_en = 1;
 		peri_b->config = config.d32;
 		printk(KERN_NOTICE"USB (%d) use clock source: %s\n",port_idx,clock_src_name[clk_sel]);
 
@@ -110,7 +110,7 @@ int clk_enable_usb(struct clk *clk)
 		control.b.fsel = 2;	/* PHY default is 24M (5), change to 12M (2) */
 		control.b.por = 1;
 		peri_b->ctrl = control.d32;
-		
+
 		control.d32 = peri_a->ctrl;
 		control.b.fsel = 2;	/* PHY default is 24M (5), change to 12M (2) */
 		control.b.por = 1;
@@ -130,11 +130,11 @@ int clk_enable_usb(struct clk *clk)
 			printk(KERN_ERR"USB (%d) PHY Clock not detected!\n",1);
 		}
 	}
-	
+
 	//uart.d32 = peri->dbg_uart;
 	//uart.b.set_iddq = 0;
-	//peri->dbg_uart = uart.d32;	
-	
+	//peri->dbg_uart = uart.d32;
+
 	dmb();
 	return 0;
 }
@@ -145,7 +145,7 @@ int clk_disable_usb(struct clk *clk)
 	char * clk_name;
 	usb_peri_reg_t * peri_a,* peri_b,*peri;
 	//usb_dbg_uart_data_t uart;
-	
+
 	if(!clk)
 		return -1;
 
@@ -175,4 +175,3 @@ int clk_disable_usb(struct clk *clk)
 	return 0;
 }
 EXPORT_SYMBOL(clk_disable_usb);
-

@@ -80,6 +80,6 @@ extern u32 LOG_LEVEL_VAR, LOG_MASK_VAR;
 #define amlog_level_if(cond, level, x...)
 #define amlog_mask_if(cond, mask, x...)
 #define amlog_mask_level_if(cond, mask, level, x...)
-#endif 
+#endif
 
 #endif /* __AMLOG_H */

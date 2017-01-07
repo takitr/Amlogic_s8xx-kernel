@@ -35,7 +35,7 @@
 #include <linux/sensor/dmard06.h>
 #include <linux/sensor/sensor_common.h>
 //#include <mach/gpio.h>
-//#include <mach/board.h> 
+//#include <mach/board.h>
 
 #ifdef CONFIG_ANDROID_POWER
 #include <linux/android_power.h>
@@ -175,7 +175,7 @@ static int dmard06_tx_data(struct i2c_client *client, char *txData, int length)
 
 static int dmard06_set_rate(struct i2c_client *client, char rate)
 {
-	
+
 	int ret = 0;
 	char buffer[2];
 	char temp ;
@@ -200,9 +200,9 @@ static int dmard06_start_dev(struct i2c_client *client, char rate)
 {
 
       struct dmard06_data *dmard06;
-	
+
 	char buffer[4];
-	
+
 	int ret = 0;
 	dmard06 = i2c_get_clientdata(client);
        buffer[0] = DMARD06_REG_NORMAL;
@@ -217,7 +217,7 @@ static int dmard06_start_dev(struct i2c_client *client, char rate)
 	/*     buffer[0] = DMARD06_REG_INT;
 	buffer[1] = 0x24;	//0x10; modify by zhao
        ret = dmard06_tx_data(client, &buffer[0], 2);*/
-	   
+
 	buffer[0] = DMARD06_REG_NA;
 	buffer[1] = 0x00;	//0x10; modify by zhao
 	ret = dmard06_tx_data(client, &buffer[0], 2);
@@ -248,27 +248,27 @@ static int dmard06_start_dev(struct i2c_client *client, char rate)
      schedule_delayed_work(&dmard06->delaywork, msecs_to_jiffies(dmard06->delay));
 #endif
 	PRINT_INFO("\n----------------------------dmard06_start------------------------\n");
-	
+
 	return ret;
 }
 
 static int dmard06_start(struct i2c_client *client, char rate)
-{ 
+{
 	struct dmard06_data *dmard06 = (struct dmard06_data *)i2c_get_clientdata(client);
-	
+
 	if (dmard06->status == DMARD06_OPEN) {
-		return 0;	   
+		return 0;
 	}
 	dmard06->status = DMARD06_OPEN;
 	return dmard06_start_dev(client, rate);
 }
 
 static int dmard06_close_dev(struct i2c_client *client)
-{		
+{
 	char buffer[2];
 	struct dmard06_data *dmard06 = (struct dmard06_data *)i2c_get_clientdata(client);
 #ifdef DMARD06_WORK_INTERRUPT
-		
+
 
 
 	disable_irq_nosync(client->irq);
@@ -279,28 +279,28 @@ static int dmard06_close_dev(struct i2c_client *client)
 
 	buffer[0] = DMARD06_REG_NORMAL;
 	buffer[1] = 0x07;
-	
+
 	return dmard06_tx_data(client, buffer, 2);
 }
 
 static int dmard06_close(struct i2c_client *client)
 {
 	struct dmard06_data *dmard06 = (struct dmard06_data *)i2c_get_clientdata(client);
-	
+
 	dmard06->status = DMARD06_CLOSE;
-	
+
 	return dmard06_close_dev(client);
 }
 
 static int dmard06_reset_rate(struct i2c_client *client, char rate)
 {
 	int ret = 0;
-	
+
 	PRINT_INFO("\n----------------------------dmard06_reset_rate------------------------\n");
-	
+
 	ret = dmard06_close_dev(client);
 	ret = dmard06_start_dev(client, rate);
-	
+
 	return ret ;
 }
 
@@ -405,7 +405,7 @@ static long dmard06_ioctl(struct file *file, unsigned int cmd,unsigned long arg)
 
 	switch (cmd) {
 	case MMA_IOCTL_START:
-	
+
 		ret = dmard06_start(client, DMARD06_RATE_50);
 		if (ret < 0)
 			return ret;
@@ -426,7 +426,7 @@ static long dmard06_ioctl(struct file *file, unsigned int cmd,unsigned long arg)
 		if (ret < 0)
 			return ret;
 		break;
-	*/	
+	*/
 	default:
 		return -ENOTTY;
 	}
@@ -461,17 +461,17 @@ static void dmard06_work_func(struct work_struct *work)
 {
 	struct dmard06_data *dmard06 = container_of(work, struct dmard06_data, work);
 	struct i2c_client *client = dmard06->client;
-	
-	if (dmard06_get_data(client) < 0) 
+
+	if (dmard06_get_data(client) < 0)
 		PRINT_INFO(KERN_ERR "dmard06 mma_work_func: Get data failed\n");
-		
-	
+
+
 #ifdef DMARD06_WORK_INTERRUPT
 		enable_irq(client->irq);
 #else
       schedule_work(&dmard06->work);
 #endif
-	
+
 }
 
 static void  dmard06_delaywork_func(struct work_struct *work)
@@ -480,26 +480,26 @@ static void  dmard06_delaywork_func(struct work_struct *work)
 	struct dmard06_data *dmard06 = container_of(delaywork, struct dmard06_data, delaywork);
 	struct i2c_client *client = dmard06->client;
 
-	if (dmard06_get_data(client) < 0) 
+	if (dmard06_get_data(client) < 0)
 		PRINT_INFO(KERN_ERR "DMARD06 mma_work_func: Get data failed\n");
-		
-	
+
+
 #ifdef DMARD06_WORK_INTERRUPT
 		enable_irq(client->irq);
 #else
 	schedule_delayed_work(&dmard06->delaywork, msecs_to_jiffies(dmard06->delay));
 #endif
-	
+
 }
 
 #ifdef DMARD06_WORK_INTERRUPT
 static irqreturn_t dmard06_interrupt(int irq, void *dev_id)
 {
 	struct dmard06_data *dmard06 = (struct dmard06_data *)dev_id;
-	
+
 	disable_irq_nosync(irq);
 	schedule_delayed_work(&dmard06->delaywork, msecs_to_jiffies(dmard06->delay));
-	
+
 	return IRQ_HANDLED;
 }
 #endif
@@ -520,15 +520,15 @@ static struct miscdevice dmard06_device = {
 static int dmard06_remove(struct i2c_client *client)
 {
 	struct dmard06_data *dmard06 = i2c_get_clientdata(client);
-	
+
 	misc_deregister(&dmard06_device);
 	input_unregister_device(dmard06->input_dev);
 	input_free_device(dmard06->input_dev);
 	free_irq(client->irq, dmard06);
-	kfree(dmard06); 
+	kfree(dmard06);
 #ifdef CONFIG_ANDROID_POWER
 	android_unregister_early_suspend(&dmard06_early_suspend);
-#endif		
+#endif
 	this_client = NULL;
 	return 0;
 }
@@ -574,10 +574,10 @@ static struct i2c_driver dmard06_driver = {
 	.id_table	= dmard06_id,
 	.probe		= dmard06_probe,
 	.remove 	= dmard06_remove,
-#ifndef CONFIG_ANDROID_POWER	
+#ifndef CONFIG_ANDROID_POWER
 	.suspend = &dmard06_suspend,
 	.resume = &dmard06_resume,
-#endif	
+#endif
 };
 
 
@@ -586,7 +586,7 @@ static int dmard06_init_client(struct i2c_client *client)
 	struct dmard06_data *dmard06;
 	int ret = 0;
 	dmard06 = i2c_get_clientdata(client);
-	
+
 #ifdef DMARD06_WORK_INTERRUPT
 	PRINT_INFO("gpio_to_irq(%d) is %d\n",client->irq,gpio_to_irq(client->irq));
 	if ( !gpio_is_valid(client->irq)) {
@@ -633,7 +633,7 @@ static ssize_t dmard06_delay_store(struct device *dev,
 	unsigned long delay;
 	int error;
 
-    	struct i2c_client *client = to_i2c_client(dev->parent);
+	struct i2c_client *client = to_i2c_client(dev->parent);
 	struct dmard06_data *dmard06 = (struct dmard06_data *)i2c_get_clientdata(client);
 
 	error = strict_strtoul(buf, 10, &delay);
@@ -658,7 +658,7 @@ static ssize_t dmard06_enable_store(struct device *dev,
 	unsigned long data;
 	int error;
 
-    	struct i2c_client *client = to_i2c_client(dev->parent);
+	struct i2c_client *client = to_i2c_client(dev->parent);
 
 	error = strict_strtoul(buf, 10, &data);
 	if (error)
@@ -699,7 +699,7 @@ static int	dmard06_probe(struct i2c_client *client, const struct i2c_device_id *
 		err = -ENOMEM;
 		goto exit_alloc_data_failed;
 	}
-	
+
 	INIT_WORK(&dmard06->work, dmard06_work_func);
 	INIT_DELAYED_WORK(&dmard06->delaywork, dmard06_delaywork_func);
 	dmard06->client = client;
@@ -712,7 +712,7 @@ static int	dmard06_probe(struct i2c_client *client, const struct i2c_device_id *
 		pr_info("DMARD06: invalid devid\n");
 		goto exit_invalid_devid;
 	}
-	   
+
 	err = dmard06_init_client(client);
 	if (err < 0) {
 		PRINT_INFO(KERN_ERR
@@ -778,7 +778,7 @@ static int	dmard06_probe(struct i2c_client *client, const struct i2c_device_id *
 	PRINT_INFO(KERN_INFO "dmard06 probe ok\n");
 	dmard06->status = -1;
 //	dmard06_start(client,0);
-#if 0	
+#if 0
 	dmard06_start(client, DMARD06_RATE_32);
 #endif
 	return 0;
@@ -795,7 +795,7 @@ exit_request_gpio_irq_failed:
 	cancel_delayed_work_sync(&dmard06->delaywork);
 	cancel_work_sync(&dmard06->work);
 exit_invalid_devid:
-	kfree(dmard06); 
+	kfree(dmard06);
 exit_alloc_data_failed:
 	;
 	return err;
@@ -815,4 +815,3 @@ static void __exit dmard06_i2c_exit(void)
 
 module_init(dmard06_i2c_init);
 module_exit(dmard06_i2c_exit);
-

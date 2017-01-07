@@ -69,7 +69,7 @@ static int card_bus_probe(struct device *dev)
 	struct card_driver *drv = to_card_driver(dev->driver);
 	struct memory_card *card = dev_to_memory_card(dev);
 
-	if (card->card_type == CARD_SDIO || 
+	if (card->card_type == CARD_SDIO ||
                   card->card_type == CARD_INAND_LP)
 		return 0;
 	return drv->probe(card);
@@ -140,7 +140,7 @@ EXPORT_SYMBOL(card_init_card);
 int card_register_card(struct memory_card *card)
 {
 	int ret = 0;
-	
+
 	dev_set_name(&card->dev, "%s:%s", card_hostname(card->host), card->name);
 
 	/*return device_add(&card->dev);*/
@@ -157,7 +157,7 @@ EXPORT_SYMBOL(card_register_card);
  * driver model, and (eventually) free it.
  */
 void card_remove_card(struct memory_card *card)
-{	
+{
 	if (card->state & CARD_STATE_PRESENT){
 		init_completion(&card_devdel_comp);
 		device_del(&card->dev);

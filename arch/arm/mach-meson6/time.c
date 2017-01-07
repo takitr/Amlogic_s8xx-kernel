@@ -111,7 +111,7 @@ static void meson_clkevt_set_mode(enum clock_event_mode mode,
         break;
 
     case CLOCK_EVT_MODE_PERIODIC:
-    	aml_set_reg32_mask(clk->mux_reg, 0x1<<(TIMER_A_PERIODIC_BIT+clk->id));
+	aml_set_reg32_mask(clk->mux_reg, 0x1<<(TIMER_A_PERIODIC_BIT+clk->id));
          aml_set_reg32_mask(clk->mux_reg, 0x1<<(TIMER_A_ENABLE_BIT+clk->id));
 
         break;
@@ -440,4 +440,3 @@ void __init meson_timer_init(void)
 #endif
 #endif
 }
-

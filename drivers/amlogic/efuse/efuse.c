@@ -125,7 +125,7 @@ static long efuse_unlocked_ioctl(struct file *file, unsigned int cmd, unsigned l
 {
 	switch (cmd)
 	{
-#ifndef CONFIG_MESON_TRUSTZONE			
+#ifndef CONFIG_MESON_TRUSTZONE
 		case EFUSE_ENCRYPT_ENABLE:
 			aml_set_reg32_bits( P_EFUSE_CNTL4, CNTL4_ENCRYPT_ENABLE_ON,
 			CNTL4_ENCRYPT_ENABLE_BIT, CNTL4_ENCRYPT_ENABLE_SIZE);
@@ -238,6 +238,39 @@ static const struct file_operations efuse_fops = {
 	.write      = efuse_write,
 	.unlocked_ioctl      = efuse_unlocked_ioctl,
 };
+
+/* function: aml_efuse_get_item
+ * key_name: key name
+ * data: key data
+ * return : >=0 ok,  <0 error
+ * */
+int aml_efuse_get_item(unsigned char* key_name, unsigned char* data)
+{
+        char dec_mac[50] = {0};
+        efuseinfo_item_t info;
+        unsigned id=0;
+
+        if(strcmp(key_name,"mac")==0)           id = EFUSE_MAC_ID;
+        else if(strcmp(key_name,"mac_bt")==0)   id = EFUSE_MAC_BT_ID;
+        else if(strcmp(key_name,"mac_wifi")==0) id = EFUSE_MAC_WIFI_ID;
+        else if(strcmp(key_name,"usid")==0)     id = EFUSE_USID_ID;
+        else {
+                printk(KERN_INFO"%s : UNKNOWN key_name\n",__func__);
+                return -EFAULT;
+        }
+
+        if(efuse_getinfo_byID(id, &info) < 0){
+                printk(KERN_INFO"ID is not found\n");
+                return -EFAULT;
+        }
+        if (efuse_read_item(dec_mac, info.data_len, (loff_t*)&info.offset) < 0)
+                return -EFAULT;
+
+        memcpy(&data[0],dec_mac,info.data_len);
+
+        return 0;
+}
+EXPORT_SYMBOL(aml_efuse_get_item);
 
 /* Sysfs Files */
 static ssize_t mac_show(struct class *cla, struct class_attribute *attr, char *buf)
@@ -359,10 +392,10 @@ static ssize_t userdata_show(struct class *cla, struct class_attribute *attr, ch
 	//	return -1;
 	//}
 	/*return sprintf(buf, "%01c%01c%01c%01c%01c%01c%01c%01c%01c%01c%01c%01c%01c%01c%01c%01c%01c%01c%01c%01c\n",
-    			   op[0],op[1],op[2],op[3],op[4],op[5],
-    			   op[6],op[7],op[8],op[9],op[10],op[11],
-    			   op[12],op[13],op[14],op[15],op[16],op[17],
-    			   op[18],op[19]);*/
+			   op[0],op[1],op[2],op[3],op[4],op[5],
+			   op[6],op[7],op[8],op[9],op[10],op[11],
+			   op[12],op[13],op[14],op[15],op[16],op[17],
+			   op[18],op[19]);*/
 
 	for(i = 0; i < info.data_len; i++) {
 	    memset(tmp, 0, 5);
@@ -531,9 +564,9 @@ int usid_min,usid_max;
 	 if(pdev->dev.platform_data)
 		 devp->platform_data = pdev->dev.platform_data;
 	 else
-	 	devp->platform_data = NULL;
+		devp->platform_data = NULL;
 #endif
-#ifndef CONFIG_MESON_TRUSTZONE	 	
+#ifndef CONFIG_MESON_TRUSTZONE
 	 /* disable efuse encryption */
 	 aml_set_reg32_bits( P_EFUSE_CNTL4, CNTL1_AUTO_WR_ENABLE_OFF,
 		 CNTL4_ENCRYPT_ENABLE_BIT, CNTL4_ENCRYPT_ENABLE_SIZE );
@@ -547,7 +580,7 @@ int usid_min,usid_max;
 	// clear power down bit
 	aml_set_reg32_bits(P_EFUSE_CNTL1, CNTL1_PD_ENABLE_OFF,
 			CNTL1_PD_ENABLE_BIT, CNTL1_PD_ENABLE_SIZE);
-#endif		
+#endif
 #endif
 	 return 0;
 
@@ -620,18 +653,3 @@ module_exit(efuse_exit);
 MODULE_DESCRIPTION("AMLOGIC eFuse driver");
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("Bo Yang <bo.yang@amlogic.com>");
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

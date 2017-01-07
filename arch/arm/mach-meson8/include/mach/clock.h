@@ -35,15 +35,15 @@ struct clk_ops {
 	//return: 0:success  1:fail
 	int (*clk_disable_before)(void* privdata);
 	//return: 0:success  1:fail.
-	int (*clk_disable_after)(void* privdata,int failed);	
+	int (*clk_disable_after)(void* privdata,int failed);
 	void* privdata;
 	struct clk_ops* next;
 };
 
 struct clk {
     #define CLK_RATE_UNKNOWN (-1)
-    unsigned long rate;///0xffffffff(-1) means unknown 
-    
+    unsigned long rate;///0xffffffff(-1) means unknown
+
     unsigned long(*get_rate)(struct clk *);
     int (*set_rate)(struct clk *, unsigned long);
     long (*round_rate)(struct clk *, unsigned long);
@@ -60,7 +60,7 @@ struct clk {
 
     unsigned clk_gate_reg_adr;
     unsigned clk_gate_reg_mask;
-    
+
     int  open_irq;
 
     struct list_head child;
@@ -94,7 +94,7 @@ int clk_ops_unregister(struct clk *clk, struct clk_ops *ops);
 		udelay(1000);\
 	}while((aml_read_reg32(pll)&0x80000000)==0);
 
-//M6 PLL control value 
+//M6 PLL control value
 #define M8_PLL_CNTL_CST2 (0x814d3928)
 #define M8_PLL_CNTL_CST3 (0x6b425012)
 #define M8_PLL_CNTL_CST4 (0x110)

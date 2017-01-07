@@ -79,10 +79,10 @@ static struct device *jpegenc_dev;
 
 /*output buffer define*/
 static unsigned BitstreamStart;
-static unsigned BitstreamEnd;  
+static unsigned BitstreamEnd;
 
 static unsigned* BitstreamStartVirtAddr;
-static unsigned dct_buff_start_addr;  
+static unsigned dct_buff_start_addr;
 static unsigned dct_buff_end_addr;
 
 static u32 stat;
@@ -274,20 +274,20 @@ static void push_word(int* offset , unsigned word)
     int bytes = (word >> 24)&0xff;
     for(i = bytes-1 ;i >= 0;i--){
         ptr = (unsigned char*)(BitstreamStartVirtAddr ) + *offset;
-        (*offset)++;	
+        (*offset)++;
         if(i ==0){
-            *ptr = word&0xff;		
+            *ptr = word&0xff;
         }else if(i ==1){
             *ptr = (word >>8)&0xff;
         }else if(i == 2 ){
             *ptr = (word >>16)&0xff;
         }
-    }	
+    }
 }
 
 static void prepare_jpeg_header(void)
 {
-    int pic_format; 
+    int pic_format;
     int pic_width, pic_height;
     int q_sel_comp0, q_sel_comp1, q_sel_comp2;
     int dc_huff_sel_comp0, dc_huff_sel_comp1, dc_huff_sel_comp2;
@@ -304,7 +304,7 @@ static void prepare_jpeg_header(void)
     int header_bytes = 0 ;
     int bak_header_bytes = 0;
     int i ,j ;
-	
+
     if(output_format >= MAX_FRAME_FMT){
         debug_level(0,"Input format is wrong!!!!\n");
     }
@@ -328,11 +328,11 @@ static void prepare_jpeg_header(void)
 
     pic_width = encoder_width;
     pic_height = encoder_height;
-        
+
     q_sel_comp0 = QUANT_SEL_COMP0;
     q_sel_comp1 = QUANT_SEL_COMP1;
     q_sel_comp2 = QUANT_SEL_COMP2;
-       
+
     dc_huff_sel_comp0 = DC_HUFF_SEL_COMP0;
     dc_huff_sel_comp1 = DC_HUFF_SEL_COMP1;
     dc_huff_sel_comp2 = DC_HUFF_SEL_COMP2;
@@ -354,13 +354,13 @@ static void prepare_jpeg_header(void)
         h_factor_comp0 = 0; v_factor_comp0 = 0;
         h_factor_comp1 = 0; v_factor_comp1 = 0;
         h_factor_comp2 = 0; v_factor_comp2 = 0;
-    }	
-	
+    }
+
     // SOI marke
     push_word(&header_bytes , (2<< 24)|   // Number of bytes
                        (0xffd8  << 0));     // data: SOI marker
     //header_bytes += 2;  // Add SOI bytes
-    
+
     // Define quantization tables
     q_num   = 1;
     if ((q_sel_comp0 != q_sel_comp1) || (q_sel_comp0 != q_sel_comp2) || (q_sel_comp1 != q_sel_comp2)) {
@@ -385,11 +385,11 @@ static void prepare_jpeg_header(void)
                                ((gQuantTable[tq[i]][zigzag(j)])  << 0));     // data: Qk
         }
     }
-    
+
     //header_bytes += (2 + (2+65*q_num)); // Add Quantization table bytes
-    
+
     // Define Huffman tables
-    
+
     dc_huff_num = 1;
     if ((dc_huff_sel_comp0 != dc_huff_sel_comp1) || (dc_huff_sel_comp0 != dc_huff_sel_comp2) || (dc_huff_sel_comp1 != dc_huff_sel_comp2)) {
         dc_huff_num ++;
@@ -406,7 +406,7 @@ static void prepare_jpeg_header(void)
     ac_th[1] = (ac_huff_sel_comp0 != ac_huff_sel_comp1)? ac_huff_sel_comp1 :
                   (ac_huff_sel_comp0 != ac_huff_sel_comp2)? ac_huff_sel_comp2 :
                   ac_huff_sel_comp0;
-    
+
     push_word(&header_bytes  , (2<< 24)  |
                        (0xffc4<< 0));     // data: DHT marker
     push_word(&header_bytes  , (2<< 24)  |
@@ -428,9 +428,9 @@ static void prepare_jpeg_header(void)
                                ((jpeg_huffman_ac[ac_th[i]][j])  << 0));     // data: Li then Vi,j
         }
     }
-    
+
     //header_bytes += (2 + (2+(1+16+12)*dc_huff_num+(1+16+162)*ac_huff_num)); // Add Huffman table bytes
-    
+
     // Frame header
     push_word(&header_bytes , (2<< 24)  |   // Number of bytes
                        (0xffc0<< 0));     // data: SOF_0 marker
@@ -465,12 +465,12 @@ static void prepare_jpeg_header(void)
                        ((v_factor_comp2+1)<< 0));     // data: V2 -- Comp2 vertical sampling factor
     push_word(&header_bytes  , (1<< 24)  |
                        (((q_sel_comp0 != q_sel_comp2)? 1 : 0)<< 0));     // data: Tq2 -- Comp2 quantization table seletor
-    
+
     //header_bytes += (2 + (8+3*3));  // Add Frame header bytes
-    
+
     // Scan header
     bak_header_bytes  = header_bytes + (2 + (6+2*3));
-    
+
     //header_bytes += (2 + (6+2*3));  // Add Scan header bytes
     // If total header bytes is not multiple of 8, then fill 0xff byte between Frame header segment and the Scan header segment.
     for (i = 0; i < ((bak_header_bytes + 7)/8)*8 - bak_header_bytes; i ++) {
@@ -478,7 +478,7 @@ static void prepare_jpeg_header(void)
                            (0xff<< 0)); // 0xff filler
     }
     // header_bytes = ((header_bytes + 7)/8)*8;
-    
+
     push_word(&header_bytes  , (2<< 24)  |   // Number of bytes
                        (0xffda<< 0));     // data: SOS marker
     push_word(&header_bytes  , (2<< 24)  |
@@ -505,7 +505,7 @@ static void prepare_jpeg_header(void)
                        (63<< 8)   |   // data: Se = 63
                        (0<< 4)   |   // data: Ah = 0
                        (0<< 0));     // data: Al = 0
-    debug_level(0,"jpeg header bytes is %d \n",header_bytes);  
+    debug_level(0,"jpeg header bytes is %d \n",header_bytes);
     WRITE_HREG(HCODEC_HENC_SCRATCH_1 , header_bytes); // Send MEM_OFFSET
 }
 
@@ -524,10 +524,10 @@ static void init_jpeg_encoder(void)
     int h_factor_comp0, v_factor_comp0;
     int h_factor_comp1, v_factor_comp1;
     int h_factor_comp2, v_factor_comp2;
-   
+
     int header_bytes;
-    
-    debug_level(0,"Initialize JPEG Encoder ....\n");   
+
+    debug_level(0,"Initialize JPEG Encoder ....\n");
     if(output_format >= MAX_FRAME_FMT){
         debug_level(0,"Input format is wrong!!!!\n");
     }
@@ -555,11 +555,11 @@ static void init_jpeg_encoder(void)
     pic_y_end = encoder_height - 1;
     pic_width = encoder_width;
     pic_height = encoder_height;
-        
+
     q_sel_comp0 = gQuantTable_id*2;
     q_sel_comp1 = q_sel_comp0+1;
     q_sel_comp2 = q_sel_comp1;
-       
+
     dc_huff_sel_comp0 = DC_HUFF_SEL_COMP0;
     dc_huff_sel_comp1 = DC_HUFF_SEL_COMP1;
     dc_huff_sel_comp2 = DC_HUFF_SEL_COMP2;
@@ -584,7 +584,7 @@ static void init_jpeg_encoder(void)
     }
 
     //--------------------------------------------------------------------------
-    // Configure picture size and format  
+    // Configure picture size and format
     //--------------------------------------------------------------------------
 
     WRITE_HREG(HCODEC_VLC_PIC_SIZE ,pic_width | (pic_height<<16));
@@ -618,9 +618,9 @@ static void init_jpeg_encoder(void)
     data32  = 0;
     data32 |= 0 << 8;   // [    8] 0=Write LUT, 1=Read
     data32 |= 0 << 0;   // [ 5: 0] Start addr = 0
-   
+
     WRITE_HREG(HCODEC_QDCT_JPEG_QUANT_ADDR ,data32);
-    
+
     // Burst-write Quantization LUT data
     write_jpeg_quant_lut(0);
     if(q_sel_comp0!=q_sel_comp1)
@@ -653,7 +653,7 @@ static void init_jpeg_encoder(void)
     if ((dc_huff_sel_comp2 != dc_huff_sel_comp0) && (dc_huff_sel_comp2 != dc_huff_sel_comp1)) {
         write_jpeg_huffman_lut_dc(dc_huff_sel_comp2);
     }
-    
+
     // Set AC Huffman LUT start address
     data32  = 0;
     data32 |= 0 << 16;  // [   16] 0=Write LUT, 1=Read
@@ -718,7 +718,7 @@ static void init_jpeg_encoder(void)
     data32 |= 0<< 0;   // [    0] jpeg_en, will be enbled by amrisc
     WRITE_HREG(HCODEC_VLC_JPEG_CTRL ,data32);
 
-    WRITE_HREG(HCODEC_QDCT_MB_CONTROL, 
+    WRITE_HREG(HCODEC_QDCT_MB_CONTROL,
                 (1<<9) | // mb_info_soft_reset
                 (1<<0));  // mb read buffer soft reset
 
@@ -786,7 +786,7 @@ static void write_jpeg_quant_lut(int table_num)
 {
     int i;
     unsigned long data32;
-    
+
     for (i = 0; i < DCTSIZE2; i += 2) {
         data32  = reciprocal(gQuantTable[table_num][i]);
         data32 |= reciprocal(gQuantTable[table_num][i+1])    << 16;
@@ -801,11 +801,11 @@ static void write_jpeg_huffman_lut_dc(int table_num)
     unsigned int    num_code_len;
     unsigned int    lut[12];
     unsigned int    i, j;
-    
+
     code_len    = 1;
     code_word   = 1;
     pos         = 16;
-    
+
     // Construct DC Huffman table
     for (i = 0; i < 16; i ++) {
         num_code_len    = jpeg_huffman_dc[table_num][i];
@@ -838,7 +838,7 @@ static void write_jpeg_huffman_lut_ac(int table_num)
     code_len = 1;
     code_word = 1;
     pos = 16;
-    
+
     // Construct AC Huffman table
     for (i = 0; i < 16; i ++) {
         num_code_len = jpeg_huffman_ac[table_num][i];
@@ -856,7 +856,7 @@ static void write_jpeg_huffman_lut_ac(int table_num)
                     addr = 0;        // EOB
                 } else if (run == 0xf) {
                     addr = 161;      // ZRL
-                } else {                	
+                } else {
                     debug_level(0,"[TEST.C] Error: Illegal AC Huffman table format!\n");
                 }
             } else if (size <= 0xa) {
@@ -946,16 +946,16 @@ static int  zigzag(int i)
     }
     return zigzag_i;
 }   /* zigzag */
-       
+
 static void jpegenc_init_output_buffer(void)
 {
     unsigned mem_offset;
     mem_offset = READ_HREG(HCODEC_HENC_SCRATCH_1);
-	
+
     WRITE_HREG(VLC_VB_MEM_CTL ,((1<<31)|(0x3f<<24)|(0x20<<16)|(2<<0)) );
     WRITE_HREG(VLC_VB_START_PTR, BitstreamStart+mem_offset);
     WRITE_HREG(VLC_VB_WR_PTR, BitstreamStart+mem_offset);
-    WRITE_HREG(VLC_VB_SW_RD_PTR, BitstreamStart+mem_offset);	
+    WRITE_HREG(VLC_VB_SW_RD_PTR, BitstreamStart+mem_offset);
     WRITE_HREG(VLC_VB_END_PTR, BitstreamEnd);
     WRITE_HREG(VLC_VB_CONTROL, 1);
     WRITE_HREG(VLC_VB_CONTROL, ((0<<14)|(7<<3)|(1<<1)|(0<<0)));
@@ -964,7 +964,7 @@ static void jpegenc_init_output_buffer(void)
 
 static void jpegenc_canvas_init(void)
 {
-    /*input dct buffer config */ 
+    /*input dct buffer config */
     dct_buff_start_addr = gJpegEncBuff.buf_start+gJpegEncBuff.bufspec->input.buf_start;
     dct_buff_end_addr = dct_buff_start_addr + gJpegEncBuff.bufspec->input.buf_size -1 ;
     debug_level(0,"dct_buff_start_addr is %x \n",dct_buff_start_addr);
@@ -972,10 +972,10 @@ static void jpegenc_canvas_init(void)
     /*output stream buffer config*/
     BitstreamStart  = gJpegEncBuff.buf_start+gJpegEncBuff.bufspec->bitstream.buf_start;
     BitstreamEnd  =  BitstreamStart + gJpegEncBuff.bufspec->bitstream.buf_size-1;
-    debug_level(0,"BitstreamStart is %x \n",BitstreamStart);   
-    
-    BitstreamStartVirtAddr  = ioremap_nocache(BitstreamStart,  gJpegEncBuff.bufspec->bitstream.buf_size); 
-    debug_level(0,"BitstreamStartVirtAddr is 0x%x \n",(unsigned)BitstreamStartVirtAddr);  
+    debug_level(0,"BitstreamStart is %x \n",BitstreamStart);
+
+    BitstreamStartVirtAddr  = ioremap_nocache(BitstreamStart,  gJpegEncBuff.bufspec->bitstream.buf_size);
+    debug_level(0,"BitstreamStartVirtAddr is 0x%x \n",(unsigned)BitstreamStartVirtAddr);
 
 }
 
@@ -1001,10 +1001,10 @@ static void mfdin_basic_jpeg (unsigned input, unsigned char iformat, unsigned ch
     y_size = (oformat!=0) ? 1 : 0;
     //r2y_mode = (r2y_en == 1)?1:0; // Fixed to 1 (TODO)
     r2y_mode =1;
-    canv_idx0_bppx = (iformat==1) ? 3 : (iformat==0) ? 2 : 1; 
-    canv_idx1_bppx = (iformat==4) ? 0 : 1; 
-    canv_idx0_bppy = 1; 
-    canv_idx1_bppy = (iformat==5) ? 1 : 0; 
+    canv_idx0_bppx = (iformat==1) ? 3 : (iformat==0) ? 2 : 1;
+    canv_idx1_bppx = (iformat==4) ? 0 : 1;
+    canv_idx0_bppy = 1;
+    canv_idx1_bppy = (iformat==5) ? 1 : 0;
     if((iformat==8) || (iformat==9) || (iformat==12)){
         linear_bytes4p = 3;
     }else if(iformat == 10){
@@ -1080,7 +1080,7 @@ static int  set_jpeg_input_format (jpegenc_mem_type type, jpegenc_frame_fmt inpu
     if(output_fmt == FMT_YUV422_SINGLE){
         oformat = 1;
     }else{
-        oformat = 0;	
+        oformat = 0;
     }
     if((type == LOCAL_BUFF)||(type == PHYSICAL_BUFF)){
         if(type == LOCAL_BUFF){
@@ -1098,10 +1098,10 @@ static int  set_jpeg_input_format (jpegenc_mem_type type, jpegenc_frame_fmt inpu
             canvas_w =  picsize_x*2;
             canvas_w =  ((canvas_w+31)>>5)<<5;
             canvas_config(ENC_CANVAS_OFFSET+6,
-                input, 
+                input,
                 canvas_w, picsize_y,
                 CANVAS_ADDR_NOWRAP, CANVAS_BLKMODE_LINEAR);
-            input = ENC_CANVAS_OFFSET+6;            
+            input = ENC_CANVAS_OFFSET+6;
         }else if((input_fmt == FMT_YUV444_SINGLE)||(input_fmt == FMT_RGB888)){
             iformat = 1;
             if(input_fmt == FMT_RGB888)
@@ -1315,14 +1315,14 @@ s32 jpegenc_loadmc(const u32 *p)
 
 
 
-#if MESON_CPU_TYPE == MESON_CPU_TYPE_MESON6TV
+#if MESON_CPU_TYPE < MESON_CPU_TYPE_MESON8
 #define  DMC_SEC_PORT8_RANGE0  0x840
 #define  DMC_SEC_CTRL  0x829
 #endif
 
 static void enable_hcoder_ddr_access(void)
 {
-#if MESON_CPU_TYPE == MESON_CPU_TYPE_MESON6TV
+#if MESON_CPU_TYPE < MESON_CPU_TYPE_MESON8
     WRITE_SEC_REG(DMC_SEC_PORT8_RANGE0 , 0xffff);
     WRITE_SEC_REG(DMC_SEC_CTRL , 0x80000000);
 #endif
@@ -1336,7 +1336,7 @@ bool jpegenc_on(void)
     spin_lock_irqsave(&lock, flags);
 
     hcodec_on = vdec_on(VDEC_HCODEC);
-    hcodec_on |=(encode_opened>0);
+    hcodec_on &=(encode_opened>0);
 
     spin_unlock_irqrestore(&lock, flags);
     return hcodec_on;
@@ -1361,7 +1361,7 @@ static s32 jpegenc_poweron(void)
     udelay(10);
     // Powerup HCODEC
     data32 = READ_AOREG(AO_RTI_GEN_PWR_SLEEP0); // [1:0] HCODEC
-    data32 = data32 & (~0x3); 
+    data32 = data32 & (~0x3);
     WRITE_AOREG(AO_RTI_GEN_PWR_SLEEP0, data32);
     udelay(10);
 #endif
@@ -1376,7 +1376,7 @@ static s32 jpegenc_poweron(void)
     WRITE_VREG(DOS_MEM_PD_HCODEC, 0x0);
 
     // Remove HCODEC ISO
-    data32 = READ_AOREG(AO_RTI_GEN_PWR_ISO0); 
+    data32 = READ_AOREG(AO_RTI_GEN_PWR_ISO0);
     data32 = data32 & (~(0x30));
     WRITE_AOREG(AO_RTI_GEN_PWR_ISO0, data32);
     udelay(10);
@@ -1425,19 +1425,26 @@ static s32 jpegenc_poweroff(void)
 
 static s32 jpegenc_init(void)
 {
-    int r;   
+    int r;
     jpegenc_poweron();
     jpegenc_canvas_init();
-
-    if(IS_MESON_M8M2_CPU)
+#if MESON_CPU_TYPE >= MESON_CPU_TYPE_MESONG9TV
+    WRITE_HREG(HCODEC_ASSIST_MMC_CTRL1,0x32);
+#elif MESON_CPU_TYPE == MESON_CPU_TYPE_MESON8
+    if(IS_MESON_M8M2_CPU){
         WRITE_HREG(HCODEC_ASSIST_MMC_CTRL1,0x32);
-    else
+    }else{
         WRITE_HREG(HCODEC_ASSIST_MMC_CTRL1,0x2);
+    }
+#else
+    WRITE_HREG(HCODEC_ASSIST_MMC_CTRL1,0x2);
+#endif
+
     debug_level(1,"start to load microcode\n");
     if (jpegenc_loadmc(jpeg_encoder_mc) < 0) {
         //amvdec_disable();
         return -EBUSY;
-    }	
+    }
     debug_level(1,"succeed to load microcode\n");
     process_irq = 0;
 
@@ -1450,7 +1457,7 @@ static s32 jpegenc_init(void)
 static void jpegenc_start_cmd(unsigned* input_info)
 {
     set_jpeg_input_format((jpegenc_mem_type)input_info[0], (jpegenc_frame_fmt)input_info[1], (jpegenc_frame_fmt)input_info[2], input_info[3], input_info[4],input_info[5],(unsigned char)input_info[6]);
-	
+
     //prepare_jpeg_header();
     init_jpeg_encoder();
     jpegenc_init_output_buffer();
@@ -1468,27 +1475,27 @@ static void jpegenc_start_cmd(unsigned* input_info)
 
 static void jpegenc_stop(void)
 {
-#if 0	
-    //register dump 
+#if 0
+    //register dump
     int i;
     /*MFDIN*/
     for( i = 0x1010 ;i < 0x101b ; i++){
-        debug_level(0,"MFDIN register 0x%x :  0x%x \n",i, READ_HREG(i)); 	
-    }	
+        debug_level(0,"MFDIN register 0x%x :  0x%x \n",i, READ_HREG(i));
+    }
     /*VLC*/
     for( i = 0x1d00 ;i < 0x1d5d ; i++){
-        debug_level(0,"VLC register 0x%x :  0x%x \n",i, READ_HREG(i)); 	
-    }		
+        debug_level(0,"VLC register 0x%x :  0x%x \n",i, READ_HREG(i));
+    }
     /*QDCT*/
     for( i = 0x1f00 ;i < 0x1f5f ; i++){
-        debug_level(0,"QDCT register 0x%x :  0x%x \n",i, READ_HREG(i)); 	
+        debug_level(0,"QDCT register 0x%x :  0x%x \n",i, READ_HREG(i));
     }
 
     for( i = 0x1001 ;i < 0x1f5f ; i++){
-        debug_level(0,"register 0x%x :  0x%x \n",i, READ_HREG(i)); 	
-    }	
-#endif 		
-    //WRITE_HREG(HCODEC_MPSR, 0);	
+        debug_level(0,"register 0x%x :  0x%x \n",i, READ_HREG(i));
+    }
+#endif
+    //WRITE_HREG(HCODEC_MPSR, 0);
     _jpegenc_stop();
     jpegenc_poweroff();
     debug_level(1,"jpegenc_stop\n");
@@ -1573,8 +1580,8 @@ static long jpegenc_ioctl(struct file *file,
             break;
         case JPEGENC_IOC_GET_STAGE:
             *((unsigned*)arg)  = encoder_status;
-            break; 
-        case JPEGENC_IOC_GET_OUTPUT_SIZE:	
+            break;
+        case JPEGENC_IOC_GET_OUTPUT_SIZE:
             *((unsigned*)arg) = READ_HREG(VLC_TOTAL_BYTES);
             break;
         case JPEGENC_IOC_SET_ENCODER_WIDTH:
@@ -1588,12 +1595,12 @@ static long jpegenc_ioctl(struct file *file,
                 *((unsigned*)arg) = gJpegEncBuff.bufspec->max_height;
             else
                 encoder_height = *((unsigned*)arg) ;
-            break;	
+            break;
         case JPEGENC_IOC_INPUT_FORMAT	:
-            break;	
+            break;
         case JPEGENC_IOC_CONFIG_INIT:
             jpegenc_init();
-            break;		
+            break;
         case JPEGENC_IOC_FLUSH_CACHE:
             addr_info  = (unsigned*)arg ;
             switch(addr_info[0]){
@@ -1621,7 +1628,7 @@ static long jpegenc_ioctl(struct file *file,
                 default:
                     buf_start = dct_buff_start_addr;
                     break;
-            }	    
+            }
             cache_flush(buf_start + addr_info[1] ,addr_info[2] - addr_info[1]);
             break;
         case JPEGENC_IOC_GET_BUFFINFO:
@@ -1726,13 +1733,13 @@ int  init_jpegenc_device(void)
 {
     int  r =0;
     r =register_chrdev(0,DEVICE_NAME,&jpegenc_fops);
-    if(r<=0) 
+    if(r<=0)
     {
-        debug_level(2,"register jpegenc device error\r\n");
+        debug_level(2,"register jpegenc device error\n");
         return  r  ;
     }
     jpegenc_device_major= r ;
-    
+
     jpegenc_class = class_create(THIS_MODULE, DEVICE_NAME);
 
     jpegenc_dev = device_create(jpegenc_class, NULL,
@@ -1746,7 +1753,7 @@ int uninit_jpegenc_device(void)
 
     class_destroy(jpegenc_class);
 
-    unregister_chrdev(jpegenc_device_major, DEVICE_NAME);	
+    unregister_chrdev(jpegenc_device_major, DEVICE_NAME);
     return 0;
 }
 
@@ -1854,7 +1861,7 @@ static int __init jpegenc_driver_init_module(void)
 static void __exit jpegenc_driver_remove_module(void)
 {
     debug_level(1, "jpegenc module remove.\n");
-	
+
     platform_driver_unregister(&jpegenc_driver);
 }
 

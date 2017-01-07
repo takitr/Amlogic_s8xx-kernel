@@ -420,7 +420,7 @@ typedef struct xml_algorithm_awb_s {
         unsigned int           thr_yl_m;          // 0 ~ 255
         unsigned int           thr_yl_l;          // 0 ~ 255
 	/*********************awb_enh****************/
-    	unsigned int           ratio_yuv;
+	unsigned int           ratio_yuv;
         unsigned int           slow_lpfcoef;    // 0 ~ 255
         unsigned int           fast_lpfcoef;    // 0 ~ 255
         unsigned int           outer;           // 0 ~ 1023

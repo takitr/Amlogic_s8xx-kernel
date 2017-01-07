@@ -78,4 +78,3 @@ int vf_notify_receiver_by_name(const char* receiver_name, int event_type, void* 
 
 
 #endif /* VFRAME_RECEIVER_H */
-

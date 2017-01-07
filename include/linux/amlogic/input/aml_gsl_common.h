@@ -13,7 +13,7 @@ struct gsl_touch_info
 	int x[10];
 	int y[10];
 	int id[10];
-	int finger_num;	
+	int finger_num;
 };
 
 struct aml_gsl_api {

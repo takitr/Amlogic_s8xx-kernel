@@ -40,7 +40,7 @@
 
 #define touch_dbg(fmt, args...)  { if(ts_com->printk_enable_flag) \
 					printk("[%s]: " fmt, ts_com->owner, ## args); }
-					
+
 #define UPGRADE_TOUCH "upgrade_touch"
 #define MAX_TOUCH 10
 
@@ -56,7 +56,7 @@ struct touch_pdata {
   int gpio_power;
   int xres;
   int yres;
-  int pol; 
+  int pol;
   int irq_edge;
 	int max_num;
   unsigned bus_type;
@@ -65,13 +65,13 @@ struct touch_pdata {
 	char *owner;
 	char fw_file[255];
 	char config_file[255];
-	
+
 	int printk_enable_flag;
 	void(*hardware_reset)(struct touch_pdata *);
 	void(*software_reset)(struct touch_pdata *);
 	void(*read_version)(char*);
 	void(*upgrade_touch)(void);
-	
+
 	struct cdev upgrade_cdev;
 	dev_t upgrade_no;
 	struct device *dev;

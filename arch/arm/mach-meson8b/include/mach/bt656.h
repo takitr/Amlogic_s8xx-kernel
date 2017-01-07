@@ -12,7 +12,7 @@
 
 //#define BT_PORT_CTRL 0x2249 	///../ucode/register.h
 //    #define BT_VSYNC_MODE      23  //1: use  vsync  as the VBI start point. 0: use the regular vref.
-//    #define BT_HSYNC_MODE      22  //1: use hsync as the active video start point.  0. Use regular sav and eav. 
+//    #define BT_HSYNC_MODE      22  //1: use hsync as the active video start point.  0. Use regular sav and eav.
 #define BT_SOFT_RESET           31	// Soft reset
 //    #define BT_JPEG_START           30
 //    #define BT_JPEG_IGNORE_BYTES    18	//20:18

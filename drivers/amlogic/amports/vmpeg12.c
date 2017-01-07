@@ -102,7 +102,7 @@ MODULE_AMLOG(LOG_LEVEL_ERROR, 0, LOG_LEVEL_DESC, LOG_DEFAULT_MASK_DESC);
 
 #define INTERLACE_SEQ_ALWAYS
 
-#if MESON_CPU_TYPE >= MESON_CPU_TYPE_MESON6  
+#if MESON_CPU_TYPE >= MESON_CPU_TYPE_MESON6
 #define NV21
 #endif
 #define CCBUF_SIZE		5*1024
@@ -161,6 +161,8 @@ static DEFINE_SPINLOCK(lock);
 static u32 frame_rpt_state;
 
 static struct dec_sysinfo vmpeg12_amstream_dec_info;
+extern u32 trickmode_i;
+static bool i_only_mode = false;
 
 /* for error handling */
 static s32 frame_force_skip_flag = 0;
@@ -262,14 +264,14 @@ static irqreturn_t vmpeg12_isr(int irq, void *dev_id)
 {
     u32 reg, info, seqinfo, offset, pts, pts_valid = 0;
     vframe_t *vf;
-    u64 pts_us64 = 0;
+    u64 pts_us64 = 0;;
 
     WRITE_VREG(ASSIST_MBOX1_CLR_REG, 1);
 
     reg = READ_VREG(MREG_BUFFEROUT);
 
-    if ((reg >> 16) == 0xfe) {	
-        wakeup_userdata_poll(reg & 0xffff, ccbuf_phyAddress, CCBUF_SIZE);
+    if ((reg >> 16) == 0xfe) {
+        wakeup_userdata_poll(reg & 0xffff, ccbuf_phyAddress, CCBUF_SIZE, 0);
         WRITE_VREG(MREG_BUFFEROUT, 0);
     }
     else if (reg) {
@@ -282,8 +284,8 @@ static irqreturn_t vmpeg12_isr(int irq, void *dev_id)
             first_i_frame_ready = 1;
         }
 
-        if ((((info & PICINFO_TYPE_MASK) == PICINFO_TYPE_I) || ((info & PICINFO_TYPE_MASK) == PICINFO_TYPE_P))
-             && (pts_lookup_offset_us64(PTS_TYPE_VIDEO, offset, &pts, 0, &pts_us64) == 0)) {
+        if ((pts_lookup_offset_us64(PTS_TYPE_VIDEO, offset, &pts, 0, &pts_us64) == 0)
+             && (((info & PICINFO_TYPE_MASK) == PICINFO_TYPE_I) || ((info & PICINFO_TYPE_MASK) == PICINFO_TYPE_P))) {
             pts_valid = 1;
         }
 
@@ -323,6 +325,15 @@ static irqreturn_t vmpeg12_isr(int irq, void *dev_id)
         }
         else if (dec_control & DEC_CONTROL_FLAG_FORCE_SEQ_INTERLACE) {
             frame_prog = 0;
+        }
+
+        if (i_only_mode) {
+            pts_valid = false;
+
+            // and add a default duration for 1/30 second if there is no valid frame duration available
+            if (frame_dur == 0) {
+                frame_dur = 96000/30;
+            }
         }
 
         if (frame_prog & PICINFO_PROG) {
@@ -505,13 +516,13 @@ static int vmpeg_event_cb(int type, void *data, void *private_data)
         spin_lock_irqsave(&lock, flags);
         vmpeg12_local_init();
         vmpeg12_prot_init();
-        spin_unlock_irqrestore(&lock, flags); 
+        spin_unlock_irqrestore(&lock, flags);
 #ifndef CONFIG_POST_PROCESS_MANAGER
         vf_reg_provider(&vmpeg_vf_prov);
-#endif              
+#endif
         amvdec_start();
     }
-    return 0;        
+    return 0;
 }
 
 static int  vmpeg_vf_states(vframe_states_t *states, void* op_arg)
@@ -523,7 +534,7 @@ static int  vmpeg_vf_states(vframe_states_t *states, void* op_arg)
     states->buf_free_num = kfifo_len(&newframe_q);
     states->buf_avail_num = kfifo_len(&display_q);
     states->buf_recycle_num = kfifo_len(&recycle_q);
-    
+
     spin_unlock_irqrestore(&lock, flags);
 
     return 0;
@@ -711,6 +722,19 @@ static void vmpeg12_canvas_init(void)
 
 }
 
+int vmpeg12_set_trickmode(unsigned long trickmode)
+{
+    if (trickmode == TRICKMODE_I) {
+        i_only_mode = true;
+        trickmode_i = 1;
+    } else if (trickmode == TRICKMODE_NONE) {
+        i_only_mode = false;
+        trickmode_i = 0;
+    }
+
+    return 0;
+}
+
 static void vmpeg12_prot_init(void)
 {
 #if (MESON_CPU_TYPE >= MESON_CPU_TYPE_MESON6)
@@ -845,10 +869,10 @@ static s32 vmpeg12_init(void)
     vf_provider_init(&vmpeg_vf_prov, PROVIDER_NAME, &vmpeg_vf_provider, NULL);
     vf_reg_provider(&vmpeg_vf_prov);
     vf_notify_receiver(PROVIDER_NAME,VFRAME_EVENT_PROVIDER_START,NULL);
- #else 
+ #else
     vf_provider_init(&vmpeg_vf_prov, PROVIDER_NAME, &vmpeg_vf_provider, NULL);
     vf_reg_provider(&vmpeg_vf_prov);
- #endif 
+ #endif
 
     vf_notify_receiver(PROVIDER_NAME, VFRAME_EVENT_PROVIDER_FR_HINT, (void *)vmpeg12_amstream_dec_info.rate);
 
@@ -868,22 +892,29 @@ static s32 vmpeg12_init(void)
 
     set_vdec_func(&vmpeg12_dec_status);
 
+    set_trickmode_func(&vmpeg12_set_trickmode);
+
     return 0;
 }
 
 static int amvdec_mpeg12_probe(struct platform_device *pdev)
 {
-    struct resource *mem;
+    struct vdec_dev_reg_s *pdata = (struct vdec_dev_reg_s *)pdev->dev.platform_data;
 
     amlog_level(LOG_LEVEL_INFO, "amvdec_mpeg12 probe start.\n");
 
-    if (!(mem = platform_get_resource(pdev, IORESOURCE_MEM, 0))) {
-        amlog_level(LOG_LEVEL_ERROR, "amvdec_mpeg12 memory resource undefined.\n");
+    if (pdata == NULL) {
+        amlog_level(LOG_LEVEL_ERROR, "amvdec_mpeg12 platform data undefined.\n");
         return -EFAULT;
     }
 
-    buf_start = mem->start;
-    buf_size  = mem->end - mem->start + 1;
+
+    if (pdata->sys_info) {
+        vmpeg12_amstream_dec_info = *pdata->sys_info;
+    }
+
+    buf_start = pdata->mem_start;
+    buf_size  = pdata->mem_end - pdata->mem_start + 1;
 
     if (vmpeg12_init() < 0) {
         amlog_level(LOG_LEVEL_ERROR, "amvdec_mpeg12 init failed.\n");

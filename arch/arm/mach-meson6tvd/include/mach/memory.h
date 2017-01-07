@@ -24,8 +24,8 @@
 /*
  * Physical DRAM offset.
  */
-#define PHYS_OFFSET     UL(0x80000000)
+#define PLAT_PHYS_OFFSET     UL(0x80000000)
 
-#define BOOT_PARAMS_OFFSET  (PHYS_OFFSET + 0x100)
+#define BOOT_PARAMS_OFFSET  (PLAT_PHYS_OFFSET + 0x100)
 
 #endif // __MACH_MESON6TVD_MEMORY_H

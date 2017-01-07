@@ -46,13 +46,13 @@ int calc_fvco(int m,int n)
 int calc_fout(int freq,int od,int ext_div)
 {
 	int f, div;
-	
+
 	f = freq;
 	if(od == 0)
 		div = 1;
 	else
 		div = od * 2;
-		
+
 	f = f / div;
 	if(ext_div == 0)
 		return f;
@@ -94,18 +94,18 @@ int add_freq_to_table(int* table, int freq, int fvco, int m, int od, int ext_div
 	int* f = table;
 	int l2,axi,peri,apb;
 	int f_cntl,f_latency,f_fvco;
-	
+
 	while(f[0]){
-		if(f[1]){ 
+		if(f[1]){
 			record++;
 		}
 
 		if(f[0] == freq){
-			
+
 			f_cntl = calc_cntl(freq, m, od);
 			f_latency = calc_latency(freq,ext_div,&l2,&axi,&peri,&apb);
 			f_fvco = fvco;
-			
+
 			if(f[1]) // record exist
 				exist = 1;
 			else{
@@ -115,19 +115,19 @@ int add_freq_to_table(int* table, int freq, int fvco, int m, int od, int ext_div
 				return 0;
 			}
 		}
-		
+
 		k++;
 		f += TABLE_CLM;
 	}
 	if(k == record)
 		return -2; //full
-		
+
 	if(exist)
 		return -1;
-		
+
 	printf("Strange !!!! -- freq: %d, fvco: %d, m: %d, od: %d, ext_div: %d, k: %d , record: %d\n",
 			freq, fvco, m, od, ext_div, k, record);
-		
+
 	//never go here
 	return 0;
 }
@@ -167,7 +167,7 @@ int * init_freq_table(int min, int max, int step)
 	int * table;
 	int size =  TABLE_CLM * ((max - min) / step + 2) * sizeof(int);
 	int freq;
-	
+
 	p = malloc(size);
 	if(p){
 		memset(p,0,size);
@@ -176,7 +176,7 @@ int * init_freq_table(int min, int max, int step)
 			table[0] = freq;
 	}
 	table[0] = 0;
-	
+
 	return p;
 }
 int main(void)
@@ -186,10 +186,10 @@ int main(void)
 	int ret;
 	int * freq_table = NULL;
 	int flag;
-	
+
 	freq_table = init_freq_table(F_MIN, F_MAX, crystal);
 
-#ifdef DEBUG	
+#ifdef DEBUG
 	printf(" === Freq table before ===\n");
 	show_freq(freq_table);
 #endif
@@ -204,28 +204,28 @@ int main(void)
 						continue;
 					}
 
-  				fout = calc_fout(fvco, od, ext_div);
+				fout = calc_fout(fvco, od, ext_div);
 					debug("--- fvco: %d, fout: %d, od: %d, m: %d, ext_div: %d\n",fvco,fout, od, m, ext_div);
-  				if(fout < F_MIN || fout > F_MAX){
- 						debug("=== skip fout %d\n",fout);
-  					continue;
-					} 
- 					debug("--- fout: %d, od: %d, m: %d, ext_div: %d\n",fout,od, m, ext_div);
-  				if((fout / (crystal / 1000)) != ((fout / crystal) * 1000))
-  					continue;
-  				
-  				/* get a poper fout */
-  				debug("=== found fvco %d, fout %d, m %d, od %d, ext_div, %d\n",
-  					fvco,fout,m, od, ext_div);
-  				ret = add_freq_to_table(freq_table, fout, fvco, m, od, ext_div);
-  				if(ret == 0)// Add successful
-  					continue;
-  				if(ret == -1)// Alread have this item
-  					continue;
-  				if(ret == -2)
-  					goto FINISH;
+				if(fout < F_MIN || fout > F_MAX){
+						debug("=== skip fout %d\n",fout);
+					continue;
+					}
+					debug("--- fout: %d, od: %d, m: %d, ext_div: %d\n",fout,od, m, ext_div);
+				if((fout / (crystal / 1000)) != ((fout / crystal) * 1000))
+					continue;
 
-			}		
+				/* get a poper fout */
+				debug("=== found fvco %d, fout %d, m %d, od %d, ext_div, %d\n",
+					fvco,fout,m, od, ext_div);
+				ret = add_freq_to_table(freq_table, fout, fvco, m, od, ext_div);
+				if(ret == 0)// Add successful
+					continue;
+				if(ret == -1)// Alread have this item
+					continue;
+				if(ret == -2)
+					goto FINISH;
+
+			}
 		}
 	}
 
@@ -233,7 +233,7 @@ FINISH:
 	printf(" ======= Meson8 syspll freq table  =======\n");
 	show_freq(freq_table);
 	printf(" ======= Meson8 syspll freq table finished =======\n");
-	
+
 	free(freq_table);
 	return 0;
 }

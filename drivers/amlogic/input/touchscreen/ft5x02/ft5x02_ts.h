@@ -30,7 +30,7 @@
 #if CFG_SUPPORT_TOUCH_KEY
 #define KEY_PRESS       1
 #define KEY_RELEASE     0
-#define CFG_NUMOFKEYS 4   
+#define CFG_NUMOFKEYS 4
 #endif
 
 

@@ -12,6 +12,7 @@ if AM_INPUT
 
 source "drivers/amlogic/input/saradc/Kconfig"
 source "drivers/amlogic/input/remote/Kconfig"
+source "drivers/amlogic/input/irblaster/Kconfig"
 source "drivers/amlogic/input/new_remote/Kconfig"
 source "drivers/amlogic/input/keyboard/Kconfig"
 source "drivers/amlogic/input/touchscreen/Kconfig"
@@ -22,4 +23,3 @@ source "drivers/amlogic/input/sensor/Kconfig"
 source "drivers/amlogic/input/gpio_key/Kconfig"
 
 endif
-

@@ -14,7 +14,7 @@
 #define 	LOG_LEVEL_LOW			0x000
 
 #define LOG_LEVEL_DESC \
-"[0x00]LOW[0X01]LEVEL1[0xf]HIGH"	
+"[0x00]LOW[0X01]LEVEL1[0xf]HIGH"
 
 #define  	LOG_MASK_INIT			0x001
 #define	LOG_MASK_IOCTL		0x002

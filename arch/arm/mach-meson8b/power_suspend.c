@@ -75,13 +75,13 @@ void enable_watchdog(void)
 	printk(KERN_INFO "** enable watchdog\n");
     aml_write_reg32(P_WATCHDOG_RESET, 0);
     aml_write_reg32(P_WATCHDOG_TC, 1 << WATCHDOG_ENABLE_BIT | 0x1FFFFF);//about 20sec
-    
+
     aml_write_reg32(P_AO_RTI_STATUS_REG1, MESON_NORMAL_BOOT);
 }
 void reset_watchdog(void)
 {
 	//printk(KERN_INFO "** reset watchdog\n");
-    aml_write_reg32(P_WATCHDOG_RESET, 0);	
+    aml_write_reg32(P_WATCHDOG_RESET, 0);
 }
 #endif /* CONFIG_HARDWARE_WATCHDOG */
 #endif

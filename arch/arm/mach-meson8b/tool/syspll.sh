@@ -18,7 +18,7 @@ while [ "$m" -le 88 ]
 do
     let "f = $m * 24"
     if [ "$f" -le 1250 ]; then
-        let "cntl0_init = $FOUT_BELOW_1G25"        
+        let "cntl0_init = $FOUT_BELOW_1G25"
         let "mm = $m * 2"
     else
         let "cntl0_init = $FOUT_OVER_1G25"

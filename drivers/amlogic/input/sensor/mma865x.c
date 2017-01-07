@@ -43,7 +43,7 @@
 #define POLL_INTERVAL_MAX	200
 #define POLL_INTERVAL		50 /* msecs */
 // if sensor is standby ,set POLL_STOP_TIME to slow down the poll
-#define POLL_STOP_TIME		200  
+#define POLL_STOP_TIME		200
 
 
 #define INPUT_FUZZ		32
@@ -151,7 +151,7 @@ static int mma865x_position_setting[8][3][3] =
    {{-1,  0,  0}, { 0, -1,	0}, {0, 0,	1}},
    {{ 0,  1,  0}, {-1,  0,	0}, {0, 0,	1}},
    {{ 1,  0,  0}, { 0,  1,	0}, {0, 0,	1}},
-   
+
    {{ 0, -1,  0}, {-1,  0,	0}, {0, 0,  -1}},
    {{-1,  0,  0}, { 0,  1,	0}, {0, 0,  -1}},
    {{ 0,  1,  0}, { 1,  0,	0}, {0, 0,  -1}},
@@ -172,24 +172,24 @@ static int mma865x_data_convert(struct mma865x_data* pdata,struct mma865x_data_a
     if(p->acc_swap_xy)
     {
         temp = axis_data->x;
-        axis_data->x = axis_data->y; 
+        axis_data->x = axis_data->y;
         axis_data->y = temp;
     }
     axis_data->x *= p->acc_negate_x ? -1 : 1;
     axis_data->y *= p->acc_negate_y ? -1 : 1;
     axis_data->z *= p->acc_negate_z ? -1 : 1;
-   
+
 #else
    short rawdata[3],data[3];
    int i,j;
    int position = pdata->position ;
    if(position < 0 || position > 7 )
-   		position = 0;
-   rawdata [0] = axis_data->x ; rawdata [1] = axis_data->y ; rawdata [2] = axis_data->z ;  
+		position = 0;
+   rawdata [0] = axis_data->x ; rawdata [1] = axis_data->y ; rawdata [2] = axis_data->z ;
    for(i = 0; i < 3 ; i++)
    {
-   	data[i] = 0;
-   	for(j = 0; j < 3; j++)
+	data[i] = 0;
+	for(j = 0; j < 3; j++)
 		data[i] += rawdata[j] * mma865x_position_setting[position][i][j];
    }
    axis_data->x = data[0];
@@ -262,7 +262,7 @@ static void mma865x_report_data(struct mma865x_data* pdata)
 		if(poll_dev->poll_interval == POLL_STOP_TIME)
 			poll_dev->poll_interval = POLL_INTERVAL;
 	}
-	
+
 	if (mma865x_read_data(pdata->client,&data) != 0)
 		goto out;
     mma865x_data_convert(pdata,&data);
@@ -300,7 +300,7 @@ static ssize_t mma865x_debug_store(struct device *dev,
 	error = strict_strtoul(buf, 10, &data);
 	if (error)
 		return error;
-	
+
 	enable_dbg = data;
 
 	return count;
@@ -335,9 +335,9 @@ static ssize_t mma865x_enable_show(struct device *dev,
 	struct i2c_client *client = pdata->client;
 	u8 val;
     int enable;
-	
+
 	mutex_lock(&pdata->data_lock);
-	val = i2c_smbus_read_byte_data(client, MMA865X_CTRL_REG1);  
+	val = i2c_smbus_read_byte_data(client, MMA865X_CTRL_REG1);
 	if((val & 0x01) && pdata->active == MMA_ACTIVED)
 		enable = 1;
 	else
@@ -356,15 +356,15 @@ static ssize_t mma865x_enable_store(struct device *dev,
 	int ret;
 	unsigned long enable;
 	u8 val = 0;
-	enable = simple_strtoul(buf, NULL, 10);    
+	enable = simple_strtoul(buf, NULL, 10);
 	mutex_lock(&pdata->data_lock);
 	enable = (enable > 0) ? 1 : 0;
     if(enable && pdata->active == MMA_STANDBY)
-	{  
+	{
 	   val = i2c_smbus_read_byte_data(client,MMA865X_CTRL_REG1);
-	   ret = i2c_smbus_write_byte_data(client, MMA865X_CTRL_REG1, val|0x01);  
+	   ret = i2c_smbus_write_byte_data(client, MMA865X_CTRL_REG1, val|0x01);
 	   if(!ret){
-	   	 pdata->active = MMA_ACTIVED;
+		 pdata->active = MMA_ACTIVED;
 		 printk("mma enable setting active \n");
 	    }
 	}
@@ -400,7 +400,7 @@ static ssize_t mma865x_position_store(struct device *dev,
     struct input_polled_dev *poll_dev = dev_get_drvdata(dev);
 	struct mma865x_data *pdata = (struct mma865x_data *)(poll_dev->private);
 	int  position;
-	position = simple_strtoul(buf, NULL, 10);    
+	position = simple_strtoul(buf, NULL, 10);
 	mutex_lock(&pdata->data_lock);
     pdata->position = position;
 	mutex_unlock(&pdata->data_lock);
@@ -540,10 +540,10 @@ static int mma865x_resume(struct device *dev)
     struct mma865x_data *pdata = i2c_get_clientdata(client);
     if(pdata->active == MMA_ACTIVED){
 	   val = i2c_smbus_read_byte_data(client,MMA865X_CTRL_REG1);
-	   i2c_smbus_write_byte_data(client, MMA865X_CTRL_REG1, val|0x01);  
+	   i2c_smbus_write_byte_data(client, MMA865X_CTRL_REG1, val|0x01);
     }
 	return 0;
-	  
+
 }
 #endif
 

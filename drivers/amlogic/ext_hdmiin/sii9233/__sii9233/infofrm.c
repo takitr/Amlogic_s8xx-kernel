@@ -45,7 +45,7 @@
 
 #define SET_CLR_IF() (RegisterWrite( REG__INFM_CLR, 0x7F)) //clear verything
 #define SET_PACKET_INTR_MASK() (RegisterWrite( REG__INTR3_UNMASK, 0x0B))
-//0x0B =  BIT__NEW_AVI_INF|BIT__NEW_SPD_INF|BIT__NEW_MPEG_INF) 
+//0x0B =  BIT__NEW_AVI_INF|BIT__NEW_SPD_INF|BIT__NEW_MPEG_INF)
 
 
 
@@ -292,7 +292,7 @@ static void VsifParser ( uint8_t const *pPayload ){
                     break;
                 default:                    DEBUG_PRINT (("Reserved")); //yma change to reserved
             }
-		DEBUG_PRINT ((" \n"));			
+		DEBUG_PRINT ((" \n"));
         }
         else {
             DEBUG_PRINT (("\nVsif not 3D"));
@@ -386,7 +386,7 @@ static void SetIfTo ( SelectIf_t eSelectIf, const uint16_t wTo ){
             /* set time out*/
             IfCtrl.Ins[ SelAcp].wTo = ACP_CAPTURE_200MS;
             break;
-        default: 
+        default:
 			;
     }
  }
@@ -490,7 +490,7 @@ of all three bytes of the Packet Header and all valid uint8_ts of the InfoFrame 
 					DEBUG_PRINT (( "OK\n" ));
                     if ( bIfType == IF_AVI_ID ){
                         AviParser( &IfCtrl.abBuff[IF_PAYLOAD_ADDR] );
-                    }                 
+                    }
                 }
                 else {
                     DEBUG_PRINT (( "Failed\n" ));
@@ -718,9 +718,9 @@ UNREQ
         SPD_BUFF:   [SPD][ISRC2 when SPD captured or time outed]
         MPEG_BUFF:  [ISRC1][VSIF][ISRC2 if SPD_BUFF is SPD][ISRC1][VSIF]
     */
-    IfCtrl.fAcpIntr = TRUE;		 
+    IfCtrl.fAcpIntr = TRUE;
 	SET_PACKET_INTR_MASK();
-	
+
 
 //    IfInitIfTest();
 }
@@ -792,7 +792,7 @@ SelectIf_t id;
                     case SelAcp:
                                     if ( GetIntrAcpStatus ()){
 										IfCtrl.fAcpIsPresent = TRUE;
-										IfCtrl.wNoAcpTotTime = 0;                                        
+										IfCtrl.wNoAcpTotTime = 0;
                                         IfCtrl.Ins[SelAcp].wTo = ACP_CAPTURE_200MS;
                                     }
                                     else {
@@ -929,4 +929,3 @@ uint8_t bIfType;
 }
 
 #endif //#if (CONF__SUPPORT_3D == ENABLE)
-

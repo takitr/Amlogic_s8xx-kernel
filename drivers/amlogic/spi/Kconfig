@@ -12,5 +12,5 @@ config AMLOGIC_SPICC_MASTER
 	help
 		This is amlogic SPICC hardware bus master.
 		This driver can also be built as a module.
-	  
+
 endmenu

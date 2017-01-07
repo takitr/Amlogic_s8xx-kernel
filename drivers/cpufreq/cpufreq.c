@@ -45,6 +45,7 @@ static DEFINE_PER_CPU(struct cpufreq_policy *, cpufreq_cpu_data);
 static DEFINE_PER_CPU(char[CPUFREQ_NAME_LEN], cpufreq_cpu_governor);
 #endif
 static DEFINE_RWLOCK(cpufreq_driver_lock);
+static DEFINE_MUTEX(cpufreq_governor_lock);
 
 /*
  * cpu_policy_rwsem is a per CPU reader-writer semaphore designed to cure
@@ -95,8 +96,9 @@ static int __cpufreq_governor(struct cpufreq_policy *policy,
 		unsigned int event);
 static unsigned int __cpufreq_get(unsigned int cpu);
 static void handle_update(struct work_struct *work);
+#ifdef CONFIG_SMP
 static void handle_up_cpu(struct work_struct *work);
-
+#endif
 /**
  * Two notifier lists: the "policy" list is involved in the
  * validation process for a new CPU frequency policy; the
@@ -132,6 +134,16 @@ bool have_governor_per_policy(void)
 {
 	return cpufreq_driver->have_governor_per_policy;
 }
+EXPORT_SYMBOL_GPL(have_governor_per_policy);
+
+struct kobject *get_governor_parent_kobj(struct cpufreq_policy *policy)
+{
+	if (have_governor_per_policy())
+		return &policy->kobj;
+	else
+		return cpufreq_global_kobject;
+}
+EXPORT_SYMBOL_GPL(get_governor_parent_kobj);
 
 static struct cpufreq_policy *__cpufreq_cpu_get(unsigned int cpu, bool sysfs)
 {
@@ -925,8 +937,9 @@ static int cpufreq_add_dev(struct device *dev, struct subsys_interface *sif)
 
 	init_completion(&policy->kobj_unregister);
 	INIT_WORK(&policy->update, handle_update);
+#ifdef CONFIG_SMP
 	INIT_WORK(&policy->up_cpu, handle_up_cpu);
-
+#endif
 	/* call driver. From then on the cpufreq must be able
 	 * to accept all calls to ->verify and ->setpolicy for this CPU
 	 */
@@ -1144,6 +1157,7 @@ static void handle_update(struct work_struct *work)
 	pr_debug("handle_update for cpu %u called\n", cpu);
 	cpufreq_update_policy(cpu);
 }
+#ifdef CONFIG_SMP
 static void __ref handle_up_cpu(struct work_struct *work)
 {
 	int i;
@@ -1152,10 +1166,9 @@ static void __ref handle_up_cpu(struct work_struct *work)
 		if(cpu_online(i))
 			continue;
 		cpu_up(i);
-		break;
 	}
 }
-
+#endif
 /**
  *	cpufreq_out_of_sync - If actual and saved CPU frequency differs, we're in deep trouble.
  *	@cpu: cpu number
@@ -1583,6 +1596,21 @@ static int __cpufreq_governor(struct cpufreq_policy *policy,
 
 	pr_debug("__cpufreq_governor for CPU %u, event %u\n",
 						policy->cpu, event);
+
+	mutex_lock(&cpufreq_governor_lock);
+	if ((!policy->governor_enabled && (event == CPUFREQ_GOV_STOP)) ||
+	    (policy->governor_enabled && (event == CPUFREQ_GOV_START))) {
+		mutex_unlock(&cpufreq_governor_lock);
+		return -EBUSY;
+	}
+
+	if (event == CPUFREQ_GOV_STOP)
+		policy->governor_enabled = false;
+	else if (event == CPUFREQ_GOV_START)
+		policy->governor_enabled = true;
+
+	mutex_unlock(&cpufreq_governor_lock);
+
 	ret = policy->governor->governor(policy, event);
 
 	if (!ret) {
@@ -1590,6 +1618,14 @@ static int __cpufreq_governor(struct cpufreq_policy *policy,
 			policy->governor->initialized++;
 		else if (event == CPUFREQ_GOV_POLICY_EXIT)
 			policy->governor->initialized--;
+	} else {
+		/* Restore original values */
+		mutex_lock(&cpufreq_governor_lock);
+		if (event == CPUFREQ_GOV_STOP)
+			policy->governor_enabled = true;
+		else if (event == CPUFREQ_GOV_START)
+			policy->governor_enabled = false;
+		mutex_unlock(&cpufreq_governor_lock);
 	}
 
 	/* we keep one module reference alive for

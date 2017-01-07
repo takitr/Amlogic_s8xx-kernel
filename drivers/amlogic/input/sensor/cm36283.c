@@ -2,7 +2,7 @@
  * This software program is licensed subject to the GNU General Public License
  * (GPL).Version 2,June 1991, available at http://www.fsf.org/copyleft/gpl.html
 
- * (C) Copyright 2011 Thundersoft.LTD 
+ * (C) Copyright 2011 Thundersoft.LTD
  * All Rights Reserved
  */
 
@@ -169,7 +169,7 @@ static void CM36283_work_func(struct work_struct *work)
 
 static int CM36283_als_state(struct CM36283_data *CM36283, int als_on)
 {
-	int rc; 
+	int rc;
 	u16 reg;
 
 	if(als_on)
@@ -189,12 +189,12 @@ static int CM36283_als_state(struct CM36283_data *CM36283, int als_on)
 	if(rc < 0)
 		pr_err("%s CM36283_smbus_write_word rc=%d\n", __func__, rc);
 
-	return rc; 
+	return rc;
 }
 
 static int CM36283_ps_state(struct CM36283_data *CM36283, int ps_on)
 {
-	int rc; 
+	int rc;
 	u16 reg;
 
 	if(ps_on)
@@ -210,7 +210,7 @@ static int CM36283_ps_state(struct CM36283_data *CM36283, int ps_on)
 	if(rc < 0)
 		pr_err("%s CM36283_smbus_write_word rc=%d\n", __func__, rc);
 
-	return rc; 
+	return rc;
 }
 
 static int CM36283_state(struct CM36283_data *CM36283,int als_on, int ps_on)
@@ -415,7 +415,7 @@ static ssize_t CM36283_info_show(struct device *dev,
 		struct device_attribute *attr, char *buf)
 {
     return sprintf(buf, "Chip: %s %s\nVersion: %s\n",
-				   VENDOR_NAME, SENSOR_NAME, DRIVER_VERSION); 
+				   VENDOR_NAME, SENSOR_NAME, DRIVER_VERSION);
 }
 
 static ssize_t CM36283_delay_show(struct device *dev,
@@ -548,7 +548,7 @@ static void CM36283_input_delete(struct CM36283_data *CM36283)
 
 static int CM36283_config(struct CM36283_data *CM36283)
 {
-	int rc; 
+	int rc;
 
 	rc = CM36283_smbus_read_word(CM36283->CM36283_client,DEV_ID);
 	if(rc < 0)
@@ -576,7 +576,7 @@ static int CM36283_config(struct CM36283_data *CM36283)
 	if(rc < 0)
 		pr_err("%s CM36283_smbus_write_word rc=%d\n", __func__, rc);
 
-	return rc; 
+	return rc;
 }
 
 static int CM36283_probe(struct i2c_client *client,
@@ -676,7 +676,7 @@ static int CM36283_resume(struct device *dev)
 	return 0;
 }
 
-static const struct dev_pm_ops CM36283_pm_ops = { 
+static const struct dev_pm_ops CM36283_pm_ops = {
 		.suspend = CM36283_suspend,
 		.resume = CM36283_resume,
 };

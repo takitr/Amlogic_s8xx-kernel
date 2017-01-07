@@ -173,7 +173,7 @@ static u32 parser_process(s32 type, s32 packet_len)
     u32 pts = 0, dts = 0;
     u32 pts_dts_flag = 0;
 	u16 invalid_pts = 0;
-	
+
     temp = PARSER_POP;
     packet_len--;
 
@@ -338,7 +338,7 @@ static u32 parser_process(s32 type, s32 packet_len)
 		printk("invalid pts \n");
 	}
 
-	
+
 
     if (!packet_len) {
         return SEARCH_START_CODE;
@@ -539,24 +539,24 @@ static u32 parser_process(s32 type, s32 packet_len)
                 sub_id_max = temp;
             }
 
-			#ifdef DEBUG_VOB_SUB				
+			#ifdef DEBUG_VOB_SUB
 			for (i = 0; i < sub_found_num; i ++) {
 				if(!sub_info[i])
 					break;
 				if(temp == sub_info[i]->id)
 					break;
-			}				
-			if (i == sub_found_num && i < MAX_SUB_NUM) {				
+			}
+			if (i == sub_found_num && i < MAX_SUB_NUM) {
 				if (sub_info[sub_found_num]) {
 					sub_info[sub_found_num]->id = temp;
 					sub_found_num ++;
 					printk("[psparser_process]found new sub_id=0x%x (num %d)\n", temp, sub_found_num);
 				} else {
 					printk("[psparser_process]sub info NULL!\n");
-				}	
+				}
 			}
 			#endif
-			
+
             if (temp == sub_id) {
                 /* DVD sub-picture data */
                 if (!packet_len) {
@@ -821,7 +821,7 @@ static ssize_t _psparser_write(const char __user *buf, size_t count)
         wmb();
 
         WRITE_MPEG_REG(PARSER_FETCH_ADDR, virt_to_phys((u8 *)fetchbuf));
-        
+
         WRITE_MPEG_REG(PARSER_FETCH_CMD,
                        (7 << FETCH_ENDIAN) | len);
 
@@ -1118,7 +1118,7 @@ u8 psparser_get_sub_info(struct subtitle_info **sub_infos)
 #ifdef DEBUG_VOB_SUB
 	u8 i = 0;
 	int ret = 0;
-	u8 size = sizeof(struct subtitle_info);	
+	u8 size = sizeof(struct subtitle_info);
 	for (i = 0; i < sub_found_num; i ++) {
 		if (!sub_info[i]){
 			printk("[psparser_get_sub_info:%d]  sub_info[%d] NULL\n", __LINE__, i);
@@ -1129,9 +1129,9 @@ u8 psparser_get_sub_info(struct subtitle_info **sub_infos)
 			printk("[psparser_get_sub_info:%d]  sub_infos[%d] NULL\n", __LINE__, i);
 			ret = -2;
 			break;
-		}		
-		memcpy(sub_infos[i], sub_info[i], size);		
-	}	
+		}
+		memcpy(sub_infos[i], sub_info[i], size);
+	}
 	return ret;
 #else
 	return 0;

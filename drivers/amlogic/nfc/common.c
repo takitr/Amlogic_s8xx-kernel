@@ -42,7 +42,7 @@ static int nfc_dt_setup(struct device_node* of_node, struct nfc_pdata *pdata)
 	    pdata->addr = 0;
     }
     printk("%s: addr=%x\n", pdata->owner, pdata->addr);
-    
+
 	err = of_property_read_string(of_node, "i2c_bus", &str);
 	if (err) {
 		printk("%s warnning: faild to get i2c_bus str,use default i2c bus!\n", pdata->owner);
@@ -60,7 +60,7 @@ static int nfc_dt_setup(struct device_node* of_node, struct nfc_pdata *pdata)
 		else if (!strncmp(str, "i2c_bus_ao", 10))
 			pdata->bus_type = AML_I2C_BUS_AO;
 		else
-			pdata->bus_type = AML_I2C_BUS_A; 
+			pdata->bus_type = AML_I2C_BUS_A;
 	}
 	printk("%s: bus_type=%d\n", pdata->owner, pdata->bus_type);
 
@@ -82,8 +82,8 @@ static int nfc_dt_setup(struct device_node* of_node, struct nfc_pdata *pdata)
         pdata->irq_gpio = amlogic_gpio_name_map_num(str);
         printk("%s: alloc gpio_interrupt(%s)!\n", pdata->owner, str);
         if (pdata->irq_gpio <= 0) {
-        	pdata->irq_gpio = 0;
-        	printk("%s: faild to alloc gpio_interrupt(%s)!\n", pdata->owner, str);
+		pdata->irq_gpio = 0;
+		printk("%s: faild to alloc gpio_interrupt(%s)!\n", pdata->owner, str);
             return -1;
         }
     }
@@ -93,12 +93,12 @@ static int nfc_dt_setup(struct device_node* of_node, struct nfc_pdata *pdata)
         pdata->en_gpio = amlogic_gpio_name_map_num(str);
         printk("%s: alloc gpio_reset(%s)!\n", pdata->owner, str);
         if (pdata->en_gpio <= 0) {
-        	pdata->en_gpio = 0;
-        	printk("%s warning: faild to alloc gpio_en(%s)!\n", pdata->owner, str);
+		pdata->en_gpio = 0;
+		printk("%s warning: faild to alloc gpio_en(%s)!\n", pdata->owner, str);
         }
     }
     else {
-  	    pdata->en_gpio = 0;
+	    pdata->en_gpio = 0;
     }
 
 	err = of_property_read_string(of_node, "gpio_wake", &str);
@@ -106,20 +106,20 @@ static int nfc_dt_setup(struct device_node* of_node, struct nfc_pdata *pdata)
         pdata->wake_gpio = amlogic_gpio_name_map_num(str);
         printk("%s: alloc gpio_wake(%s)!\n", pdata->owner, str);
         if (pdata->wake_gpio <= 0) {
-        	pdata->wake_gpio = 0;
-        	printk("%s warning: faild to alloc gpio_wake(%s)!\n", pdata->owner, str);
+		pdata->wake_gpio = 0;
+		printk("%s warning: faild to alloc gpio_wake(%s)!\n", pdata->owner, str);
         }
     }
     else {
         pdata->wake_gpio = 0;
     }
- 
+
     return 0;
 }
 
 static int aml_nfc_probe(struct platform_device *pdev)
 {
-	
+
 	struct device_node* nfc_node = pdev->dev.of_node;
 	struct device_node* child;
 	struct i2c_board_info board_info;
@@ -167,22 +167,22 @@ static int aml_nfc_probe(struct platform_device *pdev)
 			printk("%s: new i2c device successed\n",((struct nfc_pdata *)(i2c_client->dev.platform_data))->owner);
 			//printk("pdata addr = %x\n", pdata+i);
 		}
-		
+
 	}
 	printk("==%s==end==\n", __func__);
 	return 0;
-	
+
 }
 
 static int aml_nfc_remove(struct platform_device *pdev)
 {
     if (pdev->dev.platform_data)
-	 	kfree (pdev->dev.platform_data);
-    return 0; 
+		kfree (pdev->dev.platform_data);
+    return 0;
 }
 
 static const struct of_device_id nfc_prober_dt_match[]={
-	{	
+	{
 		.compatible = "amlogic,aml_nfc",
 	},
 	{},
@@ -222,4 +222,3 @@ module_exit(aml_nfc_prober_exit);
 
 MODULE_LICENSE("GPL v2");
 MODULE_DESCRIPTION("Amlogic nfc prober driver");
-

@@ -9,7 +9,7 @@
  *
  * This program is distributed .as is. WITHOUT ANY WARRANTY of any
  * kind, whether express or implied; without even the implied warranty
- * of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR
  * PURPOSE.  See the GNU General Public License for more details.
 */
 
@@ -19,7 +19,7 @@
  * @brief Linux implementation of interrupt support used by Silicon Image
  *        MHL devices.
  *
- * $Author: Tiger Qin 
+ * $Author: Tiger Qin
  * $Rev: $
  * $Date: Aug. 31, 2011
  *
@@ -115,7 +115,7 @@ static void aml_config_gpio_irq(void)
 	gpio_irq = devinfo->config.gpio_intr;
 	ret = amlogic_gpio_request(gpio_irq, gMhlI2cIdTable[0].name);
 	ret |= amlogic_gpio_direction_input(gpio_irq, gMhlI2cIdTable[0].name);
-	ret |= amlogic_gpio_to_irq(gpio_irq, gMhlI2cIdTable[0].name, AML_GPIO_IRQ(gMhlDevice.pI2cClient->irq-INT_GPIO_0,FILTER_NUM7,GPIO_IRQ_LOW));
+	ret |= amlogic_gpio_to_irq(gpio_irq, gMhlI2cIdTable[0].name, AML_GPIO_IRQ((gMhlDevice.pI2cClient->irq-INT_GPIO_0),FILTER_NUM7,GPIO_IRQ_LOW));
 	printk("sii5293 config gpio_irq, irq = %d, ret = %d\n",gMhlDevice.pI2cClient->irq, ret);
 
 	return ;
@@ -218,7 +218,7 @@ void HalEnableIrq(uint8_t bEnable)
 bool_t is_interrupt_asserted( void )
 {
 	return (amlogic_get_value(devinfo->config.gpio_intr, gMhlI2cIdTable[0].name) == INT_IS_ASSERTED );
-    //return (gpio_get_value(GPIO_INT_PIN) == INT_IS_ASSERTED);	
+    //return (gpio_get_value(GPIO_INT_PIN) == INT_IS_ASSERTED);
 }
 
 #if 0
@@ -264,7 +264,7 @@ static irqreturn_t HalSilMonRequestIrqHandler(int irq, void *data)
     }
     else
     {
-        disable_irq(pMhlDevContext->pI2cClient->irq);       
+        disable_irq(pMhlDevContext->pI2cClient->irq);
         HalEnableI2C(false);
         HalGpioSetPin(GPIO_GNT,0);
         SII_DEBUG_PRINT(SII_OSAL_DEBUG_TRACE,"under SiliMon control \n");
@@ -295,7 +295,7 @@ halReturn_t HalInstallSilMonRequestIrqHandler(void)
     if(halRet!= HAL_RET_SUCCESS)
     {
         return halRet;
-    }   
+    }
 
     spin_lock_init(&gMhlDevice.SilMonRequestIRQ_Lock);
     gMhlDevice.SilMonControlReleased  = true;
@@ -337,7 +337,7 @@ halReturn_t HalRemoveSilMonRequestIrqHandler(void)
 /*****************************************************************************/
 /**
  * @brief check device before IRQ handling, it fixed the issue taht in some case when chip error,
- *the program can NOT exit since in IRQ dead loop; 
+ *the program can NOT exit since in IRQ dead loop;
  *
  *****************************************************************************/
 halReturn_t HalInstallCheckDeviceCB(fnCheckDevice fn)

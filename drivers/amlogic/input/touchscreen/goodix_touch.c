@@ -52,17 +52,17 @@ struct goodix_ts_data {
 	bool xpol;
 	bool ypol;
 	bool suspend_state;
-}; 
+};
 
 static struct workqueue_struct *goodix_wq;
 
-static struct point_queue  finger_list;	//record the fingers list 
+static struct point_queue  finger_list;	//record the fingers list
 /*************************************************/
 
 const char *s3c_ts_name = "Goodix TouchScreen of Guitar";
 struct i2c_client * i2c_connect_client = NULL;
 EXPORT_SYMBOL(i2c_connect_client);
-	
+
 #ifdef CONFIG_HAS_EARLYSUSPEND
 static void goodix_ts_early_suspend(struct early_suspend *h);
 static void goodix_ts_late_resume(struct early_suspend *h);
@@ -82,7 +82,7 @@ static int i2c_read_bytes(struct i2c_client *client, uint8_t *buf, int len)
 	msgs[1].addr=client->addr;
 	msgs[1].len=len-1;
 	msgs[1].buf=&buf[1];
-	
+
 	ret=i2c_transfer(client->adapter,msgs,2);
 	return ret;
 }
@@ -96,8 +96,8 @@ static int i2c_write_bytes(struct i2c_client *client,uint8_t *data,int len)
 	msg.flags=!I2C_M_RD;
 	msg.addr=client->addr;
 	msg.len=len;
-	msg.buf=data;		
-	
+	msg.buf=data;
+
 	ret=i2c_transfer(client->adapter,&msg,1);
 	return ret;
 }
@@ -113,7 +113,7 @@ static int goodix_init_panel(struct goodix_ts_data *ts)
 //		printk("0x%x\n", pdata->config_info[i]);
 //	}
 	ret=i2c_write_bytes(ts->client,pdata->config_info,pdata->config_info_len);
-	if (ret < 0) 
+	if (ret < 0)
 		goto error_i2c_transfer;
 	msleep(1);
 	return 0;
@@ -125,22 +125,22 @@ error_i2c_transfer:
 static int  goodix_read_version(struct goodix_ts_data *ts)
 {
 	int ret;
-	uint8_t version[2]={0x69,0xff};	//command of reading Guitar's version 
+	uint8_t version[2]={0x69,0xff};	//command of reading Guitar's version
 	uint8_t version_data[41];		//store touchscreen version infomation
 	memset(version_data, 0 , sizeof(version_data));
 	version_data[0]=0x6A;
 	ret=i2c_write_bytes(ts->client,version,2);
-	if (ret < 0) 
+	if (ret < 0)
 		goto error_i2c_version;
 	msleep(16);
 	ret=i2c_read_bytes(ts->client,version_data, 40);
-	if (ret < 0) 
+	if (ret < 0)
 		goto error_i2c_version;
 	dev_info(&ts->client->dev," Guitar Version: %s\n", &version_data[1]);
 	version[1] = 0x00;				//cancel the command
 	i2c_write_bytes(ts->client, version, 2);
 	return 0;
-	
+
 error_i2c_version:
 	return ret;
 }
@@ -151,11 +151,11 @@ static ssize_t goodix_read(struct device *dev, struct device_attribute *attr, ch
 		int i = 0;
     struct goodix_ts_data *ts = (struct goodix_ts_data *)dev_get_drvdata(dev);
     unsigned char config_data[54];
-  	
-  	memset(config_data, 0, sizeof(config_data));
+
+	memset(config_data, 0, sizeof(config_data));
     if (!strcmp(attr->attr.name, "ctpconfig")) {
-    	config_data[0] = 0x30;
- 			i2c_read_bytes(ts->client,&config_data[0],sizeof(config_data));
+	config_data[0] = 0x30;
+			i2c_read_bytes(ts->client,&config_data[0],sizeof(config_data));
 			memcpy(buf, &config_data[0], sizeof(config_data));
 			for (i=0; i<sizeof(config_data); i++){
 				printk("%x\n", config_data[i]);
@@ -172,7 +172,7 @@ static ssize_t goodix_write(struct device *dev, struct device_attribute *attr, c
     unsigned char config_data[100];
 		struct goodix_i2c_rmi_platform_data *pdata = ts->client->dev.platform_data;
 		int SHUTDOWN_PORT  = pdata->gpio_shutdown;
-    
+
     if (!strcmp(attr->attr.name, "ctpconfig")) {
 			printk(KERN_ALERT"goodix set panel config\n");
 			gpio_set_value(SHUTDOWN_PORT, 1);
@@ -195,7 +195,7 @@ static ssize_t goodix_write(struct device *dev, struct device_attribute *attr, c
     if (!strcmp(attr->attr.name, "debug")) {
 			dbg_en = !dbg_en;
 			printk(KERN_ALERT"%s debug\n", dbg_en ? "enable" : "disable");
-  	}
+	}
     return count;
 }
 
@@ -214,17 +214,17 @@ static struct attribute_group goodix_attr_group = {
 };
 
 static void goodix_ts_work_func(struct work_struct *work)
-{	
+{
 	uint8_t  point_data[35]={ 0 };
 	static uint8_t  finger_bit=0;
 	uint8_t finger=0;
 	int ret=-1;
-	unsigned int pressure[MAX_FINGER_NUM];	
+	unsigned int pressure[MAX_FINGER_NUM];
 	int pos[MAX_FINGER_NUM][2];
 	int position =0;
 	int count = 0, read_position = 0;
 	int check_sum = 0;
-	
+
 	struct goodix_ts_data *ts = container_of(work, struct goodix_ts_data, work);
 	struct goodix_i2c_rmi_platform_data *pdata = ts->client->dev.platform_data;
 	int SHUTDOWN_PORT  = pdata->gpio_shutdown;
@@ -235,7 +235,7 @@ static void goodix_ts_work_func(struct work_struct *work)
 	{
 		printk(KERN_ALERT  "Guitar stop working.The data is invalid. \n");
 		goto NO_ACTION;
-	}	
+	}
 
 	int retry = 0;
 	while(1) {
@@ -253,7 +253,7 @@ static void goodix_ts_work_func(struct work_struct *work)
 			}
 		}
 	}
-	
+
 	//The bit indicate which fingers pressed down
 	switch(point_data[1]& 0x1f)
 	{
@@ -270,20 +270,20 @@ static void goodix_ts_work_func(struct work_struct *work)
 				check_sum += (int)point_data[count];
 			if((check_sum%256) != point_data[13])
 				goto XFER_ERROR;
-			break;	
+			break;
 		default:		//(point_data[1]& 0x1f) > 3
 			for(count=1; count<34;count++)
 				check_sum += (int)point_data[count];
 			if((check_sum%256) != point_data[34])
 				goto XFER_ERROR;
 	}
-	
+
 	point_data[1]&=0x1f;
 	finger = finger_bit^point_data[1];
-	if(finger == 0 && point_data[1] == 0)			
+	if(finger == 0 && point_data[1] == 0)
 		goto NO_ACTION;						//no fingers and no action
 	else if(finger == 0)							//the same as last time
-		goto BIT_NO_CHANGE;					
+		goto BIT_NO_CHANGE;
 	//check which point(s) DOWN or UP
 	for(position = 0; (finger !=0)&& (position < MAX_FINGER_NUM);  position++)
 	{
@@ -291,7 +291,7 @@ static void goodix_ts_work_func(struct work_struct *work)
 		{							//NO.postion finger is change
 			if(((finger_bit>>position)&0x01)==1)	//NO.postion finger is UP
 				set_up_point(&finger_list, position);
-			else 
+			else
 				add_point(&finger_list, position);
 		}
 		finger>>=1;
@@ -299,14 +299,14 @@ static void goodix_ts_work_func(struct work_struct *work)
 
 BIT_NO_CHANGE:
 	for(count = 0; count < finger_list.length; count++)
-	{	
+	{
 		if(finger_list.pointer[count].state == FLAG_UP)
 		{
-			pos[count][0] = pos[count][1] = 0;	
+			pos[count][0] = pos[count][1] = 0;
 			pressure[count] = 0;
 			continue;
 		}
-		
+
 		if(finger_list.pointer[count].num < 3)
 			read_position = finger_list.pointer[count].num*5 + 3;
 		else if (finger_list.pointer[count].num == 4)
@@ -317,14 +317,14 @@ BIT_NO_CHANGE:
 			pos[count][1] = (unsigned int)(point_data[read_position+2]<<8) + (unsigned int) (point_data[read_position+3]);
 			pressure[count] = (unsigned int) (point_data[read_position+4]);
 		}
-		else 
+		else
 		{
 			pos[count][0] = (unsigned int) (point_data[18]<<8) + (unsigned int)( point_data[25]);
 			pos[count][1] = (unsigned int)(point_data[26]<<8) + (unsigned int) (point_data[27]);
 			pressure[count] = (unsigned int) (point_data[28]);
 		}
 		if (pdata->swap_xy)
-			swap(pos[count][0] ,pos[count][1]); 
+			swap(pos[count][0] ,pos[count][1]);
 		if (pdata->xpol)
 			pos[count][0] = pdata->xmax - pos[count][0];
 		if (pdata->ypol)
@@ -335,19 +335,19 @@ BIT_NO_CHANGE:
 	if(finger_list.length > 0 && finger_list.pointer[0].state == FLAG_DOWN)
 	{
 		input_report_abs(ts->input_dev, ABS_X, pos[0][0]);
-		input_report_abs(ts->input_dev, ABS_Y, pos[0][1]);	
-	} 
+		input_report_abs(ts->input_dev, ABS_Y, pos[0][1]);
+	}
 	if(finger_list.length > 0)
 	{
 		input_report_abs(ts->input_dev, ABS_PRESSURE, pressure[0]);
-		input_report_key(ts->input_dev, BTN_TOUCH,  finger_list.pointer[0].state);                              
+		input_report_key(ts->input_dev, BTN_TOUCH,  finger_list.pointer[0].state);
 	}
 #ifdef GOODIX_MULTI_TOUCH
 	if(finger_list.length > 0 && finger_list.pointer[0].state == FLAG_DOWN)
 	{
 		input_report_abs(ts->input_dev, ABS_MT_POSITION_X, pos[0][0]);
 		input_report_abs(ts->input_dev, ABS_MT_POSITION_Y, pos[0][1]);
-	}	
+	}
 	input_report_abs(ts->input_dev, ABS_MT_PRESSURE, pressure[0]);
 	input_report_abs(ts->input_dev, ABS_MT_TOUCH_MAJOR, pressure[0]);
 	input_mt_sync(ts->input_dev);
@@ -360,7 +360,7 @@ BIT_NO_CHANGE:
 			{
 				input_report_abs(ts->input_dev, ABS_MT_POSITION_X, pos[count][0]);
 				input_report_abs(ts->input_dev, ABS_MT_POSITION_Y, pos[count][1]);
-			} 
+			}
 			input_report_abs(ts->input_dev, ABS_MT_PRESSURE, pressure[count]);
 			input_report_abs(ts->input_dev, ABS_MT_TOUCH_MAJOR, pressure[count]);
 			input_mt_sync(ts->input_dev);
@@ -370,8 +370,8 @@ BIT_NO_CHANGE:
 	input_sync(ts->input_dev);
 	del_point(&finger_list);
 	finger_bit=point_data[1];
-	
-XFER_ERROR:	
+
+XFER_ERROR:
 NO_ACTION:
 	if(ts->use_irq)
 		enable_irq(ts->client->irq);
@@ -393,7 +393,7 @@ static irqreturn_t goodix_ts_irq_handler(int irq, void *dev_id)
 	struct goodix_ts_data *ts = dev_id;
 	struct goodix_i2c_rmi_platform_data *pdata = ts->client->dev.platform_data;
 	int level = gpio_get_value(pdata->gpio_irq);
-	static int irq_count = 0;	
+	static int irq_count = 0;
 	goodix_dbg(dbg_en, "irq level=%d, irq count=%d \n", level, irq_count++);
 	if (ts->init_finished && (!ts->suspend_state)) {
 		disable_irq_nosync(ts->client->irq);
@@ -401,7 +401,7 @@ static irqreturn_t goodix_ts_irq_handler(int irq, void *dev_id)
 	}
 	else {
 		ts->init_finished = 1;
-		printk(KERN_ALERT"discard first irq\n");			
+		printk(KERN_ALERT"discard first irq\n");
 	}
 	return IRQ_HANDLED;
 }
@@ -424,11 +424,11 @@ static int goodix_ts_probe(struct i2c_client *client, const struct i2c_device_id
 	printk("Install touchscreen driver for guitar(fixed suspend issue).\n");
 	//Check I2C function
 	ret = gpio_request(SHUTDOWN_PORT, "TS_SHUTDOWN");	//Request IO
-	if (ret < 0) 
+	if (ret < 0)
 	{
 		printk(KERN_ALERT "Failed to request GPIO:%d, ERRNO:%d\n",(int)SHUTDOWN_PORT,ret);
 		goto err_check_functionality_failed;
-	}	
+	}
 	gpio_direction_output(SHUTDOWN_PORT, 0);	//Touchscreen is waiting to wakeup
 	ret = gpio_get_value(SHUTDOWN_PORT);
 	if (ret)
@@ -436,7 +436,7 @@ static int goodix_ts_probe(struct i2c_client *client, const struct i2c_device_id
 		printk(KERN_ALERT  "Cannot set touchscreen to work.\n");
 		goto err_check_functionality_failed;
 	}								//waite guitar start
-	if (!i2c_check_functionality(client->adapter, I2C_FUNC_I2C)) 
+	if (!i2c_check_functionality(client->adapter, I2C_FUNC_I2C))
 	{
 		dev_err(&client->dev, "System need I2C function.\n");
 		ret = -ENODEV;
@@ -464,11 +464,11 @@ static int goodix_ts_probe(struct i2c_client *client, const struct i2c_device_id
 		ret = -ENOMEM;
 		goto err_alloc_data_failed;
 	}
-	
+
 	INIT_WORK(&ts->work, goodix_ts_work_func);
 	ts->client = client;
 	i2c_set_clientdata(client, ts);
-	
+
 	ts->input_dev = input_allocate_device();
 	if (ts->input_dev == NULL) {
 		ret = -ENOMEM;
@@ -481,20 +481,20 @@ static int goodix_ts_probe(struct i2c_client *client, const struct i2c_device_id
 	ts->input_dev->absbit[0] = BIT(ABS_X) | BIT(ABS_Y); // for android
 
 	//#ifdef GOODIX_MULTI_TOUCH	//used by android 1.x for multi-touch, not realized
-	//ts->input_dev->absbit[0]=BIT(ABS_HAT0X) |BIT(ABS_HAT0Y);	
+	//ts->input_dev->absbit[0]=BIT(ABS_HAT0X) |BIT(ABS_HAT0Y);
 	//ts->input_dev->keybit[BIT_WORD(BTN_2)] = BIT_MASK(BTN_2);
 	//#endif
 
 	input_set_abs_params(ts->input_dev, ABS_X, 0, pdata->xmax, 0, 0);
 	input_set_abs_params(ts->input_dev, ABS_Y, 0, pdata->ymax, 0, 0);
 	input_set_abs_params(ts->input_dev, ABS_PRESSURE, 0, 255, 0, 0);
-	
+
 #ifdef GOODIX_MULTI_TOUCH
 	input_set_abs_params(ts->input_dev, ABS_MT_PRESSURE, 0, 255, 0, 0);
 	input_set_abs_params(ts->input_dev, ABS_MT_TOUCH_MAJOR, 0, 255, 0, 0);
 	input_set_abs_params(ts->input_dev, ABS_MT_POSITION_X, 0, pdata->xmax, 0, 0);
-	input_set_abs_params(ts->input_dev, ABS_MT_POSITION_Y, 0, pdata->ymax, 0, 0);	
-#endif	
+	input_set_abs_params(ts->input_dev, ABS_MT_POSITION_Y, 0, pdata->ymax, 0, 0);
+#endif
 	sprintf(ts->phys, "input/ts)");
 
 	ts->input_dev->name = s3c_ts_name;
@@ -502,7 +502,7 @@ static int goodix_ts_probe(struct i2c_client *client, const struct i2c_device_id
 	ts->input_dev->id.bustype = BUS_I2C;
 	ts->input_dev->id.vendor = 0xDEAD;
 	ts->input_dev->id.product = 0xBEEF;
-	ts->input_dev->id.version = 10427;	
+	ts->input_dev->id.version = 10427;
 
 	finger_list.length = 0;
 	ret = input_register_device(ts->input_dev);
@@ -528,7 +528,7 @@ static int goodix_ts_probe(struct i2c_client *client, const struct i2c_device_id
 	if (client->irq)
 	{
 		ret = gpio_request(INT_PORT, "TS_INT");	//Request IO
-		if (ret < 0) 
+		if (ret < 0)
 		{
 			dev_err(&client->dev, "Failed to request GPIO:%d, ERRNO:%d\n",(int)INT_PORT,ret);
 			goto err_gpio_request_failed;
@@ -545,36 +545,36 @@ static int goodix_ts_probe(struct i2c_client *client, const struct i2c_device_id
 			gpio_free( INT_PORT);
 			goto err_gpio_request_failed;
 		}
-		else 
-		{	
+		else
+		{
 //			disable_irq(client->irq);
 			ts->use_irq = 1;
 			dev_info(&client->dev,"Reques EIRQ %d succesd on GPIO:%d\n",client->irq,INT_PORT);
 		}
 	}
-	
-err_gpio_request_failed:	
-	if (!ts->use_irq) 
+
+err_gpio_request_failed:
+	if (!ts->use_irq)
 	{
 		hrtimer_init(&ts->timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
 		ts->timer.function = goodix_ts_timer_func;
 		hrtimer_start(&ts->timer, ktime_set(1, 0), HRTIMER_MODE_REL);
 	}
-	
+
 #ifdef CONFIG_HAS_EARLYSUSPEND
 	ts->early_suspend.level = EARLY_SUSPEND_LEVEL_BLANK_SCREEN + 1;
 	ts->early_suspend.suspend = goodix_ts_early_suspend;
 	ts->early_suspend.resume = goodix_ts_late_resume;
 	register_early_suspend(&ts->early_suspend);
 #endif
-	dev_info(&client->dev,"Start  %s in %s mode\n", 
+	dev_info(&client->dev,"Start  %s in %s mode\n",
 		ts->input_dev->name, ts->use_irq ? "Interrupt" : "Polling\n");
 	return 0;
 
 err_init_godix_ts:
 	if(ts->use_irq)
 		free_irq(client->irq,ts);
-	gpio_request(INT_PORT,"TS_INT");	
+	gpio_request(INT_PORT,"TS_INT");
 	gpio_free(INT_PORT);
 
 err_input_register_device_failed:
@@ -602,7 +602,7 @@ static int goodix_ts_remove(struct i2c_client *client)
 		free_irq(client->irq, ts);
 	else
 		hrtimer_cancel(&ts->timer);
-	
+
 	struct goodix_i2c_rmi_platform_data *pdata = client->dev.platform_data;
 	int INT_PORT  = pdata->gpio_irq;
 	int SHUTDOWN_PORT  = pdata->gpio_shutdown;
@@ -611,7 +611,7 @@ static int goodix_ts_remove(struct i2c_client *client)
 
 	if (ts->use_irq)
 		gpio_free(INT_PORT);
-	
+
 	dev_notice(&client->dev,"The driver is removing...\n");
 	i2c_set_clientdata(client, NULL);
 	input_unregister_device(ts->input_dev);
@@ -630,7 +630,7 @@ static int goodix_ts_suspend(struct i2c_client *client, pm_message_t mesg)
 		disable_irq(client->irq);
 	else
 		hrtimer_cancel(&ts->timer);
-	ret = cancel_work_sync(&ts->work);	
+	ret = cancel_work_sync(&ts->work);
 	if (ts->power) {
 		ret = ts->power(0);
 		if (ret < 0)
@@ -703,10 +703,10 @@ static int __devinit goodix_ts_init(void)
 	if (!goodix_wq) {
 		printk(KERN_ALERT "creat workqueue faiked\n");
 		return -ENOMEM;
-		
+
 	}
 	ret=i2c_add_driver(&goodix_ts_driver);
-	return ret; 
+	return ret;
 }
 
 static void __exit goodix_ts_exit(void)

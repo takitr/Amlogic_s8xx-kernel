@@ -48,13 +48,13 @@ enum
     GPIO_ID_P0_7,
 
     GPIO_ID_P2_0,
-    GPIO_ID_P2_1, 
+    GPIO_ID_P2_1,
     GPIO_ID_P2_2,
-    GPIO_ID_P2_3, 
+    GPIO_ID_P2_3,
     GPIO_ID_P2_4,
-    GPIO_ID_P2_5, 
+    GPIO_ID_P2_5,
     GPIO_ID_P2_6,
-    GPIO_ID_P2_7, 
+    GPIO_ID_P2_7,
 };
 
 bool_t SiiDrvBoardInit(void);

@@ -17,7 +17,7 @@
 
 #ifndef __MIR3DA_STANDARD_H__
 #define __MIR3DA_STANDARD_H__
-	 
+
 #include <linux/ioctl.h>
 
 /* driver version info*/
@@ -40,5 +40,3 @@
 #define MIR3DA_ACC_IOCTL_UPDATE_OFFSET     	    _IOW(MIR3DA_ACC_IOCTL_BASE, IOCTL_INDEX_BASE+24, int)
 
 #endif /* !__MIR3DA_STANDARD_H__ */
-
-

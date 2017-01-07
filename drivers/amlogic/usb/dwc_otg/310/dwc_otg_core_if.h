@@ -113,7 +113,7 @@ extern int32_t dwc_otg_get_param_dma_desc_enable(dwc_otg_core_if_t * core_if);
 #define dwc_param_dma_desc_enable_default 1
 
 /** The DMA Burst size (applicable only for Internal DMA
- * Mode). 
+ * Mode).
  #define DWC_GAHBCFG_INT_DMA_BURST_SINGLE	0
 #define DWC_GAHBCFG_INT_DMA_BURST_INCR		1
 #define DWC_GAHBCFG_INT_DMA_BURST_INCR4		3
@@ -635,13 +635,13 @@ extern uint32_t dwc_otg_get_remotewakesig(dwc_otg_core_if_t * core_if);
 /**
  * Get value of besl_reject bit in DCTL register
  */
- 
+
 extern uint32_t dwc_otg_get_beslreject(dwc_otg_core_if_t * core_if);
 
 /**
  * Set value of besl_reject bit in DCTL register
  */
- 
+
 extern void dwc_otg_set_beslreject(dwc_otg_core_if_t * core_if, uint32_t val);
 
 /**

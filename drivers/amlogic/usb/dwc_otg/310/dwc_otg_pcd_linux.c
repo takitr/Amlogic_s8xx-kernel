@@ -361,14 +361,14 @@ static int ep_queue(struct usb_ep *usb_ep, struct usb_request *usb_req,
 #ifdef LM_INTERFACE
 		struct device * dev = &gadget_wrapper->pcd->otg_dev->os_dep.lmdev->dev;
 		if (usb_req->length != 0/* && usb_req->dma == DWC_DMA_ADDR_INVALID*/) {
-			dma_addr = dma_map_single(dev, usb_req->buf, usb_req->length, 
+			dma_addr = dma_map_single(dev, usb_req->buf, usb_req->length,
 					ep->dwc_ep.is_in ? DMA_TO_DEVICE : DMA_FROM_DEVICE);
 			usb_req->dma = dma_addr;
 		}
 #elif defined(PCI_INTERFACE)
 		struct pci_dev *dev = gadget_wrapper->pcd->otg_dev->os_dep.pcidev;
 		if (usb_req->length != 0 && usb_req->dma == DWC_DMA_ADDR_INVALID) {
-			dma_addr = pci_map_single(dev, usb_req->buf, usb_req->length, 
+			dma_addr = pci_map_single(dev, usb_req->buf, usb_req->length,
 					ep->dwc_ep.is_in ? PCI_DMA_TODEVICE : PCI_DMA_FROMDEVICE);
 		}
 
@@ -608,7 +608,7 @@ static struct usb_ep_ops dwc_otg_pcd_ep_ops = {
 	.dequeue = ep_dequeue,
 
 	.set_halt = ep_halt,
-	
+
 #if LINUX_VERSION_CODE >= KERNEL_VERSION(2,6,26)
 	.set_wedge = ep_wedge,
  #endif
@@ -715,7 +715,7 @@ static int dwc_otg_pcd_pullup(struct usb_gadget *_gadget, int is_on)
 	struct gadget_wrapper *d;
 	dwc_otg_core_if_t * core_if;
   dwc_irqflags_t flags;
-  
+
 	DWC_DEBUGPL(DBG_PCDV, "%s(%p), is_on %d\n", __func__, _gadget,is_on);
 	if (_gadget == 0)
 		return -ENODEV;
@@ -747,11 +747,11 @@ static const struct usb_gadget_ops dwc_otg_pcd_ops = {
 	.wakeup = wakeup,
 #ifdef CONFIG_USB_DWC_OTG_LPM
 	.lpm_support = test_lpm_enabled,
-#if LINUX_VERSION_CODE >= KERNEL_VERSION(3,6,0)	
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(3,6,0)
 	.besl_support = test_besl_enabled,
 	.get_baseline_besl = get_param_baseline_besl,
 	.get_deep_besl = get_param_deep_besl,
-#endif	
+#endif
 #endif
 	.pullup	= dwc_otg_pcd_pullup,
 	// current versions must always be self-powered
@@ -1272,7 +1272,7 @@ int pcd_init(
 
 	otg_dev->pcd->otg_dev = otg_dev;
 	gadget_wrapper = alloc_wrapper(_dev);
-	
+
 	/*
 	 * Initialize EP structures
 	 */
@@ -1289,6 +1289,11 @@ int pcd_init(
 		free_wrapper(gadget_wrapper);
 		return -EBUSY;
 	}
+
+        if (irq_set_affinity(_dev->irq, cpumask_of(3))) {
+                pr_warning("unable to set irq affinity (irq=%d, cpu=%u)\n",
+                                _dev->irq, 3);
+        }
 
 	dwc_otg_pcd_start(gadget_wrapper->pcd, &fops);
 
@@ -1320,7 +1325,7 @@ void pcd_remove(
 	 */
 	free_irq(_dev->irq, pcd);
 	free_wrapper(gadget_wrapper);
-	dwc_otg_pcd_remove(otg_dev->pcd);	
+	dwc_otg_pcd_remove(otg_dev->pcd);
 	otg_dev->pcd = 0;
 }
 
@@ -1358,7 +1363,7 @@ int usb_gadget_probe_driver(struct usb_gadget_driver *driver,
 	DWC_DEBUGPL(DBG_PCD, "registering gadget driver '%s'\n",
 		    driver->driver.name);
 
-	if (!driver || 
+	if (!driver ||
 #if LINUX_VERSION_CODE  > KERNEL_VERSION(3,6,0)
 	    !driver->bind ||
 #else

@@ -65,7 +65,7 @@
 
 
 #include <linux/sensor/l3gd20.h>
-#include <linux/sensor/sensor_common.h> 
+#include <linux/sensor/sensor_common.h>
 
 /* Maximum polled-device-reported rot speed value value in dps */
 #define FS_MAX		32768
@@ -1544,7 +1544,7 @@ static int l3gd20_gyr_probe(struct i2c_client *client,
 	if (err < 0)
 		goto err3;
 
-   	err = create_sysfs_interfaces(&client->dev);
+	err = create_sysfs_interfaces(&client->dev);
 	if(err < 0){
 		dev_err(&client->dev,
 			 "%s device register failed\n", L3GD20_GYR_DEV_NAME);
@@ -1682,7 +1682,7 @@ static void l3gd20_gyr_early_suspend(struct early_suspend *h)
 	pr_info( "%s suspend\n", __func__);
 
 	l3gd20_gyr_disable(stat);
-	
+
 	stat->is_sleep = 1;
 #if 0
 	if (atomic_read(&stat->enabled)) {

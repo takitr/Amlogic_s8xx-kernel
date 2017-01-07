@@ -1,7 +1,7 @@
 #include <linux/kernel.h>
 #include <linux/i2c.h>
 #include <linux/delay.h>
-#include "aml_demod.h"
+#include <linux/dvb/aml_demod.h>
 #include "demod_func.h"
 
 static int debug_amldvbt;
@@ -777,7 +777,7 @@ static void dvbt_reg_initial(struct aml_demod_sta *demod_sta)
 
     /*
     if (ifreq == 0){
-    	switch (sr){
+	switch (sr){
 	case 0: apb_write_reg(2, 0x20, 0x00002096);break;  // DDC NORM_PHASE    36.13M IF  For 20.7M sample rate
         case 1: apb_write_reg(2, 0x20, 0x000021a9);break;  // DDC NORM_PHASE    36.13M IF  For 20.8333M sample rate
         case 2: apb_write_reg(2, 0x20, 0x000021dc);break;  // DDC NORM_PHASE    36.13M IF  For 28.57142M sample rate
@@ -786,7 +786,7 @@ static void dvbt_reg_initial(struct aml_demod_sta *demod_sta)
 	}
     }
     else if (ifreq == 1){
-    	switch (sr){
+	switch (sr){
 	case 0: apb_write_reg(2, 0x20, 0x00001c42);break;  // DDC NORM_PHASE    4.57M IF  For 20.7M sample rate
         case 1: apb_write_reg(2, 0x20, 0x00001c1f);break;  // DDC NORM_PHASE    4.57M IF  For 20.8333M sample rate
         case 2: apb_write_reg(2, 0x20, 0x00001479);break;  // DDC NORM_PHASE    4.57M IF  For 28.57142M sample rate
@@ -918,25 +918,25 @@ int dvbt_set_ch(struct aml_demod_sta *demod_sta,
     //             1: dual AGC
     //////////////////////////////////////
     if (bw > 3) {
-    	printk("Error: Invalid Bandwidth option %d\n", bw);
+	printk("Error: Invalid Bandwidth option %d\n", bw);
 	bw = 0;
 	ret = -1;
     }
 
     if (sr > 3) {
-    	printk("Error: Invalid Sampling Freq option %d\n", sr);
+	printk("Error: Invalid Sampling Freq option %d\n", sr);
 	sr = 2;
 	ret = -1;
     }
 
     if (ifreq > 1) {
-    	printk("Error: Invalid IFreq option %d\n", ifreq);
+	printk("Error: Invalid IFreq option %d\n", ifreq);
 	ifreq = 0;
 	ret = -1;
     }
 
     if (agc_mode > 3) {
-    	printk("Error: Invalid AGC mode option %d\n", agc_mode);
+	printk("Error: Invalid AGC mode option %d\n", agc_mode);
 	agc_mode = 0;
 	ret = -1;
     }
@@ -970,7 +970,7 @@ int dvbt_set_ch(struct aml_demod_sta *demod_sta,
 
 
     if ((ch_freq%100)==2) {
-    	printk("Input frequency is XXX002, Skip initial demod\n");
+	printk("Input frequency is XXX002, Skip initial demod\n");
     }
     else{
     dvbt_reg_initial(demod_sta);
@@ -1460,18 +1460,18 @@ int serial_div(int a, int b)
 	 b_buf = b;
 
 	 while (a >= b){
-	 	 b = b<<1;
-	 	 cnt++;
- 	}
- 	while (b > b_buf){
- 		  b = b >> 1;
- 		  c = c << 1;
- 		  if (a > b) {
- 		  	c = c + 1;
- 		  	a = a - b;
- 		  }
- 	}
- 	return c;
+		 b = b<<1;
+		 cnt++;
+	}
+	while (b > b_buf){
+		  b = b >> 1;
+		  c = c << 1;
+		  if (a > b) {
+			c = c + 1;
+			a = a - b;
+		  }
+	}
+	return c;
 
 }
 
@@ -1485,14 +1485,14 @@ static int dvbt_ber(void)
 
 static int demod_monitor_ave(void)
 {
-  	static int i=0;
-  	static int ave[3]={0,0,0};
+	static int i=0;
+	static int ave[3]={0,0,0};
 
- 	 ave[0] = ave[0] + (apb_read_reg(2,0x0b)&0x7ff);
- 	 ave[1] = ave[1] + (apb_read_reg(2,0x0a)&0x3ff);
- 	 ave[2] = ave[2] + (apb_read_reg(2,0x0c)&0x1fff);
+	 ave[0] = ave[0] + (apb_read_reg(2,0x0b)&0x7ff);
+	 ave[1] = ave[1] + (apb_read_reg(2,0x0a)&0x3ff);
+	 ave[2] = ave[2] + (apb_read_reg(2,0x0c)&0x1fff);
 
- 	 i ++;
+	 i ++;
 
 	if (i >= 8192)
 	{
@@ -1559,7 +1559,7 @@ int dvbt_shutdown(void)
 
 int dvbt_get_params(struct aml_demod_sta *demod_sta,
 		      struct aml_demod_i2c *adap,
-		      	int  *code_rate_HP,  /* high priority stream code rate */
+			int  *code_rate_HP,  /* high priority stream code rate */
 			int  *code_rate_LP,  /* low priority stream code rate */
 			int  *constellation, /* modulation type (see above) */
 			int  *transmission_mode,
@@ -1595,5 +1595,3 @@ int dvbt_get_params(struct aml_demod_sta *demod_sta,
 
 	return 0;
 }
-
-

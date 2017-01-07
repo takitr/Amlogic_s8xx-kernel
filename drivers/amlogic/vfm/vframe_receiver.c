@@ -186,6 +186,3 @@ void vf_unreg_receiver(struct vframe_receiver_s *recv)
     }
 }
 EXPORT_SYMBOL(vf_unreg_receiver);
-
-
-

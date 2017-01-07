@@ -1,10 +1,10 @@
 /*******************************************************************
- * 
+ *
  *  Copyright C 2010 by Amlogic, Inc. All Rights Reserved.
  *
- *  Description: 
+ *  Description:
  *
- *  Author: Herbert.hu 
+ *  Author: Herbert.hu
  *  Created: 07/26 2011
  *
  *******************************************************************/
@@ -15,7 +15,7 @@
 
 
 typedef struct pcm51_encoded_info_s
-{ 
+{
     unsigned int InfoValidFlag;
 	unsigned int SampFs;
 	unsigned int NumCh;
@@ -27,10 +27,10 @@ typedef struct pcm51_encoded_info_s
 #define AUDIODSP_PCMENC_GET_RING_BUF_SIZE      _IOR('l', 0x01, unsigned long)
 #define AUDIODSP_PCMENC_GET_RING_BUF_CONTENT   _IOR('l', 0x02, unsigned long)
 #define AUDIODSP_PCMENC_GET_RING_BUF_SPACE     _IOR('l', 0x03, unsigned long)
-#define AUDIODSP_PCMENC_SET_RING_BUF_RPTR	   _IOW('l', 0x04, unsigned long)	
-#define AUDIODSP_PCMENC_GET_PCMINFO	   	   _IOR('l', 0x05, unsigned long)	
+#define AUDIODSP_PCMENC_SET_RING_BUF_RPTR	   _IOW('l', 0x04, unsigned long)
+#define AUDIODSP_PCMENC_GET_PCMINFO	   	   _IOR('l', 0x05, unsigned long)
 
-/* initialize  stream FIFO 
+/* initialize  stream FIFO
  * return value: on success, zero is returned, on error, -1 is returned
  * */
 extern int pcmenc_stream_init(void);
@@ -43,16 +43,15 @@ extern int pcmenc_stream_space(void);
  * */
 extern int pcmenc_stream_content(void);
 
-/* deinit  stream  FIFO 
+/* deinit  stream  FIFO
  * return value: on success, zero is returned, on error, -1 is returned
  * */
 extern int pcmenc_stream_deinit(void);
 
-/* read  data out of FIFO, the minimum of the FIFO's content and size will be read, if the FIFO is empty, read will be failed 
+/* read  data out of FIFO, the minimum of the FIFO's content and size will be read, if the FIFO is empty, read will be failed
  * return value: on success, the number of bytes read are returned, othewise, 0 is returned
  * */
 extern int  pcmenc_stream_read(char __user *buffer, int size);
 
 
 #endif
-

@@ -266,6 +266,16 @@ void osddev_set_osd_antiflicker(u32 index, u32 vmode, u32 yres)
         osd_set_osd_antiflicker_hw(index, vmode, yres);
 }
 
+void osddev_get_update_state(u32 index, u32 *up_free)
+{
+        osd_get_osd_updatestate_hw(index, up_free);
+}
+
+void osddev_set_update_state(u32 index, u32 up_free)
+{
+        osd_set_osd_updatestate_hw(index, up_free);
+}
+
 void osddev_get_osd_angle(u32 index, u32 *angle)
 {
         osd_get_osd_angle_hw(index, angle);
@@ -350,15 +360,6 @@ void osddev_cursor(struct myfb_dev *fbdev, s16 x, s16 y, s16 xstart, s16 ystart,
 }
 #endif
 
-int osddev_copy_data_tocursor(myfb_dev_t *g_fbi, aml_hwc_addr_t *cursor_mem)
-{
-	if (cursor_mem == NULL){
-		return 0;
-	}
-	osddev_copy_data_tocursor_hw((u32)g_fbi->fb_mem_vaddr, cursor_mem);
-	return 1;
-}
-
 void  osddev_set_colorkey(u32 index,u32 bpp,u32 colorkey )
 {
 	osd_set_colorkey_hw( index, bpp, colorkey );
@@ -383,3 +384,21 @@ void osddev_resume(void)
 {
 	osd_resume_hw();
 }
+#ifdef CONFIG_HIBERNATION
+extern void  osd_freeze_hw(void);
+extern void  osd_thaw_hw(void);
+extern void  osd_restore_hw(void);
+
+void  osddev_freeze(void)
+{
+	osd_freeze_hw();
+}
+void osddev_thaw(void)
+{
+	osd_thaw_hw();
+}
+void osddev_restore(void)
+{
+	osd_restore_hw();
+}
+#endif
