@@ -27,10 +27,10 @@
 #define   GE2D_MAX_WORK_QUEUE_NUM   4
 #define   GE2D_IRQ_NO   	INT_GE2D
 #define	FILE_NAME		"[GE2D_WQ]"
-typedef  enum
+typedef  enum  	
 {
 		OSD0_OSD0 =0,
-		OSD0_OSD1,
+		OSD0_OSD1,	 
 		OSD1_OSD1,
 		OSD1_OSD0,
 		ALLOC_OSD0,
@@ -38,10 +38,10 @@ typedef  enum
 		ALLOC_ALLOC,
 		TYPE_INVALID,
 }ge2d_src_dst_t;
-typedef enum
+typedef enum  	
 {
     CANVAS_OSD0 =0,
-    CANVAS_OSD1,
+    CANVAS_OSD1,	 
     CANVAS_ALLOC,
     CANVAS_TYPE_INVALID,
 }ge2d_src_canvas_type;
@@ -54,13 +54,13 @@ typedef  struct {
 
 typedef struct{
 	struct list_head   list;			//connect all process in one queue for RR process.
-	ge2d_config_t       config;   //current wq configuration
-	ge2d_cmd_t         	cmd;
+    	ge2d_config_t       config;   //current wq configuration
+    	ge2d_cmd_t         	cmd;
 	struct list_head	work_queue;
-	struct list_head	free_queue;
+   	struct list_head	free_queue;
 	wait_queue_head_t	cmd_complete;
-	int				queue_dirty;
-	int				queue_need_recycle;
+   	int				queue_dirty;
+   	int				queue_need_recycle;
 	spinlock_t	 	lock; 	// for get and release item.
 } ge2d_context_t;
 
@@ -81,7 +81,6 @@ typedef  struct {
    ge2d_event_t			event ;
    int		 			irq_num;
    int 		 			ge2d_state;
-   spinlock_t	 			state_lock;  //for sync access to ge2d_state
    int					process_queue_state;
 }ge2d_manager_t ;
 
@@ -94,7 +93,7 @@ typedef  struct  {
 }src_dst_para_t ;
 
 static const  int   bpp_type_lut[]={
-	//16bit
+	//16bit 
 	COLOR_INDEX_16_655, 	// 0
 	COLOR_INDEX_16_844, 	// 1
 	COLOR_INDEX_16_6442, 	// 2
@@ -121,14 +120,14 @@ static const  int   bpp_type_lut[]={
 };
 
 static const  int   default_ge2d_color_lut[]={
+	0, 
 	0,
-	0,
-	0,//BPP_TYPE_02_PAL4    = 2,
+	0,//BPP_TYPE_02_PAL4    = 2, 
 	0,
 	0,//BPP_TYPE_04_PAL16   = 4,
-	0,
-	0,
-	0,
+    	0,
+    	0, 
+    	0,
 	0,//BPP_TYPE_08_PAL256=8,
 	GE2D_FORMAT_S16_RGB_655,//BPP_TYPE_16_655 =9,
 	GE2D_FORMAT_S16_RGB_844,//BPP_TYPE_16_844 =10,
@@ -199,7 +198,7 @@ typedef  struct  {
     unsigned char x_rev;
     unsigned char y_rev;
     unsigned char fill_color_en;
-    unsigned char fill_mode;
+    unsigned char fill_mode;    
 }src_dst_para_ex_t ;
 
 typedef    struct {
@@ -242,7 +241,7 @@ extern int   ge2d_setup(void);
 extern int   ge2d_deinit(void);
 extern int   ge2d_context_config(ge2d_context_t *context, config_para_t *ge2d_config);
 extern int   ge2d_context_config_ex(ge2d_context_t *context, config_para_ex_t *ge2d_config);
-
+	
 extern int ge2d_wq_init(void);
 extern int  destroy_ge2d_work_queue(ge2d_context_t* ) ;
 extern ge2d_context_t* create_ge2d_work_queue(void) ;

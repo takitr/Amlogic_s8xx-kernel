@@ -1,7 +1,7 @@
 /* include/linux/cm3232.h
  *
  * Copyright (C) 2011 Capella Microsystems Inc.
- * Author: Frank Hsieh <pengyueh@gmail.com>
+ * Author: Frank Hsieh <pengyueh@gmail.com>  
  *
  * This software is licensed under the terms of the GNU General Public
  * License version 2, as published by the Free Software Foundation, and

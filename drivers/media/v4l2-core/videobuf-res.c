@@ -42,7 +42,7 @@ module_param(debug, int, 0644);
 
 static void* res_alloc(struct videobuf_queue *q,size_t boff,unsigned long size, resource_size_t* phy_addr)
 {
-	void __iomem *ret = NULL;
+	void __iomem *ret = NULL; 
 	struct videobuf_res_privdata *res = NULL;
 	long res_size = 0;
 
@@ -295,16 +295,16 @@ void videobuf_queue_res_init(struct videobuf_queue *q,
 				    struct mutex *ext_lock)
 {
 	struct videobuf_res_privdata* res = (struct videobuf_res_privdata*)priv;
-
+	
 	BUG_ON(!res);
 	MAGIC_CHECK(res->magic, MAGIC_RE_MEM);
 
 	if(res->start>=res->end){
 		printk(KERN_ERR "videobuf_queue_res_init: resource is invalid.\n");
 		return;
-	}
+	}	
 	videobuf_queue_core_init(q, ops, dev, irqlock, type, field, msize,
-		priv, &qops, ext_lock);
+	 	priv, &qops, ext_lock);
 	return;
 }
 EXPORT_SYMBOL_GPL(videobuf_queue_res_init);

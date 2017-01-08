@@ -12,7 +12,7 @@ struct spicc_conreg {
   unsigned int mode         :1;
   unsigned int xch          :1;
   unsigned int smc          :1;
-	#define SPICC_DMA  0
+  	#define SPICC_DMA  0
 		#define SPICC_PIO  1
   unsigned int clk_pol      :1;
   unsigned int clk_pha      :1;
@@ -89,3 +89,4 @@ struct spicc_platform_data {
 
 
 #endif
+

@@ -159,11 +159,11 @@ static int is_vertical_sample_enable(vframe_t* vf)
 		if((process_type == TYPE_LR )
 		||((process_type == TYPE_LR_SWITCH )&&(!(status &BT_FORMAT_INDICATOR)))
 		||(process_type == TYPE_2D_TO_3D )){
-			if(!(vf->type&VIDTYPE_VIU_422)){
-				if((vf->width > 1280)&&(vf->height > 720)){
-					ret = 1 ;
-				}
-			}
+		 	if(!(vf->type&VIDTYPE_VIU_422)){
+		 		if((vf->width > 1280)&&(vf->height > 720)){
+		 			ret = 1 ;
+		 		}
+		 	}
 		}
 	}
 	if((!(status &BT_FORMAT_INDICATOR))&&(process_type !=TYPE_BT)){
@@ -181,7 +181,7 @@ int is_local_source(vframe_t* vf)
     if(vf->type&VIDTYPE_VIU_422){
         ret = 0;
     }else{
-	ret = 1;
+    	ret = 1;
     }
     return ret;
 }
@@ -191,29 +191,29 @@ static int get_input_format(vframe_t* vf)
     if(vf->type&VIDTYPE_VIU_422){
         format =  GE2D_FORMAT_S16_YUV422;
     }else if(vf->type&VIDTYPE_VIU_NV21){
-	if(is_vertical_sample_enable(vf)){
-		 if(vf->type &VIDTYPE_INTERLACE_BOTTOM){
-			format =  GE2D_FORMAT_M24_NV21|(GE2D_FORMAT_M24_NV21B & (3<<3));
-			}else if(vf->type &VIDTYPE_INTERLACE_TOP){
-			format =  GE2D_FORMAT_M24_NV21|(GE2D_FORMAT_M24_NV21T & (3<<3));
-		 }else{
-			format =  GE2D_FORMAT_M24_NV21;
-		 }
-	}else{
-		 format =  GE2D_FORMAT_M24_NV21;
-	}
+    	if(is_vertical_sample_enable(vf)){
+	    	 if(vf->type &VIDTYPE_INTERLACE_BOTTOM){
+	    	 	format =  GE2D_FORMAT_M24_NV21|(GE2D_FORMAT_M24_NV21B & (3<<3));
+	    	 	}else if(vf->type &VIDTYPE_INTERLACE_TOP){
+	    	 	format =  GE2D_FORMAT_M24_NV21|(GE2D_FORMAT_M24_NV21T & (3<<3));
+	    	 }else{
+	        	format =  GE2D_FORMAT_M24_NV21;
+	    	 }     	
+    	}else{
+    		 format =  GE2D_FORMAT_M24_NV21;
+    	}    	
     }else{
-	 if(is_vertical_sample_enable(vf)){
-		if(vf->type &VIDTYPE_INTERLACE_BOTTOM){
-			format =  GE2D_FORMAT_M24_YUV420|(GE2D_FMT_M24_YUV420B & (3<<3));
-		}else if(vf->type &VIDTYPE_INTERLACE_TOP){
-		format =  GE2D_FORMAT_M24_YUV420|(GE2D_FORMAT_M24_YUV420T & (3<<3));
-	 }else{
-			format =  GE2D_FORMAT_M24_YUV420|(GE2D_FORMAT_M24_YUV420T & (3<<3));
-		}
-	 }else{
-		format =  GE2D_FORMAT_M24_YUV420;
-	 }
+    	 if(is_vertical_sample_enable(vf)){
+    	 	if(vf->type &VIDTYPE_INTERLACE_BOTTOM){
+    	 		format =  GE2D_FORMAT_M24_YUV420|(GE2D_FMT_M24_YUV420B & (3<<3));
+    	 	}else if(vf->type &VIDTYPE_INTERLACE_TOP){
+    	 	format =  GE2D_FORMAT_M24_YUV420|(GE2D_FORMAT_M24_YUV420T & (3<<3));
+    	 }else{
+    	 		format =  GE2D_FORMAT_M24_YUV420|(GE2D_FORMAT_M24_YUV420T & (3<<3));
+    	 	}
+    	 }else{
+        	format =  GE2D_FORMAT_M24_YUV420;
+    	 }
     }
     return format;
 }
@@ -916,7 +916,7 @@ void x_offset_adjust(vframe_t* vf , int* offset , int screen_width ,int v_screen
 //	printk("pre offset is %d \n" , *offset);
 	query_video_status(0 , &trick_mode) ;
     if(trick_mode){
-	return;
+    	return;
     }
 	if((vf->width < 960)||((vf->type&VIDTYPE_VIU_422)&&(cur_process_type !=TYPE_2D_TO_3D))||(ww <= v_screen_width)){
 		return;
@@ -940,7 +940,7 @@ void axis_h_adjust(vframe_t* vf , int* left ,  int* width , int* screen_width ,i
 
 	query_video_status(0 , &trick_mode) ;
     if(trick_mode){
-	return;
+    	return;
     }
 	if(((vf->type&VIDTYPE_VIU_422)&&(cur_process_type !=TYPE_2D_TO_3D))||(ww <= v_screen_width)){
 		return;
@@ -984,17 +984,17 @@ static int get_output_rect_after_ratio(vframe_t* vf ,int* top , int*left , int* 
     l = 0;
     current_view_mode  = get_ppmgr_view_mode();
     switch(current_view_mode){
-	case VIEWMODE_4_3:
-	//vf->ratio_control = ((3 <<8)/4) << DISP_RATIO_ASPECT_RATIO_BIT;
-	vf->ratio_control = (0xc0 << DISP_RATIO_ASPECT_RATIO_BIT);
-	break;
-	case VIEWMODE_16_9:
-	//vf->ratio_control = ((9 << 8)/16) << DISP_RATIO_ASPECT_RATIO_BIT ;
-	vf->ratio_control = (0x90 << DISP_RATIO_ASPECT_RATIO_BIT) ;
-	break;
-	case VIEWMODE_NORMAL:
-	default:
-	break;
+    	case VIEWMODE_4_3:
+    	//vf->ratio_control = ((3 <<8)/4) << DISP_RATIO_ASPECT_RATIO_BIT;
+    	vf->ratio_control = (0xc0 << DISP_RATIO_ASPECT_RATIO_BIT);
+    	break;
+    	case VIEWMODE_16_9:
+    	//vf->ratio_control = ((9 << 8)/16) << DISP_RATIO_ASPECT_RATIO_BIT ;
+    	vf->ratio_control = (0x90 << DISP_RATIO_ASPECT_RATIO_BIT) ;
+    	break;
+    	case VIEWMODE_NORMAL:
+    	default:
+    	break;
     }
 
     if (vf->ratio_control) {
@@ -1036,9 +1036,9 @@ int get_2d_output_rect_after_ratio(int* top , int*left , int* width , int* heigh
     hh = in_height;
 #if 0
     if(ww * screen_height   > hh* screen_width){
-	hh = (((ww * screen_height ) << 8)/screen_width) >> 8;
+    	hh = (((ww * screen_height ) << 8)/screen_width) >> 8;
     }else{
-	ww = (((screen_width * hh) << 8) /screen_height) >> 8 ;
+    	ww = (((screen_width * hh) << 8) /screen_height) >> 8 ;
     }
 #else
 	ww = screen_width;
@@ -1046,26 +1046,26 @@ int get_2d_output_rect_after_ratio(int* top , int*left , int* width , int* heigh
 #endif
     current_view_mode  = get_ppmgr_view_mode();
     switch(current_view_mode){
-	case VIEWMODE_4_3:
+    	case VIEWMODE_4_3:
 		*top = 0;
 		*left = ww >>3;
 		*width = (ww*3) >>2  ;
 		*height = hh;
 
-	break;
-	case VIEWMODE_16_9:
+    	break;
+    	case VIEWMODE_16_9:
 		*top = 0;
 		*left = 0;
 		*width = ww ;
 		*height = hh;
-	break;
-	case VIEWMODE_NORMAL:
-	default:
+    	break;
+    	case VIEWMODE_NORMAL:
+    	default:
 		*top = 0;
 		*left = 0;
 		*width =  in_width ;
 		*height = in_height;
-	break;
+    	break;
     }
 
     return 0;
@@ -1080,7 +1080,7 @@ static void process_none(vframe_t* vf, ge2d_context_t *context,config_para_ex_t*
 {
     vframe_t* new_vf;
     ppframe_t *pp_vf;
-
+    
     int index;
     display_frame_t input_frame ;
     display_frame_t l_frame ,r_frame ;
@@ -1089,7 +1089,7 @@ static void process_none(vframe_t* vf, ge2d_context_t *context,config_para_ex_t*
     new_vf = vfq_pop(&q_free);
 
     if (unlikely((!new_vf) || (!vf)))
-        return;
+        return;  
     pp_vf = to_ppframe(new_vf);
     pp_vf->dec_frame = NULL;
     memcpy(new_vf , vf, sizeof(vframe_t));
@@ -1188,7 +1188,7 @@ static void process_2d_to_3d(vframe_t* vf, ge2d_context_t *context,config_para_e
     new_vf = vfq_pop(&q_free);
 
     if (unlikely((!new_vf) || (!vf)))
-        return;
+        return;  
     pp_vf = to_ppframe(new_vf);
     pp_vf->dec_frame = NULL;
     memcpy(new_vf , vf, sizeof(vframe_t));
@@ -1403,7 +1403,7 @@ void process_2d_to_3d_switch(vframe_t* vf, ge2d_context_t *context,config_para_e
     new_vf = vfq_pop(&q_free);
 
     if (unlikely((!new_vf) || (!vf)))
-        return;
+        return;  
     pp_vf = to_ppframe(new_vf);
     pp_vf->dec_frame = NULL;
     memcpy(new_vf , vf, sizeof(vframe_t));
@@ -1614,7 +1614,7 @@ void process_lr(vframe_t* vf, ge2d_context_t *context,config_para_ex_t* ge2d_con
     new_vf = vfq_pop(&q_free);
 
     if (unlikely((!new_vf) || (!vf)))
-        return;
+        return;  
     pp_vf = to_ppframe(new_vf);
     pp_vf->dec_frame = NULL;
     memcpy(new_vf , vf, sizeof(vframe_t));
@@ -1719,7 +1719,7 @@ void process_lr(vframe_t* vf, ge2d_context_t *context,config_para_ex_t* ge2d_con
 //    stretchblt_noalpha(context,0,0,vf->width/2,vf->height,t,l,w,h);
 	    axis_h_adjust(vf, &l ,  &w , &w2 ,  get_ppmgr_scale_width() );
 	if(is_vertical_sample_enable(vf)){
-		stretchblt_noalpha(context,l_frame.content_left,l_frame.content_top,l_frame.content_width,l_frame.content_height/2,l,t,w,h);
+    		stretchblt_noalpha(context,l_frame.content_left,l_frame.content_top,l_frame.content_width,l_frame.content_height/2,l,t,w,h);
 	}else{
 		stretchblt_noalpha(context,l_frame.content_left,l_frame.content_top,l_frame.content_width,l_frame.content_height,l,t,w,h);
 	}
@@ -1766,7 +1766,7 @@ void process_lr(vframe_t* vf, ge2d_context_t *context,config_para_ex_t* ge2d_con
     ge2d_config->src_para.left = 0;
     ge2d_config->src_para.width = vf->width;
     if(is_vertical_sample_enable(vf)){
-		ge2d_config->src_para.height = vf->height/2;
+    		ge2d_config->src_para.height = vf->height/2;
 	}else{
 		ge2d_config->src_para.height = vf->height ;
 	}
@@ -1808,7 +1808,7 @@ void process_lr(vframe_t* vf, ge2d_context_t *context,config_para_ex_t* ge2d_con
 //    stretchblt_noalpha(context,vf->width/2 ,0,vf->width/2,vf->height,l,t,w,h);
 	axis_h_adjust(vf , &l ,  &w , &w2 , get_ppmgr_scale_width() );
 	if(is_vertical_sample_enable(vf)){
-		stretchblt_noalpha(context,r_frame.content_left,r_frame.content_top,r_frame.content_width,r_frame.content_height/2,l,t,w,h);
+    		stretchblt_noalpha(context,r_frame.content_left,r_frame.content_top,r_frame.content_width,r_frame.content_height/2,l,t,w,h);
 	}else{
 		stretchblt_noalpha(context,r_frame.content_left,r_frame.content_top,r_frame.content_width,r_frame.content_height ,l,t,w,h);
 	}
@@ -1831,7 +1831,7 @@ void process_bt(vframe_t* vf, ge2d_context_t *context,config_para_ex_t* ge2d_con
     new_vf = vfq_pop(&q_free);
 
     if (unlikely((!new_vf) || (!vf)))
-        return;
+        return;  
     pp_vf = to_ppframe(new_vf);
     pp_vf->dec_frame = NULL;
     memcpy(new_vf , vf, sizeof(vframe_t));
@@ -1941,11 +1941,11 @@ void process_bt(vframe_t* vf, ge2d_context_t *context,config_para_ex_t* ge2d_con
  //   stretchblt_noalpha(context,0,0,vf->width,vf->height/2,l,t,w,h);
 
  //   stretchblt_noalpha(context,0,input_frame.content_top,input_frame.frame_width,input_frame.content_height/2,l,t,w,h);
-	axis_h_adjust(vf, &l ,  &w , &w2 ,  get_ppmgr_scale_width() );
+ 	axis_h_adjust(vf, &l ,  &w , &w2 ,  get_ppmgr_scale_width() );
 	 if(is_vertical_sample_enable(vf)){
-		stretchblt_noalpha(context,l_frame.content_left,l_frame.content_top,l_frame.content_width,l_frame.content_height/2,l,t,w,h);
+	 	stretchblt_noalpha(context,l_frame.content_left,l_frame.content_top,l_frame.content_width,l_frame.content_height/2,l,t,w,h);
 	}else{
-		stretchblt_noalpha(context,l_frame.content_left,l_frame.content_top,l_frame.content_width,l_frame.content_height,l,t,w,h);
+	 	stretchblt_noalpha(context,l_frame.content_left,l_frame.content_top,l_frame.content_width,l_frame.content_height,l,t,w,h);
 	}
 
 //ROUND_2:
@@ -2150,7 +2150,7 @@ ROUND2:
     new_vf = vfq_pop(&q_free);
 
     if (unlikely((!new_vf) || (!vf)))
-        return;
+        return;  
     pp_vf = to_ppframe(new_vf);
     pp_vf->dec_frame = NULL;
     memcpy(new_vf , vf, sizeof(vframe_t));
@@ -2256,7 +2256,7 @@ ROUND2:
 
 	axis_h_adjust(vf , &l ,  &w , &w2 , get_ppmgr_scale_width() );
 	if(is_vertical_sample_enable(vf)){
-		stretchblt_noalpha(context,r_frame.content_left,r_frame.content_top,r_frame.content_width,r_frame.content_height/2,l,t,w,h);
+    		stretchblt_noalpha(context,r_frame.content_left,r_frame.content_top,r_frame.content_width,r_frame.content_height/2,l,t,w,h);
 	}else{
 stretchblt_noalpha(context,r_frame.content_left,r_frame.content_top,r_frame.content_width,r_frame.content_height,l,t,w,h);
 	}
@@ -2302,7 +2302,7 @@ stretchblt_noalpha(context,r_frame.content_left,r_frame.content_top,r_frame.cont
     ge2d_config->src_para.left = 0;
     ge2d_config->src_para.width = vf->width;
     if(is_vertical_sample_enable(vf)){
-		ge2d_config->src_para.height = vf->height/2;
+    		ge2d_config->src_para.height = vf->height/2;
 	}else{
     ge2d_config->src_para.height = vf->height;
 	}
@@ -2344,7 +2344,7 @@ stretchblt_noalpha(context,r_frame.content_left,r_frame.content_top,r_frame.cont
 //    stretchblt_noalpha(context,vf->width/2 ,0,vf->width/2,vf->height,l,t,w,h);
 	    axis_h_adjust(vf, &l ,  &w , &w2 ,  get_ppmgr_scale_width() );
 	if(is_vertical_sample_enable(vf)){
-		stretchblt_noalpha(context,l_frame.content_left,l_frame.content_top,l_frame.content_width,l_frame.content_height/2,l,t,w,h);
+    		stretchblt_noalpha(context,l_frame.content_left,l_frame.content_top,l_frame.content_width,l_frame.content_height/2,l,t,w,h);
 	}else{
 	stretchblt_noalpha(context,l_frame.content_left,l_frame.content_top,l_frame.content_width,l_frame.content_height,l,t,w,h);
 	}
@@ -2379,7 +2379,7 @@ static void process_field_depth(vframe_t* vf, ge2d_context_t *context,config_par
     new_vf = vfq_pop(&q_free);
 
     if (unlikely((!new_vf) || (!vf)))
-        return;
+        return;  
     pp_vf = to_ppframe(new_vf);
     pp_vf->dec_frame = NULL;
     memcpy(new_vf , vf, sizeof(vframe_t));
@@ -2479,8 +2479,8 @@ static void process_field_depth(vframe_t* vf, ge2d_context_t *context,config_par
     h = 0;
 
     if(is_need_cut_window_support(vf)){
-	w1 = input_frame.frame_width - 2*ppmgr_cutwin_left ;
-	h1 = input_frame.frame_height - 2*ppmgr_cutwin_top;
+    	w1 = input_frame.frame_width - 2*ppmgr_cutwin_left ;
+    	h1 = input_frame.frame_height - 2*ppmgr_cutwin_top;
     }else{
     w1 = input_frame.frame_width;
     h1 = input_frame.frame_height ;
@@ -2733,7 +2733,7 @@ void process_3d_to_2d_l(vframe_t* vf, ge2d_context_t *context,config_para_ex_t* 
     new_vf = vfq_pop(&q_free);
 
     if (unlikely((!new_vf) || (!vf)))
-        return;
+        return;  
     pp_vf = to_ppframe(new_vf);
     pp_vf->dec_frame = NULL;
     memcpy(new_vf , vf, sizeof(vframe_t));
@@ -2752,8 +2752,8 @@ void process_3d_to_2d_l(vframe_t* vf, ge2d_context_t *context,config_para_ex_t* 
     w = 0;
     h = 0;
     if(is_need_cut_window_support(vf)){
-	w1 = input_frame.frame_width - 2*ppmgr_cutwin_left ;
-	h1 = input_frame.frame_height - 2*ppmgr_cutwin_top;
+    	w1 = input_frame.frame_width - 2*ppmgr_cutwin_left ;
+    	h1 = input_frame.frame_height - 2*ppmgr_cutwin_top;
     }else{
     w1 = new_vf->width;
     h1 = new_vf->height ;
@@ -2836,7 +2836,7 @@ void process_3d_to_2d_l(vframe_t* vf, ge2d_context_t *context,config_para_ex_t* 
     }
     axis_h_adjust(vf, &l ,  &w , &w2 ,  get_ppmgr_scale_width() );
     if(is_vertical_sample_enable(vf)){
-	stretchblt_noalpha(context, l_frame.content_left,l_frame.content_top,l_frame.content_width,l_frame.content_height/2,l,t,w,h);
+    	stretchblt_noalpha(context, l_frame.content_left,l_frame.content_top,l_frame.content_width,l_frame.content_height/2,l,t,w,h);
 	}else{
     stretchblt_noalpha(context, l_frame.content_left,l_frame.content_top,l_frame.content_width,l_frame.content_height,l,t,w,h);
 	}
@@ -2859,7 +2859,7 @@ void process_3d_to_2d_r(vframe_t* vf, ge2d_context_t *context,config_para_ex_t* 
     new_vf = vfq_pop(&q_free);
 
     if (unlikely((!new_vf) || (!vf)))
-        return;
+        return;  
     pp_vf = to_ppframe(new_vf);
     pp_vf->dec_frame = NULL;
     memcpy(new_vf , vf, sizeof(vframe_t));
@@ -2877,8 +2877,8 @@ void process_3d_to_2d_r(vframe_t* vf, ge2d_context_t *context,config_para_ex_t* 
     w = 0;
     h = 0;
     if(is_need_cut_window_support(vf)){
-	w1 = input_frame.frame_width - 2*ppmgr_cutwin_left ;
-	h1 = input_frame.frame_height - 2*ppmgr_cutwin_top;
+    	w1 = input_frame.frame_width - 2*ppmgr_cutwin_left ;
+    	h1 = input_frame.frame_height - 2*ppmgr_cutwin_top;
     }else{
     w1 = new_vf->width;
     h1 = new_vf->height ;
@@ -2960,7 +2960,7 @@ void process_3d_to_2d_r(vframe_t* vf, ge2d_context_t *context,config_para_ex_t* 
 
     axis_h_adjust(vf, &l ,  &w , &w2 ,  get_ppmgr_scale_width() );
     if(is_vertical_sample_enable(vf)){
-	stretchblt_noalpha(context, r_frame.content_left,r_frame.content_top,r_frame.content_width,r_frame.content_height/2,l,t,w,h);
+    	stretchblt_noalpha(context, r_frame.content_left,r_frame.content_top,r_frame.content_width,r_frame.content_height/2,l,t,w,h);
 	}else{
     stretchblt_noalpha(context, r_frame.content_left,r_frame.content_top,r_frame.content_width,r_frame.content_height,l,t,w,h);
 	}
@@ -2980,7 +2980,7 @@ void process_camera_input(vframe_t* vf, ge2d_context_t *context,config_para_ex_t
     new_vf = vfq_pop(&q_free);
 
     if (unlikely((!new_vf) || (!vf)))
-        return;
+        return;  
     pp_vf = to_ppframe(new_vf);
     pp_vf->dec_frame = NULL;
     memcpy(new_vf , vf, sizeof(vframe_t));
@@ -3074,12 +3074,12 @@ static void buffer_clear_2D(ge2d_context_t *context, config_para_ex_t* ge2d_conf
 
 	current_view_mode  = get_ppmgr_view_mode();
     for (i = 0; i < VF_POOL_SIZE; i++){
-	if((index >= 0)&&(index != i)){
-		continue;
-	}
-	if((index >=0 )&&(current_view_mode == VIEWMODE_4_3)){
-		w = 240;
-	}
+    	if((index >= 0)&&(index != i)){
+    		continue;
+    	}
+    	if((index >=0 )&&(current_view_mode == VIEWMODE_4_3)){
+    		w = 240;
+    	}
         ge2d_config->alu_const_color= 0;//0x000000ff;
         ge2d_config->bitmask_en  = 0;
         ge2d_config->src1_gb_alpha = 0;//0xff;
@@ -3135,9 +3135,9 @@ static void buffer_clear_3D(ge2d_context_t *context, config_para_ex_t* ge2d_conf
     h1 = 1088;
     h2 = 544;
     for (i = 0; i < VF_POOL_SIZE; i++){
-	if((index >= 0)&&(index != i)){
-		continue;
-	}
+    	if((index >= 0)&&(index != i)){
+    		continue;
+    	}
         ge2d_config->alu_const_color= 0;//0x000000ff;
         ge2d_config->bitmask_en  = 0;
         ge2d_config->src1_gb_alpha = 0;//0xff;
@@ -3239,42 +3239,42 @@ static void window_clear_3D(ge2d_context_t *context, config_para_ex_t* ge2d_conf
 void ppmgr_buffer_clear(ge2d_context_t *context, config_para_ex_t* ge2d_config)
 {
     switch(cur_process_type){
-	case TYPE_NONE:
-	case TYPE_3D_TO_2D_L:
-	case TYPE_3D_TO_2D_R:
-	buffer_clear_2D(context ,ge2d_config , -1)	;
-	break;
+    	case TYPE_NONE:
+    	case TYPE_3D_TO_2D_L:
+    	case TYPE_3D_TO_2D_R:
+    	buffer_clear_2D(context ,ge2d_config , -1)	;
+    	break;
 
-	case TYPE_2D_TO_3D:
-	case TYPE_LR:
-	case TYPE_BT:
-	case TYPE_LR_SWITCH:
-	case TYPE_FILED_DEPTH:
-	buffer_clear_3D(context ,ge2d_config, -1)	;
-	break;
-	default:
-	break;
+    	case TYPE_2D_TO_3D:
+    	case TYPE_LR:
+    	case TYPE_BT:
+    	case TYPE_LR_SWITCH:
+    	case TYPE_FILED_DEPTH:
+    	buffer_clear_3D(context ,ge2d_config, -1)	;
+    	break;
+    	default:
+    	break;
     }
 }
 
 void ppmgr_index_clear(ge2d_context_t *context, config_para_ex_t* ge2d_config ,int index)
 {
     switch(cur_process_type){
-	case TYPE_NONE:
-	case TYPE_3D_TO_2D_L:
-	case TYPE_3D_TO_2D_R:
-	buffer_clear_2D(context ,ge2d_config,index)	;
-	break;
+    	case TYPE_NONE:
+    	case TYPE_3D_TO_2D_L:
+    	case TYPE_3D_TO_2D_R:
+    	buffer_clear_2D(context ,ge2d_config,index)	;
+    	break;
 
-	case TYPE_2D_TO_3D:
-	case TYPE_LR:
-	case TYPE_BT:
-	case TYPE_LR_SWITCH:
-	case TYPE_FILED_DEPTH:
-	buffer_clear_3D(context ,ge2d_config,index)	;
-	break;
-	default:
-	break;
+    	case TYPE_2D_TO_3D:
+    	case TYPE_LR:
+    	case TYPE_BT:
+    	case TYPE_LR_SWITCH:
+    	case TYPE_FILED_DEPTH:
+    	buffer_clear_3D(context ,ge2d_config,index)	;
+    	break;
+    	default:
+    	break;
     }
 }
 
@@ -3287,7 +3287,7 @@ void ppmgr_vf_3d_tv(vframe_t* vf, ge2d_context_t *context,config_para_ex_t* ge2d
     display_frame_t l_frame ,r_frame ;
     canvas_t cd;
     int process_type = get_tv_process_type(vf);
-    cur_process_type = process_type;
+    cur_process_type = process_type;    
     get_input_frame(vf,&input_frame);
     get_input_l_frame(vf,&l_frame);
     get_input_r_frame(vf,&r_frame);

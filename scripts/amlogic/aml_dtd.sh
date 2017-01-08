@@ -6,7 +6,7 @@
 
 #debug
 #print=echo
-print=test
+print=test  
 
 TMP_DTD="./arch/arm/boot/meson.dtd"
 touch "$TMP_DTD"
@@ -15,7 +15,7 @@ copy_fragment(){
     if [ -z "$val_1" ]; then          # no "#ifdef" or "#ifndef", is "#else" ?
         local val_2=`sed -n -e "s/^#else/else/p" "$TMP_FILE"`
         if [ -n "$val_2" ]; then  # key word--"#else"
-		$print "key word--#else"
+        	$print "key word--#else"
            noelse=1
         else  # no key word--"#else"
             val_2=`sed -n -e 's/^#endif/END_CONFIG/p' "$TMP_FILE"`
@@ -32,14 +32,14 @@ copy_fragment(){
                             $print "no #ifdef #ifndef #else"
                         fi
                     fi
-
+                    
                     if [ -n "$val_3" ]; then
                         if [[ IFS != $saveIFS ]] ; then
                             IFS=$saveIFS
                         fi
                         process_file "${path}$val_3"
                     fi
-
+                
                 fi
             fi
             if [ -n "$val_2" ] ; then    # key word--"#endif"
@@ -50,15 +50,15 @@ copy_fragment(){
             fi
         fi
     fi       # no "#ifdef" or "#ifndef"
-
+    
     if [ -n "$val_1" ]; then          # key word--"#ifdef" or "#ifndef", there is a CONFIG
     $print "key word--#ifdef or #ifndef, there is a CONFIG: $val_1"
         local CONFIG=`"$path"/scripts/config -s  "$1"`
         if [[ "$CONFIG" = 'y' ]] || [[ "$CONFIG" = 'm' ]] ; then
-			$print "CONFIG is y or m"
+        		$print "CONFIG is y or m"
             invalidconfig=0
         else
-			$print "CONFIG is not define"
+        		$print "CONFIG is not define"
             invalidconfig=1
         fi
     fi
@@ -90,14 +90,14 @@ process_file(){
         copy_fragment "$val_1"
     done)
 
-    if [[ -n $saveIFS ]] ; then
+    if [[ -n $saveIFS ]] ; then      
         IFS=$saveIFS
     fi
-
+    
     echo "process file $1 end"
     $print ""
-}
-
+}   
+    
 for f in `ls $1/arch/arm/boot/dts/amlogic/aml_top.dtd`; do
         if [ -f $f ] ; then
                 $print "$f is exsit"

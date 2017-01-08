@@ -49,8 +49,8 @@
 
 #ifdef CONFIG_HAS_EARLYSUSPEND
 static struct early_suspend aml1218_early_suspend;
-static int    in_early_suspend = 0;
-static int    early_power_status = -1;
+static int    in_early_suspend = 0; 
+static int    early_power_status = 0;
 static struct wake_lock aml1218_lock;
 #endif
 struct aml1218_supply           *g_aml1218_supply  = NULL;
@@ -60,7 +60,7 @@ struct input_dev                *aml1218_power_key = NULL;
 
 static int power_protection   = 0;
 static int over_discharge_cnt = 0;
-static int adc_sign_bit       = 0;
+static int adc_sign_bit       = 0; 
 #define BATTERY_CHARGING      1
 #define BATTERY_DISCHARGING   0
 
@@ -96,11 +96,11 @@ int aml1218_get_battery_voltage(void)
     uint8_t val[2] = {};
     int result = 0;
     int tmp;
-
-    aml1218_reads(0x00AF, val, 2);
+    
+    aml1218_reads(0x00AF, val, 2);        
     tmp = (((val[1] & 0x1f) << 8) + val[0]);
     result = (tmp * 4800) / 4096;
-
+    
     return result;
 }
 EXPORT_SYMBOL_GPL(aml1218_get_battery_voltage);
@@ -116,7 +116,7 @@ int aml1218_get_dcin_voltage(void)
     aml1218_reads(0x00B1, val, 2);
     result = ((val[1] & 0x1f) << 8) + val[0];
     if (result & 0x1000) {                                  // complement code
-        result = 0;                                         // avoid ADC offset
+        result = 0;                                         // avoid ADC offset 
     } else {
         result = (result * 12800) / 4096;
     }
@@ -135,7 +135,7 @@ int aml1218_get_vbus_voltage(void)
     aml1218_reads(0x00B1, val, 2);
     result = ((val[1] & 0x1f) << 8) + val[0];
     if (result & 0x1000) {                                  // complement code
-        result = 0;                                         // avoid ADC offset
+        result = 0;                                         // avoid ADC offset 
     } else {
         result = result * 6400 / 4096;
     }
@@ -157,7 +157,7 @@ int aml1218_get_battery_current(void)
     if (tmp & 0x1000) {                                              // complement code
         tmp = (tmp ^ 0x1fff) + 1;
     }
-    result = (tmp * 5333) / 4096;
+    result = (tmp * 5333) / 4096; 
     return result;
 }
 EXPORT_SYMBOL_GPL(aml1218_get_battery_current);
@@ -180,16 +180,16 @@ int aml1218_set_gpio(int pin, int val)
 #if 0
     uint32_t data;
 
-    if (pin <= 0 || pin > 3 || val > 1 || val < 0) {
+    if (pin <= 0 || pin > 3 || val > 1 || val < 0) { 
         AML1218_DBG("ERROR, invalid input value, pin = %d, val= %d\n", pin, val);
         return -1;
-    }
-    if (val < 2) {
+    }    
+    if (val < 2) { 
         data = ((val ? 1 : 0) << (pin));
     } else {
         AML1218_DBG("%s, not support value for 1218:%d\n", __func__, val);
         return -1;
-    }
+    }    
     AML1218_DBG("%s, GPIO:%d, val:%d\n", __func__, pin, val);
     return aml1218_set_bits(0x0013, data, (1 << pin));
 #else
@@ -215,18 +215,18 @@ int aml1218_get_gpio(int gpio, int *val)
     int ret;
     uint8_t data;
 
-    if (gpio <= 0 || gpio> 4 || !val) {
+    if (gpio <= 0 || gpio> 4 || !val) { 
         AML1218_ERR("ERROR, invalid input value, gpio = %d, val= %p\n", gpio, val);
         return -EINVAL;
     }
     ret = aml1218_read(AML1218_GPIO_INPUT_STATUS, &data);
     if (ret) {                                                  // read failed
-        return ret;
+        return ret;    
     }
     if (data & (1 << (gpio - 1))) {
-        *val = 1;
+        *val = 1;    
     } else {
-        *val = 0;
+        *val = 0;    
     }
     return 0;
 }
@@ -244,7 +244,7 @@ void aml1218_power_off()
     aml1218_set_gpio(3, 1);
     AML1218_INFO("software goto OFF state\n");
     mdelay(10);
-    aml1218_write(AML1218_GEN_CNTL1, buf);
+    aml1218_write(AML1218_GEN_CNTL1, buf);    
     udelay(1000);
     while (1) {
         msleep(1000);
@@ -257,18 +257,18 @@ int aml1218_set_usb_current_limit(int limit)
 {
     int val;
     if ((limit < 100 || limit > 1600) && (limit != -1)) {
-       AML1218_ERR("%s, wrong usb current limit:%d\n", __func__, limit);
+       AML1218_ERR("%s, wrong usb current limit:%d\n", __func__, limit); 
        return -1;
     }
     if (limit == -1) {                                       // -1 means not limit, so set limit to max
-        limit = 1600;
+        limit = 1600;    
     }
     val = (limit-100)/ 100;
     val ^= 0x04;                                            // bit 2 is reverse bit
-
+    
     AML1218_INFO("%s, set usb current limit to %d, bit:%02x\n", __func__, limit, val);
     return aml1218_set_bits(0x002D, val, 0x0f);
-
+    
 }
 EXPORT_SYMBOL_GPL(aml1218_set_usb_current_limit);
 
@@ -277,7 +277,7 @@ int aml1218_set_usb_voltage_limit(int voltage)
     uint8_t val;
 
     if (voltage > 4600 || voltage < 4300) {
-        AML1218_ERR("%s, Wrong usb voltage limit:%d\n", __func__, voltage);
+        AML1218_ERR("%s, Wrong usb voltage limit:%d\n", __func__, voltage);    
     }
     aml1218_read(AML1218_CHG_CTRL5, &val);
     val &= ~(0xc0);
@@ -297,7 +297,7 @@ int aml1218_set_usb_voltage_limit(int voltage)
     case 4600:
         val |= (0x03 << 5);
         break;
-
+    
     default:
         AML1218_ERR("%s, Wrong usb voltage limit:%d\n", __func__, voltage);
         return -1;
@@ -317,7 +317,7 @@ int aml1218_get_vsys_voltage(void)
     aml1218_reads(0x00B1, val, 2);
     result = ((val[1] & 0x1f) << 8) + val[0];
     if (result & 0x1000) {                                  // complement code
-        result = 0;                                         // avoid ADC offset
+        result = 0;                                         // avoid ADC offset 
     } else {
         result = result * 6400 / 4096;
     }
@@ -327,7 +327,7 @@ int aml1218_get_vsys_voltage(void)
 static int pmu__version = -1;
 int aml1218_get_pmu_version(void)
 {
-    uint8_t val = 0;
+    uint8_t val = 0; 
 
     if (pmu__version == -1) {
         aml1218_read(0x007e, &val);
@@ -340,25 +340,25 @@ int aml1218_get_pmu_version(void)
 int aml1218_set_full_charge_voltage(int voltage);
 int aml1218_set_charge_enable(int enable)
 {
-//    uint8_t val = 0;
+//    uint8_t val = 0; 
 //    uint8_t val_t = 0;
     int pmu_version = 0;
 //    int charge_status = 0;
 //    int ocv = 0;
 
     pmu_version = aml1218_get_pmu_version();
-  //printk("---> set charger enable, vbat:%d, vsys:%d\n",
+  //printk("---> set charger enable, vbat:%d, vsys:%d\n", 
   //       aml1218_get_battery_voltage(),
   //       aml1218_get_vsys_voltage());
     if (pmu_version == 0)
-    {
+    {   
         aml1218_set_full_charge_voltage(4050000);
         if (usb_bc_mode == USB_BC_MODE_SDP) {
             return aml1218_set_bits(0x0017, 0x00, 0x01);
         }
         if (ocv_voltage > 3950)
-        {
-            AML1218_DBG("%s, pmu_version:%d, ocv = %d, do not open charger.\n", __func__, pmu_version, ocv_voltage);
+        {   
+            printk("%s, pmu_version:%d, ocv = %d, do not open charger.\n", __func__, pmu_version, ocv_voltage);
             return aml1218_set_bits(0x0017, 0x00, 0x01);
         }
     }
@@ -366,7 +366,7 @@ int aml1218_set_charge_enable(int enable)
     {
         aml1218_set_full_charge_voltage(pmu_init_chgvol);
     }
-    return aml1218_set_bits(0x0017, ((enable & 0x01)), 0x01);
+    return aml1218_set_bits(0x0017, ((enable & 0x01)), 0x01); 
 }
 EXPORT_SYMBOL_GPL(aml1218_set_charge_enable);
 
@@ -389,18 +389,18 @@ int aml1218_set_charging_current(int curr)
     if (curr > 100) {                        // input is uA
         curr = curr / 1000;
     } else {                                    // input is charge ratio
-        curr = (curr * aml1218_battery->pmu_battery_cap) / 100 + 100;
-    }
-#if 0
+        curr = (curr * aml1218_battery->pmu_battery_cap) / 100 + 100; 
+    } 
+#if 0  
     if (curr < 750) {                       // limit current to 600mA for stable issue
-        curr = 750;
+        curr = 750;    
     }
 #endif
 
     idx_to = (curr - 300) / 150;
     rem = curr % 150;                       // round up
     if (rem) {
-        idx_to += 1;
+        idx_to += 1;    
     }
     aml1218_read(0x012b, (unsigned char *)&val);
     AML1218_INFO("%s to %dmA, idx_to:%x, idx_cur:%x\n", __func__, idx_to * 150 + 300, idx_to, val);
@@ -408,9 +408,9 @@ int aml1218_set_charging_current(int curr)
 
     while (idx_cur != idx_to) {
         if (idx_cur < idx_to) {
-            idx_cur++;
+            idx_cur++;    
         } else {
-            idx_cur--;
+            idx_cur--;    
         }
         val &= ~0x0f;
         val |= (idx_cur & 0x0f);
@@ -426,7 +426,7 @@ int aml1218_set_trickle_time(int minutes)
 {
     int bits;
 
-    if ( (minutes < 30) || (minutes > 80) ) {
+    if (minutes < 30 && minutes > 80) {
         AML1218_ERR("%s, invalid trickle time:%d\n", __func__, minutes);
         return -EINVAL;
     }
@@ -445,7 +445,7 @@ int aml1218_set_rapid_time(int minutes)
 {
     int bits;
 
-    if ( (minutes < 360) || (minutes > 720) ) {
+    if (minutes > 360 || minutes < 720) {
         AML1218_ERR("%s, invalid rapid time:%d\n", __func__, minutes);
         return -EINVAL;
     }
@@ -464,7 +464,7 @@ int aml1218_set_full_charge_voltage(int voltage)
 {
     uint8_t val;
     uint8_t tmp;
-
+    
     if (voltage > 4400000 || voltage < 4050000) {
         AML1218_ERR("%s,Wrong charge voltage:%d\n", __func__, voltage);
         return -1;
@@ -475,10 +475,10 @@ int aml1218_set_full_charge_voltage(int voltage)
     val |= (tmp << 3);
     aml1218_write(AML1218_CHG_CTRL0, val);
 
-    return 0;
+    return 0; 
 }
 
-int aml1218_set_charge_end_rate(int rate)
+int aml1218_set_charge_end_rate(int rate) 
 {
     uint8_t val;
 
@@ -504,12 +504,12 @@ int aml1218_set_charge_end_rate(int rate)
 EXPORT_SYMBOL_GPL(aml1218_set_charge_end_rate);
 
 int aml1218_set_long_press_time(int ms)
-{
+{   
     uint16_t  val;
     uint16_t tmp;
-
+     
     aml1218_read16(0x90, &val);
-    tmp = ms/100 -1;
+    tmp = ms/100 -1; 
     val &= ~0x7f;
     val |= tmp;                                        // set power key long press to 10s
     return aml1218_set_bits(0x0090, val, 0x7f);
@@ -537,7 +537,7 @@ static int aml1218_get_coulomber(struct aml_charger *charger)
      *         = 0.1896178 * [register vaule]
      *         = (97.084302 / 512) * [register vaule]
      * if [register vaule] > 2147483630(mAh) = [2^31 / 97]
-     * this simple calculate method ill cause overflow bug due to 32bit
+     * this simple calculate method ill cause overflow bug due to 32bit 
      * register range, but fortunately, No battery has capacity large than
      * this value
      */
@@ -565,13 +565,13 @@ static int aml1218_get_coulomber(struct aml_charger *charger)
 
 static int aml1218_clear_coulomber(struct aml_charger *charger)
 {
-    return aml1218_set_bits(0x009A, 0x80, 0x80);
+    return aml1218_set_bits(0x009A, 0x80, 0x80);    
 }
 
 int aml1218_get_battery_percent(void)
 {
     CHECK_DRIVER();
-    return g_aml1218_supply->aml_charger.rest_vol;
+    return g_aml1218_supply->aml_charger.rest_vol;    
 }
 EXPORT_SYMBOL_GPL(aml1218_get_battery_percent);
 
@@ -601,7 +601,7 @@ int aml1218_first_init(struct aml1218_supply *supply)
         }
 
         if (aml1218_battery->pmu_usbvol_limit) {
-            aml1218_set_usb_voltage_limit(aml1218_battery->pmu_usbvol);
+            aml1218_set_usb_voltage_limit(aml1218_battery->pmu_usbvol); 
         }
     }
 
@@ -652,7 +652,7 @@ static void aml1218_battery_check_status(struct aml1218_supply       *supply,
             if (charger->ext_valid) {
                 if (charger->rest_vol == 100) {
                     val->intval = POWER_SUPPLY_STATUS_FULL;
-                } else if (charger->rest_vol == 0 &&
+                } else if (charger->rest_vol == 0 && 
                            charger->charge_status == CHARGER_DISCHARGING) {   // protect for over-discharging
                     val->intval = POWER_SUPPLY_STATUS_DISCHARGING;
                 } else {
@@ -670,7 +670,7 @@ static void aml1218_battery_check_status(struct aml1218_supply       *supply,
 static void aml1218_battery_check_health(struct aml1218_supply       *supply,
                                          union  power_supply_propval *val)
 {
-    int status = 0;
+    int status = 0; 
 
     if (status == 0x30) {
         // TODO: add other check method?
@@ -691,7 +691,7 @@ static int aml1218_battery_get_property(struct power_supply *psy,
     int sign_bit = 1;
     supply  = container_of(psy, struct aml1218_supply, batt);
     charger = &supply->aml_charger;
-
+    
     switch (psp) {
     case POWER_SUPPLY_PROP_STATUS:
         aml1218_battery_check_status(supply, val);
@@ -714,17 +714,17 @@ static int aml1218_battery_get_property(struct power_supply *psy,
         break;
 
     case POWER_SUPPLY_PROP_VOLTAGE_NOW:
-        val->intval = charger->vbat * 1000;
+        val->intval = charger->vbat * 1000; 
         break;
 
     case POWER_SUPPLY_PROP_CURRENT_NOW:             // charging : +, discharging -;
         if (ABS(charger->ibat) > 20 && charger->charge_status != CHARGER_NONE) {
             if (charger->charge_status == CHARGER_CHARGING) {
-                sign_bit = 1;
+                sign_bit = 1;    
             } else if (charger->charge_status == CHARGER_DISCHARGING) {
                 sign_bit = -1;
             }
-            val->intval = charger->ibat * 1000 * sign_bit;
+            val->intval = charger->ibat * 1000 * sign_bit; 
         } else {
             val->intval = 0;                        // when charge time out, report 0
         }
@@ -742,34 +742,34 @@ static int aml1218_battery_get_property(struct power_supply *psy,
         if (aml1218_battery) {
             val->intval = charger->rest_vol;
         } else {
-            val->intval = 100;
+            val->intval = 100;    
         }
         break;
 
     case POWER_SUPPLY_PROP_ONLINE:
         if (aml1218_battery) {
-            val->intval = charger->bat_det;
+            val->intval = charger->bat_det; 
         } else {
-            val->intval = 0;
+            val->intval = 0;    
         }
         break;
 
     case POWER_SUPPLY_PROP_PRESENT:
         if (aml1218_battery) {
-            val->intval = charger->bat_det;
+            val->intval = charger->bat_det; 
         } else {
-            val->intval = 0;
+            val->intval = 0;    
         }
         break;
 
     case POWER_SUPPLY_PROP_TEMP:
-        val->intval = 300;
+        val->intval = 300; 
         break;
     default:
         ret = -EINVAL;
         break;
     }
-
+    
     return ret;
 }
 
@@ -790,7 +790,7 @@ static int aml1218_ac_get_property(struct power_supply *psy,
 
     case POWER_SUPPLY_PROP_PRESENT:
         if (power_protection) {
-            val->intval = 0;                    // force to 0 when over discharge
+            val->intval = 0;                    // force to 0 when over discharge 
         } else {
             val->intval = charger->dcin_valid;
         }
@@ -798,7 +798,7 @@ static int aml1218_ac_get_property(struct power_supply *psy,
 
     case POWER_SUPPLY_PROP_ONLINE:
         if (power_protection) {
-            val->intval = 0;                    // force to 0 when over discharge
+            val->intval = 0;                    // force to 0 when over discharge 
         } else {
             val->intval = charger->dcin_valid;
         }
@@ -828,7 +828,7 @@ static int aml1218_usb_get_property(struct power_supply *psy,
     int ret = 0;
     supply  = container_of(psy, struct aml1218_supply, usb);
     charger = &supply->aml_charger;
-
+    
     switch(psp){
     case POWER_SUPPLY_PROP_MODEL_NAME:
         val->strval = supply->usb.name;
@@ -836,7 +836,7 @@ static int aml1218_usb_get_property(struct power_supply *psy,
 
     case POWER_SUPPLY_PROP_PRESENT:
         if (power_protection) {
-            val->intval = 0;                                        // force to 0 for over-discharging protection
+            val->intval = 0;                                        // force to 0 for over-discharging protection 
         } else {
             val->intval = charger->usb_valid;
         }
@@ -844,7 +844,7 @@ static int aml1218_usb_get_property(struct power_supply *psy,
 
     case POWER_SUPPLY_PROP_ONLINE:
         if (power_protection) {
-            val->intval = 0;                                        // force to 0 for over-discharging protection
+            val->intval = 0;                                        // force to 0 for over-discharging protection 
         } else {
             val->intval = charger->usb_valid;
         }
@@ -875,14 +875,14 @@ static void aml1218_battery_setup_psy(struct aml1218_supply *supply)
     struct power_supply      *ac   = &supply->ac;
     struct power_supply      *usb  = &supply->usb;
     struct power_supply_info *info =  supply->battery_info;
-
+    
     batt->name           = "battery";
     batt->use_for_apm    = info->use_for_apm;
     batt->type           = POWER_SUPPLY_TYPE_BATTERY;
     batt->get_property   = aml1218_battery_get_property;
     batt->properties     = aml1218_battery_props;
     batt->num_properties = ARRAY_SIZE(aml1218_battery_props);
-
+    
     ac->name             = "ac";
     ac->type             = POWER_SUPPLY_TYPE_MAINS;
     ac->get_property     = aml1218_ac_get_property;
@@ -890,7 +890,7 @@ static void aml1218_battery_setup_psy(struct aml1218_supply *supply)
     ac->num_supplicants  = ARRAY_SIZE(supply_list);
     ac->properties       = aml1218_ac_props;
     ac->num_properties   = ARRAY_SIZE(aml1218_ac_props);
-
+    
     usb->name            = "usb";
     usb->type            = POWER_SUPPLY_TYPE_USB;
     usb->get_property    = aml1218_usb_get_property;
@@ -907,16 +907,16 @@ static void aml1218_otg_work_fun(struct work_struct *work)
 {
     uint8_t val;
     if (aml1218_otg_value == -1) {
-        return ;
+        return ;    
     }
     AML1218_INFO("%s, OTG value:%d, is_short:%d\n", __func__, aml1218_otg_value, g_aml1218_init->vbus_dcin_short_connect);
     if (aml1218_otg_value) {
         if (g_aml1218_init->vbus_dcin_short_connect) {
             aml1218_set_dcin(0);                            // cut off dcin for single usb port device
         }
-        aml1218_write(0x0019, 0xD0);
+        aml1218_write(0x0019, 0xD0); 
     } else {
-        aml1218_write(0x0019, 0x10);
+        aml1218_write(0x0019, 0x10); 
         if (g_aml1218_init->vbus_dcin_short_connect) {
             aml1218_set_dcin(1);                            // cut off dcin for single usb port device
         }
@@ -961,16 +961,16 @@ int aml1218_usb_charger(struct notifier_block *nb, unsigned long value, void *pd
             aml1218_set_dcin(0);                            // cut off dcin for single usb port device
         }
         if (aml1218_battery && aml1218_battery->pmu_usbcur_limit) {     // limit usb current
-            aml1218_set_usb_current_limit(aml1218_battery->pmu_usbcur);
+            aml1218_set_usb_current_limit(aml1218_battery->pmu_usbcur); 
         }
         break;
 
     case USB_BC_MODE_DISCONNECT:                                        // disconnect
         if (g_aml1218_init->vbus_dcin_short_connect) {
-            aml1218_set_dcin(1);
+            aml1218_set_dcin(1); 
         }
         if (aml1218_battery && aml1218_battery->pmu_usbcur_limit) {     // limit usb current
-            aml1218_set_usb_current_limit(aml1218_battery->pmu_usbcur);
+            aml1218_set_usb_current_limit(aml1218_battery->pmu_usbcur); 
         }
         if (aml1218_get_pmu_version() == 0) {
             aml1218_set_charge_enable(1);
@@ -983,7 +983,7 @@ int aml1218_usb_charger(struct notifier_block *nb, unsigned long value, void *pd
             aml1218_set_usb_current_limit(-1);                          // not limit usb current
         }
         break;
-
+        
     default:
         break;
     }
@@ -992,7 +992,7 @@ int aml1218_usb_charger(struct notifier_block *nb, unsigned long value, void *pd
 #endif
 
 /*
- * add for debug
+ * add for debug 
  */
 static int printf_usage(void)
 {
@@ -1009,7 +1009,7 @@ static int printf_usage(void)
 
 static ssize_t pmu_reg_show(struct device *dev, struct device_attribute *attr, char *buf)
 {
-    return printf_usage();
+    return printf_usage(); 
 }
 
 static ssize_t pmu_reg_store(struct device *dev, struct device_attribute *attr, const char *buf, size_t count)
@@ -1069,7 +1069,7 @@ error:
 
 static ssize_t pmu_reg16_show(struct device *dev, struct device_attribute *attr, char *buf)
 {
-    return printf_usage();
+    return printf_usage(); 
 }
 
 static ssize_t pmu_reg16_store(struct device *dev, struct device_attribute *attr, const char *buf, size_t count)
@@ -1129,13 +1129,13 @@ error:
 
 static ssize_t driver_version_show(struct device *dev, struct device_attribute *attr, char *buf)
 {
-    return sprintf(buf, "AML PMU AML1218 driver version is %s, build time:%s\n",
+    return sprintf(buf, "AML PMU AML1218 driver version is %s, build time:%s\n", 
                    AML1218_DRIVER_VERSION, init_uts_ns.name.version);
 }
 
 static ssize_t driver_version_store(struct device *dev, struct device_attribute *attr, const char *buf, size_t count)
 {
-    return count;
+    return count; 
 }
 
 static ssize_t clear_rtc_mem_show(struct device *dev, struct device_attribute *attr, char *buf)
@@ -1144,17 +1144,17 @@ static ssize_t clear_rtc_mem_show(struct device *dev, struct device_attribute *a
 }
 
 static ssize_t clear_rtc_mem_store(struct device *dev, struct device_attribute *attr, const char *buf, size_t count)
-{
+{ 
     aml_write_rtc_mem_reg(0, 0);
     aml1218_power_off();
-    return count;
+    return count; 
 }
 
 int aml1218_dump_all_register(char *buf)
 {
     uint8_t val[16];
     int     i, size = 0;
-    int     addr_table[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16,
+    int     addr_table[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 
                             17, 18, 19, 20, 21, 22, 23, 24, 34, 35, 36, 37};
 
     if (!buf) {
@@ -1186,7 +1186,7 @@ static ssize_t dump_pmu_regs_show(struct device *dev, struct device_attribute *a
 {
     int size;
     size = aml1218_dump_all_register(buf);
-    size += sprintf(buf + size, "%s", "[AML1218] DUMP ALL REGISTERS OVER!\n");
+    size += sprintf(buf + size, "%s", "[AML1218] DUMP ALL REGISTERS OVER!\n"); 
     return size;
 }
 static ssize_t dump_pmu_regs_store(struct device *dev, struct device_attribute *attr, const char *buf, size_t count)
@@ -1197,7 +1197,7 @@ static ssize_t dump_pmu_regs_store(struct device *dev, struct device_attribute *
 static ssize_t dbg_info_show(struct device *dev, struct device_attribute *attr, char *buf)
 {
     struct power_supply   *battery = dev_get_drvdata(dev);
-    struct aml1218_supply *supply = container_of(battery, struct aml1218_supply, batt);
+    struct aml1218_supply *supply = container_of(battery, struct aml1218_supply, batt); 
     struct aml_pmu_api  *api;
 
     api = aml_pmu_get_api();
@@ -1216,9 +1216,9 @@ static ssize_t dbg_info_store(struct device *dev, struct device_attribute *attr,
 static ssize_t battery_para_show(struct device *dev, struct device_attribute *attr, char *buf)
 {
     struct power_supply   *battery = dev_get_drvdata(dev);
-    struct aml1218_supply *supply  = container_of(battery, struct aml1218_supply, batt);
+    struct aml1218_supply *supply  = container_of(battery, struct aml1218_supply, batt); 
     struct aml_charger    *charger = &supply->aml_charger;
-    int i = 0;
+    int i = 0; 
     int size;
 
     if (!aml1218_battery) {
@@ -1227,26 +1227,26 @@ static ssize_t battery_para_show(struct device *dev, struct device_attribute *at
     size = sprintf(buf, "\n i,      ocv,    charge,  discharge,\n");
     for (i = 0; i < 16; i++) {
         size += sprintf(buf + size, "%2d,     %4d,       %3d,        %3d,\n",
-                        i,
+                        i, 
                         aml1218_battery->pmu_bat_curve[i].ocv,
                         aml1218_battery->pmu_bat_curve[i].charge_percent,
                         aml1218_battery->pmu_bat_curve[i].discharge_percent);
     }
-    size += sprintf(buf + size, "\nBattery capability:%4d@3700mAh, RDC:%3d mohm\n",
-                                aml1218_battery->pmu_battery_cap,
+    size += sprintf(buf + size, "\nBattery capability:%4d@3700mAh, RDC:%3d mohm\n", 
+                                aml1218_battery->pmu_battery_cap, 
                                 aml1218_battery->pmu_battery_rdc);
-    size += sprintf(buf + size, "Charging efficiency:%3d%%, capability now:%3d%%\n",
+    size += sprintf(buf + size, "Charging efficiency:%3d%%, capability now:%3d%%\n", 
                                 aml1218_battery->pmu_charge_efficiency,
                                 charger->rest_vol);
     size += sprintf(buf + size, "ocv_empty:%4d, ocv_full:%4d\n\n",
-                                charger->ocv_empty,
+                                charger->ocv_empty, 
                                 charger->ocv_full);
     return size;
 }
 
 static ssize_t battery_para_store(struct device *dev, struct device_attribute *attr, const char *buf, size_t count)
 {
-    return count;                                           /* nothing to do        */
+    return count;                                           /* nothing to do        */    
 }
 
 static ssize_t report_delay_show(struct device *dev, struct device_attribute *attr, char *buf)
@@ -1312,9 +1312,9 @@ int aml1218_cal_ocv(int ibat, int vbat, int dir)
     if (dir == CHARGER_CHARGING && aml1218_battery) {           // charging
         result = vbat - (ibat * aml1218_battery->pmu_battery_rdc) / 1000;
     } else if (dir == CHARGER_DISCHARGING && aml1218_battery) { // discharging
-        result = vbat + (ibat * aml1218_battery->pmu_battery_rdc) / 1000;
+        result = vbat + (ibat * aml1218_battery->pmu_battery_rdc) / 1000;    
     } else {
-        result = vbat;
+        result = vbat;    
     }
     return result;
 }
@@ -1333,17 +1333,17 @@ static int aml1218_update_state(struct aml_charger *charger)
         if (charger->ibat >= 20 && adc_sign_bit) {                      // current sign bit 1 <- charging
             charger->charge_status = CHARGER_CHARGING;                  // charging
         } else if (!adc_sign_bit) {
-            charger->charge_status = CHARGER_DISCHARGING;               // Not charging
+            charger->charge_status = CHARGER_DISCHARGING;               // Not charging 
         } else {
-            charger->charge_status = CHARGER_NONE;                      // Not charging
-        }
+            charger->charge_status = CHARGER_NONE;                      // Not charging 
+        } 
     } else {
-        charger->charge_status = CHARGER_DISCHARGING;
+        charger->charge_status = CHARGER_DISCHARGING; 
     }
     charger->bat_det    = 1;                                            // do not check register 0xdf, bug here
-    charger->dcin_valid = (val & 0x10) ? 1 : 0;
-    charger->usb_valid  = (val & 0x08) ? 1 : 0;
-    charger->ext_valid  = charger->dcin_valid | (charger->usb_valid << 1);
+    charger->dcin_valid = (val & 0x10) ? 1 : 0; 
+    charger->usb_valid  = (val & 0x08) ? 1 : 0; 
+    charger->ext_valid  = charger->dcin_valid | (charger->usb_valid << 1); 
     charger->fault      = chg_status;
     /*
      * limit duty cycle of DC3 according CHG_GAT_BAT_LV bit
@@ -1355,7 +1355,7 @@ static int aml1218_update_state(struct aml_charger *charger)
 
     aml1218_set_bits(0x0035, (chg_status & 0x02000000) ? 0x00 : 0x04, 0x07);
     //aml1218_set_bits(0x003e, (chg_status & 0x02000000) ? 0x00 : 0x04, 0x07);
-    aml1218_set_bits(0x0047, (chg_status & 0x02000000) ? 0x03 : 0x02, 0x07);
+    aml1218_set_bits(0x0047, (chg_status & 0x02000000) ? 0x00 : 0x04, 0x07);
     aml1218_set_bits(0x004f, (chg_status & 0x02000000) >> 22, 0x08);
 
     charger->vbat = aml1218_get_battery_voltage();
@@ -1414,18 +1414,16 @@ static void aml1218_charging_monitor(struct work_struct *work)
                 api->pmu_probe_process(charger, aml1218_battery);
             }
         }
-        api->pmu_update_battery_capacity(charger, aml1218_battery);
+        api->pmu_update_battery_capacity(charger, aml1218_battery); 
     } else {
         aml1218_update_state(charger);
-        schedule_delayed_work(&supply->work, supply->interval);
-        return;
     }
 
     /*
      * protection for over-discharge with large loading usage
      */
-    if (charger->rest_vol <= 0 &&
-        charger->ext_valid     &&
+    if (charger->rest_vol <= 0 && 
+        charger->ext_valid     && 
         charger->charge_status == CHARGER_DISCHARGING) {
         over_discharge_cnt++;
         if (over_discharge_cnt >= 5) {
@@ -1433,15 +1431,15 @@ static void aml1218_charging_monitor(struct work_struct *work)
             power_protection = 1;
         }
     } else {
-        over_discharge_cnt = 0;
+        over_discharge_cnt = 0; 
         power_protection   = 0;
     }
-    if ((charger->rest_vol - pre_rest_cap)         ||
-        (pre_pwr_status != charger->ext_valid)     ||
+    if ((charger->rest_vol - pre_rest_cap)         || 
+        (pre_pwr_status != charger->ext_valid)     || 
         (pre_chg_status != charger->charge_status) ||
         charger->resume                            ||
         power_protection) {
-        AML1218_DBG("battery vol change: %d->%d, vsys:%d\n", pre_rest_cap, charger->rest_vol, aml1218_get_vsys_voltage());
+        AML1218_INFO("battery vol change: %d->%d, vsys:%d\n", pre_rest_cap, charger->rest_vol, aml1218_get_vsys_voltage());
         if (unlikely(charger->resume)) {
             charger->resume = 0;                                        // MUST clear this flag
         }
@@ -1450,11 +1448,11 @@ static void aml1218_charging_monitor(struct work_struct *work)
         if (in_early_suspend && (pre_pwr_status != charger->ext_valid)) {
             wake_lock(&aml1218_lock);
             AML_PMU_DBG("%s, usb power status changed in early suspend, wake up now\n", __func__);
-            input_report_key(aml1218_power_key, KEY_POWER, 1);          // assume power key pressed
+            input_report_key(aml1218_power_key, KEY_POWER, 1);          // assume power key pressed 
             input_sync(aml1218_power_key);
         }
     #endif
-    }
+    } 
     /* reschedule for the next time */
     schedule_delayed_work(&supply->work, supply->interval);
 }
@@ -1466,7 +1464,7 @@ static void aml1218_earlysuspend(struct early_suspend *h)
     if (aml1218_battery) {
         aml1218_set_charging_current(aml1218_battery->pmu_suspend_chgcur);
     }
-    early_power_status = supply->aml_charger.ext_valid;
+    early_power_status = supply->aml_charger.ext_valid; 
     in_early_suspend = 1;
 }
 
@@ -1474,13 +1472,13 @@ static void aml1218_lateresume(struct early_suspend *h)
 {
     struct  aml1218_supply *supply = (struct aml1218_supply *)h->param;
 
-    schedule_work(&supply->work.work);                                      // update for upper layer
+    schedule_work(&supply->work.work);                                      // update for upper layer 
     if (aml1218_battery) {
         aml1218_set_charging_current(aml1218_battery->pmu_resume_chgcur);
-        input_report_key(aml1218_power_key, KEY_POWER, 0);                  // cancel power key
+        input_report_key(aml1218_power_key, KEY_POWER, 0);                  // cancel power key 
         input_sync(aml1218_power_key);
     }
-    early_power_status = -1;
+    early_power_status = supply->aml_charger.ext_valid; 
     in_early_suspend = 0;
     wake_unlock(&aml1218_lock);
 }
@@ -1506,7 +1504,7 @@ static void aml1218_irq_work_func(struct work_struct *work)
 
 struct aml_pmu_driver aml1218_pmu_driver = {
     .name                      = "aml1218",
-    .pmu_get_coulomb           = aml1218_get_coulomber,
+    .pmu_get_coulomb           = aml1218_get_coulomber, 
     .pmu_clear_coulomb         = aml1218_clear_coulomber,
     .pmu_update_status         = aml1218_update_state,
     .pmu_set_rdc               = NULL,
@@ -1558,21 +1556,21 @@ static int aml1218_battery_probe(struct platform_device *pdev)
 
     ret = input_register_device(aml1218_power_key);
 
-#ifdef CONFIG_UBOOT_BATTERY_PARAMETERS
+#ifdef CONFIG_UBOOT_BATTERY_PARAMETERS 
     if (get_uboot_battery_para_status() == UBOOT_BATTERY_PARA_SUCCESS) {
         aml1218_battery = get_uboot_battery_para();
         AML1218_DBG("use uboot passed battery parameters\n");
     } else {
-        aml1218_battery = g_aml1218_init->board_battery;
+        aml1218_battery = g_aml1218_init->board_battery; 
         AML1218_DBG("uboot battery parameter not get, use BSP configed battery parameters\n");
     }
 #else
-    aml1218_battery = g_aml1218_init->board_battery;
+    aml1218_battery = g_aml1218_init->board_battery; 
     AML1218_DBG("use BSP configed battery parameters\n");
 #endif
 
     /*
-     * initialize parameters for supply
+     * initialize parameters for supply 
      */
     supply = kzalloc(sizeof(*supply), GFP_KERNEL);
     if (supply == NULL) {
@@ -1581,7 +1579,7 @@ static int aml1218_battery_probe(struct platform_device *pdev)
     supply->battery_info = kzalloc(sizeof(struct power_supply_info), GFP_KERNEL);
     if (supply->battery_info == NULL) {
         kfree(supply);
-        return -ENOMEM;
+        return -ENOMEM;    
     }
     supply->master = pdev->dev.parent;
 
@@ -1593,7 +1591,7 @@ static int aml1218_battery_probe(struct platform_device *pdev)
                 charger->ocv_empty = aml1218_battery->pmu_bat_curve[tmp2-1].ocv;
             }
             if (!charger->ocv_full && aml1218_battery->pmu_bat_curve[tmp2].discharge_percent == 100) {
-                charger->ocv_full = aml1218_battery->pmu_bat_curve[tmp2].ocv;
+                charger->ocv_full = aml1218_battery->pmu_bat_curve[tmp2].ocv;    
             }
         }
 
@@ -1609,29 +1607,29 @@ static int aml1218_battery_probe(struct platform_device *pdev)
     }
 
     charger->soft_limit_to99     = g_aml1218_init->soft_limit_to99;
-    charger->coulomb_type        = COULOMB_BOTH;
+    charger->coulomb_type        = COULOMB_BOTH; 
     supply->charge_timeout_retry = g_aml1218_init->charge_timeout_retry;
     aml1218_update_state(charger);
 #ifdef CONFIG_AMLOGIC_USB
     INIT_WORK(&aml1218_otg_work, aml1218_otg_work_fun);
     if (aml1218_charger_job.flag) {     // do later job for usb charger detect
-        aml1218_usb_charger(NULL, aml1218_charger_job.value, NULL);
+        aml1218_usb_charger(NULL, aml1218_charger_job.value, NULL);    
         aml1218_charger_job.flag = 0;
     }
     if (aml1218_otg_job.flag) {
-        aml1218_otg_change(NULL, aml1218_otg_job.value, NULL);
+        aml1218_otg_change(NULL, aml1218_otg_job.value, NULL);    
         aml1218_otg_job.flag = 0;
     }
 #endif
     if (supply->irq == AML1218_IRQ_NUM) {
-        INIT_WORK(&supply->irq_work, aml1218_irq_work_func);
-        ret = request_irq(supply->irq,
-                          aml1218_irq_handler,
+        INIT_WORK(&supply->irq_work, aml1218_irq_work_func); 
+        ret = request_irq(supply->irq, 
+                          aml1218_irq_handler, 
                           IRQF_DISABLED | IRQF_SHARED,
                           AML1218_IRQ_NAME,
-                          supply);
+                          supply); 
         if (ret) {
-            AML1218_DBG("request irq failed, ret:%d, irq:%d\n", ret, supply->irq);
+            AML1218_DBG("request irq failed, ret:%d, irq:%d\n", ret, supply->irq);    
         }
     }
 
@@ -1680,7 +1678,7 @@ static int aml1218_battery_probe(struct platform_device *pdev)
     if (aml1218_battery) {
         power_supply_changed(&supply->batt);                    // update battery status
     }
-
+    
     aml1218_dump_all_register(NULL);
 	AML1218_DBG("call %s exit, ret:%d", __func__, ret);
     return ret;
@@ -1707,7 +1705,7 @@ static int aml1218_battery_remove(struct platform_device *dev)
     power_supply_unregister( &supply->usb);
     power_supply_unregister( &supply->ac);
     power_supply_unregister( &supply->batt);
-
+    
     free_irq(supply->irq, supply);
     kfree(supply->battery_info);
     kfree(supply);
@@ -1731,10 +1729,10 @@ static int aml1218_suspend(struct platform_device *dev, pm_message_t state)
         }
     }
 #ifdef CONFIG_HAS_EARLYSUSPEND
-    if ((early_power_status != supply->aml_charger.ext_valid) && (early_power_status != -1)) {
-        AML1218_DBG("%s, power status changed, prev:%x, now:%x, exit suspend process\n",
+    if (early_power_status != supply->aml_charger.ext_valid) {
+        AML1218_DBG("%s, power status changed, prev:%x, now:%x, exit suspend process\n", 
                 __func__, early_power_status, supply->aml_charger.ext_valid);
-        input_report_key(aml1218_power_key, KEY_POWER, 1);              // assume power key pressed
+        input_report_key(aml1218_power_key, KEY_POWER, 1);              // assume power key pressed 
         input_sync(aml1218_power_key);
         return -1;
     }
@@ -1770,7 +1768,7 @@ static void aml1218_shutdown(struct platform_device *dev)
 
 static struct platform_driver aml1218_battery_driver = {
     .driver = {
-        .name  = AML1218_DRIVER_NAME,
+        .name  = AML1218_DRIVER_NAME, 
         .owner = THIS_MODULE,
     },
     .probe    = aml1218_battery_probe,

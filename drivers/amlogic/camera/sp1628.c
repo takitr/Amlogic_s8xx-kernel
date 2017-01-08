@@ -220,12 +220,12 @@ struct v4l2_querymenu sp1628_qmenu_wbmode[] = {
     },{
         .id         = V4L2_CID_DO_WHITE_BALANCE,
         .index      = CAM_WB_FLUORESCENT,
-        .name       = "fluorescent",
+        .name       = "fluorescent", 
         .reserved   = 0,
     },{
         .id         = V4L2_CID_DO_WHITE_BALANCE,
         .index      = CAM_WB_FLUORESCENT,
-        .name       = "warm-fluorescent",
+        .name       = "warm-fluorescent", 
         .reserved   = 0,
     },
 };
@@ -233,12 +233,12 @@ struct v4l2_querymenu sp1628_qmenu_wbmode[] = {
 struct v4l2_querymenu sp1628_qmenu_anti_banding_mode[] = {
     {
         .id         = V4L2_CID_POWER_LINE_FREQUENCY,
-        .index      = CAM_BANDING_50HZ,
+        .index      = CAM_BANDING_50HZ, 
         .name       = "50hz",
         .reserved   = 0,
     },{
         .id         = V4L2_CID_POWER_LINE_FREQUENCY,
-        .index      = CAM_BANDING_60HZ,
+        .index      = CAM_BANDING_60HZ, 
         .name       = "60hz",
         .reserved   = 0,
     },
@@ -420,7 +420,7 @@ struct sp1628_device {
 
 	/* platform device data from board initting. */
 	aml_cam_info_t  cam_info;
-
+	
 	/* wake lock */
 	struct wake_lock	wake_lock;
 
@@ -472,7 +472,7 @@ struct aml_camera_i2c_fig1_s SP1628_script[] ={
   {0x1b,0x60},//
   {0x2f,0x10},//20//;24M*2=48M//20 3pll
   {0x1c,0x10},//10
-  {0x30,0x00},//;00
+  {0x30,0x00},//;00		
   {0x0c,0x66},//;analog
   {0x0d,0x12},//
   {0x13,0x1d},//
@@ -481,9 +481,9 @@ struct aml_camera_i2c_fig1_s SP1628_script[] ={
   {0x6f,0x21},//
   {0x73,0x22},//
   {0x7a,0x20},//
-  {0x15,0x30},//
+  {0x15,0x30},// 
   {0x71,0x32},//
-  {0x76,0x34},//
+  {0x76,0x34},//  
   {0x29,0x08},//
   {0x18,0x01},//
   {0x19,0x10},//
@@ -500,34 +500,34 @@ struct aml_camera_i2c_fig1_s SP1628_script[] ={
   {0x2d,0x00},//
   {0x2e,0x80},//
   {0x27,0x38},//
-  {0x28,0x03},//
+  {0x28,0x03},// 
   {0x70,0x40},//
-  {0x72,0x40},//
-  {0x74,0x38},//
+  {0x72,0x40},//    
+  {0x74,0x38},//    
   {0x75,0x38},//
-  {0x77,0x38},//
-  {0x7f,0x40},//
+  {0x77,0x38},//  
+  {0x7f,0x40},//       
   //{0x31,0x30},//70//		;mirror/flip 960
   {0xfd,0x01},//
   {0x5d,0x11},//		;position
   {0x5f,0x00},//		;延长
   {0xfb,0x25},//		;blacklevl
   {0x48,0x00},//		;dp
-  {0x49,0x99},//
-  {0xf2,0x0a},//		;同SP1628 0xf4
+  {0x49,0x99},// 
+  {0xf2,0x0a},//		;同SP1628 0xf4     
   {0xfd,0x02},//;AE
   {0x52,0x34},//
   {0x53,0x02},//		;测试是否ae抖
   {0x54,0x0c},//
-  {0x55,0x08},//
+  {0x55,0x08},// 
   {0x86,0x0c},//		;其中满足条件帧数
   {0x87,0x10},//		;检测总帧数
-  {0x8b,0x10},//
+  {0x8b,0x10},// 
 
-
+  
 
 #if 0
-//capture preview daylight 24M 3pll 50hz 17.6-9FPS vga
+//capture preview daylight 24M 3pll 50hz 17.6-9FPS vga 
 {0xfd,0x00},
 {0x03,0x04},
 {0x04,0x38},
@@ -596,7 +596,7 @@ struct aml_camera_i2c_fig1_s SP1628_script[] ={
   {0x5c,0xd2},
   {0xfd,0x00},
  #else
- //capture preview daylight 24M 2pll 50hz 17-9FPS vga
+ //capture preview daylight 24M 2pll 50hz 17-9FPS vga 
   {0xfd,0x00},
   {0x03,0x04},
   {0x04,0x08},
@@ -641,11 +641,11 @@ struct aml_camera_i2c_fig1_s SP1628_script[] ={
   {0xbd,0xa0},//		;rpc_heq_dummy
   {0xb8,0x80},//		;mean_nr_dummy
   {0xb9,0x90},//		;mean_dummy_nr
-
+  
   {0xfd,0x01},//;rpc
-  {0xe0,0x54},//;6c
-  {0xe1,0x40},//;54
-  {0xe2,0x38},//;48
+  {0xe0,0x54},//;6c 
+  {0xe1,0x40},//;54 
+  {0xe2,0x38},//;48 
   {0xe3,0x34},//;40
   {0xe4,0x34},//;40
   {0xe5,0x30},//;3e
@@ -656,14 +656,14 @@ struct aml_camera_i2c_fig1_s SP1628_script[] ={
   {0xea,0x2c},//;38
   {0xf3,0x2c},//;38
   {0xf4,0x2c},//;38
-  {0xfd,0x01},//;ae min gain
+  {0xfd,0x01},//;ae min gain 
   {0x04,0xc0},//		;rpc_max_indr
-  {0x05,0x2c},//;38		;1e;rpc_min_indr
+  {0x05,0x2c},//;38		;1e;rpc_min_indr 
   {0x0a,0xc0},//		;rpc_max_outdr
-  {0x0b,0x2c},//;38		;rpc_min_outdr
+  {0x0b,0x2c},//;38		;rpc_min_outdr 
   {0xfd,0x01},//;ae target
-  {0xeb,0x78},//
-  {0xec,0x78},//
+  {0xeb,0x78},//		 
+  {0xec,0x78},//		
   {0xed,0x05},//
   {0xee,0x0a},//
   {0xfd,0x01},//		;lsc
@@ -684,14 +684,14 @@ struct aml_camera_i2c_fig1_s SP1628_script[] ={
   {0xae,0x0a},//;10		;ru
   {0xaf,0x0a},//;10		;ld
   {0xb0,0x06},//;10		;rd
-  {0x18,0x00},//;40		;left
-  {0x19,0x00},//;50		;right
-  {0x1a,0x00},//;32		;up
-  {0x1b,0x00},//;30		;down
-  {0xbf,0x00},//;a5		;lu
-  {0xc0,0x00},//;a0		;ru
-  {0xc1,0x00},//;08		;ld
-  {0xfa,0x00},//;00		;rd
+  {0x18,0x00},//;40		;left  
+  {0x19,0x00},//;50		;right 
+  {0x1a,0x00},//;32		;up    
+  {0x1b,0x00},//;30		;down  
+  {0xbf,0x00},//;a5		;lu    
+  {0xc0,0x00},//;a0		;ru    
+  {0xc1,0x00},//;08		;ld    
+  {0xfa,0x00},//;00		;rd   
   {0xa5,0x30},//;38	;GGain
   {0xa6,0x36},//;48
   {0xa7,0x30},//;48
@@ -703,11 +703,11 @@ struct aml_camera_i2c_fig1_s SP1628_script[] ={
   {0x1c,0x00},//;28
   {0x1d,0x00},//;40
   {0x1e,0x00},//;2c
-  {0xb9,0x00},//;25
+  {0xb9,0x00},//;25 
   {0x21,0x00},//;b0
   {0x22,0x00},//;a0
   {0x23,0x00},//;50
-  {0x24,0x00},//;0d
+  {0x24,0x00},//;0d  
   {0xa9,0x31},//;38		;BGain
   {0xaa,0x36},//;48
   {0xab,0x30},//;46
@@ -723,7 +723,7 @@ struct aml_camera_i2c_fig1_s SP1628_script[] ={
   {0x25,0x00},//;a0
   {0x45,0x00},//;a0
   {0x46,0x00},//;12
-  {0x47,0x00},//;09
+  {0x47,0x00},//;09    
   {0xfd,0x01},//		;awb
   {0x32,0x15},//
   {0xfd,0x02},//
@@ -797,51 +797,51 @@ struct aml_camera_i2c_fig1_s SP1628_script[] ={
   {0x09,0x10},//		;肤色排除白点区域
   {0xfd,0x01},//		;dns
   {0x64,0x22},//		;沿方向边缘平滑力度  ;0-最强，8-最弱
-  {0x65,0x22},//
+  {0x65,0x22},//		
   {0x86,0x20},//		;沿方向边缘平滑阈值，越小越弱
-  {0x87,0x20},//
-  {0x88,0x20},//
-  {0x89,0x20},//
+  {0x87,0x20},//		
+  {0x88,0x20},//		
+  {0x89,0x20},//		
   {0x6d,0x0f},//		;强平滑（平坦）区域平滑阈值
-  {0x6e,0x0f},//
-  {0x6f,0x10},//
-  {0x70,0x10},//
-  {0x71,0x0d},//		;弱轮廓（非平坦）区域平滑阈值
-  {0x72,0x23},//
-  {0x73,0x2a},//
-  {0x74,0x2f},//
+  {0x6e,0x0f},//		
+  {0x6f,0x10},//		
+  {0x70,0x10},//		
+  {0x71,0x0d},//		;弱轮廓（非平坦）区域平滑阈值	
+  {0x72,0x23},//		
+  {0x73,0x2a},//		
+  {0x74,0x2f},//		
   {0x75,0x46},//		;[7:4]平坦区域强度，[3:0]非平坦区域强度；0-最强，8-最弱；
-  {0x76,0x36},//
-  {0x77,0x25},//
-  {0x78,0x12},//
+  {0x76,0x36},//		
+  {0x77,0x25},//		
+  {0x78,0x12},//		
   {0x81,0x1d},//		;2x;根据增益判定区域阈值
   {0x82,0x2b},//		;4x
   {0x83,0xff},//		;8x
   {0x84,0xff},//		;16x
   {0x85,0x0a},//		; 12/8+reg0x81 第二阈值，在平坦和非平坦区域做连接
-  {0xfd,0x01},//		;gamma
-  {0x8b,0x00},//;00;00;00;
-  {0x8c,0x10},//;02;0b;0b;
-  {0x8d,0x20},//;0a;19;17;
-  {0x8e,0x31},//;13;2a;27;
-  {0x8f,0x3f},//;1d;37;35;
-  {0x90,0x53},//;30;4b;51;
-  {0x91,0x64},//;40;5e;64;
-  {0x92,0x74},//;4e;6c;74;
-  {0x93,0x80},//;5a;78;80;
-  {0x94,0x92},//;71;92;92;
-  {0x95,0xa2},//;85;a6;a2;
-  {0x96,0xaf},//;96;b5;af;
-  {0x97,0xbb},//;a6;bf;bb;
-  {0x98,0xc6},//;b3;ca;c6;
-  {0x99,0xd0},//;c0;d2;d0;
-  {0x9a,0xd9},//;cb;d9;d9;
-  {0x9b,0xe0},//;d5;e1;e0;
-  {0x9c,0xe8},//;df;e8;e8;
-  {0x9d,0xee},//;e9;ee;ee;
-  {0x9e,0xf4},//;f2;f4;f4;
-  {0x9f,0xfa},//;fa;fa;fa;
-  {0xa0,0xff},//;ff;ff;ff;
+  {0xfd,0x01},//		;gamma  
+  {0x8b,0x00},//;00;00;00;     
+  {0x8c,0x10},//;02;0b;0b;     
+  {0x8d,0x20},//;0a;19;17;     
+  {0x8e,0x31},//;13;2a;27;     
+  {0x8f,0x3f},//;1d;37;35;     
+  {0x90,0x53},//;30;4b;51;     
+  {0x91,0x64},//;40;5e;64;     
+  {0x92,0x74},//;4e;6c;74;     
+  {0x93,0x80},//;5a;78;80;     
+  {0x94,0x92},//;71;92;92;     
+  {0x95,0xa2},//;85;a6;a2;     
+  {0x96,0xaf},//;96;b5;af;     
+  {0x97,0xbb},//;a6;bf;bb;     
+  {0x98,0xc6},//;b3;ca;c6;     
+  {0x99,0xd0},//;c0;d2;d0;     
+  {0x9a,0xd9},//;cb;d9;d9;     
+  {0x9b,0xe0},//;d5;e1;e0;     
+  {0x9c,0xe8},//;df;e8;e8;     
+  {0x9d,0xee},//;e9;ee;ee;     
+  {0x9e,0xf4},//;f2;f4;f4;     
+  {0x9f,0xfa},//;fa;fa;fa;     
+  {0xa0,0xff},//;ff;ff;ff;     
   {0xfd,0x02},//		;CCM
   {0x15,0xac},//		;b>th a4
   {0x16,0x90},//		;r<th 87
@@ -868,20 +868,20 @@ struct aml_camera_i2c_fig1_s SP1628_script[] ={
   {0xb4,0xb9},//;e6;f3;00;00;
   {0xb5,0x30},//;00;30;30;30;
   {0xb6,0x33},//;33;33;33;33;
-  {0xb7,0x0f},//;0f;0f;1f;1f;
-  {0xfd,0x01},//		;sat u
+  {0xb7,0x0f},//;0f;0f;1f;1f; 
+  {0xfd,0x01},//		;sat u 
   {0xd3,0x98},//	过标准105%
-  {0xd4,0x98},//
-  {0xd5,0x80},//
-  {0xd6,0x70},//
-  {0xd7,0x98},// ;sat v
-  {0xd8,0x98},//
-  {0xd9,0x80},//
-  {0xda,0x70},//
+  {0xd4,0x98},//	
+  {0xd5,0x80},//		
+  {0xd6,0x70},//		
+  {0xd7,0x98},// ;sat v 
+  {0xd8,0x98},//	
+  {0xd9,0x80},//		
+  {0xda,0x70},//		
   {0xfd,0x01},//		;auto_sat
   {0xd2,0x00},//		;autosa_en
-  {0xfd,0x01},//		;uv_th
-  {0xc2,0xee},//   ;白色物体表面有彩色噪声降低此值
+  {0xfd,0x01},//		;uv_th	
+  {0xc2,0xee},//   ;白色物体表面有彩色噪声降低此值  
   {0xc3,0xee},//
   {0xc4,0xdd},//
   {0xc5,0xbb},//
@@ -892,38 +892,38 @@ struct aml_camera_i2c_fig1_s SP1628_script[] ={
   {0x35,0x6f},//
   {0x37,0x13},//
   {0xfd,0x01},//		;heq
-  {0xdb,0x00},//
-  {0x10,0x00},//
-  {0x14,0x15},//
+  {0xdb,0x00},//  
+  {0x10,0x00},// 
+  {0x14,0x15},//  
   {0x11,0x00},//
   {0x15,0x10},//
-  {0x16,0x10},//
-  {0xfd,0x02},//		;cnr 找张国华解释
-  {0x8e,0x10},//
+  {0x16,0x10},// 
+  {0xfd,0x02},//		;cnr 找张国华解释  
+  {0x8e,0x10},// 
   {0x90,0x20},//
   {0x91,0x20},//
   {0x92,0x60},//
   {0x93,0x80},//
-  {0xfd,0x02},//		;auto
+  {0xfd,0x02},//		;auto 
   {0x85,0x00},//	;12 enable 50Hz/60Hz function
-  {0xfd,0x01},//
-  {0x00,0x00},// 	;fix mode
+  {0xfd,0x01},// 
+  {0x00,0x00},// 	;fix mode   
   {0x32,0x15},//;		;ae en
   {0x33,0xef},//		;lsc\bpc en
   {0x34,0xc7},//		;ynr\cnr\gamma\color en
   {0x35,0x41},//	40	;YUYV
-  {0xfd,0x00},
+  {0xfd,0x00},		  
  #if 1
-	//set VGA
+ 	//set VGA
 	{0xfd,0x00},
 	{0x19,0x17},
 	{0x30,0x00}, //pclk/2
 	{0x31,0x54},//74
-#endif //end vga set
+#endif //end vga set	
 
 #if 0
    //mipi
-	{0x94,0x80},
+	{0x94,0x80}, 
 	{0x95,0x02},
 	{0x96,0xe0},//  0x2d0=720P
 	{0x97,0x01},//	  0x3c0=960
@@ -933,7 +933,7 @@ struct aml_camera_i2c_fig1_s SP1628_script[] ={
 	{0xfb,0x25},
 
 
-
+	
 	{0xe7,0x03},
 	{0xe7,0x00},
 	{0xff,0xff},
@@ -945,7 +945,7 @@ void SP1628_init_regs(struct sp1628_device *dev)
 	int i=0;//,j;
 	unsigned char buf[2];
 	struct i2c_client *client = v4l2_get_subdevdata(&dev->sd);
-
+	
 	while (1) {
 		buf[0] = SP1628_script[i].addr;
 		buf[1] = SP1628_script[i].val;
@@ -991,12 +991,12 @@ static void sp1628_set_resolution(struct sp1628_device *dev,int height,int width
 	struct i2c_client *client = v4l2_get_subdevdata(&dev->sd);
 	if (width*height >= 640*480) {
 		printk("set resolution 1280X960\n");
-
+		
 		i2c_put_byte_add8_new(client,0xfd,0x00);
-		i2c_put_byte_add8_new(client,0x19,0x10);//1280*960
+		i2c_put_byte_add8_new(client,0x19,0x10);//1280*960		
 		i2c_put_byte_add8_new(client,0x30,0x00);
 		i2c_put_byte_add8_new(client,0x31,0x50);
-
+		
 		/*i2c_put_byte_add8_new(client,0xfd,0x01);
 		i2c_put_byte_add8_new(client,0x4a,0x00);
 		i2c_put_byte_add8_new(client,0x4b,0x03);
@@ -1029,15 +1029,15 @@ static void sp1628_set_resolution(struct sp1628_device *dev,int height,int width
 		sp1628_frmintervals_active.numerator	= 1;
 		/*
 		i2c_put_byte_add8_new(client,0xfd,0x00);
-		i2c_put_byte_add8_new(client,0x19,0x17);	//640*480
+		i2c_put_byte_add8_new(client,0x19,0x17);	//640*480	
 		i2c_put_byte_add8_new(client,0x30,0x00);
 		i2c_put_byte_add8_new(client,0x31,0x54);*/
-
+		
 		/*i2c_put_byte_add8_new(client,0xfd,0x00);
-		i2c_put_byte_add8_new(client,0x19,0x10);//1280*960
+		i2c_put_byte_add8_new(client,0x19,0x10);//1280*960		
 		i2c_put_byte_add8_new(client,0x30,0x00);
 		i2c_put_byte_add8_new(client,0x31,0x50);*/
-
+		
 	} else {
 		printk("set resolution 320X240\n");
 		sp1628_h_active = 320;
@@ -1066,111 +1066,111 @@ static void sp1628_set_resolution(struct sp1628_device *dev,int height,int width
 void set_SP1628_param_wb(struct sp1628_device *dev,enum  camera_wb_flip_e para)
 	{
 		struct i2c_client *client = v4l2_get_subdevdata(&dev->sd);
-
+	
 		switch (para)
 		{
-
+	
 			case CAM_WB_AUTO://auto
 				i2c_put_byte_add8_new(client,0xfd,0x01);
 				i2c_put_byte_add8_new(client,0x32,0x05);
-
+				
 				i2c_put_byte_add8_new(client,0xfd,0x00);
 				i2c_put_byte_add8_new(client,0xe7,0x03);
-
+				
 				i2c_put_byte_add8_new(client,0xfd,0x02);
 				i2c_put_byte_add8_new(client,0x26,0xc9);
 				i2c_put_byte_add8_new(client,0x27,0x8b);
-
+				
 				i2c_put_byte_add8_new(client,0xfd,0x00);
 				i2c_put_byte_add8_new(client,0xe7,0x00);
-
+				
 				i2c_put_byte_add8_new(client,0xfd,0x01);
 				i2c_put_byte_add8_new(client,0x32,0x15);
 				break;
-
+	
 			case CAM_WB_CLOUD: //cloud
-
+	
 				i2c_put_byte_add8_new(client,0xfd,0x01);
 				i2c_put_byte_add8_new(client,0x32,0x05);
-
+				
 				i2c_put_byte_add8_new(client,0xfd,0x00);
 				i2c_put_byte_add8_new(client,0xe7,0x03);
-
+				
 				i2c_put_byte_add8_new(client,0xfd,0x02);
 				i2c_put_byte_add8_new(client,0x26,0xdb);
 				i2c_put_byte_add8_new(client,0x27,0x63);
-
+				
 				i2c_put_byte_add8_new(client,0xfd,0x00);
 				i2c_put_byte_add8_new(client,0xe7,0x00);
 				break;
-
+	
 			case CAM_WB_DAYLIGHT: //
 				i2c_put_byte_add8_new(client,0xfd,0x01);
 				i2c_put_byte_add8_new(client,0x32,0x05);
-
+				
 				i2c_put_byte_add8_new(client,0xfd,0x00);
 				i2c_put_byte_add8_new(client,0xe7,0x03);
-
+				
 				i2c_put_byte_add8_new(client,0xfd,0x02);
 				i2c_put_byte_add8_new(client,0x26,0xca);
 				i2c_put_byte_add8_new(client,0x27,0x73);
-
+				
 				i2c_put_byte_add8_new(client,0xfd,0x00);
 				i2c_put_byte_add8_new(client,0xe7,0x00);
 				break;
-
+	
 			case CAM_WB_INCANDESCENCE:
 				i2c_put_byte_add8_new(client,0xfd,0x01);
 				i2c_put_byte_add8_new(client,0x32,0x05);
-
+				
 				i2c_put_byte_add8_new(client,0xfd,0x00);
 				i2c_put_byte_add8_new(client,0xe7,0x03);
-
+				
 				i2c_put_byte_add8_new(client,0xfd,0x02);
 				i2c_put_byte_add8_new(client,0x26,0x8c);
 				i2c_put_byte_add8_new(client,0x27,0xb3);
-
+				
 				i2c_put_byte_add8_new(client,0xfd,0x00);
 				i2c_put_byte_add8_new(client,0xe7,0x00);
 				break;
-
+	
 			case CAM_WB_TUNGSTEN:
 				i2c_put_byte_add8_new(client,0xfd,0x01);
 				i2c_put_byte_add8_new(client,0x32,0x05);
-
+				
 				i2c_put_byte_add8_new(client,0xfd,0x00);
 				i2c_put_byte_add8_new(client,0xe7,0x03);
-
+				
 				i2c_put_byte_add8_new(client,0xfd,0x02);
 				i2c_put_byte_add8_new(client,0x26,0x90);
 				i2c_put_byte_add8_new(client,0x27,0xa5);
-
+				
 				i2c_put_byte_add8_new(client,0xfd,0x00);
 				i2c_put_byte_add8_new(client,0xe7,0x00);
 				break;
-
+	
 			case CAM_WB_FLUORESCENT:
 				i2c_put_byte_add8_new(client,0xfd,0x01);
 				i2c_put_byte_add8_new(client,0x32,0x05);
-
+				
 				i2c_put_byte_add8_new(client,0xfd,0x00);
 				i2c_put_byte_add8_new(client,0xe7,0x03);
-
+				
 				i2c_put_byte_add8_new(client,0xfd,0x02);
 				i2c_put_byte_add8_new(client,0x26,0x95);
 				i2c_put_byte_add8_new(client,0x27,0x9c);
-
+				
 				i2c_put_byte_add8_new(client,0xfd,0x00);
 				i2c_put_byte_add8_new(client,0xe7,0x00);
 				break;
-
+	
 			case CAM_WB_MANUAL:
 			default:
 					// TODO
 				break;
 		}
-
-
+	
+	
 	}
 
 
@@ -1192,18 +1192,18 @@ void set_SP1628_param_wb(struct sp1628_device *dev,enum  camera_wb_flip_e para)
 *************************************************************************/
 void SP1628_night_mode(struct sp1628_device *dev,enum  camera_night_mode_flip_e enable)
 	{
-		struct i2c_client *client = v4l2_get_subdevdata(&dev->sd);
-
+		struct i2c_client *client = v4l2_get_subdevdata(&dev->sd);	
+		
 		if (enable)
 		{
 			sp1628_night_or_normal = 1; //=1,night mode; =0,normal mode //add by sp_yjp,20120905
-
+	
 			if(Antiflicker== DCAMERA_FLICKER_50HZ)
 			{
 				//i2c_put_byte_add8_new(client,0xfd,0x00);	//disable AE,add by sp_yjp,20120905
 				//i2c_put_byte_add8_new(client,0x32,0x08);
-				printk("night mode 50hz\n");
-				#if 0
+				printk("night mode 50hz\r\n");
+				#if 0					   
 					//capture preview night  24M 3pll 50hz 17.6-6FPS vga
 				i2c_put_byte_add8_new(client,0xfd,0x00);
 				i2c_put_byte_add8_new(client,0x03,0x04);
@@ -1273,18 +1273,18 @@ void SP1628_night_mode(struct sp1628_device *dev,enum  camera_night_mode_flip_e 
 				i2c_put_byte_add8_new(client,0x5b,0x0a);
 				i2c_put_byte_add8_new(client,0x5c,0xc0);
 				i2c_put_byte_add8_new(client,0xfd,0x00);
-
+				
 				#endif
-
+				
 				i2c_put_byte_add8_new(client,0xe7,0x03);	//add by sp_yjp,20120905
-				i2c_put_byte_add8_new(client,0xe7,0x00);
-
+				i2c_put_byte_add8_new(client,0xe7,0x00);			
+	
 			}
 			else
 			{
 				//i2c_put_byte_add8_new(client,,0xfd,0x00);	//disable AE,add by sp_yjp,20120905
 				//i2c_put_byte_add8_new(client,,0x32,0x08);
-				printk("night mode 60hz\n");
+				printk("night mode 60hz\r\n");
 	            #if 0
 				 //capture preview night  24M 3pll 60hz 17.6-6FPS vga
 				i2c_put_byte_add8_new(client,0xfd,0x00);
@@ -1310,7 +1310,7 @@ void SP1628_night_mode(struct sp1628_device *dev,enum  camera_night_mode_flip_e 
 				i2c_put_byte_add8_new(client,0x42,0x00);
 				i2c_put_byte_add8_new(client,0x88,0x69);
 				i2c_put_byte_add8_new(client,0x89,0x69);
-				i2c_put_byte_add8_new(client,0x8a,0x33);
+				i2c_put_byte_add8_new(client,0x8a,0x33);  
 				i2c_put_byte_add8_new(client,0xfd,0x02);//Status
 				i2c_put_byte_add8_new(client,0xbe,0xb8);
 				i2c_put_byte_add8_new(client,0xbf,0x0b);
@@ -1345,7 +1345,7 @@ void SP1628_night_mode(struct sp1628_device *dev,enum  camera_night_mode_flip_e 
 				i2c_put_byte_add8_new(client,0x42,0x00);
 				i2c_put_byte_add8_new(client,0x88,0x8e);
 				i2c_put_byte_add8_new(client,0x89,0x8e);
-				i2c_put_byte_add8_new(client,0x8a,0x33);
+				i2c_put_byte_add8_new(client,0x8a,0x33);  
 				i2c_put_byte_add8_new(client,0xfd,0x02);//Status
 				i2c_put_byte_add8_new(client,0xbe,0x40);
 				i2c_put_byte_add8_new(client,0xbf,0x0b);
@@ -1358,20 +1358,20 @@ void SP1628_night_mode(struct sp1628_device *dev,enum  camera_night_mode_flip_e 
 				#endif
 				i2c_put_byte_add8_new(client,0xe7,0x03);	//add by sp_yjp,20120905
 				i2c_put_byte_add8_new(client,0xe7,0x00);
-
+	
 			}
 		}
 		else
 		{
 			//i2c_put_byte_add8_new(client,); //Camera Enable night mode  1/5 Frame rate //zyy test
 			sp1628_night_or_normal = 0; //=1,night mode; =0,normal mode //add by sp_yjp,20120905
-
-
+	
+	
 			if(Antiflicker== DCAMERA_FLICKER_50HZ)
 			{
 				//i2c_put_byte_add8_new(client,0xfd,0x00);	//disable AE,add by sp_yjp,20120905
 				//i2c_put_byte_add8_new(client,0x32,0x08);
-				printk("normal mode 50hz\n"); 
+				printk("normal mode 50hz\r\n"); 
 	            #if 0
 			   //capture preview daylight 24M 3pll 50hz 17.6-9FPS vga
 				i2c_put_byte_add8_new(client,0xfd,0x00);
@@ -1406,7 +1406,7 @@ void SP1628_night_mode(struct sp1628_device *dev,enum  camera_night_mode_flip_e 
 				i2c_put_byte_add8_new(client,0xfd,0x01);
 				i2c_put_byte_add8_new(client,0x5b,0x07);
 				i2c_put_byte_add8_new(client,0x5c,0xbc);
-				i2c_put_byte_add8_new(client,0xfd,0x00);
+				i2c_put_byte_add8_new(client,0xfd,0x00); 		
 				#else
 				//capture preview daylight 24M 2pll 50hz 17-9FPS vga
 				i2c_put_byte_add8_new(client,0xfd,0x00);
@@ -1441,9 +1441,9 @@ void SP1628_night_mode(struct sp1628_device *dev,enum  camera_night_mode_flip_e 
 				i2c_put_byte_add8_new(client,0xfd,0x01);
 				i2c_put_byte_add8_new(client,0x5b,0x07);
 				i2c_put_byte_add8_new(client,0x5c,0x64);
-				i2c_put_byte_add8_new(client,0xfd,0x00);
+				i2c_put_byte_add8_new(client,0xfd,0x00); 	
 				#endif
-
+	
 				i2c_put_byte_add8_new(client,0xe7,0x03);	//add by sp_yjp,20120905
 				i2c_put_byte_add8_new(client,0xe7,0x00);
 			}
@@ -1451,7 +1451,7 @@ void SP1628_night_mode(struct sp1628_device *dev,enum  camera_night_mode_flip_e 
 			{
 				//i2c_put_byte_add8_new(client,0xfd,0x00);	//disable AE,add by sp_yjp,20120905
 				//i2c_put_byte_add8_new(client,0x32,0x08);
-				printk("normal mode 60hz\n"); 
+				printk("normal mode 60hz\r\n"); 
 			    #if 0
 				//capture preview daylight 24M 3pll 60hz 17.6-9FPS vga
 				i2c_put_byte_add8_new(client,0xfd,0x00);
@@ -1521,9 +1521,9 @@ void SP1628_night_mode(struct sp1628_device *dev,enum  camera_night_mode_flip_e 
 				i2c_put_byte_add8_new(client,0xfd,0x01);
 				i2c_put_byte_add8_new(client,0x5b,0x07);
 				i2c_put_byte_add8_new(client,0x5c,0x50);
-				i2c_put_byte_add8_new(client,0xfd,0x00);
+				i2c_put_byte_add8_new(client,0xfd,0x00); 
 				#endif
-
+	
 				i2c_put_byte_add8_new(client,0xe7,0x03);	//add by sp_yjp,20120905
 				i2c_put_byte_add8_new(client,0xe7,0x00);
 			}
@@ -1554,32 +1554,32 @@ void SP1628_set_param_banding(struct sp1628_device *dev,enum  camera_banding_fli
 	{
 		//struct i2c_client *client = v4l2_get_subdevdata(&dev->sd);
 		//unsigned char buf[4];
-
+		
 		  switch(banding)
-
+		
 		 {
-			 case CAM_BANDING_50HZ:
-
+			 case CAM_BANDING_50HZ: 		
+		
 			Antiflicker = DCAMERA_FLICKER_50HZ;
-
-			printk( " set_SP1628_anti_flicker  50hz\n" );
-
+		
+			printk( " set_SP1628_anti_flicker  50hz \r\n" );
+		
 			break;
-
+		
 			 case CAM_BANDING_60HZ:
-
+		
 			Antiflicker = DCAMERA_FLICKER_60HZ;
-
-			printk( " set_SP1628_anti_flicker  60hz\n" );
-
+		
+			printk( " set_SP1628_anti_flicker  60hz \r\n" );
+		
 			break;
-
+		
 			default:
-
+		
 				 break;
-
+		
 		 }
-
+		
 	}
 
 
@@ -1603,81 +1603,81 @@ void SP1628_set_param_banding(struct sp1628_device *dev,enum  camera_banding_fli
 void set_SP1628_param_exposure(struct sp1628_device *dev,enum camera_exposure_e para)//曝光调节
 	{
 		struct i2c_client *client = v4l2_get_subdevdata(&dev->sd);
-
-
+	
+	
 		switch (para)
 		{
-
+	
 			case EXPOSURE_N4_STEP:
 				i2c_put_byte_add8_new(client,0xfd , 0x01);
 				i2c_put_byte_add8_new(client,0xeb , P1_Ae_Target_0xeb-0x40);
 				i2c_put_byte_add8_new(client,0xec , P1_Ae_Target_0xec-0x40);
 				break;
-
-
-
+	
+	
+	
 			case EXPOSURE_N3_STEP:
 				i2c_put_byte_add8_new(client,0xfd , 0x01);
 				i2c_put_byte_add8_new(client,0xeb , P1_Ae_Target_0xeb-0x30);
 				i2c_put_byte_add8_new(client,0xec , P1_Ae_Target_0xec-0x30);
 				break;
-
-
+	
+	
 			case EXPOSURE_N2_STEP:
 				i2c_put_byte_add8_new(client,0xfd , 0x01);
 				i2c_put_byte_add8_new(client,0xeb , P1_Ae_Target_0xeb-0x20);
 				i2c_put_byte_add8_new(client,0xec , P1_Ae_Target_0xec-0x20);
 				break;
-
-
+	
+	
 			case EXPOSURE_N1_STEP:
 				i2c_put_byte_add8_new(client,0xfd , 0x01);
 				i2c_put_byte_add8_new(client,0xeb , P1_Ae_Target_0xeb-0x10);
 				i2c_put_byte_add8_new(client,0xec , P1_Ae_Target_0xec-0x10);
 				break;
-
+				
 			case EXPOSURE_0_STEP:
 				i2c_put_byte_add8_new(client,0xfd , 0x01);
 				i2c_put_byte_add8_new(client,0xeb , P1_Ae_Target_0xeb);//-40
 				i2c_put_byte_add8_new(client,0xec , P1_Ae_Target_0xec);//-40
 				break;
-
+				
 			case EXPOSURE_P1_STEP:
 				i2c_put_byte_add8_new(client,0xfd , 0x01);
 				i2c_put_byte_add8_new(client,0xeb , P1_Ae_Target_0xeb+0x10);
 				i2c_put_byte_add8_new(client,0xec , P1_Ae_Target_0xec+0x10);
 				break;
-
+				
 			case EXPOSURE_P2_STEP:
 				i2c_put_byte_add8_new(client,0xfd , 0x01);
 				i2c_put_byte_add8_new(client,0xeb , P1_Ae_Target_0xeb+0x20);
 				i2c_put_byte_add8_new(client,0xec , P1_Ae_Target_0xec+0x20);
 				break;
-
+	
 			case EXPOSURE_P3_STEP:
 				i2c_put_byte_add8_new(client,0xfd , 0x01);
 				i2c_put_byte_add8_new(client,0xeb , P1_Ae_Target_0xeb+0x30);
 				i2c_put_byte_add8_new(client,0xec , P1_Ae_Target_0xec+0x30);
 				break;
-
-			case EXPOSURE_P4_STEP:
+						
+			case EXPOSURE_P4_STEP:	
 				i2c_put_byte_add8_new(client,0xfd , 0x01);
 				i2c_put_byte_add8_new(client,0xeb , P1_Ae_Target_0xeb+0x40);
 				i2c_put_byte_add8_new(client,0xec , P1_Ae_Target_0xec+0x40);
 				break;
-
+	
 			default:
 				i2c_put_byte_add8_new(client,0xfd , 0x01);
 				i2c_put_byte_add8_new(client,0xeb , P1_Ae_Target_0xeb);//
 				i2c_put_byte_add8_new(client,0xec , P1_Ae_Target_0xec);//
 				break;
 					//break;
-
-
-
+	
+	
+	
 		}
-
-
+	
+	
 	}
 
 
@@ -1700,8 +1700,8 @@ void set_SP1628_param_exposure(struct sp1628_device *dev,enum camera_exposure_e 
 void set_SP1628_param_effect(struct sp1628_device *dev,enum camera_effect_flip_e para)//特效设置
 	{
 		struct i2c_client *client = v4l2_get_subdevdata(&dev->sd);
-
-
+	
+	
 		switch (para)
 		{
 			case CAM_EFFECT_ENC_NORMAL:
@@ -1714,7 +1714,7 @@ void set_SP1628_param_effect(struct sp1628_device *dev,enum camera_effect_flip_e
 				i2c_put_byte_add8_new(client,0xfd, 0x02);
 				i2c_put_byte_add8_new(client,0x14, 0x00);
 				break;
-
+	
 			case CAM_EFFECT_ENC_GRAYSCALE:
 				i2c_put_byte_add8_new(client,0xfd, 0x01);
 				i2c_put_byte_add8_new(client,0x66, 0x20);
@@ -1725,7 +1725,7 @@ void set_SP1628_param_effect(struct sp1628_device *dev,enum camera_effect_flip_e
 				i2c_put_byte_add8_new(client,0xfd, 0x02);
 				i2c_put_byte_add8_new(client,0x14, 0x00);
 				break;
-
+	
 			case CAM_EFFECT_ENC_SEPIA:
 				i2c_put_byte_add8_new(client,0xfd, 0x01);
 				i2c_put_byte_add8_new(client,0x66, 0x10);
@@ -1736,7 +1736,7 @@ void set_SP1628_param_effect(struct sp1628_device *dev,enum camera_effect_flip_e
 				i2c_put_byte_add8_new(client,0xfd, 0x02);
 				i2c_put_byte_add8_new(client,0x14, 0x00);
 				break;
-
+	
 			case CAM_EFFECT_ENC_SEPIAGREEN:
 				i2c_put_byte_add8_new(client,0xfd, 0x01);
 				i2c_put_byte_add8_new(client,0x66, 0x10);
@@ -1747,7 +1747,7 @@ void set_SP1628_param_effect(struct sp1628_device *dev,enum camera_effect_flip_e
 				i2c_put_byte_add8_new(client,0xfd, 0x02);
 				i2c_put_byte_add8_new(client,0x14, 0x00);
 				break;
-
+	
 			case CAM_EFFECT_ENC_SEPIABLUE:
 				i2c_put_byte_add8_new(client,0xfd, 0x01);
 				i2c_put_byte_add8_new(client,0x66, 0x10);
@@ -1758,17 +1758,17 @@ void set_SP1628_param_effect(struct sp1628_device *dev,enum camera_effect_flip_e
 				i2c_put_byte_add8_new(client,0xfd, 0x02);
 				i2c_put_byte_add8_new(client,0x14, 0x00);
 				break;
-
+	
 			case CAM_EFFECT_ENC_COLORINV:
-
+	
 				break;
-
+	
 			default:
 				break;
 		}
-
-
-
+	
+	
+	
 	}
 
 
@@ -1858,14 +1858,14 @@ static int sp1628_setting(struct sp1628_device *dev,int PROP_ID,int value )
 			printk(KERN_INFO " set camera  scene mode=%d. \n ",value);
 		}
 		break;
-	case V4L2_CID_HFLIP:    /* set flip on H. */
+	case V4L2_CID_HFLIP:    /* set flip on H. */          
 		value = value & 0x3;
 		if(sp1628_qctrl[5].default_value!=value){
 			sp1628_qctrl[5].default_value=value;
 			printk(" set camera  h filp =%d. \n ",value);
 		}
 		break;
-	case V4L2_CID_VFLIP:    /* set flip on V. */
+	case V4L2_CID_VFLIP:    /* set flip on V. */         
 		break;
 	case V4L2_CID_ZOOM_ABSOLUTE:
 		if(sp1628_qctrl[7].default_value!=value){
@@ -1897,7 +1897,7 @@ static int sp1628_setting(struct sp1628_device *dev,int PROP_ID,int value )
 	buf[0]=0x25;
 	buf[1]=0x00;
 	i2c_put_byte_add8(client,buf,2);
-
+	
 	msleep(5);
 	return;
 }*/
@@ -2584,9 +2584,9 @@ static int sp1628_open(struct file *file)
 #endif
 #if MESON_CPU_TYPE >= MESON_CPU_TYPE_MESON6
 	switch_mod_gate_by_name("ge2d", 1);
-#endif
-	aml_cam_init(&dev->cam_info);
-
+#endif	
+	aml_cam_init(&dev->cam_info);	
+	
 	SP1628_init_regs(dev);
 	msleep(100);//40
 	mutex_lock(&dev->mutex);
@@ -2601,7 +2601,7 @@ static int sp1628_open(struct file *file)
 		video_device_node_name(dev->vdev),
 		v4l2_type_names[V4L2_BUF_TYPE_VIDEO_CAPTURE], dev->users);
 
-	/* init video dma queues */
+    	/* init video dma queues */
 	INIT_LIST_HEAD(&dev->vidq.active);
 	init_waitqueue_head(&dev->vidq.wq);
 	spin_lock_init(&dev->slock);
@@ -2709,11 +2709,11 @@ static int sp1628_close(struct file *file)
 	//power_down_sp1628(dev);
 #endif
 	aml_cam_uninit(&dev->cam_info);
-
+	
 #if MESON_CPU_TYPE >= MESON_CPU_TYPE_MESON6
 	switch_mod_gate_by_name("ge2d", 0);
-#endif
-	wake_unlock(&(dev->wake_lock));
+#endif	
+	wake_unlock(&(dev->wake_lock));	
 #ifdef CONFIG_CMA
     vm_deinit_buf();
 #endif
@@ -2818,7 +2818,7 @@ static int sp1628_probe(struct i2c_client *client,
 	v4l2_i2c_subdev_init(sd, client, &sp1628_ops);
 
 	plat_dat = (aml_cam_info_t*)client->dev.platform_data;
-
+	
 	/* Now create a video4linux device */
 	mutex_init(&t->mutex);
 
@@ -2834,11 +2834,11 @@ static int sp1628_probe(struct i2c_client *client,
 	video_set_drvdata(t->vdev, t);
 
 	wake_lock_init(&(t->wake_lock), WAKE_LOCK_SUSPEND, "sp1628");
-
+	
 	/* Register it */
 	if (plat_dat) {
 		memcpy(&t->cam_info, plat_dat, sizeof(aml_cam_info_t));
-		if (plat_dat->front_back >=0)
+		if (plat_dat->front_back >=0)  
 			video_nr = plat_dat->front_back;
 	} else {
 		printk("camera sp1628: have no platform data\n");
@@ -2846,11 +2846,11 @@ static int sp1628_probe(struct i2c_client *client,
 		kfree(client);
 		return -1;
 	}
-
+	
 	t->cam_info.version = SP1628_DRIVER_VERSION;
 	if (aml_cam_info_reg(&t->cam_info) < 0)
 		printk("reg caminfo error\n");
-
+	
 	err = video_register_device(t->vdev, VFL_TYPE_GRABBER, video_nr);
 	if (err < 0) {
 		video_device_release(t->vdev);
@@ -2890,3 +2890,4 @@ static struct i2c_driver sp1628_i2c_driver = {
 };
 
 module_i2c_driver(sp1628_i2c_driver);
+

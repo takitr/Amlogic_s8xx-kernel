@@ -53,3 +53,4 @@ struct bit_info {
 #define IOC_RD_AAPB_REG       _IOR(AML_REGS_IOC_MAGIC, 0x18, struct reg_info)
 #define IOC_WR_AAPB_REG       _IOW(AML_REGS_IOC_MAGIC, 0x19, struct reg_info)
 #endif /* __AML_REG_DRV_H */
+

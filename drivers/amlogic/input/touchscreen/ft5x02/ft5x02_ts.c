@@ -1,7 +1,7 @@
-/*
+/* 
  * drivers/input/touchscreen/ft5x02_ts.c
  *
- * FocalTech ft5x02 TouchScreen driver.
+ * FocalTech ft5x02 TouchScreen driver. 
  *
  * Copyright (c) 2012  Focal tech Ltd.
  *
@@ -22,7 +22,7 @@
 #include <linux/earlysuspend.h>
 #include <linux/delay.h>
 #include <linux/slab.h>
-#include <linux/interrupt.h>
+#include <linux/interrupt.h>   
 #include <mach/irqs.h>
 #include <linux/kernel.h>
 #include <linux/semaphore.h>
@@ -58,7 +58,7 @@ struct ft5x02_ts_data {
 	struct touch_pdata *pdata;
 #else
 	struct ft5x02_platform_data *pdata;
-#endif
+#endif	
 //	struct delayed_work dwork;
 #ifdef CONFIG_PM
 	struct early_suspend *early_suspend;
@@ -81,7 +81,7 @@ char *tsp_keyname[CFG_NUMOFKEYS] ={
 static bool tsp_keystatus[CFG_NUMOFKEYS];
 #endif
 
-static u8 CTPM_FW[] =
+static u8 CTPM_FW[] = 
 {
 	//#include "ft5x02_app.i"
 };
@@ -107,7 +107,7 @@ static int ft5x02_create_sysfs_debug(struct i2c_client *client);
 *
 *
 */
-int ft5x02_i2c_Read(struct i2c_client *client,  char * writebuf, int writelen,
+int ft5x02_i2c_Read(struct i2c_client *client,  char * writebuf, int writelen, 
 							char *readbuf, int readlen)
 {
 	int ret;
@@ -149,7 +149,7 @@ int ft5x02_i2c_Read(struct i2c_client *client,  char * writebuf, int writelen,
 	return ret;
 }
 /*
-*write data by i2c
+*write data by i2c 
 */
 int ft5x02_i2c_Write(struct i2c_client *client, char *writebuf, int writelen)
 {
@@ -222,7 +222,7 @@ void ft5x02_upgrade_send_head(struct i2c_client * client)
 #define FTS_PACKET_LENGTH 128
 static int  ft5x02_ctpm_fw_upgrade(struct i2c_client * client, u8* pbt_buf, u32 dw_lenth)
 {
-
+	
 	u8 reg_val[2] = {0};
 	u32 i = 0;
 
@@ -243,7 +243,7 @@ static int  ft5x02_ctpm_fw_upgrade(struct i2c_client * client, u8* pbt_buf, u32 
 	//delay_qt_ms(58);
 	msleep(30);
 	//do_gettimeofday(&end_tv);
-	//DBG("cost time=%lu.%lu\n", begin_tv.tv_sec-end_tv.tv_sec,
+	//DBG("cost time=%lu.%lu\n", begin_tv.tv_sec-end_tv.tv_sec, 
 	//		begin_tv.tv_usec-end_tv.tv_usec);
 	 /*write 0x55 to register 0x3c*/
 	ft5x02_write_reg(client, 0xfc, 0x55);
@@ -268,7 +268,7 @@ static int  ft5x02_ctpm_fw_upgrade(struct i2c_client * client, u8* pbt_buf, u32 
 	ft5x02_i2c_Write(client, auc_i2c_write_buf, 1);
 	#endif
 
-	/*********Step 3:check READ-ID***********************/
+	/*********Step 3:check READ-ID***********************/	 
 	delay_qt_ms(10);
 	for (i=0; i<3; i++) {
 		ft5x02_upgrade_send_head(client);
@@ -276,8 +276,8 @@ static int  ft5x02_ctpm_fw_upgrade(struct i2c_client * client, u8* pbt_buf, u32 
 		auc_i2c_write_buf[1] = auc_i2c_write_buf[2] = auc_i2c_write_buf[3] = 0x00;
 
 		ft5x02_i2c_Read(client, auc_i2c_write_buf, 4, reg_val, 2);
-
-		if (reg_val[0] == 0x79
+		
+		if (reg_val[0] == 0x79 
 			&& reg_val[1] == 0x02) {
 			//dev_dbg(&client->dev, "[FTS] Step 3: CTPM ID,ID1 = 0x%x,ID2 = 0x%x\n",reg_val[0],reg_val[1]);
 			pr_info("[FTS] Step 3: CTPM ID,ID1 = 0x%x,ID2 = 0x%x\n",reg_val[0],reg_val[1]);
@@ -311,7 +311,7 @@ static int  ft5x02_ctpm_fw_upgrade(struct i2c_client * client, u8* pbt_buf, u32 
 		packet_buf[5] = (u8)lenght;
 
 		for (i=0; i<FTS_PACKET_LENGTH; i++) {
-			packet_buf[6+i] = pbt_buf[j*FTS_PACKET_LENGTH + i];
+			packet_buf[6+i] = pbt_buf[j*FTS_PACKET_LENGTH + i]; 
 			bt_ecc ^= packet_buf[6+i];
 		}
 		ft5x02_upgrade_send_head(client);
@@ -329,7 +329,7 @@ static int  ft5x02_ctpm_fw_upgrade(struct i2c_client * client, u8* pbt_buf, u32 
 		packet_buf[5] = (u8)temp;
 
 		for (i=0; i<temp; i++) {
-			packet_buf[6+i] = pbt_buf[ packet_number*FTS_PACKET_LENGTH + i];
+			packet_buf[6+i] = pbt_buf[ packet_number*FTS_PACKET_LENGTH + i]; 
 			bt_ecc ^= packet_buf[6+i];
 		}
 		ft5x02_upgrade_send_head(client);
@@ -345,7 +345,7 @@ static int  ft5x02_ctpm_fw_upgrade(struct i2c_client * client, u8* pbt_buf, u32 
 		temp =1;
 		packet_buf[4] = (u8)(temp>>8);
 		packet_buf[5] = (u8)temp;
-		packet_buf[6] = pbt_buf[ dw_lenth + i];
+		packet_buf[6] = pbt_buf[ dw_lenth + i]; 
 		bt_ecc ^= packet_buf[6];
 
 		ft5x02_upgrade_send_head(client);
@@ -360,7 +360,7 @@ static int  ft5x02_ctpm_fw_upgrade(struct i2c_client * client, u8* pbt_buf, u32 
 	/*********Step 6: read out checksum***********************/
 	ft5x02_upgrade_send_head(client);
 	auc_i2c_write_buf[0] = 0xcc;
-	ft5x02_i2c_Read(client, auc_i2c_write_buf, 1, reg_val, 1);
+	ft5x02_i2c_Read(client, auc_i2c_write_buf, 1, reg_val, 1); 
 
 	if (reg_val[0] != bt_ecc) {
 		dev_err(&client->dev, "[FTS]--ecc error! FW=%02x bt_ecc=%02x\n", reg_val[0], bt_ecc);
@@ -375,9 +375,9 @@ static int  ft5x02_ctpm_fw_upgrade(struct i2c_client * client, u8* pbt_buf, u32 
 	//DBG("-------upgrade successful-----\n");
 
 	do_gettimeofday(&end_tv);
-	DBG("cost time=%lu.%lu\n", end_tv.tv_sec-begin_tv.tv_sec,
+	DBG("cost time=%lu.%lu\n", end_tv.tv_sec-begin_tv.tv_sec, 
 			end_tv.tv_usec-begin_tv.tv_usec);
-
+	
 	return 0;
 }
 
@@ -390,13 +390,13 @@ static int fts_ctpm_fw_upgrade_with_i_file(struct i2c_client * client)
 	u8 *pbt_buf = NULL;
 	int i_ret;
 	int fw_len = 0;
-
-#ifdef CONFIG_OF
+	
+#ifdef CONFIG_OF	
 	int file_size;
 	u8 tmp[READ_COUNT];
 	u8 check_dot[2];
-	u32 offset = 0;
-
+ 	u32 offset = 0;
+ 
 	file_size = touch_open_fw(ts_com->fw_file);
 	if(file_size < 0)
 	{
@@ -404,7 +404,7 @@ static int fts_ctpm_fw_upgrade_with_i_file(struct i2c_client * client)
 		return -EIO;
 	}
 	pbt_buf = vmalloc(200*1024*sizeof(*pbt_buf));
-
+	
 	while (offset < file_size) {
 		touch_read_fw(offset, READ_COUNT, &tmp[0]);
 		i_ret = sscanf(&tmp[0],"0x%c%c",&check_dot[0],&check_dot[1]);
@@ -413,24 +413,24 @@ static int fts_ctpm_fw_upgrade_with_i_file(struct i2c_client * client)
 				sscanf(&tmp[0],"0x%x, ",(uint *)&pbt_buf[fw_len]);
 		  else
 				sscanf(&tmp[0],"0x%x,",(uint *)&pbt_buf[fw_len]);
-			fw_len++;
+			fw_len++;	
 		}
 		offset++;
 	}
 #else
 	fw_len = sizeof(CTPM_FW);
-	pbt_buf = CTPM_FW;
+	pbt_buf = CTPM_FW;	
 #endif
 	/*judge the fw that will be upgraded
 	 * if illegal, then stop upgrade and return.
 	*/
 	if (fw_len<8 || fw_len>32*1024) {
 		dev_err(&client->dev, "[FTS]----FW length error\n");
-#ifdef CONFIG_OF
+#ifdef CONFIG_OF	
 		vfree(pbt_buf);
 #endif
 		return -EIO;
-	}
+	}	
 //	if((CTPM_FW[fw_len-8]^CTPM_FW[fw_len-6])==0xFF
 //		&& (CTPM_FW[fw_len-7]^CTPM_FW[fw_len-5])==0xFF
 //		&& (CTPM_FW[fw_len-3]^CTPM_FW[fw_len-4])==0xFF)
@@ -439,7 +439,7 @@ static int fts_ctpm_fw_upgrade_with_i_file(struct i2c_client * client)
 		//pbt_buf = CTPM_FW;
 		/*call the upgrade function*/
 		i_ret =  ft5x02_ctpm_fw_upgrade(client, pbt_buf, fw_len);
-#ifdef CONFIG_OF
+#ifdef CONFIG_OF	
 		vfree(pbt_buf);
 #endif
 		if (i_ret != 0)
@@ -457,7 +457,7 @@ static int fts_ctpm_fw_upgrade_with_i_file(struct i2c_client * client)
 
 
 
-/*
+/* 
 *Read touch point information when the interrupt  is asserted.
 */
 static int ft5x02_read_Touchdata(struct ft5x02_ts_data *data)
@@ -501,7 +501,7 @@ static int ft5x02_read_Touchdata(struct ft5x02_ts_data *data)
 }
 
 #if CFG_SUPPORT_TOUCH_KEY
-/*
+/* 
 *Processes the key message when the CFG_SUPPORT_TOUCH_KEY has defined
 */
 int ft5x02_touch_key_process(struct input_dev *dev, int x, int y, int touch_event)
@@ -521,7 +521,7 @@ int ft5x02_touch_key_process(struct input_dev *dev, int x, int y, int touch_even
 	else if ( y < 217&&y > 197)
 	{
 		key_id = 2;
-	}
+	}  
 	else if (y < 67&&y > 47)
 	{
 		key_id = 3;
@@ -530,7 +530,7 @@ int ft5x02_touch_key_process(struct input_dev *dev, int x, int y, int touch_even
 	{
 		key_id = 0xf;
 	}
-
+    
 	for(i = 0; i <CFG_NUMOFKEYS; i++ )
 	{
 		if(tsp_keystatus[i])
@@ -551,8 +551,8 @@ int ft5x02_touch_key_process(struct input_dev *dev, int x, int y, int touch_even
 		}
 	}
 	return 0;
-
-}
+    
+}    
 #endif
 
 /*
@@ -566,39 +566,39 @@ static void ft5x02_report_value(struct ft5x02_ts_data *data)
 	for (i  = 0; i < event->touch_point; i++)
 	{
 		// LCD view area
-		if (event->au16_x[i] < data->x_max && event->au16_y[i] < data->y_max)
-		{
-			input_report_abs(data->input_dev, ABS_MT_POSITION_X, event->au16_x[i]);
-			input_report_abs(data->input_dev, ABS_MT_POSITION_Y, event->au16_y[i]);
-			input_report_abs(data->input_dev, ABS_MT_WIDTH_MAJOR, 1);
-			input_report_abs(data->input_dev, ABS_MT_TRACKING_ID, event->au8_finger_id[i]);
-			if (event->au8_touch_event[i]== 0 || event->au8_touch_event[i] == 2)
-			{
-				input_report_abs(data->input_dev, ABS_MT_TOUCH_MAJOR, event->pressure);
-			}
-			else
-			{
-				input_report_abs(data->input_dev, ABS_MT_TOUCH_MAJOR, 0);
-			}
-		}
-		else /*maybe the touch key area*/
-		{
+	    	if (event->au16_x[i] < data->x_max && event->au16_y[i] < data->y_max)
+	    	{
+	        	input_report_abs(data->input_dev, ABS_MT_POSITION_X, event->au16_x[i]);
+    			input_report_abs(data->input_dev, ABS_MT_POSITION_Y, event->au16_y[i]);
+    			input_report_abs(data->input_dev, ABS_MT_WIDTH_MAJOR, 1);
+    			input_report_abs(data->input_dev, ABS_MT_TRACKING_ID, event->au8_finger_id[i]);
+    			if (event->au8_touch_event[i]== 0 || event->au8_touch_event[i] == 2)
+    			{
+    		    		input_report_abs(data->input_dev, ABS_MT_TOUCH_MAJOR, event->pressure);
+    			}
+    			else
+    			{
+    		    		input_report_abs(data->input_dev, ABS_MT_TOUCH_MAJOR, 0);
+    			}
+	    	}
+	    	else /*maybe the touch key area*/
+	    	{
 #if CFG_SUPPORT_TOUCH_KEY
-			if (event->au16_x[i] >= data->x_max)
-			{
-				ft5x02_touch_key_process(data->input_dev, event->au16_x[i], event->au16_y[i], event->au8_touch_event[i]);
-			}
+            		if (event->au16_x[i] >= data->x_max)
+            		{
+                		ft5x02_touch_key_process(data->input_dev, event->au16_x[i], event->au16_y[i], event->au8_touch_event[i]);
+            		}
 #endif
-		}
-
-
+	    	}
+	    
+			
 		input_mt_sync(data->input_dev);
 	}
 	input_sync(data->input_dev);
 
-	if (event->touch_point == 0) {
-		ft5x02_ts_release(data);
-	}
+    	if (event->touch_point == 0) {
+        	ft5x02_ts_release(data);
+    	}
 }	/*end ft5x02_report_value*/
 
 #if 0
@@ -607,7 +607,7 @@ static  void ft5x02_ts_worker(struct work_struct *work)
 	struct ft5x02_ts_data *ft5x02_ts;
 	int ret = 0;
 	ft5x02_ts = container_of(work, struct ft5x02_ts_data, dwork.work);
-
+	
 	//disable_irq(ft5x02_ts->irq);
 	ret = ft5x02_read_Touchdata(ft5x02_ts);
 	if (ret == 0)
@@ -615,7 +615,7 @@ static  void ft5x02_ts_worker(struct work_struct *work)
 }
 #endif
 /*
- * The ft5x02 device will signal the host about TRIGGER_FALLING.
+ * The ft5x02 device will signal the host about TRIGGER_FALLING. 
  */
 
 static irqreturn_t ft5x02_ts_interrupt(int irq, void *dev_id)
@@ -640,7 +640,7 @@ static int ft5x02_ts_probe(struct i2c_client *client, const struct i2c_device_id
 	struct ft5x02_ts_data *ft5x02_ts;
 	struct input_dev *input_dev;
 	int err = 0;
-//	unsigned char uc_reg_value;
+//	unsigned char uc_reg_value; 
 //	unsigned char uc_reg_addr;
 #ifdef CONFIG_OF
 	struct touch_pdata *pdata = (struct touch_pdata *)client->dev.platform_data;
@@ -658,9 +658,9 @@ static int ft5x02_ts_probe(struct i2c_client *client, const struct i2c_device_id
 	struct ft5x02_platform_data *pdata = (struct ft5x02_platform_data *)client->dev.platform_data;
 #endif
 #if CFG_SUPPORT_TOUCH_KEY
-	int i;
+    	int i;
 #endif
-
+	
 	if (!i2c_check_functionality(client->adapter, I2C_FUNC_I2C)) {
 		err = -ENODEV;
 		goto exit_check_functionality_failed;
@@ -680,10 +680,10 @@ static int ft5x02_ts_probe(struct i2c_client *client, const struct i2c_device_id
 #ifdef CONFIG_OF
 	ft5x02_ts->x_max = pdata->xres - 1;
 	ft5x02_ts->y_max = pdata->yres - 1;
-#else
+#else	
 	ft5x02_ts->x_max = pdata->x_max - 1;
 	ft5x02_ts->y_max = pdata->y_max - 1;
-#endif
+#endif	
 
 //	INIT_DELAYED_WORK(&ft5x02_ts->dwork, ft5x02_ts_worker);
 #ifdef CONFIG_PM
@@ -711,7 +711,7 @@ static int ft5x02_ts_probe(struct i2c_client *client, const struct i2c_device_id
 		dev_err(&client->dev, "failed to allocate input device\n");
 		goto exit_input_dev_alloc_failed;
 	}
-
+	
 	ft5x02_ts->input_dev = input_dev;
 
 	set_bit(ABS_MT_TOUCH_MAJOR, input_dev->absbit);
@@ -727,23 +727,23 @@ static int ft5x02_ts_probe(struct i2c_client *client, const struct i2c_device_id
 			     ABS_MT_TOUCH_MAJOR, 0, PRESS_MAX, 0, 0);
 	input_set_abs_params(input_dev,
 			     ABS_MT_WIDTH_MAJOR, 0, 200, 0, 0);
-	input_set_abs_params(input_dev,
+    	input_set_abs_params(input_dev,
 			     ABS_MT_TRACKING_ID, 0, CFG_MAX_TOUCH_POINTS, 0, 0);
 
 
-	set_bit(EV_KEY, input_dev->evbit);
-	set_bit(EV_ABS, input_dev->evbit);
+    	set_bit(EV_KEY, input_dev->evbit);
+    	set_bit(EV_ABS, input_dev->evbit);
 
 #if CFG_SUPPORT_TOUCH_KEY
-	/*setup key code area*/
-	set_bit(EV_SYN, input_dev->evbit);
-	set_bit(BTN_TOUCH, input_dev->keybit);
-	input_dev->keycode = tsp_keycodes;
-	for(i = 0; i < CFG_NUMOFKEYS; i++)
-	{
-		input_set_capability(input_dev, EV_KEY, ((int*)input_dev->keycode)[i]);
-		tsp_keystatus[i] = KEY_RELEASE;
-	}
+    	/*setup key code area*/
+    	set_bit(EV_SYN, input_dev->evbit);
+    	set_bit(BTN_TOUCH, input_dev->keybit);
+    	input_dev->keycode = tsp_keycodes;
+    	for(i = 0; i < CFG_NUMOFKEYS; i++)
+    	{
+        	input_set_capability(input_dev, EV_KEY, ((int*)input_dev->keycode)[i]);
+        	tsp_keystatus[i] = KEY_RELEASE;
+    	}
 #endif
 
 	input_dev->name		= FT5X02_NAME;
@@ -755,7 +755,7 @@ static int ft5x02_ts_probe(struct i2c_client *client, const struct i2c_device_id
 		goto exit_input_register_device_failed;
 	}
 
-	 msleep(150);  /*make sure CTP already finish startup process*/
+   	 msleep(150);  /*make sure CTP already finish startup process*/
 #if 1
 	/*upgrade for program the app to RAM*/
 	dev_dbg(&client->dev, "[FTS]----ready for upgrading---\n");
@@ -778,17 +778,17 @@ static int ft5x02_ts_probe(struct i2c_client *client, const struct i2c_device_id
 //	cancel_delayed_work(&ft5x02_ts->dwork);
 //	schedule_delayed_work(&ft5x02_ts->dwork, 0);
 	enable_irq(client->irq);
-	return 0;
+    	return 0;
 
 exit_input_register_device_failed:
 	input_free_device(input_dev);
-
+	
 exit_input_dev_alloc_failed:
 	free_irq(client->irq, ft5x02_ts);
 #ifdef CONFIG_PM
 exit_request_reset:
 	//gpio_free(ft5x02_ts->pdata->reset);
-#endif
+#endif	
 exit_irq_request_failed:
 	i2c_set_clientdata(client, NULL);
 	kfree(ft5x02_ts);
@@ -798,7 +798,7 @@ exit_check_functionality_failed:
 exit_get_dt_failed:
 	free_touch_gpio(ts_com);
 	ts_com->owner = NULL;
-	printk("%s: probe failed!\n", __FUNCTION__);
+	printk("%s: probe failed!\n", __FUNCTION__);	
 	return err;
 }
 
@@ -842,13 +842,13 @@ static ssize_t ft5x02_initparam_show(struct device *dev,
 	mutex_lock(&g_device_mutex);
 	if (ft5x02_Init_IC_Param(client) >= 0)
 		num_read_chars = sprintf(buf, "%s",
-			"ft5x02 init param successful\n");
+			"ft5x02 init param successful\r\n");
 	else
 		num_read_chars = sprintf(buf, "%s",
-			"ft5x02 init param failed!\n");
+			"ft5x02 init param failed!\r\n");
 	//ft5x02_get_ic_param(client);
 	mutex_unlock(&g_device_mutex);
-
+	
 	return num_read_chars;
 }
 
@@ -907,7 +907,7 @@ static int ft5x02_ts_remove(struct i2c_client *client)
 	//cancel_delayed_work_sync(&ft5x02_ts->dwork);
 	free_irq(client->irq, ft5x02_ts);
 	kfree(ft5x02_ts);
-	i2c_set_clientdata(client, NULL);
+	i2c_set_clientdata(client, NULL); 	
 	return 0;
 }
 

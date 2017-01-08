@@ -9,6 +9,6 @@
 		status = "ok";
 		reserve-memory = <0x01800000 0x00100000>;
 		display_size_default = <2048 1536 2048 3072 32>;
-
+	 
 	};
 #endif

@@ -7,9 +7,6 @@
 #include <linux/device.h>
 #include <linux/err.h>
 #include <linux/hardirq.h>
-#ifdef CONFIG_HIBERNATION
-#include <linux/syscore_ops.h>
-#endif
 
 short GCLK_ref[GCLK_IDX_MAX];
 EXPORT_SYMBOL(GCLK_ref);
@@ -18,7 +15,7 @@ EXPORT_SYMBOL(GCLK_ref);
 #ifdef PRINT_DEBUG_INFO
 #define PRINT_INFO(...)		printk(__VA_ARGS__)
 #else
-#define PRINT_INFO(...)
+#define PRINT_INFO(...)	
 #endif
 
 typedef struct{
@@ -31,8 +28,6 @@ typedef struct{
 }mod_record_t;
 
 DEFINE_SPINLOCK(gate_lock);
-EXPORT_SYMBOL(gate_lock);
-
 
 static mod_record_t mod_records[MOD_MAX_NUM + 1] = {
 	{
@@ -215,10 +210,12 @@ static int _switch_gate(mod_type_t type, int flag)
 	switch(type) {
 	case MOD_VDEC:
 		PRINT_INFO("turn %s vdec module\n", flag?"on":"off");
-		if (flag) {
-			__CLK_GATE_ON(DOS);
+		if (flag) {			   
+			//__CLK_GATE_ON(DOS);
+			//aml_set_reg32_mask(P_HHI_VDEC_CLK_CNTL, 1 << 8);
 		} else {
-			__CLK_GATE_OFF(DOS);
+			//__CLK_GATE_OFF(DOS);
+			//aml_clr_reg32_mask(P_HHI_VDEC_CLK_CNTL, 1 << 8);
 		}
 		break;
 	case MOD_AUDIO:
@@ -236,8 +233,7 @@ static int _switch_gate(mod_type_t type, int flag)
 			__CLK_GATE_ON(AIU_PCLK);
 			__CLK_GATE_ON(AIU_AOCLK);
 			__CLK_GATE_ON(AIU_ICE958_AMCLK);
-			__CLK_GATE_ON(AUD_IN);
-		} else {
+		} else { 
 			__CLK_GATE_OFF(AIU_AI_TOP_GLUE);
 			__CLK_GATE_OFF(AIU_IEC958);
 			__CLK_GATE_OFF(AIU_I2S_OUT);
@@ -250,7 +246,7 @@ static int _switch_gate(mod_type_t type, int flag)
 			__CLK_GATE_OFF(AIU_PCLK);
 			__CLK_GATE_OFF(AIU_AOCLK);
 			__CLK_GATE_OFF(AIU_ICE958_AMCLK);
-			__CLK_GATE_OFF(AUD_IN);
+	  
 		}
 		break;
 	#if 0
@@ -264,7 +260,7 @@ static int _switch_gate(mod_type_t type, int flag)
 			__CLK_GATE_OFF(HDMI_INTR_SYNC);
 			__CLK_GATE_OFF(HDMI_RX);
 			__CLK_GATE_OFF(HDMI_PCLK);
-		}
+		}			
 		break;
 	case MOD_VENC:
 		PRINT_INFO("turn %s venc module\n", flag?"on":"off");
@@ -288,10 +284,10 @@ static int _switch_gate(mod_type_t type, int flag)
 			__CLK_GATE_OFF(VCLK2_VENCP);
 		#ifndef CONFIG_MACH_MESON6_G02_DONGLE
 			__CLK_GATE_OFF(VCLK2_VENCP1);
-		#endif
-
+		#endif	 
+		
 			__CLK_GATE_OFF(VCLK2_ENCI);
-		#ifndef CONFIG_MACH_MESON6_G02_DONGLE
+		#ifndef CONFIG_MACH_MESON6_G02_DONGLE	  
 			__CLK_GATE_OFF(VCLK2_ENCP);
 		#endif
 			__CLK_GATE_OFF(VCLK2_VENCT);
@@ -385,10 +381,8 @@ static int _switch_gate(mod_type_t type, int flag)
 		PRINT_INFO("turn %s random_num_gen module\n", flag?"on":"off");
 		if (flag) {
 			__CLK_GATE_ON(RANDOM_NUM_GEN);
-			__CLK_GATE_ON(RANDOM_NUM_GEN1);
 		} else {
 			__CLK_GATE_OFF(RANDOM_NUM_GEN);
-			__CLK_GATE_OFF(RANDOM_NUM_GEN1);
 		}
 		break;
 	case MOD_ETHERNET:
@@ -534,7 +528,7 @@ static int put_mod(mod_record_t* mod_record)
 	unsigned long flags;
 	PRINT_INFO("put mod  %s\n", mod_record->name);
 	spin_lock_irqsave(&gate_lock, flags);
-	ret = _switch_gate(mod_record->type, 0);
+	ret = _switch_gate(mod_record->type, 0); 
 	spin_unlock_irqrestore(&gate_lock, flags);
 	return ret;
 }
@@ -569,7 +563,7 @@ EXPORT_SYMBOL(switch_mod_gate_by_name);
 void switch_lcd_mod_gate(int flag)
 {
 	unsigned long flags;
-
+	
 	spin_lock_irqsave(&gate_lock, flags);
 	PRINT_INFO("turn %s lcd module\n", flag?"on":"off");
 	if (flag) {
@@ -584,49 +578,6 @@ void switch_lcd_mod_gate(int flag)
 	spin_unlock_irqrestore(&gate_lock, flags);
 }
 EXPORT_SYMBOL(switch_lcd_mod_gate);
-
-#ifdef CONFIG_HIBERNATION
-static unsigned long gates_reg0, gates_reg1, gates_reg2;
-static unsigned long gates_reg_other, gates_reg_ao;
-#define GATES_REG0_MASK	(0x200000)
-#define GATES_REG2_MASK	(0x18)
-#define GATES_REG_OTHER_MASK (0x7d007fe)
-static int gates_suspend(void)
-{
-	unsigned long flags;
-	spin_lock_irqsave(&gate_lock, flags);
-	gates_reg0 = READ_CBUS_REG(HHI_GCLK_MPEG0) & (~GATES_REG0_MASK);
-	gates_reg1 = READ_CBUS_REG(HHI_GCLK_MPEG1);
-	gates_reg2 = READ_CBUS_REG(HHI_GCLK_MPEG2) & (~GATES_REG2_MASK);
-	gates_reg_other = READ_CBUS_REG(HHI_GCLK_OTHER) & (~GATES_REG_OTHER_MASK);
-	gates_reg_ao = READ_CBUS_REG(HHI_GCLK_AO);
-	spin_unlock_irqrestore(&gate_lock, flags);
-
-	return 0;
-}
-
-static void gates_resume(void)
-{
-	unsigned long flags, temp;
-	spin_lock_irqsave(&gate_lock, flags);
-	temp = READ_CBUS_REG(HHI_GCLK_MPEG0) & GATES_REG0_MASK;
-	WRITE_CBUS_REG(HHI_GCLK_MPEG0, gates_reg0 | temp);
-	WRITE_CBUS_REG(HHI_GCLK_MPEG1, gates_reg1);
-	temp = READ_CBUS_REG(HHI_GCLK_MPEG2) & GATES_REG2_MASK;
-	WRITE_CBUS_REG(HHI_GCLK_MPEG2, gates_reg2 | temp);
-	temp = READ_CBUS_REG(HHI_GCLK_OTHER) & GATES_REG_OTHER_MASK;
-	WRITE_CBUS_REG(HHI_GCLK_OTHER, gates_reg_other | temp);
-	WRITE_CBUS_REG(HHI_GCLK_AO, gates_reg_ao);
-	spin_unlock_irqrestore(&gate_lock, flags);
-}
-
-static struct syscore_ops gates_ops = {
-	.suspend = gates_suspend,
-	.resume = gates_resume,
-	.shutdown = NULL,
-};
-
-#endif
 
 void power_gate_init(void)
 {
@@ -754,10 +705,6 @@ static struct class_attribute aml_mod_attrs[]={
 static int __init mode_gate_mgr_init(void)
 {
 	int ret = 0, i = 0;
-#ifdef CONFIG_HIBERNATION
-	INIT_LIST_HEAD(&gates_ops.node);
-	register_syscore_ops(&gates_ops);
-#endif
 	power_gate_init();
 	mod_gate_clsp = class_create(THIS_MODULE, "aml_mod");
 	if(IS_ERR(mod_gate_clsp)){
@@ -773,8 +720,8 @@ err:
 	for(i=0; aml_mod_attrs[i].attr.name; i++){
 		class_remove_file(mod_gate_clsp, &aml_mod_attrs[i]);
 	}
-	class_destroy(mod_gate_clsp);
-	return -1;
+	class_destroy(mod_gate_clsp); 
+	return -1;  
 }
 arch_initcall(mode_gate_mgr_init);
 #endif
@@ -791,7 +738,9 @@ int  video_dac_disable()
 {
     //SET_CBUS_REG_MASK(VENC_VDAC_SETTING, 0x1f);
     //switch_mod_gate_by_name("venc", 0);
-
+  
     return 0;
 }
 EXPORT_SYMBOL(video_dac_disable);
+
+

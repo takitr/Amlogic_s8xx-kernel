@@ -29,3 +29,4 @@ int aml_pcmcia_reset(struct aml_pcmcia *pc);
 
 
 #endif /*_AML_PCMCIA_*/
+

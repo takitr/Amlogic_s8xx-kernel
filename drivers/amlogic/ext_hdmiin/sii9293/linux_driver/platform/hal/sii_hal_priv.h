@@ -9,7 +9,7 @@
  *
  * This program is distributed .as is. WITHOUT ANY WARRANTY of any
  * kind, whether express or implied; without even the implied warranty
- * of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
  * PURPOSE.  See the GNU General Public License for more details.
 */
 
@@ -37,8 +37,8 @@
 #include <linux/kthread.h>
 #include <linux/spinlock.h>
 
-#ifdef __cplusplus
-extern "C" {
+#ifdef __cplusplus 
+extern "C" { 
 #endif  /* _defined (__cplusplus) */
 
 /***** macro definitions *****************************************************/
@@ -51,7 +51,7 @@ extern "C" {
  * MHL TX device. */
 typedef struct  {
 	struct	i2c_driver	driver;
-	struct	i2c_adapter *pI2cAdapter;
+	struct	i2c_adapter *pI2cAdapter; 
 	struct	i2c_client	*pI2cClient;
 	fwIrqHandler_t		irqHandler;
     unsigned int        SilMonRequestIRQ;

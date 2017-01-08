@@ -16,7 +16,7 @@
     };
 
 //$$ DEVICE="dummy_codec_audio"
-//$$ L2 PROP_STR = "status"
+//$$ L2 PROP_STR = "status"	
 //$$ L2 PROP_STR = "pinctrl-names"
 //$$ L3 PROP_CHOICE "dummy_codec_audio_0_pin_match" = "pinctrl-0"
 	dummy_codec_audio{
@@ -26,13 +26,13 @@
         pinctrl-names = "dummy_codec_audio";
         pinctrl-0 = <&aml_dummy_codec_pins>;
     };
-
+ 
 //$$ DEVICE="dummy_codec"
-//$$ L2 PROP_STR = "status"
+//$$ L2 PROP_STR = "status"	 
     dummy_codec{
         status = "okay";
         compatible = "amlogic,aml_dummy_codec";
         dev_name = "dummy_codec.0";
     };
 
-#endif
+#endif        

@@ -132,7 +132,7 @@
 
 //#define MLVDS_CONFIG_HI                            0x14c7
 //#define MLVDS_CONFIG_LO                            0x14c8
-   #define     mLVDS_reset_offset         29 // Bit 31:29
+   #define     mLVDS_reset_offset         29 // Bit 31:29 
    #define     mLVDS_reset_length         23 // Bit 28:23
    #define     mLVDS_config_reserved      20 // Bit 22:20
    #define     mLVDS_reset_start_bit12    19 // Bit 19
@@ -143,7 +143,7 @@
    #define     mLVDS_data_latch_0_toggle  14
    #define     mLVDS_data_latch_0_ini     13
    #define     mLVDS_reset_1_select       12 // 0 - same as reset_0, 1 - 1 clock delay of reset_0
-   #define     mLVDS_reset_start           0 // Bit 11:0
+   #define     mLVDS_reset_start           0 // Bit 11:0   
 
 //#define TCON_DOUBLE_CTL                            0x14c9
    #define     tcon_double_ini          8 // Bit 7:0
@@ -180,7 +180,7 @@
 //#define MLVDS_CLK_CTL_HI                           0x14f4
 //#define MLVDS_CLK_CTL_LO                           0x14f5
    #define     mlvds_clk_pattern_reserved 31 // Bit 31
-   #define     mpclk_dly                  28 // Bit 2:0
+   #define     mpclk_dly                  28 // Bit 2:0 
    #define     mpclk_div                  26 // Bit 1:0 (control phy clok divide 2,4,6,8)
    #define     use_mpclk                  25 // Bit 0
    #define     mlvds_clk_half_delay       24 // Bit 0
@@ -195,5 +195,6 @@
    #define     mlvds_dual_gate_rd_end      0 // Bit 12:0
 //#define MLVDS_SECOND_RESET_CTL                     0x14fa
    #define     mLVDS_2nd_reset_start       0 // Bit 12:0
-
+   
 #endif
+

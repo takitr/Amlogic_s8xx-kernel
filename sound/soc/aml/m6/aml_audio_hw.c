@@ -82,7 +82,7 @@ unsigned int dac_mute_const = 0x800000;
 /*
                                 fIn * (M)
             Fout   =  -----------------------------
-				(N) * (OD+1) * (XD)
+                      		(N) * (OD+1) * (XD)
 */
 #if MESON_CPU_TYPE >= MESON_CPU_TYPE_MESON6
 int audio_clock_config_table[][12][2]=
@@ -232,7 +232,7 @@ void audio_set_958outbuf(u32 addr, u32 size,int flag)
 {
     if (ENABLE_IEC958) {
         WRITE_MPEG_REG(AIU_MEM_IEC958_START_PTR, addr & 0xffffffc0);
-		if(READ_MPEG_REG(AIU_MEM_IEC958_START_PTR) == READ_MPEG_REG(AIU_MEM_I2S_START_PTR)){
+	  	if(READ_MPEG_REG(AIU_MEM_IEC958_START_PTR) == READ_MPEG_REG(AIU_MEM_I2S_START_PTR)){
 			WRITE_MPEG_REG(AIU_MEM_IEC958_RD_PTR, READ_MPEG_REG(AIU_MEM_I2S_RD_PTR));
 		}
 		else
@@ -263,17 +263,17 @@ static void i2sin_fifo0_set_buf(u32 addr, u32 size,u32 i2s_mode)
 	WRITE_MPEG_REG(AUDIN_FIFO0_END, (addr&0xffffffc0) + (size&0xffffffc0)-8);
 
 	WRITE_MPEG_REG(AUDIN_FIFO0_CTRL, (1<<AUDIN_FIFO0_EN)	// FIFO0_EN
-								|(1<<AUDIN_FIFO0_LOAD)	// load start address./* AUDIN_FIFO0_LOAD */
+    								|(1<<AUDIN_FIFO0_LOAD)	// load start address./* AUDIN_FIFO0_LOAD */
 								|(1<<AUDIN_FIFO0_DIN_SEL)	// DIN from i2sin./* AUDIN_FIFO0_DIN_SEL */
-								//|(1<<6)	// 32 bits data in./*AUDIN_FIFO0_D32b */
+	    							//|(1<<6)	// 32 bits data in./*AUDIN_FIFO0_D32b */
 									//|(0<<7)	// put the 24bits data to  low 24 bits./* AUDIN_FIFO0_h24b */16bit
 								|(4<<AUDIN_FIFO0_ENDIAN)	// /*AUDIN_FIFO0_ENDIAN */
 								|(2<<AUDIN_FIFO0_CHAN)//2 channel./* AUDIN_FIFO0_CHAN*/
-								|(0<<16)	//to DDR
+		    						|(0<<16)	//to DDR
                                                        |(1<<AUDIN_FIFO0_UG)    // Urgent request.  DDR SDRAM urgent request enable.
                                                        |(0<<17)    // Overflow Interrupt mask
                                                        |(0<<18)    // Audio in INT
-								//|(1<<19)	//hold 0 enable
+			                                	//|(1<<19)	//hold 0 enable
 								|(0<<AUDIN_FIFO0_UG)	// hold0 to aififo
 				  );
 
@@ -291,10 +291,10 @@ static void i2sin_fifo0_set_buf(u32 addr, u32 size,u32 i2s_mode)
 									|(1<<I2SIN_POS_SYNC)
 #endif
 									|(1<<I2SIN_LRCLK_SKEW)
-								|(1<<I2SIN_LRCLK_INVT)
+                                    				|(1<<I2SIN_LRCLK_INVT)
 									|(!mode<<I2SIN_CLK_SEL)
 									|(!mode<<I2SIN_LRCLK_SEL)
-								|(!mode<<I2SIN_DIR)
+				    				|(!mode<<I2SIN_DIR)
 				  );
 
 }
@@ -305,17 +305,17 @@ static void spdifin_fifo1_set_buf(u32 addr, u32 size)
 	WRITE_MPEG_REG(AUDIN_FIFO0_PTR, (addr&0xffffffc0));
 	WRITE_MPEG_REG(AUDIN_FIFO0_END, (addr&0xffffffc0) + (size&0xffffffc0)-8);
 	WRITE_MPEG_REG(AUDIN_FIFO0_CTRL, (1<<AUDIN_FIFO0_EN)	// FIFO0_EN
-								|(1<<AUDIN_FIFO0_LOAD)	// load start address./* AUDIN_FIFO0_LOAD */
+    								|(1<<AUDIN_FIFO0_LOAD)	// load start address./* AUDIN_FIFO0_LOAD */
 								|(0<<AUDIN_FIFO0_DIN_SEL)	// DIN from i2sin./* AUDIN_FIFO0_DIN_SEL */
-								//|(1<<6)	// 32 bits data in./*AUDIN_FIFO0_D32b */
+	    							//|(1<<6)	// 32 bits data in./*AUDIN_FIFO0_D32b */
 									//|(0<<7)	// put the 24bits data to  low 24 bits./* AUDIN_FIFO0_h24b */16bit
 								|(4<<AUDIN_FIFO0_ENDIAN)	// /*AUDIN_FIFO0_ENDIAN */
 								|(2<<AUDIN_FIFO0_CHAN)//2 channel./* AUDIN_FIFO0_CHAN*/
-								|(0<<16)	//to DDR
+		    						|(0<<16)	//to DDR
                                                        |(1<<AUDIN_FIFO0_UG)    // Urgent request.  DDR SDRAM urgent request enable.
                                                        |(0<<17)    // Overflow Interrupt mask
                                                        |(0<<18)    // Audio in INT
-								//|(1<<19)	//hold 0 enable
+			                                	//|(1<<19)	//hold 0 enable
 								|(0<<AUDIN_FIFO0_UG)	// hold0 to aififo
 				  );
 	WRITE_MPEG_REG(AUDIN_FIFO0_CTRL1,0xc);
@@ -340,7 +340,7 @@ void audio_in_spdif_set_buf(u32 addr, u32 size)
 
 void audio_in_i2s_enable(int flag)
 {
-	int rd = 0, start=0;
+  	int rd = 0, start=0;
 	if(flag){
           /* reset only when start i2s input */
 reset_again:
@@ -457,7 +457,7 @@ void audio_set_i2s_mode(u32 mode)
 
 void audio_util_set_dac_format(unsigned format)
 {
-	WRITE_MPEG_REG(AIU_CLK_CTRL,		 (0 << 12) | // 958 divisor more, if true, divided by 2, 4, 6, 8.
+  	WRITE_MPEG_REG(AIU_CLK_CTRL,		 (0 << 12) | // 958 divisor more, if true, divided by 2, 4, 6, 8.
 							(1 <<  8) | // alrclk skew: 1=alrclk transitions on the cycle before msb is sent
 							(1 <<  6) | // invert aoclk
 							(1 <<  7) | // invert lrclk
@@ -475,10 +475,10 @@ void audio_util_set_dac_format(unsigned format)
     } else if (format == AUDIO_ALGOUT_DAC_FORMAT_LEFT_JUSTIFY) {
         WRITE_MPEG_REG_BITS(AIU_CLK_CTRL, 0, 8, 2);
     }
-	if(dac_mute_const == 0x800000)
-	WRITE_MPEG_REG(AIU_I2S_DAC_CFG, 	0x000f);	// Payload 24-bit, Msb first, alrclk = aoclk/64.mute const 0x800000
+ 	if(dac_mute_const == 0x800000)
+    	WRITE_MPEG_REG(AIU_I2S_DAC_CFG, 	0x000f);	// Payload 24-bit, Msb first, alrclk = aoclk/64.mute const 0x800000
     else
-	WRITE_MPEG_REG(AIU_I2S_DAC_CFG, 	0x0007);	// Payload 24-bit, Msb first, alrclk = aoclk/64
+    	WRITE_MPEG_REG(AIU_I2S_DAC_CFG, 	0x0007);	// Payload 24-bit, Msb first, alrclk = aoclk/64
 	WRITE_MPEG_REG(AIU_I2S_SOURCE_DESC, 0x0001);	// four 2-channel
 }
 
@@ -511,10 +511,10 @@ void audio_util_set_dac_i2s_format(unsigned format)
     } else if (format == AUDIO_ALGOUT_DAC_FORMAT_LEFT_JUSTIFY) {
         WRITE_MPEG_REG_BITS(AIU_CLK_CTRL, 0, 8, 2);
     }
-	if(dac_mute_const == 0x800000)
-	WRITE_MPEG_REG(AIU_I2S_DAC_CFG, 	0x000f);	// Payload 24-bit, Msb first, alrclk = aoclk/64.mute const 0x800000
+ 	if(dac_mute_const == 0x800000)
+    	WRITE_MPEG_REG(AIU_I2S_DAC_CFG, 	0x000f);	// Payload 24-bit, Msb first, alrclk = aoclk/64.mute const 0x800000
     else
-	WRITE_MPEG_REG(AIU_I2S_DAC_CFG, 	0x0007);	// Payload 24-bit, Msb first, alrclk = aoclk/64
+    	WRITE_MPEG_REG(AIU_I2S_DAC_CFG, 	0x0007);	// Payload 24-bit, Msb first, alrclk = aoclk/64
 	WRITE_MPEG_REG(AIU_I2S_SOURCE_DESC, 0x0001);	// four 2-channel
 }
 
@@ -1109,7 +1109,7 @@ static void audio_hw_set_958_pcm24(_aiu_958_raw_setting_t * set)
 void audio_set_958_mode(unsigned mode, _aiu_958_raw_setting_t * set)
 {
     if(mode == AIU_958_MODE_PCM_RAW){
-	mode = AIU_958_MODE_PCM16; //use 958 raw pcm mode
+    	mode = AIU_958_MODE_PCM16; //use 958 raw pcm mode
        WRITE_MPEG_REG(AIU_958_VALID_CTRL,3);//enable 958 invalid bit
     }
     else
@@ -1173,8 +1173,8 @@ void audio_hw_958_enable(unsigned flag)
 unsigned int read_i2s_mute_swap_reg(void)
 {
 	unsigned int val;
-	val = READ_MPEG_REG(AIU_I2S_MUTE_SWAP);
-	return val;
+    	val = READ_MPEG_REG(AIU_I2S_MUTE_SWAP);
+    	return val;
 }
 
 void audio_i2s_swap_left_right(unsigned int flag)

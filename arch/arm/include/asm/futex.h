@@ -3,6 +3,11 @@
 
 #ifdef __KERNEL__
 
+#if defined(CONFIG_CPU_USE_DOMAINS) && defined(CONFIG_SMP)
+/* ARM doesn't provide unprivileged exclusive memory accessors */
+#include <asm-generic/futex.h>
+#else
+
 #include <linux/futex.h>
 #include <linux/uaccess.h>
 #include <asm/errno.h>
@@ -23,7 +28,6 @@
 
 #define __futex_atomic_op(insn, ret, oldval, tmp, uaddr, oparg)	\
 	smp_mb();						\
-	prefetchw(uaddr);					\
 	__asm__ __volatile__(					\
 	"1:	ldrex	%1, [%3]\n"				\
 	"	" insn "\n"					\
@@ -47,8 +51,6 @@ futex_atomic_cmpxchg_inatomic(u32 *uval, u32 __user *uaddr,
 		return -EFAULT;
 
 	smp_mb();
-	/* Prefetching cannot fault */
-	prefetchw(uaddr);
 	__asm__ __volatile__("@futex_atomic_cmpxchg_inatomic\n"
 	"1:	ldrex	%1, [%4]\n"
 	"	teq	%1, %2\n"
@@ -162,5 +164,6 @@ futex_atomic_op_inuser (int encoded_op, u32 __user *uaddr)
 	return ret;
 }
 
+#endif /* !(CPU_USE_DOMAINS && SMP) */
 #endif /* __KERNEL__ */
 #endif /* _ASM_ARM_FUTEX_H */

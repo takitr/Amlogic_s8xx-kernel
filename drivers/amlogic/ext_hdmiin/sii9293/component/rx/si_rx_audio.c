@@ -235,7 +235,7 @@ static uint32_t get_tclk_10kHz(void)
 //-------------------------------------------------------------------------------------------------
 static void set_mclk(void)
 {
-	rxCfgAudioMclk_t mclk = RX_CFG_256FS;   //the minimum MCLK for TDM is 256*fs, set MCLK as 256*fs always
+	rxCfgAudioMclk_t mclk = RX_CFG_256FS;   //the minimum MCLK for TDM is 256*fs, set MCLK as 256*fs always 
 
 	uint8_t fs_code_per_channel = AUDIO_CHST4__FS_UNKNOWN;
 
@@ -295,7 +295,7 @@ static void set_mclk(void)
 
 	SiiRegWrite(RX_A__FREQ_SVAL, (mclk << 6) | (mclk << 4) | fs_code_per_channel);
 
-	if(fs_code_per_channel == AUDIO_CHST4__FS_UNKNOWN)
+	if(fs_code_per_channel == AUDIO_CHST4__FS_UNKNOWN) 
 	{
 		//if DSD mode or calculated Fs invalid
 		SiiRegBitsSet(RX_A__ACR_CTRL1, RX_M__ACR_CTRL1__FS_SEL, OFF);
@@ -385,7 +385,7 @@ void RxAudio_OnChannelStatusChange(void)
 {
 	SiiRegReadBlock(RX_A__CHST1, &audio_vars.channel_status[0], 3);
 
-	audio_vars.encoded =
+	audio_vars.encoded = 
 		(0 != (audio_vars.channel_status[0] & AUDIO_CHST1__ENCODED));
 
 
@@ -530,3 +530,6 @@ void RxAudio_Init(void)
 
 	RxAudio_Start();
 }
+
+
+

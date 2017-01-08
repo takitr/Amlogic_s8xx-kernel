@@ -50,3 +50,4 @@ enum amvideocap_state{
 	AMVIDEOCAP_STATE_ERROR=0xffff,
 };
 #endif//__AMVIDEOCAP_HEADHER_
+

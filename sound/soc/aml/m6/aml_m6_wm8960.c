@@ -101,7 +101,7 @@ static int aml_audio_hp_detect(struct aml_audio_private_data *p_aml_audio)
 {
     int val = amlogic_get_value(p_aml_audio->gpio_hp_det,"wm8960");
     //printk("***********%s*****val=%d******\n",__func__,val);
-    return p_aml_audio->det_pol_inv ? val:(!val);
+    return p_aml_audio->det_pol_inv ? val:(!val); 
 }
 
 
@@ -170,7 +170,7 @@ static int aml_asoc_hw_params(struct snd_pcm_substream *substream,
     }
     /*set codec DAI sysclk divider,now 512fs for MCLK,sysclk divide 2  */
     snd_soc_dai_set_clkdiv(codec_dai,WM8960_SYSCLKDIV,WM8960_SYSCLK_DIV_2);
-
+    
     /* set cpu DAI clock */
     ret = snd_soc_dai_set_sysclk(cpu_dai, 0, params_rate(params) * 512, SND_SOC_CLOCK_OUT);
     if (ret < 0) {
@@ -304,7 +304,7 @@ static int aml_asoc_init(struct snd_soc_pcm_runtime *rtd)
     struct snd_soc_dapm_context *dapm = &codec->dapm;
     struct aml_audio_private_data * p_aml_audio;
     int ret = 0;
-
+    
     printk(KERN_DEBUG "enter %s \n", __func__);
     p_aml_audio = snd_soc_card_get_drvdata(card);
 
@@ -317,7 +317,7 @@ static int aml_asoc_init(struct snd_soc_pcm_runtime *rtd)
     /* not connected */
     snd_soc_dapm_nc_pin(dapm, "LINPUT3");
     snd_soc_dapm_nc_pin(dapm, "RINPUT3");
-
+    
     snd_soc_dapm_nc_pin(dapm, "OUT3");
 
     /* always connected */
@@ -337,7 +337,7 @@ static int aml_asoc_init(struct snd_soc_pcm_runtime *rtd)
             printk(KERN_WARNING "Failed to setup hp pins\n");
         }
     }
-#if HP_IRQ
+#if HP_IRQ  
     p_aml_audio->gpio_hp_det = of_get_named_gpio(card->dev->of_node,"wm8960_gpio",0);
 
     if (gpio_is_valid(p_aml_audio->gpio_hp_det)) {
@@ -364,30 +364,30 @@ static int aml_asoc_init(struct snd_soc_pcm_runtime *rtd)
 #endif
 
 //p_aml_audio->dis_hp_det = of_property_read_bool(card->dev->of_node,"dis_hp_det");
-     ret = of_property_read_u32(card->dev->of_node,"dis_hp_det",(u32 *)&p_aml_audio->dis_hp_det);
+     ret = of_property_read_u32(card->dev->of_node,"dis_hp_det",(u32 *)&p_aml_audio->dis_hp_det);
      printk("******p_aml_audio->dis_hp_det=%d***\n",p_aml_audio->dis_hp_det);
     if(ret){
         printk("don't find match dis_hp_det\n");
         goto out1;
     }
-
+  
     if(!p_aml_audio->dis_hp_det){
         printk("****mm**p_aml_audio->dis_hp_det\n");
         //JD2 as headphone detect
-        snd_soc_update_bits(codec,27, 0x008, 0x008);// OUT3 buffer Enabled and disabled with HPL and HPR jack detect
-        //INSERT_DELAY    [1]
-        mdelay(1);
+        snd_soc_update_bits(codec,27, 0x008, 0x008);// OUT3 buffer Enabled and disabled with HPL and HPR jack detect              
+        //INSERT_DELAY    [1] 
+        mdelay(1);      
         ///GPIO1 output the "jack detect output"
-        snd_soc_update_bits(codec,48, 0x03A, 0x03A);// JD2 used for Jack Detect Input, GPIO function = jack detect output
+        snd_soc_update_bits(codec,48, 0x03A, 0x03A);// JD2 used for Jack Detect Input, GPIO function = jack detect output 
 
-        snd_soc_update_bits(codec,24, 0x040, 0x040);// HPDETECT LOW = Speaker
-
+        snd_soc_update_bits(codec,24, 0x040, 0x040);// HPDETECT LOW = Speaker 
+    
         snd_soc_update_bits(codec, 23, 0x1D1, 0x1D1);
         mdelay(500);
 
     }
-out1:
-
+out1:    
+   
     return 0;
 }
 
@@ -463,19 +463,19 @@ static struct device_node * find_avaliable_asoc_device(struct device_node *pnode
 
     for (np = of_get_next_child(sound_cardp, NULL); np;
             np = of_get_next_child(sound_cardp, np)) {
-        int status = of_device_is_available(np);
+        int status = of_device_is_available(np); 
         if(status){
-            printk("find usable sound card in the parent node of %s\n",name);
+            printk("find usable sound card in the parent node of %s\n",name);      
             of_node_put(sound_cardp);
             return np;
         }else{
             continue;
-        }
+        }   
     }
     return NULL;
 }
 
-*/
+*/       
 static int aml_m6_audio_probe(struct platform_device *pdev)
 {
 //    struct device_node *np = pdev->dev.of_node;
@@ -554,7 +554,7 @@ static int aml_m6_audio_remove(struct platform_device *pdev)
     struct snd_soc_card *card;
     struct aml_audio_private_data *p_aml_audio;
 
-    card = platform_get_drvdata(pdev);
+    card = platform_get_drvdata(pdev);  
     p_aml_audio = snd_soc_card_get_drvdata(card);
 #if HP_IRQ
 
@@ -620,3 +620,5 @@ MODULE_DESCRIPTION("AML_M6 audio machine Asoc driver");
 MODULE_LICENSE("GPL");
 MODULE_ALIAS("platform:" DRV_NAME);
 MODULE_DEVICE_TABLE(of, amlogic_audio_dt_match);
+
+

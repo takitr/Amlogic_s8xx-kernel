@@ -8,7 +8,7 @@
 #include <linux/module.h>
 #include <linux/platform_device.h>
 #include <linux/slab.h>
-#include <linux/jiffies.h>
+#include <linux/jiffies.h> 
 #include <linux/i2c.h>
 #include <linux/i2c-aml.h>
 #include <linux/miscdevice.h>
@@ -102,10 +102,7 @@ static int bl_extern_power_on(void)
     }
 #endif
     if (bl_ext_config->gpio_used > 0) {
-        if (bl_ext_config->gpio_on==2)
-            bl_extern_gpio_direction_input(bl_ext_config->gpio);
-        else
-            bl_extern_gpio_direction_output(bl_ext_config->gpio, bl_ext_config->gpio_on);
+        bl_extern_gpio_direction_output(bl_ext_config->gpio, 1);
     }
 
     printk("%s\n", __FUNCTION__);
@@ -121,10 +118,7 @@ static int bl_extern_power_off(void)
     int ret = 0;
 
     if (bl_ext_config->gpio_used > 0) {
-        if (bl_ext_config->gpio_off==2)
-            bl_extern_gpio_direction_input(bl_ext_config->gpio);
-        else
-            bl_extern_gpio_direction_output(bl_ext_config->gpio, bl_ext_config->gpio_off);
+        bl_extern_gpio_direction_output(bl_ext_config->gpio, 0);
     }
 #ifdef CONFIG_AMLOGIC_BOARD_HAS_PMU
     pmu_driver = aml_pmu_get_driver();
@@ -147,6 +141,25 @@ static int bl_extern_power_off(void)
 
     printk("%s\n", __FUNCTION__);
     return ret;
+}
+
+static int bl_extern_driver_update(void)
+{
+    struct aml_bl_extern_driver_t* bl_ext;
+
+    bl_ext = aml_bl_extern_get_driver();
+    if (bl_ext) {
+        bl_ext->type      = bl_ext_config->type;
+        bl_ext->name      = bl_ext_config->name;
+        bl_ext->power_on  = bl_extern_power_on;
+        bl_ext->power_off = bl_extern_power_off;
+        bl_ext->set_level = bl_extern_set_level;
+    }
+    else {
+        printk("[error] %s get bl_extern_driver failed\n", bl_ext_config->name);
+    }
+
+    return 0;
 }
 
 //***********************************************//
@@ -205,39 +218,6 @@ static struct class bl_extern_debug_class = {
 };
 //*********************************************************//
 
-static int get_bl_extern_config(struct device_node* of_node, struct bl_extern_config_t *bl_ext_cfg)
-{
-    int ret = 0;
-    struct aml_bl_extern_driver_t* bl_ext;
-
-    ret = get_bl_extern_dt_data(of_node, bl_ext_cfg);
-    if (ret) {
-        printk("[error] %s: failed to get dt data\n", BL_EXTERN_NAME);
-        return ret;
-    }
-
-    if (bl_ext_cfg->dim_min > 0x1f)
-        bl_ext_cfg->dim_min = 0x1f;
-    if (bl_ext_cfg->dim_max > 0x1f)
-        bl_ext_cfg->dim_max = 0x1f;
-
-    //bl extern driver update
-    bl_ext = aml_bl_extern_get_driver();
-    if (bl_ext) {
-        bl_ext->type      = bl_ext_cfg->type;
-        bl_ext->name      = bl_ext_cfg->name;
-        bl_ext->power_on  = bl_extern_power_on;
-        bl_ext->power_off = bl_extern_power_off;
-        bl_ext->set_level = bl_extern_set_level;
-    }
-    else {
-        printk("[error] %s get bl_extern_driver failed\n", bl_ext_cfg->name);
-        ret = -1;
-    }
-
-    return ret;
-}
-
 static int aml_aml1218_probe(struct platform_device *pdev)
 {
     int ret = 0;
@@ -254,10 +234,12 @@ static int aml_aml1218_probe(struct platform_device *pdev)
 
     pdev->dev.platform_data = bl_ext_config;
 
-    ret = get_bl_extern_config(pdev->dev.of_node, bl_ext_config);
-    if (ret) {
+    if (get_bl_extern_dt_data(pdev->dev.of_node, bl_ext_config) != 0) {
+        printk("[error] %s probe: failed to get dt data\n", BL_EXTERN_NAME);
         goto bl_extern_probe_failed;
     }
+
+    bl_extern_driver_update();
 
     ret = class_register(&bl_extern_debug_class);
     if(ret){
@@ -268,10 +250,8 @@ static int aml_aml1218_probe(struct platform_device *pdev)
     return ret;
 
 bl_extern_probe_failed:
-    if (bl_ext_config) {
+    if (bl_ext_config)
         kfree(bl_ext_config);
-        bl_ext_config = NULL;
-    }
     return -1;
 }
 

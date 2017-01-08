@@ -1,10 +1,10 @@
 /*******************************************************************
- *
+ * 
  *  Copyright C 2012 by Amlogic, Inc. All Rights Reserved.
  *
- *  Description:
+ *  Description: 
  *
- *  Author: jian.xu
+ *  Author: jian.xu 
  *  Created: 04/16 2012
  *
  *******************************************************************/
@@ -12,11 +12,11 @@
 #include <linux/slab.h>
 #include <linux/module.h>
 #include <linux/fs.h>
-#include <asm/uaccess.h>
-#include <linux/device.h>
+#include <asm/uaccess.h>	
+#include <linux/device.h>	
 #include <linux/mm.h>
 #include <mach/am_regs.h>
-#include "pcmenc_stream.h"
+#include "pcmenc_stream.h"	
 #include <linux/amlogic/amports/dsp_register.h>
 
 
@@ -35,7 +35,7 @@ static int audiodsp_pcmenc_create_stream_buffer(void);
 static int audiodsp_pcmenc_destroy_stream_buffer(void);
 
 #define SUCCESS 0
-#define DEVICE_NAME "audiodsp_pcmenc"
+#define DEVICE_NAME "audiodsp_pcmenc"	
 
 #define MIN_CACHE_ALIGN(x)	(((x-4)&(~0x1f)))
 #define MAX_CACHE_ALIGN(x)	((x+0x1f)&(~0x1f))
@@ -46,20 +46,20 @@ static int audiodsp_pcmenc_destroy_stream_buffer(void);
 #define MIN(x,y)	(((x)<(y))?(x):(y))
 
 
-static int major;
+static int major;		
 static struct class *class_pcmenc;
 static struct device *dev_pcmenc;
-static int device_opened = 0;	/* Is device open?
+static int device_opened = 0;	/* Is device open?  
                              * Used to prevent multiple access to device */
 static pcm51_encoded_info_t pcminfo = {0};
 typedef struct {
-       void *stream_buffer_mem;
+       void *stream_buffer_mem; 
 	unsigned int stream_buffer_mem_size;
 	unsigned long stream_buffer_start;
 	unsigned long stream_buffer_end;
-	unsigned long stream_buffer_size;
+	unsigned long stream_buffer_size;	
 	unsigned long user_read_offset; //the offset of the stream buffer which user space reading
-}priv_data_t;
+}priv_data_t; 
 
 static priv_data_t priv_data = {0};
 
@@ -68,14 +68,14 @@ static ssize_t pcmenc_ptr_show(struct class* class, struct class_attribute* attr
 {
 	  ssize_t ret = 0;
 	  ret = sprintf(buf, "pcmenc runtime info:\n"
-	                     "  pcmenc rd ptr :\t%lx\n"
-	                     "  pcmenc wr ptr :\t%lx\n"
+	                     "  pcmenc rd ptr :\t%lx\n"    
+	                     "  pcmenc wr ptr :\t%lx\n"    
 	                     "  pcmenc level  :\t%x\n",
 	                     (DSP_RD(DSP_DECODE_51PCM_OUT_RD_ADDR)),
 	                     (DSP_RD(DSP_DECODE_51PCM_OUT_WD_ADDR)),
 	                     pcmenc_stream_content()
 	                     );
-	return ret;
+  	return ret;
 }
 static struct class_attribute pcmenc_attrs[]={
   __ATTR_RO(pcmenc_ptr),
@@ -126,7 +126,7 @@ static int __init audiodsp_pcmenc_init_module(void)
 
     priv_data.stream_buffer_mem_size = 2*2*512*1024+PAGE_SIZE;//buffer should be page aligned for mmap operation
 
-    ret = audiodsp_pcmenc_create_stream_buffer();
+    ret = audiodsp_pcmenc_create_stream_buffer(); 
     if(ret){
         goto err2;
     }
@@ -161,40 +161,40 @@ static int audiodsp_pcmenc_open(struct inode *inode, struct file *file)
 	device_opened++;
 	try_module_get(THIS_MODULE);
 #if  0
-	if(buf == NULL)
+	if(buf == NULL)	
 		buf = (char *)kmalloc(priv_data.stream_buffer_size, GFP_KERNEL);
 	if(buf == NULL){
-		device_opened--;
+		device_opened--; 	
 		module_put(THIS_MODULE);
 		printk("pcmenc: malloc buffer failed\n");
 		return -ENOMEM;
 	}
 #endif /* 0 */
-	//audiodsp_pcmenc_create_stream_buffer(); //init the r/p register
+	//audiodsp_pcmenc_create_stream_buffer(); //init the r/p register	
 	pcmenc_stream_init();
 	return SUCCESS;
 }
 
 static int audiodsp_pcmenc_release(struct inode *inode, struct file *file)
 {
-    device_opened--;
+    device_opened--;		
     module_put(THIS_MODULE);
-#if 0
+#if 0    
     if(buf){
         kfree(buf);
         buf = NULL;
     }
 #endif
-	audiodsp_pcmenc_create_stream_buffer(); //init the r/p register
+	audiodsp_pcmenc_create_stream_buffer(); //init the r/p register 
 
     pcmenc_stream_deinit();
 
     return SUCCESS;
 }
 
-static ssize_t audiodsp_pcmenc_read(struct file *filp,
-        char __user *buffer,
-        size_t length,
+static ssize_t audiodsp_pcmenc_read(struct file *filp,	
+        char __user *buffer,	
+        size_t length,	
         loff_t * offset)
 {
 #if 1
@@ -235,10 +235,10 @@ static int audiodsp_pcmenc_mmap(struct file *filp, struct vm_area_struct *vma)
         printk("	pcmenc : failed remap_pfn_range\n");
         return -EAGAIN;
     }
-    printk("pcmenc: mmap finished\n");
+    printk("pcmenc: mmap finished\n");	
     return 0;
 
-
+	
 }
 static long audiodsp_pcmenc_ioctl( struct file *file, unsigned int cmd, unsigned long args)
 {
@@ -267,11 +267,11 @@ static long audiodsp_pcmenc_ioctl( struct file *file, unsigned int cmd, unsigned
 			}
 			 ret = copy_to_user( (void __user *)args,&pcminfo, sizeof(pcminfo));
 			 if(ret != 0){
-				printk("pcm enc:copy to user error\n");
+			 	printk("pcm enc:copy to user error\n");
 			 }
 			break;
 		default:
-			printk("pcmenc:un-implemented  cmd\n");
+			printk("pcmenc:un-implemented  cmd\n");	
 			break;
 	}
 	return ret;
@@ -298,7 +298,7 @@ static int audiodsp_pcmenc_create_stream_buffer(void)
     memset((void *)priv_data.stream_buffer_mem, 0, priv_data.stream_buffer_mem_size);
     buf_map = dma_map_single(NULL, (void *)priv_data.stream_buffer_mem, priv_data.stream_buffer_mem_size, DMA_TO_DEVICE);
     dma_unmap_single(NULL, buf_map,  priv_data.stream_buffer_mem_size, DMA_TO_DEVICE);
-    wmb();
+    wmb();	
     priv_data.stream_buffer_start = PAGE_ALIGN((unsigned long)priv_data.stream_buffer_mem+PAGE_SIZE-1);
     priv_data.stream_buffer_end = PAGE_ALIGN((unsigned long)priv_data.stream_buffer_mem + priv_data.stream_buffer_mem_size);
     priv_data.stream_buffer_size = priv_data.stream_buffer_end - priv_data.stream_buffer_start;
@@ -334,12 +334,12 @@ static int audiodsp_pcmenc_destroy_stream_buffer(void)
 }
 void set_pcminfo_data(void *pcm_encoded_info)
 {
-	dma_addr_t buf_map;
-/*as this ptr got from arc dsp side,which mapping to 0 address,so add this dsp start offset */
+    	dma_addr_t buf_map;
+/*as this ptr got from arc dsp side,which mapping to 0 address,so add this dsp start offset */ 		
 	pcm51_encoded_info_t *info = (pcm51_encoded_info_t*)((unsigned)pcm_encoded_info+AUDIO_DSP_START_ADDR);
 	/* inv dcache as this data from device */
 	buf_map = dma_map_single(dev_pcmenc,(void*)info ,sizeof(pcm51_encoded_info_t),DMA_FROM_DEVICE);
-	dma_unmap_single(dev_pcmenc,buf_map,sizeof(pcm51_encoded_info_t),DMA_FROM_DEVICE);
+	dma_unmap_single(dev_pcmenc,buf_map,sizeof(pcm51_encoded_info_t),DMA_FROM_DEVICE);	
 	memcpy(&pcminfo,info,sizeof(pcm51_encoded_info_t));
 	printk("got pcm51 info from dsp \n");
 }

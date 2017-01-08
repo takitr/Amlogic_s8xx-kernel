@@ -34,7 +34,7 @@
 #define	SILDING_LENGTH				4//Sliding Window Length
 //===============================================================//
 //=============   Software Related Define   =============//
-#define ZERO_TOUCH	0
+#define ZERO_TOUCH	0	
 #define ONE_TOUCH	1
 #define TWO_TOUCH	2
 //===========================================================//
@@ -59,7 +59,7 @@ struct uor7x5x_touch_screen_struct {
 	int count;
 	int shift;
 	unsigned char n_touch;
-
+	
 	wait_queue_head_t wq;
 	spinlock_t lock;
 	struct timer_list	ts_timer;
@@ -108,7 +108,7 @@ static struct i2c_driver uor_i2c_driver = {
         .probe          = uor_probe,
         .remove         = __devexit_p(uor_remove),
         .suspend	= uor_suspend,
-        .resume		= uor_resume,
+        .resume		= uor_resume,	
 };
 
 VINT8 UOR_IICRead(VUINT8 Command, VUINT8 *readdata, VINT8 nread)
@@ -133,7 +133,7 @@ VINT8 UOR_IICRead(VUINT8 Command, VUINT8 *readdata, VINT8 nread)
 		printk(KERN_ERR "[IIC_Read]: i2c_transfer() return error !!!\n");
 		return -1;
 	}
-	return 0;
+	return 0; 
 }
 
 VINT8 UOR_IICWrite(VUINT8 Command,VUINT8 *data,VINT8 nread)
@@ -146,15 +146,15 @@ VINT8 UOR_IICWrite(VUINT8 Command,VUINT8 *data,VINT8 nread)
 			.buf		= data,
 		}
 	};
-
+	
 	data[0] = Command;
-
+	
 	if (i2c_transfer(ts.client->adapter, msgs1, 1) != 1)//tranfer two messages
 	{
 		printk(KERN_ERR "[IICWrite]: i2c_transfer() return error !!!\n");
 		return -1;
 	}
-	return 0;
+	return 0; 
 }
 
 static struct workqueue_struct *queue = NULL;
@@ -183,14 +183,14 @@ static int uor7x5x_init(void)
 #else
 	UOR_IICRead(0x10 | 0x80, buf, 2);
 	//printk(KERN_ERR "%s: buf[0],buf[1]= 0x%x,0x%x \n",__FUNCTION__, buf[0], buf[1]);
-#endif
+#endif	
 	return 0;
 }
 
 static void uor7x5x_read_data(unsigned int	*nTouch, int *x1, int *y1, int *x2, int *y2)
 {
 	unsigned char	buf[16];
-
+	
 	memset(buf, 0, sizeof(buf));
 /*
 	// 8 bytes data burst read with Firmware Version 1.0 only
@@ -206,12 +206,12 @@ static void uor7x5x_read_data(unsigned int	*nTouch, int *x1, int *y1, int *x2, i
 	// 8 bytes compact data burst read with Firmware Version 1.2
 	UOR_IICRead(0x37 | 0x80, buf, 8);
 	*nTouch = buf[1] >> 6 ;
-
+	
 	*x1 = (buf[3]<<4) | (buf[2]>>4);
 	*y1 = (buf[2]&0x0f)<<8 | buf[5];
 	*x2 = (buf[4]<<4) | (buf[7]>>4);
 	*y2 = (buf[7]&0x0f)<<8 | buf[6];
-
+	
 	//printk(KERN_ERR "%s: (x1,y1)=(%d,%d) (x2,y2)=(%d,%d) nTouch %d \n",__FUNCTION__, *x1, *y1, *x2, *y2, *nTouch);
 }
 
@@ -267,7 +267,7 @@ static void silding_avg_s(int *x, int *y)
 		buf_y[sliding_buf_index_s] = *y ;
 		sliding_buf_index_s = (sliding_buf_index_s + 1)%SILDING_LENGTH;
 		*x = sliding_sum_x / sliding_count_s;
-		*y = sliding_sum_y / sliding_count_s;
+		*y = sliding_sum_y / sliding_count_s;		
 	}
 	else//buffer full
 	{
@@ -328,10 +328,10 @@ static void silding_avg(int *x1, int *y1, int *x2, int *y2)
 		buf_y2[sliding_buf_index] = *y2 ;
 		sliding_buf_index = (sliding_buf_index + 1)%SILDING_LENGTH;
 		*x1 = sliding_sum_x1 / sliding_count;
-		*y1 = sliding_sum_y1 / sliding_count;
+		*y1 = sliding_sum_y1 / sliding_count;		
 		*x2 = sliding_sum_x2 / sliding_count;
 		*y2 = sliding_sum_y2 / sliding_count;
-
+		
 	}
 	else//buffer full
 	{
@@ -342,7 +342,7 @@ static void silding_avg(int *x1, int *y1, int *x2, int *y2)
 		sliding_sum_x1 -= buf_x1[sliding_buf_index];
 		sliding_sum_y1 -= buf_y1[sliding_buf_index];
 		sliding_sum_x2 -= buf_x2[sliding_buf_index];
-		sliding_sum_y2 -= buf_y2[sliding_buf_index];
+		sliding_sum_y2 -= buf_y2[sliding_buf_index];		
 		buf_x1[sliding_buf_index] = *x1 ;
 		buf_y1[sliding_buf_index] = *y1 ;
 		buf_x2[sliding_buf_index] = *x2 ;
@@ -351,7 +351,7 @@ static void silding_avg(int *x1, int *y1, int *x2, int *y2)
 		*x1 = sliding_sum_x1 / SILDING_LENGTH;
 		*y1 = sliding_sum_y1 / SILDING_LENGTH;
 		*x2 = sliding_sum_x2 / SILDING_LENGTH;
-		*y2 = sliding_sum_y2 / SILDING_LENGTH;
+		*y2 = sliding_sum_y2 / SILDING_LENGTH;		
 	}
 	//printk(KERN_ERR "after sliding:count %d, buf_index %d, (sum_x1,sum_y1)=(%d,%d) (sum_x2,sum_y2)=(%d,%d)\n",sliding_count, sliding_buf_index, sliding_sum_x1, sliding_sum_y1, sliding_sum_x2, sliding_sum_y2);
 }
@@ -359,7 +359,7 @@ static void silding_avg(int *x1, int *y1, int *x2, int *y2)
 static irqreturn_t uor_isr(int irq,void *dev_id)
 {
 	struct i2c_client *client = (struct i2c_client *)dev_id;
-
+	
 	//printk(KERN_ERR "uor.c: uor_isr\n");
 	disable_irq_nosync(client->irq);
 	queue_work(queue, &work);
@@ -398,12 +398,12 @@ static void uor_read_loop(struct work_struct *data)
 				y = y2;
 			}
 		}
-
+		
 		ts.xp = x;
 		ts.yp = y;
 		x = ts.xp;
 		y = ts.yp;
-
+		
 		if(nTouch == TWO_TOUCH)
 		{
 			silding_init_s();
@@ -431,7 +431,7 @@ static void uor_read_loop(struct work_struct *data)
 			else{
 			        //report dual touch p1 ,p2 to Linux/Android
 			        //printk(KERN_ERR "%s:report dual touch for android (x1,y1)=(%d,%d) (x2,y2)=(%d,%d)  !!!\n",__FUNCTION__, x1, y1, x2, y2);
-
+			        
 			        //sliding avgerage
 			        silding_x1 = x1;
 			        silding_y1 = y1;
@@ -439,46 +439,46 @@ static void uor_read_loop(struct work_struct *data)
 			        silding_y2 = y2;
 			        silding_avg(&silding_x1, &silding_y1, &silding_x2, &silding_y2);
 			        //printk(KERN_ERR "%s: after silding avg:(x1,y1)=(%d,%d) (x2,y2)=(%d,%d)\n",__FUNCTION__, silding_x1, silding_y1, silding_x2, silding_y2 );
-
+			        
 			        input_report_abs(ts.dev, ABS_MT_TOUCH_MAJOR, 800 + ((x1+y1)%200));
 			        //input_report_abs(ts.dev, ABS_MT_WIDTH_MAJOR, 500+press);
-
+			        
 			        xy = 0;
 			        out_x = silding_x1;
 			        out_y = silding_y1;
 			        if(ts.pdata->convert){
-					xy = ts.pdata->convert(out_x, out_y);
-					out_x = xy >> 16;
-					out_y = xy & 0xffff;
+			        	xy = ts.pdata->convert(out_x, out_y);
+			        	out_x = xy >> 16;
+			        	out_y = xy & 0xffff;
 			        }
 			        //printk(KERN_ERR "%s:TWO_TOUCH (x1,y1)=(%d,%d)\n",__FUNCTION__, out_x, out_y);
-
+			        
 			        input_report_abs(ts.dev, ABS_MT_POSITION_X, out_x);
 			        input_report_abs(ts.dev, ABS_MT_POSITION_Y, out_y);
 			        input_mt_sync(ts.dev);
-
+			        
 			        input_report_abs(ts.dev, ABS_MT_TOUCH_MAJOR, 800 + ((x1+y1)%200));
 			        //input_report_abs(ts.dev, ABS_MT_WIDTH_MAJOR, 600+press);
-
+			        
 			        xy = 0;
 			        out_x = silding_x2;
 			        out_y = silding_y2;
 			        if(ts.pdata->convert){
-					xy = ts.pdata->convert(out_x, out_y);
-					out_x = xy >> 16;
-					out_y = xy & 0xffff;
+			        	xy = ts.pdata->convert(out_x, out_y);
+			        	out_x = xy >> 16;
+			        	out_y = xy & 0xffff;
 			        }
 			        //printk(KERN_ERR "%s:TWO_TOUCH (x2,y2)=(%d,%d)\n",__FUNCTION__, out_x, out_y);
-
+			        
 			        input_report_abs(ts.dev, ABS_MT_POSITION_X, out_x );
 			        input_report_abs(ts.dev, ABS_MT_POSITION_Y, out_y );
 			        input_mt_sync(ts.dev);
-
+			        
 			        input_sync(ts.dev);
-
+			        
 			        TWOTouchFlag = 1;
 			        OneTCountAfter2 = 0;
-
+			        
 			        pre_x1 = x1;
 			        pre_y1 = y1;
 			        pre_x2 = x2;
@@ -487,7 +487,7 @@ static void uor_read_loop(struct work_struct *data)
 			}
 		}
 		else if(nTouch == ONE_TOUCH){
-			silding_init();
+			silding_init();	
 			if((TWOTouchFlag == 1) && (OneTCountAfter2 < ONETOUCHCountAfter2)){
 				//printk(KERN_ERR "%s:filter after two touch -- (x,y)=(%d,%d) ,OneTCountAfter2 = %d, ONETOUCHCountAfter2 = %d !!!\n",__FUNCTION__, x, y, OneTCountAfter2, ONETOUCHCountAfter2);
 				OneTCountAfter2++;
@@ -495,10 +495,10 @@ static void uor_read_loop(struct work_struct *data)
 				pre_y1 = 0;
 				pre_x2 = 0;
 				pre_y2 = 0;
-
+				
 				msleep(DROP_POINT_DELAY);
 				continue;//re-start the loop
-			}
+			}		
 			else if((TWOTouchFlag == 0) && (FirstTC < FIRSTTOUCHCOUNT)){
 				//printk(KERN_ERR "%s:filter before single touch -- (x,y)=(%d,%d) ,FirstTC = %d, FIRSTTOUCHCOUNT = %d !!!\n",__FUNCTION__, x, y, FirstTC, FIRSTTOUCHCOUNT);
 				FirstTC++;
@@ -513,40 +513,40 @@ static void uor_read_loop(struct work_struct *data)
 			else{
 			        //printk(KERN_ERR "%s:report single touch-- (x,y)=(%d,%d) !!!\n",__FUNCTION__, x, y);
 			        //report x,y,pressure,size to Linux/Android
-
+			        
 			        //sliding avgerage
 			        silding_x = ts.xp;
 			        silding_y = ts.yp;
 			        silding_avg_s(&silding_x , &silding_y);
 			        //printk(KERN_ERR "%s: after silding avg:(x,y)=(%d,%d) \n",__FUNCTION__, silding_x, silding_y);
-
+			        
 			        input_report_abs(ts.dev, ABS_MT_TOUCH_MAJOR, 800 + ((ts.xp+ts.yp)%200) );
 			        //input_report_abs(ts.dev, ABS_MT_WIDTH_MAJOR, 300);
-
+			        
 			        //printk(KERN_ERR "%s:ONE_TOUCH (silding_x,silding_y)=(%d,%d)\n",__FUNCTION__, silding_x, silding_y);
 			        xy = 0;
 			        out_x = silding_x;
 			        out_y = silding_y;
 			        if(ts.pdata->convert){
-					xy = ts.pdata->convert(out_x, out_y);
-					out_x = xy >> 16;
-					out_y = xy & 0xffff;
+			        	xy = ts.pdata->convert(out_x, out_y);
+			        	out_x = xy >> 16;
+			        	out_y = xy & 0xffff;
 			        }
 			        //printk(KERN_ERR "%s:ONE_TOUCH (x1,y1)=(%d,%d)\n",__FUNCTION__, out_x, out_y);
-
+			        
 			        input_report_abs(ts.dev, ABS_MT_POSITION_X, out_x);
 			        input_report_abs(ts.dev, ABS_MT_POSITION_Y, out_y);
 			        input_mt_sync(ts.dev);
 			        input_sync(ts.dev);
-
+			        
 			        //save previous single touch point
-			        ts.pX = ts.xp;
+			        ts.pX = ts.xp; 
 			        ts.pY = ts.yp;
 			        pre_x1 = 0;
 			        pre_y1 = 0;
 			        pre_x2 = 0;
 			        pre_y2 = 0;
-
+			        
 			        msleep(MAX_READ_PERIOD);
 			}
 		}
@@ -555,7 +555,7 @@ static void uor_read_loop(struct work_struct *data)
 			//input_report_abs(ts.dev, ABS_MT_WIDTH_MAJOR, 0);
 			input_mt_sync(ts.dev);
 			input_sync(ts.dev);
-
+			
 			//reset filter parameters
 			FirstTC = 0;
 			OneTCountAfter2 = 0;
@@ -565,7 +565,7 @@ static void uor_read_loop(struct work_struct *data)
 			ts.yp = 0;
 			ts.pX = 0;
 			ts.pY = 0;
-
+			
 			pre_x1 = 0;
 			pre_y1 = 0;
 			pre_x2 = 0;
@@ -573,7 +573,7 @@ static void uor_read_loop(struct work_struct *data)
 			silding_init();
 			silding_init_s();
 			msleep(1);
-
+			
 			//set interrupt to high by software
 			//gpio_direction_output(GPIO_00_PIN,1);
 			//gpio_direction_input(GPIO_00_PIN);
@@ -583,41 +583,41 @@ static void uor_read_loop(struct work_struct *data)
 		else{
 		        printk(KERN_ERR "uor_read_loop(): n_touch state error !!!\n");
 		}
-	}
-	//printk(KERN_ERR "%s: exit while loop !!!\n",__FUNCTION__ );
+	}	
+	//printk(KERN_ERR "%s: exit while loop !!!\n",__FUNCTION__ );	
 }
 
 static int uor_register_input(void)
 {
     int ret;
     struct input_dev *	input_device;
-
+    
     input_device = input_allocate_device();
     if (!input_device) {
-	printk(KERN_ERR "Unable to allocate the input device !!\n");
-	return -ENOMEM;
+    	printk(KERN_ERR "Unable to allocate the input device !!\n");
+    	return -ENOMEM;
     }
-
+    
     input_device->name = "UOR Touchscreen";
-
+    
     ts.dev = input_device;
     __set_bit(EV_ABS, ts.dev->evbit);
     __set_bit(EV_SYN, ts.dev->evbit);
-
+    
     input_set_abs_params(ts.dev, ABS_MT_TOUCH_MAJOR, 0, 1000, 0, 0);
     //input_set_abs_params(codec_ts_input, ABS_MT_WIDTH_MAJOR, 0, 1000, 0, 0);
-
+    
     int max_x = ts.pdata->abs_xmax ? ts.pdata->abs_xmax : 4095;
     input_set_abs_params(ts.dev, ABS_MT_POSITION_X, 0, max_x, 0, 0);
-
+    
     int max_y = ts.pdata->abs_ymax ? ts.pdata->abs_ymax : 4095;
     input_set_abs_params(ts.dev, ABS_MT_POSITION_Y, 0, max_y, 0, 0);
-
+    
     ret = input_register_device(ts.dev);
     if (ret) {
-	input_free_device(ts.dev);
-	printk(KERN_ERR "%s: unabled to register input device, ret = %d\n", __FUNCTION__, ret);
-	return ret;
+    	input_free_device(ts.dev);
+    	printk(KERN_ERR "%s: unabled to register input device, ret = %d\n", __FUNCTION__, ret);
+    	return ret;
     }
     return 0;
 }
@@ -625,15 +625,15 @@ static int uor_register_input(void)
 static int __init uor_init(void)
 {
 	int ret;
-
+	
 	//printk(KERN_ERR "uor.c: uor_init() !\n");
-
+		
 	memset(&ts, 0, sizeof(struct uor7x5x_touch_screen_struct));//init data struct ts
 
 	ret = i2c_add_driver(&uor_i2c_driver);
 	if(ret < 0)
-		printk(KERN_ERR "uor.c: i2c_add_driver() fail in uor_init()!\n");
-	silding_init();
+		printk(KERN_ERR "uor.c: i2c_add_driver() fail in uor_init()!\n");	
+	silding_init();	
 	silding_init_s();
 	return ret;
 }
@@ -643,39 +643,39 @@ static int __devinit uor_probe(struct i2c_client *client,
 {
         int err = 0;
         struct uor7x5x_platform_data *pdata = pdata = client->dev.platform_data;
-
+        
         printk(KERN_ERR "uor.c: uor_probe() !\n");
-
+	
 	if (!pdata) {
 		dev_err(&client->dev, "platform data is required!\n");
 		return -EINVAL;
 	}
-
+	
 	if (!i2c_check_functionality(client->adapter, I2C_FUNC_I2C))
 	        return -EIO;
-
+	        
 	queue = create_singlethread_workqueue("uor-touch-screen-read-loop");
 	INIT_WORK(&work, uor_read_loop);
-
+	
 	if (pdata->init_irq)
 		pdata->init_irq();
 	ts.client = client; // save the client we get
-	ts.pdata = pdata;
-
+	ts.pdata = pdata;	
+	
 	if (uor_register_input() < 0) {
 		dev_err(&client->dev, "register input fail!\n");
 		return -ENOMEM;
 	}
-
+	
 	//uor7x5x_init();
-
+	
 	//printk(KERN_ERR "driver name is <%s>,client->irq is %d,INT_GPIO_0 is %d\n",client->dev.driver->name, client->irq, INT_GPIO_0);
 	err = request_irq(client->irq, uor_isr, IRQF_TRIGGER_FALLING,client->dev.driver->name, client);
 	if(err < 0){
 		printk(KERN_ERR "uor.c: Could not allocate GPIO intrrupt for touch screen !!!\n");
 		free_irq(client->irq, client);
 		err = -ENOMEM;
-		return err;
+		return err;	
 	}
 	printk(KERN_ERR "uor_probe ok!\n");
 	return err;
@@ -689,7 +689,7 @@ static int __devexit uor_remove(struct i2c_client *client)
 
 static void __exit uor_exit(void)
 {
-	i2c_del_driver(&uor_i2c_driver);
+	i2c_del_driver(&uor_i2c_driver);  
 }
 
 #ifdef CONFIG_DEFERRED_MODULE_INIT

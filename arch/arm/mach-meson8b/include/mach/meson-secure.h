@@ -74,7 +74,6 @@
 #define TRUSTZONE_HAL_API_STORAGE               0x200
 #define TRUSTZONE_HAL_API_MEMCONFIG             0x300
 #define TRUSTZONE_HAL_API_MEMCONFIG_GE2D        0x301
-#define TRUSTZONE_HAL_API_SRAM			0x400
 
 #ifndef __ASSEMBLER__
 extern int meson_smc1(u32 fn, u32 arg);
@@ -103,11 +102,10 @@ struct efuse_hal_api_arg{
 	unsigned int offset;
 	unsigned int size;
 	unsigned int buffer_phy;
-	unsigned int retcnt_phy;
+	unsigned int retcnt_phy;	
 };
 #define EFUSE_HAL_API_READ	0
 #define EFUSE_HAL_API_WRITE 1
-#define EFUSE_HAL_API_VERIFY_IMG 3
 extern int meson_trustzone_efuse(struct efuse_hal_api_arg* arg);
 
 
@@ -126,17 +124,6 @@ extern int meson_trustzone_memconfig(void);
 extern unsigned int meson_trustzone_getmemsecure_size(void);
 extern int meson_trustzone_getmemconfig(unsigned char* name, unsigned int* startphyaddr, unsigned int* endphyaddr);
 
-
-#define TRUSTZONE_HAL_API_SRAM_WR_ADDR		0x406
-struct sram_hal_api_arg {
-        unsigned int cmd;
-        unsigned int req_len;
-        unsigned int res_len;
-        unsigned int req_phy_addr;
-        unsigned int res_phy_addr;
-        unsigned int ret_phy_addr;
-};
-extern int32_t meson_secure_sram_copy(struct sram_hal_api_arg *arg);
 #endif
 
 #endif

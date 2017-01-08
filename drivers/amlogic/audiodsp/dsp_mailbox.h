@@ -10,10 +10,10 @@ int audiodsp_get_audioinfo(struct audiodsp_priv *priv);
 #define pre_read_mailbox(reg)	\
 	dma_cache_inv((unsigned long)reg,sizeof(*reg))
 #define after_change_mailbox(reg)	\
-	dma_cache_wback((unsigned long)reg,sizeof(*reg))
+	dma_cache_wback((unsigned long)reg,sizeof(*reg))	
 #else
-#define pre_read_mailbox(reg)
-#define after_change_mailbox(reg)
+#define pre_read_mailbox(reg)	
+#define after_change_mailbox(reg)	
 #endif
 enum DSP_CMD
 {

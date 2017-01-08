@@ -167,7 +167,7 @@ static struct v4l2_queryctrl ov2655_qctrl[] = {
 		.step		= 90,
 		.default_value	= 0,
 		.flags         = V4L2_CTRL_FLAG_SLIDER,
-	}
+ 	}
 };
 
 #define dprintk(dev, level, fmt, arg...) \
@@ -316,7 +316,7 @@ struct ov2655_device {
 
 	/* platform device data from board initting. */
 	aml_cam_info_t  cam_info;
-
+	
 	/* wake lock */
 	struct wake_lock	wake_lock;
 
@@ -1225,12 +1225,12 @@ void OV2655_init_regs(struct ov2655_device *dev)
     {
         if (OV2655_script[i].val==0xff&&OV2655_script[i].addr==0xffff)
         {
-		printk("OV2655_write_regs success in initial OV2655.\n");
-		break;
+        	printk("OV2655_write_regs success in initial OV2655.\n");
+        	break;
         }
         if((i2c_put_byte(client,OV2655_script[i].addr, OV2655_script[i].val)) < 0)
         {
-		printk("fail in initial OV2655. i=%d\n",i);
+        	printk("fail in initial OV2655. i=%d\n",i);
 		return;
 		}
 		i++;
@@ -1308,7 +1308,7 @@ void OV2655_set_param_wb(struct ov2655_device *dev,enum  camera_wb_flip_e para)/
 		break;
 
 	case CAM_WB_MANUAL:
-		// TODO
+	    	// TODO
 		break;
 	default:
 		break;
@@ -1743,49 +1743,49 @@ static int ov2655_setting(struct ov2655_device *dev,int PROP_ID,int value )
 			ov2655_qctrl[0].default_value=value;
 			OV2655_set_param_wb(dev,value);
 			printk(KERN_INFO " set camera  white_balance=%d. \n ",value);
-		}
+        	}
 		break;
 	case V4L2_CID_EXPOSURE:
         if(ov2655_qctrl[1].default_value!=value){
 			ov2655_qctrl[1].default_value=value;
 			OV2655_set_param_exposure(dev,value);
 			printk(KERN_INFO " set camera  exposure=%d. \n ",value);
-		}
+        	}
 		break;
 	case V4L2_CID_COLORFX:
         if(ov2655_qctrl[2].default_value!=value){
 			ov2655_qctrl[2].default_value=value;
 			OV2655_set_param_effect(dev,value);
 			printk(KERN_INFO " set camera  effect=%d. \n ",value);
-		}
+        	}
 		break;
 	case V4L2_CID_WHITENESS:
 		 if(ov2655_qctrl[3].default_value!=value){
 			ov2655_qctrl[3].default_value=value;
 			OV2655_set_param_banding(dev,value);
 			printk(KERN_INFO " set camera  banding=%d. \n ",value);
-		}
+        	}
 		break;
 	case V4L2_CID_HFLIP:
 		value = value & 0x3;
 		if(ov2655_qctrl[4].default_value!=value){
 			ov2655_qctrl[4].default_value=value;
 			printk(" set camera  h filp =%d. \n ",value);
-		}
+        	}
 		break;
-	case V4L2_CID_VFLIP:    /* set flip on V. */
+	case V4L2_CID_VFLIP:    /* set flip on V. */         
 		break;
 	case V4L2_CID_ZOOM_ABSOLUTE:
 		if(ov2655_qctrl[6].default_value!=value){
 			ov2655_qctrl[6].default_value=value;
 			//printk(KERN_INFO " set camera  zoom mode=%d. \n ",value);
-		}
+        	}
 		break;
 	case V4L2_CID_ROTATE:
 		 if(ov2655_qctrl[7].default_value!=value){
 			ov2655_qctrl[7].default_value=value;
 			printk(" set camera  rotate =%d. \n ",value);
-		}
+        	}
 		break;
 	default:
 		ret=-1;
@@ -1843,7 +1843,7 @@ static void ov2655_thread_tick(struct ov2655_fh *fh)
 	unsigned long flags = 0;
 
 	dprintk(dev, 1, "Thread tick\n");
-	if(!fh->stream_on){
+   	if(!fh->stream_on){
             dprintk(dev, 1, "sensor doesn't stream on\n");
             return ;
        }
@@ -2307,11 +2307,11 @@ static int vidioc_streamon(struct file *file, void *priv, enum v4l2_buf_type i)
 	para.h_active = ov2655_h_active;
 	para.v_active = ov2655_v_active;
 	para.hsync_phase = 0;
-	para.vsync_phase  = 0;
+	para.vsync_phase  = 0;	
 	para.hs_bp = 0;
 	para.vs_bp = 2;
 	para.cfmt = TVIN_YUV422;
-	para.scan_mode = TVIN_SCAN_MODE_PROGRESSIVE;
+	para.scan_mode = TVIN_SCAN_MODE_PROGRESSIVE;	
 	para.skip_count =  2; //skip_num
 	ret =  videobuf_streamon(&fh->vb_vidq);
 	if(ret == 0){
@@ -2503,7 +2503,7 @@ static int ov2655_open(struct file *file)
 		video_device_node_name(dev->vdev),
 		v4l2_type_names[V4L2_BUF_TYPE_VIDEO_CAPTURE], dev->users);
 
-	/* init video dma queues */
+    	/* init video dma queues */
 	INIT_LIST_HEAD(&dev->vidq.active);
 	init_waitqueue_head(&dev->vidq.wq);
         spin_lock_init(&dev->slock);
@@ -2603,7 +2603,7 @@ static int ov2655_close(struct file *file)
 	ov2655_qctrl[1].default_value=4;
 	ov2655_qctrl[2].default_value=0;
 	ov2655_qctrl[3].default_value=0;
-
+	
 	ov2655_qctrl[4].default_value=0;
 	ov2655_qctrl[6].default_value=100;
 	ov2655_qctrl[7].default_value=0;
@@ -2615,7 +2615,7 @@ static int ov2655_close(struct file *file)
         aml_cam_uninit(&dev->cam_info);
 #if MESON_CPU_TYPE >= MESON_CPU_TYPE_MESON6
 	switch_mod_gate_by_name("ge2d", 0);
-#endif
+#endif	
 	wake_unlock(&(dev->wake_lock));
 #ifdef CONFIG_CMA
     vm_deinit_buf();
@@ -2731,7 +2731,7 @@ static int ov2655_probe(struct i2c_client *client,
 	memcpy(t->vdev, &ov2655_template, sizeof(*t->vdev));
 
 	video_set_drvdata(t->vdev, t);
-
+	
 	wake_lock_init(&(t->wake_lock),WAKE_LOCK_SUSPEND, "ov2655");
 	/* Register it */
 	plat_dat= (aml_cam_info_t*)client->dev.platform_data;
@@ -2741,20 +2741,20 @@ static int ov2655_probe(struct i2c_client *client,
 	} else {
 	    printk("camera ov2655: have no platform data\n");
 	    kfree(t);
-	    return -1;
+	    return -1; 	
 	}
-
+	
 	t->cam_info.version = OV2655_DRIVER_VERSION;
 	if (aml_cam_info_reg(&t->cam_info) < 0)
 		printk("reg caminfo error\n");
-
+	
 	err = video_register_device(t->vdev, VFL_TYPE_GRABBER, video_nr);
 	if (err < 0) {
 		video_device_release(t->vdev);
 		kfree(t);
 		return err;
 	}
-
+	
 	return 0;
 }
 
@@ -2787,3 +2787,4 @@ static struct i2c_driver ov2655_i2c_driver = {
 };
 
 module_i2c_driver(ov2655_i2c_driver);
+

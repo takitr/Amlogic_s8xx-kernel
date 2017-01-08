@@ -31,13 +31,13 @@ typedef struct csi_parm_s {
 
 typedef struct amcsi_dev_s{
         int                     index;
-        dev_t                   devt;
+        dev_t                   devt;           
         struct cdev             cdev;
         struct device          *dev;
         unsigned int            overflow_cnt;
         enum amcsi_status_e     dec_status;
         struct vdin_parm_s      para;
 	csi_parm_t              csi_parm;
-        struct tvin_frontend_s  frontend;
+        struct tvin_frontend_s  frontend; 
 }amcsi_dev_t;
 #endif

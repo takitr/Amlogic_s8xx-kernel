@@ -98,3 +98,6 @@ struct lis3dh_acc_platform_data {
 #endif	/* __KERNEL__ */
 
 #endif	/* __LIS3DH_H__ */
+
+
+

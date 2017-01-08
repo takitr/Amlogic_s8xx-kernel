@@ -307,7 +307,7 @@ struct ov7675_device {
 
 	/* platform device data from board initting. */
 	aml_cam_info_t  cam_info;
-
+	
 	/* wake lock */
 	struct wake_lock	wake_lock;
 
@@ -574,15 +574,15 @@ static void OV7675_init_regs(struct ov7675_device *dev)
 	    buf[1] = OV7675_script[i].val;
 		i++;
 	 if (OV7675_script[i].val==0xff&&OV7675_script[i].addr==0xff)
-		{
-		printk("OV7675_write_regs success in initial OV7675.\n");
-		break;
-		}
+	 	{
+ 	    	printk("OV7675_write_regs success in initial OV7675.\n");
+	 	break;
+	 	}
         if((i2c_put_byte_add8(client,buf, 2)) < 0)
-		{
-		printk("fail in initial OV7675.i=%d \n",i);
+        	{
+    	    	printk("fail in initial OV7675.i=%d \n",i);
 		return;
-		}
+        	}
 		if(i==1)
 			msleep(40);
     }
@@ -632,12 +632,12 @@ static void OV7675_init_regs(struct ov7675_device *dev)
     {
         if (OV7675_script[i].val==0xff&&OV7675_script[i].addr==0xff)
         {
-		//printk("GT2005_write_regs success in initial GT2005.\n");
-		break;
+        	//printk("GT2005_write_regs success in initial GT2005.\n");
+        	break;
         }
         if((i2c_put_byte(client,OV7675_script[i].addr, OV7675_script[i].val)) < 0)
         {
-		printk("fail in initial OV7675. \n");
+        	printk("fail in initial OV7675. \n");
 		break;
 		}
 		i++;
@@ -1085,49 +1085,49 @@ static int ov7675_setting(struct ov7675_device *dev,int PROP_ID,int value )
 			ov7675_qctrl[0].default_value=value;
 			set_OV7675_param_wb(dev,value);
 			printk(KERN_INFO " set camera  white_balance=%d. \n ",value);
-		}
+        	}
 		break;
 	case V4L2_CID_EXPOSURE:
 		if(ov7675_qctrl[1].default_value!=value){
 			ov7675_qctrl[1].default_value=value;
 			set_OV7675_param_exposure(dev,value);
 			printk(KERN_INFO " set camera  exposure=%d. \n ",value);
-		}
+        	}
 		break;
 	case V4L2_CID_COLORFX:
 		if(ov7675_qctrl[2].default_value!=value){
 			ov7675_qctrl[2].default_value=value;
 			set_OV7675_param_effect(dev,value);
 			printk(KERN_INFO " set camera  effect=%d. \n ",value);
-		}
+        	}
 		break;
 	case V4L2_CID_WHITENESS:
 		 if(ov7675_qctrl[3].default_value!=value){
 			ov7675_qctrl[3].default_value=value;
 			OV7675_set_param_banding(dev,value);
 			printk(KERN_INFO " set camera  banding=%d. \n ",value);
-		}
+        	}
 		break;
 	case V4L2_CID_HFLIP:
 		value = value & 0x3;
 		if(ov7675_qctrl[4].default_value!=value){
 			ov7675_qctrl[4].default_value=value;
 			printk(" set camera  h filp =%d. \n ",value);
-		}
+        	}
 		break;
-	case V4L2_CID_VFLIP:    /* set flip on V. */
+	case V4L2_CID_VFLIP:    /* set flip on V. */         
 		break;
 	case V4L2_CID_ZOOM_ABSOLUTE:
 		if(ov7675_qctrl[6].default_value!=value){
 			ov7675_qctrl[6].default_value=value;
 			//printk(KERN_INFO " set camera  zoom mode=%d. \n ",value);
-		}
+        	}
 		break;
 	case V4L2_CID_ROTATE:
 		 if(ov7675_qctrl[7].default_value!=value){
 			ov7675_qctrl[7].default_value=value;
 			printk(" set camera  rotate =%d. \n ",value);
-		}
+        	}
 		break;
 	default:
 		ret=-1;
@@ -1186,7 +1186,7 @@ static void ov7675_thread_tick(struct ov7675_fh *fh)
 	struct ov7675_device *dev = fh->dev;
 	struct ov7675_dmaqueue *dma_q = &dev->vidq;
 
-	unsigned long flags = 0;
+ 	unsigned long flags = 0;
 
 	dprintk(dev, 1, "Thread tick\n");
        if(!fh->stream_on){
@@ -1651,7 +1651,7 @@ static int vidioc_streamon(struct file *file, void *priv, enum v4l2_buf_type i)
 	para.hs_bp = 0;
 	para.vs_bp = 2;
 	para.cfmt = TVIN_YUV422;
-	para.scan_mode = TVIN_SCAN_MODE_PROGRESSIVE;
+	para.scan_mode = TVIN_SCAN_MODE_PROGRESSIVE;	
 	para.skip_count =  2; //skip_num
 
 	ret =  videobuf_streamon(&fh->vb_vidq);
@@ -1844,7 +1844,7 @@ static int ov7675_open(struct file *file)
 		video_device_node_name(dev->vdev),
 		v4l2_type_names[V4L2_BUF_TYPE_VIDEO_CAPTURE], dev->users);
 
-	/* init video dma queues */
+    	/* init video dma queues */
 	INIT_LIST_HEAD(&dev->vidq.active);
 	init_waitqueue_head(&dev->vidq.wq);
        spin_lock_init(&dev->slock);
@@ -1858,7 +1858,7 @@ static int ov7675_open(struct file *file)
 
 	if (retval)
 		return retval;
-
+	
 	wake_lock(&(dev->wake_lock));
 	file->private_data = fh;
 	fh->dev      = dev;
@@ -1942,7 +1942,7 @@ static int ov7675_close(struct file *file)
 	ov7675_qctrl[1].default_value=4;
 	ov7675_qctrl[2].default_value=0;
 	ov7675_qctrl[3].default_value=0;
-
+	
 	ov7675_qctrl[4].default_value=0;
 	ov7675_qctrl[6].default_value=100;
 	ov7675_qctrl[7].default_value=0;
@@ -1953,7 +1953,7 @@ static int ov7675_close(struct file *file)
        aml_cam_uninit(&dev->cam_info);
 #if MESON_CPU_TYPE >= MESON_CPU_TYPE_MESON6
 	switch_mod_gate_by_name("ge2d", 0);
-#endif
+#endif	
 	wake_unlock(&(dev->wake_lock));
 #ifdef CONFIG_CMA
     vm_deinit_buf();
@@ -2076,18 +2076,18 @@ static int ov7675_probe(struct i2c_client *client,
 	plat_dat= (aml_cam_info_t*)client->dev.platform_data;
 	if (plat_dat) {
 	    memcpy(&t->cam_info, plat_dat, sizeof(aml_cam_info_t));
-	    if (plat_dat->front_back >=0)
-		video_nr = plat_dat->front_back;
+	    if (plat_dat->front_back >=0)  
+	   	video_nr = plat_dat->front_back;
 	} else {
 	    printk("camera ov7675: have no platform data\n");
 	    kfree(t);
-        return -1;
+        return -1; 
 	}
-
+	
 	t->cam_info.version = OV7675_DRIVER_VERSION;
 	if (aml_cam_info_reg(&t->cam_info) < 0)
 		printk("reg caminfo error\n");
-
+	
 	err = video_register_device(t->vdev, VFL_TYPE_GRABBER, video_nr);
 	if (err < 0) {
 		video_device_release(t->vdev);
@@ -2127,3 +2127,4 @@ static struct i2c_driver ov7675_i2c_driver = {
 };
 
 module_i2c_driver(ov7675_i2c_driver);
+

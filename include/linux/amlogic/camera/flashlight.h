@@ -24,3 +24,5 @@ typedef enum {
 }aml_plat_flashlight_status_t;
 
 #endif
+
+

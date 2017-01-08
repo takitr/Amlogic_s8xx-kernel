@@ -80,7 +80,7 @@ dsp_register.h
 #define DSP_CHIP_SUBID          DSP_REG(32)
 // other definations
 
-// for wifi-display
+// for wifi-display 
 #define DSP_SKIP_BYTES          DSP_REG(38)
 
 #define MAILBOX1_REG(n)	DSP_REG(40+n)
@@ -97,7 +97,7 @@ dsp_register.h
 as iec958 ouput maybe be enabled before the spdif module inititation finish in the spdif driver,
 in this case,it will cause 958 module not work.so add a protocal register to co-work for that
 */
-#define DSP_IEC958_INIT_READY_INFO  		DSP_REG(110)
+#define DSP_IEC958_INIT_READY_INFO  		DSP_REG(110) 
 #define DSP_AC3_DRC_INFO 					DSP_IEC958_INIT_READY_INFO
 #define DSP_DTS_DEC_INFO					DSP_REG(111)
 #define DSP_WORK_INFO (AUDIO_DSP_END_ADDR - 128)
@@ -132,7 +132,7 @@ int len;
 #define M2B_IRQ4_AUDIO_INFO					(4)
 #define M2B_IRQ0_DSP_SLEEP					(5)
 #define M2B_IRQ0_DSP_WAKEUP					(6)
-#define M2B_IRQ0_DSP_AUDIO_EFFECT			(7) //audio post process cmd
+#define M2B_IRQ0_DSP_AUDIO_EFFECT			(7) //audio post process cmd 
 
 #define CMD_PRINT_LOG					(1234<<8 |1)
 
@@ -238,3 +238,5 @@ int len;
 #define DSP_WD(reg,val)	({(*((volatile unsigned long *)(reg)))=val;})
 
 #endif
+
+

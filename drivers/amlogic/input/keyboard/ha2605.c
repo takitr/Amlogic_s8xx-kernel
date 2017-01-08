@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * author :
+ * author :  
  */
 
 #include <linux/delay.h>
@@ -71,7 +71,7 @@ static int ha2605_read_data(struct i2c_client *client)
 {
 	int ret;
 	u8 buf[2];
-
+	
 	struct i2c_msg msg[1] = {
 		[0] = {
 			.addr = client->addr,
@@ -97,9 +97,9 @@ static int ha2605_write_param(struct i2c_client *client)
 		.len = sizeof(ha2605_init_param_table),
 		.buf = ha2605_init_param_table,
 	};
-
+	
 	printk("ha2605 param table len = %d\n", sizeof(ha2605_init_param_table));
-
+	
 	return i2c_transfer(client->adapter, &msg, 1);
 }
 
@@ -120,7 +120,7 @@ static int ha2605_reset(struct i2c_client *client)
 }
 
 #if 0
-static int ha2605_sleep(struct i2c_client *client,  bool sleep)
+static int ha2605_sleep(struct i2c_client *client,  bool sleep) 
 {
 	return 0;
 }
@@ -134,7 +134,7 @@ static void ha2605_work(struct work_struct *work)
 	struct cap_key *key;
 
 	kp = (struct ha2605 *)container_of(work, struct ha2605, work);
-
+	
 	if (!kp->get_irq_level())
 	{
 		button_val = ha2605_read_data(kp->client);
@@ -143,18 +143,18 @@ static void ha2605_work(struct work_struct *work)
 	{
 		button_val = 255;
 	}
-
+	
 	if ((button_val < 255) && (button_val > 5)){
 		ha2605_reset(kp->client);
 		return;
 	}
 
 #if	__HA2605_DEBUG__
-	printk(KERN_INFO "button_val = 0x%04x\n", button_val);
+	printk(KERN_INFO "button_val = 0x%04x\r\n", button_val);
 #endif
 
 	key = kp->key;
-
+	
 	if ((button_val <= 5) && (button_val > 0))
 	{
 		if(kp->pending_keys)
@@ -170,7 +170,7 @@ static void ha2605_work(struct work_struct *work)
 		if(kp->pending_keys != button_val)
 		{
 			kp->pending_keys = button_val;
-
+			
 			for (i = 0; i < kp->key_num; i++)
 			{
 				if (button_val == key->mask)
@@ -178,10 +178,10 @@ static void ha2605_work(struct work_struct *work)
 					input_report_key(kp->input, key->code, 1);
 					printk(KERN_INFO"%s key(%d) pressed\n", key->name, key->code);
 					kp->pending_key_code = key->code;
-
+				
 					break;
 				}
-
+				
 				key++;
 			}
 		}
@@ -201,7 +201,7 @@ static void ha2605_work(struct work_struct *work)
 
 			}
 		}
-
+		
         enable_irq(kp->client->irq);
 	}
 }
@@ -210,31 +210,31 @@ static struct input_dev* ha2605_register_input(struct cap_key *key, int key_num)
 {
 	struct input_dev *input;
 	int i;
-
+	
 	input = input_allocate_device();
 	if (input) {
 		/* setup input device */
 		set_bit(EV_KEY, input->evbit);
 		set_bit(EV_REP, input->evbit);
-
+	
 		for (i=0; i<key_num; i++) {
 			set_bit(key->code, input->keybit);
 			printk(KERN_INFO "%s key(%d) registed.\n", key->name, key->code);
 			key++;
 		}
-
+    
 		input->name = DRIVER_NAME;
 		input->phys = "ha2605/input0";
 //		input->dev.parent = &pdev->dev;
 		input->id.bustype = BUS_ISA;
 		input->id.vendor = 0x0015;
 		input->id.product = 0x0001;
-		input->id.version = 0x0100;
+		input->id.version = 0x0100;	
 		input->rep[REP_DELAY]=0xffffffff;
 		input->rep[REP_PERIOD]=0xffffffff;
 		input->keycodesize = sizeof(unsigned short);
 		input->keycodemax = 0x1ff;
-
+	
 		if (input_register_device(input) < 0) {
 			printk(KERN_ERR "ha2605 register input device failed\n");
 			input_free_device(input);
@@ -255,7 +255,7 @@ static enum hrtimer_restart ha2605_timer(struct hrtimer *timer)
 {
 	struct ha2605 *kp = (struct ha2605*)container_of(timer, struct ha2605, timer);
 	unsigned long flags = 0;
-
+	
     spin_lock_irqsave(&kp->lock, flags);
     queue_work(kp->workqueue, &kp->work);
     spin_unlock_irqrestore(&kp->lock, flags);
@@ -266,7 +266,7 @@ static irqreturn_t ha2605_interrupt(int irq, void *context)
 {
 	struct ha2605 *kp = (struct ha2605 *)context;
 	unsigned long flags;
-
+	
 	spin_lock_irqsave(&kp->lock, flags);
 	printk(KERN_INFO "ha2605 enter irq\n");
     /* if the attn low or data not clear, disable IRQ and start timer chain */
@@ -303,11 +303,11 @@ static int ha2605_register_device(struct ha2605 *kp)
 	strcpy(kp->config_name,DRIVER_NAME);
 	ret=register_chrdev(0, kp->config_name, &ha2605_fops);
 	if(ret<=0) {
-		printk("register char device error\n");
+		printk("register char device error\r\n");
 		return  ret ;
 	}
 	kp->config_major=ret;
-	printk("ha2605 major:%d\n",ret);
+	printk("ha2605 major:%d\r\n",ret);
 	kp->config_class=class_create(THIS_MODULE,kp->config_name);
 	kp->config_dev=device_create(kp->config_class,	NULL,
 	MKDEV(kp->config_major,0),NULL,kp->config_name);
@@ -319,13 +319,13 @@ static int ha2605_probe(struct i2c_client *client, const struct i2c_device_id *i
 	int err;
 	struct ha2605 *kp;
 	struct ha2605_platform_data *pdata;
-
+	
 	pdata = client->dev.platform_data;
 	if (!pdata) {
 		dev_err(&client->dev, "ha2605 require platform data!\n");
 		return  -EINVAL;
 	}
-
+   
 	kp = kzalloc(sizeof(struct ha2605), GFP_KERNEL);
 	if (!kp) {
 		dev_err(&client->dev, "ha2605 alloc data failed!\n");
@@ -344,7 +344,7 @@ static int ha2605_probe(struct i2c_client *client, const struct i2c_device_id *i
 	}
 
 	ha2605_reset(client);
-
+	
 	hrtimer_init(&kp->timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
 	kp->timer.function = ha2605_timer;
 	INIT_WORK(&kp->work, ha2605_work);
@@ -436,3 +436,7 @@ module_exit(ha2605_exit);
 MODULE_AUTHOR("");
 MODULE_DESCRIPTION("ha2605 driver");
 MODULE_LICENSE("GPL");
+
+
+
+

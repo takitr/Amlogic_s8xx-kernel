@@ -14,7 +14,7 @@
 				  __func__, __LINE__, ##__VA_ARGS__)
 
 #define store_msg(fmt, ...) printk( "%s: line:%d " fmt "\n", \
-				  __func__, __LINE__, ##__VA_ARGS__)
+				  __func__, __LINE__, ##__VA_ARGS__)				  
 #else
 #define store_dbg(fmt, ...)
 #define store_msg(fmt, ...) printk( fmt "\n",  ##__VA_ARGS__)
@@ -44,7 +44,7 @@ struct mmc_storage_head_t{
 	unsigned int data[MMC_STORAGE_AREA_VALID_SIZE];
 };
 
-struct storage_node_t{
+struct storage_node_t{	
 	uint64_t offset_addr;
 	char valid_node_flag;
 	char valid_flag;

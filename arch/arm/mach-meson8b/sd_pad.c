@@ -58,7 +58,7 @@ void sd_io_init(struct memory_card *card)
 	SD_WORK_MODE = aml_card_info->work_mode;
 
 	switch (aml_card_info->io_pad_type) {
-
+		
 		case SDHC_CARD_0_5:		//SDHC-B
 			SD_CMD_OUTPUT_EN_REG = CARD_GPIO_ENABLE;
 			SD_CMD_OUTPUT_EN_MASK = PREG_IO_25_MASK;
@@ -80,7 +80,7 @@ void sd_io_init(struct memory_card *card)
 			SD_DAT0_OUTPUT_MASK = PREG_IO_23_MASK;
 			SD_DAT0_3_OUTPUT_MASK = PREG_IO_2223_2627_MASK;
 			SD_DAT_OUTPUT_OFFSET = 23;
-
+			
 			SD_DAT_INPUT_REG = CARD_GPIO_INPUT;
 			SD_DAT0_INPUT_MASK = PREG_IO_23_MASK;
 			SD_DAT0_3_INPUT_MASK = PREG_IO_2223_2627_MASK;
@@ -103,18 +103,18 @@ void sd_io_init(struct memory_card *card)
 			SD_DAT_OUTPUT_EN_REG = BOOT_GPIO_ENABLE;
 			SD_DAT0_OUTPUT_EN_MASK = PREG_IO_0_MASK;
 			SD_DAT0_3_OUTPUT_EN_MASK = PREG_IO_0_3_MASK;
-
+			
 			SD_DAT_OUTPUT_REG = BOOT_GPIO_OUTPUT;
 			SD_DAT0_OUTPUT_MASK = PREG_IO_0_MASK;
 			SD_DAT0_3_OUTPUT_MASK = PREG_IO_0_3_MASK;
 			SD_DAT_OUTPUT_OFFSET = 0;
-
+			
 			SD_DAT_INPUT_REG = BOOT_GPIO_INPUT;
 			SD_DAT0_INPUT_MASK = PREG_IO_0_MASK;
 			SD_DAT0_3_INPUT_MASK = PREG_IO_0_3_MASK;
 			SD_DAT_INPUT_OFFSET = 0;
 			break;
-
+            
         case SDHC_GPIOX_0_9:        //SDHC-A
             SD_CMD_OUTPUT_EN_REG = EGPIO_GPIOXL_ENABLE;
             SD_CMD_OUTPUT_EN_MASK = PREG_IO_9_MASK;
@@ -122,21 +122,21 @@ void sd_io_init(struct memory_card *card)
             SD_CMD_OUTPUT_MASK = PREG_IO_9_MASK;
             SD_CMD_INPUT_REG = EGPIO_GPIOXL_INPUT;
             SD_CMD_INPUT_MASK = PREG_IO_9_MASK;
-
+        
             SD_CLK_OUTPUT_EN_REG = EGPIO_GPIOXL_ENABLE;
             SD_CLK_OUTPUT_EN_MASK = PREG_IO_8_MASK;
             SD_CLK_OUTPUT_REG = EGPIO_GPIOXL_OUTPUT;
             SD_CLK_OUTPUT_MASK = PREG_IO_8_MASK;
-
+        
             SD_DAT_OUTPUT_EN_REG = EGPIO_GPIOXL_ENABLE;
             SD_DAT0_OUTPUT_EN_MASK = PREG_IO_0_MASK;
             SD_DAT0_3_OUTPUT_EN_MASK = PREG_IO_0_3_MASK;
-
+            
             SD_DAT_OUTPUT_REG = EGPIO_GPIOXL_OUTPUT;
             SD_DAT0_OUTPUT_MASK = PREG_IO_0_MASK;
             SD_DAT0_3_OUTPUT_MASK = PREG_IO_0_3_MASK;
             SD_DAT_OUTPUT_OFFSET = 0;
-
+            
             SD_DAT_INPUT_REG = EGPIO_GPIOXL_INPUT;
             SD_DAT0_INPUT_MASK = PREG_IO_0_MASK;
             SD_DAT0_3_INPUT_MASK = PREG_IO_0_3_MASK;
@@ -174,7 +174,7 @@ void sd_io_init(struct memory_card *card)
 		SD_PWR_OUTPUT_EN_MASK = 1;
 		SD_PWR_OUTPUT_REG = SD_BAKUP_OUTPUT_REG;
 		SD_PWR_OUTPUT_MASK = 1;
-		SD_PWR_EN_LEVEL = 0;
+		SD_PWR_EN_LEVEL = 0;	
 	}
 
 	if (aml_card_info->card_wp_en_reg) {
@@ -251,7 +251,7 @@ void sd_sdio_enable(SDIO_Pad_Type_t io_pad_type)
 			printk("set pinmux error!\n");
 	}
 	switch (io_pad_type) {
-
+		
 		case SDHC_CARD_0_5 :	//SDHC-B
 #ifdef CONFIG_OF
 			s = pinctrl_lookup_state(p, "sdhc_b");
@@ -309,14 +309,14 @@ void sd_sdio_enable(SDIO_Pad_Type_t io_pad_type)
 			printk("invalid hw io pad!!!\n");
 			break;
 	}
-
+	
 	return;
 }
 
 void sd_gpio_enable(SDIO_Pad_Type_t io_pad_type)
 {
 	switch (io_pad_type) {
-
+		
 		case SDHC_CARD_0_5 :	//SDHC-B
 #ifdef CONFIG_OF
 			if(p)
@@ -353,6 +353,6 @@ void sd_gpio_enable(SDIO_Pad_Type_t io_pad_type)
 			printk("invalid hw io pad!!!\n");
 			break;
 	}
-
+	
 	return;
 }

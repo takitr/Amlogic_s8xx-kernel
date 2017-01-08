@@ -228,7 +228,8 @@ void hevc_clock_prepare_switch(void)
 int vdec_clock_level(vdec_type_t core)
 {
     if (core >= VDEC_MAX)
-        return 0;
+        return 0; 
 
     return clock_level[core];
 }
+

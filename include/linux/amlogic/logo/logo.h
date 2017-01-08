@@ -25,7 +25,7 @@
 /**************************************************************
 ************************ type define part ***************************
 ***************************************************************/
-//loader
+//loader 
 
 
 
@@ -35,13 +35,13 @@
 /**************************************************************
 ************************ macro define part ************************
 ***************************************************************/
-extern	logo_object_t  aml_logo;
+extern	logo_object_t  aml_logo; 
 #define   TOLOWER(x) ((x) | 0x20)
 
 #define	LOGO_NAME	"aml_logo"
 #define   dev_to_platformdev(dev)   (container_of((dev), struct platform_device,dev) )
 extern struct bus_type platform_bus_type;
-
+  	
 typedef enum{
 	VMODE_SETTED = 0,
 	VMODE_NOT_SETTED,

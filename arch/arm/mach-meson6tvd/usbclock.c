@@ -101,7 +101,7 @@ int clk_enable_usb(struct clk *clk)
 	config.d32 = peri->config;
 	config.b.clk_sel = clk_sel;
 	config.b.clk_div = clk_div;
-	config.b.clk_en = 1;
+  	config.b.clk_en = 1;
 	peri->config = config.d32;
 
 
@@ -164,3 +164,4 @@ int clk_disable_usb(struct clk *clk)
 	return 0;
 }
 EXPORT_SYMBOL(clk_disable_usb);
+

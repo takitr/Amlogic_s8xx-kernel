@@ -91,10 +91,10 @@ static int dummy_codec_hw_params(struct snd_pcm_substream *substream,
     /* set cpu DAI configuration */
 	if(substream->stream == SNDRV_PCM_STREAM_PLAYBACK)
 	{
-	ret = snd_soc_dai_set_fmt(cpu_dai, SND_SOC_DAIFMT_I2S | SND_SOC_DAIFMT_NB_NF | SND_SOC_DAIFMT_CBM_CFM);
+    	ret = snd_soc_dai_set_fmt(cpu_dai, SND_SOC_DAIFMT_I2S | SND_SOC_DAIFMT_NB_NF | SND_SOC_DAIFMT_CBM_CFM);
 	}
 	else
-	ret = snd_soc_dai_set_fmt(cpu_dai, SND_SOC_DAIFMT_I2S | SND_SOC_DAIFMT_NB_NF | SND_SOC_DAIFMT_CBS_CFS);
+    	ret = snd_soc_dai_set_fmt(cpu_dai, SND_SOC_DAIFMT_I2S | SND_SOC_DAIFMT_NB_NF | SND_SOC_DAIFMT_CBS_CFS);
     if (ret < 0) {
         printk(KERN_ERR "%s: set cpu dai fmt failed!\n", __func__);
         return ret;
@@ -122,7 +122,6 @@ static struct snd_soc_ops dummy_codec_soc_ops = {
 };
 
 static int dummy_codec_set_bias_level(struct snd_soc_card *card,
-				struct snd_soc_dapm_context *dapm,
 			      enum snd_soc_bias_level level)
 {
     int ret = 0;
@@ -131,11 +130,11 @@ static int dummy_codec_set_bias_level(struct snd_soc_card *card,
     case SND_SOC_BIAS_ON:
         break;
     case SND_SOC_BIAS_PREPARE:
-	dummy_codec_mute_speaker(0);
+    	dummy_codec_mute_speaker(0);
         break;
 
     case SND_SOC_BIAS_OFF:
-	break;
+    	break;
     case SND_SOC_BIAS_STANDBY:
         dummy_codec_mute_speaker(1);
         break;
@@ -170,7 +169,7 @@ static struct snd_soc_dai_link dummy_codec_dai_link[] = {
         .init = NULL,
         .platform_name = "aml-i2s.0",
         .codec_name = "spdif-dit.0",
-        .ops = NULL,
+        .ops = NULL,      
     },
 
 };
@@ -192,18 +191,18 @@ static void dummy_codec_device_init(void)
 	p = pinctrl_get(dummy_codec_dev);
 
 	if (IS_ERR(p))
-		return;
+		return p;
 
 	s = pinctrl_lookup_state(p, "dummy_codec_audio");
 	if (IS_ERR(s)) {
 		pinctrl_put(p);
-		return;
+		return ERR_PTR(PTR_ERR(s));
 	}
 
 	ret = pinctrl_select_state(p, s);
 	if (ret < 0) {
 		pinctrl_put(p);
-		return;
+		return ERR_PTR(ret);
 	}
 	printk("=%s==,dummy_codec_audio init done\n",__func__);
 #else
@@ -297,10 +296,8 @@ static int dummy_codec_audio_probe(struct platform_device *pdev)
 
     return ret;
 
-#if 0
 err_device_add:
     platform_device_put(dummy_codec_snd_device);
-#endif
 err:
 err1:
     kfree(dummy_codec_pdata);

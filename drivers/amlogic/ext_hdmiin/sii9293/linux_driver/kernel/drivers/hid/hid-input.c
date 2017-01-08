@@ -717,7 +717,7 @@ void hidinput_hid_event(struct hid_device *hid, struct hid_field *field, struct 
 	#ifdef MDT_SUPPORT
 	int ret;
 	#endif
-
+	
 	if (!field->hidinput)
 		return;
 
@@ -790,7 +790,7 @@ void hidinput_hid_event(struct hid_device *hid, struct hid_field *field, struct 
 		input_event(input, EV_MSC, MSC_SCAN, usage->hid);
 
 	#if defined(MDT_SUPPORT)
-	//printk(KERN_ERR "mhawb\tu%x\tt%x\tu%x\tv%x", (int)usage->hid, (int)usage->type, (int)usage->code, (int)value);
+	//printk(KERN_ERR "mhawb\tu%x\tt%x\tu%x\tv%x", (int)usage->hid, (int)usage->type, (int)usage->code, (int)value); 
 	//printk(KERN_ERR "mdt_update status: %x",(int)mdt_burst_value_update(usage,value));
 	if (mdt_burst_value_update)
 	{
@@ -961,3 +961,4 @@ void hidinput_disconnect(struct hid_device *hid)
 	}
 }
 EXPORT_SYMBOL_GPL(hidinput_disconnect);
+

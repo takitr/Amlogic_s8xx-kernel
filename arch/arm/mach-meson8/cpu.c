@@ -34,12 +34,10 @@
 static int meson_cpu_version[MESON_CPU_VERSION_LVL_MAX+1];
 int __init meson_cpu_version_init(void)
 {
-	unsigned int version,ver;
-#ifndef CONFIG_MESON_TRUSTZONE
+	unsigned int version,ver;	
 	unsigned int  *version_map;
-#endif
 
-	meson_cpu_version[MESON_CPU_VERSION_LVL_MAJOR] =
+	meson_cpu_version[MESON_CPU_VERSION_LVL_MAJOR] = 
 		aml_read_reg32(P_ASSIST_HW_REV);
 
 #ifndef CONFIG_MESON_TRUSTZONE
@@ -50,30 +48,30 @@ int __init meson_cpu_version_init(void)
 #endif
 
 	version = aml_read_reg32(P_METAL_REVISION);
-	switch (version) {
+	switch (version) {		
 		case 0x11111112:
 			meson_cpu_version[MESON_CPU_VERSION_LVL_MAJOR] = 0x1D; //M8 MarkII RevA
-		case 0x11111111:
-			ver = 0xA;
-			break;
-		case 0x11111113:
-			ver = 0xB;
-			break;
-		case 0x11111133:
-			ver = 0xC;
-			break;
-		default:/*changed?*/
+		case 0x11111111:			
+			ver = 0xA;		
+			break;		
+		case 0x11111113:			
+			ver = 0xB;		
+			break;	
+		case 0x11111133:			
+			ver = 0xC;		
+			break;	
+		default:/*changed?*/			
 			ver = 0xD;
 			break;
 	}
-	meson_cpu_version[MESON_CPU_VERSION_LVL_MINOR] = ver;
+	meson_cpu_version[MESON_CPU_VERSION_LVL_MINOR] = ver;	
 	printk(KERN_INFO "Meson chip version = Rev%X (%X:%X - %X:%X)\n", ver,
 		meson_cpu_version[MESON_CPU_VERSION_LVL_MAJOR],
 		meson_cpu_version[MESON_CPU_VERSION_LVL_MINOR],
 		meson_cpu_version[MESON_CPU_VERSION_LVL_PACK],
 		meson_cpu_version[MESON_CPU_VERSION_LVL_MISC]
-		);
-
+		);	
+	
 	return 0;
 }
 EXPORT_SYMBOL(meson_cpu_version_init);

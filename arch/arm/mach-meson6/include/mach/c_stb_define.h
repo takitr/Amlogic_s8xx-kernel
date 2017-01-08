@@ -812,3 +812,4 @@ advanced setting -- bit 7:0 force compare result
 #define RESET_DEMUXSTB      (1<<1)
 
 #endif // C_STB_DEFINE_H
+

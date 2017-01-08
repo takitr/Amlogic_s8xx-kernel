@@ -69,7 +69,7 @@ typedef struct d2d3_param_s{
         unsigned int        output_w;
         unsigned int        output_h;
         unsigned int        reverse_flag;
-		 short      depth;
+        	 short      depth;
         unsigned short      dpg_path;
         unsigned short      dbr_path;
         enum d2d3_dbr_mode_e dbr_mode;
@@ -127,3 +127,4 @@ extern void d2d3_update_canvas(struct d2d3_dev_s *devp);
 extern void d2d3_canvas_init(struct d2d3_dev_s *devp);
 extern int d2d3_depth_adjust(short depth);
 #endif /* D2D3_H_ */
+

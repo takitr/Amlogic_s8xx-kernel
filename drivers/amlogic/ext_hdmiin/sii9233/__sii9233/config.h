@@ -31,11 +31,11 @@
 //------------------------------------------------------------------------------
 
 #define PEBBLES_ES1_ZONE_WORKAROUND						(ENABLE) //ES1.1 auto zone detection issue
-#define PEBBLES_ES1_FF_WORKAROUND						(ENABLE) //ES1.1 FF part
+#define PEBBLES_ES1_FF_WORKAROUND						(ENABLE) //ES1.1 FF part 
 #define PEBBLES_STARTER_NO_CLK_DIVIDER					(ENABLE) //for demo 480i with starter board
 #define PEBBLES_VIDEO_STATUS_2ND_CHECK					(ENABLE) //check pclk status again after video unmute
-#define VIDEO_UNMUTE_TIMEOUT							(400)	 //set video unmute timeout 400ms
-#define VIDEO_STABLITY_CHECK_INTERVAL					(100)	 //set video stability check timeout 400ms
+#define VIDEO_UNMUTE_TIMEOUT							(400)	 //set video unmute timeout 400ms 
+#define VIDEO_STABLITY_CHECK_INTERVAL					(100)	 //set video stability check timeout 400ms 
 #define VIDEO_STABLITY_CHECK_TOTAL						(5000)   //multiple check within this time
 //------------------------------------------------------------------------------
 // Receiver Configuration
@@ -62,8 +62,8 @@
 #define CONF__OUTOUT_COLOR_DEPTH        (VAL__OUT_COLOR_DEPTH_8)
 #define CONF__OUTPUT_YCBCR        		(DISABLE)
 #define CONF__OUTPUT_SAMPL_422        	(DISABLE)
-#define CONF__OUTPUT_MUXYC				(DISABLE)
-#define CONF__OUTPUT_EMBEDDED_SYNC		(DISABLE)
+#define CONF__OUTPUT_MUXYC				(DISABLE)	
+#define CONF__OUTPUT_EMBEDDED_SYNC		(DISABLE)	
 
 #define CONF__OUTPUT_VIDEO_FORMAT       (VAL__RGB)
 
@@ -92,7 +92,7 @@
 
 // Common Audio Configuration
 //$$ #define CONF__AUD_CTRL                  (BIT__MUTE_MODE | BIT__PSERR | BIT__PAERR | BIT__I2SMODE | BIT__SPEN)  //use soft mute - pass errors
-#define CONF__AUD_MUTE_MODE             (ENABLE)
+#define CONF__AUD_MUTE_MODE             (ENABLE) 
 #define CONF__AUD_MODE_EN				(BIT__HBR_ENABLE 	|	\
 										 BIT__DSD_ENABLE	|	\
 										 BIT__SPDIF_ENABLE	|	\
@@ -120,7 +120,7 @@
 #define CONF__SUPPORT_ALL_INFOFRAMES	(ENABLE)	// used for demonstration of repeater's configuratiom
 #define CONF__SUPPORT_3D				(ENABLE)	// used for support device in 3 Mode
 #define CONF__SUPPORT_REPEATER3D		(DISABLE)	// used for support device in 3 Mode
-#define CONF__VSYNC_OVERFLOW			(ENABLE)	// overlow for line counter
+#define CONF__VSYNC_OVERFLOW			(ENABLE)	// overlow for line counter 
 
 //------------------------------------------------------------------------------
 // Application Configuration

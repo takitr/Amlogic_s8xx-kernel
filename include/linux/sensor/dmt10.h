@@ -74,7 +74,7 @@
 #define VALUE_STAINT 			0xAA
 #define VALUE_AFEM_AFEN_Normal	0x8f	// AFEN set 1 , ATM[2:0]=b'000(normal),EN_Z/Y/X/T=1
 #define VALUE_AFEM_Normal		0x0f	// AFEN set 0 , ATM[2:0]=b'000(normal),EN_Z/Y/X/T=1
-#define VALUE_INTC				0x00	// INTC[6:5]=b'00
+#define VALUE_INTC				0x00	// INTC[6:5]=b'00 
 #define VALUE_INTC_Interrupt_En	0x20	// INTC[6:5]=b'01 (Data ready interrupt enable, active high at INT0)
 #define VALUE_CKSEL_ODR_0		0x05	// ODR[3:0]=b'0000 (0.78125Hz), CCK[3:0]=b'0000 (102.4kHZ)
 #define VALUE_CKSEL_ODR_1		0x15	// ODR[3:0]=b'0001 (1.5625Hz), CCK[3:0]=b'0000 (102.4kHZ)
@@ -112,7 +112,7 @@
 #define CONFIG_GSEN_CALIBRATION_GRAVITY_ON_X_POSITIVE 6
 
 #define AVG_NUM 				16
-#define SENSOR_DATA_SIZE 		3
+#define SENSOR_DATA_SIZE 		3 
 #define DEFAULT_SENSITIVITY 	1024
 
 #define IOCTL_MAGIC  0x09
@@ -159,8 +159,8 @@ typedef union {
 struct dev_data {
 	dev_t 					devno;
 	struct cdev 			cdev;
-	struct class 			*class;
-	struct input_dev 		*input;
+  	struct class 			*class;
+  	struct input_dev 		*input;
 	struct i2c_client 		*client;
 	struct delayed_work 	delaywork;	//work;
 	struct work_struct 		work;	//irq_work;
@@ -171,4 +171,4 @@ struct dev_data {
 	atomic_t 				enable;
 };
 
-#endif
+#endif               

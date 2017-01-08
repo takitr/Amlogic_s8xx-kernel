@@ -4,9 +4,14 @@ menu "Amlogic Audio Interface V2"
 
 config	AMAUDIO2
 	bool "Amlogic Audio Interface V2"
-    	default y
-    	depends on PLAT_MESON
+    default n
+    select SOUND
+    select SND_SOC
+    select SND
+    select AML_AUDIO_DSP
+    select SND_AML_SOC
+    select SWITCH
 	help
 		"Amlogic Audio Interface V2, The interface different from amaudio"
-
-endmenu
+	
+endmenu	

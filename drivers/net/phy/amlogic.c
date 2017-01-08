@@ -265,7 +265,7 @@ int amlogic_phy_config_aneg(struct phy_device *phydev)
 	err = genphy_config_aneg(phydev);
 	if(err < 0)
 		return err;
-
+	
 	return 0;
 }
 

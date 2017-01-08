@@ -38,7 +38,7 @@ static void pcm_in_register_show(void)
 void pcm_in_enable(int flag)
 {
     /* reset fifo */
-RESET_FIFO:
+RESET_FIFO:    
     WRITE_MPEG_REG_BITS(AUDIN_FIFO1_CTRL, 1, 1, 1);
     WRITE_MPEG_REG(AUDIN_FIFO1_PTR, 0);
     if (READ_MPEG_REG(AUDIN_FIFO1_PTR) != READ_MPEG_REG(AUDIN_FIFO1_START))
@@ -57,9 +57,9 @@ RESET_FIFO:
 
     if (flag) {
         /* set buffer start ptr end */
-	WRITE_MPEG_REG(AUDIN_FIFO1_START, pcmin_buffer_addr);
-	WRITE_MPEG_REG(AUDIN_FIFO1_PTR, pcmin_buffer_addr);
-	WRITE_MPEG_REG(AUDIN_FIFO1_END, pcmin_buffer_addr + pcmin_buffer_size - 8);
+    	WRITE_MPEG_REG(AUDIN_FIFO1_START, pcmin_buffer_addr);
+    	WRITE_MPEG_REG(AUDIN_FIFO1_PTR, pcmin_buffer_addr);
+    	WRITE_MPEG_REG(AUDIN_FIFO1_END, pcmin_buffer_addr + pcmin_buffer_size - 8);
 
         /* fifo control */
         WRITE_MPEG_REG(AUDIN_FIFO1_CTRL, (1 << 15) |    // urgent request
@@ -192,9 +192,9 @@ void pcm_out_enable(int flag)
 
     if (flag) {
         /* set buffer start ptr end */
-	WRITE_MPEG_REG(AUDOUT_BUF0_STA, pcmout_buffer_addr);
-	WRITE_MPEG_REG(AUDOUT_BUF0_WPTR, pcmout_buffer_addr);
-	WRITE_MPEG_REG(AUDOUT_BUF0_EDA, pcmout_buffer_addr + pcmout_buffer_size - 8);
+    	WRITE_MPEG_REG(AUDOUT_BUF0_STA, pcmout_buffer_addr);
+    	WRITE_MPEG_REG(AUDOUT_BUF0_WPTR, pcmout_buffer_addr);
+    	WRITE_MPEG_REG(AUDOUT_BUF0_EDA, pcmout_buffer_addr + pcmout_buffer_size - 8);
 
         /* fifo control */
         WRITE_MPEG_REG(AUDOUT_CTRL, (0 << 31) |     // fifo enable
@@ -223,7 +223,7 @@ void pcm_out_enable(int flag)
                                     (0 << 4) |      // use register set 0 always
                                     (1 << 3) |       // urgent request
                                     (6 << 0)         //endian
-
+                                    
                         );
         /* pcmout control3 */
         WRITE_MPEG_REG(PCMOUT_CTRL3, 0);            // mute constant
@@ -298,7 +298,7 @@ unsigned int pcm_out_rd_ptr(void)
 unsigned int pcm_out_wr_ptr(void)
 {
     unsigned int value = 0;
-	value = READ_MPEG_REG(AUDOUT_BUF0_WPTR);
+ 	value = READ_MPEG_REG(AUDOUT_BUF0_WPTR);
     pcm_debug("PCMOUT write pointer: 0x%08x\n", value);
     return value;
 }
@@ -306,8 +306,9 @@ unsigned int pcm_out_wr_ptr(void)
 unsigned int pcm_out_set_wr_ptr(unsigned int value)
 {
     unsigned int old = READ_MPEG_REG(AUDOUT_BUF0_WPTR);
-	WRITE_MPEG_REG(AUDOUT_BUF0_WPTR, value);
+ 	WRITE_MPEG_REG(AUDOUT_BUF0_WPTR, value);
     pcm_debug("PCMOUT write pointer: 0x%08x -> 0x%08x\n", old, value);
 
     return old;
 }
+

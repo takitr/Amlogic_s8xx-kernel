@@ -126,7 +126,7 @@ uint8_t HAL_GetInterruptPinState(void)
 uint8_t HAL_GetPortSelection(void)
 {
     uint8_t bPortSelection;
-
+	
     bPortSelection = GPIO_GetPins(GPIO_PIN__PORT_SELECT_SWITCH_0 | GPIO_PIN__PORT_SELECT_SWITCH_1 |
                                   GPIO_PIN__PORT_SELECT_SWITCH_2 );
 
@@ -182,7 +182,7 @@ uint8_t HAL_GetPortSelectionDebounced(void)
 void HAL_PowerDownAudioDAC(void)
 {
 #if 0
-    I2C_WriteByte(ADAC_SLAVE_ADDR, ADAC_SPEED_PD_ADDR, ADAC_POWER_DOWN);
+    I2C_WriteByte(ADAC_SLAVE_ADDR, ADAC_SPEED_PD_ADDR, ADAC_POWER_DOWN);    
     GPIO_SetPins(GPIO_PIN__AUDIO_DAC_MUTE);   //set mute pin (latch on 9135)
 #endif
 }
@@ -196,7 +196,7 @@ void HAL_PowerDownAudioDAC(void)
 void HAL_WakeUpAudioDAC(void)
 {
 #if 0
-    I2C_WriteByte(ADAC_SLAVE_ADDR, ADAC_SPEED_PD_ADDR, ADAC_NORMAL_OPERATION);
+    I2C_WriteByte(ADAC_SLAVE_ADDR, ADAC_SPEED_PD_ADDR, ADAC_NORMAL_OPERATION);  
     GPIO_ClearPins(GPIO_PIN__AUDIO_DAC_MUTE);  //clear mute pin (latch on 9135)
 #endif
 }
@@ -229,9 +229,11 @@ void HAL_SetAudioDACMode(uint8_t dacMode)
 //------------------------------------------------------------------------------
  void HAL_VccEnable(uint8_t qON)
  {
-	  if(qON)
-			GPIO_SetPins(GPIO_PIN__VCCEN);
+ 	  if(qON)
+	  	  	GPIO_SetPins(GPIO_PIN__VCCEN);
 
 	  else
-			GPIO_ClearPins(GPIO_PIN__VCCEN);
+	  		GPIO_ClearPins(GPIO_PIN__VCCEN);
  }
+
+

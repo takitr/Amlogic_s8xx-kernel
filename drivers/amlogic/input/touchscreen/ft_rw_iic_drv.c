@@ -32,7 +32,7 @@ static struct class *my_class;
 static u16 g_slaveaddr = 0x38;
 struct ft_rw_i2c_dev {
     struct cdev cdev;
-    struct semaphore ft_rw_i2c_sem;
+    struct semaphore ft_rw_i2c_sem;   
 };
 struct ft_rw_i2c_dev *ft_rw_i2c_dev_tt;
 
@@ -41,18 +41,18 @@ typedef struct ft_rw_i2c
   u8 *buf;  //buffer
   __u16 addr; //slave addr
   u8 	flag;//0-write 1-read
-  __u16 length; //the length of data
+  __u16 length; //the length of data 
 }*pft_rw_i2c;
 
 typedef struct ft_rw_i2c_queue
 {
 	struct ft_rw_i2c __user *i2c_queue;
-	int queuenum;
+	int queuenum;	
 }*pft_rw_i2c_queue;
 
 static int ft_rw_iic_drv_myread(u8* buf, int length)
 {
-
+   
 #if 0
 	struct i2c_adapter *adap=this_client->adapter;
 	struct i2c_msg msg;
@@ -72,7 +72,7 @@ static int ft_rw_iic_drv_myread(u8* buf, int length)
 #else
 int ret;
 
-	//printk("want to read length=%d\n", length);
+    	//printk("want to read length=%d\n", length);
     ret = i2c_master_recv(this_client, buf, length);
 
     if(ret<=0)
@@ -94,9 +94,9 @@ static int ft_rw_iic_drv_mywrite(u8* buf, int length)
 		msg.flags = this_client->flags & I2C_M_TEN;
 		msg.len = length;
 		msg.buf = (char *)buf;
-
+	
 		ret = i2c_transfer(adap, &msg, 1);
-
+	
 		/* If everything went ok (i.e. 1 msg transmitted), return #bytes
 		   transmitted, else error code. */
 		return (ret == 1) ? length : ret;
@@ -124,7 +124,7 @@ static int ft_rw_iic_drv_RDWR(unsigned long arg)
 			return -EFAULT;
 
 	if(copy_from_user(&i2c_rw_queue,
-		(struct ft_rw_i2c_queue *)arg,
+		(struct ft_rw_i2c_queue *)arg, 
 		sizeof(struct ft_rw_i2c_queue)))
 		return -EFAULT;
 
@@ -151,7 +151,7 @@ static int ft_rw_iic_drv_RDWR(unsigned long arg)
 		kfree(i2c_rw_msg);
 		return -ENOMEM;
 	}
-
+	
 	ret = 0;
 	for(i=0; i< i2c_rw_queue.queuenum; i++)
 	{
@@ -189,12 +189,12 @@ static int ft_rw_iic_drv_RDWR(unsigned long arg)
 	{
 		if(i2c_rw_msg[i].flag)
 		{
-			ret = ft_rw_iic_drv_myread(i2c_rw_msg[i].buf, i2c_rw_msg[i].length);
+   	   		ret = ft_rw_iic_drv_myread(i2c_rw_msg[i].buf, i2c_rw_msg[i].length);
 			if(ret>=0){
 				//printk("copy data to user\n");
-				ret = copy_to_user(data_ptrs[i], i2c_rw_msg[i].buf, ret);
+   	   			ret = copy_to_user(data_ptrs[i], i2c_rw_msg[i].buf, ret);
 				}
-		}
+   	   	}
 		else
 		{
 			ret = ft_rw_iic_drv_mywrite(i2c_rw_msg[i].buf, i2c_rw_msg[i].length);
@@ -204,21 +204,21 @@ static int ft_rw_iic_drv_RDWR(unsigned long arg)
 	return ret;
 }
 
-/*
+/*  
        [function]:
-                       char device open function interface
+                       char device open function interface 
 */
 static int ft_rw_iic_drv_open(struct inode *inode, struct file *filp)
 {
-
+ 
  filp->private_data=ft_rw_i2c_dev_tt;
  return 0;
 }
 
 
-/*
+/*  
        [function]:
-                       char device close function interface
+                       char device close function interface 
 */
 static int ft_rw_iic_drv_release(struct inode *inode, struct file *filp)
 {
@@ -227,7 +227,7 @@ static int ft_rw_iic_drv_release(struct inode *inode, struct file *filp)
 }
 
 
-/*
+/*  
        [function]:
                        char device ioctrl function interface
 
@@ -251,37 +251,37 @@ static int ft_rw_iic_drv_ioctl(struct file *filp, unsigned
   //printk("call ioctl\n");
    switch (cmd)
   {
-#if 0
+#if 0  
   case FT_I2C_SLAVEADDR:
   {
-	printk("set slave addr\n");
+  	printk("set slave addr\n");
 
-	if ((arg > 0x3ff) ||
+  	if ((arg > 0x3ff) ||
 		    (((this_client->flags & I2C_M_TEN) == 0) && arg > 0x7f)){
 			ret = -EINVAL;
 			break;
-		}
+  		}
 	this_client->addr = arg;
 	g_slaveaddr = arg;
 	}
-	break;
+  	break;
 #endif
 
   case FT_I2C_RW:
-	//printk("%s****%d\n", __FUNCTION__, __LINE__);
-	ret = ft_rw_iic_drv_RDWR(arg);
-	      break;
+  	//printk("%s****%d\n", __FUNCTION__, __LINE__);
+  	ret = ft_rw_iic_drv_RDWR(arg);	
+	      break; 
   default:
-	printk("no command, command=%d\n", cmd);
-	ret =  -ENOTTY;
-	    break;
+  	printk("no command, command=%d\n", cmd);
+  	ret =  -ENOTTY;
+  	    break;
   }
    up(&ft_rw_i2c_dev_tt->ft_rw_i2c_sem);
-  return ret;
+  return ret;	
 }
 
 
-/*
+/*    
     [function]:char device file operation which will be put to register the char device
 
 */
@@ -311,7 +311,7 @@ static int __devexit ft_rw_iic_drv_remove(struct i2c_client *client)
   i2c_set_clientdata(client, NULL);
  //	 struct i2c_client *client1 = i2c_get_clientdata(client);;
 //	kfree(client1);
-	return 0;
+  	return 0;
 }
 
 static int ft_rw_iic_drv_myinitdev()
@@ -335,15 +335,15 @@ static int ft_rw_iic_drv_myinitdev()
 		return err;
 		}
 	init_MUTEX(&ft_rw_i2c_dev_tt->ft_rw_i2c_sem);
-	ft_rw_iic_drv_setup_cdev(ft_rw_i2c_dev_tt, 0);
+	ft_rw_iic_drv_setup_cdev(ft_rw_i2c_dev_tt, 0); 
 
 	#if 1
        my_class = class_create(THIS_MODULE, "my_class");
-       if(IS_ERR(my_class))
+       if(IS_ERR(my_class)) 
        {
           printk("Err: failed in creating class.\n");
-          return -1;
-        }
+          return -1; 
+        } 
         //step6 create device node
 	 device_create( my_class, NULL, MKDEV(ft_rw_iic_drv_major, 0),NULL, "ft_rw_iic_drv");
 	#endif
@@ -352,7 +352,7 @@ static int ft_rw_iic_drv_myinitdev()
 }
 
 static int ft_rw_iic_drv_probe(struct i2c_client *client, const struct i2c_device_id *id)
-{
+{	
 	int err = 0;
  printk("search i2c device \n");
 	if (!i2c_check_functionality(client->adapter, I2C_FUNC_I2C)) {
@@ -396,16 +396,16 @@ static void __exit ft_rw_iic_drv_exit(void)
 {
 #if 1
    //delete device node under /dev
-   device_destroy(my_class, MKDEV(ft_rw_iic_drv_major, 0));
+   device_destroy(my_class, MKDEV(ft_rw_iic_drv_major, 0)); 
     //delete class created by us
-   class_destroy(my_class);
+   class_destroy(my_class);  
 #endif
    //delet the cdev
    cdev_del(&ft_rw_i2c_dev_tt->cdev);
    kfree(ft_rw_i2c_dev_tt);
-   unregister_chrdev_region(MKDEV(ft_rw_iic_drv_major, 0), 1);
+   unregister_chrdev_region(MKDEV(ft_rw_iic_drv_major, 0), 1); 
 
-   i2c_del_driver(&ft_rw_iic_drv_driver);
+   i2c_del_driver(&ft_rw_iic_drv_driver);  
 }
 
 #ifdef CONFIG_DEFERRED_MODULE_INIT

@@ -10,7 +10,7 @@ config MESON_CPU_TEMP_SENSOR
 	bool "meson temperature sensor cpu interface support"
 	default n
 	help
-		/sys/class/saradc/temperature can got the celius .
+		/sys/class/saradc/temperature can got the celius . 
 config CORE_FREQ_TRACK
     bool "trace for cpu frequence with kernel timestamp"
     default n
@@ -43,7 +43,7 @@ config MESON_L2CC_STANDBY
 	default n
 	help
 		enable PL310 dynamic gating & standby mode
-
+		
 config MESON_FIX_SMP_SCALING_WARNING
 	bool "Fix scaling warning"
 	depends on SMP
@@ -63,7 +63,7 @@ config MESON_TRUSTZONE
 	default n
 	help
 		Enable ARM Trustzone secure extension
-
+		
 config GPIO_TEST
 	bool "support gpio group test"
 	default n

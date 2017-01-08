@@ -204,7 +204,7 @@ static void ppmgr_vf_put(vframe_t *vf, void *op_arg)
 
 
     i=vfq_level(&q_free);
-
+    
     while(i>0)
     {
         index=(q_free.rp+i-1)%(q_free.size);
@@ -318,7 +318,7 @@ static int ppmgr_event_cb(int type, void *data, void *private_data)
 #endif
     if(type & VFRAME_EVENT_RECEIVER_FRAME_WAIT){
         if(task_running && !ppmgr_device.use_prot){
-
+			
 			if(timestamp_pcrscr_enable_state()){
 				return 0;
 			}
@@ -459,8 +459,8 @@ void vf_local_init(void)
     }
 
     for(i =0 ; i < VF_POOL_SIZE ;i++ ){
-	buf_status[i].index = ppmgr_canvas_tab[i];
-	buf_status[i].dirty = 1;
+    	buf_status[i].index = ppmgr_canvas_tab[i];
+    	buf_status[i].dirty = 1;
     }
     sema_init(&thread_sem,1);
 }
@@ -637,11 +637,11 @@ static void display_mode_adjust(ge2d_context_t *context, vframe_t *new_vf, int p
     int vf_height = new_vf->height;
     static int current_display_mode = 0;
     if (ppmgr_device.display_mode != current_display_mode) {
-	current_display_mode = ppmgr_device.display_mode;
-	display_mode_change = VF_POOL_SIZE;
+    	current_display_mode = ppmgr_device.display_mode;
+    	display_mode_change = VF_POOL_SIZE;
     }
     if (display_mode_change > 0) {
-	display_mode_change--;
+    	display_mode_change--;
         fillrect(context, 0, 0, canvas_width, canvas_height, 0x008080ff);
     }
     if (ppmgr_device.display_mode == 0) {//stretch full
@@ -679,9 +679,6 @@ static int process_vf_deinterlace_nv21(vframe_t *vf, ge2d_context_t *context, co
     if (!vf)
         return -1;
 
-    if(vf->type & VIDTYPE_MVC){
-		return 0;
-	}
     if ((vf->canvas0Addr == vf->canvas1Addr)||(ppmgr_device.angle == 0)){
         //printk("++ppmgr interlace skip.\n");
         return 0;
@@ -837,9 +834,6 @@ static int process_vf_deinterlace(vframe_t *vf, ge2d_context_t *context, config_
     if (!vf)
         return -1;
 
-    if(vf->type & VIDTYPE_MVC){
-		return 0;
-	}
     if ((vf->canvas0Addr == vf->canvas1Addr)||(ppmgr_device.bypass)||(ppmgr_device.angle == 0)){
         //printk("++ppmgr interlace skip.\n");
         return 0;
@@ -1303,9 +1297,6 @@ static void process_vf_rotate(vframe_t *vf, ge2d_context_t *context, config_para
         pp_vf->dec_frame = NULL;
 #endif
 
-   if(vf->type & VIDTYPE_MVC){
-		pp_vf->dec_frame = vf;
-	}
     if (pp_vf->dec_frame) {
         /* bypass mode */
         *new_vf = *vf;
@@ -1342,23 +1333,23 @@ static void process_vf_rotate(vframe_t *vf, ge2d_context_t *context, config_para
 
     if(vf->type&VIDTYPE_VIU_422){
         if(interlace_mode == VIDTYPE_INTERLACE_TOP)
-			  vf->height >>=1;
-		else if(interlace_mode == VIDTYPE_INTERLACE_BOTTOM){
-		    vf->height >>=1;
-		}else{
+    			  vf->height >>=1;
+    		else if(interlace_mode == VIDTYPE_INTERLACE_BOTTOM){
+    		    vf->height >>=1;
+    		}else{
             pic_struct = (GE2D_FORMAT_S16_YUV422T &(3<<3));
         }
     }else if(vf->type&VIDTYPE_VIU_NV21){
-		if(interlace_mode == VIDTYPE_INTERLACE_TOP)
-			pic_struct = (GE2D_FORMAT_M24_NV21T & (3<<3));
-		else if(interlace_mode == VIDTYPE_INTERLACE_BOTTOM)
-			pic_struct = (GE2D_FORMAT_M24_NV21B & (3<<3));
-	}else{
-			if(interlace_mode == VIDTYPE_INTERLACE_TOP)
-				pic_struct = (GE2D_FORMAT_M24_YUV420T & (3<<3));
-			else if(interlace_mode == VIDTYPE_INTERLACE_BOTTOM)
-				pic_struct = (GE2D_FORMAT_M24_YUV420B & (3<<3));
-	}
+    		if(interlace_mode == VIDTYPE_INTERLACE_TOP)
+    			pic_struct = (GE2D_FORMAT_M24_NV21T & (3<<3));
+    		else if(interlace_mode == VIDTYPE_INTERLACE_BOTTOM)
+    			pic_struct = (GE2D_FORMAT_M24_NV21B & (3<<3));
+    	}else{
+        		if(interlace_mode == VIDTYPE_INTERLACE_TOP)
+        			pic_struct = (GE2D_FORMAT_M24_YUV420T & (3<<3));
+        		else if(interlace_mode == VIDTYPE_INTERLACE_BOTTOM)
+        			pic_struct = (GE2D_FORMAT_M24_YUV420B & (3<<3));
+    	}
 
 #ifndef CONFIG_POST_PROCESS_MANAGER_PPSCALER
     vf_rotate_adjust(vf, new_vf, cur_angle);
@@ -1380,8 +1371,8 @@ static void process_vf_rotate(vframe_t *vf, ge2d_context_t *context, config_para
             scaler_w = rect_w;
             scaler_h = rect_h;
             for(i =0 ; i < VF_POOL_SIZE ;i++ ){
-		buf_status[i].index = ppmgr_canvas_tab[i];
-		buf_status[i].dirty = 1;
+            	buf_status[i].index = ppmgr_canvas_tab[i];
+            	buf_status[i].dirty = 1;
             }
             //printk("--ppmgr new rect x:%d, y:%d, w:%d, h:%d.\n", rect_x, rect_y, rect_w, rect_h);
         }
@@ -1403,14 +1394,14 @@ static void process_vf_rotate(vframe_t *vf, ge2d_context_t *context, config_para
     memset(ge2d_config,0,sizeof(config_para_ex_t));
 
     for(i =0 ; i < VF_POOL_SIZE ;i++ ){
-	if(buf_status[i].index == new_vf->canvas0Addr){
-		break;
-	}
+    	if(buf_status[i].index == new_vf->canvas0Addr){
+    		break;
+    	}
     }
 
     if(buf_status[i].dirty == 1){
-	buf_status[i].dirty = 0;
-	//printk("--scale_clear_count is %d ------new_vf->canvas0Addr is %d ----------x:%d, y:%d, w:%d, h:%d.\n",scale_clear_count,new_vf->canvas0Addr, rect_x, rect_y, rect_w, rect_h);
+    	buf_status[i].dirty = 0;
+    	//printk("--scale_clear_count is %d ------new_vf->canvas0Addr is %d ----------x:%d, y:%d, w:%d, h:%d.\n",scale_clear_count,new_vf->canvas0Addr, rect_x, rect_y, rect_w, rect_h);
     /* data operating. */
         ge2d_config->alu_const_color= 0;//0x000000ff;
         ge2d_config->bitmask_en  = 0;
@@ -1671,10 +1662,10 @@ static void process_vf_rotate(vframe_t *vf, ge2d_context_t *context, config_para
 			ge2d_config->dst_para.y_rev = 1;
 	} else if (ppmgr_device.mirror_flag == 2) {
 		if(cur_angle == 1 || cur_angle == 2)
-			ge2d_config->dst_para.x_rev = 0;
-		else
-			ge2d_config->dst_para.x_rev = 1;
-	}
+    			ge2d_config->dst_para.x_rev = 0;
+    		else
+    			ge2d_config->dst_para.x_rev = 1;
+    	}
     }
     ge2d_config->dst_para.color = 0;
     ge2d_config->dst_para.top = 0;
@@ -1800,22 +1791,22 @@ static void process_vf_change(vframe_t *vf, ge2d_context_t *context, config_para
 
     if(vf->type&VIDTYPE_VIU_422){
         if(interlace_mode == VIDTYPE_INTERLACE_TOP)
-			  vf->height >>=1;
-		else if(interlace_mode == VIDTYPE_INTERLACE_BOTTOM){
-		    vf->height >>=1;
-		}else{
+    			  vf->height >>=1;
+    		else if(interlace_mode == VIDTYPE_INTERLACE_BOTTOM){
+    		    vf->height >>=1;
+    		}else{
             pic_struct = (GE2D_FORMAT_S16_YUV422T &(3<<3));
         }
     }else if(vf->type&VIDTYPE_VIU_NV21){
-		if(interlace_mode == VIDTYPE_INTERLACE_TOP)
-			pic_struct = (GE2D_FORMAT_M24_NV21T & (3<<3));
-		else if(interlace_mode == VIDTYPE_INTERLACE_BOTTOM)
-			pic_struct = (GE2D_FORMAT_M24_NV21B & (3<<3));
+    		if(interlace_mode == VIDTYPE_INTERLACE_TOP)
+    			pic_struct = (GE2D_FORMAT_M24_NV21T & (3<<3));
+    		else if(interlace_mode == VIDTYPE_INTERLACE_BOTTOM)
+    			pic_struct = (GE2D_FORMAT_M24_NV21B & (3<<3));
 	}else{
-		if(interlace_mode == VIDTYPE_INTERLACE_TOP)
-			pic_struct = (GE2D_FORMAT_M24_YUV420T & (3<<3));
-		else if(interlace_mode == VIDTYPE_INTERLACE_BOTTOM)
-			pic_struct = (GE2D_FORMAT_M24_YUV420B & (3<<3));
+    		if(interlace_mode == VIDTYPE_INTERLACE_TOP)
+    			pic_struct = (GE2D_FORMAT_M24_YUV420T & (3<<3));
+    		else if(interlace_mode == VIDTYPE_INTERLACE_BOTTOM)
+    			pic_struct = (GE2D_FORMAT_M24_YUV420B & (3<<3));
 	}
 
     memset(ge2d_config,0,sizeof(config_para_ex_t));
@@ -2026,8 +2017,8 @@ static int process_vf_adjust(vframe_t *vf, ge2d_context_t *context, config_para_
 
     scale_clear_count = VF_POOL_SIZE;
     for(i =0 ; i < VF_POOL_SIZE ;i++ ){
-	buf_status[i].index = ppmgr_canvas_tab[i];
-	buf_status[i].dirty = 1;
+    	buf_status[i].index = ppmgr_canvas_tab[i];
+    	buf_status[i].dirty = 1;
     }
     scaler_x = rect_x;
     scaler_y = rect_y;
@@ -2290,7 +2281,7 @@ static int ppmgr_task(void *data)
     struct sched_param param = {.sched_priority = MAX_RT_PRIO - 1 };
     int i;
 	 vframe_t *vf_local = NULL;
-	 ppframe_t *pp_local=NULL;
+	 ppframe_t *pp_local=NULL;    
     ge2d_context_t *context=create_ge2d_work_queue();
     config_para_ex_t ge2d_config;
     memset(&ge2d_config,0,sizeof(config_para_ex_t));
@@ -2371,7 +2362,6 @@ static int ppmgr_task(void *data)
                 break;
             if (vf && ppmgr_device.started) {
                 if (!(vf->type & (VIDTYPE_VIU_422 | VIDTYPE_VIU_444 | VIDTYPE_VIU_NV21)) || (vf->type & VIDTYPE_INTERLACE) || ppmgr_device.disable_prot
-                || (vf->type & VIDTYPE_MVC)
 #ifdef CONFIG_POST_PROCESS_MANAGER_PPSCALER
                 || amvideo_get_scaler_mode()
 #endif
@@ -2379,47 +2369,44 @@ static int ppmgr_task(void *data)
                 || ppmgr_device.receiver
 #endif
                 ) {
-                    if (ppmgr_device.use_prot != 0) {
-                        ppmgr_device.use_prot = 0;
-                        set_video_angle(0);
-                        //ppmgr_device.angle = ppmgr_device.global_angle;
-                        ppmgr_device.videoangle = (ppmgr_device.angle + ppmgr_device.orientation) % 4;
-                        set_property_change(1);
-                    }
+                    ppmgr_device.use_prot = 0;
+                    set_video_angle(0);
+                    ppmgr_device.angle = ppmgr_device.global_angle;
+                    ppmgr_device.videoangle = (ppmgr_device.angle + ppmgr_device.orientation) % 4;
+                    set_property_change(1);
                 } else {
                     ppmgr_device.use_prot = 1;
-                    //ppmgr_device.angle = 0;
+                    ppmgr_device.angle = 0;
                     ppmgr_device.videoangle = (ppmgr_device.angle + ppmgr_device.orientation) % 4;
                     set_property_change(1);
                     //set_video_angle(ppmgr_device.global_angle);
                 }
                 ppmgr_device.started = 0;
             }
-            vf->video_angle = (ppmgr_device.angle + ppmgr_device.orientation + vf->orientation)%4;
             plarform_type = get_platform_type();
             if( plarform_type == PLATFORM_TV){
-		process_type = get_tv_process_type(vf);
+            	process_type = get_tv_process_type(vf);
             }else{
-		process_type = get_mid_process_type(vf);
-		}
+            	process_type = get_mid_process_type(vf);
+        	}
             if(process_type== TYPE_NONE){
                 int ret = 0;
                 if( plarform_type != PLATFORM_TV){
-			ret = process_vf_deinterlace(vf, context, &ge2d_config);
-		}
+                	ret = process_vf_deinterlace(vf, context, &ge2d_config);
+            	}
                 process_vf_rotate(vf, context, &ge2d_config,(ret>0)?ret:0);
             }else{
-		if( plarform_type == PLATFORM_TV){
-			ppmgr_vf_3d_tv(vf, context, &ge2d_config);
-		}else{
-			ppmgr_vf_3d(vf, context, &ge2d_config);
-		}
+            	if( plarform_type == PLATFORM_TV){
+            		ppmgr_vf_3d_tv(vf, context, &ge2d_config);
+            	}else{
+                	ppmgr_vf_3d(vf, context, &ge2d_config);
+            	}
             }
 #else
             int ret = 0;
             vf = ppmgr_vf_get_dec();
             if(!vf)
-                break;
+                break;            
             if (vf && ppmgr_device.started) {
                 if (!(vf->type & (VIDTYPE_VIU_422 | VIDTYPE_VIU_444 | VIDTYPE_VIU_NV21)) || (vf->type & VIDTYPE_INTERLACE) || ppmgr_device.disable_prot
 #ifdef CONFIG_POST_PROCESS_MANAGER_PPSCALER
@@ -2429,23 +2416,20 @@ static int ppmgr_task(void *data)
                 || ppmgr_device.receiver
 #endif
                 ) {
-                    if (ppmgr_device.use_prot != 0) {
-                        ppmgr_device.use_prot = 0;
-                        set_video_angle(0);
-                        //ppmgr_device.angle = ppmgr_device.global_angle;
-                        ppmgr_device.videoangle = (ppmgr_device.angle + ppmgr_device.orientation) % 4;
-                        set_property_change(1);
-                    }
+                    ppmgr_device.use_prot = 0;
+                    set_video_angle(0);
+                    ppmgr_device.angle = ppmgr_device.global_angle;
+                    ppmgr_device.videoangle = (ppmgr_device.angle + ppmgr_device.orientation) % 4;
+                    set_property_change(1);
                 } else {
                     ppmgr_device.use_prot = 1;
                     set_video_angle(ppmgr_device.global_angle);
-                    //ppmgr_device.angle = 0;
+                    ppmgr_device.angle = 0;
                     ppmgr_device.videoangle = (ppmgr_device.angle + ppmgr_device.orientation) % 4;
                     set_property_change(1);
                 }
                 ppmgr_device.started = 0;
             }
-            vf->video_angle = (ppmgr_device.angle + ppmgr_device.orientation + vf->orientation)%4;
             ret = process_vf_deinterlace(vf, context, &ge2d_config);
             process_vf_rotate(vf, context, &ge2d_config,(ret>0)?ret:0);
 #endif
@@ -2453,10 +2437,10 @@ static int ppmgr_task(void *data)
 
         if (ppmgr_blocking) {
             #if 0
-		if(ppmgr_reset_type){
+        	if(ppmgr_reset_type){
 				vf_notify_provider(PROVIDER_NAME,VFRAME_EVENT_RECEIVER_RESET,NULL);
-		ppmgr_reset_type = 0 ;
-		}
+            	ppmgr_reset_type = 0 ;
+        	}
             #endif
             /***recycle buffer to decoder***/
 
@@ -2718,11 +2702,11 @@ int start_ppmgr_task(void)
         vf_local_init();
         //if(get_buff_change())
         #ifdef CONFIG_POST_PROCESS_MANAGER_3D_PROCESS
-		if( plarform_type == PLATFORM_TV){
-			ppmgr_buffer_init(1);
-		}else{
-			ppmgr_buffer_init(0);
-		}
+        	if( plarform_type == PLATFORM_TV){
+        		ppmgr_buffer_init(1);
+        	}else{
+        		ppmgr_buffer_init(0);
+        	}
         #else
             ppmgr_buffer_init(0);
         #endif

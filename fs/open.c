@@ -628,12 +628,23 @@ out:
 static inline int __get_file_write_access(struct inode *inode,
 					  struct vfsmount *mnt)
 {
-	int error = get_write_access(inode);
+	int error;
+	error = get_write_access(inode);
 	if (error)
 		return error;
-	error = __mnt_want_write(mnt);
-	if (error)
-		put_write_access(inode);
+	/*
+	 * Do not take mount writer counts on
+	 * special files since no writes to
+	 * the mount itself will occur.
+	 */
+	if (!special_file(inode->i_mode)) {
+		/*
+		 * Balanced in __fput()
+		 */
+		error = __mnt_want_write(mnt);
+		if (error)
+			put_write_access(inode);
+	}
 	return error;
 }
 
@@ -666,14 +677,16 @@ static int do_dentry_open(struct file *f,
 
 	path_get(&f->f_path);
 	inode = f->f_inode = f->f_path.dentry->d_inode;
-	if (f->f_mode & FMODE_WRITE && !special_file(inode->i_mode)) {
+	if (f->f_mode & FMODE_WRITE) {
 		error = __get_file_write_access(inode, f->f_path.mnt);
 		if (error)
 			goto cleanup_file;
-		file_take_write(f);
+		if (!special_file(inode->i_mode))
+			file_take_write(f);
 	}
 
 	f->f_mapping = inode->i_mapping;
+	file_sb_list_add(f, inode->i_sb);
 
 	if (unlikely(f->f_mode & FMODE_PATH)) {
 		f->f_op = &empty_fops;
@@ -708,7 +721,9 @@ static int do_dentry_open(struct file *f,
 
 cleanup_all:
 	fops_put(f->f_op);
+	file_sb_list_del(f);
 	if (f->f_mode & FMODE_WRITE) {
+		put_write_access(inode);
 		if (!special_file(inode->i_mode)) {
 			/*
 			 * We don't consider this a real
@@ -716,7 +731,6 @@ cleanup_all:
 			 * because it all happenend right
 			 * here, so just reset the state.
 			 */
-			put_write_access(inode);
 			file_reset_write(f);
 			__mnt_drop_write(f->f_path.mnt);
 		}
@@ -786,7 +800,8 @@ struct file *dentry_open(const struct path *path, int flags,
 	f = get_empty_filp();
 	if (!IS_ERR(f)) {
 		f->f_flags = flags;
-		error = vfs_open(path, f, cred);
+		f->f_path = *path;
+		error = do_dentry_open(f, NULL, cred);
 		if (!error) {
 			/* from now on we need fput() to dispose of f */
 			error = open_check_o_direct(f);
@@ -802,26 +817,6 @@ struct file *dentry_open(const struct path *path, int flags,
 	return f;
 }
 EXPORT_SYMBOL(dentry_open);
-
-/**
- * vfs_open - open the file at the given path
- * @path: path to open
- * @filp: newly allocated file with f_flag initialized
- * @cred: credentials to use
- */
-int vfs_open(const struct path *path, struct file *filp,
-	     const struct cred *cred)
-{
-	struct inode *inode = path->dentry->d_inode;
-
-	if (inode->i_op->dentry_open)
-		return inode->i_op->dentry_open(path->dentry, filp, cred);
-	else {
-		filp->f_path = *path;
-		return do_dentry_open(filp, NULL, cred);
-	}
-}
-EXPORT_SYMBOL(vfs_open);
 
 static inline int build_open_flags(int flags, umode_t mode, struct open_flags *op)
 {

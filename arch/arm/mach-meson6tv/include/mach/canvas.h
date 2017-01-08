@@ -45,3 +45,4 @@
 #define CANVAS_WRITE(x...)		   WRITE_APB_REG(x)
 #define CANVAS_READ(x...)                  READ_APB_REG(x)
 #endif
+

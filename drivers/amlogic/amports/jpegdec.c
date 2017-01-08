@@ -555,13 +555,7 @@ int AMHWJPEGDEC_MAJOR = 0;
 static int amjpegdec_probe(struct platform_device *pdev)
 {
     int r;
-	
-    struct vdec_dev_reg_s *pdata = (struct vdec_dev_reg_s *)pdev->dev.platform_data;
-	
-    if (pdata == NULL) {
-        printk("amjpegdec memory resource undefined.\n");
-        return -EFAULT;
-    }
+    struct resource *s;
 
     AMHWJPEGDEC_MAJOR = 0;
     r = register_chrdev(AMHWJPEGDEC_MAJOR, "amjpegdev", &amjpegdec_fops);
@@ -577,8 +571,11 @@ static int amjpegdec_probe(struct platform_device *pdev)
     amjpegdec_dev = device_create(amjpegdec_class, NULL,
                                   MKDEV(AMHWJPEGDEC_MAJOR, 0), NULL,
                                   DEVICE_NAME);
-    pbufAddr = pdata->mem_start;
-    pbufSize  = pdata->mem_end - pdata->mem_start + 1;
+
+    s = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+
+    pbufAddr = s->start;
+    pbufSize = s->end - s->start + 1;
 
     return 0;
 }
@@ -624,3 +621,5 @@ module_exit(amjpegdec_exit);
 MODULE_DESCRIPTION("AMLOGIC HW JPEG decoder driver");
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("Tim Yao <timyao@amlogic.com>");
+
+

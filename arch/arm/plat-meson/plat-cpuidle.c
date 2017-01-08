@@ -34,7 +34,7 @@ int meson_enter_idle_simple(struct cpuidle_device *dev,
 //	printk("enter wfi.\n");
 	cpu_do_idle();
 //	printk("exit wfi.\n");
-
+	
 	local_fiq_enable();
 
 	return index;
@@ -49,3 +49,5 @@ int meson_enter_idle_cpu_off(struct cpuidle_device *dev,
 {
 	return index;
 }
+
+

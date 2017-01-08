@@ -37,7 +37,7 @@
 int SCREEN_MAX_X = 0;
 int SCREEN_MAX_Y = 0;
 
-#ifdef GSL_DEBUG
+#ifdef GSL_DEBUG 
 #define print_info(fmt, args...)	\
 	do{                           	\
 			printk(fmt, ##args);				\

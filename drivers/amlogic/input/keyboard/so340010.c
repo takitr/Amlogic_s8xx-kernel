@@ -18,7 +18,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * author :
+ * author :  
  */
 
 #include <linux/delay.h>
@@ -97,7 +97,7 @@ static int so340010_read_reg(struct i2c_client *client, u16 addr)
 			.buf = buf,
 		},
 	};
-
+		
 	ret = i2c_transfer(client->adapter, msg, ARRAY_SIZE(msg));
 	if (ret >= 0) {
 		ret = (buf[0] << 8) | buf[1];
@@ -114,7 +114,7 @@ static int so340010_write_reg(struct i2c_client *client, u16 addr,  u16 data)
 		.len = 4,
 		.buf = buf,
 	};
-
+	
 	return i2c_transfer(client->adapter, &msg, 1);
 }
 
@@ -134,7 +134,7 @@ static int so340010_reset(struct i2c_client *client)
 			return -EINVAL;
 		}
 		ret = so340010_read_reg(client, reg->address);
-		printk("after write: register #%x  = %x\n", reg->address, ret);
+		printk("after write: register #%x  = %x\n", reg->address, ret);		
 		reg++;
 	}
 
@@ -147,7 +147,7 @@ static int so340010_reset(struct i2c_client *client)
 	return 0;
 }
 
-static int so340010_sleep(struct i2c_client *client,  bool sleep)
+static int so340010_sleep(struct i2c_client *client,  bool sleep) 
 {
 	if (sleep) {
 		return so340010_write_reg(client, SO340010_REG_GENERAL_CONFIG,
@@ -175,7 +175,7 @@ static void so340010_work(struct work_struct *work)
 		so340010_reset(kp->client);
 		return;
 	}
-	printk(KERN_INFO "gpio_val=0x%04x, button_val = 0x%04x\n", gpio_val, button_val);
+	printk(KERN_INFO "gpio_val=0x%04x, button_val = 0x%04x\r\n", gpio_val, button_val);
 
 	key = kp->key;
 	for (i = 0; i < kp->key_num; i++) {
@@ -199,31 +199,31 @@ static struct input_dev* so340010_register_input(struct cap_key *key, int key_nu
 {
 	struct input_dev *input;
 	int i;
-
+	
 	input = input_allocate_device();
 	if (input) {
 		/* setup input device */
 		set_bit(EV_KEY, input->evbit);
 		set_bit(EV_REP, input->evbit);
-
+	
 		for (i=0; i<key_num; i++) {
 			set_bit(key->code, input->keybit);
 			printk(KERN_INFO "%s key(%d) registed.\n", key->name, key->code);
 			key++;
 		}
-
+    
 		input->name = DRIVER_NAME;
 		input->phys = "so340010/input0";
 //		input->dev.parent = &pdev->dev;
 		input->id.bustype = BUS_ISA;
 		input->id.vendor = 0x0001;
 		input->id.product = 0x0001;
-		input->id.version = 0x0100;
+		input->id.version = 0x0100;	
 		input->rep[REP_DELAY]=0xffffffff;
 		input->rep[REP_PERIOD]=0xffffffff;
 		input->keycodesize = sizeof(unsigned short);
 		input->keycodemax = 0x1ff;
-
+	
 		if (input_register_device(input) < 0) {
 			printk(KERN_ERR "so340010 register input device failed\n");
 			input_free_device(input);
@@ -244,7 +244,7 @@ static enum hrtimer_restart so340010_timer(struct hrtimer *timer)
 {
 	struct so340010 *kp = (struct so340010*)container_of(timer, struct so340010, timer);
 	unsigned long flags = 0;
-
+	
 	spin_lock_irqsave(&kp->lock, flags);
 	if (!kp->get_irq_level() &&	((jiffies_to_msecs(jiffies) - kp->last_read) > 200)) {
 		queue_work(kp->workqueue, &kp->work);
@@ -259,7 +259,7 @@ static irqreturn_t so340010_interrupt(int irq, void *context)
 {
 	struct so340010 *kp = (struct so340010 *)context;
 	unsigned long flags;
-
+	
 	spin_lock_irqsave(&kp->lock, flags);
 	printk(KERN_INFO "enter penirq\n");
 	/* if the attn low, disable IRQ and start timer chain */
@@ -296,11 +296,11 @@ static int so340010_register_device(struct so340010 *kp)
 	strcpy(kp->config_name,DRIVER_NAME);
 	ret=register_chrdev(0, kp->config_name, &so340010_fops);
 	if(ret<=0) {
-		printk("register char device error\n");
+		printk("register char device error\r\n");
 		return  ret ;
 	}
 	kp->config_major=ret;
-	printk("so340010 major:%d\n",ret);
+	printk("so340010 major:%d\r\n",ret);
 	kp->config_class=class_create(THIS_MODULE,kp->config_name);
 	kp->config_dev=device_create(kp->config_class,	NULL,
 	MKDEV(kp->config_major,0),NULL,kp->config_name);
@@ -312,13 +312,13 @@ static int so340010_probe(struct i2c_client *client, const struct i2c_device_id 
 	int err;
 	struct so340010 *kp;
 	struct so340010_platform_data *pdata;
-
+	
 	pdata = client->dev.platform_data;
 	if (!pdata) {
 		dev_err(&client->dev, "so340010 require platform data!\n");
 		return  -EINVAL;
 	}
-
+   
 	kp = kzalloc(sizeof(struct so340010), GFP_KERNEL);
 	if (!kp) {
 		dev_err(&client->dev, "so340010 alloc data failed!\n");
@@ -336,7 +336,7 @@ static int so340010_probe(struct i2c_client *client, const struct i2c_device_id 
 	}
 
 	so340010_reset(client);
-
+	
 	hrtimer_init(&kp->timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
 	kp->timer.function = so340010_timer;
 	INIT_WORK(&kp->work, so340010_work);
@@ -428,3 +428,7 @@ module_exit(so340010_exit);
 MODULE_AUTHOR("");
 MODULE_DESCRIPTION("so340010 driver");
 MODULE_LICENSE("GPL");
+
+
+
+

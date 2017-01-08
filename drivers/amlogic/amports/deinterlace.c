@@ -2791,3 +2791,4 @@ module_exit(deinterlace_module_exit);
 MODULE_DESCRIPTION("AMLOGIC deinterlace driver");
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("Qi Wang <qi.wang@amlogic.com>");
+

@@ -1,7 +1,7 @@
 #! /bin/bash
 
 #make UIMAGE_COMPRESSION=none uImage -j
-make uImage -j8
+make uImage -j
 #make modules
 
 make meson6_skt.dtd

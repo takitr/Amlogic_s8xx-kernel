@@ -43,7 +43,7 @@ ENTRY(meson_smc1)
 ENDPROC(meson_smc1)
 
 ENTRY(meson_smc_hal_api)
-	stmfd sp!, {r3-r12, lr}
+	stmfd sp!, {r3-r12, lr}	
 	mov r2, r1
 	mov r1, r0
 	ldr r0, =CALL_TRUSTZONE_HAL_API
@@ -133,7 +133,7 @@ ENTRY(meson_suspend_firmware)
 ENDPROC(meson_suspend_firmware)
 
 ENTRY(meson_read_socrev1)
-    stmfd sp!, {r2-r12, lr}
+    stmfd sp!, {r2-r12, lr}    
     ldr r1, =TRUSTZONE_MON_CORE_RD_SOC_REV1
     ldr r0, =CALL_TRUSTZONE_MON
     dsb
@@ -142,7 +142,7 @@ ENTRY(meson_read_socrev1)
 ENDPROC(meson_read_socrev1)
 
 ENTRY(meson_read_socrev2)
-    stmfd sp!, {r2-r12, lr}
+    stmfd sp!, {r2-r12, lr}    
     ldr r1, =TRUSTZONE_MON_CORE_RD_SOC_REV2
     ldr r0, =CALL_TRUSTZONE_MON
     dsb

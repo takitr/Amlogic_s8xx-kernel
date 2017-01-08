@@ -206,7 +206,6 @@ int i2c_generic_scl_recovery(struct i2c_adapter *adap)
 	adap->bus_recovery_info->set_scl(adap, 1);
 	return i2c_generic_recovery(adap);
 }
-EXPORT_SYMBOL_GPL(i2c_generic_scl_recovery);
 
 int i2c_generic_gpio_recovery(struct i2c_adapter *adap)
 {
@@ -221,7 +220,6 @@ int i2c_generic_gpio_recovery(struct i2c_adapter *adap)
 
 	return ret;
 }
-EXPORT_SYMBOL_GPL(i2c_generic_gpio_recovery);
 
 int i2c_recover_bus(struct i2c_adapter *adap)
 {
@@ -231,7 +229,6 @@ int i2c_recover_bus(struct i2c_adapter *adap)
 	dev_dbg(&adap->dev, "Trying i2c bus recovery\n");
 	return adap->bus_recovery_info->recover_bus(adap);
 }
-EXPORT_SYMBOL_GPL(i2c_recover_bus);
 
 static int i2c_device_probe(struct device *dev)
 {
@@ -693,7 +690,7 @@ out_err_silent:
 EXPORT_SYMBOL_GPL(i2c_new_device);
 
 struct i2c_client *
-i2c_new_existing_device(struct i2c_adapter *adap,
+i2c_new_existing_device(struct i2c_adapter *adap, 
 			struct i2c_board_info const *info)
 {
 	struct i2c_client	*client;
@@ -726,12 +723,12 @@ i2c_new_existing_device(struct i2c_adapter *adap,
 		struct device *dev;
 		char dev_name[32] = {0};
 		sprintf(dev_name, "%d-%04x-%d", i2c_adapter_id(adap),
-					client->addr, nr);
+		     			client->addr, nr);
 		dev = bus_find_device_by_name(&i2c_bus_type, NULL, dev_name);
-		if (!dev){
+		if (!dev){	
 			//printk("try to register dev %s\n", dev_name);
 			dev_set_name(&client->dev, "%d-%04x-%d", i2c_adapter_id(adap),
-					client->addr, nr);
+		     			client->addr, nr);
 			status = device_register(&client->dev);
 		} else {
 			//printk("file %s have existed\n", dev_name);

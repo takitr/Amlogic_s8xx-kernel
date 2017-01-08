@@ -8,7 +8,7 @@
 #include <linux/module.h>
 #include <linux/platform_device.h>
 #include <linux/slab.h>
-#include <linux/jiffies.h>
+#include <linux/jiffies.h> 
 #include <linux/miscdevice.h>
 #include <linux/mutex.h>
 #include <linux/mm.h>
@@ -36,13 +36,9 @@ static struct bl_extern_config_t *bl_ext_config = NULL;
 static unsigned int bl_status = 1;
 static unsigned int bl_level = 0;
 
-//******************** mipi command ********************//
-//format:  data_type, num, data....
-//special: data_type=0xff, num<0xff means delay ms, num=0xff means ending.
-//******************************************************//
 static int bl_extern_set_level(unsigned int level)
 {
-    unsigned char payload[]={0x15,2,0x51,0xe6,0xff,0xff};
+    unsigned char payload[]={0x15,0x51,1,0xe6,0xff,0xff};
 
     bl_level = level;
 
@@ -65,10 +61,7 @@ static int bl_extern_set_level(unsigned int level)
 static int bl_extern_power_on(void)
 {
     if (bl_ext_config->gpio_used > 0) {
-      if(bl_ext_config->gpio_on == 2)
-            bl_extern_gpio_direction_input(bl_ext_config->gpio);
-        else
-            bl_extern_gpio_direction_output(bl_ext_config->gpio, bl_ext_config->gpio_on);
+        bl_extern_gpio_direction_output(bl_ext_config->gpio, 1);
     }
 
     bl_status = 1;
@@ -81,53 +74,34 @@ static int bl_extern_power_on(void)
 static int bl_extern_power_off(void)
 {
     if (bl_ext_config->gpio_used > 0) {
-      if(bl_ext_config->gpio_off == 2)
-            bl_extern_gpio_direction_input(bl_ext_config->gpio);
-        else
-            bl_extern_gpio_direction_output(bl_ext_config->gpio, bl_ext_config->gpio_off);
+        bl_extern_gpio_direction_output(bl_ext_config->gpio, 0);
     }
 
     printk("%s\n", __FUNCTION__);
     return 0;
 }
 
-static int get_bl_extern_config(struct device_node* of_node, struct bl_extern_config_t *bl_ext_cfg)
+static int bl_extern_driver_update(void)
 {
-    int ret = 0;
     struct aml_bl_extern_driver_t* bl_ext;
 
-    ret = get_bl_extern_dt_data(of_node, bl_ext_cfg);
-    if (ret) {
-        printk("[error] %s: failed to get dt data\n", BL_EXTERN_NAME);
-        return ret;
-    }
-
-    if (bl_ext_cfg->dim_min > 0xff)
-        bl_ext_cfg->dim_min = 0xff;
-    if (bl_ext_cfg->dim_max > 0xff)
-        bl_ext_cfg->dim_max = 0xff;
-
-    //bl extern driver update
     bl_ext = aml_bl_extern_get_driver();
     if (bl_ext) {
-        bl_ext->type      = bl_ext_cfg->type;
-        bl_ext->name      = bl_ext_cfg->name;
+        bl_ext->type      = bl_ext_config->type;
+        bl_ext->name      = bl_ext_config->name;
         bl_ext->power_on  = bl_extern_power_on;
         bl_ext->power_off = bl_extern_power_off;
         bl_ext->set_level = bl_extern_set_level;
     }
     else {
-        printk("[error] %s get bl_extern_driver failed\n", bl_ext_cfg->name);
-        ret = -1;
+        printk("[error] %s get bl_extern_driver failed\n", bl_ext_config->name);
     }
 
-    return ret;
+    return 0;
 }
 
 static int aml_LT070ME05_probe(struct platform_device *pdev)
 {
-    int ret = 0;
-
     if (bl_extern_driver_check()) {
         return -1;
     }
@@ -140,19 +114,19 @@ static int aml_LT070ME05_probe(struct platform_device *pdev)
 
     pdev->dev.platform_data = bl_ext_config;
 
-    ret = get_bl_extern_config(pdev->dev.of_node, bl_ext_config);
-    if (ret) {
+    if (get_bl_extern_dt_data(pdev->dev.of_node, bl_ext_config) != 0) {
+        printk("[error] %s probe: failed to get dt data\n", BL_EXTERN_NAME);
         goto bl_extern_probe_failed;
     }
 
+    bl_extern_driver_update();
+
     printk("%s ok\n", __FUNCTION__);
-    return ret;
+    return 0;
 
 bl_extern_probe_failed:
-    if (bl_ext_config) {
+    if (bl_ext_config)
         kfree(bl_ext_config);
-        bl_ext_config = NULL;
-    }
     return -1;
 }
 

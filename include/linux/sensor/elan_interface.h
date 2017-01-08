@@ -10,7 +10,7 @@
 #define ELAN_LS_6881 "elan-epl6881"
 
 #define ELAN_8232_I2C_NAME "elan-touch"
-#define ELAN_FS_8713 "elan-forcesensor"
+#define ELAN_FS_8713 "elan-forcesensor" 
 #define ELAN_EKTF2000_NAME "elan-ektf-touchpad"
 #define ELAN_OFN_8713 "elan-ofn-sensor"
 #define ELAN_TP_1058 "elan-ekt1058-touchpad"
@@ -79,7 +79,7 @@
 #define R_SEVEN_BYTE		0X06
 #define R_EIGHT_BYTE		0X07
 
-#define EPL_SENSING_1_TIME	(0 << 5)
+#define EPL_SENSING_1_TIME	(0 << 5) 
 #define EPL_SENSING_2_TIME	(1 << 5)
 #define EPL_SENSING_4_TIME	(2 << 5)
 #define EPL_SENSING_8_TIME	(3 << 5)
@@ -131,7 +131,7 @@
 
 
 
-struct elan_forcesensor_platform_data
+struct elan_forcesensor_platform_data 
 {
 	uint16_t version;
 	int abs_x_min;
@@ -154,7 +154,7 @@ struct elan_touchpad_platform_Data
 };
 
 
-struct elan_epl_platform_data
+struct elan_epl_platform_data 
 {
 	int intr_gpio;
 	int (*power)(int on);

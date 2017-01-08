@@ -226,12 +226,12 @@ struct v4l2_querymenu sp0a19_qmenu_wbmode[] = {
     },{
         .id         = V4L2_CID_DO_WHITE_BALANCE,
         .index      = CAM_WB_FLUORESCENT,
-        .name       = "fluorescent",
+        .name       = "fluorescent", 
         .reserved   = 0,
     },{
         .id         = V4L2_CID_DO_WHITE_BALANCE,
         .index      = CAM_WB_FLUORESCENT,
-        .name       = "warm-fluorescent",
+        .name       = "warm-fluorescent", 
         .reserved   = 0,
     },
 };
@@ -239,12 +239,12 @@ struct v4l2_querymenu sp0a19_qmenu_wbmode[] = {
 struct v4l2_querymenu sp0a19_qmenu_anti_banding_mode[] = {
     {
         .id         = V4L2_CID_POWER_LINE_FREQUENCY,
-        .index      = CAM_BANDING_50HZ,
+        .index      = CAM_BANDING_50HZ, 
         .name       = "50hz",
         .reserved   = 0,
     },{
         .id         = V4L2_CID_POWER_LINE_FREQUENCY,
-        .index      = CAM_BANDING_60HZ,
+        .index      = CAM_BANDING_60HZ, 
         .name       = "60hz",
         .reserved   = 0,
     },
@@ -402,7 +402,7 @@ struct sp0a19_device {
 
 	/* platform device data from board initting. */
 	aml_cam_info_t  cam_info;
-
+	
 	/* wake lock */
 	struct wake_lock	wake_lock;
 
@@ -450,7 +450,7 @@ static struct v4l2_frmsize_discrete sp0a19_pic_resolution[]=
 	reg spec of SP0A19
    ------------------------------------------------------------------*/
 
-struct aml_camera_i2c_fig1_s SP0A19_script[] = {
+struct aml_camera_i2c_fig1_s SP0A19_script[] = {  
 //SP0A19 ini
 	  {0xfd,0x00},
 	  {0x1C,0x28},
@@ -477,7 +477,7 @@ struct aml_camera_i2c_fig1_s SP0A19_script[] = {
 	  {0x30,0x00},
 	  {0x31,0x00},//0x00 0x20改摄像头移动方向
 	{0xfb,0x33},
-	{0x1f,0x08},
+	{0x1f,0x08},  
 
 
 	//Blacklevel
@@ -509,7 +509,7 @@ struct aml_camera_i2c_fig1_s SP0A19_script[] = {
 	{0xce,0x60},
 	{0xcf,0x06},
 	{0xd0,0x60},
-	{0xd1,0x06},
+	{0xd1,0x06}, 
        #endif
 	#if 0 //PZT 2013-7-11
 	  {0xfd,0x00},
@@ -527,13 +527,13 @@ struct aml_camera_i2c_fig1_s SP0A19_script[] = {
 	  {0x99,0x00},
 	  {0x9a,0x01},
 	  {0x9b,0x00},
-
+	  
 	//Status
 	{0xfd,0x01},
 	{0xce,0xc8},
 	{0xcf,0x04},
 	{0xd0,0xc8},
-	{0xd1,0x04},
+	{0xd1,0x04}, 
        #endif
 
 	{0xfd,0x01},
@@ -545,7 +545,7 @@ struct aml_camera_i2c_fig1_s SP0A19_script[] = {
 	{0xcd,0x48},
 	{0xfd,0x00},
 
-	  //lsc  for st
+	  //lsc  for st 
 	  {0xfd,0x01},
 	  {0x35,0x15},
 	  {0x36,0x15}, //20
@@ -578,15 +578,15 @@ struct aml_camera_i2c_fig1_s SP0A19_script[] = {
 	  {0x28,0xc5},
 	  {0x29,0x9b},
 	//{0x10,0x08},
-	//{0x11,0x14},
+	//{0x11,0x14},	
 	//{0x12,0x14},
-	  {0x2e,0x02},
+	  {0x2e,0x02},	
 	  {0x2f,0x16},
 	  {0x17,0x17},
 	  {0x18,0x19},	//0x29	 0813
-	  {0x19,0x45},
+	  {0x19,0x45},	
 
-	//{0x1a,0x9e},//a1;a5
+	//{0x1a,0x9e},//a1;a5   
 	//{0x1b,0xae},//b0;9a
 	//{0x33,0xef},
 	  {0x2a,0xef},
@@ -596,7 +596,7 @@ struct aml_camera_i2c_fig1_s SP0A19_script[] = {
 	  {0xfd,0x01},
 	  {0x73,0x80},
 	  {0x1a,0x80},
-	  {0x1b,0x80},
+	  {0x1b,0x80}, 
 	//d65
 	  {0x65,0xd5}, //d6
 	  {0x66,0xfa}, //f0
@@ -607,7 +607,7 @@ struct aml_camera_i2c_fig1_s SP0A19_script[] = {
 	  {0x6a,0xee}, //ca
 	  {0x6b,0x94}, //a3
 	  {0x6c,0xab}, //c1
-	//f
+	//f 
 	  {0x61,0x7a}, //82
 	  {0x62,0x98}, //a5
 	  {0x63,0xc5}, //d6
@@ -617,7 +617,7 @@ struct aml_camera_i2c_fig1_s SP0A19_script[] = {
 	  {0x6e,0xde}, //c2
 	  {0x6f,0xb2}, //a7
 	  {0x70,0xd5}, //c5
-
+	 
 	//skin detect
 	 {0xfd,0x01},
 	 {0x08,0x15},
@@ -631,9 +631,9 @@ struct aml_camera_i2c_fig1_s SP0A19_script[] = {
 	   //BPC_grad
 	  {0xfd,0x00},
 	  {0x79,0xf0},
-	  {0x7a,0x80}, //f0
-	  {0x7b,0x80}, //f0
-	  {0x7c,0x20},//f0
+	  {0x7a,0x80}, //f0 
+	  {0x7b,0x80}, //f0 
+	  {0x7c,0x20},//f0	
 #if 0
 	//smooth
 	  {0xfd,0x00},
@@ -644,9 +644,9 @@ struct aml_camera_i2c_fig1_s SP0A19_script[] = {
 	  {0x56,0x10}, //raw_dif_thr_dummy
 	  {0x59,0x10}, //raw_dif_thr_lowlight
 		//GrGb
-	  {0x89,0x06}, //raw_grgb_thr_outdoor
-	  {0x8a,0x0d}, //raw_grgb_thr_normal
-	  {0x9c,0x10}, //raw_grgb_thr_dummy
+	  {0x89,0x06}, //raw_grgb_thr_outdoor 
+	  {0x8a,0x0d}, //raw_grgb_thr_normal	
+	  {0x9c,0x10}, //raw_grgb_thr_dummy	
 	  {0x9d,0x10}, //raw_grgb_thr_lowlight
 		//Gr\Gb
 	  {0x81,0xe0}, //raw_gflt_fac_outdoor
@@ -654,18 +654,18 @@ struct aml_camera_i2c_fig1_s SP0A19_script[] = {
 	  {0x83,0x80}, //raw_gflt_fac_dummy
 	  {0x84,0x40}, //raw_gflt_fac_lowlight
 		//GrGb
-	  {0x85,0xe0}, //raw_gf_fac_outdoor
-	  {0x86,0xc0}, //raw_gf_fac_normal
-	  {0x87,0x80}, //raw_gf_fac_dummy
+	  {0x85,0xe0}, //raw_gf_fac_outdoor  
+	  {0x86,0xc0}, //raw_gf_fac_normal  
+	  {0x87,0x80}, //raw_gf_fac_dummy   
 	  {0x88,0x40}, //raw_gf_fac_lowlight
 		//
 	  {0x5a,0xff},  //raw_rb_fac_outdoor
 	  {0x5b,0xe0},  //raw_rb_fac_normal
 	  {0x5c,0x80},  //raw_rb_fac_dummy
 	  {0x5d,0x00},  //raw_rb_fac_lowlight
-
-	//sharpen
-	  {0xfd,0x01},
+	  
+	//sharpen 
+	  {0xfd,0x01}, 
 	  {0xe2,0x30}, //sharpen_y_base
 	  {0xe4,0xa0}, //sharpen_y_max
 
@@ -674,8 +674,8 @@ struct aml_camera_i2c_fig1_s SP0A19_script[] = {
 	{0xd7,0x04}, //range_base_outdoor	//0x08
 
 	{0xe6,0x06}, //rangek_neg_normal
-	{0xd4,0x06}, //rangek_pos_normal
-	{0xd8,0x06}, //range_base_normal
+	{0xd4,0x06}, //rangek_pos_normal 
+	{0xd8,0x06}, //range_base_normal  
 
 	{0xe7,0x08}, //rangek_neg_dummy   // 0x10
 	{0xd5,0x08}, //rangek_pos_dummy   // 0x10
@@ -692,7 +692,7 @@ struct aml_camera_i2c_fig1_s SP0A19_script[] = {
 	{0xea,0x20},//sharp_fac_pos_dummy
 	{0xef,0x25},//sharp_fac_neg_dummy
 	{0xeb,0x15},//sharp_fac_pos_low
-	{0xf0,0x20},//sharp_fac_neg_low
+	{0xf0,0x20},//sharp_fac_neg_low 
 #else //PZT 2013-7-11
 	{0xfd,0x00},
 
@@ -700,31 +700,31 @@ struct aml_camera_i2c_fig1_s SP0A19_script[] = {
 	{0x58,0x10}, //raw_dif_thr_normal
 	{0x56,0x18}, //raw_dif_thr_dummy
 	{0x59,0x10}, //raw_dif_thr_lowlight
-	{0x89,0x06}, //raw_grgb_thr_outdoor
-	{0x8a,0x10}, //raw_grgb_thr_normal
-	{0x9c,0x18}, //raw_grgb_thr_dummy
+	{0x89,0x06}, //raw_grgb_thr_outdoor 
+	{0x8a,0x10}, //raw_grgb_thr_normal	
+	{0x9c,0x18}, //raw_grgb_thr_dummy	
 	{0x9d,0x10}, //raw_grgb_thr_lowlight
 	{0x81,0xe0}, //raw_gflt_fac_outdoor
 	{0x82,0xd8}, //raw_gflt_fac_normal
 	{0x83,0x78}, //raw_gflt_fac_dummy
 	{0x84,0x40}, //raw_gflt_fac_lowlight
-	{0x85,0xe0}, //raw_gf_fac_outdoor
-	{0x86,0xb8}, //raw_gf_fac_normal
-	{0x87,0x78}, //raw_gf_fac_dummy
+	{0x85,0xe0}, //raw_gf_fac_outdoor  
+	{0x86,0xb8}, //raw_gf_fac_normal  
+	{0x87,0x78}, //raw_gf_fac_dummy   
 	{0x88,0x40}, //raw_gf_fac_lowlight
 	{0x5a,0xff},  //raw_rb_fac_outdoor
 	{0x5b,0xd8},  //raw_rb_fac_normal
 	{0x5c,0x78},  //raw_rb_fac_dummy
 	{0x5d,0x00},  //raw_rb_fac_lowlight
-	{0xfd,0x01},
+	{0xfd,0x01}, 
 	{0xe2,0x30}, //sharpen_y_base
 	{0xe4,0xa0}, //sharpen_y_max
 	{0xe5,0x04}, //rangek_neg_outdoor  //0x08
 	{0xd3,0x04}, //rangek_pos_outdoor	//0x08
 	{0xd7,0x04}, //range_base_outdoor	//0x08
 	{0xe6,0x06}, //rangek_neg_normal
-	{0xd4,0x06}, //rangek_pos_normal
-	{0xd8,0x06}, //range_base_normal
+	{0xd4,0x06}, //rangek_pos_normal 
+	{0xd8,0x06}, //range_base_normal  
 	{0xe7,0x08}, //rangek_neg_dummy   // 0x10
 	{0xd5,0x08}, //rangek_pos_dummy   // 0x10
 	{0xd9,0x08}, //range_base_dummy    // 0x10
@@ -738,7 +738,7 @@ struct aml_camera_i2c_fig1_s SP0A19_script[] = {
 	{0xea,0x20},//sharp_fac_pos_dummy
 	{0xef,0x28},//sharp_fac_neg_dummy
 	{0xeb,0x10},//sharp_fac_pos_low
-	{0xf0,0x20},//sharp_fac_neg_low
+	{0xf0,0x20},//sharp_fac_neg_low 
 #endif
 	//CCM
 	  {0xfd,0x01},
@@ -756,9 +756,9 @@ struct aml_camera_i2c_fig1_s SP0A19_script[] = {
 	  {0xab,0x0c},
 	  {0xfd,0x00},
 
-			//gamma
+			//gamma  
 	  {0xfd,0x00},
-	  {0x8b,0x0 },  // 00;0 ;0
+	  {0x8b,0x0 },  // 00;0 ;0 
 	  {0x8c,0xC },  // 0f;C ;11
 	  {0x8d,0x19},  // 1e;19;19
 	  {0x8e,0x2C},  // 3d;2C;28
@@ -777,11 +777,11 @@ struct aml_camera_i2c_fig1_s SP0A19_script[] = {
 	  {0x9b,0xEF},  // f1;EF;EF
 	  {0xfd,0x01},  // 01;01;01
 	  {0x8d,0xF7},  // f7;F7;F7
-	  {0x8e,0xFF},  // ff;FF;FF
+	  {0x8e,0xFF},  // ff;FF;FF		 
 	  {0xfd,0x00},  //
 
 	   //rpc
-	  {0xfd,0x00},
+	  {0xfd,0x00}, 
 	  {0xe0,0x4c}, //  4c;44;4c;3e;3c;3a;38;rpc_1base_max
 	  {0xe1,0x3c}, //  3c;36;3c;30;2e;2c;2a;rpc_2base_max
 	  {0xe2,0x34}, //  34;2e;34;2a;28;26;26;rpc_3base_max
@@ -790,36 +790,36 @@ struct aml_camera_i2c_fig1_s SP0A19_script[] = {
 	  {0xe5,0x2c}, //  2c;28;2c;24;22;20;rpc_6base_max
 	  {0xe6,0x2c}, //  2c;28;2c;24;22;20;rpc_7base_max
 	  {0xe8,0x2a}, //  2a;26;2a;22;20;20;1e;rpc_8base_max
-	  {0xe9,0x2a}, //  2a;26;2a;22;20;20;1e;rpc_9base_max
+	  {0xe9,0x2a}, //  2a;26;2a;22;20;20;1e;rpc_9base_max 
 	  {0xea,0x2a}, //  2a;26;2a;22;20;20;1e;rpc_10base_max
 	  {0xeb,0x28}, //  28;24;28;20;1f;1e;1d;rpc_11base_max
 	  {0xf5,0x28}, //  28;24;28;20;1f;1e;1d;rpc_12base_max
-	  {0xf6,0x28}, //  28;24;28;20;1f;1e;1d;rpc_13base_max
+	  {0xf6,0x28}, //  28;24;28;20;1f;1e;1d;rpc_13base_max	
 
-	//ae min gain
+	//ae min gain  
 	{0xfd,0x01},
 	{0x94,0x80},//rpc_max_indr //0xb0
-	{0x95,0x28},//1e//rpc_min_indr
+	{0x95,0x28},//1e//rpc_min_indr 
 	{0x9c,0xa0},//rpc_max_outdr
-	{0x9d,0x28},//rpc_min_outdr
+	{0x9d,0x28},//rpc_min_outdr    
 
 	//ae target
-	  {0xfd,0x00},
-	  {0xed,0x8c}, //80
-	  {0xf7,0x88}, //7c
-	  {0xf8,0x80}, //70
-	  {0xec,0x7c}, //6c
-
+	  {0xfd,0x00}, 
+	  {0xed,0x8c}, //80 
+	  {0xf7,0x88}, //7c 
+	  {0xf8,0x80}, //70 
+	  {0xec,0x7c}, //6c  
+	  
 	  {0xef,0x74}, //99
 	  {0xf9,0x70}, //90
 	  {0xfa,0x68}, //80
 	  {0xee,0x64}, //78
 
-
+		
 	//gray detect
 	  {0xfd,0x01},
 	  {0x30,0x40},
-	  //add 0813
+	  //add 0813 
 	  {0x31,0x70},
 	  {0x32,0x40},
 	  {0x33,0xef},
@@ -836,30 +836,30 @@ struct aml_camera_i2c_fig1_s SP0A19_script[] = {
 	  {0xb5,0x45}, //white_vt
 
 	//saturation
-	  {0xfd,0x00},
-	  {0xbe,0xff},
-	  {0xbf,0x01},
-	  {0xc0,0xff},
-	  {0xc1,0xd8},
+	  {0xfd,0x00}, 
+	  {0xbe,0xff}, 
+	  {0xbf,0x01}, 
+	  {0xc0,0xff}, 
+	  {0xc1,0xd8}, 
 	  {0xd3,0x88}, //0x78
 	  {0xd4,0x78}, //0x78
 	  {0xd6,0x70}, //0x78 	   (0xd7,0x60}, //0x78
 	  {0xd7,0x60},
 
 	//HEQ
-	  {0xfd,0x00},
-	  {0xdc,0x00},
+	  {0xfd,0x00}, 
+	  {0xdc,0x00}, 
 	{0xdd,0x78}, //0x80 0813  // 0x80
 	  {0xde,0xa8}, //80  0x88  0813
-	  {0xdf,0x80},
-
+	  {0xdf,0x80}, 
+	   
 	//func enable
-	  {0xfd,0x00},
+	  {0xfd,0x00},  
 	  {0x32,0x15},  //0x0d
 	  {0x34,0x76},  //16
-	  {0x35,0x41},
-	  {0x33,0xef},
-	  {0x5f,0x51},
+	  {0x35,0x41},  
+	  {0x33,0xef},  
+	  {0x5f,0x51}, 
 	  {0xff,0xff},
 };
 
@@ -869,7 +869,7 @@ void SP0A19_init_regs(struct sp0a19_device *dev)
     int i=0;//,j;
     unsigned char buf[2];
     struct i2c_client *client = v4l2_get_subdevdata(&dev->sd);
-
+	
 	while (1) {
 		buf[0] = SP0A19_script[i].addr;
 		buf[1] = SP0A19_script[i].val;
@@ -897,7 +897,7 @@ static struct aml_camera_i2c_fig1_s resolution_320x240_script[] = {
 	{0x4b, 0x00},
 	{0x4c, 0xa0},
 	{0x4d, 0x01},
-	{0x4e, 0x40},
+	{0x4e, 0x40},                
 	{0xff, 0xff}
 };
 
@@ -910,7 +910,7 @@ static struct aml_camera_i2c_fig1_s resolution_640x480_script[] = {
 	{0x4b, 0x00},
 	{0x4c, 0x00},
 	{0x4d, 0x02},
-	{0x4e, 0x80},
+	{0x4e, 0x80},                
 	{0xff, 0xff}
 };
 
@@ -944,7 +944,7 @@ static void sp0a19_set_resolution(struct sp0a19_device *dev,int height,int width
 		printk("set resolution 640X480\n");
 		resolution_script = resolution_640x480_script;
 		sp0a19_h_active = 640;
-		sp0a19_v_active = 478; //480
+		sp0a19_v_active = 478; //480 
 		sp0a19_frmintervals_active.denominator 	= 15;
 		sp0a19_frmintervals_active.numerator	= 1;
 		//SP0A19_init_regs(dev);
@@ -957,7 +957,7 @@ static void sp0a19_set_resolution(struct sp0a19_device *dev,int height,int width
 		sp0a19_frmintervals_active.numerator	= 1;
 		resolution_script = resolution_320x240_script;
 	}
-
+	
 	while(1) {
         buf[0] = resolution_script[i].addr;
         buf[1] = resolution_script[i].val;
@@ -970,7 +970,7 @@ static void sp0a19_set_resolution(struct sp0a19_device *dev,int height,int width
         }
         i++;
     }
-	set_flip(dev);
+    	set_flip(dev);
 }
 /*************************************************************************
 * FUNCTION
@@ -1172,7 +1172,7 @@ void SP0A19_night_mode(struct sp0a19_device *dev,enum  camera_night_mode_flip_e 
     {
 
 #if 0
-		//caprure preview night 24M 50hz 20-6FPS maxgain:0x78
+		//caprure preview night 24M 50hz 20-6FPS maxgain:0x78		
 		buf[0]=0xfd;
 		buf[1]=0x00;
 		i2c_put_byte_add8(client,buf,2);
@@ -1412,7 +1412,7 @@ void SP0A19_night_mode(struct sp0a19_device *dev,enum  camera_night_mode_flip_e 
 		i2c_put_byte_add8(client,buf,2);
 		buf[0]=0xfd;
 		buf[1]=0x00;
-		i2c_put_byte_add8(client,buf,2);
+		i2c_put_byte_add8(client,buf,2); 
 		#endif
 	}
 
@@ -1502,9 +1502,9 @@ void SP0A19_set_param_banding(struct sp0a19_device *dev,enum camera_banding_flip
 			buf[1]=0x06;
 			i2c_put_byte_add8(client,buf,2);
 			buf[0]=0xfd;
-			buf[1]=0x00;
-			i2c_put_byte_add8(client,buf,2);
-
+			buf[1]=0x00;	
+			i2c_put_byte_add8(client,buf,2);	
+			
 			 #else
 	       //caprure preview daylight 24M 60hz 20-8FPS maxgain:0x70
 		buf[0]=0xfd;
@@ -1568,8 +1568,8 @@ void SP0A19_set_param_banding(struct sp0a19_device *dev,enum camera_banding_flip
 		buf[1]=0x04;
 		i2c_put_byte_add8(client,buf,2);
 		buf[0]=0xfd;
-		buf[1]=0x00;
-		i2c_put_byte_add8(client,buf,2);
+		buf[1]=0x00;	
+		i2c_put_byte_add8(client,buf,2);	
                      #endif
             break;
    case CAM_BANDING_50HZ:
@@ -1635,9 +1635,9 @@ void SP0A19_set_param_banding(struct sp0a19_device *dev,enum camera_banding_flip
 			buf[1]=0x06;
 			i2c_put_byte_add8(client,buf,2);
 			buf[0]=0xfd;
-			buf[1]=0x00;
-			i2c_put_byte_add8(client,buf,2);
-
+			buf[1]=0x00;	
+			i2c_put_byte_add8(client,buf,2);	
+			
 			#else
     //caprure preview daylight 24M 50hz 20-8FPS maxgain:0x70
 		buf[0]=0xfd;
@@ -1795,9 +1795,9 @@ void set_SP0A19_param_exposure(struct sp0a19_device *dev,enum camera_exposure_e 
 			buf1[1]=0x00;
 			buf2[0]=0xdc;
 			buf2[1]=0x00;
-			break;
-	}
-	//msleep(300);
+			break; 
+	} 
+	//msleep(300);  
 	i2c_put_byte_add8(client,buf1,2);
 	i2c_put_byte_add8(client,buf2,2);
 
@@ -1898,7 +1898,7 @@ void set_SP0A19_param_effect(struct sp0a19_device *dev,enum camera_effect_flip_e
 		    buf[1]=0x20;
 		    i2c_put_byte_add8(client,buf,2);
 			break;
-
+			
 		case CAM_EFFECT_ENC_SEPIABLUE:
 			buf[0]=0xfd;
 		    buf[1]=0x00;
@@ -1915,7 +1915,7 @@ void set_SP0A19_param_effect(struct sp0a19_device *dev,enum camera_effect_flip_e
 
 			break;
 		default:
-			break;
+			break;  
 	}
 
 }
@@ -1969,14 +1969,14 @@ static int sp0a19_setting(struct sp0a19_device *dev,int PROP_ID,int value )
 			printk(KERN_INFO " set camera  scene mode=%d. \n ",value);
 		}
 		break;
-	case V4L2_CID_HFLIP:    /* set flip on H. */
+	case V4L2_CID_HFLIP:    /* set flip on H. */          
 		value = value & 0x3;
 		if(sp0a19_qctrl[5].default_value!=value){
 			sp0a19_qctrl[5].default_value=value;
 			printk(" set camera  h filp =%d. \n ",value);
 		}
 		break;
-	case V4L2_CID_VFLIP:    /* set flip on V. */
+	case V4L2_CID_VFLIP:    /* set flip on V. */         
 		break;
 	case V4L2_CID_ZOOM_ABSOLUTE:
 		if(sp0a19_qctrl[7].default_value!=value){
@@ -2008,9 +2008,9 @@ static void power_down_sp0a19(struct sp0a19_device *dev)
 	buf[0]=0x25;
 	buf[1]=0x00;
 	i2c_put_byte_add8(client,buf,2);
-
+	
 	msleep(5);
-	return;
+	return;    
 }
 #endif
 /* ------------------------------------------------------------------
@@ -2516,7 +2516,7 @@ static int vidioc_streamon(struct file *file, void *priv, enum v4l2_buf_type i)
 	para.hs_bp = 0;
 	para.vs_bp = 2;
 	para.cfmt = TVIN_YUV422;
-	para.scan_mode = TVIN_SCAN_MODE_PROGRESSIVE;
+	para.scan_mode = TVIN_SCAN_MODE_PROGRESSIVE;	
 	para.skip_count =  2; //skip_num
 	printk("0a19,h=%d, v=%d, frame_rate=%d\n", sp0a19_h_active, sp0a19_v_active, sp0a19_frmintervals_active.denominator);
 	ret =  videobuf_streamon(&fh->vb_vidq);
@@ -2691,9 +2691,9 @@ static int sp0a19_open(struct file *file)
 #endif
 #if MESON_CPU_TYPE >= MESON_CPU_TYPE_MESON6
 	switch_mod_gate_by_name("ge2d", 1);
-#endif
-	aml_cam_init(&dev->cam_info);
-
+#endif		
+	aml_cam_init(&dev->cam_info);	
+	
 	SP0A19_init_regs(dev);
 	msleep(100);//40
 	mutex_lock(&dev->mutex);
@@ -2708,7 +2708,7 @@ static int sp0a19_open(struct file *file)
 		video_device_node_name(dev->vdev),
 		v4l2_type_names[V4L2_BUF_TYPE_VIDEO_CAPTURE], dev->users);
 
-	/* init video dma queues */
+    	/* init video dma queues */
 	INIT_LIST_HEAD(&dev->vidq.active);
 	init_waitqueue_head(&dev->vidq.wq);
     spin_lock_init(&dev->slock);
@@ -2813,11 +2813,11 @@ static int sp0a19_close(struct file *file)
 	//power_down_sp0a19(dev);
 #endif
 	aml_cam_uninit(&dev->cam_info);
-
+	
 #if MESON_CPU_TYPE >= MESON_CPU_TYPE_MESON6
 	switch_mod_gate_by_name("ge2d", 0);
-#endif
-	wake_unlock(&(dev->wake_lock));
+#endif	
+	wake_unlock(&(dev->wake_lock));	
 #ifdef CONFIG_CMA
     vm_deinit_buf();
 #endif
@@ -2894,8 +2894,8 @@ static int sp0a19_g_chip_ident(struct v4l2_subdev *sd, struct v4l2_dbg_chip_iden
 {
 	struct i2c_client *client = v4l2_get_subdevdata(sd);
 
-	return v4l2_chip_ident_i2c_client(client, chip, V4L2_IDENT_SP0A19, 0);
-	//return v4l2_chip_ident_i2c_client(client, chip,  V4L2_IDENT_GT2005, 0);
+	return v4l2_chip_ident_i2c_client(client, chip, V4L2_IDENT_SP0A19, 0); 
+	//return v4l2_chip_ident_i2c_client(client, chip,  V4L2_IDENT_GT2005, 0); 
 }
 
 static const struct v4l2_subdev_core_ops sp0a19_core_ops = {
@@ -2923,7 +2923,7 @@ static int sp0a19_probe(struct i2c_client *client,
 	v4l2_i2c_subdev_init(sd, client, &sp0a19_ops);
 
 	plat_dat = (aml_cam_info_t*)client->dev.platform_data;
-
+	
 	/* Now create a video4linux device */
 	mutex_init(&t->mutex);
 
@@ -2939,11 +2939,11 @@ static int sp0a19_probe(struct i2c_client *client,
 	video_set_drvdata(t->vdev, t);
 
 	wake_lock_init(&(t->wake_lock),WAKE_LOCK_SUSPEND, "sp0a19");
-
+	
 	/* Register it */
 	if (plat_dat) {
 		memcpy(&t->cam_info, plat_dat, sizeof(aml_cam_info_t));
-		if (plat_dat->front_back >=0)
+		if (plat_dat->front_back >=0)  
 			video_nr = plat_dat->front_back;
 	} else {
 		printk("camera sp0a19: have no platform data\n");
@@ -2951,11 +2951,11 @@ static int sp0a19_probe(struct i2c_client *client,
 		kfree(client);
 		return -1;
 	}
-
+	
 	t->cam_info.version = SP0A19_DRIVER_VERSION;
 	if (aml_cam_info_reg(&t->cam_info) < 0)
 		printk("reg caminfo error\n");
-
+	
 	err = video_register_device(t->vdev, VFL_TYPE_GRABBER, video_nr);
 	if (err < 0) {
 		video_device_release(t->vdev);
@@ -2997,3 +2997,4 @@ static struct i2c_driver sp0a19_i2c_driver = {
 };
 
 module_i2c_driver(sp0a19_i2c_driver);
+

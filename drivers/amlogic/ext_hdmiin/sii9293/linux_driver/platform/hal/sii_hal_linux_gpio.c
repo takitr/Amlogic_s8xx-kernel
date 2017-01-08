@@ -9,7 +9,7 @@
  *
  * This program is distributed .as is. WITHOUT ANY WARRANTY of any
  * kind, whether express or implied; without even the implied warranty
- * of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
  * PURPOSE.  See the GNU General Public License for more details.
 */
 
@@ -48,7 +48,7 @@
 
 /***** global variable declarations *******************************************/
 /***** local functions *******************************************************/
-typedef enum
+typedef enum 
 {
     DIRECTION_IN =0,
     DIRECTION_OUT,
@@ -68,7 +68,7 @@ typedef struct tagGPIOInfo
  .gpio_number = (b), \
  .gpio_descripion = (#a), \
  .gpio_direction = (c), \
- .init_value = (d),  }
+ .init_value = (d),  } 
 
 
 static GPIOInfo_t GPIO_List[]=
@@ -126,7 +126,7 @@ static GPIOInfo_t  * GetGPIOInfo(int gpio)
 /*****************************************************************************/
 /**
  * @brief set GPIO Pin MUX, it is also can be done in kernel ,
- * we put it here , make it sure that all pin mux is configured crrectly;
+ * we put it here , make it sure that all pin mux is configured crrectly; 
  * *
  *****************************************************************************/
 #if 0 // pinmux need not be configed here in aml platform. by Jets, Nov/25/2013
@@ -136,14 +136,14 @@ static void HalSetPinMux(void)
     int i;
     unsigned short x,old;
     void * base = NULL;
-    base = ioremap(IO_PHY_ADDRESS,
+    base = ioremap(IO_PHY_ADDRESS, 
                           0x10000);
 
     if (base == NULL)
     {
         SII_DEBUG_PRINT(MSG_ERR,"IO Mapping failed\n");
         return ;
-    }
+    } 
     else
     {
         SII_DEBUG_PRINT(MSG_STAT,"iobase = 0x%x\n",base);
@@ -155,11 +155,11 @@ static void HalSetPinMux(void)
 
         switch(i)
         {
-        case 5:
-                x = (IEN | EN | PTU | M4 );break;
+        case 5: 
+                x = (IEN | EN | PTU | M4 );break; 
 
 
-        default:
+        default:               
                 x = (M4 | IDIS);break;
         }
 
@@ -174,8 +174,8 @@ static void HalSetPinMux(void)
 
 /*****************************************************************************/
 /**
- * @brief when SilMon is open , disable ARM I2C R/W;
- * configure I2C pin to output mode when I2c disable ;
+ * @brief when SilMon is open , disable ARM I2C R/W; 
+ * configure I2C pin to output mode when I2c disable ; 
  * *
  *****************************************************************************/
 #if 0 // this api is not used. by jets, Nov/23/2013
@@ -186,14 +186,14 @@ halReturn_t HalEnableI2C(int bEnable )
 
     unsigned short x,old;
     void * base = NULL;
-    base = ioremap(IO_PHY_ADDRESS,
+    base = ioremap(IO_PHY_ADDRESS, 
                           0x10000);
 
     if (base == NULL)
     {
         SII_DEBUG_PRINT(MSG_ERR,"IO Mapping failed\n");
         return HAL_RET_FAILURE;
-    }
+    } 
 
     old = ioread16(base + PAD_CONF_OFFSET + PADCONF_I2C2_SCL_OFFSET);
 
@@ -223,7 +223,7 @@ halReturn_t HalEnableI2C(int bEnable )
     iowrite16(x,base + PAD_CONF_OFFSET + PADCONF_I2C2_SDA_OFFSET);
 //    SII_DEBUG_PRINT(SII_OSAL_DEBUG_TRACE,"GPIO%d {0x%x}:0x%x => 0x%x ;\n",183,pinconf,old,x);
     iounmap(base);
-	return HAL_RET_SUCCESS;
+   	return HAL_RET_SUCCESS;
 }
 #endif
 
@@ -254,17 +254,17 @@ halReturn_t HalGpioInit(void)
 
     for(i =0; i< ARRAY_SIZE(GPIO_List);i++)
     {
-	/* Request  GPIO . */
+    	/* Request  GPIO . */
         status = gpio_request(GPIO_List[i].gpio_number, GPIO_List[i].gpio_descripion);
-	if (status < 0 && status != -EBUSY)
-	{
-		SII_DEBUG_PRINT(MSG_ERR,"HalInit gpio_request for GPIO %d (H/W Reset) failed, status: %d\n", GPIO_List[i].gpio_number, status);
+    	if (status < 0 && status != -EBUSY)
+    	{
+    		SII_DEBUG_PRINT(MSG_ERR,"HalInit gpio_request for GPIO %d (H/W Reset) failed, status: %d\n", GPIO_List[i].gpio_number, status);
             for(j = 0; j < i;j++)
             {
                 gpio_free(GPIO_List[j].gpio_number);
             }
             return HAL_RET_FAILURE;
-	}
+    	}
 
         if(GPIO_List[i].gpio_direction == DIRECTION_OUT)
         {
@@ -275,21 +275,21 @@ halReturn_t HalGpioInit(void)
             status = gpio_direction_input(GPIO_List[i].gpio_number);
         }
 
-	if (status < 0)
-	{
+    	if (status < 0)
+    	{
             SII_DEBUG_PRINT(MSG_ERR,"HalInit gpio_direction_output for GPIO %d (H/W Reset) failed, status: %d\n", GPIO_List[i].gpio_number, status);
             for(j = 0; j <= i;j++)
             {
                 gpio_free(GPIO_List[j].gpio_number);
             }
-		return HAL_RET_FAILURE;
-	}
+    		return HAL_RET_FAILURE;
+    	}
 //        SII_DEBUG_PRINT(SII_OSAL_DEBUG_TRACE,"initialize %s successfully\n",GPIO_List[i].gpio_descripion);
     }
 
 
 
-	return HAL_RET_SUCCESS;
+   	return HAL_RET_SUCCESS;
 }
 
 /*****************************************************************************/
@@ -393,7 +393,7 @@ halReturn_t HalGpioGetPin(GpioIndex_t gpio,int * value)
 /*****************************************************************************/
 /**
  * @brief HalGetGpioIrqNumber
- * request one irq number FROM GPIO
+ * request one irq number FROM GPIO 
  *
  *****************************************************************************/
 #if 0 // this api is not used. by jets, Nov/23/2013
@@ -427,3 +427,4 @@ halReturn_t HalGetGpioIrqNumber(GpioIndex_t gpio, unsigned int * irqNumber)
     return HAL_RET_FAILURE;
 }
 #endif
+

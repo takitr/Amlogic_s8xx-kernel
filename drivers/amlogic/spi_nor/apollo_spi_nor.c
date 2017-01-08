@@ -65,20 +65,20 @@ static pinmux_item_t spi_nor_set_pins[] ={
 		.setmask = 0xf,
     },
   {
-	.reg = PINMUX_REG(2),
-	.clrmask = ((1<<19)|(1<<20)|(1<<21)),
+  	.reg = PINMUX_REG(2),
+  	.clrmask = ((1<<19)|(1<<20)|(1<<21)),
   },
     PINMUX_END_ITEM
 };
 
 static pinmux_item_t spi_nor_clr_pins[] ={
 	{
-	.reg = PINMUX_REG(5),
-	.setmask = 0xf,
+    	.reg = PINMUX_REG(5),
+    	.setmask = 0xf,
     },
   {
     .reg = PINMUX_REG(2),
-	.clrmask = ((1<<19)|(1<<20)|(1<<21)),
+  	.clrmask = ((1<<19)|(1<<20)|(1<<21)),
   },
     PINMUX_END_ITEM
 };
@@ -102,8 +102,8 @@ static pinmux_item_t spi_nor_pins[] ={
 		.setmask = ((1<<0) | (1<<1) | (1<<2) | (1<<3)),
     },
     {
-	.reg = PINMUX_REG(2),
-	.clrmask = ((1<<19)|(1<<20)|(1<<21)),
+    	.reg = PINMUX_REG(2),
+    	.clrmask = ((1<<19)|(1<<20)|(1<<21)),
     },
     PINMUX_END_ITEM
 };
@@ -194,16 +194,16 @@ static void spi_hw_disable(struct amlogic_spi	*amlogic_spi)
 #ifdef CONFIG_OF
 	int ret=0;
 	if(amlogic_spi->p)
-	{
+	{	
 		ret = pinctrl_select_state(amlogic_spi->p, amlogic_spi->spi_idlestate);
-
+		
 		if(ret<0)
 			printk("select idle state error\n");
 		mutex_unlock(&spi_nand_mutex);
 	}
 #else
-	pinmux_clr(&spi_nor_clr);
-#endif
+	pinmux_clr(&spi_nor_clr);	
+#endif	
 #elif defined(CONFIG_ARCH_MESON3)
   pinmux_clr(&spi_nor_set);
 #else
@@ -715,3 +715,4 @@ module_exit(amlogic_spi_nor_exit);
 
 MODULE_DESCRIPTION("Amlogic Spi Nor Flash driver");
 MODULE_LICENSE("GPL");
+

@@ -88,3 +88,4 @@ static inline long has_wake_lock(int type) { return 0; }
 #endif
 
 #endif
+

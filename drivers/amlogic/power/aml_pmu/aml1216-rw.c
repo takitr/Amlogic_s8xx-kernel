@@ -48,7 +48,7 @@ int aml1216_write(int32_t add, uint8_t val)
     };
 
     CHECK_DRIVER();
-    pdev = g_aml1216_client;
+    pdev = g_aml1216_client; 
 
     buf[0] = add & 0xff;
     buf[1] = (add >> 8) & 0x0f;
@@ -77,7 +77,7 @@ int aml1216_write16(int32_t add, uint16_t val)
     };
 
     CHECK_DRIVER();
-    pdev = g_aml1216_client;
+    pdev = g_aml1216_client; 
 
     buf[0] = add & 0xff;
     buf[1] = (add >> 8) & 0x0f;
@@ -107,7 +107,7 @@ int aml1216_writes(int32_t add, uint8_t *buff, int len)
     };
 
     CHECK_DRIVER();
-    pdev = g_aml1216_client;
+    pdev = g_aml1216_client; 
 
     buf[0] = add & 0xff;
     buf[1] = (add >> 8) & 0x0f;
@@ -142,7 +142,7 @@ int aml1216_read(int add, uint8_t *val)
     };
 
     CHECK_DRIVER();
-    pdev = g_aml1216_client;
+    pdev = g_aml1216_client; 
 
     buf[0] = add & 0xff;
     buf[1] = (add >> 8) & 0x0f;
@@ -170,13 +170,13 @@ int aml1216_read16(int add, uint16_t *val)
         {
             .addr  = AML1216_ADDR,
             .flags = I2C_M_RD,
-            .len   = 2,
+            .len   = 2, 
             .buf   = (uint8_t *)val,
         }
     };
 
     CHECK_DRIVER();
-    pdev = g_aml1216_client;
+    pdev = g_aml1216_client; 
 
     buf[0] = add & 0xff;
     buf[1] = (add >> 8) & 0x0f;
@@ -210,7 +210,7 @@ int aml1216_reads(int add, uint8_t *buff, int len)
     };
 
     CHECK_DRIVER();
-    pdev = g_aml1216_client;
+    pdev = g_aml1216_client; 
 
     buf[0] = add & 0xff;
     buf[1] = (add >> 8) & 0x0f;
@@ -225,36 +225,36 @@ EXPORT_SYMBOL_GPL(aml1216_reads);
 
 int aml1216_set_bits(int addr, uint8_t bits, uint8_t mask)
 {
-    uint8_t val;
-    int ret;
-
-    ret = aml1216_read(addr, &val);
-    if (ret) {
-        return ret;
-    }
-    val &= ~(mask);
-    val |=  (bits & mask);
-    return aml1216_write(addr, val);
-}
-EXPORT_SYMBOL_GPL(aml1216_set_bits);
+    uint8_t val; 
+    int ret; 
+ 
+    ret = aml1216_read(addr, &val); 
+    if (ret) { 
+        return ret; 
+    } 
+    val &= ~(mask); 
+    val |=  (bits & mask); 
+    return aml1216_write(addr, val); 
+} 
+EXPORT_SYMBOL_GPL(aml1216_set_bits); 
 
 static int find_idx(uint32_t start, uint32_t target, uint32_t step, int size)
 {
-    int i = 0;
+    int i = 0; 
 
     if (start < target) {
-        AML1216_DBG("%s, invalid input of voltage:%u\n", __func__, target);
+        AML1216_DBG("%s, invalid input of voltage:%u\n", __func__, target);    
         return -1;
     }
-    do {
+    do { 
         if ((start - step) < target) {
-            break;
-        }
+            break;    
+        }    
         start -= step;
-        i++;
+        i++; 
     } while (i < size);
     if (i >= size) {
-        AML1216_DBG("%s, input voltage %u outof range\n", __func__, target);
+        AML1216_DBG("%s, input voltage %u outof range\n", __func__, target);    
         return -1;
     }
 
@@ -265,8 +265,8 @@ int aml1216_set_dcdc_voltage(int dcdc, uint32_t voltage)
 {
     int addr;
     int idx_to;
-    int range    = 64;
-    int step     = 1875 * 10;
+    int range    = 64; 
+    int step     = 1875 * 10; 
     int start    = 1881 * 1000;
     int bit_mask = 0x3f;
     int idx_cur;
@@ -274,15 +274,15 @@ int aml1216_set_dcdc_voltage(int dcdc, uint32_t voltage)
     static uint8_t dcdc_val[3] = {};
 
     if (dcdc > 3 || dcdc < 0) {
-        return -1;
-    }
+        return -1;    
+    }   
     addr = 0x34+(dcdc-1)*9;
     if (dcdc == 3) {
-        step     = 50 * 1000;
-        range    = 32;
+        step     = 50 * 1000; 
+        range    = 32; 
         start    = 3600 * 1000;
         bit_mask = 0x1f;
-    }
+    }   
     if (dcdc_val[dcdc] == 0) {
         aml1216_read(addr, &val);                               // read first time
     } else {
@@ -292,7 +292,7 @@ int aml1216_set_dcdc_voltage(int dcdc, uint32_t voltage)
     idx_cur  = val >> 2;
     while (idx_cur != idx_to) {
         if (idx_cur < idx_to) {                                 // adjust to target voltage step by step
-            idx_cur++;
+            idx_cur++;    
         } else {
             idx_cur--;
         }
@@ -314,14 +314,14 @@ int aml1216_get_dcdc_voltage(int dcdc, uint32_t *uV)
 //    int start;
 
     if (dcdc > 3 || dcdc < 0) {
-        return -EINVAL;
+        return -EINVAL;    
     }
 
     addr = 0x34+(dcdc-1)*9;
-
+    
     ret = aml1216_read(addr, &val);
     if (ret) {
-        return ret;
+        return ret;    
     }
     val &= 0xfc;
     val >>= 2;
@@ -333,7 +333,7 @@ int aml1216_get_dcdc_voltage(int dcdc, uint32_t *uV)
     {
         *uV = (1881300 - val * 18750); //step: 20 mv
     }
-
+    
     return 0;
 }
 EXPORT_SYMBOL_GPL(aml1216_get_dcdc_voltage);

@@ -12,10 +12,10 @@ static int  axp18_init_chip(struct axp_mfd_chip *chip)
 		return err;
 
 	/*enable irqs and clear*/
-	err =   __axp_writes(chip->client, POWER18_INTEN1, 11, v);
+	err =   __axp_writes(chip->client, POWER18_INTEN1, 11, v);	
 	if (err)
 		return err;
-
+	
 	dev_info(chip->dev, "AXP (CHIP ID: 0x%02x) detected\n", chip_id);
 	chip->type = AXP18;
 
@@ -39,9 +39,9 @@ static int axp18_disable_irqs(struct axp_mfd_chip *chip, uint64_t irqs)
 	v[2] = ((chip->irqs_enabled) >> 8) & 0xff;
 	v[3] = POWER18_INTEN3;
 	v[4] = ((chip->irqs_enabled) >> 16) & 0xff;
-
+	
 	ret =  __axp_writes(chip->client, POWER18_INTEN1, 5, v);
-
+	
 	return ret;
 }
 
@@ -56,9 +56,9 @@ static int axp18_enable_irqs(struct axp_mfd_chip *chip, uint64_t irqs)
 	v[2] = ((chip->irqs_enabled) >> 8) & 0xff;
 	v[3] = POWER18_INTEN3;
 	v[4] = ((chip->irqs_enabled) >> 16) & 0xff;
-
+	
 	ret =  __axp_writes(chip->client, POWER18_INTEN1, 5, v);
-
+	
 	return ret;
 }
 
@@ -67,16 +67,16 @@ static int axp18_read_irqs(struct axp_mfd_chip *chip, uint64_t *irqs)
 {
 	uint8_t v[3] = {0, 0, 0};
 	int ret;
-
+	
 	//ret =  __axp_reads(chip->client, POWER18_INTSTS1, 3, v);
 	ret =  __axp_read(chip->client, POWER18_INTSTS1, v);
 	ret =  __axp_read(chip->client, POWER18_INTSTS2, v+1);
 	ret =  __axp_read(chip->client, POWER18_INTSTS1, v+2);
-
-
+	
+	
 	if (ret < 0)
 		return ret;
-
+		
 	*irqs = (v[2] << 16) | (v[1] << 8) | v[0];
 
 	return 0;
@@ -101,7 +101,7 @@ static ssize_t axp18_offvol_store(struct device *dev,
 		tmp = 2400;
 	if (tmp > 3200)
 		tmp = 3200;
-
+	
 	axp_read(dev,POWER18_IPS_SET,&val);
 	val &= 0xfc;
 	if(tmp >= 2900)
@@ -155,7 +155,7 @@ static ssize_t axp18_peklong_show(struct device *dev,
 {
 	uint8_t val = 0;
 	axp_read(dev,POWER18_PEK,&val);
-	return sprintf(buf,"%d\n",((val >> 4) & 0x03) * 500 + 1000);
+	return sprintf(buf,"%d\n",((val >> 4) & 0x03) * 500 + 1000);		
 }
 
 static ssize_t axp18_peklong_store(struct device *dev,
@@ -212,7 +212,7 @@ static ssize_t axp18_reg_store(struct device *dev,
 }
 
 static struct device_attribute axp18_mfd_attrs[] = {
-	AXP_MFD_ATTR(axp18_offvol),
+	AXP_MFD_ATTR(axp18_offvol),	
 	AXP_MFD_ATTR(axp18_pekopen),
 	AXP_MFD_ATTR(axp18_peklong),
 	AXP_MFD_ATTR(axp18_reg),

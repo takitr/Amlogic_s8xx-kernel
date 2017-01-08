@@ -39,10 +39,6 @@ else ifeq ($(CONFIG_KERNEL_XZ),y)
 UIMAGE_COMPRESSION ?= xz
 kcomp=xz
 karg="-z"
-else ifeq ($(CONFIG_KERNEL_LZ4),y)
-UIMAGE_COMPRESSION ?= lz4
-kcomp=lz4
-karg="-z9"
 endif
 
 export ZRELADDR INITRD_PHYS PARAMS_PHYS UIMAGE_COMPRESSION
@@ -55,7 +51,7 @@ DTB_LIST := $(addsuffix .dtb,$(DTB_NAMES))
 else
 DTB_LIST := $(dtb-y)
 endif
-DTB_OBJS := $(addprefix $(obj)/dts/amlogic/,$(DTB_LIST))
+DTB_OBJS := $(addprefix $(obj)/dts/,$(DTB_LIST))
 
 ifeq ($(CONFIG_XIP_KERNEL),y)
 
@@ -131,11 +127,6 @@ $(obj)/uImage:	$(obj)/$(F_CIMAGE_NAME) FORCE
 	@$(check_for_multiple_loadaddr)
 	$(call if_changed,uimage)
 	@$(kecho) '  Image $@ is ready'
-
-$(obj)/uImage-dtb:	$(obj)/zImage-dtb FORCE
-	$(eval UIMAGE_COMPRESSION := none)
-	$(call if_changed,uimage)
-	@echo '  Kernel: $@ is ready'
 
 $(obj)/bootp/bootp: $(obj)/zImage initrd FORCE
 	$(Q)$(MAKE) $(build)=$(obj)/bootp $@

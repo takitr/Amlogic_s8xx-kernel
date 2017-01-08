@@ -3,7 +3,7 @@
 #
 
 menuconfig AML_SII9293
-	bool "Amlogic SII9293 device driver"
+	bool "Amlogic SII9293 device driver" 
     default  n
     help
          Amlogic SII9293 device driver.
@@ -27,9 +27,10 @@ config DEBUG_DRIVER
 	default n
 
 config SII5293_RX
-	bool
-	prompt "Silicon Image 9293 HDMI to MHL Rx"
+	bool 
+	prompt "Silicon Image 9293 HDMI to MHL Rx"	
 	depends on I2C
 	default y
 
 endif
+

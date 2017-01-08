@@ -68,27 +68,27 @@ static void send_all_frame(struct blaster_window * creat_window){
 	// set init_high valid and enable the ir_blaster
 	irblaster_dbg("Enable the ir_blaster, and create a new format !! \n");
 	aml_write_reg32( P_AO_IR_BLASTER_ADDR0, aml_read_reg32(P_AO_IR_BLASTER_ADDR0)| (2<<12));     //set the modulator_tb = 2'10; 1us
-	aml_write_reg32( P_AO_IR_BLASTER_ADDR1, aml_read_reg32(P_AO_IR_BLASTER_ADDR1)| (12<<16));    //set mod_high_count = 13;
+	aml_write_reg32( P_AO_IR_BLASTER_ADDR1, aml_read_reg32(P_AO_IR_BLASTER_ADDR1)| (12<<16));    //set mod_high_count = 13;  
 	aml_write_reg32( P_AO_IR_BLASTER_ADDR1, aml_read_reg32(P_AO_IR_BLASTER_ADDR1)| (12<<0));     //set mod_low_count = 13;
 	aml_write_reg32( P_AO_IR_BLASTER_ADDR0, aml_read_reg32(P_AO_IR_BLASTER_ADDR0)| (1<<2) | (1<<0));
 	udelay(1);
 	aml_write_reg32( P_AO_IR_BLASTER_ADDR0, aml_read_reg32(P_AO_IR_BLASTER_ADDR0)| (1<<2) | (1<<0));
-		k = creat_window->winNum;
+		k = creat_window->winNum;	
 	if(creat_window->winNum){
 		for(i =0; i < k/2; i++){
 			aml_write_reg32( P_AO_IR_BLASTER_ADDR2, (0x10000 & ~(1<<12))    //timeleve = 0;
-					| (3<<10)     //[11:10] = 2'b01,then set the timebase 10us.
+					| (3<<10)     //[11:10] = 2'b01,then set the timebase 10us. 
 			//		| ((((creat_window->winArray[2*i])*10-1)/26)<<0)    //[9:0] = 10'd,the timecount = N+1;
 					| (((((creat_window->winArray[2*i])*10-1)*38)/1000)<<0)    //[9:0] = 10'd,the timecount = N+1;
 				       );
 			aml_write_reg32( P_AO_IR_BLASTER_ADDR2, (0x10000  | (1<<12))     //timeleve = 1;
-					| (1<<10)     //[11:10] = 2'b11,then set the timebase 26.5us.
+					| (1<<10)     //[11:10] = 2'b11,then set the timebase 26.5us. 
 					| ((((creat_window->winArray[2*i+1])-1))<<0)     //[9:0] = 10'd,the timecount = N+1;
 				//	| ((((creat_window->winArray[2*i+1])-1))<<0)     //[9:0] = 10'd,the timecount = N+1;
 				       );
-		}
+		}                                        
 	}
-	irblaster_dbg("The all frame finished !!\n");
+	irblaster_dbg("The all frame finished !!\n");    
 
 }
 #if 0
@@ -102,35 +102,35 @@ static void send_nec_frame(struct blaster_window * creat_window){
 	if(creat_window->winNum){
 		irblaster_dbg("Create a 9ms low pulse\n");
 		aml_write_reg32( P_AO_IR_BLASTER_ADDR2, (0x10000 & ~(1<<12))    //timeleve = 0;
-				| (1<<10)     //[11:10] = 2'b01,then set the timebase 10us.
+				| (1<<10)     //[11:10] = 2'b01,then set the timebase 10us. 
 				| (899<<0)    //[9:0] = 10'd899,the timecount = N+1;
 			       );
 		irblaster_dbg("Create a 4.5ms high pulse\n");
 		aml_write_reg32( P_AO_IR_BLASTER_ADDR2, (0x10000  | (1<<12))     //timeleve = 1;
-				| (1<<10)     //[11:10] = 2'b01,then set the timebase 10us.
+				| (1<<10)     //[11:10] = 2'b01,then set the timebase 10us. 
 				| (449<<0)    //[9:0] = 10'd449,the timecount = N+1;
 			       );
-		udelay(1);
+		udelay(1);                                                    
 		for(i =0; i<creat_window->winNum;i++) {
 			if (creat_window->winArray[i] != 1) {
 				aml_write_reg32( P_AO_IR_BLASTER_ADDR2, (0x10000 & ~(1<<12))    //timeleve = 0;
-						| (1<<10)     //[11:10] = 2'b01,then set the timebase 10us.
+						| (1<<10)     //[11:10] = 2'b01,then set the timebase 10us. 
 						| (55<<0)     //[9:0] = 10'd55,the timecount = N+1;
 					       );
 
 				aml_write_reg32( P_AO_IR_BLASTER_ADDR2, (0x10000 | (1<<12))     //timeleve = 1;
-						| (1<<10)     //[11:10] = 2'b01,then set the timebase 10us.
+						| (1<<10)     //[11:10] = 2'b01,then set the timebase 10us. 
 						| (55<<0)     //[9:0] = 10'd55,the timecount = N+1;
-					       );
+					       ); 
 			}
 			else {
 				aml_write_reg32( P_AO_IR_BLASTER_ADDR2, (0x10000 & ~(1<<12))    //timeleve = 0;
-						| (1<<10)     //[11:10] = 2'b01,then set the timebase 10us.
+						| (1<<10)     //[11:10] = 2'b01,then set the timebase 10us. 
 						| (55<<0)    //[9:0] = 10'd449,the timecount = N+1;
 					       );
 
 				aml_write_reg32( P_AO_IR_BLASTER_ADDR2, (0x10000 | (1<<12))     //timeleve = 1;
-						| (1<<10)     //[11:10] = 2'b01,then set the timebase 10us.
+						| (1<<10)     //[11:10] = 2'b01,then set the timebase 10us. 
 						| (167<<0)    //[9:0] = 10'd449,the timecount = N+1;
 					       );
 			}
@@ -140,17 +140,17 @@ static void send_nec_frame(struct blaster_window * creat_window){
 		// if creat_window.winNum =  this is  repeat.
 		irblaster_dbg("Create a 9ms low pulse\n");
 		aml_write_reg32( P_AO_IR_BLASTER_ADDR2, (0x10000 & ~(1<<12))    //timeleve = 0;
-				| (1<<10)     //[11:10] = 2'b01,then set the timebase 10us.
+				| (1<<10)     //[11:10] = 2'b01,then set the timebase 10us. 
 				| (899<<0)    //[9:0] = 10'd899,the timecount = N+1;
 			       );
 		irblaster_dbg("Create a 2.5ms high pulse\n");
 		aml_write_reg32( P_AO_IR_BLASTER_ADDR2, (0x10000  | (1<<12))     //timeleve = 1;
-				| (1<<10)     //[11:10] = 2'b01,then set the timebase 10us.
+				| (1<<10)     //[11:10] = 2'b01,then set the timebase 10us. 
 				| (249<<0)    //[9:0] = 10'd449,the timecount = N+1;
 			       );
-		udelay(1);
+		udelay(1);          
 	}
-	irblaster_dbg("The NEC frame finished !!\n");
+	irblaster_dbg("The NEC frame finished !!\n");    
 
 }
 static void send_sony_frame(struct blaster_window *creat_window){
@@ -164,7 +164,7 @@ static void send_sony_frame(struct blaster_window *creat_window){
 	// -----------------------------------------------
 	irblaster_dbg("Configure the parameter of modulator !! \n");
 	aml_write_reg32( P_AO_IR_BLASTER_ADDR0, aml_read_reg32(P_AO_IR_BLASTER_ADDR0)| (1<<12));     //set the modulator_tb = 2'01;
-	aml_write_reg32( P_AO_IR_BLASTER_ADDR1, aml_read_reg32(P_AO_IR_BLASTER_ADDR1)| (34<<16));    //set mod_high_count = 34;
+	aml_write_reg32( P_AO_IR_BLASTER_ADDR1, aml_read_reg32(P_AO_IR_BLASTER_ADDR1)| (34<<16));    //set mod_high_count = 34;  
 	aml_write_reg32( P_AO_IR_BLASTER_ADDR1, aml_read_reg32(P_AO_IR_BLASTER_ADDR1)| (34<<0));     //set mod_low_count = 34;
 
 	// -----------------------------------------------
@@ -172,36 +172,36 @@ static void send_sony_frame(struct blaster_window *creat_window){
 	// -----------------------------------------------
 	irblaster_dbg("Create a 2.4ms pulse\n");
 	aml_write_reg32( P_AO_IR_BLASTER_ADDR2, (0x10000 & ~(1<<12))     //timeleve = 0;
-			| (3<<10)       //[11:10] = 2'b01,then set the timebase 10us.
+			| (3<<10)       //[11:10] = 2'b01,then set the timebase 10us. 
 			| (273<<0)      //[9:0] = 10'd899,the timecount = N+1;
 		       );
 
 	for(i =0; i<creat_window->winNum;i++) {
 		if (creat_window->winArray[i] != 1) {
 			aml_write_reg32( P_AO_IR_BLASTER_ADDR2, (0x10000 & ~(1<<12))     //timeleve = 0;
-					| (1<<10)       //[11:10] = 2'b01,then set the timebase 10us.
+					| (1<<10)       //[11:10] = 2'b01,then set the timebase 10us. 
 					| (59<<0)       //[9:0] = 10'd59,the timecount = N+1;
 				       );
 
 			aml_write_reg32( P_AO_IR_BLASTER_ADDR2, (0x10000 | (1<<12))      //timeleve = 1;
-					| (3<<10)       //[11:10] = 2'b01,then set the timebase 10us.
+					| (3<<10)       //[11:10] = 2'b01,then set the timebase 10us. 
 					| (68<<0)       //[9:0] = 10'd68,the timecount = N+1;
-				       );
+				       ); 
 		}
 		else {
 			aml_write_reg32( P_AO_IR_BLASTER_ADDR2, (0x10000 & ~(1<<12))    //timeleve = 0;
-					| (1<<10)     //[11:10] = 2'b01,then set the timebase 10us.
+					| (1<<10)     //[11:10] = 2'b01,then set the timebase 10us. 
 					| (59<<0)    //[9:0] = 10'd59,the timecount = N+1;
 				       );
 
 			aml_write_reg32( P_AO_IR_BLASTER_ADDR2, (0x10000 | (1<<12))     //timeleve = 1;
-					| (3<<10)     //[11:10] = 2'b01,then set the timebase 10us.
+					| (3<<10)     //[11:10] = 2'b01,then set the timebase 10us. 
 					| (136<<0)    //[9:0] = 10'd449,the timecount = N+1;
 				       );
 		}
 	}
 
-	irblaster_dbg("The SONY frame finished !!\n");
+	irblaster_dbg("The SONY frame finished !!\n");    
 
 }
 static void send_duokan_frame(struct blaster_window *creat_window){
@@ -215,7 +215,7 @@ static void send_duokan_frame(struct blaster_window *creat_window){
 	// -----------------------------------------------
 	irblaster_dbg("Configure the parameter of modulator !! \n");
 	aml_write_reg32( P_AO_IR_BLASTER_ADDR0, aml_read_reg32(P_AO_IR_BLASTER_ADDR0)| (1<<12));     //set the modulator_tb = 2'01;
-	aml_write_reg32( P_AO_IR_BLASTER_ADDR1, aml_read_reg32(P_AO_IR_BLASTER_ADDR1)| (34<<16));    //set mod_high_count = 34;
+	aml_write_reg32( P_AO_IR_BLASTER_ADDR1, aml_read_reg32(P_AO_IR_BLASTER_ADDR1)| (34<<16));    //set mod_high_count = 34;  
 	aml_write_reg32( P_AO_IR_BLASTER_ADDR1, aml_read_reg32(P_AO_IR_BLASTER_ADDR1)| (34<<0));     //set mod_low_count = 34;
 
 	// -----------------------------------------------
@@ -223,36 +223,36 @@ static void send_duokan_frame(struct blaster_window *creat_window){
 	// -----------------------------------------------
 	irblaster_dbg("Create a 2.4ms pulse\n");
 	aml_write_reg32( P_AO_IR_BLASTER_ADDR2, (0x10000 & ~(1<<12))     //timeleve = 0;
-			| (3<<10)       //[11:10] = 2'b01,then set the timebase 10us.
+			| (3<<10)       //[11:10] = 2'b01,then set the timebase 10us. 
 			| (273<<0)      //[9:0] = 10'd899,the timecount = N+1;
 		       );
 
 	for(i =0; i<creat_window->winNum;i++) {
 		if (creat_window->winArray[i] != 1) {
 			aml_write_reg32( P_AO_IR_BLASTER_ADDR2, (0x10000 & ~(1<<12))     //timeleve = 0;
-					| (1<<10)       //[11:10] = 2'b01,then set the timebase 10us.
+					| (1<<10)       //[11:10] = 2'b01,then set the timebase 10us. 
 					| (59<<0)       //[9:0] = 10'd59,the timecount = N+1;
 				       );
 
 			aml_write_reg32( P_AO_IR_BLASTER_ADDR2, (0x10000 | (1<<12))      //timeleve = 1;
-					| (3<<10)       //[11:10] = 2'b01,then set the timebase 10us.
+					| (3<<10)       //[11:10] = 2'b01,then set the timebase 10us. 
 					| (68<<0)       //[9:0] = 10'd68,the timecount = N+1;
-				       );
+				       ); 
 		}
 		else {
 			aml_write_reg32( P_AO_IR_BLASTER_ADDR2, (0x10000 & ~(1<<12))    //timeleve = 0;
-					| (1<<10)     //[11:10] = 2'b01,then set the timebase 10us.
+					| (1<<10)     //[11:10] = 2'b01,then set the timebase 10us. 
 					| (59<<0)    //[9:0] = 10'd59,the timecount = N+1;
 				       );
 
 			aml_write_reg32( P_AO_IR_BLASTER_ADDR2, (0x10000 | (1<<12))     //timeleve = 1;
-					| (3<<10)     //[11:10] = 2'b01,then set the timebase 10us.
+					| (3<<10)     //[11:10] = 2'b01,then set the timebase 10us. 
 					| (136<<0)    //[9:0] = 10'd449,the timecount = N+1;
 				       );
 		}
 	}
 
-	irblaster_dbg("The SONY frame finished !!\n");
+	irblaster_dbg("The SONY frame finished !!\n");    
 
 }
 
@@ -429,7 +429,7 @@ static void ir_hardware_release(void)
 static int  aml_ir_irblaster_probe(struct platform_device *pdev)
 {
 	int r;
-	printk("ir irblaster probe\n");
+	printk("ir irblaster probe\n");	
 	r = alloc_chrdev_region(&irblaster_id, 0, DEIVE_COUNT, DEVICE_NAME);
 	if (r < 0) {
 		printk(KERN_ERR "Can't register major for ir irblaster device\n");
@@ -491,7 +491,7 @@ static struct platform_driver aml_ir_irblaster_driver = {
 	.driver = {
 		.name = "meson-irblaster",
 		.owner  = THIS_MODULE,
-		.of_match_table = irblaster_dt_match,
+		.of_match_table = irblaster_dt_match,	
 	},
 };
 

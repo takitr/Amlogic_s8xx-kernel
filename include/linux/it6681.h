@@ -34,7 +34,7 @@ void DumpHDMITXReg(void);
 void DumpHDMIRXReg(void);
 
 int it6681_read_edid( void *it6681_dev_data, void *pedid, unsigned short max_length);
-//struct it6681_platform_data
+//struct it6681_platform_data 
 //{
 //    struct i2c_client *hdmi_tx_client;
 //    struct i2c_client *hdmi_rx_client;

@@ -5,10 +5,10 @@
 
 
 /**
- * efuse version 0.1 (for M3 )
+ * efuse version 0.1 (for M3 ) 
  * M3 efuse: read all free efuse data maybe fail on addr 0 and addr 0x40
  * so M3 EFUSE layout avoid using 0 and 0x40
-title				offset			datasize			checksize			totalsize
+title				offset			datasize			checksize			totalsize			
 reserved 		0					0						0						4
 usid				4					33					2						35
 mac_wifi		39				6						1						7
@@ -21,14 +21,14 @@ reserved		378				0						0						2
 version		380				3						1						4    (version+machid, version=1)
 */
 
-static efuseinfo_item_t efuseinfo_v0[] =
+static efuseinfo_item_t efuseinfo_v0[] = 
 {
 	{
 		.title = "licence",
 		.id = EFUSE_LICENCE_ID,
 		.offset = 0,
-		.enc_len = 4,
-		.data_len = 3,
+		.enc_len = 4,			
+		.data_len = 3,			
 		.bch_en = 1,
 		.bch_reverse = 1,
 	},
@@ -37,7 +37,7 @@ static efuseinfo_item_t efuseinfo_v0[] =
 		.id = EFUSE_MAC_ID,
 		.offset = 4,
 		.enc_len = 7,
-		.data_len = 6,
+		.data_len = 6,		
 		.bch_en = 1,
 		.bch_reverse = 1,
 	},
@@ -46,7 +46,7 @@ static efuseinfo_item_t efuseinfo_v0[] =
 		.id = EFUSE_HDCP_ID,
 		.offset = 12,
 		.enc_len = 310,
-		.data_len = 300,
+		.data_len = 300,		
 		.bch_en = 1,
 		.bch_reverse = 1,
 	},
@@ -55,7 +55,7 @@ static efuseinfo_item_t efuseinfo_v0[] =
 		.id = EFUSE_MAC_BT_ID,
 		.offset = 322,
 		.enc_len = 7,
-		.data_len = 6,
+		.data_len = 6,		
 		.bch_en = 1,
 		.bch_reverse = 1,
 	},
@@ -64,7 +64,7 @@ static efuseinfo_item_t efuseinfo_v0[] =
 		.id = EFUSE_MAC_WIFI_ID,
 		.offset = 330,
 		.enc_len = 7,
-		.data_len = 6,
+		.data_len = 6,		
 		.bch_en = 1,
 		.bch_reverse = 1,
 	},
@@ -73,16 +73,16 @@ static efuseinfo_item_t efuseinfo_v0[] =
 		.id = EFUSE_USID_ID,
 		.offset = V0_EFUSE_USID_OFFSET, //337,
 		.enc_len = V0_EFUSE_USID_ENC_LEN, //43,
-		.data_len = V0_EFUSE_USID_DATA_LEN, //41,
+		.data_len = V0_EFUSE_USID_DATA_LEN, //41,		
 		.bch_en = V0_EFUSE_USID_BCH_EN, //1,
 		.bch_reverse = V0_EFUSE_USID_BCH_REVERSE, //1,
-	},
+	},	
 	{
 		.title= "version",     //1B(version=0)+2B(machid)
 		.id = EFUSE_VERSION_ID,
 		.offset=EFUSE_VERSION_OFFSET, //380,
 		.enc_len = EFUSE_VERSION_ENC_LEN, //4,
-		.data_len = EFUSE_VERSION_DATA_LEN, //3,
+		.data_len = EFUSE_VERSION_DATA_LEN, //3,		
 		.bch_en = EFUSE_VERSION_BCH_EN, //1,
 		.bch_reverse = EFUSE_VERSION_BCH_REVERSE, //0,
 	},
@@ -347,7 +347,7 @@ static efuseinfo_item_t efuseinfo_v4[] = {
         .data_len = 156,
         .bch_en = 0,
         .bch_reverse = 0,
-    },
+    },    
     {
         .title = "reserved",
         .offset = 292,
@@ -355,7 +355,7 @@ static efuseinfo_item_t efuseinfo_v4[] = {
         .data_len = 112,
         .bch_en = 0,
         .bch_reverse = 0,
-    },
+    },    
     {
         .title = "storagekey",
         .offset = 404,
@@ -417,18 +417,18 @@ static efuseinfo_item_t efuseinfo_v4[] = {
         .bch_en = 0,
         .bch_reverse = 0,
     },
-
+        
 };
 
 #endif///endif efuseinfo version3
-static efuseinfo_item_t efuseinfo_v2[] =
+static efuseinfo_item_t efuseinfo_v2[] = 
 {
 	{
 		.title = "licence",
 		.id = EFUSE_LICENCE_ID,
 		.offset = 0,
 		.enc_len = 3,
-		.data_len = 3,
+		.data_len = 3,		
 		.bch_en = 0,
 		.bch_reverse = 0,
 	},
@@ -437,8 +437,8 @@ static efuseinfo_item_t efuseinfo_v2[] =
 		.id = EFUSE_VERSION_ID,
 		.offset = V2_EFUSE_VERSION_OFFSET, //3,
 		.enc_len = V2_EFUSE_VERSION_ENC_LEN, //1,
-		.data_len = V2_EFUSE_VERSION_DATA_LEN, //1,
-		.bch_en = V2_EFUSE_VERSION_BCH_EN, //0,
+		.data_len = V2_EFUSE_VERSION_DATA_LEN, //1,		
+		.bch_en = V2_EFUSE_VERSION_BCH_EN, //0,	
 		.bch_reverse = V2_EFUSE_VERSION_BCH_REVERSE, //0,
 	},
 	{
@@ -446,8 +446,8 @@ static efuseinfo_item_t efuseinfo_v2[] =
 		.id = EFUSE_CUSTOMER_ID,
 		.offset = 4,
 		.enc_len = 4,
-		.data_len = 4,
-		.bch_en = 0,
+		.data_len = 4,		
+		.bch_en = 0,	
 		.bch_reverse = 0,
 	},
 	{
@@ -496,7 +496,7 @@ static efuseinfo_item_t efuseinfo_v2[] =
 		.bch_reverse = 0,
 	},
 	{
-		.title = "usid",
+		.title = "usid",   
 		.id = EFUSE_USID_ID,
 		.offset = V2_EFUSE_USID_OFFSET, //454,
 		.enc_len = V2_EFUSE_USID_ENC_LEN, //58,
@@ -505,7 +505,7 @@ static efuseinfo_item_t efuseinfo_v2[] =
 		.bch_reverse = V2_EFUSE_USID_BCH_REVERSE, //0,
 	},
 	{
-		.title = "machineid",
+		.title = "machineid",   
 		.id = EFUSE_MACHINEID_ID,
 		.offset = 502, //502,
 		.enc_len = 4, //4,
@@ -516,14 +516,14 @@ static efuseinfo_item_t efuseinfo_v2[] =
 };
 
 //m8 efuse layout according to haixiang.bao allocation
-static efuseinfo_item_t efuseinfo_M8_serialNum_v1[] =
+static efuseinfo_item_t efuseinfo_M8_serialNum_v1[] = 
 {
 	{
 		.title = "licence",
 		.id = EFUSE_LICENCE_ID,
 		.offset = 0,
 		.enc_len = 4,
-		.data_len = 4,
+		.data_len = 4,		
 		.bch_en = 0,
 		.bch_reverse = 0,
 	},
@@ -584,7 +584,7 @@ static efuseinfo_item_t efuseinfo_M8_serialNum_v1[] =
 };
 
 //M6TVD layout
-static efuseinfo_item_t efuseinfo_m6tvd_serialNum_v1[] =
+static efuseinfo_item_t efuseinfo_m6tvd_serialNum_v1[] = 
 {
 	{
 		.title = "licence",
@@ -643,22 +643,22 @@ static efuseinfo_item_t efuseinfo_m6tvd_serialNum_v1[] =
 };
 
 
-efuseinfo_t efuseinfo[] =
+efuseinfo_t efuseinfo[] = 
 {
 	{
 		.efuseinfo_version = efuseinfo_v0,
 		.size = sizeof(efuseinfo_v0)/sizeof(efuseinfo_item_t),
-		.version =0,
+		.version =0,	
 	},
 	{
 		.efuseinfo_version = efuseinfo_v1,
 		.size = sizeof(efuseinfo_v1)/sizeof(efuseinfo_item_t),
-		.version =1,
+		.version =1,		
 	},
 	{
 		.efuseinfo_version = efuseinfo_v2,
 		.size = sizeof(efuseinfo_v2)/sizeof(efuseinfo_item_t),
-		.version =2,
+		.version =2,		
 	},
 	{
 		.efuseinfo_version = efuseinfo_v3,
@@ -688,3 +688,4 @@ unsigned efuse_active_customerid = 0;
 pfn efuse_getinfoex = 0;
 pfn efuse_getinfoex_byPos = 0;
 pfn efuse_getinfoex_byTitle = 0;
+

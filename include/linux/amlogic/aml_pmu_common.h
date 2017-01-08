@@ -1,8 +1,8 @@
 /*
  * Amlogic COMMON PMU driver head file
  */
-#ifndef __AML_PMU_COMMON_H__
-#define __AML_PMU_COMMON_H__
+#ifndef __AML_PMU_COMMON_H__ 
+#define __AML_PMU_COMMON_H__ 
 
 #include <linux/amlogic/battery_parameter.h>
 #define CHARGER_CHARGING            1               // battery is charging
@@ -22,7 +22,7 @@
 struct aml_charger {
     int rest_vol;                                   // current volume of battery
     int ocv;                                        // open-circuit voltage of battery
-    int ibat;                                       // battery current
+    int ibat;                                       // battery current 
     int vbat;                                       // battery voltage
     int ocv_full;                                   // ocv when battery is charged full
     int ocv_empty;                                  // ocv when battery is disharged to empty
@@ -33,7 +33,7 @@ struct aml_charger {
     int i_usb;                                      // current of USB
     int v_dcin;                                     // voltage of DCIN
     int i_dcin;                                     // current of DCIN
-    uint32_t fault;                                 // indicate charge status register
+    uint32_t fault;                                 // indicate charge status register 
 
     uint8_t  charge_status;                         // charge status
     uint8_t  resume;                                // resume after long suspend
@@ -41,10 +41,10 @@ struct aml_charger {
     uint8_t  ext_valid;                             // extern power valid, including USB or DCIN
     uint8_t  usb_valid;                             // status for usb is valid
     uint8_t  dcin_valid;                            // status for dcin is valid
-    uint8_t  coulomb_type;                          // type of coulomb
-    uint8_t  bat_det;                               // battery detected
+    uint8_t  coulomb_type;                          // type of coulomb 
+    uint8_t  bat_det;                               // battery detected 
     uint8_t  charge_timeout;                        // indicate charging timeout
-    uint8_t  serial_batteries;                      // indicate how many batteries serialed,
+    uint8_t  serial_batteries;                      // indicate how many batteries serialed, 
                                                     // 0 -> 1 battery, 1 -> 2 batteries
 };
 
@@ -56,7 +56,7 @@ struct aml_pmu_driver {
     int  (*pmu_clear_coulomb)(struct aml_charger *charger);             // clear coulomb counter
     int  (*pmu_update_status)(struct aml_charger *charger);             // update status
     int  (*pmu_set_rdc)(int rdc);                                       // update RDC for calculate
-    int  (*pmu_set_gpio)(int gpio, int value);                          // export for other driver
+    int  (*pmu_set_gpio)(int gpio, int value);                          // export for other driver 
     int  (*pmu_get_gpio)(int gpio, int *value);                         // export for other driver
     int  (*pmu_reg_read)(int addr, uint8_t *buf);                       // single register read
     int  (*pmu_reg_write)(int addr, uint8_t value);                     // single register write
@@ -73,7 +73,7 @@ extern void pmu_mutex_lock(void *mutex);
 extern void pmu_mutex_unlock(void *mutex);
 extern int  pmu_rtc_device_init(void);
 extern int  pmu_rtc_set_alarm(unsigned long seconds);
-
+   
 struct aml_pmu_api {
     int     (*pmu_get_ocv_filter)(void);
     int     (*pmu_get_report_delay)(void);
@@ -96,8 +96,6 @@ extern struct aml_pmu_api *aml_pmu_get_api(void);
 extern void   aml_pmu_clear_driver(void);
 extern void   aml_pmu_do_callbacks(struct aml_charger *charger);
 extern struct aml_pmu_driver* aml_pmu_get_driver(void);
-extern void   set_board_battery_status(int);
-extern int    board_has_battery(void);
 
 extern struct aml_pmu_api *aml_pmu_get_api(void);
 #endif /* __AML_PMU_COMMON_H__ */

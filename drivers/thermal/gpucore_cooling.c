@@ -206,7 +206,7 @@ gpucore_cooling_register(struct gpucore_cooling_device *gpucore_dev)
 	cool_dev = thermal_cooling_device_register(dev_name, gpucore_dev,
 						   &gpucore_cooling_ops);
 	if (!cool_dev) {
-
+		
 		release_idr(&gpucore_idr, gpucore_dev->id);
 		kfree(gpucore_dev);
 		return ERR_PTR(-EINVAL);

@@ -42,7 +42,7 @@
 
 static LIST_HEAD(stream_list);
 static DEFINE_SPINLOCK(platform_lock);
-
+    
 struct aml_platform_stream{
     struct list_head list;
     struct aml_audio_interface *interface;
@@ -302,7 +302,7 @@ static snd_pcm_uframes_t aml_platform_pointer(struct snd_pcm_substream *substrea
     plat_stream = find_platform_stream(substream);
     if (likely(plat_stream != NULL)) {
         aud_interface = plat_stream->interface;
-        BUG_ON(aud_interface->pcm_ops->pointer == NULL);
+        BUG_ON(aud_interface->pcm_ops->pointer == NULL);    
         ret = aud_interface->pcm_ops->pointer(substream);
     } else {
         printk(KERN_ERR "aml-platform: substream %p invalid!", substream);
@@ -313,8 +313,8 @@ static snd_pcm_uframes_t aml_platform_pointer(struct snd_pcm_substream *substrea
 }
 
 static int aml_platform_copy(struct snd_pcm_substream *substream, int channel,
-		    snd_pcm_uframes_t pos,
-		    void __user *buf, snd_pcm_uframes_t count)
+        	    snd_pcm_uframes_t pos,
+        	    void __user *buf, snd_pcm_uframes_t count)
 {
     struct aml_audio_interface *aud_interface = NULL;
     struct aml_platform_stream *plat_stream = NULL;
@@ -335,7 +335,7 @@ static int aml_platform_copy(struct snd_pcm_substream *substream, int channel,
     return ret;
 }
 
-static int aml_platform_silence(struct snd_pcm_substream *substream, int channel,
+static int aml_platform_silence(struct snd_pcm_substream *substream, int channel, 
                 snd_pcm_uframes_t pos, snd_pcm_uframes_t count)
 {
     struct snd_pcm_runtime *runtime = substream->runtime;
@@ -424,7 +424,7 @@ static int aml_platform_ack(struct snd_pcm_substream *substream)
 
     return ret;
 }
-
+    
 static struct snd_pcm_ops aml_platform_ops = {
 	.open		= aml_platform_open,
 	.close		= aml_platform_close,
@@ -443,15 +443,15 @@ static struct snd_pcm_ops aml_platform_ops = {
 
 static int aml_platform_pcm_new(struct snd_soc_pcm_runtime *rtd)
 {
-
+	
     struct snd_soc_dai *cpu_dai = rtd->cpu_dai;
-
+	
     struct snd_soc_dai *codec_dai = rtd->codec_dai;
-
+	
     struct aml_audio_interface *aud_interface = NULL;
 //    struct snd_pcm *pcm =rtd->pcm ;
 //    struct snd_soc_card *card = rtd->card;
-
+	
 	int ret = 0;
     printk("rtd %x \n",	(unsigned)rtd);
     printk("cpu_dai %x \n",	(unsigned)cpu_dai);
@@ -500,7 +500,7 @@ static int aml_platform_suspend(struct snd_soc_dai *dai)
 
 	/* disable the PDC and save the PDC registers */
 	// TODO
-	printk("aml pcm suspend\n");
+	printk("aml pcm suspend\n");	
 
 	return 0;
 }
@@ -546,7 +546,7 @@ static struct platform_driver aml_soc_platform_driver = {
 	.driver = {
 			.name = "aml-audio",
 			.owner = THIS_MODULE,
-			.of_match_table = amlogic_audio_dt_match,
+			.of_match_table = amlogic_audio_dt_match,			
 	},
 
 	.probe = aml_soc_platform_probe,
@@ -570,3 +570,4 @@ module_exit(aml_soc_platform_exit);
 MODULE_AUTHOR("Amlogic, Inc.");
 MODULE_DESCRIPTION("Amlogic ASoC platform driver");
 MODULE_LICENSE("GPL");
+

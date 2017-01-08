@@ -47,7 +47,7 @@ typedef struct vframe_operations_s {
     struct vframe_s * (*get ) (void* op_arg);
     void (*put ) (struct vframe_s *, void* op_arg);
     int  (*event_cb)(int type, void* data, void* private_data);
-	int (*vf_states)(vframe_states_t *states, void* op_arg);
+  	int (*vf_states)(vframe_states_t *states, void* op_arg);
 } vframe_operations_t;
 
 typedef struct vframe_provider_s {
@@ -81,9 +81,10 @@ void get_video_keep_buffer(unsigned long *addr, unsigned long *phys_addr);
 vframe_t* get_cur_dispbuf(void);
 int query_video_status(int type , int* value);
 
-#ifdef CONFIG_V4L_AMLOGIC_VIDEO
+#ifdef CONFIG_V4L_AMLOGIC_VIDEO 
 void v4l_reg_provider(struct vframe_provider_s *prov);
 void v4l_unreg_provider(void);
 const vframe_provider_t * v4l_get_vfp(void);
 #endif
 #endif /* VFRAME_PROVIDER_H */
+

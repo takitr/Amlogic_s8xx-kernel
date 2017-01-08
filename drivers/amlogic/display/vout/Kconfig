@@ -6,7 +6,7 @@ menu "Amlogic video output module"
 config AM_TV_OUTPUT
 	tristate "TV output"
 	default y
-	help
+	help  
 		tv output module
 
 config AML_VOUT_FRAMERATE_AUTOMATION
@@ -16,17 +16,10 @@ config AML_VOUT_FRAMERATE_AUTOMATION
 	help
 		framerate adjustment automatically from video source
 
-config AML_VDAC_HW_SWITCH
-	bool "vdac hardware switch"
-	default n
-	depends on AM_TV_OUTPUT
-	help
-		vdac hardware switch of cvbs/ypbpr for mx.
-
 config AM_LCD_OUTPUT
-	tristate "LCD output"
+	tristate "LCD output" 
 	default y
-	help
+	help  
 		LCD output module
 
 config AML_GAMMA_DEBUG

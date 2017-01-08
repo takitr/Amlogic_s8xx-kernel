@@ -196,12 +196,12 @@ static ssize_t _ppmgr_angle_write(unsigned long val)
     }
 
     ppmgr_device.global_angle = angle;
-    ppmgr_device.angle = angle;
-    ppmgr_device.videoangle = (ppmgr_device.angle + ppmgr_device.orientation) % 4;    
     if (!ppmgr_device.use_prot) {
         if (angle != ppmgr_device.angle) {
             property_change = 1;
         }
+        ppmgr_device.angle = angle;
+        ppmgr_device.videoangle = (ppmgr_device.angle + ppmgr_device.orientation) % 4;
         printk("ppmgr angle:%x,orientation:%x,videoangle:%x \n", ppmgr_device.angle, ppmgr_device.orientation, ppmgr_device.videoangle);
     } else {
         set_video_angle(angle);
@@ -525,7 +525,7 @@ static ssize_t platform_type_read(struct class *cla,struct class_attribute *attr
 	}else if(platform_type ==PLATFORM_MID){
 		return snprintf(buf,80,"current platform is MID\n");
 	}else if(platform_type ==PLATFORM_MID_VERTICAL){
-		return snprintf(buf,80,"current platform is vertical MID\n");
+        	return snprintf(buf,80,"current platform is vertical MID\n");
 	}else{
 		return snprintf(buf,80,"current platform is MBX\n");
 	}
@@ -820,7 +820,7 @@ static ssize_t mirror_write(struct class *cla,
 }
 
 /**************************************************************
-			3DTV usage
+ 			3DTV usage
 *******************************************************************/
 extern int  vf_ppmgr_get_states(vframe_states_t *states);
 
@@ -925,7 +925,7 @@ static struct class_attribute ppmgr_class_attrs[] = {
 			read_scale_width,
 			write_scale_width),
     __ATTR(axis,
-		S_IRUGO | S_IWUSR,
+    		S_IRUGO | S_IWUSR,
 		    cut_win_show,
 		    cut_win_store),
 #endif
@@ -957,7 +957,7 @@ struct class* init_ppmgr_cls() {
     ret = class_register(&ppmgr_class);
     if(ret<0 )
     {
-        amlog_level(LOG_LEVEL_HIGH,"error create ppmgr class\n");
+        amlog_level(LOG_LEVEL_HIGH,"error create ppmgr class\r\n");
         return NULL;
     }
     return &ppmgr_class;
@@ -978,7 +978,6 @@ void get_ppmgr_buf_info(char** start,unsigned int* size) {
     *start=ppmgr_device.buffer_start;
     *size=ppmgr_device.buffer_size;
 }
-EXPORT_SYMBOL(get_ppmgr_buf_info);
 
 static int ppmgr_open(struct inode *inode, struct file *file)
 {
@@ -1021,10 +1020,10 @@ static long ppmgr_ioctl(struct file *file,
             platform_type_t plarform_type;
             plarform_type = get_platform_type();
             if( plarform_type == PLATFORM_TV){
-		set_ppmgr_status(mode);
+            	set_ppmgr_status(mode);
             }else{
-		  set_ppmgr_3dmode(mode);
-		}
+          	  set_ppmgr_3dmode(mode);
+         	}
             break;
         case PPMGR_IOC_VIEW_MODE:
             mode=(int)argp;
@@ -1102,7 +1101,7 @@ int  init_ppmgr_device(void)
     ret=register_chrdev(0,ppmgr_device.name,&ppmgr_fops);
     if(ret <=0)
     {
-        amlog_level(LOG_LEVEL_HIGH,"register ppmgr device error\n");
+        amlog_level(LOG_LEVEL_HIGH,"register ppmgr device error\r\n");
         return  ret ;
     }
     ppmgr_device.major=ret;
@@ -1131,7 +1130,7 @@ int  init_ppmgr_device(void)
 #endif
     ppmgr_device.mirror_flag  = 0;
     ppmgr_device.canvas_width = ppmgr_device.canvas_height = 0;
-    amlog_level(LOG_LEVEL_LOW,"ppmgr_dev major:%d\n",ret);
+    amlog_level(LOG_LEVEL_LOW,"ppmgr_dev major:%d\r\n",ret);
 
     if((ppmgr_device.cla = init_ppmgr_cls())==NULL) return -1;
     ppmgr_device.dev=device_create(ppmgr_device.cla,NULL,MKDEV(ppmgr_device.major,0),NULL,ppmgr_device.name);
@@ -1272,3 +1271,5 @@ module_exit(ppmgr_remove_module);
 MODULE_DESCRIPTION("AMLOGIC  ppmgr driver");
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("aml-sh <kasin.li@amlogic.com>");
+
+

@@ -59,7 +59,7 @@
 #define NT99252_CAMERA_RELEASE 0
 #define NT99252_CAMERA_VERSION \
 	KERNEL_VERSION(NT99252_CAMERA_MAJOR_VERSION, NT99252_CAMERA_MINOR_VERSION, NT99252_CAMERA_RELEASE)
-
+	
 #define NT99252_DRIVER_VERSION "NT99252-COMMON-01-140717"
 
 MODULE_DESCRIPTION("nt99252 On Board");
@@ -91,7 +91,7 @@ static struct i2c_client *this_client;
 
 #define NT99340_AE_TARGET_MEAN	0x30	//0x32	//0x34
 
-#if 0	//(NT99340_AE_TARGET_MEAN == 0x34)
+#if 0	//(NT99340_AE_TARGET_MEAN == 0x34) 
 #define NT99340_REG_0X32B8	0x3B
 #define NT99340_REG_0X32B9	0x2D
 #define NT99340_REG_0X32BC	0x34
@@ -343,7 +343,7 @@ struct nt99252_device {
 
 	/* platform device data from board initting. */
 	aml_cam_info_t  cam_info;
-
+	
 	/* wake lock */
 	struct wake_lock	wake_lock;
 
@@ -383,7 +383,7 @@ static struct v4l2_frmsize_discrete nt99252_prev_resolution[]=
 };
 
 static struct v4l2_frmsize_discrete nt99252_pic_resolution[]=
-{
+{		
 	{800,600},
 	{1600,1200},
 };
@@ -401,67 +401,67 @@ struct aml_camera_i2c_fig_s NT99252_script[] = {
 	{0x3069, 0x01}, //data & v/s(sync)
 	{0x306A, 0x01}, //pclk
 	*/
-	{0x302A, 0x00},
+	{0x302A, 0x00},  
 	{0x301F, 0x80},
-	{0x3104, 0x03},
-	{0x3105, 0x03},
-	{0x3106, 0x0D},
+	{0x3104, 0x03},  
+	{0x3105, 0x03},  
+	{0x3106, 0x0D},  
 	{0x310A, 0x62},
 	{0x310B, 0x02},
 	{0x310D, 0x70},
-	{0x302E, 0x00},
-	{0x303E, 0x01},
-	{0x303F, 0x0e},
-	{0x3044, 0x00},
-	{0x3045, 0x00},
-	{0x3046, 0x00},
-	{0x3047, 0x00},
-	{0x3048, 0x00},
-	{0x3049, 0x00},
-	{0x304A, 0x00},
-	{0x304B, 0x00},
-	{0x3051, 0xf0},
-	{0x3111, 0x5B},
-	{0x3113, 0x77},
+	{0x302E, 0x00},  
+	{0x303E, 0x01},  
+	{0x303F, 0x0e},  
+	{0x3044, 0x00},  
+	{0x3045, 0x00},  
+	{0x3046, 0x00},  
+	{0x3047, 0x00},  
+	{0x3048, 0x00},  
+	{0x3049, 0x00},  
+	{0x304A, 0x00},  
+	{0x304B, 0x00},  
+	{0x3051, 0xf0},  
+	{0x3111, 0x5B}, 
+	{0x3113, 0x77}, 
 	{0x3115, 0x01},
 	{0x3131, 0x58},
-	{0x3127, 0x01}, //ae
+	{0x3127, 0x01}, //ae 
 	{0x32c4, 0x28},
 	{0x3200, 0x1F},
 	{0x3201, 0x3F},
 	{0x320A, 0x00},
 
 	{0x3210, 0x18}, //lsc
-	{0x3211, 0x18},
-	{0x3212, 0x18},
-	{0x3213, 0x18},
-	{0x3214, 0x10},
-	{0x3215, 0x10},
-	{0x3216, 0x10},
-	{0x3217, 0x10},
-	{0x3218, 0x10},
-	{0x3219, 0x10},
-	{0x321A, 0x10},
-	{0x321B, 0x10},
-	{0x321C, 0x0F},
-	{0x321D, 0x10},
-	{0x321E, 0x10},
-	{0x321F, 0x10},
-	{0x3230, 0x08},
-	{0x3231, 0x00},
-	{0x3232, 0x00},
-	{0x3233, 0x0B},
-	{0x3234, 0x00},
-	{0x3235, 0x00},
-	{0x3236, 0x00},
-	{0x3237, 0x00},
-	{0x3238, 0x20},
-	{0x3239, 0x00},
-	{0x323A, 0x27},
-	{0x3241, 0xC0},
-	{0x3243, 0xC3},
-	{0x3244, 0x00},
-	{0x3245, 0x00},
+	{0x3211, 0x18}, 
+	{0x3212, 0x18}, 
+	{0x3213, 0x18}, 
+	{0x3214, 0x10}, 
+	{0x3215, 0x10}, 
+	{0x3216, 0x10}, 
+	{0x3217, 0x10}, 
+	{0x3218, 0x10}, 
+	{0x3219, 0x10}, 
+	{0x321A, 0x10}, 
+	{0x321B, 0x10}, 
+	{0x321C, 0x0F}, 
+	{0x321D, 0x10}, 
+	{0x321E, 0x10}, 
+	{0x321F, 0x10}, 
+	{0x3230, 0x08}, 
+	{0x3231, 0x00}, 
+	{0x3232, 0x00}, 
+	{0x3233, 0x0B}, 
+	{0x3234, 0x00}, 
+	{0x3235, 0x00}, 
+	{0x3236, 0x00}, 
+	{0x3237, 0x00}, 
+	{0x3238, 0x20}, 
+	{0x3239, 0x00}, 
+	{0x323A, 0x27}, 
+	{0x3241, 0xC0}, 
+	{0x3243, 0xC3}, 
+	{0x3244, 0x00}, 
+	{0x3245, 0x00}, 
 
 	{0x3250, 0x01},	//CA_AWB_Setting
 	{0x3251, 0x4A},
@@ -487,30 +487,30 @@ struct aml_camera_i2c_fig_s NT99252_script[] = {
 	{0x327D, 0xF7},
 	{0x327E, 0xFF},
 
-	{0x3363, 0xB3},  //NR_Largen9377
-	{0x336D, 0x14},  // DPC
+	{0x3363, 0xB3},  //NR_Largen9377             
+	{0x336D, 0x14},  // DPC  
 	{0x336E, 0x10},
 	{0x336F, 0x0C},
 	{0x3370, 0x04},
-
-	{0x3371, 0x3F},  // Weight
+          
+	{0x3371, 0x3F},  // Weight 
 	{0x3372, 0x3F},
 	{0x3373, 0x3F},
-	{0x3374, 0x3F},
-	{0x3379, 0x08},  // Comp_Max
+	{0x3374, 0x3F},        
+	{0x3379, 0x08},  // Comp_Max  
 	{0x337A, 0x10},
 	{0x337B, 0x18},
-	{0x337C, 0x1F},
-	{0x337D, 0x02},  // AW_Slope
+	{0x337C, 0x1F},    
+	{0x337D, 0x02},  // AW_Slope      
 	{0x337E, 0x03},
 	{0x337F, 0x04},
-	{0x3380, 0x05},
-	{0x3381, 0x08},  // AW_Dark
+	{0x3380, 0x05},       
+	{0x3381, 0x08},  // AW_Dark    
 	{0x3382, 0x0C},
 	{0x3383, 0x14},
-	{0x3384, 0x20},
-	{0x3385, 0xE4},  // Enlarge
-	{0x3386, 0x0E},  // AW_Dir
+	{0x3384, 0x20},    
+	{0x3385, 0xE4},  // Enlarge            
+	{0x3386, 0x0E},  // AW_Dir     
 	{0x3331, 0x0B},  //EDGE_Largen9377
 	{0x3332, 0x60},
 	{0x3364, 0x01},
@@ -539,19 +539,19 @@ struct aml_camera_i2c_fig_s NT99252_script[] = {
 	{0x3311, 0x5F},
 	{0x3312, 0x07},
 	{0x3313, 0xF2},
-
-        {0x32B0, 0x55},  //
-        {0x32B1, 0xAA},  //
+  
+        {0x32B0, 0x55},  // 
+        {0x32B1, 0xAA},  // 
         {0x32B2, 0x14},  //
 
-
+  
 	{0x33C0, 0x0d},	//chroma
 	{0x33C9, 0xD0},
 	{0x33CA, 0x68},
 
 	{0x32FC, 0x00},
 	{0x32F8, 0x01},
-	{0x3360, 0x10},
+	{0x3360, 0x10},           
 	{0x3361, 0x16},
 	{0x3362, 0x30},
 	{0x3326, 0x08},
@@ -562,76 +562,76 @@ struct aml_camera_i2c_fig_s NT99252_script[] = {
 	{0x33A3, 0x30},
 	{0x33A4, 0x01},
 
-	{0x32B8, 0x3F},	//ae target
-	{0x32B9, 0x31},
-	{0x32BC, 0x38},
-	{0x32BD, 0x3C},
+	{0x32B8, 0x3F},	//ae target 
+	{0x32B9, 0x31}, 
+	{0x32BC, 0x38}, 
+	{0x32BD, 0x3C}, 
 	{0x32BE, 0x34},
 
 	{0x3012, 0x04},
 	{0x3013, 0x76},
 	{0x3060, 0x01},
-
+		
 	///*
 	//[YUYV_800x600_8.33_15.02_Fps_50Hz]	PCLK_40M
-	{0x32BF, 0x60},
-	{0x32C0, 0x78},
-	{0x32C1, 0x78},
-	{0x32C2, 0x78},
-	{0x32C3, 0x00},
-	{0x32C4, 0x28},
-	{0x32C5, 0x28},
-	{0x32C6, 0x28},
-	{0x32C7, 0x00},
-	{0x32C8, 0x5F},
-	{0x32C9, 0x78},
-	{0x32CA, 0xA7},
-	{0x32CB, 0xA7},
-	{0x32CC, 0xA7},
-	{0x32CD, 0xA7},
-	{0x32DB, 0x67},
-	{0x32E0, 0x03},
-	{0x32E1, 0x20},
-	{0x32E2, 0x02},
-	{0x32E3, 0x58},
-	{0x32E4, 0x01},
-	{0x32E5, 0x00},
-	{0x32E6, 0x00},
-	{0x32E7, 0x00},
-	{0x3200, 0x3E},
-	{0x3201, 0x7F},
-	{0x302A, 0x00},
-	{0x302C, 0x09},
-	{0x302D, 0x02},
-	{0x3022, 0x24},
-	{0x3023, 0x66},
-	{0x3002, 0x00},
-	{0x3003, 0x04},
-	{0x3004, 0x00},
-	{0x3005, 0x04},
-	{0x3006, 0x06},
-	{0x3007, 0x43},
-	{0x3008, 0x04},
-	{0x3009, 0xCC},
-	{0x300A, 0x08},
-	{0x300B, 0x34},
-	{0x300C, 0x02},
-	{0x300D, 0x7A},
-	{0x300E, 0x06},
-	{0x300F, 0x40},
-	{0x3010, 0x02},
-	{0x3011, 0x58},
-	{0x32BB, 0x87},
-	{0x32B8, 0x3B},
-	{0x32B9, 0x2D},
-	{0x32BC, 0x34},
-	{0x32BD, 0x38},
-	{0x32BE, 0x30},
-	{0x325C, 0x03},
-	{0x320A, 0x6C},
-	{0x3021, 0x06},
-	{0x3060, 0x01},
-	{0xffff, 0xff}
+	{0x32BF, 0x60}, 
+	{0x32C0, 0x78}, 
+	{0x32C1, 0x78}, 
+	{0x32C2, 0x78}, 
+	{0x32C3, 0x00}, 
+	{0x32C4, 0x28}, 
+	{0x32C5, 0x28}, 
+	{0x32C6, 0x28}, 
+	{0x32C7, 0x00}, 
+	{0x32C8, 0x5F}, 
+	{0x32C9, 0x78}, 
+	{0x32CA, 0xA7}, 
+	{0x32CB, 0xA7}, 
+	{0x32CC, 0xA7}, 
+	{0x32CD, 0xA7}, 
+	{0x32DB, 0x67}, 
+	{0x32E0, 0x03}, 
+	{0x32E1, 0x20}, 
+	{0x32E2, 0x02}, 
+	{0x32E3, 0x58}, 
+	{0x32E4, 0x01}, 
+	{0x32E5, 0x00}, 
+	{0x32E6, 0x00}, 
+	{0x32E7, 0x00}, 
+	{0x3200, 0x3E}, 
+	{0x3201, 0x7F}, 
+	{0x302A, 0x00}, 
+	{0x302C, 0x09}, 
+	{0x302D, 0x02}, 
+	{0x3022, 0x24}, 
+	{0x3023, 0x66}, 
+	{0x3002, 0x00}, 
+	{0x3003, 0x04}, 
+	{0x3004, 0x00}, 
+	{0x3005, 0x04}, 
+	{0x3006, 0x06}, 
+	{0x3007, 0x43}, 
+	{0x3008, 0x04}, 
+	{0x3009, 0xCC}, 
+	{0x300A, 0x08}, 
+	{0x300B, 0x34}, 
+	{0x300C, 0x02}, 
+	{0x300D, 0x7A}, 
+	{0x300E, 0x06}, 
+	{0x300F, 0x40}, 
+	{0x3010, 0x02}, 
+	{0x3011, 0x58}, 
+	{0x32BB, 0x87}, 
+	{0x32B8, 0x3B}, 
+	{0x32B9, 0x2D}, 
+	{0x32BC, 0x34}, 
+	{0x32BD, 0x38}, 
+	{0x32BE, 0x30}, 
+	{0x325C, 0x03}, 
+	{0x320A, 0x6C}, 
+	{0x3021, 0x06}, 
+	{0x3060, 0x01}, 
+	{0xffff, 0xff}	
 };
 
 int NT99252_preview(struct nt99252_device *dev)
@@ -643,65 +643,65 @@ int NT99252_preview(struct nt99252_device *dev)
 
 	int regPreview[] =
 	{
-
+		
 		//[YUYV_800x600_8.33_15.02_Fps_50Hz]	PCLK_40M
-		0x32BF, 0x60,
-		0x32C0, 0x78,
-		0x32C1, 0x78,
-		0x32C2, 0x78,
-		0x32C3, 0x00,
-		0x32C4, 0x28,
-		0x32C5, 0x28,
-		0x32C6, 0x28,
-		0x32C7, 0x00,
-		0x32C8, 0x5F,
-		0x32C9, 0x78,
-		0x32CA, 0xA7,
-		0x32CB, 0xA7,
-		0x32CC, 0xA7,
-		0x32CD, 0xA7,
-		0x32DB, 0x67,
-		0x32E0, 0x03,
-		0x32E1, 0x20,
-		0x32E2, 0x02,
-		0x32E3, 0x58,
-		0x32E4, 0x01,
-		0x32E5, 0x00,
-		0x32E6, 0x00,
-		0x32E7, 0x00,
-		0x3200, 0x3E,
-		0x3201, 0x7F,
-		0x302A, 0x00,
-		0x302C, 0x09,
-		0x302D, 0x02,
-		0x3022, 0x24,
-		0x3023, 0x66,
-		0x3002, 0x00,
-		0x3003, 0x04,
-		0x3004, 0x00,
-		0x3005, 0x04,
-		0x3006, 0x06,
-		0x3007, 0x43,
-		0x3008, 0x04,
-		0x3009, 0xCC,
-		0x300A, 0x08,
-		0x300B, 0x34,
-		0x300C, 0x02,
-		0x300D, 0x7A,
-		0x300E, 0x06,
-		0x300F, 0x40,
-		0x3010, 0x02,
-		0x3011, 0x58,
-		0x32BB, 0x87,
-		0x32B8, 0x3B,
-		0x32B9, 0x2D,
-		0x32BC, 0x34,
-		0x32BD, 0x38,
-		0x32BE, 0x30,
-		0x325C, 0x03,
-		0x320A, 0x6C,
-		0x3021, 0x06,
-		0x3060, 0x01,
+		0x32BF, 0x60, 
+		0x32C0, 0x78, 
+		0x32C1, 0x78, 
+		0x32C2, 0x78, 
+		0x32C3, 0x00, 
+		0x32C4, 0x28, 
+		0x32C5, 0x28, 
+		0x32C6, 0x28, 
+		0x32C7, 0x00, 
+		0x32C8, 0x5F, 
+		0x32C9, 0x78, 
+		0x32CA, 0xA7, 
+		0x32CB, 0xA7, 
+		0x32CC, 0xA7, 
+		0x32CD, 0xA7, 
+		0x32DB, 0x67, 
+		0x32E0, 0x03, 
+		0x32E1, 0x20, 
+		0x32E2, 0x02, 
+		0x32E3, 0x58, 
+		0x32E4, 0x01, 
+		0x32E5, 0x00, 
+		0x32E6, 0x00, 
+		0x32E7, 0x00, 
+		0x3200, 0x3E, 
+		0x3201, 0x7F, 
+		0x302A, 0x00, 
+		0x302C, 0x09, 
+		0x302D, 0x02, 
+		0x3022, 0x24, 
+		0x3023, 0x66, 
+		0x3002, 0x00, 
+		0x3003, 0x04, 
+		0x3004, 0x00, 
+		0x3005, 0x04, 
+		0x3006, 0x06, 
+		0x3007, 0x43, 
+		0x3008, 0x04, 
+		0x3009, 0xCC, 
+		0x300A, 0x08, 
+		0x300B, 0x34, 
+		0x300C, 0x02, 
+		0x300D, 0x7A, 
+		0x300E, 0x06, 
+		0x300F, 0x40, 
+		0x3010, 0x02, 
+		0x3011, 0x58, 
+		0x32BB, 0x87, 
+		0x32B8, 0x3B, 
+		0x32B9, 0x2D, 
+		0x32BC, 0x34, 
+		0x32BD, 0x38, 
+		0x32BE, 0x30, 
+		0x325C, 0x03, 
+		0x320A, 0x6C, 
+		0x3021, 0x06, 
+		0x3060, 0x01, 
 	};
 //	struct i2c_client *client = v4l2_get_subdevdata(&dev->sd);
 
@@ -714,10 +714,10 @@ int NT99252_preview(struct nt99252_device *dev)
 	{
 	i2c_put_byte(client,regPreview[i], regPreview[i+1]);
 	}
-
+		
 	temp_reg=i2c_get_byte(client,0x3201);
 	if(camera_wb_state)
-	{
+	{	
 		i2c_put_byte(client,0x3201, temp_reg&~0x10);  // select manual WB
 	}
 	else
@@ -726,7 +726,7 @@ int NT99252_preview(struct nt99252_device *dev)
 	}
 	temp_reg=i2c_get_byte(client,0x3201);
 	//printk("_GJL_  NT99252_get_AE_AWB_3201=%x\n",temp_reg);
-
+	
 	return 0;
 }
 int NT99252_capture(struct nt99252_device *dev)
@@ -738,65 +738,65 @@ int NT99252_capture(struct nt99252_device *dev)
 	int regCapture[] =
 	{
 		//[YUYV_1600x1200_5.00_5.00_Fps_50Hz]	PCLK_40M
-		0x32BF, 0x60,
-		0x32C0, 0x84,
-		0x32C1, 0x84,
-		0x32C2, 0x84,
-		0x32C3, 0x00,
-		0x32C4, 0x28,
-		0x32C5, 0x28,
-		0x32C6, 0x28,
-		0x32C7, 0x00,
-		0x32C8, 0x5F,
-		0x32C9, 0x84,
-		0x32CA, 0xA4,
-		0x32CB, 0xA4,
-		0x32CC, 0xA4,
-		0x32CD, 0xA4,
-		0x32DB, 0x67,
-		0x3200, 0x3E,
-		0x3201, 0x3F,
-		0x302A, 0x00,
-		0x302C, 0x09,
-		0x302D, 0x02,
-		0x3022, 0x24,
-		0x3023, 0x24,
-		0x3002, 0x00,
-		0x3003, 0x04,
-		0x3004, 0x00,
-		0x3005, 0x04,
-		0x3006, 0x06,
-		0x3007, 0x43,
-		0x3008, 0x04,
-		0x3009, 0xCC,
-		0x300A, 0x08,
-		0x300B, 0x34,
-		0x300C, 0x07,
-		0x300D, 0x70,
-		0x300E, 0x06,
-		0x300F, 0x40,
-		0x3010, 0x04,
-		0x3011, 0xB0,
-		0x32BB, 0x87,
-		0x32B8, 0x48,
-		0x32B9, 0x38,
-		0x32BC, 0x40,
-		0x32BD, 0x44,
-		0x32BE, 0x3C,
-		0x325C, 0x03,
-		0x320A, 0x00,
-		0x3021, 0x06,
-		0x3060, 0x01,
+		0x32BF, 0x60, 
+		0x32C0, 0x84, 
+		0x32C1, 0x84, 
+		0x32C2, 0x84, 
+		0x32C3, 0x00, 
+		0x32C4, 0x28, 
+		0x32C5, 0x28, 
+		0x32C6, 0x28, 
+		0x32C7, 0x00, 
+		0x32C8, 0x5F, 
+		0x32C9, 0x84, 
+		0x32CA, 0xA4, 
+		0x32CB, 0xA4, 
+		0x32CC, 0xA4, 
+		0x32CD, 0xA4, 
+		0x32DB, 0x67, 
+		0x3200, 0x3E, 
+		0x3201, 0x3F, 
+		0x302A, 0x00, 
+		0x302C, 0x09, 
+		0x302D, 0x02, 
+		0x3022, 0x24, 
+		0x3023, 0x24, 
+		0x3002, 0x00, 
+		0x3003, 0x04, 
+		0x3004, 0x00, 
+		0x3005, 0x04, 
+		0x3006, 0x06, 
+		0x3007, 0x43, 
+		0x3008, 0x04, 
+		0x3009, 0xCC, 
+		0x300A, 0x08, 
+		0x300B, 0x34, 
+		0x300C, 0x07, 
+		0x300D, 0x70, 
+		0x300E, 0x06, 
+		0x300F, 0x40, 
+		0x3010, 0x04, 
+		0x3011, 0xB0, 
+		0x32BB, 0x87, 
+		0x32B8, 0x48, 
+		0x32B9, 0x38, 
+		0x32BC, 0x40, 
+		0x32BD, 0x44, 
+		0x32BE, 0x3C, 
+		0x325C, 0x03, 
+		0x320A, 0x00, 
+		0x3021, 0x06, 
+		0x3060, 0x01, 
 
 	};
-
+		
 	// Write preview table
 	for (i=0; i<sizeof(regCapture)/sizeof(int); i+=2)
 	{
 		i2c_put_byte(client, regCapture[i], regCapture[i+1]);
-	}
-
-	msleep(300);
+	}	
+	
+	msleep(300);	
 	return 0;
 }
 
@@ -810,12 +810,12 @@ static void NT99252_init_regs(struct nt99252_device *dev)
     {
         if (NT99252_script[i].val==0xff&&NT99252_script[i].addr==0xffff)
         {
-		printk("NT99252_write_regs success in initial NT99252.\n");
-		break;
+        	printk("NT99252_write_regs success in initial NT99252.\n");
+        	break;
         }
         if((i2c_put_byte(client,NT99252_script[i].addr, NT99252_script[i].val)) < 0)
         {
-		printk("fail in initial NT99252.");
+        	printk("fail in initial NT99252.");
 		    return;
 		}
 		i++;
@@ -852,7 +852,7 @@ void NT99252_set_param_wb(struct nt99252_device *dev,enum  camera_wb_flip_e para
 			i2c_put_byte(client,0x3201, temp_reg|0x10);   // select Auto WB
 			break;
 
-		case CAM_WB_CLOUD: /* Cloudy Colour Temperature : 6500K - 8000K  */
+		case CAM_WB_CLOUD: /* Cloudy Colour Temperature : 6500K - 8000K  */		
 			i2c_put_byte(client,0x3201, temp_reg&~0x10);  // select manual WB
 			i2c_put_byte(client,0x3290, 0x01);
 			i2c_put_byte(client,0x3291, 0x51);
@@ -860,7 +860,7 @@ void NT99252_set_param_wb(struct nt99252_device *dev,enum  camera_wb_flip_e para
 			i2c_put_byte(client,0x3297, 0x00);
 			break;
 
-		case CAM_WB_DAYLIGHT: /* ClearDay Colour Temperature : 5000K - 6500K	*/
+		case CAM_WB_DAYLIGHT: /* ClearDay Colour Temperature : 5000K - 6500K	*/	
 			i2c_put_byte(client,0x3201, temp_reg&~0x10);  // select manual WB
 			i2c_put_byte(client,0x3290, 0x01);
 			i2c_put_byte(client,0x3291, 0x38);
@@ -876,7 +876,7 @@ void NT99252_set_param_wb(struct nt99252_device *dev,enum  camera_wb_flip_e para
 			i2c_put_byte(client,0x3297, 0xcb);
 			break;
 
-		case CAM_WB_TUNGSTEN: /* Office Colour Temperature : 3500K - 5000K  */
+		case CAM_WB_TUNGSTEN: /* Office Colour Temperature : 3500K - 5000K  */	
 			i2c_put_byte(client,0x3201, temp_reg&~0x10);  // select manual WB
 			i2c_put_byte(client,0x3290, 0x01);
 			i2c_put_byte(client,0x3291, 0x00);
@@ -884,7 +884,7 @@ void NT99252_set_param_wb(struct nt99252_device *dev,enum  camera_wb_flip_e para
 			i2c_put_byte(client,0x3297, 0x30);
 			break;
 
-	case CAM_WB_FLUORESCENT:
+      	case CAM_WB_FLUORESCENT:			
 			i2c_put_byte(client,0x3201, temp_reg&~0x10);  // select manual WB
 			i2c_put_byte(client,0x3290, 0x01);
 			i2c_put_byte(client,0x3291, 0x70);
@@ -961,7 +961,7 @@ void NT99252_set_param_exposure(struct nt99252_device *dev,enum camera_exposure_
 		default:
 			i2c_put_byte(client,0x32f2, 0x80);
 			i2c_put_byte(client,0x32f8, 0x01);
-			break;
+			break;	
 
 	}
 
@@ -1050,18 +1050,18 @@ void NT99252_set_night_mode(struct nt99252_device *dev,enum  camera_night_mode_f
 	struct i2c_client *client = v4l2_get_subdevdata(&dev->sd);
 	//int temp;
 	if (enable) {
-	     i2c_put_byte(client, 0x302A,0x04);
+	     i2c_put_byte(client, 0x302A,0x04);		
 	} else {
-	     i2c_put_byte(client, 0x302A,0x00);
+	     i2c_put_byte(client, 0x302A,0x00);	
 	}
 
 }    /* NT99252_NightMode */
 void NT99252_set_param_banding(struct nt99252_device *dev,enum  camera_banding_flip_e banding)
 {
-	struct i2c_client *client = v4l2_get_subdevdata(&dev->sd);
+	struct i2c_client *client = v4l2_get_subdevdata(&dev->sd);	
 	//int temp;
 	switch(banding) {
-	case CAM_BANDING_50HZ:
+	case CAM_BANDING_50HZ:			
 		i2c_put_byte(client, 0x32BF, 0x60);
 		i2c_put_byte(client, 0x32C0, 0x78);
 		i2c_put_byte(client, 0x32C1, 0x78);
@@ -1078,10 +1078,10 @@ void NT99252_set_param_banding(struct nt99252_device *dev,enum  camera_banding_f
 		i2c_put_byte(client, 0x32CC, 0x98);
 		i2c_put_byte(client, 0x32CD, 0x98);
 		i2c_put_byte(client, 0x32DB, 0x77);
-
-		printk(KERN_INFO "banding 50 in\n");
+	
+		printk(KERN_INFO "banding 50 in\n");			
 		break;
-	case CAM_BANDING_60HZ:
+	case CAM_BANDING_60HZ:			
 		i2c_put_byte(client, 0x32BF, 0x60);
 		i2c_put_byte(client, 0x32C0, 0x7C);
 		i2c_put_byte(client, 0x32C1, 0x7C);
@@ -1097,8 +1097,8 @@ void NT99252_set_param_banding(struct nt99252_device *dev,enum  camera_banding_f
 		i2c_put_byte(client, 0x32CB, 0x9C);
 		i2c_put_byte(client, 0x32CC, 0x9C);
 		i2c_put_byte(client, 0x32CD, 0x9C);
-		i2c_put_byte(client, 0x32DB, 0x73);
-		printk(KERN_INFO " banding 60 in\n ");
+		i2c_put_byte(client, 0x32DB, 0x73);							
+		printk(KERN_INFO " banding 60 in\n ");				
 		break;
 	default:
 		break;
@@ -1128,18 +1128,18 @@ void NT99252_set_resolution(struct nt99252_device *dev,int height,int width)
 	//int ret;
 	//struct i2c_client *client = v4l2_get_subdevdata(&dev->sd);
 
-#if 1
+#if 1	 
 	if(height&&width&&(height<=1200)&&(width<=1600))
-	{
+	{		
 	  if((height<=600)&&(width<=800))
 	  {
-	    #if 1
-			NT99252_preview(dev);
+	    #if 1			
+			NT99252_preview(dev);	
 			nt99252_h_active=800;
-			nt99252_v_active=598;
+			nt99252_v_active=598;	
                         nt99252_frmintervals_active.denominator = 15;
                         nt99252_frmintervals_active.numerator	= 1;
-			#endif
+			#endif			
 		}
 		else
 		{
@@ -1157,7 +1157,7 @@ void NT99252_set_resolution(struct nt99252_device *dev,int height,int width)
 	i2c_put_byte(client,0x32e0, 0x03);
 	i2c_put_byte(client,0x32e1, 0x20);
 	i2c_put_byte(client,0x32e2 ,0x02);
-	i2c_put_byte(client,0x32e3, 0x58);//
+	i2c_put_byte(client,0x32e3, 0x58);//	
 #endif
        set_flip(dev);
 }    /* NT99252_set_resolution */
@@ -1231,21 +1231,21 @@ static int nt99252_setting(struct nt99252_device *dev,int PROP_ID,int value )
 			nt99252_qctrl[1].default_value=value;
 			NT99252_set_param_exposure(dev,value);
 			printk(KERN_INFO " set camera  exposure=%d. \n ",value);
-		}
+        	}
 		break;
 	case V4L2_CID_COLORFX:
         if(nt99252_qctrl[2].default_value!=value){
 			nt99252_qctrl[2].default_value=value;
 			NT99252_set_param_effect(dev,value);
 			printk(KERN_INFO " set camera  effect=%d. \n ",value);
-		}
+        	}
 		break;
 	case V4L2_CID_WHITENESS:
 		 if(nt99252_qctrl[3].default_value!=value){
 			nt99252_qctrl[3].default_value=value;
 			NT99252_set_param_banding(dev,value);
 			printk(KERN_INFO " set camera  banding=%d. \n ",value);
-		}
+        	}
 		break;
 	case V4L2_CID_BLUE_BALANCE:
 		if(nt99252_qctrl[4].default_value!=value){
@@ -1254,7 +1254,7 @@ static int nt99252_setting(struct nt99252_device *dev,int PROP_ID,int value )
 			printk(KERN_INFO " set camera  scene mode=%d. \n ",value);
 		}
 		break;
-	case V4L2_CID_HFLIP:    /* set flip on H. */
+	case V4L2_CID_HFLIP:    /* set flip on H. */          
 		value = value & 0x3;
 		if(nt99252_qctrl[5].default_value!=value){
 			nt99252_qctrl[5].default_value=value;
@@ -1331,7 +1331,7 @@ static void nt99252_thread_tick(struct nt99252_fh *fh)
 	unsigned long flags = 0;
 
 	dprintk(dev, 1, "Thread tick\n");
-	if(!fh->stream_on){
+   	if(!fh->stream_on){
             dprintk(dev, 1, "sensor doesn't stream on\n");
             return ;
 	}
@@ -1796,11 +1796,11 @@ static int vidioc_streamon(struct file *file, void *priv, enum v4l2_buf_type i)
 	para.h_active = nt99252_h_active;
 	para.v_active = nt99252_v_active;
 	para.hsync_phase = 0;
-	para.vsync_phase  = 0;
+	para.vsync_phase  = 0;	
 	para.hs_bp = 0;
 	para.vs_bp = 2;
 	para.cfmt = TVIN_YUV422;
-	para.scan_mode = TVIN_SCAN_MODE_PROGRESSIVE;
+	para.scan_mode = TVIN_SCAN_MODE_PROGRESSIVE;	
 	para.skip_count =  2;//skip num
 	ret =  videobuf_streamon(&fh->vb_vidq);
 	if(ret == 0){
@@ -1823,7 +1823,7 @@ static int vidioc_streamoff(struct file *file, void *priv, enum v4l2_buf_type i)
 	ret = videobuf_streamoff(&fh->vb_vidq);
 	if(ret == 0 ){
             vops->stop_tvin_service(0);
-            fh->stream_on = 0;
+            fh->stream_on = 0; 
 	}
 	return ret;
 }
@@ -1980,7 +1980,7 @@ static int nt99252_open(struct file *file)
 #endif
 #if MESON_CPU_TYPE >= MESON_CPU_TYPE_MESON6
 	switch_mod_gate_by_name("ge2d", 1);
-#endif
+#endif		
         aml_cam_init(&dev->cam_info);
 	NT99252_init_regs(dev);
 	msleep(40);
@@ -1996,7 +1996,7 @@ static int nt99252_open(struct file *file)
 		video_device_node_name(dev->vdev),
 		v4l2_type_names[V4L2_BUF_TYPE_VIDEO_CAPTURE], dev->users);
 
-	/* init video dma queues */
+    	/* init video dma queues */
 	INIT_LIST_HEAD(&dev->vidq.active);
 	init_waitqueue_head(&dev->vidq.wq);
         spin_lock_init(&dev->slock);
@@ -2010,7 +2010,7 @@ static int nt99252_open(struct file *file)
 
 	if (retval)
 		return retval;
-
+		
 	wake_lock(&(dev->wake_lock));
 	file->private_data = fh;
 	fh->dev      = dev;
@@ -2047,7 +2047,7 @@ nt99252_read(struct file *file, char __user *data, size_t count, loff_t *ppos)
 	if (fh->type == V4L2_BUF_TYPE_VIDEO_CAPTURE) {
 		return videobuf_read_stream(&fh->vb_vidq, data, count, ppos, 0,
 					file->f_flags & O_NONBLOCK);
-	}
+	} 
 	return 0;
 }
 
@@ -2107,8 +2107,8 @@ static int nt99252_close(struct file *file)
        aml_cam_uninit(&dev->cam_info);
 #if MESON_CPU_TYPE >= MESON_CPU_TYPE_MESON6
 	switch_mod_gate_by_name("ge2d", 0);
-#endif
-	wake_unlock(&(dev->wake_lock));
+#endif		
+	wake_unlock(&(dev->wake_lock));	
 #ifdef CONFIG_CMA
     vm_deinit_buf();
 #endif
@@ -2196,35 +2196,35 @@ static const struct v4l2_subdev_ops nt99252_ops = {
 };
 
 //****************************
-static ssize_t camera_ctrl(struct class *class,
+static ssize_t camera_ctrl(struct class *class, 
 			struct class_attribute *attr,	const char *buf, size_t count)
 {
-    unsigned int reg, val, ret;
+    unsigned int reg, val, ret;	
 	int n=1,i;
 	if(buf[0] == 'w'){
-		ret = sscanf(buf, "w %x %x", &reg, &val);
+		ret = sscanf(buf, "w %x %x", &reg, &val);		
 		printk("write camera reg 0x%x value %x\n", reg, val);
-		i2c_put_byte(this_client, reg, val);
+		i2c_put_byte(this_client, reg, val);		
 	}
 	else{
 		ret =  sscanf(buf, "r %x %d", &reg,&n);
 		printk("read %d camera register from reg: %x \n",n,reg);
 		for(i=0;i<n;i++)
-		{
+		{			
 			val = i2c_get_byte(this_client, reg+i);
 			printk("reg 0x%x : 0x%x\n", reg+i, val);
 		}
 	}
-
+	
 	if (ret != 1 || ret !=2)
 		return -EINVAL;
-
+	
 	return count;
 	//return 0;
 }
 
 static struct class_attribute camera_ctrl_class_attrs[] = {
-    __ATTR(reg,  S_IRUGO | S_IWUSR, NULL,    camera_ctrl),
+    __ATTR(reg,  S_IRUGO | S_IWUSR, NULL,    camera_ctrl), 
     __ATTR_NULL
 };
 
@@ -2243,7 +2243,7 @@ static int nt99252_probe(struct i2c_client *client,
 	int ret;
 	aml_cam_info_t* plat_dat;
 	vops = get_vdin_v4l2_ops();
-
+	
 	v4l_info(client, "chip found @ 0x%x (%s)\n",
 			client->addr << 1, client->adapter->name);
 	t = kzalloc(sizeof(*t), GFP_KERNEL);
@@ -2267,7 +2267,7 @@ static int nt99252_probe(struct i2c_client *client,
 	memcpy(t->vdev, &nt99252_template, sizeof(*t->vdev));
 
 	video_set_drvdata(t->vdev, t);
-
+	
 	wake_lock_init(&(t->wake_lock),WAKE_LOCK_SUSPEND, "nt99252");
 	/* Register it */
 	if (plat_dat) {
@@ -2276,13 +2276,13 @@ static int nt99252_probe(struct i2c_client *client,
         } else {
              printk("camera nt99252: have no platform data\n");
              kfree(t);
-             return -1;
+             return -1;     
 	}
-
+	
 	t->cam_info.version = NT99252_DRIVER_VERSION;
 	if (aml_cam_info_reg(&t->cam_info) < 0)
 		printk("reg caminfo error\n");
-
+	
 	err = video_register_device(t->vdev, VFL_TYPE_GRABBER, video_nr);
 	if (err < 0) {
 		video_device_release(t->vdev);
@@ -2326,3 +2326,5 @@ static struct i2c_driver nt99252_i2c_driver = {
 };
 
 module_i2c_driver(nt99252_i2c_driver);
+
+

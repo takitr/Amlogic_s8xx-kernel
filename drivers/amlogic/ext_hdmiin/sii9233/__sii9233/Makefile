@@ -10,3 +10,5 @@ obj-$(CONFIG_AML_SII9233)	+= CEC/
 obj-$(CONFIG_AML_SII9233)	+= HAL/
 
 #EXTRA_CFLAGS += -O2
+
+

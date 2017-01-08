@@ -12,3 +12,4 @@
 #define CT36X_TS_RST_PIN			RK29_PIN6_PC3
 
 #endif
+

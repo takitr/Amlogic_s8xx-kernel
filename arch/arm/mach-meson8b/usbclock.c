@@ -33,7 +33,7 @@
 /*
  * M chip USB clock setting
  */
-
+ 
 /*
  * Clock source name index must sync with chip's spec
  * M1/M2/M3/M6 are different!
@@ -60,7 +60,7 @@ int clk_enable_usb(struct clk *clk)
 	usb_adp_bc_data_t adp_bc;
 	int clk_sel,clk_div,clk_src;
 	int time_dly = 500; //usec
-
+	
 	if(!clk)
 		return -1;
 
@@ -71,7 +71,7 @@ int clk_enable_usb(struct clk *clk)
 		//for(i = 0; i < 1000; i++)
 		//	udelay(time_dly);
 	}
-
+	
 	clk_name = (char*)clk->priv;
 	switch_mod_gate_by_name(clk_name, 1);
 
@@ -88,7 +88,7 @@ int clk_enable_usb(struct clk *clk)
 		printk(KERN_ERR "bad usb clk name: %s\n",clk_name);
 		return -1;
 	}
-
+	
 
 	clk_sel = USB_PHY_CLK_SEL_XTAL;
 	clk_div = 1;
@@ -109,7 +109,7 @@ int clk_enable_usb(struct clk *clk)
 	control.b.por = 0;
 	peri->ctrl = control.d32;
 	udelay(time_dly);
-
+	
 
 	/* read back clock detected flag*/
 	control.d32 = peri->ctrl;
@@ -130,7 +130,7 @@ int clk_enable_usb(struct clk *clk)
 			return -1;
 		}
 	}
-
+	
 	dmb();
 	return 0;
 }
@@ -169,3 +169,4 @@ int clk_disable_usb(struct clk *clk)
 	return 0;
 }
 EXPORT_SYMBOL(clk_disable_usb);
+

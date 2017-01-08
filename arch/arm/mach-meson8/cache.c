@@ -32,7 +32,7 @@ static int __init meson_cache_of_init(void)
 	/*
 		put some default aux setting here
 	*/
-
+	
 	l2x0_of_init(aux,~0);
 	return 0;
 }

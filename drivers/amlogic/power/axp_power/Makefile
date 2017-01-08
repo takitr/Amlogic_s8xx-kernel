@@ -17,3 +17,4 @@ obj-$(CONFIG_AW_AXP20) += axp20-sply.o
 obj-$(CONFIG_AW_AXP20) += axp20-gpio.o
 obj-$(CONFIG_AW_AXP20) += virtual20.o
 obj-$(CONFIG_AW_AXP20) += virtual20_dev.o
+

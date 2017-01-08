@@ -64,7 +64,7 @@
 #endif
 
 #define IOCTL_MAGIC  0x09
-#define SENSOR_DATA_SIZE 3
+#define SENSOR_DATA_SIZE 3                           
 
 #define SENSOR_RESET    		_IO(IOCTL_MAGIC, 0)
 #define SENSOR_CALIBRATION   	_IOWR(IOCTL_MAGIC,  1, int[SENSOR_DATA_SIZE])
@@ -120,7 +120,7 @@
 
 #define DMARD06_REG_INTSU   0x47
 
-#define DMARD06_IIC_ADDR		0x38
+#define DMARD06_IIC_ADDR		0x38  
 #define DMARD06_GRAVITY_STEP	32
 #define DMARD06_PRECISION		7
 #define DMARD06_BOUNDARY  (0x1 << (DMARD06_PRECISION - 1))
@@ -156,3 +156,4 @@ struct dmard06_axis {
 
 
 #endif
+

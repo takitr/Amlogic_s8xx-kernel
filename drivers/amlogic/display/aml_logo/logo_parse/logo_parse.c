@@ -16,7 +16,7 @@
 
 static  LIST_HEAD(parser_line);
 
-#ifdef   SETUP_SELF_RAISE
+#ifdef   SETUP_SELF_RAISE 
 static  parser_list_t aml_parser[MAX_PIC_TYPE];
 #endif
 
@@ -28,7 +28,7 @@ int  register_logo_parser(logo_parser_t* new_parser)
 
 	parser_list_t  *pitem;
 
-#ifdef   SETUP_SELF_RAISE
+#ifdef   SETUP_SELF_RAISE   
 	static int count=0;
 	pitem=&aml_parser[count++];
 #else
@@ -51,37 +51,37 @@ static int  all_parser_setup(void)
 	logo_object_t *plogo=&aml_logo;
 	int  found=0;
 	int  ret=0 ;
-	if(0!=strcmp(plogo->name,LOGO_NAME)){
+	if(0!=strcmp(plogo->name,LOGO_NAME)){   
 	    ret = -LOGO_PARA_UNPARSED;
         goto start_logo_fail;
-	}
+	} 
 	if ((ret=setup_output_device(plogo))!=SUCCESS)//we will use this device to get display info
-	{						//for examble: width height
+	{						//for examble: width height 
         goto start_logo_fail;
 	}
 	if(plogo->para.loaded) //if logo be loaded by uboot or other loader.then return
 	return SUCCESS;
 
-	all_parser_setup();
-	amlog_mask_level(LOG_MASK_PARSER,LOG_LEVEL_LOW,"start decode logo\n");
+	all_parser_setup();	
+	amlog_mask_level(LOG_MASK_PARSER,LOG_LEVEL_LOW,"start decode logo\n");	
 	list_for_each_entry(pitem,&parser_line,list){
-		if(pitem->parser->op.init(plogo)==PARSER_FOUND)
+		if(pitem->parser->op.init(plogo)==PARSER_FOUND)	
 		{
 			found=1;
 			amlog_mask_level(LOG_MASK_PARSER,LOG_LEVEL_HIGH,"parser found,logo type:%s\n",pitem->parser->name);
 			break;
 		}
 	}
-	if(0==found){
+	if(0==found){   
 	    ret = -ENOPARSER;
         goto start_logo_fail;
 	}
-
+	
 	if(plogo->parser->op.decode(plogo))
 	{
 		amlog_mask_level(LOG_MASK_PARSER,LOG_LEVEL_HIGH,"decode logo picture fail\n")	;
 	    ret = -PARSER_DECODE_FAIL;
-        goto start_logo_fail;
+        goto start_logo_fail;		
 	}
 	plogo->dev->op.transfer(plogo);
 	plogo->dev->op.deinit();
@@ -89,19 +89,19 @@ static int  all_parser_setup(void)
 
 	if (Power_on_bl)
 		Power_on_bl();
-
-	return SUCCESS;
-
+		
+	return SUCCESS;	
+	
 start_logo_fail:
 	if (Power_on_bl)
 		Power_on_bl();
-
-	return ret;
+		
+	return ret;	
 
  }
  int exit_logo(logo_object_t *logo)
  {
-	return 0;
+ 	return 0;
  }
 int  unregister_logo_parser(void)
 {
@@ -109,14 +109,14 @@ int  unregister_logo_parser(void)
 	logo_object_t *plogo=&aml_logo;
 
 	list_for_each_entry_safe(pitem,tmp,&parser_line,list){
-		if(pitem)
+		if(pitem)  
 		{
 			pitem->parser->op.deinit(plogo);
 			list_del(&pitem->list );
-#ifndef   SETUP_SELF_RAISE
+#ifndef   SETUP_SELF_RAISE 
 			kfree(pitem);
-#endif
-
+#endif			
+			
 		}
 	}
 	return SUCCESS;

@@ -100,11 +100,11 @@ static void __init meson_map_io(void)
 }
 
 static struct of_device_id mxs_of_platform_bus_ids[] = {
-		{.compatible = "simple-bus",},
+		{.compatible = "simple-bus",},  
 		{},
 };
 static struct of_device_id mxs_of_lm_bus_ids[] = {
-		{.compatible = "logicmodule-bus",},
+		{.compatible = "logicmodule-bus",},  
 		{},
 };
 static int mmc_lp_suspend(void)
@@ -141,9 +141,9 @@ static void power_off(void)
 
 static __init void meson_init_machine_devicetree(void)
 {
-	struct device *parent;
+	struct device *parent;	
 	parent = get_device(&platform_bus);
-
+	
 	of_platform_populate(NULL,mxs_of_platform_bus_ids,NULL,parent);
 	of_lm_populate(NULL,mxs_of_lm_bus_ids,NULL,NULL);
 	mmc_lp_suspend_init();
@@ -178,7 +178,7 @@ static const char *m6_common_board_compat[] __initdata = {
 
 DT_MACHINE_START(AML8726_MX, "Amlogic Meson6")
 	.reserve	= meson6_reserve,
-//.nr_irqs	=
+//.nr_irqs	= 
 	.smp		= smp_ops(meson_smp_ops),
 	.map_io		= meson_map_io,/// dt - 1
 	.init_early	= meson_init_early,/// dt -2

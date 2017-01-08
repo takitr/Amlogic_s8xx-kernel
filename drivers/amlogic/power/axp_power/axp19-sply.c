@@ -67,7 +67,7 @@ static inline void axp_read_adc(struct axp_charger *charger,
 	 adc->iac_res = ((uint16_t) tmp[2] << 8 )| tmp[3];
 	 adc->vusb_res = ((uint16_t) tmp[4] << 8 )| tmp[5];
 	 adc->iusb_res = ((uint16_t) tmp[6] << 8 )| tmp[7];
-	 axp_reads(charger->master,AXP19_VBATH_RES,6,tmp);
+ 	 axp_reads(charger->master,AXP19_VBATH_RES,6,tmp);
 	 adc->vbat_res = ((uint16_t) tmp[0] << 8 )| tmp[1];
 	 adc->ichar_res = ((uint16_t) tmp[2] << 8 )| tmp[3];
 	 adc->idischar_res = ((uint16_t) tmp[4] << 8 )| tmp[5];
@@ -475,7 +475,7 @@ static int axp_battery_first_init(struct axp_charger *charger)
    axp_set_charge(charger);
    ret = axp_battery_adc_set(charger);
    if(ret)
-	return ret;
+   	return ret;
 
    ret = axp_read(charger->master, AXP19_ADC_CONTROL3, &val);
    switch ((val >> 6) & 0x03){
@@ -528,7 +528,7 @@ static int axp_get_rdc(struct axp_charger *charger)
 			}
 			else {
 				temp += pre_temp;
-				temp >>= 1;
+			 	temp >>= 1;
 			  axp_write(charger->master,AXP19_DATA_BUFFER2,((temp & 0xFF00) | 0x800) >> 8);
 		    axp_write(charger->master,AXP19_DATA_BUFFER3,temp & 0x00FF);
 				return temp;
@@ -581,7 +581,7 @@ static int axp_get_coulomb(struct axp_charger *charger)
 		(((uint64_t)temp[6]) << 8) + ((uint64_t)temp[7]));
 	}
     if(rValue1 > rValue2){
-	coulomb_flag = 1;
+    	coulomb_flag = 1;
         rValue = rValue1 - rValue2 ;
     }
     else{
@@ -870,7 +870,7 @@ static int axp_main_task(void *arg)
 		if((j == AXP19_VOL_MAX) && (charger->bat_det == 1)){
             Cur_CoulombCounter = axp_get_coulomb(charger);
 			 if((ocv_rest_vol < 10) && Rdc_Flag && (rt_charge_status == 7) \
-				&& (!Cou_Correction_Flag))    {
+			 	&& (!Cou_Correction_Flag))    {
                  Cou_Correction_Flag = 0x01;
                  axp_set_bits(charger->master,AXP19_COULOMB_CONTROL,AXP19_COULOMB_CLEAR);
                  Pre_rest_cap = ocv_rest_vol;
@@ -957,7 +957,7 @@ static int axp_main_task(void *arg)
 			//pre_rest_vol = charger->rest_vol;
 			cou_rest_vol = 0;
             if(j == AXP19_VOL_MAX - 1){
-		axp_set_bits(charger->master,AXP19_COULOMB_CONTROL,0xA0);
+            	axp_set_bits(charger->master,AXP19_COULOMB_CONTROL,0xA0);
             }
         }
 	/* if battery volume changed, inform uevent */
@@ -1072,7 +1072,7 @@ static ssize_t chgendcur_show(struct device *dev,
 	struct axp_charger *charger = dev_get_drvdata(dev);
 	uint8_t val;
 	axp_read(charger->master, AXP19_CHARGE_CONTROL1, &val);
-	charger->chgend = ((val >> 4)& 0x01)? 15 : 10;
+  	charger->chgend = ((val >> 4)& 0x01)? 15 : 10;
 	return sprintf(buf, "%d\n",charger->chgend);
 }
 
@@ -1100,7 +1100,7 @@ static ssize_t chgpretimemin_show(struct device *dev,
 	struct axp_charger *charger = dev_get_drvdata(dev);
 	uint8_t val;
   axp_read(charger->master,AXP19_CHARGE_CONTROL2, &val);
-	charger->chgpretime = (val >> 6) * 10 +30;
+ 	charger->chgpretime = (val >> 6) * 10 +30;
 	return sprintf(buf, "%d\n",charger->chgpretime);
 }
 
@@ -1274,7 +1274,7 @@ static ssize_t vhold_show(struct device *dev,
 	uint8_t val;
 	int vhold;
 	axp_read(charger->master,AXP19_CHARGE_VBUS, &val);
-	vhold = ((val >> 3) & 0x07) * 100000 + 4000000;
+ 	vhold = ((val >> 3) & 0x07) * 100000 + 4000000;
 	return sprintf(buf, "%d\n",vhold);
 }
 
@@ -1327,7 +1327,7 @@ static ssize_t ihold_show(struct device *dev,
 	uint8_t val;
 	int vhold;
 	axp_read(charger->master,AXP19_CHARGE_VBUS, &val);
-	vhold = ((val) & 0x01)? 500000: 100000;
+ 	vhold = ((val) & 0x01)? 500000: 100000;
 	return sprintf(buf, "%d\n",vhold);
 }
 

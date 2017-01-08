@@ -3,7 +3,7 @@
  *  Copyright C 2010 by Amlogic, Inc. All Rights Reserved.
  *
  *  Description:
- *		parse bmp data
+ *		parse bmp data 
  *
  *  Author: Amlogic Software
  *  Created: 2010/4/1   19:46
@@ -16,7 +16,7 @@
 #include <linux/amlogic/amlog.h>
 
 static  logo_parser_t    logo_bmp_parser={
-	.name="bmp",
+ 	.name="bmp",
 	.op={
 	 .init = bmp_init,
 	 .decode=bmp_decode,
@@ -27,14 +27,14 @@ static  logo_parser_t    logo_bmp_parser={
 /**************************************************************************
 **	before we setup parser output addr ,output device info and ************************
 **	pic info has been setup already.						   **********************
-** 	different  pic type will select different output place      	 **************************
+** 	different  pic type will select different output place      	 **************************                                                                 
 **************************************************************************/
 static  int  setup_parser_output_addr(logo_object_t *plogo)
 {
 	int  screen_mem_start;
 	int  screen_size ;
 
-	if(plogo->para.output_dev_type > LOGO_DEV_OSD1) //bmp pic decoded into video layer
+	if(plogo->para.output_dev_type > LOGO_DEV_OSD1) //bmp pic decoded into video layer 
 	{											//not supported .
 		return -1;
 	}
@@ -84,9 +84,9 @@ static int bmp_init(logo_object_t *logo)
 
 	header=(BITMAPFILEHEADER*)logo_vaddr;
 	bmp_info_header=(BITMAPINFOHEADER*)(logo_vaddr+sizeof(BITMAPFILEHEADER));
-
-
-	if (NULL==header) goto error;
+	
+	
+	if (NULL==header) goto error; 
 	if(header->bfType == 0x4d42) //"BM"
 	{
 		logo->parser=&logo_bmp_parser;
@@ -113,12 +113,12 @@ static int bmp_init(logo_object_t *logo)
 	}
 error:
 	return PARSER_UNFOUND;
-
+	
 }
 static int  bmp_deinit(logo_object_t *plogo)
 {
 	bmp_header_t	*bmp_header=(bmp_header_t*)plogo->parser->priv;
-
+	
 	if(bmp_header)
 	{
 		kfree(bmp_header);
@@ -133,5 +133,5 @@ int bmp_setup(void)
 	amlog_mask_level(LOG_MASK_PARSER,LOG_LEVEL_LOW,"bmp setup\n");
 	return SUCCESS;
 }
-
+	
 //arch_initcall(bmp_setup) ;

@@ -47,24 +47,24 @@ static void	enable_dsp(int flag)
 	//power down the media cpu
 	if(!flag)
 		 WRITE_CBUS_REG_BITS(HHI_MEM_PD_REG0,3,0,2);
-	//reset
-	SET_MPEG_REG_MASK(RESET1_REGISTER, RESET_AUD_ARC);
+	//reset 
+ 	SET_MPEG_REG_MASK(RESET1_REGISTER, RESET_AUD_ARC);	
 	if(flag)
 	{
 		//power on media cpu
-		WRITE_CBUS_REG_BITS(HHI_MEM_PD_REG0,0,0,2);
-		//enable
-		SET_MPEG_REG_MASK(MEDIA_CPU_CTL, 3);
+		WRITE_CBUS_REG_BITS(HHI_MEM_PD_REG0,0,0,2);	
+		//enable 
+		SET_MPEG_REG_MASK(MEDIA_CPU_CTL, 3);		
 	}
 #else
 	 if(!flag)
-		 CLEAR_MPEG_REG_MASK(MEDIA_CPU_CTL, 1);
-	 SET_MPEG_REG_MASK(RESET2_REGISTER, RESET_AUD_ARC);
+	  	 CLEAR_MPEG_REG_MASK(MEDIA_CPU_CTL, 1);
+	 SET_MPEG_REG_MASK(RESET2_REGISTER, RESET_AUD_ARC);	
         if (flag) {
 		    SET_MPEG_REG_MASK(MEDIA_CPU_CTL, 1);
 		    CLEAR_MPEG_REG_MASK(MEDIA_CPU_CTL, 1);
 	}
-#endif
+#endif		
 }
 
 void halt_dsp( struct audiodsp_priv *priv)
@@ -82,7 +82,7 @@ void halt_dsp( struct audiodsp_priv *priv)
 		        msleep(1);/*waiting arc2 sleep*/
             }
         if(i == 100)
-           DSP_PRNT("warning: dsp is not sleeping when call dsp_stop\n");
+           DSP_PRNT("warning: dsp is not sleeping when call dsp_stop\n"); 
 #else
 	for(i = 0; i <  10;i++){
 		dsp_mailbox_send(priv,1,M2B_IRQ0_DSP_HALT,0,0,0);
@@ -95,7 +95,7 @@ void halt_dsp( struct audiodsp_priv *priv)
 	}
 #endif
        }
-#ifdef AUDIODSP_RESET
+#ifdef AUDIODSP_RESET	
 	if(DSP_RD(DSP_STATUS)!=DSP_STATUS_RUNING)
 	{
 		DSP_WD(DSP_STATUS, DSP_STATUS_HALT);
@@ -107,10 +107,10 @@ void halt_dsp( struct audiodsp_priv *priv)
 	    enable_dsp(0);/*hardware halt the cpu*/
            DSP_WD(DSP_STATUS, DSP_STATUS_HALT);
            priv->last_stream_fmt=-1;/*mask the stream format is not valid*/
-    }
+    }   
     else
         DSP_WD(DSP_STATUS, DSP_STATUS_SLEEP);
-
+	
 }
 void reset_dsp( struct audiodsp_priv *priv)
 {
@@ -122,8 +122,8 @@ void reset_dsp( struct audiodsp_priv *priv)
 #else
     CLEAR_MPEG_REG_MASK(MEDIA_CPU_CTL, (0xfff << 4));
     SET_MPEG_REG_MASK(MEDIA_CPU_CTL, ((AUDIO_DSP_START_PHY_ADDR)>> 20) << 4);
-#endif
-// decode option
+#endif	
+// decode option    
     if(audioin_mode &2){
 		decopt &= ~(1<<6);
     }
@@ -137,7 +137,7 @@ void reset_dsp( struct audiodsp_priv *priv)
 	else{
 		DSP_WD(DSP_DECODE_OPTION, decopt&(~(1<<31)));
 	}
-
+    
     DSP_WD(DSP_CHIP_SUBID, subid);
 
     printk("reset dsp : dec opt=%lx, subid=%lx\n", DSP_RD(DSP_DECODE_OPTION), DSP_RD(DSP_CHIP_SUBID));
@@ -146,13 +146,13 @@ void reset_dsp( struct audiodsp_priv *priv)
         enable_dsp(1);
         }
     else{
-	dsp_mailbox_send(priv,1,M2B_IRQ0_DSP_WAKEUP,0,0,0);
+       	dsp_mailbox_send(priv,1,M2B_IRQ0_DSP_WAKEUP,0,0,0);
         DSP_WD(DSP_STATUS, DSP_STATUS_WAKEUP);
         msleep(1);/*waiting arc625 run again */
 
     }
 
-    return;
+    return;    
 }
 static inline int dsp_set_stack( struct audiodsp_priv *priv)
 {
@@ -185,7 +185,7 @@ static inline int dsp_set_stack( struct audiodsp_priv *priv)
 	DSP_WD(DSP_GP_STACK_START,MAX_CACHE_ALIGN(ARM_2_ARC_ADDR_SWAP(priv->dsp_gstack_start)));
 	DSP_WD(DSP_GP_STACK_END,MIN_CACHE_ALIGN(ARM_2_ARC_ADDR_SWAP(priv->dsp_gstack_start)+priv->dsp_gstack_size));
 	DSP_PRNT("DSP gp statck start =%#lx,size=%#lx\n",(ulong)ARM_2_ARC_ADDR_SWAP(priv->dsp_gstack_start),priv->dsp_gstack_size);
-
+		
 	return 0;
 }
 static inline int dsp_set_heap( struct audiodsp_priv *priv)
@@ -228,7 +228,7 @@ static inline int dsp_set_stream_buffer( struct audiodsp_priv *priv)
 		return -ENOMEM;
 		}
 	memset((void *)priv->stream_buffer_mem,0,priv->stream_buffer_mem_size);
-	buf_map = dma_map_single(NULL, (void *)priv->stream_buffer_mem, priv->stream_buffer_mem_size, DMA_FROM_DEVICE);
+    	buf_map = dma_map_single(NULL, (void *)priv->stream_buffer_mem, priv->stream_buffer_mem_size, DMA_FROM_DEVICE);
 	dma_unmap_single(NULL, buf_map,  priv->stream_buffer_mem_size, DMA_FROM_DEVICE);
 
 	priv->stream_buffer_start=MAX_CACHE_ALIGN((unsigned long)priv->stream_buffer_mem);
@@ -243,12 +243,12 @@ static inline int dsp_set_stream_buffer( struct audiodsp_priv *priv)
 		priv->stream_buffer_mem=NULL;
 		return -2;
 		}
-
+		
 	DSP_WD(DSP_DECODE_OUT_START_ADDR,ARM_2_ARC_ADDR_SWAP(priv->stream_buffer_start));
 	DSP_WD(DSP_DECODE_OUT_END_ADDR,ARM_2_ARC_ADDR_SWAP(priv->stream_buffer_end));
 	DSP_WD(DSP_DECODE_OUT_RD_ADDR,ARM_2_ARC_ADDR_SWAP(priv->stream_buffer_start));
 	DSP_WD(DSP_DECODE_OUT_WD_ADDR,ARM_2_ARC_ADDR_SWAP(priv->stream_buffer_start));
-
+	
 	DSP_PRNT("DSP stream buffer to [%#lx-%#lx]\n",(ulong)ARM_2_ARC_ADDR_SWAP(priv->stream_buffer_start),(ulong)ARM_2_ARC_ADDR_SWAP(priv->stream_buffer_end));
 	return 0;
 }
@@ -258,7 +258,7 @@ static inline int dsp_set_stream_buffer( struct audiodsp_priv *priv)
  {
 	int i;
 	int res;
-	mutex_lock(&priv->dsp_mutex);
+	mutex_lock(&priv->dsp_mutex);		
 	halt_dsp(priv);
 	if(priv->stream_fmt!=priv->last_stream_fmt) // remove the trick, bug fixed on dsp side
 		{
@@ -281,11 +281,11 @@ static inline int dsp_set_stream_buffer( struct audiodsp_priv *priv)
     else{
         dsp_mailbox_send(priv,1,M2B_IRQ0_DSP_WAKEUP,0,0,0);
         msleep(1);/*waiting arc625 run again */
-    }
+    }    
 	priv->dsp_start_time=jiffies;
-
+    
 	for(i=0;i<1000;i++)
-		{
+		{            
 		if(DSP_RD(DSP_STATUS)==DSP_STATUS_RUNING)
 			break;
 		msleep(1);
@@ -302,19 +302,19 @@ static inline int dsp_set_stream_buffer( struct audiodsp_priv *priv)
 		res=0;
 		}
 exit:
-	mutex_unlock(&priv->dsp_mutex);
+	mutex_unlock(&priv->dsp_mutex);		
 	return res;
  }
 
  int dsp_stop( struct audiodsp_priv *priv)
-	{
-	mutex_lock(&priv->dsp_mutex);
-#ifdef AUDIODSP_RESET
-	priv->dsp_is_started=0;
+ 	{
+ 	mutex_lock(&priv->dsp_mutex);		
+#ifdef AUDIODSP_RESET	
+ 	priv->dsp_is_started=0;
 #endif
-	halt_dsp(priv);
+ 	halt_dsp(priv);
 	priv->dsp_end_time=jiffies;
-#if 0
+#if 0	
 	if(priv->dsp_stack_start!=0)
 		kfree((void*)priv->dsp_stack_start);
 	priv->dsp_stack_start=0;
@@ -327,30 +327,30 @@ exit:
 	if(priv->stream_buffer_mem!=NULL)
 		{
 		kfree(priv->stream_buffer_mem);
-		priv->stream_buffer_mem=NULL;
+		priv->stream_buffer_mem=NULL;		
 		}
 	#endif
-	mutex_unlock(&priv->dsp_mutex);
+	mutex_unlock(&priv->dsp_mutex);	
 	return 0;
-	}
+ 	}
 int   dsp_check_status(struct audiodsp_priv *priv)
 {
 	//unsigned dsp_halt_score = 0;
 	unsigned ablevel  = 0;
-	int  pcmlevel = 0;
+	int  pcmlevel = 0; 
 	if(DSP_RD(DSP_STATUS) != DSP_STATUS_RUNING)
-		return 1;
+		return 1;	
 	ablevel =READ_MPEG_REG(AIU_MEM_AIFIFO_LEVEL);
 	pcmlevel = dsp_codec_get_bufer_data_len(priv);
 	if((ablevel == priv->last_ablevel && ablevel > 50*1024)&& \
 	    (pcmlevel == priv->last_pcmlevel && pcmlevel < 512)){
-		priv->last_ablevel = ablevel;
+	    	priv->last_ablevel = ablevel;
 		priv->last_pcmlevel = 	pcmlevel;
-		printk("dsp not working ............\n");
-		return 0;
+	    	printk("dsp not working ............\n");
+	    	return 0;
 	}
-	priv->last_ablevel = ablevel;
-	priv->last_pcmlevel = 	pcmlevel;
+    	priv->last_ablevel = ablevel;
+	priv->last_pcmlevel = 	pcmlevel;	
 	return 1;
 }
 
@@ -358,11 +358,11 @@ int   dsp_check_status(struct audiodsp_priv *priv)
  *	bit31 - digital raw output
  *	bit30 - IEC61937 pass over HDMI
  *    bit 6  -  audio in mode.
-		     00: spdif in mode
-		     01: i2s in mode
+ 		     00: spdif in mode
+ 		     01: i2s in mode
  *    bit 5 - DTS passthrough working mode
-		     00:  AIU 958 hw search raw mode
-		     01:  PCM_RAW mode,the same as AC3/AC3+
+ 		     00:  AIU 958 hw search raw mode 
+ 		     01:  PCM_RAW mode,the same as AC3/AC3+
  *    bit 3:4 - used for the communication of dsp and player tansfer decoding infomation:
  *                00: used for libplayer_end to tell dsp_end that the file end has been notreached;
  *                01: used for libplayer_end to tell dsp_end that the file end has been reached;

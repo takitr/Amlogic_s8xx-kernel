@@ -19,9 +19,9 @@ static  ge2d_device_t  ge2d_device;
 static DEFINE_MUTEX(ge2d_mutex);
 static const struct file_operations ge2d_fops = {
 	.owner		= THIS_MODULE,
-	.open		=ge2d_open,
+	.open		=ge2d_open,  
 	.unlocked_ioctl		= ge2d_ioctl,
-	.release		= ge2d_release,
+	.release		= ge2d_release, 	
 };
 static struct class_attribute ge2d_class_attrs[] = {
 	__ATTR(wq_status,

@@ -93,7 +93,7 @@ typedef struct{
 typedef struct{
 	int num;
 	char name[40];
-	int export[CAPTURE_ITEM_MAX];
+	int export[CAPTURE_ITEM_MAX];	
 }capture_type;
 
 typedef struct{
@@ -137,7 +137,7 @@ typedef struct{
 }aet_struct;
 
 typedef struct{
-	int export[WAVE_MAX];
+	int export[WAVE_MAX];	
 }wave_struct;
 
 typedef struct{
@@ -148,7 +148,7 @@ typedef struct{
 
 typedef struct{
 	int sum;
-	lens_type lens[LENS_ITEM_MAX];
+	lens_type lens[LENS_ITEM_MAX];	
 }lens_struct;
 
 typedef struct{
@@ -164,28 +164,28 @@ typedef struct{
 typedef struct{
     char date[40];
     char module[30];
-    char version[30];
+    char version[30];		
 }version_struct;
 
 typedef struct{
-	int export[CM_MAX];
+	int export[CM_MAX];	
 }cm_struct;
 
 typedef struct{
 	int num;
 	char name[40];
-	int export[NR_MAX];
+	int export[NR_MAX];	
 }nr_type;
 
 typedef struct{
 	int sum;
-	nr_type nr[NR_ITEM_MAX];
+	nr_type nr[NR_ITEM_MAX];	
 }nr_struct;
 
 typedef struct{
 	int num;
 	char name[40];
-	int export[PEAKING_MAX];
+	int export[PEAKING_MAX];	
 }peaking_type;
 
 typedef struct{
@@ -198,7 +198,7 @@ typedef struct{
     int effect_valid;
     hw_struct hw;
     int hw_valid;
-    aet_struct aet;
+    aet_struct aet; 
     int aet_valid;
     capture_struct capture;
     int capture_valid;
@@ -276,3 +276,4 @@ int my_i2c_put_byte_add8(struct i2c_adapter *adapter,unsigned short i2c_addr,cha
 int my_i2c_get_byte(struct i2c_adapter *adapter,unsigned short i2c_addr,unsigned short addr);
 int my_i2c_get_word(struct i2c_adapter *adapter,unsigned short i2c_addr);
 #endif
+

@@ -46,7 +46,7 @@
 /* 	Accelerometer defines section	 	*/
 /************************************************/
 #define MXC622X_ACC_DEV_NAME		"mxc6255xc"
-#define MXC622X_ACC_INPUT_NAME		"mxc6255xc"
+#define MXC622X_ACC_INPUT_NAME		"mxc6255xc" 
 #define MXC622X_ACC_I2C_ADDR     	0x15
 #define MXC622X_ACC_I2C_NAME     	MXC622X_ACC_DEV_NAME
 
@@ -77,3 +77,6 @@ struct mxc622x_acc_platform_data {
 #endif	/* __KERNEL__ */
 
 #endif	/* __MXC622X_H__ */
+
+
+

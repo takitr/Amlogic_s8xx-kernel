@@ -43,8 +43,8 @@ int  register_fiq_bridge_handle(bridge_item_t *c_item)
     }
     c_item->active = 0;
     if (list_empty(&fiq_bridge_list)) {
-		aml_clr_reg32_mask(P_ISA_TIMER_MUX, (1<<18)|(1<<14)|(3<<4));
-		aml_set_reg32_mask(P_ISA_TIMER_MUX,	(1<<18)|(0<<14)|(0<<4));
+    		aml_clr_reg32_mask(P_ISA_TIMER_MUX, (1<<18)|(1<<14)|(3<<4));
+		aml_set_reg32_mask(P_ISA_TIMER_MUX,	(1<<18)|(0<<14)|(0<<4));   		
         if (request_irq(BRIDGE_IRQ, &root_handle_isr,
                         IRQF_SHARED , "fiq_bridge", &fiq_bridge_list) < 0) {
             printk("can't not register  fiq bridge handle %s\n", c_item->name);
@@ -75,3 +75,4 @@ int  unregister_fiq_bridge_handle(bridge_item_t *c_item)
     }
     return 0;
 }
+

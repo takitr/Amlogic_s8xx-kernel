@@ -22,7 +22,7 @@ bool_t SiiDrvEvitaInit(void)
     SiiRegWrite(PP_PAGE_3 | 0x49, 0x00); //output color space YCbCr
     SiiRegWrite(PP_PAGE_3 | 0x4A, 0x00); //video mode converter
 
-    SiiRegWrite(PP_PAGE_4 | 0x3C, 0x00); //bring out of core iso mode
+    SiiRegWrite(PP_PAGE_4 | 0x3C, 0x00); //bring out of core iso mode	
     SiiRegWrite(PP_PAGE_3 | 0x08, 0x35); //power up chip
     SiiRegWrite(PP_PAGE_3 | 0x0F, 0x00); //Diaable HDCP
     SiiRegWrite(PP_PAGE_3 | 0x0D, 0x02); //Audio Mute
@@ -37,9 +37,9 @@ bool_t SiiDrvEvitaInit(void)
     SiiRegWrite(PP_PAGE_4 | 0x23, 0x10);
     SiiRegWrite(PP_PAGE_4 | 0x24, 0x0B); //set 24-bit I2S bus width
     SiiRegWrite(PP_PAGE_4 | 0x1D, 0x40); //set I2S bus format
-    SiiRegWrite(PP_PAGE_4 | 0x14, 0xF1); //Enable 8-ch I2S input
+    SiiRegWrite(PP_PAGE_4 | 0x14, 0xF1); //Enable 8-ch I2S input 
     SiiRegWrite(PP_PAGE_4 | 0x1C, 0xE4); //Assign the SD0,1,2,3 FIFO
-    SiiRegWrite(PP_PAGE_4 | 0x2F, 0x03); //enable hdmi mode
+    SiiRegWrite(PP_PAGE_4 | 0x2F, 0x03); //enable hdmi mode	
 
     SiiRegWrite(PP_PAGE_3 | 0x0D, 0x00); //Disable Audio Mute
 
@@ -80,7 +80,7 @@ void SiiDrvEvitaAviIfUpdate(void)
     ifData[1] = 0x02;       //version
     ifData[2] = 0x0D;       //length
     ifData[3] = 0x00;       //checksum
-    ifData[4] = csType << 5;
+    ifData[4] = csType << 5; 
     ifData[5] = 0x08;       //colorimetry;
     if (csType == ColorSpace_RGB)
     {
@@ -110,12 +110,12 @@ void SiiDrvEvitaAviIfUpdate(void)
     }
 
     ifData[9] = 0x00;
-    ifData[10] = 0x00;
+    ifData[10] = 0x00; 
     ifData[11] = 0x00;
-    ifData[12] = 0x00;
+    ifData[12] = 0x00; 
     ifData[13] = 0x00;
     ifData[14] = 0x00;
-    ifData[15] = 0x00;
+    ifData[15] = 0x00; 
     ifData[16] = 0x00;
 
     checksum = 0x00;
@@ -126,10 +126,10 @@ void SiiDrvEvitaAviIfUpdate(void)
     ifData[3] = 0x100 - checksum;
 	// Fill AVI InfoFrame in TPI mode
 	for (i = 0; i < 14; i++)
-	{
-		SiiRegWrite(PP_PAGE_3  | (0x0C + i), ifData[i+3]);
+ 	{
+ 		SiiRegWrite(PP_PAGE_3  | (0x0C + i), ifData[i+3]);
 //		DEBUG_PRINT(MSG_ALWAYS, ("Configure Evita AVI InfoFrame byte %2X to %2X\n", (int)i, (int)(*pPacket[i+IF_HEADER_LENGTH-1])));
-	}
+ 	}
 
 	// Check whether trigger is already active
 	if ( 0x19 >= 0x0C + i )
@@ -155,10 +155,10 @@ void SiiDrvEvitaAudioIfUpdate(uint8_t *pPacket)
 
 	// Fill AUDIO InfoFrame in TPI mode
 	for (i = 0; i < IF_MAX_AUDIO_LENGTH+1 && i < data_length+1; i++)
-	{
-		SiiRegWrite(PP_PAGE_3  | (0xC0 + i), pPacket[i]);
+ 	{
+ 		SiiRegWrite(PP_PAGE_3  | (0xC0 + i), pPacket[i]);
 //		DEBUG_PRINT(MSG_ALWAYS, ("Configure Evita AUDIO InfoFrame byte %2X to %2X\n", (int)i, (int)(*pPacket[i+IF_HEADER_LENGTH-1])));
-	}
+ 	}
 
 	// Check whether trigger is already active
 	if ( 0xCD >= 0xC0 + i )
@@ -168,3 +168,4 @@ void SiiDrvEvitaAudioIfUpdate(uint8_t *pPacket)
 	}
 
 }
+

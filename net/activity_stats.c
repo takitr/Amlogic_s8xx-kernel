@@ -116,3 +116,4 @@ static int  __init activity_stats_init(void)
 }
 
 subsys_initcall(activity_stats_init);
+

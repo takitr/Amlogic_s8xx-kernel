@@ -12,3 +12,4 @@ unsigned int aml_iobus_attr_read(unsigned int addr);
 int aml_iobus_attr_write(unsigned int addr, unsigned char val);
 
 #endif/*_AML_IOBUS_*/
+

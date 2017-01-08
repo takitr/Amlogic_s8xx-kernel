@@ -620,7 +620,7 @@ static int stk_als_probe(struct i2c_client *client,
     err = stk_sysfs_create_bin_files(&(pStkAlsData->input_dev->dev.kobj),sensetek_optical_sensors_bin_attrs);
     if (err)
     {
-
+ 
         return -ENOMEM;
     }
     err = stk_sysfs_create_files(&(pStkAlsData->input_dev->dev.kobj),sensetek_optical_sensors_attrs);

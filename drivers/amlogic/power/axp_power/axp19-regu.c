@@ -40,7 +40,7 @@ static int axp_set_voltage(struct regulator_dev *rdev,
 	struct axp_regulator_info *info = rdev_get_drvdata(rdev);
 	struct device *axp_dev = to_axp_dev(rdev);
 	uint8_t val, mask;
-
+	
 
 	if (check_range(info, min_uV, max_uV)) {
 		pr_err("invalid voltage range (%d, %d) uV\n", min_uV, max_uV);
@@ -64,12 +64,12 @@ static int axp_get_voltage(struct regulator_dev *rdev)
 	ret = axp_read(axp_dev, info->vol_reg, &val);
 	if (ret)
 		return ret;
-
+  
 	mask = ((1 << info->vol_nbits) - 1)  << info->vol_shift;
 	val = (val & mask) >> info->vol_shift;
 
 	return info->min_uV + info->step_uV * val;
-
+	
 }
 
 static int axp_enable(struct regulator_dev *rdev)
@@ -120,7 +120,7 @@ static int axp_set_suspend_voltage(struct regulator_dev *rdev, int uV)
 	int ldo = rdev_get_id(rdev);
 
 	switch (ldo) {
-
+	
 	case AXP19_ID_LDO1 ... AXP19_ID_LDOIO0:
 		return axp_set_voltage(rdev, uV, uV);
 	default:
@@ -189,11 +189,11 @@ static struct regulator_ops axp19_ldoio0_ops = {
 	AXP_BUCK(AXP19, _id, min, max, step, vreg, shift, nbits, ereg, ebit)
 
 
-
+	
 
 static struct axp_regulator_info axp_regulator_info[] = {
 	AXP19_LDO( 1,  AXP19LDO1,AXP19LDO1,   0,  RTC,    0,    0,  LDO1EN,    0),//ldo1 for rtc
-	AXP19_LDO( 2,     1800,     3300, 100,ANALOG1,    4,    4,  LDO2EN,    2),//ldo2 for analog1
+	AXP19_LDO( 2,     1800,     3300, 100,ANALOG1,    4,    4,  LDO2EN,    2),//ldo2 for analog1 
 	AXP19_LDO( 3,      700,     3500,  25,DIGITAL,    0,    7,  LDO3EN,    2),//ldo3 for digital
 	AXP19_LDO( 4,     1800,     3300, 100,ANALOG2,    0,    4,  LDO4EN,    3),//ldo4 for analog2
 	AXP19_BUCK(1,      700,     3500,  25,     IO,    0,    7, DCDC1EN,    0),//dcdc1 for io
@@ -213,7 +213,7 @@ static ssize_t workmode_show(struct device *dev,
 	ret = axp_read(axp_dev, AXP19_BUCKMODE, &val);
 	if (ret)
 		return sprintf(buf, "IO ERROR\n");
-
+	
 	if(info->desc.id == AXP19_ID_BUCK2){
 		switch (val & 0x04) {
 			case 0:return sprintf(buf, "AUTO\n");
@@ -241,7 +241,7 @@ static ssize_t workmode_show(struct device *dev,
 
 static ssize_t workmode_store(struct device *dev,
 				struct device_attribute *attr, const char *buf, size_t count)
-{
+{	
 	struct regulator_dev *rdev = dev_get_drvdata(dev);
 	struct axp_regulator_info *info = rdev_get_drvdata(rdev);
 	struct device *axp_dev = to_axp_dev(rdev);
@@ -251,7 +251,7 @@ static ssize_t workmode_store(struct device *dev,
 		mode = buf[0];
 	else
 		mode = buf[1];
-
+	
 	switch(mode){
 	 case 'U':
 	 case 'u':
@@ -260,11 +260,11 @@ static ssize_t workmode_store(struct device *dev,
 	 case 'W':
 	 case 'w':
 	 case '2':
-		val = 1;break;
+	 	val = 1;break;
 	 default:
-	    val =0;
+	    val =0;	
 	}
-
+	
 	if(info->desc.id == AXP19_ID_BUCK2){
 		if(val)
 			axp_set_bits(axp_dev, AXP19_BUCKMODE,0x04);
@@ -304,7 +304,7 @@ static ssize_t frequency_show(struct device *dev,
 
 static ssize_t frequency_store(struct device *dev,
 				struct device_attribute *attr, const char *buf, size_t count)
-{
+{	
 	struct regulator_dev *rdev = dev_get_drvdata(dev);
 	struct device *axp_dev = to_axp_dev(rdev);
 	uint8_t val,tmp;
@@ -314,10 +314,10 @@ static ssize_t frequency_store(struct device *dev,
 		var = 750;
 	if(var > 1875)
 		var = 1875;
-
+		
 	val = (var -750)/75;
 	val &= 0x0F;
-
+	
 	axp_read(axp_dev, AXP19_BUCKFREQ, &tmp);
 	tmp &= 0xF0;
 	val |= tmp;
@@ -340,7 +340,7 @@ int axp_regu_create_attrs(struct platform_device *pdev)
 			goto sysfs_failed;
 	}
     goto succeed;
-
+	
 sysfs_failed:
 	while (j--)
 		device_remove_file(&pdev->dev,&axp_regu_attrs[j]);
@@ -381,7 +381,7 @@ static int __devinit axp_regulator_probe(struct platform_device *pdev)
 
 	if(ri->desc.id == AXP19_ID_LDOIO0)
 		ri->desc.ops = &axp19_ldoio0_ops;
-
+	
 	rdev = regulator_register(&ri->desc, &pdev->dev,
 				  pdev->dev.platform_data, ri);
 	if (IS_ERR(rdev)) {
@@ -391,7 +391,7 @@ static int __devinit axp_regulator_probe(struct platform_device *pdev)
 	}
 
 	platform_set_drvdata(pdev, rdev);
-
+	
 	if(ri->desc.id == AXP19_ID_BUCK1 || ri->desc.id == AXP19_ID_BUCK2 \
 		||ri->desc.id == AXP19_ID_BUCK3){
 		ret = axp_regu_create_attrs(pdev);
@@ -399,7 +399,7 @@ static int __devinit axp_regulator_probe(struct platform_device *pdev)
 			return ret;
 		}
 	}
-
+	
 	return 0;
 }
 

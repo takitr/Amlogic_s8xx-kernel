@@ -149,7 +149,7 @@ int efuse_bch_enc(const char *ibuf, int isize, char *obuf, int reverse)
 		return -1;
 	}
 	memset(c, 0, sizeof(int) * 255);
-
+	
 
 	for (i = 0; i < isize; ++i) {
 		info = ibuf[i];
@@ -177,7 +177,7 @@ int efuse_bch_enc(const char *ibuf, int isize, char *obuf, int reverse)
 		for (j = 0; j < 8; ++j) {
 			tmp += c[i*8 + j]<<(7-j);
 		}
-
+		
 		if(reverse)
 			obuf[i] = ~tmp;
 		else

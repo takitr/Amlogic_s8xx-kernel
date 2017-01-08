@@ -26,7 +26,7 @@
 
 #ifdef ENV_ANDROID
     #define debug_6681	pr_err
-#else
+#else    
     //#define debug_6681	printf
 #endif
 

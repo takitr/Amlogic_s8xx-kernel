@@ -67,3 +67,4 @@
 #define MMA8452_IOC_SETDETECTION	_IOW(MMA8452_IOM, 0x08, unsigned char)
 
 #endif /* __MMA8452_H__ */
+

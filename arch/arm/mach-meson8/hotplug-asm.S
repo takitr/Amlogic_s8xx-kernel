@@ -31,17 +31,17 @@
 
 ENTRY(meson_cleanup)
 	stmfd	sp!, {r0-r11, lr}
-
+	
 	@ disable interrupt
 	mrs r4, cpsr
 	orr r5, r4, #0xc0
 	msr cpsr_c, r5
-
+	
 	@ icache disable
 	mrc p15, 0, r4, c1, c0, 0
 	bic r4, r4, #(CR_I)
 	mcr p15, 0, r4, c1, c0, 0
-
+	
 	@ invalid i-cache
 	mov r4, #0
 	mcr p15, 0, r4, c7, c5, 6 @invalid BTAC
@@ -50,30 +50,24 @@ ENTRY(meson_cleanup)
 	nop
 	nop
 	isb
-
+	
 	@ dcache disable
 	mrc p15, 0, r4, c1, c0, 0
 	bic r4, r4, #CR_C
 	mcr p15, 0, r4, c1, c0, 0
 	dsb
 	isb
-
+	
 	/* Flush the D-cache */
 	bl	v7_flush_dcache_louis
-
-	ldmfd	sp!, {r0-r11, pc}
-ENDPROC(meson_cleanup)
-
-ENTRY(meson_turn_off_smp)
-	stmfd	sp!, {r0-r11, lr}
-
+	
 	mov r4, #0
 	mcr p15, 0, r4, c7, c10, 4
-	dsb
+	dsb 
 	isb
-
+	
 	/* Trun off coherency */
 	exit_smp r4, r5
-
+		
 	ldmfd	sp!, {r0-r11, pc}
-ENDPROC(meson_turn_off_smp)
+ENDPROC(meson_cleanup)

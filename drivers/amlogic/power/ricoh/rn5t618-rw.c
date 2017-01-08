@@ -153,36 +153,36 @@ EXPORT_SYMBOL_GPL(rn5t618_reads);
 
 int rn5t618_set_bits(int addr, uint8_t bits, uint8_t mask)
 {
-    uint8_t val;
-    int ret;
-
-    ret = rn5t618_read(addr, &val);
-    if (ret) {
-        return ret;
-    }
-    val &= ~(mask);
-    val |=  (bits & mask);
-    return rn5t618_write(addr, val);
-}
-EXPORT_SYMBOL_GPL(rn5t618_set_bits);
+    uint8_t val; 
+    int ret; 
+ 
+    ret = rn5t618_read(addr, &val); 
+    if (ret) { 
+        return ret; 
+    } 
+    val &= ~(mask); 
+    val |=  (bits & mask); 
+    return rn5t618_write(addr, val); 
+} 
+EXPORT_SYMBOL_GPL(rn5t618_set_bits); 
 
 static int find_idx(uint32_t start, uint32_t target, uint32_t step, int size)
 {
-    int i = 0;
+    int i = 0; 
 
     if (start >= target) {
-        RICOH_DBG("%s, invalid input of voltage:%u\n", __func__, target);
+        RICOH_DBG("%s, invalid input of voltage:%u\n", __func__, target);    
         return -1;
     }
-    do {
+    do { 
         if (start >= target) {
-            break;
-        }
+            break;    
+        }    
         start += step;
-        i++;
+        i++; 
     } while (i < size);
     if (i >= size) {
-        RICOH_DBG("%s, input voltage %u outof range\n", __func__, target);
+        RICOH_DBG("%s, input voltage %u outof range\n", __func__, target);    
         return -1;
     }
 
@@ -215,7 +215,7 @@ int rn5t618_get_dcdc_voltage(int dcdc, uint32_t *uV)
 
     ret = rn5t618_read(addr, &val);
     if (ret) {
-        return ret;
+        return ret;    
     }
     *uV = (600 * 1000 + val * 12500);
     return 0;

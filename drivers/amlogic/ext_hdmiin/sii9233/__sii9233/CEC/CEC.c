@@ -10,7 +10,7 @@
 #include <registers.h>
 #include <hal.h>
 #include <amf.h>
-#include <CEC.h>
+#include <CEC.h>  
 
 
 
@@ -64,12 +64,12 @@ void CEC_Init( void )
           {
               DEBUG_PRINT(("\n Cannot init CEC"));
           }
-
+	
 	  //
 	  // 4. Initialize Event Descriptor
 	  //
 	  CEC_event_descriptor_clear();
-
+	
 	  // Enumirate as an TV
 	  bCECTask  = SiI_CEC_Enumiration;
 	  bEnumType = SiI_EnumTV;
@@ -102,7 +102,7 @@ uint8_t SiI_CEC_SetSnoop ( uint8_t bSnoopAddr, bool_t qOn )
 
     if ( qOn )
     {
-		RegisterModify(REG__CEC_DEBUG_3,BIT_SNOOP_EN, BIT_SNOOP_EN);
+		RegisterModify(REG__CEC_DEBUG_3,BIT_SNOOP_EN, BIT_SNOOP_EN);  
         bSnoopAddr <<= 4;
     }
     else {

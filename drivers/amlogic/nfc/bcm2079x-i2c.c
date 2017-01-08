@@ -473,7 +473,7 @@ static const struct file_operations bcm2079x_dev_fops = {
 unsigned int bcm2079x_irq_handle(void *para)
 {
 	bcm2079x_dev_irq_handler(0, para);
-	return 0;
+	return 0;	
 }
 
 static int bcm2079x_probe(struct i2c_client *client,
@@ -532,7 +532,7 @@ static int bcm2079x_probe(struct i2c_client *client,
 	//client->irq = __gpio_to_irq(platform_data->irq_gpio);
 	if (client->irq == -ENXIO) {
 		dev_err(&client->dev,"[bcm2079x]: get gpio irq fail.\n");
-		goto err_exit;
+		goto err_exit;	
 	}
 
 	bcm2079x_dev->wake_gpio = platform_data->wake_gpio;
@@ -565,7 +565,7 @@ static int bcm2079x_probe(struct i2c_client *client,
 	 */
 	dev_info(&client->dev, "requesting IRQ %d with IRQF_NO_SUSPEND\n", client->irq);
 	bcm2079x_dev->irq_enabled = true;
-
+        
     AML_GPIO_TO_IRQ(bcm2079x_dev->irq_gpio, platform_data->irq, GPIO_IRQ_RISING);
 	ret = request_irq(client->irq, bcm2079x_dev_irq_handler,
 			  IRQF_TRIGGER_RISING|IRQF_NO_SUSPEND, client->name, bcm2079x_dev);
@@ -575,12 +575,12 @@ static int bcm2079x_probe(struct i2c_client *client,
 	}
 	//enable_irq_wake(client->irq);
 
-
+        
         //Platform specific API
     /*
 	nfc_handle = sw_gpio_irq_request(bcm2079x_dev->irq_gpio, TRIG_EDGE_POSITIVE,
 						 bcm2079x_irq_handle, bcm2079x_dev);
-
+	
 	if (nfc_handle == 0) {
 		dev_err(&client->dev, "request_irq failed.\n");
 		goto err_request_irq_failed;
@@ -621,7 +621,7 @@ static int bcm2079x_remove(struct i2c_client *client)
 	free_irq(client->irq, bcm2079x_dev);
 	//Platform specific API
 	//if (nfc_handle != 0)
-		//sw_gpio_irq_free(nfc_handle);
+		//sw_gpio_irq_free(nfc_handle);	
 
 	misc_deregister(&bcm2079x_dev->bcm2079x_device);
 	mutex_destroy(&bcm2079x_dev->read_mutex);
@@ -656,7 +656,7 @@ static struct i2c_driver bcm2079x_driver = {
 		.owner = THIS_MODULE,
 		.name = "bcm2079x",
 	},
-	//.address_list = normal_i2c,
+	//.address_list = normal_i2c,	
 };
 
 /*

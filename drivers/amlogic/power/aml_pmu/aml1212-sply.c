@@ -32,7 +32,7 @@
 #include <linux/amlogic/aml_pmu.h>
 #include <linux/amlogic/battery_parameter.h>
 #include <linux/amlogic/aml_rtc.h>
-#include <mach/irqs.h>
+#include <mach/irqs.h> 
 #include <mach/usbclock.h>
 #ifdef CONFIG_RESET_TO_SYSTEM
 #include <linux/reboot.h>
@@ -46,7 +46,7 @@
 
 #ifdef CONFIG_HAS_EARLYSUSPEND
 static struct early_suspend aml_pmu_early_suspend;
-static int    in_early_suspend = 0;
+static int    in_early_suspend = 0; 
 static int    early_power_status = 0;
 static struct wake_lock aml1212_lock;
 #endif
@@ -97,7 +97,7 @@ int aml_pmu_write(int add, uint8_t val)
     };
 
     CHECK_DRIVER();
-    pdev = g_aml1212_client;
+    pdev = g_aml1212_client; 
 
     buf[0] = add & 0xff;
     buf[1] = (add >> 8) & 0x0f;
@@ -126,7 +126,7 @@ int aml_pmu_write16(int add, uint16_t val)
     };
 
     CHECK_DRIVER();
-    pdev = g_aml1212_client;
+    pdev = g_aml1212_client; 
 
     buf[0] = add & 0xff;
     buf[1] = (add >> 8) & 0x0f;
@@ -156,7 +156,7 @@ int aml_pmu_writes(int add, uint8_t *buff, int len)
     };
 
     CHECK_DRIVER();
-    pdev = g_aml1212_client;
+    pdev = g_aml1212_client; 
 
     buf[0] = add & 0xff;
     buf[1] = (add >> 8) & 0x0f;
@@ -191,7 +191,7 @@ int aml_pmu_read(int add, uint8_t *val)
     };
 
     CHECK_DRIVER();
-    pdev = g_aml1212_client;
+    pdev = g_aml1212_client; 
 
     buf[0] = add & 0xff;
     buf[1] = (add >> 8) & 0x0f;
@@ -219,13 +219,13 @@ int aml_pmu_read16(int add, uint16_t *val)
         {
             .addr  = AML1212_ADDR,
             .flags = I2C_M_RD,
-            .len   = 2,
+            .len   = 2, 
             .buf   = (uint8_t *)val,
         }
     };
 
     CHECK_DRIVER();
-    pdev = g_aml1212_client;
+    pdev = g_aml1212_client; 
 
     buf[0] = add & 0xff;
     buf[1] = (add >> 8) & 0x0f;
@@ -259,7 +259,7 @@ int aml_pmu_reads(int add, uint8_t *buff, int len)
     };
 
     CHECK_DRIVER();
-    pdev = g_aml1212_client;
+    pdev = g_aml1212_client; 
 
     buf[0] = add & 0xff;
     buf[1] = (add >> 8) & 0x0f;
@@ -274,18 +274,18 @@ EXPORT_SYMBOL_GPL(aml_pmu_reads);
 
 int aml_pmu_set_bits(int addr, uint8_t bits, uint8_t mask)
 {
-    uint8_t val;
-    int ret;
-
-    ret = aml_pmu_read(addr, &val);
-    if (ret) {
-        return ret;
-    }
-    val &= ~(mask);
-    val |=  (bits & mask);
-    return aml_pmu_write(addr, val);
-}
-EXPORT_SYMBOL_GPL(aml_pmu_set_bits);
+    uint8_t val; 
+    int ret; 
+ 
+    ret = aml_pmu_read(addr, &val); 
+    if (ret) { 
+        return ret; 
+    } 
+    val &= ~(mask); 
+    val |=  (bits & mask); 
+    return aml_pmu_write(addr, val); 
+} 
+EXPORT_SYMBOL_GPL(aml_pmu_set_bits); 
 
 int aml_pmu_set_dcin(int enable)
 {
@@ -293,10 +293,10 @@ int aml_pmu_set_dcin(int enable)
 
     aml_pmu_read(AML1212_CHG_CTRL4, &val);
     if (enable) {
-        val &= ~0x10;
+        val &= ~0x10;    
     } else {
-        val |= 0x10;
-    }
+        val |= 0x10;    
+    }    
     return aml_pmu_write(AML1212_CHG_CTRL4, val);
 }
 EXPORT_SYMBOL_GPL(aml_pmu_set_dcin);
@@ -323,18 +323,18 @@ int aml_pmu_get_gpio(int pin, int *val)
     int ret;
     uint8_t data;
 
-    if (pin <= 0 || pin > 4 || !val) {
+    if (pin <= 0 || pin > 4 || !val) { 
         AML_PMU_ERR("ERROR, invalid input value, pin = %d, val= %p\n", pin, val);
         return -EINVAL;
     }
     ret = aml_pmu_read(AML1212_GPIO_INPUT_STATUS, &data);
     if (ret) {                                                  // read failed
-        return ret;
+        return ret;    
     }
     if (data & (1 << (pin - 1))) {
         *val = 1;
     } else {
-        *val = 0;
+        *val = 0;    
     }
     return 0;
 }
@@ -352,11 +352,11 @@ int aml_pmu_get_voltage(void)
         aml_pmu_reads(AML1212_SAR_RD_VBAT_ACTIVE, buf, 2);
         tmp = (((buf[1] & 0x0f) << 8) + buf[0]);
         if (pmu_version == 0x02 || pmu_version == 0x01) {       // VERSION A & B
-            tmp = (tmp * 7200) / 2048;
+            tmp = (tmp * 7200) / 2048; 
         } else if (pmu_version == 0x03) {                       // VERSION D
             tmp = (tmp * 4800) / 2048;
         } else {
-            tmp = 0;
+            tmp = 0;    
         }
         result += tmp;
     }
@@ -411,11 +411,11 @@ int aml_pmu_get_ibat_cnt(void)
 {
     uint8_t buf[4] = {};
     uint32_t cnt = 0;
-
+    
     aml_pmu_write(AML1212_SAR_SW_EN_FIELD, 0x40);
     aml_pmu_reads(AML1212_SAR_RD_IBAT_CNT, buf, 4);
 
-    cnt = (buf[0] <<  0) |
+    cnt = (buf[0] <<  0) | 
           (buf[1] <<  8) |
           (buf[2] << 16) |
           (buf[3] << 24);
@@ -444,24 +444,24 @@ int aml_pmu_manual_measure_current(void)
 }
 
 static unsigned int dcdc1_voltage_table[] = {                  // voltage table of DCDC1
-    2000, 1980, 1960, 1940, 1920, 1900, 1880, 1860,
-    1840, 1820, 1800, 1780, 1760, 1740, 1720, 1700,
-    1680, 1660, 1640, 1620, 1600, 1580, 1560, 1540,
-    1520, 1500, 1480, 1460, 1440, 1420, 1400, 1380,
-    1360, 1340, 1320, 1300, 1280, 1260, 1240, 1220,
-    1200, 1180, 1160, 1140, 1120, 1100, 1080, 1060,
-    1040, 1020, 1000,  980,  960,  940,  920,  900,
+    2000, 1980, 1960, 1940, 1920, 1900, 1880, 1860, 
+    1840, 1820, 1800, 1780, 1760, 1740, 1720, 1700, 
+    1680, 1660, 1640, 1620, 1600, 1580, 1560, 1540, 
+    1520, 1500, 1480, 1460, 1440, 1420, 1400, 1380, 
+    1360, 1340, 1320, 1300, 1280, 1260, 1240, 1220, 
+    1200, 1180, 1160, 1140, 1120, 1100, 1080, 1060, 
+    1040, 1020, 1000,  980,  960,  940,  920,  900,  
      880,  860,  840,  820,  800,  780,  760,  740
 };
 
 static unsigned int dcdc2_voltage_table[] = {                  // voltage table of DCDC2
     2160, 2140, 2120, 2100, 2080, 2060, 2040, 2020,
-    2000, 1980, 1960, 1940, 1920, 1900, 1880, 1860,
-    1840, 1820, 1800, 1780, 1760, 1740, 1720, 1700,
-    1680, 1660, 1640, 1620, 1600, 1580, 1560, 1540,
-    1520, 1500, 1480, 1460, 1440, 1420, 1400, 1380,
-    1360, 1340, 1320, 1300, 1280, 1260, 1240, 1220,
-    1200, 1180, 1160, 1140, 1120, 1100, 1080, 1060,
+    2000, 1980, 1960, 1940, 1920, 1900, 1880, 1860, 
+    1840, 1820, 1800, 1780, 1760, 1740, 1720, 1700, 
+    1680, 1660, 1640, 1620, 1600, 1580, 1560, 1540, 
+    1520, 1500, 1480, 1460, 1440, 1420, 1400, 1380, 
+    1360, 1340, 1320, 1300, 1280, 1260, 1240, 1220, 
+    1200, 1180, 1160, 1140, 1120, 1100, 1080, 1060, 
     1040, 1020, 1000,  980,  960,  940,  920,  900
 };
 
@@ -474,11 +474,11 @@ int find_idx_by_voltage(int voltage, unsigned int *table)
      */
     for (i = 0; i < 64; i++) {
         if (voltage >= table[i]) {
-            break;
+            break;    
         }
     }
     if (voltage == table[i]) {
-        return i;
+        return i;    
     }
     return i - 1;
 }
@@ -490,16 +490,16 @@ void aml_pmu_set_voltage(int dcdc, int voltage)
     unsigned char val;
     unsigned char addr;
     unsigned int *table;
-
+    
     if (dcdc < 0 || dcdc > AML_PMU_DCDC2 || voltage > 2100 || voltage < 840) {
         return ;                                                // current only support DCDC1&2 voltage adjust
     }
     if (dcdc == AML_PMU_DCDC1) {
-        addr  = 0x2f;
-        table = dcdc1_voltage_table;
+        addr  = 0x2f; 
+        table = dcdc1_voltage_table; 
     } else if (dcdc == AML_PMU_DCDC2) {
-        addr  = 0x38;
-        table = dcdc2_voltage_table;
+        addr  = 0x38;    
+        table = dcdc2_voltage_table; 
     }
     aml_pmu_read(addr, &val);
     idx_cur = ((val & 0xfc) >> 2);
@@ -507,7 +507,7 @@ void aml_pmu_set_voltage(int dcdc, int voltage)
     AML_PMU_DBG("set idx from %x to %x\n", idx_cur, idx_to);
     while (idx_cur != idx_to) {
         if (idx_cur < idx_to) {                                 // adjust to target voltage step by step
-            idx_cur++;
+            idx_cur++;    
         } else {
             idx_cur--;
         }
@@ -536,10 +536,10 @@ void aml_pmu_poweroff(void)
     }
     AML_PMU_INFO("software goto OFF state\n");
     mdelay(10);
-    aml_pmu_write(AML1212_GEN_CNTL1, buf);
+    aml_pmu_write(AML1212_GEN_CNTL1, buf);    
     AML_PMU_ERR("power off PMU failed\n");
     while (1) {
-
+            
     }
 }
 EXPORT_SYMBOL_GPL(aml_pmu_poweroff);
@@ -587,8 +587,8 @@ static void aml_pmu_battery_check_status(struct aml1212_supply       *supply,
         if (charger->ext_valid){
             if( charger->rest_vol == 100) {
                 val->intval = POWER_SUPPLY_STATUS_FULL;
-            } else if (charger->rest_vol == 0 &&
-                       charger->charge_status == CHARGER_DISCHARGING) {
+            } else if (charger->rest_vol == 0 && 
+                       charger->charge_status == CHARGER_DISCHARGING) { 
                 // protect for over-discharging
                 val->intval = POWER_SUPPLY_STATUS_DISCHARGING;
             } else {
@@ -628,7 +628,7 @@ static int aml_pmu_battery_get_property(struct power_supply *psy,
     int ret = 0;
     supply  = container_of(psy, struct aml1212_supply, batt);
     charger = &supply->aml_charger;
-
+    
     switch (psp) {
     case POWER_SUPPLY_PROP_STATUS:
         aml_pmu_battery_check_status(supply, val);
@@ -651,12 +651,12 @@ static int aml_pmu_battery_get_property(struct power_supply *psy,
         break;
 
     case POWER_SUPPLY_PROP_VOLTAGE_NOW:
-        val->intval = charger->vbat * 1000;
+        val->intval = charger->vbat * 1000; 
         break;
 
     case POWER_SUPPLY_PROP_CURRENT_NOW:             // charging : +, discharging -;
-        if (ABS(charger->ibat) > 20  &&
-            !charger->charge_timeout &&
+        if (ABS(charger->ibat) > 20  && 
+            !charger->charge_timeout && 
             charger->charge_status != CHARGER_NONE) {
             val->intval = charger->ibat * 1000 * (charger->charge_status == CHARGER_CHARGING ? 1 : -1);
         } else {
@@ -677,7 +677,7 @@ static int aml_pmu_battery_get_property(struct power_supply *psy,
         break;
 
     case POWER_SUPPLY_PROP_ONLINE:
-        val->intval = charger->bat_det;
+        val->intval = charger->bat_det; 
         break;
 
     case POWER_SUPPLY_PROP_PRESENT:
@@ -690,7 +690,7 @@ static int aml_pmu_battery_get_property(struct power_supply *psy,
         ret = -EINVAL;
         break;
     }
-
+    
     return ret;
 }
 
@@ -780,14 +780,14 @@ static void aml_pmu_battery_setup_psy(struct aml1212_supply *supply)
     struct power_supply      *ac   = &supply->ac;
     struct power_supply      *usb  = &supply->usb;
     struct power_supply_info *info =  supply->battery_info;
-
+    
     batt->name           = "battery";
     batt->use_for_apm    = info->use_for_apm;
     batt->type           = POWER_SUPPLY_TYPE_BATTERY;
     batt->get_property   = aml_pmu_battery_get_property;
     batt->properties     = aml_pmu_battery_props;
     batt->num_properties = ARRAY_SIZE(aml_pmu_battery_props);
-
+    
     ac->name             = "ac";
     ac->type             = POWER_SUPPLY_TYPE_MAINS;
     ac->get_property     = aml_pmu_ac_get_property;
@@ -795,7 +795,7 @@ static void aml_pmu_battery_setup_psy(struct aml1212_supply *supply)
     ac->num_supplicants  = ARRAY_SIZE(supply_list);
     ac->properties       = aml_pmu_ac_props;
     ac->num_properties   = ARRAY_SIZE(aml_pmu_ac_props);
-
+    
     usb->name            = "usb";
     usb->type            = POWER_SUPPLY_TYPE_USB;
     usb->get_property    = aml_pmu_usb_get_property;
@@ -834,7 +834,7 @@ int aml_pmu_set_usb_current_limit(int curr, int bc_mode)
 
     default:
         AML_PMU_ERR("%s, wrong usb current limit:%d\n", __func__, curr);
-        return -1;
+        return -1; 
     }
     return aml_pmu_write(AML1212_CHG_CTRL3, val);
 }
@@ -842,7 +842,7 @@ EXPORT_SYMBOL_GPL(aml_pmu_set_usb_current_limit);
 
 int aml1212_set_usb_current_limit(int curr)
 {
-    return aml_pmu_set_usb_current_limit(curr, -1);
+    return aml_pmu_set_usb_current_limit(curr, -1);    
 }
 
 int aml_pmu_get_battery_percent(void)
@@ -880,7 +880,7 @@ int aml_pmu_set_charge_voltage(int voltage)
 {
     uint8_t val;
     uint8_t tmp;
-
+    
     if (voltage > 4400000 || voltage < 4050000) {
         AML_PMU_ERR("%s,Wrong charge voltage:%d\n", __func__, voltage);
         return -1;
@@ -891,11 +891,11 @@ int aml_pmu_set_charge_voltage(int voltage)
     val |= tmp;
     aml_pmu_write(AML1212_CHG_CTRL0, val);
 
-    return 0;
+    return 0; 
 }
 EXPORT_SYMBOL_GPL(aml_pmu_set_charge_voltage);
 
-int aml_pmu_set_charge_end_rate(int rate)
+int aml_pmu_set_charge_end_rate(int rate) 
 {
     uint8_t val;
 
@@ -927,7 +927,7 @@ int aml_pmu_set_adc_freq(int freq)
     int32_t time_bit;
 
     if (freq > 1000 || freq < 10) {
-        AML_PMU_ERR("%s, Wrong adc freq:%d\n", __func__, freq);
+        AML_PMU_ERR("%s, Wrong adc freq:%d\n", __func__, freq);    
         return -1;
     }
     time = 1000 / freq;
@@ -972,7 +972,7 @@ int aml_pmu_set_precharge_time(int minute)
     case 80:
         val |= 0x03;
         break;
-
+    
     default:
         AML_PMU_ERR("%s, Wrong pre-charge time:%d\n", __func__, minute);
         return -1;
@@ -1019,17 +1019,17 @@ EXPORT_SYMBOL_GPL(aml_pmu_set_fastcharge_time);
 int aml_pmu_set_charge_enable(int en)
 {
     uint8_t val;
-
+    
     if (pmu_version <= 0x02 && pmu_version != 0) {                      /* reversion A or B             */
         aml_pmu_read(AML1212_OTP_GEN_CONTROL0, &val);
         if (en) {
-            val |= (0x01);
+            val |= (0x01);    
         } else {
-            val &= ~(0x01);
+            val &= ~(0x01);    
         }
         aml_pmu_write(AML1212_OTP_GEN_CONTROL0, val);
     } else if (pmu_version == 0x03) {                                   /* reversion D                  */
-        aml_pmu_set_bits(0x0011, ((en & 0x01) << 7), 0x80);
+        aml_pmu_set_bits(0x0011, ((en & 0x01) << 7), 0x80); 
     }
 
     return 0;
@@ -1041,7 +1041,7 @@ int aml_pmu_set_usb_voltage_limit(int voltage)
     uint8_t val;
 
     if (voltage > 4600 || voltage < 4300) {
-        AML_PMU_ERR("%s, Wrong usb voltage limit:%d\n", __func__, voltage);
+        AML_PMU_ERR("%s, Wrong usb voltage limit:%d\n", __func__, voltage);    
     }
     aml_pmu_read(AML1212_CHG_CTRL4, &val);
     val &= ~(0xc0);
@@ -1061,7 +1061,7 @@ int aml_pmu_set_usb_voltage_limit(int voltage)
     case 4600:
         val |= (0x03 << 6);
         break;
-
+    
     default:
         AML_PMU_ERR("%s, Wrong usb voltage limit:%d\n", __func__, voltage);
         return -1;
@@ -1074,7 +1074,7 @@ EXPORT_SYMBOL_GPL(aml_pmu_set_usb_voltage_limit);
 
 static int aml1212_clear_coulomb(struct aml_charger *charger)
 {
-	aml_pmu_write(AML1212_SAR_SW_EN_FIELD, 0x80);
+	aml_pmu_write(AML1212_SAR_SW_EN_FIELD, 0x80); 
     return 0;
 }
 
@@ -1099,7 +1099,7 @@ int aml_pmu_first_init(struct aml1212_supply *supply)
     aml_pmu_set_charge_enable  (aml_pmu_battery->pmu_init_chg_enabled);
 
     if (aml_pmu_battery->pmu_usbvol_limit) {
-        aml_pmu_set_usb_voltage_limit(aml_pmu_battery->pmu_usbvol);
+        aml_pmu_set_usb_voltage_limit(aml_pmu_battery->pmu_usbvol); 
     }
     if (aml_pmu_battery->pmu_usbcur_limit) {
         aml_pmu_set_usb_current_limit(500, USB_BC_MODE_SDP);            // fix to 500 when init
@@ -1109,7 +1109,7 @@ int aml_pmu_first_init(struct aml1212_supply *supply)
 }
 
 /*
- * add for debug
+ * add for debug 
  */
 static ssize_t dbg_info_show     (struct device *dev, struct device_attribute *attr, char *buf);
 static ssize_t dbg_info_store    (struct device *dev, struct device_attribute *attr, const char *buf, size_t count);
@@ -1123,7 +1123,7 @@ static ssize_t dump_pmu_regs_store  (struct device *dev, struct device_attribute
 static int     aml_pmu_regs_base = 0;
 static ssize_t aml_pmu_reg_base_show(struct device *dev, struct device_attribute *attr, char *buf)
 {
-    return sprintf(buf, "aml_pmu_regs_base: 0x%02x\n", aml_pmu_regs_base);
+    return sprintf(buf, "aml_pmu_regs_base: 0x%02x\n", aml_pmu_regs_base); 
 }
 
 static ssize_t aml_pmu_reg_base_store(struct device *dev, struct device_attribute *attr, const char *buf, size_t count)
@@ -1153,7 +1153,7 @@ static ssize_t aml_pmu_reg_store(struct device *dev, struct device_attribute *at
         return -1;
     }
     aml_pmu_write(aml_pmu_regs_base, data);
-    return count;
+    return count; 
 }
 
 static ssize_t aml_pmu_reg_16bit_show(struct device *dev, struct device_attribute *attr, char *buf)
@@ -1179,7 +1179,7 @@ static ssize_t aml_pmu_reg_16bit_store(struct device *dev, struct device_attribu
         return -1;
     }
     aml_pmu_write16(aml_pmu_regs_base, data);
-    return count;
+    return count; 
 }
 
 static ssize_t aml_pmu_vddao_show(struct device *dev, struct device_attribute *attr, char *buf)
@@ -1199,18 +1199,18 @@ static ssize_t aml_pmu_vddao_store(struct device *dev, struct device_attribute *
     }
     AML_PMU_INFO("Set VDD_AO to %4d mV\n", data);
     aml_pmu_set_voltage(AML_PMU_DCDC1, data);
-    return count;
+    return count; 
 }
 
 static ssize_t driver_version_show(struct device *dev, struct device_attribute *attr, char *buf)
 {
-    return sprintf(buf, "Amlogic PMU Aml1212 driver version is %s, build time:%s\n",
+    return sprintf(buf, "Amlogic PMU Aml1212 driver version is %s, build time:%s\n", 
                    AML1212_DRIVER_VERSION, init_uts_ns.name.version);
 }
 
 static ssize_t driver_version_store(struct device *dev, struct device_attribute *attr, const char *buf, size_t count)
 {
-    return count;
+    return count; 
 }
 
 static ssize_t clear_rtc_mem_show(struct device *dev, struct device_attribute *attr, char *buf)
@@ -1219,10 +1219,10 @@ static ssize_t clear_rtc_mem_show(struct device *dev, struct device_attribute *a
 }
 
 static ssize_t clear_rtc_mem_store(struct device *dev, struct device_attribute *attr, const char *buf, size_t count)
-{
+{ 
     aml_write_rtc_mem_reg(0, 0);
     aml_pmu_poweroff();
-    return count;
+    return count; 
 }
 
 static ssize_t charge_timeout_show(struct device *dev, struct device_attribute *attr, char *buf)
@@ -1232,21 +1232,21 @@ static ssize_t charge_timeout_show(struct device *dev, struct device_attribute *
     aml_pmu_read(AML1212_CHG_CTRL3, &val);
     val >>= 6;
     if (val) {
-        return sprintf(buf, "charge timeout is %d minutes\n", val * 180 + 180);
+        return sprintf(buf, "charge timeout is %d minutes\n", val * 180 + 180);   
     }
     return 0;
 }
 
 static ssize_t charge_timeout_store(struct device *dev, struct device_attribute *attr, const char *buf, size_t count)
-{
+{ 
     uint32_t data = simple_strtoul(buf, NULL, 10);
     if (data > 720 || data < 360) {
         AML_PMU_ERR("Invalid input value = %d\n", data);
         return -1;
     }
     AML_PMU_INFO("Set charge timeout to %4d minutes\n", data);
-    aml_pmu_set_fastcharge_time(data);
-    return count;
+    aml_pmu_set_fastcharge_time(data); 
+    return count; 
 }
 
 static struct device_attribute aml1212_supply_attrs[] = {
@@ -1288,7 +1288,7 @@ int aml1212_otg_change(struct notifier_block *nb, unsigned long value, void *pda
     if (value) {        // open OTG
         if (aml1212_init->vbus_dcin_short_connect) {
             aml_pmu_set_dcin(0);                                            // Disable DCIN
-        }
+        }    
         aml_pmu_set_bits(0x0027, 0x02, 0x02);                               // close uv fault of boost
         udelay(100);
         aml_pmu_write(0x0019, 0xD0);                                        // Enable boost output
@@ -1311,7 +1311,7 @@ int aml1212_usb_charger(struct notifier_block *nb, unsigned long value, void *pd
     case USB_BC_MODE_SDP:                                               // pc
         if (aml1212_init->vbus_dcin_short_connect) {
             aml_pmu_set_dcin(0);
-        }
+        }    
         if (aml_pmu_battery && aml_pmu_battery->pmu_usbcur_limit) {
             aml_pmu_set_usb_current_limit(aml_pmu_battery->pmu_usbcur, value);
         }
@@ -1324,9 +1324,9 @@ int aml1212_usb_charger(struct notifier_block *nb, unsigned long value, void *pd
             if (value != USB_BC_MODE_DISCONNECT) {
                 aml_pmu_set_dcin(1);        /* only open DCIN when detect charger       */
             } else {
-                aml_pmu_set_dcin(0);        /* dcin should close when usb disconnect    */
-            }
-        }
+                aml_pmu_set_dcin(0);        /* dcin should close when usb disconnect    */    
+            }    
+        }    
         if (aml_pmu_battery) {
             aml_pmu_set_usb_current_limit(900, value);
         }
@@ -1346,9 +1346,9 @@ static int aml_cal_ocv(int ibat, int vbat, int dir)
     if (dir == 1) {                                                     // charging
         result = vbat - (ibat * aml_pmu_battery->pmu_battery_rdc) / 1000;
     } else if (dir == 2) {                                              // discharging
-        result = vbat + (ibat * aml_pmu_battery->pmu_battery_rdc) / 1000;
+        result = vbat + (ibat * aml_pmu_battery->pmu_battery_rdc) / 1000;    
     } else {
-        result = vbat;
+        result = vbat;    
     }
     return result;
 }
@@ -1362,28 +1362,28 @@ static int aml1212_update_status(struct aml_charger *charger)
     aml_pmu_reads(AML1212_SP_CHARGER_STATUS0, buff, sizeof(buff));
 
     if (!(buff[3] & 0x02)) {                                            // CHG_GAT_BAT_LV = 0, discharging
-        charger->charge_status = CHARGER_DISCHARGING;
+        charger->charge_status = CHARGER_DISCHARGING; 
     } else if ((buff[3] & 0x02) && (buff[2] & 0x04)) {
         charger->charge_status = CHARGER_CHARGING;                      // charging
     } else {
-        charger->charge_status = CHARGER_NONE;                          // Not charging
+        charger->charge_status = CHARGER_NONE;                          // Not charging 
     }
     charger->bat_det    = 1;                                            // do not check register 0xdf, bug here
     charger->dcin_valid = buff[2] & 0x10 ? 1 : 0;
     charger->usb_valid  = buff[2] & 0x08 ? 1 : 0;
-    charger->ext_valid  = buff[2] & 0x18;                               // to differ USB / AC status update
+    charger->ext_valid  = buff[2] & 0x18;                               // to differ USB / AC status update 
 
     charger->fault = ((buff[0] <<  0) | (buff[1] <<  8) |
                       (buff[2] << 16) | (buff[3] << 24));
     if ((!(buff[3] & 0x02)) && !chg_gat_bat_lv) {                       // according David Wang
         AML_PMU_INFO("CHG_GAT_BAT_LV is 0, limit usb current to 500mA\n");
-        aml_pmu_set_usb_current_limit(500, supply->usb_connect_type);
+        aml_pmu_set_usb_current_limit(500, supply->usb_connect_type); 
         chg_gat_bat_lv = 1;
     } else if (buff[3] & 0x02 && chg_gat_bat_lv) {
-        chg_gat_bat_lv = 0;
-        if (supply->usb_connect_type == USB_BC_MODE_DCP ||
+        chg_gat_bat_lv = 0;    
+        if (supply->usb_connect_type == USB_BC_MODE_DCP || 
             supply->usb_connect_type == USB_BC_MODE_CDP) {              // reset to 900 when enough current supply
-            aml_pmu_set_usb_current_limit(900, supply->usb_connect_type);
+            aml_pmu_set_usb_current_limit(900, supply->usb_connect_type);    
             AML_PMU_INFO("CHG_GAT_BAT_LV is 1, limit usb current to 900mA\n");
         }
     }
@@ -1392,7 +1392,7 @@ static int aml1212_update_status(struct aml_charger *charger)
         if ((aml1212_init->charge_timeout_retry) &&
             (aml1212_init->charge_timeout_retry > re_charge_cnt)) {
             re_charge_cnt++;
-            AML_PMU_INFO("reset charger due to charge timeout occured, ocv :%d, retry:%d\n",
+            AML_PMU_INFO("reset charger due to charge timeout occured, ocv :%d, retry:%d\n", 
                         charger->ocv, re_charge_cnt);
             aml_pmu_set_fastcharge_time(360);                           // only retry charge 6 hours, for safe problem
             aml_pmu_set_charge_enable(0);
@@ -1401,10 +1401,10 @@ static int aml1212_update_status(struct aml_charger *charger)
         }
         charger->charge_timeout = 1;
     } else {
-        charger->charge_timeout = 0;
+        charger->charge_timeout = 0;    
     }
     if (charger->ext_valid && !(power_flag & 0x01)) {                   // enable charger when detect extern power
-        power_flag |=  0x01;                                            // remember enabled charger
+        power_flag |=  0x01;                                            // remember enabled charger 
         power_flag &= ~0x02;
     } else if (!charger->ext_valid && !(power_flag & 0x02)) {
         re_charge_cnt = 0;
@@ -1439,7 +1439,7 @@ int dump_pmu_register(char *buf)
         }
         return 0;
     }
-
+    
     size += sprintf(buf + size, "%s", "[AML_PMU] DUMP ALL REGISTERS\n");
     for (i = 0; i < 16; i++) {
         aml_pmu_reads(i*16, val, 16);
@@ -1457,7 +1457,7 @@ static ssize_t dump_pmu_regs_show(struct device *dev, struct device_attribute *a
 {
     int size;
     size = dump_pmu_register(buf);
-    size += sprintf(buf, "%s", "[AML_PMU] DUMP ALL REGISTERS OVER!\n");
+    size += sprintf(buf, "%s", "[AML_PMU] DUMP ALL REGISTERS OVER!\n"); 
     return size;
 }
 static ssize_t dump_pmu_regs_store(struct device *dev, struct device_attribute *attr, const char *buf, size_t count)
@@ -1468,7 +1468,7 @@ static ssize_t dump_pmu_regs_store(struct device *dev, struct device_attribute *
 static ssize_t dbg_info_show(struct device *dev, struct device_attribute *attr, char *buf)
 {
     struct power_supply   *battery = dev_get_drvdata(dev);
-    struct aml1212_supply *supply= container_of(battery, struct aml1212_supply, batt);
+    struct aml1212_supply *supply= container_of(battery, struct aml1212_supply, batt); 
     struct aml_pmu_api  *api;
 
     api = aml_pmu_get_api();
@@ -1487,27 +1487,27 @@ static ssize_t dbg_info_store(struct device *dev, struct device_attribute *attr,
 static ssize_t battery_para_show(struct device *dev, struct device_attribute *attr, char *buf)
 {
     struct power_supply   *battery = dev_get_drvdata(dev);
-    struct aml1212_supply *supply  = container_of(battery, struct aml1212_supply, batt);
+    struct aml1212_supply *supply  = container_of(battery, struct aml1212_supply, batt); 
     struct aml_charger    *charger = &supply->aml_charger;
-    int i = 0;
+    int i = 0; 
     int size;
 
     size = sprintf(buf, "\n i,      ocv,    charge,  discharge,\n");
     for (i = 0; i < 16; i++) {
         size += sprintf(buf + size, "%2d,     %4d,       %3d,        %3d,\n",
-                        i,
+                        i, 
                         aml_pmu_battery->pmu_bat_curve[i].ocv,
                         aml_pmu_battery->pmu_bat_curve[i].charge_percent,
                         aml_pmu_battery->pmu_bat_curve[i].discharge_percent);
     }
-    size += sprintf(buf + size, "\nBattery capability:%4d@3700mAh, RDC:%3d mohm\n",
-                                aml_pmu_battery->pmu_battery_cap,
+    size += sprintf(buf + size, "\nBattery capability:%4d@3700mAh, RDC:%3d mohm\n", 
+                                aml_pmu_battery->pmu_battery_cap, 
                                 aml_pmu_battery->pmu_battery_rdc);
-    size += sprintf(buf + size, "Charging efficiency:%3d%%, capability now:%3d%%\n",
+    size += sprintf(buf + size, "Charging efficiency:%3d%%, capability now:%3d%%\n", 
                                 aml_pmu_battery->pmu_charge_efficiency,
                                 charger->rest_vol);
     size += sprintf(buf + size, "ocv_empty:%4d, ocv_full:%4d\n\n",
-                                charger->ocv_empty,
+                                charger->ocv_empty, 
                                 charger->ocv_full);
     return size;
 }
@@ -1521,7 +1521,7 @@ static ssize_t report_delay_show(struct device *dev, struct device_attribute *at
 {
     struct aml_pmu_api *api = aml_pmu_get_api();
     if (api && api->pmu_get_report_delay) {
-        return sprintf(buf, "report_delay = %d\n", api->pmu_get_report_delay());
+        return sprintf(buf, "report_delay = %d\n", api->pmu_get_report_delay()); 
     } else {
         return sprintf(buf, "error, api not found\n");
     }
@@ -1530,11 +1530,11 @@ static ssize_t report_delay_show(struct device *dev, struct device_attribute *at
 static ssize_t report_delay_store(struct device *dev, struct device_attribute *attr, const char *buf, size_t count)
 {
     struct aml_pmu_api *api = aml_pmu_get_api();
-    uint32_t tmp = simple_strtoul(buf, NULL, 10);
+    uint32_t tmp = simple_strtoul(buf, NULL, 10); 
 
     if (tmp > 200) {
-        AML_PMU_ERR("input too large, failed to set report_delay\n");
-    }
+        AML_PMU_ERR("input too large, failed to set report_delay\n");    
+    }    
     if (api && api->pmu_set_report_delay) {
         api->pmu_set_report_delay(tmp);
     } else {
@@ -1547,7 +1547,7 @@ static void aml_pmu_charging_monitor(struct work_struct *work)
 {
     struct   aml1212_supply *supply;
     struct   aml_charger    *charger;
-    static int check_charge_flag = 0;
+    static int check_charge_flag = 0; 
     uint8_t  v[2] = {};
     int32_t pre_rest_cap;
     uint8_t pre_chg_status;
@@ -1576,11 +1576,11 @@ static void aml_pmu_charging_monitor(struct work_struct *work)
             api->pmu_probe_process(charger, aml_pmu_battery);
         }
     }
-    api->pmu_update_battery_capacity(charger, aml_pmu_battery);
+    api->pmu_update_battery_capacity(charger, aml_pmu_battery); 
 
     if (charger->ocv > 5000) {
         // SAR ADC error, only occur when battery voltage is very low
-        AML_PMU_ERR(">> SAR ADC error, ocv:%d, vbat:%d, ibat:%d\n",
+        AML_PMU_ERR(">> SAR ADC error, ocv:%d, vbat:%d, ibat:%d\n", 
                     charger->ocv, charger->vbat, charger->ibat);
         charger->rest_vol = 0;
     }
@@ -1611,7 +1611,7 @@ static void aml_pmu_charging_monitor(struct work_struct *work)
         if (in_early_suspend && (pre_chg_status != charger->ext_valid)) {
             wake_lock(&aml1212_lock);
             AML_PMU_INFO("%s, usb power status changed in early suspend, wake up now\n", __func__);
-            input_report_key(aml_pmu_power_key, KEY_POWER, 1);                        // assume power key pressed
+            input_report_key(aml_pmu_power_key, KEY_POWER, 1);                        // assume power key pressed 
             input_sync(aml_pmu_power_key);
         }
     #endif
@@ -1637,11 +1637,11 @@ static void aml_pmu_lateresume(struct early_suspend *h)
 {
     struct  aml1212_supply *supply = (struct aml1212_supply *)h->param;
 
-    schedule_work(&supply->work.work);                                      // update for upper layer
+    schedule_work(&supply->work.work);                                      // update for upper layer 
     if (aml_pmu_battery) {
         aml_pmu_set_charge_current(aml_pmu_battery->pmu_resume_chgcur);
-        early_power_status = supply->aml_charger.ext_valid;
-        input_report_key(aml_pmu_power_key, KEY_POWER, 0);                  // cancel power key
+        early_power_status = supply->aml_charger.ext_valid; 
+        input_report_key(aml_pmu_power_key, KEY_POWER, 0);                  // cancel power key 
         input_sync(aml_pmu_power_key);
     }
     in_early_suspend = 0;
@@ -1665,7 +1665,7 @@ static void aml_pmu_irq_work_func(struct work_struct *work)
     uint8_t irq_status[6] = {};
 
     aml_pmu_reads(AML1212_IRQ_STATUS_CLR_0, irq_status, sizeof(irq_status));
-    AML_PMU_DBG("PMU IRQ status: %02x %02x %02x %02x %02x %02x",
+    AML_PMU_DBG("PMU IRQ status: %02x %02x %02x %02x %02x %02x", 
                 irq_status[0], irq_status[1], irq_status[2],
                 irq_status[3], irq_status[4], irq_status[5]);
     aml_pmu_writes(AML1212_IRQ_STATUS_CLR_0, irq_status, sizeof(irq_status));       // clear IRQ status
@@ -1687,7 +1687,7 @@ static void check_pmu_version(void)
     aml_pmu_read(0x007f, &val);
     AML_PMU_INFO("PMU VERSION: 0x%02x\n", val);
     if (val > 0x03 || val == 0x00) {
-        AML_PMU_ERR("#### ERROR: unknow pmu version:0x%02x ####\n", val);
+        AML_PMU_ERR("#### ERROR: unknow pmu version:0x%02x ####\n", val);    
     } else {
         pmu_version = val;
     }
@@ -1706,20 +1706,20 @@ static struct notifier_block pmu_reboot_nb;
 
 struct aml_pmu_driver aml1212_driver = {
     .name                       = "aml1212",
-    .pmu_get_coulomb            = aml1212_get_coulomb_acc,
-    .pmu_clear_coulomb          = aml1212_clear_coulomb,
-    .pmu_update_status          = aml1212_update_status,
+    .pmu_get_coulomb            = aml1212_get_coulomb_acc, 
+    .pmu_clear_coulomb          = aml1212_clear_coulomb, 
+    .pmu_update_status          = aml1212_update_status, 
     .pmu_set_rdc                = NULL,
     .pmu_set_gpio               = aml_pmu_set_gpio,
-    .pmu_get_gpio               = aml_pmu_get_gpio,
-    .pmu_reg_read               = aml_pmu_read,
+    .pmu_get_gpio               = aml_pmu_get_gpio, 
+    .pmu_reg_read               = aml_pmu_read, 
     .pmu_reg_write              = aml_pmu_write,
     .pmu_reg_reads              = aml_pmu_reads,
     .pmu_reg_writes             = aml_pmu_writes,
     .pmu_set_bits               = aml_pmu_set_bits,
     .pmu_set_usb_current_limit  = aml1212_set_usb_current_limit,
     .pmu_set_charge_current     = aml_pmu_set_charge_current,
-    .pmu_power_off              = aml_pmu_poweroff,
+    .pmu_power_off              = aml_pmu_poweroff, 
 };
 
 static struct workqueue_struct *aml_pwr_key_work;
@@ -1743,7 +1743,7 @@ static void pwr_key_work_func(struct work_struct *work)
             input_report_key(aml_pmu_power_key, KEY_POWER, 1);
             input_sync(aml_pmu_power_key);
             pressed = 1;
-        }
+        }    
     }
     queue_delayed_work(aml_pwr_key_work, &pwr_key_work, msecs_to_jiffies(20));
 }
@@ -1781,31 +1781,31 @@ static int aml_pmu_battery_probe(struct platform_device *pdev)
     ret = input_register_device(aml_pmu_power_key);
 
     if (aml1212_init == NULL) {
-        return -EINVAL;
+        return -EINVAL;    
     }
 
     aml_pwr_key_work = create_singlethread_workqueue("aml_pwr_key");
     if (!aml_pwr_key_work) {
         AML_PMU_ERR("%s, create workqueue failed\n", __func__);
-        return -ENOMEM;
+        return -ENOMEM;    
     }
     INIT_DELAYED_WORK(&pwr_key_work, pwr_key_work_func);
     queue_delayed_work(aml_pwr_key_work, &pwr_key_work, msecs_to_jiffies(2000));
-#ifdef CONFIG_UBOOT_BATTERY_PARAMETERS
+#ifdef CONFIG_UBOOT_BATTERY_PARAMETERS 
     if (get_uboot_battery_para_status() == UBOOT_BATTERY_PARA_SUCCESS) {
         aml_pmu_battery = get_uboot_battery_para();
         AML_PMU_DBG("use uboot passed battery parameters\n");
     } else {
-        aml_pmu_battery = aml1212_init->board_battery;
+        aml_pmu_battery = aml1212_init->board_battery; 
         AML_PMU_DBG("uboot battery parameter not get, use BSP configed battery parameters\n");
     }
 #else
-    aml_pmu_battery = aml1212_init->board_battery;
+    aml_pmu_battery = aml1212_init->board_battery; 
     AML_PMU_DBG("use BSP configed battery parameters\n");
 #endif
 
     /*
-     * initialize parameters for supply
+     * initialize parameters for supply 
      */
     supply = kzalloc(sizeof(*supply), GFP_KERNEL);
     if (supply == NULL) {
@@ -1814,7 +1814,7 @@ static int aml_pmu_battery_probe(struct platform_device *pdev)
     supply->battery_info = kzalloc(sizeof(struct power_supply_info), GFP_KERNEL);
     if (supply->battery_info == NULL) {
         kfree(supply);
-        return -ENOMEM;
+        return -ENOMEM;    
     }
     supply->master = pdev->dev.parent;
 
@@ -1827,7 +1827,7 @@ static int aml_pmu_battery_probe(struct platform_device *pdev)
             charger->ocv_empty = aml_pmu_battery->pmu_bat_curve[tmp2-1].ocv;
         }
         if (!charger->ocv_full && aml_pmu_battery->pmu_bat_curve[tmp2].discharge_percent == 100) {
-            charger->ocv_full = aml_pmu_battery->pmu_bat_curve[tmp2].ocv;
+            charger->ocv_full = aml_pmu_battery->pmu_bat_curve[tmp2].ocv;    
         }
         tmp_diff = aml_pmu_battery->pmu_bat_curve[tmp2].discharge_percent -
                    aml_pmu_battery->pmu_bat_curve[tmp2].charge_percent;
@@ -1849,14 +1849,14 @@ static int aml_pmu_battery_probe(struct platform_device *pdev)
     charger->soft_limit_to99 = aml1212_init->soft_limit_to99;
     charger->coulomb_type    = COULOMB_SINGLE_CHG_DEC;
     if (supply->irq == AML_PMU_IRQ_NUM) {
-        INIT_WORK(&supply->irq_work, aml_pmu_irq_work_func);
-        ret = request_irq(supply->irq,
-                          aml_pmu_irq_handler,
+        INIT_WORK(&supply->irq_work, aml_pmu_irq_work_func); 
+        ret = request_irq(supply->irq, 
+                          aml_pmu_irq_handler, 
                           IRQF_DISABLED | IRQF_SHARED,
                           AML1212_IRQ_NAME,
-                          supply);
+                          supply); 
         if (ret) {
-            AML_PMU_DBG("request irq failed, ret:%d, irq:%d\n", ret, supply->irq);
+            AML_PMU_DBG("request irq failed, ret:%d, irq:%d\n", ret, supply->irq);    
         }
     }
 
@@ -1910,7 +1910,7 @@ static int aml_pmu_battery_probe(struct platform_device *pdev)
     }
 #endif
     power_supply_changed(&supply->batt);                   // update battery status
-
+    
     aml_pmu_set_gpio(1, 0);                                 // open LCD backlight, test
     aml_pmu_set_gpio(2, 0);                                 // open VCCx2, test
 
@@ -1948,7 +1948,7 @@ static int aml_pmu_battery_remove(struct platform_device *dev)
     power_supply_unregister(&supply->usb);
     power_supply_unregister(&supply->ac);
     power_supply_unregister(&supply->batt);
-
+    
     free_irq(supply->irq, supply);
     kfree(supply->battery_info);
     kfree(supply);
@@ -1981,7 +1981,7 @@ static int aml_pmu_suspend(struct platform_device *dev, pm_message_t state)
     if (early_power_status != supply->aml_charger.ext_valid) {
         AML_PMU_DBG("%s, power status changed, prev:%x, now:%x, exit suspend process\n",
                     __func__, early_power_status, supply->aml_charger.ext_valid);
-        input_report_key(aml_pmu_power_key, KEY_POWER, 1);              // assume power key pressed
+        input_report_key(aml_pmu_power_key, KEY_POWER, 1);              // assume power key pressed 
         input_sync(aml_pmu_power_key);
         return -1;
     }
@@ -2013,7 +2013,7 @@ static void aml_pmu_shutdown(struct platform_device *dev)
 #if 0
     uint8_t tmp;
     struct aml1212_supply *supply= platform_get_drvdata(dev);
-
+    
     // add code here
 #endif
 #ifdef CONFIG_HAS_EARLYSUSPEND
@@ -2023,7 +2023,7 @@ static void aml_pmu_shutdown(struct platform_device *dev)
 
 static struct platform_driver aml_pmu_battery_driver = {
     .driver = {
-        .name  = AML1212_SUPPLY_NAME,
+        .name  = AML1212_SUPPLY_NAME, 
         .owner = THIS_MODULE,
     },
     .probe    = aml_pmu_battery_probe,

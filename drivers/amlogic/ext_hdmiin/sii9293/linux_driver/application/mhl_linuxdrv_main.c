@@ -9,7 +9,7 @@
  *
  * This program is distributed .as is. WITHOUT ANY WARRANTY of any
  * kind, whether express or implied; without even the implied warranty
- * of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
  * PURPOSE.  See the GNU General Public License for more details.
 */
 
@@ -155,26 +155,26 @@ int32_t StartMhlTxDevice(void)
     osalStatus = SiiOsInit(0);
     if (osalStatus != SII_OS_STATUS_SUCCESS)
     {
-	SII_DEBUG_PRINT(MSG_ERR,"Initialization of OSAL failed, error code: %d\n",osalStatus);
-	return -EIO;
+    	SII_DEBUG_PRINT(MSG_ERR,"Initialization of OSAL failed, error code: %d\n",osalStatus);
+    	return -EIO;
     }
 
     halStatus = HalInit();
     if (halStatus != HAL_RET_SUCCESS)
     {
-	SII_DEBUG_PRINT(MSG_ERR,"Initialization of HAL failed, error code: %d\n",halStatus);
-	SiiOsTerm();
-	return -EIO;
+    	SII_DEBUG_PRINT(MSG_ERR,"Initialization of HAL failed, error code: %d\n",halStatus);
+    	SiiOsTerm();
+    	return -EIO;
     }
 
     halStatus = HalOpenI2cDevice(MHL_DEVICE_NAME, MHL_DRIVER_NAME);
     if (halStatus != HAL_RET_SUCCESS)
     {
-	SII_DEBUG_PRINT(MSG_ERR,"Opening of I2c device %s failed, error code: %d\n",
-			MHL_DEVICE_NAME, halStatus);
-	HalTerm();
-	SiiOsTerm();
-	return -EIO;
+    	SII_DEBUG_PRINT(MSG_ERR,"Opening of I2c device %s failed, error code: %d\n",
+    			MHL_DEVICE_NAME, halStatus);
+    	HalTerm();
+    	SiiOsTerm();
+    	return -EIO;
     }
 
 	HalAcquireIsrLock();
@@ -187,12 +187,12 @@ int32_t StartMhlTxDevice(void)
     halStatus = HalInstallIrqHandler(SiiDrvDeviceManageInterrupts);
     if (halStatus != HAL_RET_SUCCESS)
     {
-	SII_DEBUG_PRINT(MSG_ERR,"Initialization of HAL interrupt support failed, error code: %d\n",
-			halStatus);
-	HalCloseI2cDevice();
-	HalTerm();
-	SiiOsTerm();
-	return -EIO;
+    	SII_DEBUG_PRINT(MSG_ERR,"Initialization of HAL interrupt support failed, error code: %d\n",
+    			halStatus);
+    	HalCloseI2cDevice();
+    	HalTerm();
+    	SiiOsTerm();
+    	return -EIO;
     }
 	printk("sii5293 [%s] end!\n", __FUNCTION__);
 
@@ -205,12 +205,12 @@ int32_t StartMhlTxDevice(void)
  * @brief Stop the MHL transmitter device
  * This function shuts down control of the transmitter device so that
  * the driver can exit
- *
- *
+ * 
+ * 
  * @return 0 if successful, negative error code otherwise
- *
+ * 
  * @param void
- *
+ * 
  */
 int32_t StopMhlTxDevice(void)
 {
@@ -227,17 +227,17 @@ int32_t StopMhlTxDevice(void)
 	halStatus = HalCloseI2cDevice();
     if (halStatus != HAL_RET_SUCCESS)
     {
-	SII_DEBUG_PRINT(MSG_ERR,
-			"Closing of I2c device failed, error code: %d\n",halStatus);
-	return -EIO;
+    	SII_DEBUG_PRINT(MSG_ERR,
+    			"Closing of I2c device failed, error code: %d\n",halStatus);
+    	return -EIO;
     }
 
 	halStatus = HalTerm();
     if (halStatus != HAL_RET_SUCCESS)
     {
-	SII_DEBUG_PRINT(MSG_ERR,
-			"Termination of HAL failed, error code: %d\n",halStatus);
-	return -EIO;
+    	SII_DEBUG_PRINT(MSG_ERR,
+    			"Termination of HAL failed, error code: %d\n",halStatus);
+    	return -EIO;
     }
 
 	SiiOsTerm();
@@ -364,7 +364,7 @@ static ssize_t set_mhl_devcap_local(struct device *dev,
         goto done;
     }
     SiiRegWrite(REG_CBUS_DEVICE_CAP_0+gDriverContext.devcap_local_offset, value);
-
+    
 	HalReleaseIsrLock();
 done:
 	return retval;
@@ -502,7 +502,7 @@ static ssize_t set_mhl_rap_in_status(struct device *dev,
 		pr_info("sii5293, Command not available in cbus not connected.\n");
 		return -ENODEV;
 	}
-
+    
     if(HalAcquireIsrLock() != HAL_RET_SUCCESS)
     {
         return -ERESTARTSYS;
@@ -538,7 +538,7 @@ static ssize_t set_mhl_rap_out(struct device *dev,
 		pr_info("sii5293, Command not available in cbus not connected.\n");
 		return -ENODEV;
 	}
-
+    
     if(HalAcquireIsrLock() != HAL_RET_SUCCESS)
     {
         return -ERESTARTSYS;
@@ -647,7 +647,7 @@ static ssize_t set_mhl_rcp_in_status(struct device *dev,
 		pr_info("sii5293, Command not available in cbus not connected.\n");
 		return -ENODEV;
 	}
-
+    
     if(HalAcquireIsrLock() != HAL_RET_SUCCESS)
     {
         return -ERESTARTSYS;
@@ -687,7 +687,7 @@ static ssize_t set_mhl_rcp_out(struct device *dev,
 		pr_info("sii5293, Command not available in cbus not connected.\n");
 		return -ENODEV;
 	}
-
+    
     if(HalAcquireIsrLock() != HAL_RET_SUCCESS)
     {
         return -ERESTARTSYS;
@@ -793,7 +793,7 @@ static ssize_t set_mhl_ucp_in_status(struct device *dev,
 		pr_info("sii5293, Command not available in cbus not connected.\n");
 		return -ENODEV;
 	}
-
+    
     if(HalAcquireIsrLock() != HAL_RET_SUCCESS)
     {
         return -ERESTARTSYS;
@@ -832,7 +832,7 @@ static ssize_t set_mhl_ucp_out(struct device *dev,
 		pr_info("sii5293, Command not available in cbus not connected.\n");
 		return -ENODEV;
 	}
-
+    
     if(HalAcquireIsrLock() != HAL_RET_SUCCESS)
     {
         return -ERESTARTSYS;
@@ -1403,7 +1403,7 @@ static ssize_t set_debug_register(struct device *dev,
 
 			data[idx] = value;
 		}
-
+		
 
 	} else {
 		idx = 0;
@@ -1482,12 +1482,11 @@ typedef enum
 	CEA_576I50	= 21,
 
 	CEA_1080P50	= 31,
-	CEA_1080P30 = 34,
 
 	CEA_MAX = 60
 }SII5293_VIDEO_MODE;
 
-//static unsigned int vdin_state = 0;
+static unsigned int vdin_state = 0;
 sii5293_vdin sii5293_vdin_info;
 sii9293_info_t sii9293_info;
 
@@ -1511,11 +1510,11 @@ void dump_input_video_info(void)
     }
     else
     {
-	index = gDriverContext.input_video_mode & 0x7f;
-	if( index >= NMB_OF_CEA861_VIDEO_MODES )
-		printk("sii5293 input video index = %d\n", index);
-	else
-	{
+    	index = gDriverContext.input_video_mode & 0x7f;
+    	if( index >= NMB_OF_CEA861_VIDEO_MODES )
+    		printk("sii5293 input video index = %d\n", index);
+    	else
+    	{
 			int height,width,h_total,v_total;
 			int hs_fp,hs_width,hs_bp;
 			int vs_fp,vs_width,vs_bp;
@@ -1556,6 +1555,7 @@ void dump_input_video_info(void)
 
 unsigned int sii5293_get_output_mode(void)
 {
+	unsigned int h_active,h_total,v_active,v_total;
 	unsigned int mode = 0;
 
 	if( (gDriverContext.input_video_mode == 0) || (gDriverContext.input_video_mode >= NMB_OF_CEA861_VIDEO_MODES) )
@@ -1565,7 +1565,6 @@ unsigned int sii5293_get_output_mode(void)
 	{
 		case 11:		mode = CEA_1080P60;		break;
 		case 24:		mode = CEA_1080P50;		break;
-		case 27:		mode = CEA_1080P30;		break;
 		case  3:		mode = CEA_1080I60;		break;
 		case 14:		mode = CEA_1080I50;		break;
 		case  2:		mode = CEA_720P60;		break;
@@ -1587,49 +1586,45 @@ static void sii5293_start_vdin_mode(unsigned int mode)
 	switch(mode)
 	{
 		case CEA_480I60:
-			width = 720;	height = 240;	frame_rate = 60;	field_flag = 1;
+			width = 720;	height = 240;	frame_rate = 60;	field_flag = 1;		
 			break;
-
+		
 		case CEA_480P60:
-			width = 720;	height = 480;	frame_rate = 60;	field_flag = 0;
+			width = 720;	height = 480;	frame_rate = 60;	field_flag = 0;		
 			break;
-
+		
 		case CEA_576I50:
-			width = 720;	height = 288;	frame_rate = 50;	field_flag = 1;
+			width = 720;	height = 288;	frame_rate = 50;	field_flag = 1;		
 			break;
-
+		
 		case CEA_576P50:
-			width = 720;	height = 576;	frame_rate = 50;	field_flag = 0;
+			width = 720;	height = 576;	frame_rate = 50;	field_flag = 0;		
 			break;
-
+		
 		case CEA_720P50:
-			width = 1280;	height = 720;	frame_rate = 50;	field_flag = 0;
+			width = 1280;	height = 720;	frame_rate = 50;	field_flag = 0;		
 			break;
-
+		
 		case CEA_720P60:
-			width = 1280;	height = 720;	frame_rate = 60;	field_flag = 0;
+			width = 1280;	height = 720;	frame_rate = 60;	field_flag = 0;		
 			break;
-
+		
 		case CEA_1080I60:
-			width = 1920;	height = 1080;	frame_rate = 60;	field_flag = 1;
+			width = 1920;	height = 1080;	frame_rate = 60;	field_flag = 1;		
 			break;
-
+		
 		case CEA_1080P60:
-			width = 1920;	height = 1080;	frame_rate = 60;	field_flag = 0;
+			width = 1920;	height = 1080;	frame_rate = 60;	field_flag = 0;		
 			break;
-
+		
 		case CEA_1080I50:
-			width = 1920;	height = 1080;	frame_rate = 50;	field_flag = 1;
+			width = 1920;	height = 1080;	frame_rate = 50;	field_flag = 1;		
 			break;
-
+		
 		case CEA_1080P50:
-			width = 1920;	height = 1080;	frame_rate = 50;	field_flag = 0;
+			width = 1920;	height = 1080;	frame_rate = 50;	field_flag = 0;		
 			break;
-
-		case CEA_1080P30:
-			width = 1920;	height = 1080;	frame_rate = 30;	field_flag = 0;
-			break;
-
+		
 		default:
 			printk("[%s], invalid video mode!\n",__FUNCTION__);
 			return ;
@@ -1703,7 +1698,7 @@ static ssize_t user_enable_store(struct class *class, struct class_attribute *at
 {
 	int argn;
 	char *p=NULL, *para=NULL, *argv[5] = {NULL,NULL,NULL,NULL,NULL};
-	unsigned int mode = 0, enable=0;
+	unsigned int mode = 0, enable=0, height = 0, width = 0, frame_rate = 0, field_flag = 0;
 	char *vmode[10] = {"480i\n","480p\n","576i\n","576p\n","720p50\n","720p\n","1080i\n","1080p\n","1080i50\n","1080p50\n"};
 	int i = 0;
 
@@ -1760,7 +1755,7 @@ static ssize_t user_enable_store(struct class *class, struct class_attribute *at
 	}
 	else if( (enable==0xff) && (sii5293_vdin_info.vdin_started==0) )
 	{
-
+		
 		switch(mode)
 		{
 			case 0: // 480i
@@ -1824,9 +1819,9 @@ static ssize_t debug_store(struct class *class, struct class_attribute *attr,
 {
 	int argn;
 	char *p=NULL, *para=NULL, *argv[4] = {NULL,NULL,NULL,NULL};
-	unsigned int cmd=0, reg_start = 0, reg_end = 0, value = 0xff;
-//	char i2c_buf[2] = {0,0};
-//	int ret = 0;
+	unsigned int cmd=0, reg_start = 0, reg_end = 0, length = 0, value = 0xff;
+	char i2c_buf[2] = {0,0};
+	int ret = 0;
 
 	p = kstrdup(buf, GFP_KERNEL);
 	for( argn=0; argn<4; argn++ )
@@ -1857,7 +1852,7 @@ static ssize_t debug_store(struct class *class, struct class_attribute *attr,
 		return count;
 	}
 
-
+	
 	printk(" cmd = %d - \"%s\"\n", cmd, argv[0]);
 	if( (argn<1) || ((cmd==0)&&argn!=2) || ((cmd==1)&&(argn!=3)) || ((cmd==2)&&(argn!=3)) )
 	{
@@ -1880,7 +1875,7 @@ static ssize_t debug_store(struct class *class, struct class_attribute *attr,
 		reg_start 	= (unsigned int)simple_strtoul(argv[1],NULL,16);
 		reg_end 	= (unsigned int)simple_strtoul(argv[2],NULL,16);
 		printk("sii5293 dump reg, [ 0x%x, 0x%x] :\n", reg_start, reg_end);
-
+		
 		for( i=reg_start; i<=reg_end; i++ )
 		{
 			value = SiiRegRead(i);
@@ -1895,7 +1890,7 @@ static ssize_t debug_store(struct class *class, struct class_attribute *attr,
 	else if( cmd == 2 ) // write
 	{
 		reg_start 	= (unsigned int)simple_strtoul(argv[1],NULL,16);
-		value 		= (unsigned int)simple_strtoul(argv[2],NULL,16);
+		value 		= (unsigned int)simple_strtoul(argv[2],NULL,16); 
 
 		SiiRegWrite(reg_start, value);
 		printk("sii5293 write reg[0x%x] = 0x%x\n", reg_start, value);
@@ -1909,8 +1904,8 @@ static ssize_t debug_store(struct class *class, struct class_attribute *attr,
 	}
 	else if( cmd == 4 ) // tt, for loop test of 9293 i2c
 	{
-		unsigned int type = 255, count = 0;//, i = 0, v1 = 0, v2 = 0;
-//		unsigned int err1 = 0, err2 = 0;
+		unsigned int type = 255, count = 0, i = 0, v1 = 0, v2 = 0;
+		unsigned int err1 = 0, err2 = 0, sum = 0, sum_failed = 0;
 
 		type = (unsigned int )simple_strtoul(argv[1], NULL, 10);
 		count = (unsigned int)simple_strtoul(argv[2], NULL, 10);
@@ -1920,14 +1915,14 @@ static ssize_t debug_store(struct class *class, struct class_attribute *attr,
 		if( type == 0 ) // 0x2/0x3 = 9392
 		{
 			unsigned int i = 0, v1 = 0, v2 = 0;
-			unsigned int err1 = 0, err2 = 0;
+			unsigned int err1 = 0, err2 = 0, sum_failed = 0;
 			for( i=0; i<count; i++ )
 			{
 				msleep(2);
 				v1 = sii9293_test_get_id();
 				msleep(2);
 				v2 = sii9293_test_get_h_total();
-
+				
 				if( v1 != 0x9293 )
 				{
 					err1 ++;
@@ -1977,7 +1972,6 @@ static ssize_t sii5293_input_mode_show(struct class *class, struct class_attribu
 		case CEA_1080I50:	strcpy(mode_str, "1080i50hz");	break;
 		case CEA_1080P60:	strcpy(mode_str, "1080p");		break;
 		case CEA_1080P50:	strcpy(mode_str, "1080p50hz");	break;
-		case CEA_1080P30:	strcpy(mode_str, "1080p30hz");	break;
 		default:			strcpy(mode_str, "invalid");	break;
 	}
 
@@ -1988,7 +1982,6 @@ static ssize_t sii5293_input_mode_show(struct class *class, struct class_attribu
 	return sprintf(buf, "%s\n", hdmi_mode_str);
 }
 
-/*
 static void dump_dvin_pinmux(void)
 {
 	printk(" dvin pinmux config:\n\
@@ -2081,7 +2074,7 @@ static ssize_t pinmux_store(struct class *class, struct class_attribute *attr,
 
 	return count;
 }
-*/
+
 static ssize_t sii9293_cable_status_show(struct class *class, struct class_attribute *attr, char *buf)
 {
 	sii9293_info.cable_status = sii_get_pwr5v_status();
@@ -2144,8 +2137,8 @@ static ssize_t sii9293_frame_skip_store(struct class *class, struct class_attrib
 {
 	int argn;
 	char *p=NULL, *para=NULL, *argv[4] = {NULL,NULL,NULL,NULL};
-	unsigned int skip_normal, skip_standby, skip_cable;
-//	int ret = 0;
+	unsigned int skip_normal, skip_standby, skip_cable, skip_signal;
+	int ret = 0;
 
 	p = kstrdup(buf, GFP_KERNEL);
 	for( argn=0; argn<3; argn++ )
@@ -2203,7 +2196,7 @@ static int aml_sii5293_create_attrs(struct class *cls)
 	if( cls == NULL )
 		return 1;
 
-	ret = class_create_file(cls, &class_attr_enable);
+	ret = class_create_file(cls, &class_attr_enable);	
 	ret |= class_create_file(cls, &class_attr_debug);
 //	ret |= class_create_file(cls, &class_attr_pinmux);
 	ret |= class_create_file(cls, &class_attr_input_mode);
@@ -2223,7 +2216,7 @@ static void aml_sii5293_remove_attrs(struct class *cls)
 	if( cls == NULL )
 		return ;
 
-	class_remove_file(cls, &class_attr_enable);
+	class_remove_file(cls, &class_attr_enable);	
 	class_remove_file(cls, &class_attr_debug);
 //	class_remove_file(cls, &class_attr_pinmux);
 	class_remove_file(cls, &class_attr_input_mode);
@@ -2247,7 +2240,7 @@ static int sii5293_get_of_data(struct device_node *pnode)
 //	struct i2c_board_info board_info;
 //	struct i2c_adapter *adapter;
 	unsigned int i2c_index;
-
+	
 	const char *str;
 	int ret = 0;
 
@@ -2271,9 +2264,9 @@ static int sii5293_get_of_data(struct device_node *pnode)
 		else if (!strncmp(str, "i2c_bus_d", 9))
 			i2c_index = AML_I2C_MASTER_D;
 		else
-			return -1;
+			return -1; 
 	}
-
+	
 	devinfo->config.i2c_bus_index = i2c_index;
 
 // for gpio_reset
@@ -2318,7 +2311,7 @@ static int sii5293_get_of_data(struct device_node *pnode)
 	hdmirx_info.i2c_client = i2c_new_device(adapter, &board_info);
 	printk("[%s] new i2c device i2c_client = 0x%x\n",hdmirx_info.i2c_client);
 #endif
-	printk("sii5293 get i2c_idx = %d, gpio_reset = %d, gpio_irq = %d\n",
+	printk("sii5293 get i2c_idx = %d, gpio_reset = %d, gpio_irq = %d\n", 
 		devinfo->config.i2c_bus_index, devinfo->config.gpio_reset, devinfo->config.gpio_intr);
 	return 0;
 }
@@ -2351,7 +2344,7 @@ static int sii5293_probe(struct platform_device *pdev)
 
 static int sii5293_remove(struct platform_device *pdev)
 {
-	return 0;
+	return 0;	
 }
 
 #ifdef CONFIG_USE_OF
@@ -2362,7 +2355,7 @@ static const struct of_device_id sii5293_dt_match[] = {
 };
 #endif
 
-static struct platform_driver sii5293_driver =
+static struct platform_driver sii5293_driver = 
 {
 	.probe		= sii5293_probe,
 	.remove 	= sii5293_remove,
@@ -2370,7 +2363,7 @@ static struct platform_driver sii5293_driver =
 					.name 				= MHL_DEVICE_NAME,
 					.owner				= THIS_MODULE,
 #ifdef CONFIG_USE_OF
-					.of_match_table 	= sii5293_dt_match,
+					.of_match_table 	= sii5293_dt_match, 
 #endif
 					}
 };
@@ -2378,7 +2371,7 @@ static struct platform_driver sii5293_driver =
 /*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 
 /*
-* modelue init interface
+* modelue init interface 
 */
 static int __init SiiMhlInit(void)
 {
@@ -2401,8 +2394,8 @@ static int __init SiiMhlInit(void)
                         0, NUMBER_OF_DEVS,
                         DEVNAME);
     if (ret) {
-	pr_info("sii5293, register_chrdev %s failed, error code: %d\n",
-					MHL_DRIVER_NAME, ret);
+    	pr_info("sii5293, register_chrdev %s failed, error code: %d\n",
+    					MHL_DRIVER_NAME, ret);
         goto free_devinfo;
     }
 
@@ -2410,7 +2403,7 @@ static int __init SiiMhlInit(void)
     devinfo->cdev->owner = THIS_MODULE;
     ret = cdev_add(devinfo->cdev, devinfo->devnum, MHL_DRIVER_MINOR_MAX);
     if (ret) {
-	pr_info("sii5293, cdev_add %s failed %d\n", MHL_DRIVER_NAME, ret);
+    	pr_info("sii5293, cdev_add %s failed %d\n", MHL_DRIVER_NAME, ret);
         goto free_chrdev;
     }
 
@@ -2421,7 +2414,7 @@ static int __init SiiMhlInit(void)
 
     devinfo->dev_class = class_create(THIS_MODULE, CLASS_NAME);
     if (IS_ERR(devinfo->dev_class)) {
-	pr_info("sii5293, class_create failed %d\n", ret);
+    	pr_info("sii5293, class_create failed %d\n", ret);
         ret = PTR_ERR(devinfo->dev_class);
         goto free_mhl_cdev;
     }
@@ -2429,10 +2422,10 @@ static int __init SiiMhlInit(void)
     //devinfo->dev_class->dev_attrs = driver_attribs;
 
     devinfo->device  = device_create(devinfo->dev_class, NULL,
-									 devinfo->devnum,  NULL,
-									 "%s", DEVNAME);
+    									 devinfo->devnum,  NULL,
+    									 "%s", DEVNAME);
     if (IS_ERR(devinfo->device)) {
-	pr_info("sii5293, class_device_create failed %s %d\n", DEVNAME, ret);
+    	pr_info("sii5293, class_device_create failed %s %d\n", DEVNAME, ret);
         ret = PTR_ERR(devinfo->device);
         goto free_class;
     }
@@ -2484,17 +2477,17 @@ static int __init SiiMhlInit(void)
     ret = StartMhlTxDevice();
     if(ret == 0) {
         printk(KERN_NOTICE"sii5293 mhldrv initialized successfully !\n");
-	return 0;
+    	return 0;
     } else {
-	// Transmitter startup failed so fail the driver load.
-	printk(KERN_NOTICE"sii5293 mhldrv initialized failed !\n");
-	mhl_dev_exit(devinfo);
+    	// Transmitter startup failed so fail the driver load.
+    	printk(KERN_NOTICE"sii5293 mhldrv initialized failed !\n");
+    	mhl_dev_exit(devinfo);
     }
 
 free_dev:
     if (devinfo->device)
     {
-	aml_sii5293_remove_attrs(devinfo->dev_class);
+    	aml_sii5293_remove_attrs(devinfo->dev_class);
 #ifdef DEBUG
         sysfs_remove_group(&devinfo->device->kobj, &sii5293_debug_attr_group);
 #endif
@@ -2528,7 +2521,7 @@ free_devinfo:
 	return ret;
 }
 /*
-* modelue remove interface
+* modelue remove interface 
 */
 static void __exit SiiMhlExit(void)
 {
@@ -2537,7 +2530,7 @@ static void __exit SiiMhlExit(void)
     mhl_dev_exit(devinfo);
     if (devinfo->device)
     {
-	aml_sii5293_remove_attrs(devinfo->dev_class);
+    	aml_sii5293_remove_attrs(devinfo->dev_class);
 #ifdef DEBUG
         sysfs_remove_group(&devinfo->device->kobj, &sii5293_debug_attr_group);
 #endif
@@ -2569,7 +2562,7 @@ int send_sii5293_uevent(struct device *device, const char *event_cat,
 	char event_string[MAX_EVENT_STRING_LEN];
 	char *envp[] = {event_string, NULL};
 
-	if ((NULL == event_cat) || (NULL == event_type))
+	if ((NULL == event_cat) || (NULL == event_type)) 
 	{
 		pr_info("sii5293, Invalid parameters\n");
 		retval = -EINVAL;

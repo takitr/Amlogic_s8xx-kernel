@@ -9,7 +9,7 @@ config AMLOGIC_MIPI
 	default n
 	help
 		Amlogic MIPI device driver
-
+		
 config MEM_MIPI
 	bool "Amlogic MEM_MIPI device"
 	default n

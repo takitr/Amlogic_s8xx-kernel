@@ -45,17 +45,11 @@ struct pinctrl_maps {
 
 static bool pinctrl_dummy_state;
 
-/* Mutex taken to protect pinctrl_list */
-DEFINE_MUTEX(pinctrl_list_mutex);
-
 /* Mutex taken by all entry points */
 DEFINE_MUTEX(pinctrl_mutex);
 
 /* Mutex taken to protect pinctrl_maps */
 DEFINE_MUTEX(pinctrl_maps_mutex);
-
-/* Mutex taken to protect pinctrldev_list */
-DEFINE_MUTEX(pinctrldev_list_mutex);
 
 /* Global list of pin control devices (struct pinctrl_dev) */
 LIST_HEAD(pinctrldev_list);
@@ -973,7 +967,7 @@ void devm_pinctrl_put(struct pinctrl *p)
 EXPORT_SYMBOL_GPL(devm_pinctrl_put);
 
 int pinctrl_register_map(struct pinctrl_map const *maps, unsigned num_maps,
-			 bool dup)
+			 bool dup, bool locked)
 {
 	int i, ret;
 	struct pinctrl_maps *maps_node;
@@ -1041,9 +1035,11 @@ int pinctrl_register_map(struct pinctrl_map const *maps, unsigned num_maps,
 		maps_node->maps = maps;
 	}
 
-	mutex_lock(&pinctrl_maps_mutex);
+	if (!locked)
+		mutex_lock(&pinctrl_maps_mutex);
 	list_add_tail(&maps_node->node, &pinctrl_maps);
-	mutex_unlock(&pinctrl_maps_mutex);
+	if (!locked)
+		mutex_unlock(&pinctrl_maps_mutex);
 
 	return 0;
 }
@@ -1058,13 +1054,13 @@ int pinctrl_register_map(struct pinctrl_map const *maps, unsigned num_maps,
 int pinctrl_register_mappings(struct pinctrl_map const *maps,
 			      unsigned num_maps)
 {
-	return pinctrl_register_map(maps, num_maps, true);
+	return pinctrl_register_map(maps, num_maps, true, false);
 }
 
 void pinctrl_unregister_map(struct pinctrl_map const *map)
 {
 	struct pinctrl_maps *maps_node;
-
+	
 	mutex_lock(&pinctrl_maps_mutex);
 	list_for_each_entry(maps_node, &pinctrl_maps, node) {
 		if (maps_node->maps == map) {
@@ -1558,17 +1554,13 @@ void pinctrl_unregister(struct pinctrl_dev *pctldev)
 	if (pctldev == NULL)
 		return;
 
-        mutex_lock(&pinctrl_mutex);
 	pinctrl_remove_device_debugfs(pctldev);
-        mutex_unlock(&pinctrl_mutex);
 
 	mutex_lock(&pinctrl_mutex);
 
 	if (!IS_ERR(pctldev->p))
 		pinctrl_put_locked(pctldev->p, true);
 
-	mutex_lock(&pinctrldev_list_mutex);
-        mutex_lock(&pinctrl_mutex);
 	/* TODO: check that no pinmuxes are still active? */
 	list_del(&pctldev->node);
 	/* Destroy descriptor tree */

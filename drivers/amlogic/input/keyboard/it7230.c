@@ -70,7 +70,7 @@ static int int_count=0;
 static int err_count = 0;
 static int low_count=0;
 
-const sInitCapSReg asInitCapSReg[] = {
+const sInitCapSReg asInitCapSReg[] = {  
 { PAGE_1,  CAPS_PCR,        0x0001},
 { PAGE_1,  CAPS_PSR,        0x0001},
 { PAGE_1,  CAPS_PSR,        0x0001},
@@ -201,7 +201,7 @@ static int it7230_power_on_init(void)
        ret2 = it7230_write_reg(PAGE_1, CAPS_CFER, 0xC000);//set the cab  time.
         }
     #ifdef _DEBUG_IT7230_INIT_
-    ret2 = it7230_write_reg(PAGE_1, CAPS_CFER, 0xC000);
+    ret2 = it7230_write_reg(PAGE_1, CAPS_CFER, 0xC000);    
     if (ret2 < 0)
         printk(KERN_INFO "***it7230_write_reg(PAGE_1, CAPS_CFER, 0xC000) failed ret = %d***\n", ret2);
     #endif
@@ -268,9 +268,9 @@ int it7230_read_reg(unsigned char page, unsigned char addr_byte)
     if (page != current_page ) {
         ret = i2c_transfer(client->adapter, &msg[0], 1);
         if (ret != 1) {
-			printk( "it7230 read(1) failed, address = 0x%x\n", addr_byte);
-		return -1;
-	}
+    			printk( "it7230 read(1) failed, address = 0x%x\n", addr_byte);
+        	return -1;
+       	}
         current_page = page;
         msleep(10);
     }
@@ -279,16 +279,16 @@ int it7230_read_reg(unsigned char page, unsigned char addr_byte)
         ret = (buf[1] << 8) | buf[0];
     }
     else{
-		printk( "it7230 read(2) failed, address = 0x%x\n", addr_byte);
-		return -1;
+    		printk( "it7230 read(2) failed, address = 0x%x\n", addr_byte);
+    		return -1;
         count ++;
-        if(count < 10){
-            printk("count = %d\n", count++);
+        if(count < 10){ 
+            printk("count = %d\n", count++);    
         }
         else{
             printk("power on init the it7230!\n");
             count = 0;
-            it7230_power_on_init();
+            it7230_power_on_init();  
         }
     }
     return ret;
@@ -338,7 +338,7 @@ static ssize_t it7230_write(struct device *dev, struct device_attribute *attr, c
 {
 	  struct i2c_client *client = container_of(dev, struct i2c_client, dev);
     u16 reg_addr, reg_data;
-
+   
 		printk("echo %s: buf[0]=%x\n", attr->attr.name, buf[0]);
     if (!strcmp(attr->attr.name, "reg")) {
 			sscanf(buf+2, "%x", &reg_addr);
@@ -351,21 +351,21 @@ static ssize_t it7230_write(struct device *dev, struct device_attribute *attr, c
 				reg_data = it7230_read_reg(reg_addr>>8, reg_addr&0xff);
 				printk(KERN_ALERT"read register(0x%x)= 0x%x\n",reg_addr, reg_data);
 			}
-		}
+ 		}
 
     if (!strcmp(attr->attr.name, "state")) {
-	printk("interrupt count = %d\n", int_count);
-	printk("timer count = %d\n", timer_count);
-	printk("work count = %d\n", work_count);
-	printk("gpioA3 mode=%d(0=output, 1=input)\n", get_gpio_mode(GPIOA_bank_bit0_14(3), GPIOA_bit_bit0_14(3)));
-	printk("gpioA3 value=%d(0=low, 1=high)\n", get_gpio_val(GPIOA_bank_bit0_14(3), GPIOA_bit_bit0_14(3)));
-		}
+    	printk("interrupt count = %d\n", int_count);
+    	printk("timer count = %d\n", timer_count);
+    	printk("work count = %d\n", work_count);
+    	printk("gpioA3 mode=%d(0=output, 1=input)\n", get_gpio_mode(GPIOA_bank_bit0_14(3), GPIOA_bit_bit0_14(3)));
+    	printk("gpioA3 value=%d(0=low, 1=high)\n", get_gpio_val(GPIOA_bank_bit0_14(3), GPIOA_bit_bit0_14(3)));
+ 		}
 
     if (!strcmp(attr->attr.name, "init")) {
-	printk("it7230 initialize echo\n");
-	it7230_power_on_init();
-		}
-
+    	printk("it7230 initialize echo\n");
+    	it7230_power_on_init();  
+ 		}
+		
 		return 1;
 }
 
@@ -413,16 +413,16 @@ static void it7230_work(struct work_struct *work)
 	//*************************************************************
     work_count++;
 	//***************************************************************
-    if ((!kp->get_irq_level()) || (kp->pending_keys))
+    if ((!kp->get_irq_level()) || (kp->pending_keys)) 
     {
-		if (!kp->get_irq_level()) {
-			if (++low_count > 30) {
-				low_count = 0;
-				it7230_power_on_init();
-				printk("interrupt pin low time more than 300ms\n");
-				goto restart;
-			}
-		}
+    		if (!kp->get_irq_level()) {
+    			if (++low_count > 30) {
+    				low_count = 0;
+    				it7230_power_on_init();
+    				printk("interrupt pin low time more than 300ms\n");
+    				goto restart;
+    			}
+    		}
         button_val = it7230_read_reg(PAGE_0, CAPS_SXCHSR);
         if ((button_val >> 4) || (button_val < 0)){ //note, just use 5 keys currently, if you have more key define, you need change this value.
             #ifdef _DEBUG_IT7230_READ_
@@ -430,9 +430,9 @@ static void it7230_work(struct work_struct *work)
             #endif
             kp->pending_keys = 0;
             if (++err_count > 50) {
-					err_count = 0;
-					it7230_power_on_init();
-					printk("error data more than 50\n");
+	    				err_count = 0;
+	    				it7230_power_on_init();
+	    				printk("error data more than 50\n");    	
             }
             goto restart;
         }
@@ -465,7 +465,7 @@ restart:
     }
     else
     {
-	  low_count = 0;
+    	  low_count = 0;
         enable_irq(kp->client->irq);
     }
 }
@@ -474,7 +474,7 @@ static struct input_dev* it7230_register_input(struct cap_key *key, int key_num)
 {
     struct input_dev *input;
     int i;
-
+    
     input = input_allocate_device();
     if (input) {
         /* setup input device */
@@ -492,7 +492,7 @@ static struct input_dev* it7230_register_input(struct cap_key *key, int key_num)
         input->id.bustype = BUS_ISA;
         input->id.vendor = 0x0001;
         input->id.product = 0x0001;
-        input->id.version = 0x0100;
+        input->id.version = 0x0100; 
         input->rep[REP_DELAY]=0xffffffff;
         input->rep[REP_PERIOD]=0xffffffff;
         input->keycodesize = sizeof(unsigned short);
@@ -568,11 +568,11 @@ static int it7230_register_device(struct it7230 *kp)
     strcpy(kp->config_name,DRIVER_NAME);
     ret=register_chrdev(0, kp->config_name, &it7230_fops);
     if(ret<=0) {
-        printk("register char device error\n");
+        printk("register char device error\r\n");
         return  ret ;
     }
     kp->config_major=ret;
-    printk("it7230 major:%d\n",ret);
+    printk("it7230 major:%d\r\n",ret);
     kp->config_class=class_create(THIS_MODULE,kp->config_name);
     kp->config_dev=device_create(kp->config_class,  NULL,
     MKDEV(kp->config_major,0),NULL,kp->config_name);
@@ -719,3 +719,7 @@ module_exit(it7230_exit);
 MODULE_AUTHOR("");
 MODULE_DESCRIPTION("it7230 driver");
 MODULE_LICENSE("GPL");
+
+
+
+

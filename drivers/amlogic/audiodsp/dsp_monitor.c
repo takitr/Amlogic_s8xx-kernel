@@ -20,7 +20,7 @@ static void audiodsp_monitor(unsigned long arg)
 	unsigned long dsp_jiffies;
 	unsigned long dsp_status;
 
-
+	
 	dsp_jiffies=DSP_RD(DSP_JIFFIES);
 	dsp_status=DSP_RD(DSP_STATUS);
 
@@ -41,7 +41,7 @@ static void audiodsp_monitor(unsigned long arg)
 		priv->dsp_abnormal_count++;
 	}
 	else
-		priv->dsp_abnormal_count = 0;
+		priv->dsp_abnormal_count = 0;		
 	if(priv->dsp_abnormal_count > 5 || jiffies_error > 5){
 		priv->decode_fatal_err |= 0x2;
 		priv->dsp_abnormal_count = 0;
@@ -54,7 +54,7 @@ static void audiodsp_monitor(unsigned long arg)
 
 
 void start_audiodsp_monitor(struct audiodsp_priv *priv)
-{
+{	
 	priv->dsp_mointer.expires=jiffies;
 	add_timer(&priv->dsp_mointer);
 }
@@ -66,9 +66,10 @@ void stop_audiodsp_monitor(struct audiodsp_priv *priv)
 void init_audiodsp_monitor(struct audiodsp_priv *priv)
 {
 	setup_timer(&priv->dsp_mointer,audiodsp_monitor,(unsigned long)priv);
-
+	
 }
 void release_audiodsp_monitor(struct audiodsp_priv *priv)
 {
 	stop_audiodsp_monitor(priv);
 }
+

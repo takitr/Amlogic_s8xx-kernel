@@ -13,19 +13,19 @@ struct aml_camera_i2c_fig_s HM5065_script_step[] = {
 {0xffff,0x01},  //	; MCU bypass;
 {0x9000,0x03},  //	; Enable Ram and enable Write;
 {0xA000,0x90},  //	;    MOV      DPTR,#fpInputRange(0x0C56)
-{0xA001,0x0C},  //	;
-{0xA002,0x56},  //	;
+{0xA001,0x0C},  //	; 
+{0xA002,0x56},  //	; 
 {0xA003,0xE0},  //	;    MOVX     A,@DPTR
 {0xA004,0xFE},  //	;    MOV      R6,A
 {0xA005,0xA3},  //	;    INC      DPTR
 {0xA006,0xE0},  //	;    MOVX     A,@DPTR
 {0xA007,0xFF},  //	;    MOV      R7,A
 {0xA008,0x12},  //	;    LCALL    FPAlu_FloatToInt16(C:4285)
-{0xA009,0x42},  //	;
-{0xA00A,0x85},  //	;
+{0xA009,0x42},  //	; 
+{0xA00A,0x85},  //	; 
 {0xA00B,0x90},  //	;    MOV      DPTR,#0x01B7  (0x0B4D)
-{0xA00C,0x01},  //	;
-{0xA00D,0xB7},  //	;
+{0xA00C,0x01},  //	; 
+{0xA00D,0xB7},  //	; 
 {0xA00E,0xEE},  //	;    MOV      A,R6
 {0xA00F,0xF0},  //	;    MOVX     @DPTR,A
 {0xA010,0xFC},  //	;    MOV      R4,A
@@ -34,30 +34,30 @@ struct aml_camera_i2c_fig_s HM5065_script_step[] = {
 {0xA013,0xF0},  //	;    MOVX     @DPTR,A
 {0xA014,0xFD},  //	;    MOV      R5,A
 {0xA015,0x90},  //	;    MOV      DPTR,#0x0605
-{0xA016,0x06},  //	;
-{0xA017,0x05},  //	;
+{0xA016,0x06},  //	; 
+{0xA017,0x05},  //	; 
 {0xA018,0xE0},  //	;    MOVX     A,@DPTR
 {0xA019,0x75},  //	;    MOV      B(0xF0),#0x02
-{0xA01A,0xF0},  //	;
-{0xA01B,0x02},  //	;
+{0xA01A,0xF0},  //	; 
+{0xA01B,0x02},  //	; 
 {0xA01C,0xA4},  //	;    MUL      AB
 {0xA01D,0x2D},  //	;    ADD      A,R5
 {0xA01E,0xFF},  //	;    MOV      R7,A
 {0xA01F,0xE5},  //	;    MOV      A,B(0xF0)
-{0xA020,0xF0},  //	;
+{0xA020,0xF0},  //	; 
 {0xA021,0x3C},  //	;    ADDC     A,R4
 {0xA022,0xFE},  //	;    MOV      R6,A
 {0xA023,0xAB},  //	;    MOV      R3 07
-{0xA024,0x07},  //	;
+{0xA024,0x07},  //	; 
 {0xA025,0xFA},  //	;    MOV      R2,A
 {0xA026,0x33},  //	;    RLC      A
 {0xA027,0x95},  //	;    SUBB     A,ACC(0xE0)
-{0xA028,0xE0},  //	;
+{0xA028,0xE0},  //	; 
 {0xA029,0xF9},  //	;    MOV      R1,A
 {0xA02A,0xF8},  //	;    MOV      R0,A
 {0xA02B,0x90},  //	;    MOV      DPTR,#0x0B4B
-{0xA02C,0x0B},  //	;
-{0xA02D,0x4B},  //	;
+{0xA02C,0x0B},  //	; 
+{0xA02D,0x4B},  //	; 
 {0xA02E,0xE0},  //	;    MOVX     A,@DPTR
 {0xA02F,0xFE},  //	;    MOV      R6,A
 {0xA030,0xA3},  //	;    INC      DPTR
@@ -66,21 +66,21 @@ struct aml_camera_i2c_fig_s HM5065_script_step[] = {
 {0xA033,0xEE},  //	;    MOV      A,R6
 {0xA034,0x33},  //	;    RLC      A
 {0xA035,0x95},  //	;    SUBB     A,ACC(0xE0)
-{0xA036,0xE0},  //	;
+{0xA036,0xE0},  //	; 
 {0xA037,0xFD},  //	;    MOV      R5,A
 {0xA038,0xFC},  //	;    MOV      R4,A
 {0xA039,0x12},  //	;    LCALL    C?LMUL(C:0C7B)
-{0xA03A,0x0C},  //	;
-{0xA03B,0x7B},  //	;
+{0xA03A,0x0C},  //	; 
+{0xA03B,0x7B},  //	; 
 {0xA03C,0x90},  //	;    MOV      DPTR,#0x01B9(0x0B4F)
-{0xA03D,0x01},  //	;
-{0xA03E,0xB9},  //	;
+{0xA03D,0x01},  //	; 
+{0xA03E,0xB9},  //	; 
 {0xA03F,0x12},  //	;    LCALL    C?LSTXDATA(C:0E05)
-{0xA040,0x0E},  //	;
-{0xA041,0x05},  //	;
+{0xA040,0x0E},  //	; 
+{0xA041,0x05},  //	; 
 {0xA042,0x90},  //	;    MOV      DPTR,#0x01B9(0x0B4F)
-{0xA043,0x01},  //	;
-{0xA044,0xB9},  //	;
+{0xA043,0x01},  //	; 
+{0xA044,0xB9},  //	; 
 {0xA045,0xE0},  //	;    MOVX     A,@DPTR
 {0xA046,0xFC},  //	;    MOV      R4,A
 {0xA047,0xA3},  //	;    INC      DPTR
@@ -93,21 +93,21 @@ struct aml_camera_i2c_fig_s HM5065_script_step[] = {
 {0xA04E,0xE0},  //	;    MOVX     A,@DPTR
 {0xA04F,0xFF},  //	;    MOV      R7,A
 {0xA050,0x78},  //	;    MOV      R0,#g_fTimer0TimeOut(0x08)
-{0xA051,0x08},  //	;
+{0xA051,0x08},  //	; 
 {0xA052,0x12},  //	;    LCALL    C?ULSHR(C:0DBF)
-{0xA053,0x0D},  //	;
-{0xA054,0xBF},  //	;
+{0xA053,0x0D},  //	; 
+{0xA054,0xBF},  //	; 
 {0xA055,0xA8},  //	;    MOV      R0,uwDelay1000(0x04)
-{0xA056,0x04},  //	;
+{0xA056,0x04},  //	; 
 {0xA057,0xA9},  //	;    MOV      R1 05
-{0xA058,0x05},  //	;
+{0xA058,0x05},  //	; 
 {0xA059,0xAA},  //	;    MOV      R2,uwDelay100(0x06)
-{0xA05A,0x06},  //	;
+{0xA05A,0x06},  //	; 
 {0xA05B,0xAB},  //	;    MOV      R3 07
-{0xA05C,0x07},  //	;
+{0xA05C,0x07},  //	; 
 {0xA05D,0x90},  //	;    MOV      DPTR,#0x0B49
-{0xA05E,0x0B},  //	;
-{0xA05F,0x49},  //	;
+{0xA05E,0x0B},  //	; 
+{0xA05F,0x49},  //	; 
 {0xA060,0xE0},  //	;    MOVX     A,@DPTR
 {0xA061,0xFE},  //	;    MOV      R6,A
 {0xA062,0xA3},  //	;    INC      DPTR
@@ -116,7 +116,7 @@ struct aml_camera_i2c_fig_s HM5065_script_step[] = {
 {0xA065,0xEE},  //	;    MOV      A,R6
 {0xA066,0x33},  //	;    RLC      A
 {0xA067,0x95},  //	;    SUBB     A,ACC(0xE0)
-{0xA068,0xE0},  //	;
+{0xA068,0xE0},  //	; 
 {0xA069,0xFD},  //	;    MOV      R5,A
 {0xA06A,0xFC},  //	;    MOV      R4,A
 {0xA06B,0xC3},  //	;    CLR      C
@@ -133,548 +133,548 @@ struct aml_camera_i2c_fig_s HM5065_script_step[] = {
 {0xA076,0x98},  //	;    SUBB     A,R0
 {0xA077,0xFC},  //	;    MOV      R4,A
 {0xA078,0x78},  //	;    MOV      R0,#0x01
-{0xA079,0x01},  //	;
+{0xA079,0x01},  //	; 
 {0xA07A,0x12},  //	;    LCALL    C?ULSHR(C:0DBF)
-{0xA07B,0x0D},  //	;
-{0xA07C,0xBF},  //	;
+{0xA07B,0x0D},  //	; 
+{0xA07C,0xBF},  //	; 
 {0xA07D,0x90},  //	;    MOV      DPTR,#m_pxwOffsetVector(0x0C4A)
-{0xA07E,0x0C},  //	;
-{0xA07F,0x4A},  //	;
+{0xA07E,0x0C},  //	; 
+{0xA07F,0x4A},  //	; 
 {0xA080,0xE0},  //	;    MOVX     A,@DPTR
 {0xA081,0xFC},  //	;    MOV      R4,A
 {0xA082,0xA3},  //	;    INC      DPTR
 {0xA083,0xE0},  //	;    MOVX     A,@DPTR
 {0xA084,0xF5},  //	;    MOV      DPL(0x82),A
-{0xA085,0x82},  //	;
+{0xA085,0x82},  //	; 
 {0xA086,0x8C},  //	;    MOV      DPH(0x83),R4
-{0xA087,0x83},  //	;
+{0xA087,0x83},  //	; 
 {0xA088,0xC0},  //	;    PUSH     DPH(0x83)
-{0xA089,0x83},  //	;
+{0xA089,0x83},  //	; 
 {0xA08A,0xC0},  //	;    PUSH     DPL(0x82)
-{0xA08B,0x82},  //	;
+{0xA08B,0x82},  //	; 
 {0xA08C,0x90},  //	;    MOV      DPTR,#0x0B48
-{0xA08D,0x0B},  //	;
-{0xA08E,0x48},  //	;
+{0xA08D,0x0B},  //	; 
+{0xA08E,0x48},  //	; 
 {0xA08F,0xE0},  //	;    MOVX     A,@DPTR
 {0xA090,0xD0},  //	;    POP      DPL(0x82)
-{0xA091,0x82},  //	;
+{0xA091,0x82},  //	; 
 {0xA092,0xD0},  //	;    POP      DPH(0x83)
-{0xA093,0x83},  //	;
+{0xA093,0x83},  //	; 
 {0xA094,0x75},  //	;    MOV      B(0xF0),#0x02
-{0xA095,0xF0},  //	;
-{0xA096,0x02},  //	;
+{0xA095,0xF0},  //	; 
+{0xA096,0x02},  //	; 
 {0xA097,0x12},  //	;    LCALL    C?OFFXADD(C:0E45)
-{0xA098,0x0E},  //	;
-{0xA099,0x45},  //	;
+{0xA098,0x0E},  //	; 
+{0xA099,0x45},  //	; 
 {0xA09A,0xEE},  //	;    MOV      A,R6
 {0xA09B,0xF0},  //	;    MOVX     @DPTR,A
 {0xA09C,0xA3},  //	;    INC      DPTR
 {0xA09D,0xEF},  //	;    MOV      A,R7
 {0xA09E,0xF0},  //	;    MOVX     @DPTR,A
 {0xA09F,0x02},  //	;    LJMP     C:BAD8
-{0xA0A0,0xBA},  //	;
-{0xA0A1,0xD8},  //	;
-{0xA0A2,0x90},  //    ;
+{0xA0A0,0xBA},  //	; 
+{0xA0A1,0xD8},  //	; 
+{0xA0A2,0x90},  //    ;         
 {0xA0A3,0x30},  //    ;        MOV      DPTR,#0x0036
-{0xA0A4,0x18},  //    ;
-{0xA0A5,0xe4},  //    ;
+{0xA0A4,0x18},  //    ;        
+{0xA0A5,0xe4},  //    ;        
 {0xA0A6,0xf0},  //    ;        MOV      A,#0x00
-{0xA0A7,0x74},  //    ;
+{0xA0A7,0x74},  //    ;        
 {0xA0A8,0x3f},  //    ;        MOVX     @DPTR,A
 {0xA0A9,0xf0},  //    ;        INC      DPTR
 {0xA0AA,0x22},  //    ;        INC      DPTR
 {0xA0BF,0x90},  //	;    MOV      DPTR,#0x005E
-{0xA0C0,0x00},  //	;
-{0xA0C1,0x5E},  //	;
+{0xA0C0,0x00},  //	; 
+{0xA0C1,0x5E},  //	; 
 {0xA0C2,0xE0},  //	;    MOVX     A,@DPTR
 {0xA0C3,0xFF},  //	;    MOV      R7,A
 {0xA0C4,0x70},  //	;    JNZ      B00:A9AF
-{0xA0C5,0x20},  //	;
+{0xA0C5,0x20},  //	; 
 {0xA0C6,0x90},  //	;    MOV      DPTR,#Av2x2_H_Size(0x4704)
-{0xA0C7,0x47},  //	;
-{0xA0C8,0x04},  //	;
+{0xA0C7,0x47},  //	; 
+{0xA0C8,0x04},  //	; 
 {0xA0C9,0x74},  //	;    MOV      A,#bInt_Event_Status(0x0A)
-{0xA0CA,0x0A},  //	;
+{0xA0CA,0x0A},  //	; 
 {0xA0CB,0xF0},  //	;    MOVX     @DPTR,A
 {0xA0CC,0xA3},  //	;    INC      DPTR
 {0xA0CD,0x74},  //	;    MOV      A,#0x30
-{0xA0CE,0x30},  //	;
+{0xA0CE,0x30},  //	; 
 {0xA0CF,0xF0},  //	;    MOVX     @DPTR,A
 {0xA0D0,0x90},  //	;    MOV      DPTR,#Av2x2_V_Size(0x470C)
-{0xA0D1,0x47},  //	;
-{0xA0D2,0x0C},  //	;
+{0xA0D1,0x47},  //	; 
+{0xA0D2,0x0C},  //	; 
 {0xA0D3,0x74},  //	;    MOV      A,#0x07
-{0xA0D4,0x07},  //	;
+{0xA0D4,0x07},  //	; 
 {0xA0D5,0xF0},  //	;    MOVX     @DPTR,A
 {0xA0D6,0xA3},  //	;    INC      DPTR
 {0xA0D7,0x74},  //	;    MOV      A,#IE(0xA8)
-{0xA0D8,0xA8},  //	;
+{0xA0D8,0xA8},  //	; 
 {0xA0D9,0xF0},  //	;    MOVX     @DPTR,A
 {0xA0DA,0x90},  //	;    MOV      DPTR,#Av2x2_Xscale(0x47A4)
-{0xA0DB,0x47},  //	;
-{0xA0DC,0xA4},  //	;
+{0xA0DB,0x47},  //	; 
+{0xA0DC,0xA4},  //	; 
 {0xA0DD,0x74},  //	;    MOV      A,#0x01
-{0xA0DE,0x01},  //	;
+{0xA0DE,0x01},  //	; 
 {0xA0DF,0xF0},  //	;    MOVX     @DPTR,A
 {0xA0E0,0x90},  //	;    MOV      DPTR,#Av2x2_Yscale(0x47A8)
-{0xA0E1,0x47},  //	;
-{0xA0E2,0xA8},  //	;
+{0xA0E1,0x47},  //	; 
+{0xA0E2,0xA8},  //	; 
 {0xA0E3,0xF0},  //	;    MOVX     @DPTR,A
 {0xA0E4,0x80},  //	;    SJMP     B00:A9FF
-{0xA0E5,0x50},  //	;
+{0xA0E5,0x50},  //	; 
 {0xA0E6,0xEF},  //	;    MOV      A,R7
 {0xA0E7,0x64},  //	;    XRL      A,#0x01
-{0xA0E8,0x01},  //	;
+{0xA0E8,0x01},  //	; 
 {0xA0E9,0x60},  //	;    JZ       B00:A9B8
-{0xA0EA,0x04},  //	;
+{0xA0EA,0x04},  //	; 
 {0xA0EB,0xEF},  //	;    MOV      A,R7
 {0xA0EC,0xB4},  //	;    CJNE     A,#0x03,B00:A9D8
-{0xA0ED,0x03},  //	;
-{0xA0EE,0x20},  //	;
+{0xA0ED,0x03},  //	; 
+{0xA0EE,0x20},  //	; 
 {0xA0EF,0x90},  //	;    MOV      DPTR,#Av2x2_H_Size(0x4704)
-{0xA0F0,0x47},  //	;
-{0xA0F1,0x04},  //	;
+{0xA0F0,0x47},  //	; 
+{0xA0F1,0x04},  //	; 
 {0xA0F2,0x74},  //	;    MOV      A,#0x05
-{0xA0F3,0x05},  //	;
+{0xA0F3,0x05},  //	; 
 {0xA0F4,0xF0},  //	;    MOVX     @DPTR,A
 {0xA0F5,0xA3},  //	;    INC      DPTR
 {0xA0F6,0x74},  //	;    MOV      A,#0x18
-{0xA0F7,0x18},  //	;
+{0xA0F7,0x18},  //	; 
 {0xA0F8,0xF0},  //	;    MOVX     @DPTR,A
 {0xA0F9,0x90},  //	;    MOV      DPTR,#Av2x2_V_Size(0x470C)
-{0xA0FA,0x47},  //	;
-{0xA0FB,0x0C},  //	;
+{0xA0FA,0x47},  //	; 
+{0xA0FB,0x0C},  //	; 
 {0xA0FC,0x74},  //	;    MOV      A,#0x03
-{0xA0FD,0x03},  //	;
+{0xA0FD,0x03},  //	; 
 {0xA0FE,0xF0},  //	;    MOVX     @DPTR,A
 {0xA0FF,0xA3},  //	;    INC      DPTR
 {0xA100,0x74},  //	;    MOV      A,#m_fDitherBitFormat(0xD4)
-{0xA101,0xD4},  //	;
+{0xA101,0xD4},  //	; 
 {0xA102,0xF0},  //	;    MOVX     @DPTR,A
 {0xA103,0x90},  //	;    MOV      DPTR,#Av2x2_Xscale(0x47A4)
-{0xA104,0x47},  //	;
-{0xA105,0xA4},  //	;
+{0xA104,0x47},  //	; 
+{0xA105,0xA4},  //	; 
 {0xA106,0x74},  //	;    MOV      A,#0x02
-{0xA107,0x02},  //	;
+{0xA107,0x02},  //	; 
 {0xA108,0xF0},  //	;    MOVX     @DPTR,A
 {0xA109,0x90},  //	;    MOV      DPTR,#Av2x2_Yscale(0x47A8)
-{0xA10A,0x47},  //	;
-{0xA10B,0xA8},  //	;
+{0xA10A,0x47},  //	; 
+{0xA10B,0xA8},  //	; 
 {0xA10C,0xF0},  //	;    MOVX     @DPTR,A
 {0xA10D,0x80},  //	;    SJMP     B00:A9FF
-{0xA10E,0x27},  //	;
+{0xA10E,0x27},  //	; 
 {0xA10F,0xEF},  //	;    MOV      A,R7
 {0xA110,0x64},  //	;    XRL      A,#0x02
-{0xA111,0x02},  //	;
+{0xA111,0x02},  //	; 
 {0xA112,0x60},  //	;    JZ       B00:A9E1
-{0xA113,0x04},  //	;
+{0xA113,0x04},  //	; 
 {0xA114,0xEF},  //	;    MOV      A,R7
 {0xA115,0xB4},  //	;    CJNE     A,#uwDelay1000(0x04),B00:A9FF
-{0xA116,0x04},  //	;
-{0xA117,0x1E},  //	;
+{0xA116,0x04},  //	; 
+{0xA117,0x1E},  //	; 
 {0xA118,0x90},  //	;    MOV      DPTR,#Av2x2_H_Size(0x4704)
-{0xA119,0x47},  //	;
-{0xA11A,0x04},  //	;
+{0xA119,0x47},  //	; 
+{0xA11A,0x04},  //	; 
 {0xA11B,0x74},  //	;    MOV      A,#0x02
-{0xA11C,0x02},  //	;
+{0xA11C,0x02},  //	; 
 {0xA11D,0xF0},  //	;    MOVX     @DPTR,A
 {0xA11E,0xA3},  //	;    INC      DPTR
 {0xA11F,0x74},  //	;    MOV      A,#TH0(0x8C)
-{0xA120,0x8C},  //	;
+{0xA120,0x8C},  //	; 
 {0xA121,0xF0},  //	;    MOVX     @DPTR,A
 {0xA122,0x90},  //	;    MOV      DPTR,#Av2x2_V_Size(0x470C)
-{0xA123,0x47},  //	;
-{0xA124,0x0C},  //	;
+{0xA123,0x47},  //	; 
+{0xA124,0x0C},  //	; 
 {0xA125,0x74},  //	;    MOV      A,#0x01
-{0xA126,0x01},  //	;
+{0xA126,0x01},  //	; 
 {0xA127,0xF0},  //	;    MOVX     @DPTR,A
 {0xA128,0xA3},  //	;    INC      DPTR
 {0xA129,0x74},  //	;    MOV      A,#0xEA
-{0xA12A,0xEA},  //	;
+{0xA12A,0xEA},  //	; 
 {0xA12B,0xF0},  //	;    MOVX     @DPTR,A
 {0xA12C,0x90},  //	;    MOV      DPTR,#Av2x2_Xscale(0x47A4)
-{0xA12D,0x47},  //	;
-{0xA12E,0xA4},  //	;
+{0xA12D,0x47},  //	; 
+{0xA12E,0xA4},  //	; 
 {0xA12F,0x74},  //	;    MOV      A,#uwDelay1000(0x04)
-{0xA130,0x04},  //	;
+{0xA130,0x04},  //	; 
 {0xA131,0xF0},  //	;    MOVX     @DPTR,A
 {0xA132,0x90},  //	;    MOV      DPTR,#Av2x2_Yscale(0x47A8)
-{0xA133,0x47},  //	;
-{0xA134,0xA8},  //	;
+{0xA133,0x47},  //	; 
+{0xA134,0xA8},  //	; 
 {0xA135,0xF0},  //	;    MOVX     @DPTR,A
 {0xA136,0x22},  //	;    RTN
 {0xA137,0x74},  //	;    MOV      A,#uwDelay1000(0x04)
-{0xA138,0x04},  //	;
+{0xA138,0x04},  //	; 
 {0xA139,0xF0},  //	;    MOVX     @DPTR,A
 {0xA13A,0xA3},  //	;    INC      DPTR
 {0xA13B,0x74},  //	;    MOV      A,#ZoomPanControl(0x20)
-{0xA13C,0x20},  //	;
+{0xA13C,0x20},  //	; 
 {0xA13D,0xF0},  //	;    MOVX     @DPTR,A
 {0xA13E,0xE4},  //	;    CLR      A
 {0xA13F,0xF5},  //	;    MOV      0x22,A
-{0xA140,0x22},  //	;
+{0xA140,0x22},  //	; 
 {0xA141,0xE5},  //	;    MOV      A 22
-{0xA142,0x22},  //	;
+{0xA142,0x22},  //	; 
 {0xA143,0xC3},  //	;    CLR      C
 {0xA144,0x94},  //	;    SUBB     A,#PipeSetupBank0(0x40)
-{0xA145,0x40},  //	;
+{0xA145,0x40},  //	; 
 {0xA146,0x40},  //	;    JC       B00:AB81
-{0xA147,0x03},  //	;
+{0xA147,0x03},  //	; 
 {0xA148,0x02},  //	;    LJMP     B00:AC33
-{0xA149,0xF1},  //	;
-{0xA14A,0xFD},  //	;
+{0xA149,0xF1},  //	; 
+{0xA14A,0xFD},  //	; 
 {0xA14B,0x90},  //	;    MOV      DPTR,#0x0ABA
-{0xA14C,0x0A},  //	;
-{0xA14D,0xBA},  //	;
+{0xA14C,0x0A},  //	; 
+{0xA14D,0xBA},  //	; 
 {0xA14E,0xE0},  //	;    MOVX     A,@DPTR
 {0xA14F,0xFE},  //	;    MOV      R6,A
 {0xA150,0xA3},  //	;    INC      DPTR
 {0xA151,0xE0},  //	;    MOVX     A,@DPTR
 {0xA152,0xFF},  //	;    MOV      R7,A
 {0xA153,0xF5},  //	;    MOV      DPL(0x82),A
-{0xA154,0x82},  //	;
+{0xA154,0x82},  //	; 
 {0xA155,0x8E},  //	;    MOV      DPH(0x83),R6
-{0xA156,0x83},  //	;
+{0xA156,0x83},  //	; 
 {0xA157,0xE0},  //	;    MOVX     A,@DPTR
 {0xA158,0x54},  //	;    ANL      A,#0x70
-{0xA159,0x70},  //	;
+{0xA159,0x70},  //	; 
 {0xA15A,0xFD},  //	;    MOV      R5,A
 {0xA15B,0xC4},  //	;    SWAP     A
 {0xA15C,0x54},  //	;    ANL      A,#0x0F
-{0xA15D,0x0F},  //	;
+{0xA15D,0x0F},  //	; 
 {0xA15E,0xFD},  //	;    MOV      R5,A
 {0xA15F,0x90},  //	;    MOV      DPTR,#0x0ABC
-{0xA160,0x0A},  //	;
-{0xA161,0xBC},  //	;
+{0xA160,0x0A},  //	; 
+{0xA161,0xBC},  //	; 
 {0xA162,0xE0},  //	;    MOVX     A,@DPTR
 {0xA163,0xFA},  //	;    MOV      R2,A
 {0xA164,0xA3},  //	;    INC      DPTR
 {0xA165,0xE0},  //	;    MOVX     A,@DPTR
 {0xA166,0xF5},  //	;    MOV      DPL(0x82),A
-{0xA167,0x82},  //	;
+{0xA167,0x82},  //	; 
 {0xA168,0x8A},  //	;    MOV      DPH(0x83),R2
-{0xA169,0x83},  //	;
+{0xA169,0x83},  //	; 
 {0xA16A,0xED},  //	;    MOV      A,R5
 {0xA16B,0xF0},  //	;    MOVX     @DPTR,A
 {0xA16C,0x90},  //	;    MOV      DPTR,#0x0ABD
-{0xA16D,0x0A},  //	;
-{0xA16E,0xBD},  //	;
+{0xA16D,0x0A},  //	; 
+{0xA16E,0xBD},  //	; 
 {0xA16F,0xE0},  //	;    MOVX     A,@DPTR
 {0xA170,0x04},  //	;    INC      A
 {0xA171,0xF0},  //	;    MOVX     @DPTR,A
 {0xA172,0x70},  //	;    JNZ      B00:ABB0
-{0xA173,0x06},  //	;
+{0xA173,0x06},  //	; 
 {0xA174,0x90},  //	;    MOV      DPTR,#0x0ABC
-{0xA175,0x0A},  //	;
-{0xA176,0xBC},  //	;
+{0xA175,0x0A},  //	; 
+{0xA176,0xBC},  //	; 
 {0xA177,0xE0},  //	;    MOVX     A,@DPTR
 {0xA178,0x04},  //	;    INC      A
 {0xA179,0xF0},  //	;    MOVX     @DPTR,A
 {0xA17A,0x8F},  //	;    MOV      DPL(0x82),R7
-{0xA17B,0x82},  //	;
+{0xA17B,0x82},  //	; 
 {0xA17C,0x8E},  //	;    MOV      DPH(0x83),R6
-{0xA17D,0x83},  //	;
+{0xA17D,0x83},  //	; 
 {0xA17E,0xA3},  //	;    INC      DPTR
 {0xA17F,0xE0},  //	;    MOVX     A,@DPTR
 {0xA180,0xFF},  //	;    MOV      R7,A
 {0xA181,0x90},  //	;    MOV      DPTR,#0x0ABC
-{0xA182,0x0A},  //	;
-{0xA183,0xBC},  //	;
+{0xA182,0x0A},  //	; 
+{0xA183,0xBC},  //	; 
 {0xA184,0xE0},  //	;    MOVX     A,@DPTR
 {0xA185,0xFC},  //	;    MOV      R4,A
 {0xA186,0xA3},  //	;    INC      DPTR
 {0xA187,0xE0},  //	;    MOVX     A,@DPTR
 {0xA188,0xF5},  //	;    MOV      DPL(0x82),A
-{0xA189,0x82},  //	;
+{0xA189,0x82},  //	; 
 {0xA18A,0x8C},  //	;    MOV      DPH(0x83),R4
-{0xA18B,0x83},  //	;
+{0xA18B,0x83},  //	; 
 {0xA18C,0xEF},  //	;    MOV      A,R7
 {0xA18D,0xF0},  //	;    MOVX     @DPTR,A
 {0xA18E,0x90},  //	;    MOV      DPTR,#0x0ABD
-{0xA18F,0x0A},  //	;
-{0xA190,0xBD},  //	;
+{0xA18F,0x0A},  //	; 
+{0xA190,0xBD},  //	; 
 {0xA191,0xE0},  //	;    MOVX     A,@DPTR
 {0xA192,0x04},  //	;    INC      A
 {0xA193,0xF0},  //	;    MOVX     @DPTR,A
 {0xA194,0x70},  //	;    JNZ      B00:ABD2
-{0xA195,0x06},  //	;
+{0xA195,0x06},  //	; 
 {0xA196,0x90},  //	;    MOV      DPTR,#0x0ABC
-{0xA197,0x0A},  //	;
-{0xA198,0xBC},  //	;
+{0xA197,0x0A},  //	; 
+{0xA198,0xBC},  //	; 
 {0xA199,0xE0},  //	;    MOVX     A,@DPTR
 {0xA19A,0x04},  //	;    INC      A
 {0xA19B,0xF0},  //	;    MOVX     @DPTR,A
 {0xA19C,0x90},  //	;    MOV      DPTR,#0x0ABA
-{0xA19D,0x0A},  //	;
-{0xA19E,0xBA},  //	;
+{0xA19D,0x0A},  //	; 
+{0xA19E,0xBA},  //	; 
 {0xA19F,0xE0},  //	;    MOVX     A,@DPTR
 {0xA1A0,0xFE},  //	;    MOV      R6,A
 {0xA1A1,0xA3},  //	;    INC      DPTR
 {0xA1A2,0xE0},  //	;    MOVX     A,@DPTR
 {0xA1A3,0xFF},  //	;    MOV      R7,A
 {0xA1A4,0xF5},  //	;    MOV      DPL(0x82),A
-{0xA1A5,0x82},  //	;
+{0xA1A5,0x82},  //	; 
 {0xA1A6,0x8E},  //	;    MOV      DPH(0x83),R6
-{0xA1A7,0x83},  //	;
+{0xA1A7,0x83},  //	; 
 {0xA1A8,0xE0},  //	;    MOVX     A,@DPTR
 {0xA1A9,0x54},  //	;    ANL      A,#0x07
-{0xA1AA,0x07},  //	;
+{0xA1AA,0x07},  //	; 
 {0xA1AB,0xFD},  //	;    MOV      R5,A
 {0xA1AC,0x90},  //	;    MOV      DPTR,#0x0ABC
-{0xA1AD,0x0A},  //	;
-{0xA1AE,0xBC},  //	;
+{0xA1AD,0x0A},  //	; 
+{0xA1AE,0xBC},  //	; 
 {0xA1AF,0xE0},  //	;    MOVX     A,@DPTR
 {0xA1B0,0xFA},  //	;    MOV      R2,A
 {0xA1B1,0xA3},  //	;    INC      DPTR
 {0xA1B2,0xE0},  //	;    MOVX     A,@DPTR
 {0xA1B3,0xF5},  //	;    MOV      DPL(0x82),A
-{0xA1B4,0x82},  //	;
+{0xA1B4,0x82},  //	; 
 {0xA1B5,0x8A},  //	;    MOV      DPH(0x83),R2
-{0xA1B6,0x83},  //	;
+{0xA1B6,0x83},  //	; 
 {0xA1B7,0xED},  //	;    MOV      A,R5
 {0xA1B8,0xF0},  //	;    MOVX     @DPTR,A
 {0xA1B9,0x90},  //	;    MOV      DPTR,#0x0ABD
-{0xA1BA,0x0A},  //	;
-{0xA1BB,0xBD},  //	;
+{0xA1BA,0x0A},  //	; 
+{0xA1BB,0xBD},  //	; 
 {0xA1BC,0xE0},  //	;    MOVX     A,@DPTR
 {0xA1BD,0x04},  //	;    INC      A
 {0xA1BE,0xF0},  //	;    MOVX     @DPTR,A
 {0xA1BF,0x70},  //	;    JNZ      B00:ABFD
-{0xA1C0,0x06},  //	;
+{0xA1C0,0x06},  //	; 
 {0xA1C1,0x90},  //	;    MOV      DPTR,#0x0ABC
-{0xA1C2,0x0A},  //	;
-{0xA1C3,0xBC},  //	;
+{0xA1C2,0x0A},  //	; 
+{0xA1C3,0xBC},  //	; 
 {0xA1C4,0xE0},  //	;    MOVX     A,@DPTR
 {0xA1C5,0x04},  //	;    INC      A
 {0xA1C6,0xF0},  //	;    MOVX     @DPTR,A
 {0xA1C7,0x8F},  //	;    MOV      DPL(0x82),R7
-{0xA1C8,0x82},  //	;
+{0xA1C8,0x82},  //	; 
 {0xA1C9,0x8E},  //	;    MOV      DPH(0x83),R6
-{0xA1CA,0x83},  //	;
+{0xA1CA,0x83},  //	; 
 {0xA1CB,0xA3},  //	;    INC      DPTR
 {0xA1CC,0xA3},  //	;    INC      DPTR
 {0xA1CD,0xE0},  //	;    MOVX     A,@DPTR
 {0xA1CE,0xFF},  //	;    MOV      R7,A
 {0xA1CF,0x90},  //	;    MOV      DPTR,#0x0ABC
-{0xA1D0,0x0A},  //	;
-{0xA1D1,0xBC},  //	;
+{0xA1D0,0x0A},  //	; 
+{0xA1D1,0xBC},  //	; 
 {0xA1D2,0xE0},  //	;    MOVX     A,@DPTR
 {0xA1D3,0xFC},  //	;    MOV      R4,A
 {0xA1D4,0xA3},  //	;    INC      DPTR
 {0xA1D5,0xE0},  //	;    MOVX     A,@DPTR
 {0xA1D6,0xF5},  //	;    MOV      DPL(0x82),A
-{0xA1D7,0x82},  //	;
+{0xA1D7,0x82},  //	; 
 {0xA1D8,0x8C},  //	;    MOV      DPH(0x83),R4
-{0xA1D9,0x83},  //	;
+{0xA1D9,0x83},  //	; 
 {0xA1DA,0xEF},  //	;    MOV      A,R7
 {0xA1DB,0xF0},  //	;    MOVX     @DPTR,A
 {0xA1DC,0x90},  //	;    MOV      DPTR,#0x0ABD
-{0xA1DD,0x0A},  //	;
-{0xA1DE,0xBD},  //	;
+{0xA1DD,0x0A},  //	; 
+{0xA1DE,0xBD},  //	; 
 {0xA1DF,0xE0},  //	;    MOVX     A,@DPTR
 {0xA1E0,0x04},  //	;    INC      A
 {0xA1E1,0xF0},  //	;    MOVX     @DPTR,A
 {0xA1E2,0x70},  //	;    JNZ      B00:AC20
-{0xA1E3,0x06},  //	;
+{0xA1E3,0x06},  //	; 
 {0xA1E4,0x90},  //	;    MOV      DPTR,#0x0ABC
-{0xA1E5,0x0A},  //	;
-{0xA1E6,0xBC},  //	;
+{0xA1E5,0x0A},  //	; 
+{0xA1E6,0xBC},  //	; 
 {0xA1E7,0xE0},  //	;    MOVX     A,@DPTR
 {0xA1E8,0x04},  //	;    INC      A
 {0xA1E9,0xF0},  //	;    MOVX     @DPTR,A
 {0xA1EA,0x90},  //	;    MOV      DPTR,#0x0ABB
-{0xA1EB,0x0A},  //	;
-{0xA1EC,0xBB},  //	;
+{0xA1EB,0x0A},  //	; 
+{0xA1EC,0xBB},  //	; 
 {0xA1ED,0xE0},  //	;    MOVX     A,@DPTR
 {0xA1EE,0x24},  //	;    ADD      A,#0x03
-{0xA1EF,0x03},  //	;
+{0xA1EF,0x03},  //	; 
 {0xA1F0,0xF0},  //	;    MOVX     @DPTR,A
 {0xA1F1,0x90},  //	;    MOV      DPTR,#0x0ABA
-{0xA1F2,0x0A},  //	;
-{0xA1F3,0xBA},  //	;
+{0xA1F2,0x0A},  //	; 
+{0xA1F3,0xBA},  //	; 
 {0xA1F4,0xE0},  //	;    MOVX     A,@DPTR
 {0xA1F5,0x34},  //	;    ADDC     A,#DeviceParameters(0x00)
-{0xA1F6,0x00},  //	;
+{0xA1F6,0x00},  //	; 
 {0xA1F7,0xF0},  //	;    MOVX     @DPTR,A
 {0xA1F8,0x05},  //	;    INC      0x22
-{0xA1F9,0x22},  //	;
+{0xA1F9,0x22},  //	; 
 {0xA1FA,0x02},  //	;    LJMP     B00:A409
-{0xA1FB,0xF1},  //	;
-{0xA1FC,0x41},  //	;
+{0xA1FB,0xF1},  //	; 
+{0xA1FC,0x41},  //	; 
 {0xA1FD,0x90},  //	;    MOV      DPTR,#0x0ABA
-{0xA1FE,0x0A},  //	;
-{0xA1FF,0xBA},  //	;
+{0xA1FE,0x0A},  //	; 
+{0xA1FF,0xBA},  //	; 
 {0xA200,0x74},  //	;    MOV      A,#g_fpPixelCount(0x0E)
-{0xA201,0x0E},  //	;
+{0xA201,0x0E},  //	; 
 {0xA202,0xF0},  //	;    MOVX     @DPTR,A
 {0xA203,0xA3},  //	;    INC      DPTR
 {0xA204,0x74},  //	;    MOV      A,#0xDC
-{0xA205,0xDC},  //	;
+{0xA205,0xDC},  //	; 
 {0xA206,0xF0},  //	;    MOVX     @DPTR,A
 {0xA207,0xA3},  //	;    INC      DPTR
 {0xA208,0x74},  //	;    MOV      A,#0x05
-{0xA209,0x05},  //	;
+{0xA209,0x05},  //	; 
 {0xA20A,0xF0},  //	;    MOVX     @DPTR,A
 {0xA20B,0xA3},  //	;    INC      DPTR
 {0xA20C,0x74},  //	;    MOV      A,#0x61
-{0xA20D,0x61},  //	;
+{0xA20D,0x61},  //	; 
 {0xA20E,0xF0},  //	;    MOVX     @DPTR,A
 {0xA20F,0x90},  //	;    MOV      DPTR,#0x0ABA
-{0xA210,0x0A},  //	;
-{0xA211,0xBA},  //	;
+{0xA210,0x0A},  //	; 
+{0xA211,0xBA},  //	; 
 {0xA212,0xE0},  //	;    MOVX     A,@DPTR
 {0xA213,0xFE},  //	;    MOV      R6,A
 {0xA214,0xA3},  //	;    INC      DPTR
 {0xA215,0xE0},  //	;    MOVX     A,@DPTR
 {0xA216,0xAA},  //	;    MOV      R2,uwDelay100(0x06)
-{0xA217,0x06},  //	;
+{0xA217,0x06},  //	; 
 {0xA218,0xF9},  //	;    MOV      R1,A
 {0xA219,0x7B},  //	;    MOV      R3,#0x01
-{0xA21A,0x01},  //	;
+{0xA21A,0x01},  //	; 
 {0xA21B,0xC0},  //	;    PUSH     0x02
-{0xA21C,0x02},  //	;
+{0xA21C,0x02},  //	; 
 {0xA21D,0xA3},  //	;    INC      DPTR
 {0xA21E,0xE0},  //	;    MOVX     A,@DPTR
 {0xA21F,0xFE},  //	;    MOV      R6,A
 {0xA220,0xA3},  //	;    INC      DPTR
 {0xA221,0xE0},  //	;    MOVX     A,@DPTR
 {0xA222,0xAA},  //	;    MOV      R2,uwDelay100(0x06)
-{0xA223,0x06},  //	;
+{0xA223,0x06},  //	; 
 {0xA224,0xF8},  //	;    MOV      R0,A
 {0xA225,0xAC},  //	;    MOV      R4 02
-{0xA226,0x02},  //	;
+{0xA226,0x02},  //	; 
 {0xA227,0x7D},  //	;    MOV      R5,#0x01
-{0xA228,0x01},  //	;
+{0xA228,0x01},  //	; 
 {0xA229,0xD0},  //	;    POP      0x02
-{0xA22A,0x02},  //	;
+{0xA22A,0x02},  //	; 
 {0xA22B,0x7E},  //	;    MOV      R6,#DeviceParameters(0x00)
-{0xA22C,0x00},  //	;
+{0xA22C,0x00},  //	; 
 {0xA22D,0x7F},  //	;    MOV      R7,#uwDelay1000(0x04)
-{0xA22E,0x04},  //	;
+{0xA22E,0x04},  //	; 
 {0xA22F,0x12},  //	;    LCALL    C?COPY517(C:0F6F)
-{0xA230,0x0F},  //	;
-{0xA231,0x6F},  //	;
-{0xA232,0x02},  //	;    JUMP
-{0xA233,0x66},  //	;
-{0xA234,0xD9},  //	;
+{0xA230,0x0F},  //	; 
+{0xA231,0x6F},  //	; 
+{0xA232,0x02},  //	;    JUMP    
+{0xA233,0x66},  //	; 
+{0xA234,0xD9},  //	; 
 {0xA235,0x90},  //	;    MOV      R4 02
-{0xA236,0x07},  //	;
+{0xA236,0x07},  //	; 
 {0xA237,0xD0},  //	;    MOV      R5,#0x01
-{0xA238,0x02},  //	;
+{0xA238,0x02},  //	; 
 {0xA239,0xA2},  //	;    POP      0x02
-{0xA23A,0x69},  //	;
+{0xA23A,0x69},  //	; 
 {0xA240,0x02},  //	;    ANL      A,#0xFD
-{0xA241,0x21},  //	;
+{0xA241,0x21},  //	; 
 {0xA242,0x7F},  //	;    MOVX     @DPTR,A
 {0xA243,0x02},  //	;    ANL      A,#0xFD
-{0xA244,0x21},  //	;
+{0xA244,0x21},  //	; 
 {0xA245,0xF4},  //	;    MOVX     @DPTR,A
 {0xA246,0x02},  //	;    ANL      A,#0xFD
-{0xA247,0xA6},  //	;
+{0xA247,0xA6},  //	; 
 {0xA248,0x15},  //	;    MOVX     @DPTR,A
 {0xA249,0x60},  //	;    JZ       C:29EF
-{0xA24A,0x0A},  //	;
+{0xA24A,0x0A},  //	; 
 {0xA24B,0xEF},  //	;    MOV      A,R7
 {0xA24C,0xB4},  //	;    CJNE     A,#0x01,C:29FF
-{0xA24D,0x01},  //	;
-{0xA24E,0x16},  //	;
+{0xA24D,0x01},  //	; 
+{0xA24E,0x16},  //	; 
 {0xA24F,0x90},  //	;    MOV      DPTR,#ModeSetup(0x005D)
-{0xA250,0x00},  //	;
-{0xA251,0x5D},  //	;
+{0xA250,0x00},  //	; 
+{0xA251,0x5D},  //	; 
 {0xA252,0xE0},  //	;    MOVX     A,@DPTR
 {0xA253,0x70},  //	;    JNZ      C:29FF
-{0xA254,0x10},  //	;
+{0xA254,0x10},  //	; 
 {0xA255,0x12},  //	;    LCALL    StreamManager_ResumeStreaming(C:26C8)
-{0xA256,0x26},  //	;
-{0xA257,0xC8},  //	;
+{0xA256,0x26},  //	; 
+{0xA257,0xC8},  //	; 
 {0xA258,0x90},  //	;    MOV      DPTR,#0x0011
-{0xA259,0x00},  //	;
-{0xA25A,0x11},  //	;
+{0xA259,0x00},  //	; 
+{0xA25A,0x11},  //	; 
 {0xA25B,0x74},  //	;    MOV      A,#0x30
-{0xA25C,0x30},  //	;
+{0xA25C,0x30},  //	; 
 {0xA25D,0xF0},  //	;    MOVX     @DPTR,A
 {0xA25E,0x90},  //	;    MOV      DPTR,#fpHighClipForDesiredExposure(0x0010)
-{0xA25F,0x00},  //	;
-{0xA260,0x10},  //	;
+{0xA25F,0x00},  //	; 
+{0xA260,0x10},  //	; 
 {0xA261,0x74},  //	;    MOV      A,#0x01
-{0xA262,0x01},  //	;
+{0xA262,0x01},  //	; 
 {0xA263,0xF0},  //	;    MOVX     @DPTR,A
-{0xA264,0x22},  //	;    RET
+{0xA264,0x22},  //	;    RET      
 {0xA265,0x12},  //	;    LCALL    C:25A8
-{0xA266,0x25},  //	;
-{0xA267,0xA8},  //	;
-{0xA268,0x02},  //	;      RET
-{0xA269,0x29},  //	;
-{0xA26A,0xFC},  //	;
+{0xA266,0x25},  //	; 
+{0xA267,0xA8},  //	; 
+{0xA268,0x02},  //	;      RET     
+{0xA269,0x29},  //	; 
+{0xA26A,0xFC},  //	; 
 {0xA26B,0x44},  //	;    ORL      A,#fpHighClipForDesiredExposure(0x10)
-{0xA26C,0x18},  //	;
+{0xA26C,0x18},  //	; 
 {0xA26D,0xF0},  //	;    MOVX     @DPTR,A
 {0xA26E,0x90},  //	;    MOV      DPTR,#Tx_Csi2_Dphy_Datalane2_Pwr_Ctrl(0x7218)
-{0xA26F,0x72},  //	;
-{0xA270,0x18},  //	;
+{0xA26F,0x72},  //	; 
+{0xA270,0x18},  //	; 
 {0xA271,0xE0},  //	;    MOVX     A,@DPTR
 {0xA272,0x44},  //	;    ORL      A,#fpHighClipForDesiredExposure(0x10)
-{0xA273,0x18},  //	;
+{0xA273,0x18},  //	; 
 {0xA274,0xF0},  //	;    MOVX     @DPTR,A
 {0xA275,0x00},  //	;    MOV      DPTR,#Tx_Csi2_Dphy_Clklane_Pwr_Ctrl(0x7208)
-{0xA276,0x00},  //	;
-{0xA277,0x00},  //	;
+{0xA276,0x00},  //	; 
+{0xA277,0x00},  //	; 
 {0xA278,0x00},  //	;    MOVX     A,@DPTR
 {0xA279,0x00},  //	;    ORL      A,#fpHighClipForDesiredExposure(0x10)
-{0xA27A,0x00},  //	;
+{0xA27A,0x00},  //	; 
 {0xA27B,0x90},  //	;    MOVX     @DPTR,A
 {0xA27C,0x72},  //	;    MOV      DPTR,#Tx_Csi2_Pwr_Ctrl(0x7214)
-{0xA27D,0x08},  //	;
-{0xA27E,0xE0},  //	;
+{0xA27D,0x08},  //	; 
+{0xA27E,0xE0},  //	; 
 {0xA27F,0x44},  //	;    MOVX     A,@DPTR
 {0xA280,0x10},  //	;    ANL      A,#0xFD
-{0xA281,0xF0},  //	;
+{0xA281,0xF0},  //	; 
 {0xA282,0x90},  //	;    MOVX     @DPTR,A
 {0xA283,0x72},  //	;    MOV      DPTR,#Tx_Csi2_Dphy_Pwr_Ctrl(0x7204)
-{0xA284,0x14},  //	;
-{0xA285,0xE0},  //	;
+{0xA284,0x14},  //	; 
+{0xA285,0xE0},  //	; 
 {0xA286,0x54},  //	;    MOV      A,#0x1F
-{0xA287,0xFD},  //	;
+{0xA287,0xFD},  //	; 
 {0xA288,0xF0},  //	;    MOVX     @DPTR,A
-{0xA289,0x22},  //	;    RET
+{0xA289,0x22},  //	;    RET     
 {0xA29B,0xF0},  //	;    MOVX     @DPTR,A
 {0xA29C,0xD3},  //	;    SETB     C
 {0xA29D,0x90},  //	;    MOV      DPTR,#0x0791
-{0xA29E,0x07},  //	;
-{0xA29F,0x91},  //	;
+{0xA29E,0x07},  //	; 
+{0xA29F,0x91},  //	; 
 {0xA2A0,0xE0},  //	;    MOVX     A,@DPTR
 {0xA2A1,0x94},  //	;    SUBB     A,#0x21
-{0xA2A2,0x21},  //	;
+{0xA2A2,0x21},  //	; 
 {0xA2A3,0x90},  //	;    MOV      DPTR,#AutoFocusInput(0x0790)
-{0xA2A4,0x07},  //	;
-{0xA2A5,0x90},  //	;
+{0xA2A4,0x07},  //	; 
+{0xA2A5,0x90},  //	; 
 {0xA2A6,0xE0},  //	;    MOVX     A,@DPTR
 {0xA2A7,0x64},  //	;    XRL      A,#PipeSetupCommon(0x80)
-{0xA2A8,0x80},  //	;
+{0xA2A8,0x80},  //	; 
 {0xA2A9,0x94},  //	;    SUBB     A,#SP(0x81)
-{0xA2AA,0x81},  //	;
+{0xA2AA,0x81},  //	; 
 {0xA2AB,0x40},  //	;    JC       B01:B152
-{0xA2AC,0x08},  //	;
+{0xA2AC,0x08},  //	; 
 {0xA2AD,0x90},  //	;    MOV      DPTR,#0x07CB
-{0xA2AE,0x07},  //	;
-{0xA2AF,0xCB},  //	;
+{0xA2AE,0x07},  //	; 
+{0xA2AF,0xCB},  //	; 
 {0xA2B0,0x74},  //	;    MOV      A,#0xFF
-{0xA2B1,0xFF},  //	;
+{0xA2B1,0xFF},  //	; 
 {0xA2B2,0xF0},  //	;    MOVX     @DPTR,A
 {0xA2B3,0x80},  //	;    SJMP     B01:B158
-{0xA2B4,0x06},  //	;
+{0xA2B4,0x06},  //	; 
 {0xA2B5,0x90},  //	;    MOV      DPTR,#0x07CB
-{0xA2B6,0x07},  //	;
-{0xA2B7,0xCB},  //	;
+{0xA2B6,0x07},  //	; 
+{0xA2B7,0xCB},  //	; 
 {0xA2B8,0x74},  //	;    MOV      A,#0x01
-{0xA2B9,0x01},  //	;
+{0xA2B9,0x01},  //	; 
 {0xA2BA,0xF0},  //	;    MOVX     @DPTR,A
 {0xA2BB,0x02},  //	;    JUMP
-{0xA2BC,0xB5},  //	;
-{0xA2BD,0xC3},  //	;
+{0xA2BC,0xB5},  //	; 
+{0xA2BD,0xC3},  //	; 
 {0xA2BE,0x90},  //	;    MOV      DPTR,#0x0834
-{0xA2BF,0x08},  //	;
-{0xA2C0,0x34},  //	;
+{0xA2BF,0x08},  //	; 
+{0xA2C0,0x34},  //	; 
 {0xA2C1,0xE0},  //	;    MOVX     A,@DPTR
 {0xA2C2,0xFC},  //	;    MOV      R4,A
 {0xA2C3,0xA3},  //	;    INC      DPTR
@@ -687,8 +687,8 @@ struct aml_camera_i2c_fig_s HM5065_script_step[] = {
 {0xA2CA,0xE0},  //	;    MOVX     A,@DPTR
 {0xA2CB,0xFF},  //	;    MOV      R7,A
 {0xA2CC,0x90},  //	;    MOV      DPTR,#AutoFocusMeasureData(0x07D0)
-{0xA2CD,0x07},  //	;
-{0xA2CE,0xD0},  //	;
+{0xA2CD,0x07},  //	; 
+{0xA2CE,0xD0},  //	; 
 {0xA2CF,0xE0},  //	;    MOVX     A,@DPTR
 {0xA2D0,0xF8},  //	;    MOV      R0,A
 {0xA2D1,0xA3},  //	;    INC      DPTR
@@ -702,58 +702,58 @@ struct aml_camera_i2c_fig_s HM5065_script_step[] = {
 {0xA2D9,0xFB},  //	;    MOV      R3,A
 {0xA2DA,0xD3},  //	;    SETB     C
 {0xA2DB,0x12},  //	;    LCALL    C?ULCMP(C:0DAE)
-{0xA2DC,0x0D},  //	;
-{0xA2DD,0xAE},  //	;
+{0xA2DC,0x0D},  //	; 
+{0xA2DD,0xAE},  //	; 
 {0xA2DE,0x40},  //	;    JC       B01:9FDA
-{0xA2DF,0x0B},  //	;
+{0xA2DF,0x0B},  //	; 
 {0xA2E0,0x12},  //	;    LCALL    HCS_Initialization(B01:B0EF)
-{0xA2E1,0xB5},  //	;
-{0xA2E2,0x49},  //	;
+{0xA2E1,0xB5},  //	; 
+{0xA2E2,0x49},  //	; 
 {0xA2E3,0x90},  //	;    MOV      DPTR,#0x07A4
-{0xA2E4,0x07},  //	;
-{0xA2E5,0xA4},  //	;
+{0xA2E4,0x07},  //	; 
+{0xA2E5,0xA4},  //	; 
 {0xA2E6,0x74},  //	;    MOV      A,#0x02
-{0xA2E7,0x02},  //	;
+{0xA2E7,0x02},  //	; 
 {0xA2E8,0xF0},  //	;    MOVX     @DPTR,A
 {0xA2E9,0x80},  //	;    SJMP     B01:9FE3
-{0xA2EA,0x09},  //	;
+{0xA2EA,0x09},  //	; 
 {0xA2EB,0x12},  //	;    LCALL    LowFocusMeasureFullSearchInit(B01:B7AE)
-{0xA2EC,0xB7},  //	;
-{0xA2ED,0x51},  //	;
+{0xA2EC,0xB7},  //	; 
+{0xA2ED,0x51},  //	; 
 {0xA2EE,0x90},  //	;    MOV      DPTR,#0x07A4
-{0xA2EF,0x07},  //	;
-{0xA2F0,0xA4},  //	;
+{0xA2EF,0x07},  //	; 
+{0xA2F0,0xA4},  //	; 
 {0xA2F1,0x74},  //	;    MOV      A,#0x05
-{0xA2F2,0x05},  //	;
+{0xA2F2,0x05},  //	; 
 {0xA2F3,0xF0},  //	;    MOVX     @DPTR,A
 {0xA2F4,0x02},  //	;    JUM
-{0xA2F5,0xA2},  //	;
-{0xA2F6,0xDA},  //	;
+{0xA2F5,0xA2},  //	; 
+{0xA2F6,0xDA},  //	; 
 {0xA2F7,0x90},  //	;    MOV      DPTR,#fOTPRed(0x0EE0)
-{0xA2F8,0x0E},  //	;
-{0xA2F9,0xE0},  //	;
+{0xA2F8,0x0E},  //	; 
+{0xA2F9,0xE0},  //	; 
 {0xA2FA,0xE0},  //	;    MOVX     A,@DPTR
 {0xA2FB,0xFD},  //	;    MOV      R5,A
 {0xA2FC,0xA3},  //	;    INC      DPTR
 {0xA2FD,0xE0},  //	;    MOVX     A,@DPTR
 {0xA2FE,0x90},  //	;    MOV      DPTR,#0x02A2
-{0xA2FF,0x02},  //	;
-{0xA300,0xA2},  //	;
+{0xA2FF,0x02},  //	; 
+{0xA300,0xA2},  //	; 
 {0xA301,0xCD},  //	;    XCH      A,R5
 {0xA302,0xF0},  //	;    MOVX     @DPTR,A
 {0xA303,0xA3},  //	;    INC      DPTR
 {0xA304,0xED},  //	;    MOV      A,R5
 {0xA305,0xF0},  //	;    MOVX     @DPTR,A
 {0xA306,0x90},  //	;    MOV      DPTR,#fOTPBlue(0x0EE2)
-{0xA307,0x0E},  //	;
-{0xA308,0xE2},  //	;
+{0xA307,0x0E},  //	; 
+{0xA308,0xE2},  //	; 
 {0xA309,0xE0},  //	;    MOVX     A,@DPTR
 {0xA30A,0xFD},  //	;    MOV      R5,A
 {0xA30B,0xA3},  //	;    INC      DPTR
 {0xA30C,0xE0},  //	;    MOVX     A,@DPTR
 {0xA30D,0x90},  //	;    MOV      DPTR,#0x02A8
-{0xA30E,0x02},  //	;
-{0xA30F,0xA8},  //	;
+{0xA30E,0x02},  //	; 
+{0xA30F,0xA8},  //	; 
 {0xA310,0xCD},  //	;    XCH      A,R5
 {0xA311,0xF0},  //	;    MOVX     @DPTR,A
 {0xA312,0xA3},  //	;    INC      DPTR
@@ -761,98 +761,98 @@ struct aml_camera_i2c_fig_s HM5065_script_step[] = {
 {0xA314,0xF0},  //	;    MOVX     @DPTR,A
 {0xA315,0xE4},  //	;    CLR      A
 {0xA316,0x90},  //	;    MOV      DPTR,#PresetControl(0x0638)
-{0xA317,0x06},  //	;
-{0xA318,0x38},  //	;
+{0xA317,0x06},  //	; 
+{0xA318,0x38},  //	; 
 {0xA319,0xF0},  //	;    MOVX     @DPTR,A
 {0xA31A,0x02},  //	;    JUMP     #676
-{0xA31B,0x67},  //	;
-{0xA31C,0x63},  //	;
+{0xA31B,0x67},  //	; 
+{0xA31C,0x63},  //	; 
 {0xA31D,0x90},  //	;    MOV      DPTR,#bDarkCalSR(0x0EE8)
-{0xA31E,0x0E},  //	;
-{0xA31F,0xE8},  //	;
+{0xA31E,0x0E},  //	; 
+{0xA31F,0xE8},  //	; 
 {0xA320,0xE0},  //	;    MOVX     A,@DPTR
 {0xA321,0x90},  //	;    MOV      DPTR,#0x0262
-{0xA322,0x02},  //	;
-{0xA323,0x62},  //	;
+{0xA322,0x02},  //	; 
+{0xA323,0x62},  //	; 
 {0xA324,0xF0},  //	;    MOVX     @DPTR,A
 {0xA325,0x90},  //	;    MOV      DPTR,#bDarkCalAB4(0x0EE9)
-{0xA326,0x0E},  //	;
-{0xA327,0xE9},  //	;
+{0xA326,0x0E},  //	; 
+{0xA327,0xE9},  //	; 
 {0xA328,0xE0},  //	;    MOVX     A,@DPTR
 {0xA329,0x90},  //	;    MOV      DPTR,#0x0263
-{0xA32A,0x02},  //	;
-{0xA32B,0x63},  //	;
+{0xA32A,0x02},  //	; 
+{0xA32B,0x63},  //	; 
 {0xA32C,0xF0},  //	;    MOVX     @DPTR,A
 {0xA32D,0x02},  //	;    JUMP     #676
-{0xA32E,0x67},  //	;
-{0xA32F,0x1F},  //	;
+{0xA32E,0x67},  //	; 
+{0xA32F,0x1F},  //	; 
 {0xA33B,0x90},  //	;    MOV      DPTR,#INFINITY_OTP(0xE014)
-{0xA33C,0x0E},  //	;
-{0xA33D,0x14},  //	;
+{0xA33C,0x0E},  //	; 
+{0xA33D,0x14},  //	; 
 {0xA33E,0xE0},  //	;    MOVX     A,@DPTR
 {0xA33F,0xFE},  //	;    MOV      R6,A
 {0xA340,0xA3},  //	;    INC      DPTR
 {0xA341,0xE0},  //	;    MOVX     A,@DPTR
 {0xA342,0xFF},  //	;    MOV      R7,A
 {0xA343,0x90},  //	;    MOV      DPTR,#0x06D9
-{0xA344,0x06},  //	;
-{0xA345,0xD9},  //	;
+{0xA344,0x06},  //	; 
+{0xA345,0xD9},  //	; 
 {0xA346,0xEE},  //	;    MOV      A,R6
 {0xA347,0xF0},  //	;    MOVX     @DPTR,A
 {0xA348,0xA3},  //	;    INC      DPTR
 {0xA349,0xEF},  //	;    MOV      A,R7
 {0xA34A,0xF0},  //	;    MOVX     @DPTR,A
 {0xA34B,0x90},  //	;    MOV      DPTR,#DELTA_UP_OTP(0xE018)
-{0xA34C,0x0E},  //	;
-{0xA34D,0x18},  //	;
+{0xA34C,0x0E},  //	; 
+{0xA34D,0x18},  //	; 
 {0xA34E,0xE0},  //	;    MOVX     A,@DPTR
 {0xA34F,0xFD},  //	;    MOV      R5,A
 {0xA350,0x7C},  //	;    MOV      R4,#DeviceParameters(0x00)
-{0xA351,0x00},  //	;
+{0xA351,0x00},  //	; 
 {0xA352,0xC3},  //	;    CLR      C
 {0xA353,0xEF},  //	;    MOV      A,R7
 {0xA354,0x9D},  //	;    SUBB     A,R5
 {0xA355,0xEE},  //	;    MOV      A,R6
 {0xA356,0x9C},  //	;    SUBB     A,R4
 {0xA357,0x50},  //	;    JNC      C:2067
-{0xA358,0x09},  //	;
+{0xA358,0x09},  //	; 
 {0xA359,0xE4},  //	;    CLR      A
 {0xA35A,0x90},  //	;    MOV      DPTR,#0x06D7
-{0xA35B,0x06},  //	;
-{0xA35C,0xD7},  //	;
+{0xA35B,0x06},  //	; 
+{0xA35C,0xD7},  //	; 
 {0xA35D,0xF0},  //	;    MOVX     @DPTR,A
 {0xA35E,0xA3},  //	;    INC      DPTR
 {0xA35F,0xF0},  //	;    MOVX     @DPTR,A
 {0xA360,0x80},  //	;    SJMP     C:207A
-{0xA361,0x13},  //	;
+{0xA361,0x13},  //	; 
 {0xA362,0xC3},  //	;    CLR      C
 {0xA363,0x90},  //	;    MOV      DPTR,#0x06DA
-{0xA364,0x06},  //	;
-{0xA365,0xDA},  //	;
+{0xA364,0x06},  //	; 
+{0xA365,0xDA},  //	; 
 {0xA366,0xE0},  //	;    MOVX     A,@DPTR
 {0xA367,0x9D},  //	;    SUBB     A,R5
 {0xA368,0xFE},  //	;    MOV      R6,A
 {0xA369,0x90},  //	;    MOV      DPTR,#0x06D9
-{0xA36A,0x06},  //	;
-{0xA36B,0xD9},  //	;
+{0xA36A,0x06},  //	; 
+{0xA36B,0xD9},  //	; 
 {0xA36C,0xE0},  //	;    MOVX     A,@DPTR
 {0xA36D,0x9C},  //	;    SUBB     A,R4
 {0xA36E,0x90},  //	;    MOV      DPTR,#0x06D7
-{0xA36F,0x06},  //	;
-{0xA370,0xD7},  //	;
+{0xA36F,0x06},  //	; 
+{0xA370,0xD7},  //	; 
 {0xA371,0xF0},  //	;    MOVX     @DPTR,A
 {0xA372,0xA3},  //	;    INC      DPTR
 {0xA373,0xCE},  //	;    XCH      A,R6
 {0xA374,0xF0},  //	;    MOVX     @DPTR,A
 {0xA375,0x90},  //	;    MOV      DPTR,#DELTA_UP_OTP(0xE018)
-{0xA376,0x0E},  //	;
-{0xA377,0x18},  //	;
+{0xA376,0x0E},  //	; 
+{0xA377,0x18},  //	; 
 {0xA378,0xE0},  //	;    MOVX     A,@DPTR
 {0xA379,0xF9},  //	;    MOV      R1,A
 {0xA37A,0xFF},  //	;    MOV      R7,A
 {0xA37B,0x90},  //	;    MOV      DPTR,#0x06C2
-{0xA37C,0x06},  //	;
-{0xA37D,0xC2},  //	;
+{0xA37C,0x06},  //	; 
+{0xA37D,0xC2},  //	; 
 {0xA37E,0xE0},  //	;    MOVX     A,@DPTR
 {0xA37F,0xFC},  //	;    MOV      R4,A
 {0xA380,0xA3},  //	;    INC      DPTR
@@ -863,11 +863,11 @@ struct aml_camera_i2c_fig_s HM5065_script_step[] = {
 {0xA385,0xFF},  //	;    MOV      R7,A
 {0xA386,0xEC},  //	;    MOV      A,R4
 {0xA387,0x94},  //	;    SUBB     A,#DeviceParameters(0x00)
-{0xA388,0x00},  //	;
+{0xA388,0x00},  //	; 
 {0xA389,0xFE},  //	;    MOV      R6,A
 {0xA38A,0x90},  //	;    MOV      DPTR,#MACRO_OTP(0xE016)
-{0xA38B,0x0E},  //	;
-{0xA38C,0x16},  //	;
+{0xA38B,0x0E},  //	; 
+{0xA38C,0x16},  //	; 
 {0xA38D,0xE0},  //	;    MOVX     A,@DPTR
 {0xA38E,0xFA},  //	;    MOV      R2,A
 {0xA38F,0xA3},  //	;    INC      DPTR
@@ -878,27 +878,27 @@ struct aml_camera_i2c_fig_s HM5065_script_step[] = {
 {0xA394,0xEA},  //	;    MOV      A,R2
 {0xA395,0x9E},  //	;    SUBB     A,R6
 {0xA396,0x40},  //	;    JC       C:20A7
-{0xA397,0x0A},  //	;
+{0xA397,0x0A},  //	; 
 {0xA398,0x90},  //	;    MOV      DPTR,#0x06D5
-{0xA399,0x06},  //	;
-{0xA39A,0xD5},  //	;
+{0xA399,0x06},  //	; 
+{0xA39A,0xD5},  //	; 
 {0xA39B,0xEC},  //	;    MOV      A,R4
 {0xA39C,0xF0},  //	;    MOVX     @DPTR,A
 {0xA39D,0xA3},  //	;    INC      DPTR
 {0xA39E,0xED},  //	;    MOV      A,R5
 {0xA39F,0xF0},  //	;    MOVX     @DPTR,A
 {0xA3A0,0x80},  //	;    SJMP     C:20B5
-{0xA3A1,0x0E},  //	;
+{0xA3A1,0x0E},  //	; 
 {0xA3A2,0xE9},  //	;    MOV      A,R1
 {0xA3A3,0x7E},  //	;    MOV      R6,#DeviceParameters(0x00)
-{0xA3A4,0x00},  //	;
+{0xA3A4,0x00},  //	; 
 {0xA3A5,0x2B},  //	;    ADD      A,R3
 {0xA3A6,0xFF},  //	;    MOV      R7,A
 {0xA3A7,0xEE},  //	;    MOV      A,R6
 {0xA3A8,0x3A},  //	;    ADDC     A,R2
 {0xA3A9,0x90},  //	;    MOV      DPTR,#0x06D5
-{0xA3AA,0x06},  //	;
-{0xA3AB,0xD5},  //	;
+{0xA3AA,0x06},  //	; 
+{0xA3AB,0xD5},  //	; 
 {0xA3AC,0xF0},  //	;    MOVX     @DPTR,A
 {0xA3AD,0xA3},  //	;    INC      DPTR
 {0xA3AE,0xEF},  //	;    MOV      A,R7
@@ -906,152 +906,152 @@ struct aml_camera_i2c_fig_s HM5065_script_step[] = {
 {0xA3B0,0xE9},  //	;    MOV      A,R1
 {0xA3B1,0xFB},  //	;    MOV      R3,A
 {0xA3B2,0x7A},  //	;    MOV      R2,#DeviceParameters(0x00)
-{0xA3B3,0x00},  //	;
+{0xA3B3,0x00},  //	; 
 {0xA3B4,0x90},  //	;    MOV      DPTR,#0xE015
-{0xA3B5,0x0E},  //	;
-{0xA3B6,0x15},  //	;
+{0xA3B5,0x0E},  //	; 
+{0xA3B6,0x15},  //	; 
 {0xA3B7,0xE0},  //	;    MOVX     A,@DPTR
 {0xA3B8,0x2B},  //	;    ADD      A,R3
 {0xA3B9,0xFE},  //	;    MOV      R6,A
 {0xA3BA,0x90},  //	;    MOV      DPTR,#INFINITY_OTP(0xE014)
-{0xA3BB,0x0E},  //	;
-{0xA3BC,0x14},  //	;
+{0xA3BB,0x0E},  //	; 
+{0xA3BC,0x14},  //	; 
 {0xA3BD,0xE0},  //	;    MOVX     A,@DPTR
 {0xA3BE,0x3A},  //	;    ADDC     A,R2
 {0xA3BF,0x90},  //	;    MOV      DPTR,#0x06E1
-{0xA3C0,0x06},  //	;
-{0xA3C1,0xE1},  //	;
+{0xA3C0,0x06},  //	; 
+{0xA3C1,0xE1},  //	; 
 {0xA3C2,0xF0},  //	;    MOVX     @DPTR,A
 {0xA3C3,0xA3},  //	;    INC      DPTR
 {0xA3C4,0xCE},  //	;    XCH      A,R6
 {0xA3C5,0xF0},  //	;    MOVX     @DPTR,A
 {0xA3C6,0xC3},  //	;    CLR      C
 {0xA3C7,0x90},  //	;    MOV      DPTR,#0xE017
-{0xA3C8,0x0E},  //	;
-{0xA3C9,0x17},  //	;
+{0xA3C8,0x0E},  //	; 
+{0xA3C9,0x17},  //	; 
 {0xA3CA,0xE0},  //	;    MOVX     A,@DPTR
 {0xA3CB,0x9B},  //	;    SUBB     A,R3
 {0xA3CC,0xFE},  //	;    MOV      R6,A
 {0xA3CD,0x90},  //	;    MOV      DPTR,#MACRO_OTP(0xE016)
-{0xA3CE,0x0E},  //	;
-{0xA3CF,0x16},  //	;
-{0xA3D0,0x02},  //	;    JUMP
-{0xA3D1,0x20},  //	;
-{0xA3D2,0xD5},  //	;
+{0xA3CE,0x0E},  //	; 
+{0xA3CF,0x16},  //	; 
+{0xA3D0,0x02},  //	;    JUMP    
+{0xA3D1,0x20},  //	; 
+{0xA3D2,0xD5},  //	; 
 {0xA3D3,0x90},  //	;    MOV      DPTR,#bDarkCalHFPN(0x0EE4)
-{0xA3d4,0x0E},  //	;
-{0xA3d5,0xE4},  //	;
+{0xA3d4,0x0E},  //	; 
+{0xA3d5,0xE4},  //	; 
 {0xA3d6,0xE0},  //	;    MOVX     A,@DPTR
 {0xA3d7,0x90},  //	;    MOV      DPTR,#0x0266
-{0xA3d8,0x02},  //	;
-{0xA3d9,0x66},  //	;
+{0xA3d8,0x02},  //	; 
+{0xA3d9,0x66},  //	; 
 {0xA3da,0xF0},  //	;    MOVX     @DPTR,A
 {0xA3DB,0x90},  //	;    MOV      DPTR,#bDarkCalHFPN(0x0EE4)
-{0xA3dc,0x0E},  //	;
-{0xA3dd,0xE5},  //	;
+{0xA3dc,0x0E},  //	; 
+{0xA3dd,0xE5},  //	; 
 {0xA3de,0xE0},  //	;    MOVX     A,@DPTR
 {0xA3df,0x90},  //	;    MOV      DPTR,#0x0266
-{0xA3e0,0x02},  //	;
-{0xA3e1,0x64},  //	;
+{0xA3e0,0x02},  //	; 
+{0xA3e1,0x64},  //	; 
 {0xA3e2,0xF0},  //	;    MOVX     @DPTR,A
 {0xA3e3,0x90},  //	;    MOV      DPTR,#bDarkCalHFPN(0x0EE4)
-{0xA3e4,0x0E},  //	;
-{0xA3e5,0xE6},  //	;
+{0xA3e4,0x0E},  //	; 
+{0xA3e5,0xE6},  //	; 
 {0xA3e6,0xE0},  //	;    MOVX     A,@DPTR
 {0xA3e7,0x90},  //	;    MOV      DPTR,#0x0266
-{0xA3e8,0x02},  //	;
-{0xA3e9,0x65},  //	;
+{0xA3e8,0x02},  //	; 
+{0xA3e9,0x65},  //	; 
 {0xA3ea,0xF0},  //	;    MOVX     @DPTR,A
-{0xA3eb,0x02},  //	;    JUMP
-{0xA3ec,0x67},  //	;
-{0xA3ed,0xA5},  //	;
-{0xA3f0,0x12},  //	;
-{0xA3f1,0x47},  //	;
+{0xA3eb,0x02},  //	;    JUMP    
+{0xA3ec,0x67},  //	; 
+{0xA3ed,0xA5},  //	; 
+{0xA3f0,0x12},  //	; 
+{0xA3f1,0x47},  //	; 
 {0xA3f2,0x59},  //	;    MOVX     @DPTR,A
 {0xA3f3,0x90},  //	;    MOV      DPTR,#bDarkCalHFPN(0x0EE4)
-{0xA3f4,0x00},  //	;
-{0xA3f5,0xB5},  //	;
+{0xA3f4,0x00},  //	; 
+{0xA3f5,0xB5},  //	; 
 {0xA3f6,0xE0},  //	;    MOVX     A,@DPTR
 {0xA3f7,0xB4},  //	;    MOVX     A,@DPTR
 {0xA3f8,0x02},  //	;    MOV      DPTR,#0x0266
-{0xA3f9,0x03},  //	;
-{0xA3fa,0x12},  //	;
+{0xA3f9,0x03},  //	; 
+{0xA3fa,0x12},  //	; 
 {0xA3fb,0x47},  //	;    MOVX     @DPTR,A
-{0xA3fc,0x59},  //	;    JUMP
-{0xA3fd,0x02},  //	;
-{0xA3fe,0xC5},  //	;
-{0xA3ff,0xC3},  //	;
+{0xA3fc,0x59},  //	;    JUMP    
+{0xA3fd,0x02},  //	; 
+{0xA3fe,0xC5},  //	; 
+{0xA3ff,0xC3},  //	; 
 {0xA400,0x90},  //	;    MOV      DPTR,#c_HFlip(0x003D)
-{0xA401,0x00},  //	;
-{0xA402,0x3D},  //	;
+{0xA401,0x00},  //	; 
+{0xA402,0x3D},  //	; 
 {0xA403,0xF0},  //	;    MOVX     @DPTR,A
 {0xA404,0x90},  //	;    MOV      DPTR,#0x0084
-{0xA405,0x00},  //	;
-{0xA406,0x84},  //	;
+{0xA405,0x00},  //	; 
+{0xA406,0x84},  //	; 
 {0xA407,0xE0},  //	;    MOVX     A,@DPTR
 {0xA408,0xFE},  //	;    MOV      R6,A
 {0xA409,0x90},  //	;    MOV      DPTR,#c_VFlip(0x003E)
-{0xA40A,0x00},  //	;
-{0xA40B,0x3E},  //	;
+{0xA40A,0x00},  //	; 
+{0xA40B,0x3E},  //	; 
 {0xA40C,0xF0},  //	;    MOVX     @DPTR,A
 {0xA40D,0xEF},  //	;    MOV      A,R7
 {0xA40E,0x70},  //	;    JNZ      B00:8201
-{0xA40F,0x03},  //	;
+{0xA40F,0x03},  //	; 
 {0xA410,0xEE},  //	;    MOV      A,R6
 {0xA411,0x60},  //	;    JZ       B00:8205
-{0xA412,0x04},  //	;
+{0xA412,0x04},  //	; 
 {0xA413,0x7F},  //	;    MOV      R7,#0x01
-{0xA414,0x01},  //	;
+{0xA414,0x01},  //	; 
 {0xA415,0x80},  //	;    SJMP     B00:8207
-{0xA416,0x02},  //	;
+{0xA416,0x02},  //	; 
 {0xA417,0x7F},  //	;    MOV      R7,#DeviceParameters(0x00)
-{0xA418,0x00},  //	;
+{0xA418,0x00},  //	; 
 {0xA419,0x90},  //	;    MOV      DPTR,#c_HVFlip(0x003F)
-{0xA41A,0x00},  //	;
-{0xA41B,0x3F},  //	;
+{0xA41A,0x00},  //	; 
+{0xA41B,0x3F},  //	; 
 {0xA41C,0xEF},  //	;    MOV      A,R7
 {0xA41D,0xF0},  //	;    MOVX     @DPTR,A
 {0xA41E,0x02},  //	;    JUMP bac
-{0xA41F,0x89},  //	;
-{0xA420,0xD3},  //	;
+{0xA41F,0x89},  //	; 
+{0xA420,0xD3},  //	; 
 {0xA421,0x90},  //	;    MOV      DPTR,#uwI2CSIndex(0x0012)
-{0xA422,0x00},  //	;
-{0xA423,0x12},  //	;
+{0xA422,0x00},  //	; 
+{0xA423,0x12},  //	; 
 {0xA424,0xE0},  //	;    MOVX     A,@DPTR
 {0xA425,0xFF},  //	;    MOV      R7,A
 {0xA426,0x70},  //	;    JNZ      B00:9AC3
-{0xA427,0x0C},  //	;
+{0xA427,0x0C},  //	; 
 {0xA428,0x90},  //	;    MOV      DPTR,#0x0046
-{0xA429,0x00},  //	;
-{0xA42A,0x46},  //	;
+{0xA429,0x00},  //	; 
+{0xA42A,0x46},  //	; 
 {0xA42B,0xE0},  //	;    MOVX     A,@DPTR
 {0xA42C,0xC3},  //	;    CLR      C
 {0xA42D,0x94},  //	;    SUBB     A,#0x07
-{0xA42E,0x07},  //	;
+{0xA42E,0x07},  //	; 
 {0xA42F,0x40},  //	;    JC       B00:9AC3
-{0xA430,0x03},  //	;
+{0xA430,0x03},  //	; 
 {0xA431,0x75},  //	;    MOV      0x2E,#0x02
-{0xA432,0x2E},  //	;
-{0xA433,0x02},  //	;
+{0xA432,0x2E},  //	; 
+{0xA433,0x02},  //	; 
 {0xA434,0xEF},  //	;    MOV      A,R7
 {0xA435,0xB4},  //	;    CJNE     A,#0x01,B00:9AD3
-{0xA436,0x01},  //	;
-{0xA437,0x0C},  //	;
+{0xA436,0x01},  //	; 
+{0xA437,0x0C},  //	; 
 {0xA438,0x90},  //	;    MOV      DPTR,#XDroop_Reverse_Croping(0x0066)
-{0xA439,0x00},  //	;
-{0xA43A,0x66},  //	;
+{0xA439,0x00},  //	; 
+{0xA43A,0x66},  //	; 
 {0xA43B,0xE0},  //	;    MOVX     A,@DPTR
 {0xA43C,0xC3},  //	;    CLR      C
 {0xA43D,0x94},  //	;    SUBB     A,#0x07
-{0xA43E,0x07},  //	;
+{0xA43E,0x07},  //	; 
 {0xA43F,0x40},  //	;    JC       B00:9AD3
-{0xA440,0x03},  //	;
+{0xA440,0x03},  //	; 
 {0xA441,0x75},  //	;    MOV      0x2E,#0x02
-{0xA442,0x2E},  //	;
-{0xA443,0x02},  //	;
-{0xA444,0x02},  //	;    JUMP
-{0xA445,0xA7},  //	;
-{0xA446,0x9E},  //	;
+{0xA442,0x2E},  //	; 
+{0xA443,0x02},  //	; 
+{0xA444,0x02},  //	;    JUMP   
+{0xA445,0xA7},  //	; 
+{0xA446,0x9E},  //	; 
 {0xA447,0xC3},  //	;   CLR      C
 {0xA448,0x90},  //	;   MOV      DPTR,#0x0B8F
 {0xA449,0x0B},  //	;
@@ -1103,283 +1103,283 @@ struct aml_camera_i2c_fig_s HM5065_script_step[] = {
 {0xA477,0x57},  //	;
 {0xA478,0x02},  //	;   LJMP     back
 {0xA479,0x86},  //	;
-{0xA47A,0x5C},  //	;
-{0xA500,0xF5},  //     ;    MOV      c_HeightScale(0x3B),A
-{0xA501,0x3B},  //     ;
-{0xA502,0x90},  //     ;    MOV      DPTR,#0x066C
-{0xA503,0x06},  //     ;
-{0xA504,0x6C},  //     ;
-{0xA505,0xE0},  //     ;    MOVX     A,@DPTR
-{0xA506,0xFF},  //     ;    MOV      R7,A
-{0xA507,0xE5},  //     ;    MOV      A,c_HeightScale(0x3B)
-{0xA508,0x3B},  //     ;
-{0xA509,0xC3},  //     ;    CLR      C
-{0xA50A,0x9F},  //     ;    SUBB     A,R7
-{0xA50B,0x40},  //     ;    JC       B01:98E8
-{0xA50C,0x03},  //     ;
-{0xA50D,0x02},  //     ;    LJMP     B01:99E6
-{0xA50E,0xF6},  //     ;
-{0xA50F,0x0E},  //     ;
-{0xA510,0x90},  //     ;    MOV      DPTR,#0x0BC6
-{0xA511,0x0B},  //     ;
-{0xA512,0xC6},  //     ;
-{0xA513,0xE0},  //     ;    MOVX     A,@DPTR
-{0xA514,0x14},  //     ;    DEC      A
-{0xA515,0x60},  //     ;    JZ       B01:992B
-{0xA516,0x3C},  //     ;
-{0xA517,0x14},  //     ;    DEC      A
-{0xA518,0x60},  //     ;    JZ       B01:995D
-{0xA519,0x6B},  //     ;
-{0xA51A,0x24},  //     ;    ADD      A,#0x02
-{0xA51B,0x02},  //     ;
-{0xA51C,0x60},  //     ;    JZ       B01:98F9
-{0xA51D,0x03},  //     ;
-{0xA51E,0x02},  //     ;    LJMP     B01:998D
-{0xA51F,0xF5},  //     ;
-{0xA520,0xB5},  //     ;
-{0xA521,0x90},  //     ;    MOV      DPTR,#AutoFocusInstableFocusMeasureValues(0x0A9A)
-{0xA522,0x0A},  //     ;
-{0xA523,0x9A},  //     ;
-{0xA524,0xE0},  //     ;    MOVX     A,@DPTR
-{0xA525,0xFB},  //     ;    MOV      R3,A
-{0xA526,0xA3},  //     ;    INC      DPTR
-{0xA527,0xE0},  //     ;    MOVX     A,@DPTR
-{0xA528,0xFA},  //     ;    MOV      R2,A
-{0xA529,0xA3},  //     ;    INC      DPTR
-{0xA52A,0xE0},  //     ;    MOVX     A,@DPTR
-{0xA52B,0xF9},  //     ;    MOV      R1,A
-{0xA52C,0x85},  //     ;    MOV      DPL(0x82),c_HeightScale(0x3B)
-{0xA52D,0x3B},  //     ;
-{0xA52E,0x82},  //     ;
-{0xA52F,0x75},  //     ;    MOV      DPH(0x83),#DeviceParameters(0x00)
-{0xA530,0x83},  //     ;
-{0xA531,0x00},  //     ;
-{0xA532,0x12},  //     ;    LCALL    C?CLDOPTR(C:0AB8)
-{0xA533,0x0A},  //     ;
-{0xA534,0xB8},  //     ;
-{0xA535,0xFF},  //     ;    MOV      R7,A
-{0xA536,0x74},  //     ;    MOV      A,#0xAB
-{0xA537,0xAB},  //     ;
-{0xA538,0x25},  //     ;    ADD      A,c_HeightScale(0x3B)
-{0xA539,0x3B},  //     ;
-{0xA53A,0xF5},  //     ;    MOV      DPL(0x82),A
-{0xA53B,0x82},  //     ;
-{0xA53C,0xE4},  //     ;    CLR      A
-{0xA53D,0x34},  //     ;    ADDC     A,#bInt_Event_Status(0x0A)
-{0xA53E,0x0A},  //     ;
-{0xA53F,0xF5},  //     ;    MOV      DPH(0x83),A
-{0xA540,0x83},  //     ;
-{0xA541,0xE0},  //     ;    MOVX     A,@DPTR
-{0xA542,0xFD},  //     ;    MOV      R5,A
-{0xA543,0xC3},  //     ;    CLR      C
-{0xA544,0xEF},  //     ;    MOV      A,R7
-{0xA545,0x9D},  //     ;    SUBB     A,R5
-{0xA546,0xFE},  //     ;    MOV      R6,A
-{0xA547,0xE4},  //     ;    CLR      A
-{0xA548,0x94},  //     ;    SUBB     A,#DeviceParameters(0x00)
-{0xA549,0x00},  //     ;
-{0xA54A,0x90},  //     ;    MOV      DPTR,#0x0BCA
-{0xA54B,0x0B},  //     ;
-{0xA54C,0xCA},  //     ;
-{0xA54D,0xF0},  //     ;    MOVX     @DPTR,A
-{0xA54E,0xA3},  //     ;    INC      DPTR
-{0xA54F,0xCE},  //     ;    XCH      A,R6
-{0xA550,0xF0},  //     ;    MOVX     @DPTR,A
-{0xA551,0x80},  //     ;    SJMP     B01:998D
-{0xA552,0x62},  //     ;
-{0xA553,0x90},  //     ;    MOV      DPTR,#AutoFocusInstableFocusMeasureValues(0x0A9A)
-{0xA554,0x0A},  //     ;
-{0xA555,0x9A},  //     ;
-{0xA556,0xE0},  //     ;    MOVX     A,@DPTR
-{0xA557,0xFB},  //     ;    MOV      R3,A
-{0xA558,0xA3},  //     ;    INC      DPTR
-{0xA559,0xE0},  //     ;    MOVX     A,@DPTR
-{0xA55A,0xFA},  //     ;    MOV      R2,A
-{0xA55B,0xA3},  //     ;    INC      DPTR
-{0xA55C,0xE0},  //     ;    MOVX     A,@DPTR
-{0xA55D,0xF9},  //     ;    MOV      R1,A
-{0xA55E,0x85},  //     ;    MOV      DPL(0x82),c_HeightScale(0x3B)
-{0xA55F,0x3B},  //     ;
-{0xA560,0x82},  //     ;
-{0xA561,0x75},  //     ;    MOV      DPH(0x83),#DeviceParameters(0x00)
-{0xA562,0x83},  //     ;
-{0xA563,0x00},  //     ;
-{0xA564,0x12},  //     ;    LCALL    C?CLDOPTR(C:0AB8)
-{0xA565,0x0A},  //     ;
-{0xA566,0xB8},  //     ;
-{0xA567,0xFF},  //     ;    MOV      R7,A
-{0xA568,0x74},  //     ;    MOV      A,#0x9D
-{0xA569,0x9D},  //     ;
-{0xA56A,0x25},  //     ;    ADD      A,c_HeightScale(0x3B)
-{0xA56B,0x3B},  //     ;
-{0xA56C,0xF5},  //     ;    MOV      DPL(0x82),A
-{0xA56D,0x82},  //     ;
-{0xA56E,0xE4},  //     ;    CLR      A
-{0xA56F,0x34},  //     ;    ADDC     A,#bInt_Event_Status(0x0A)
-{0xA570,0x0A},  //     ;
-{0xA571,0xF5},  //     ;    MOV      DPH(0x83),A
-{0xA572,0x83},  //     ;
-{0xA573,0xE0},  //     ;    MOVX     A,@DPTR
-{0xA574,0xFD},  //     ;    MOV      R5,A
-{0xA575,0xC3},  //     ;    CLR      C
-{0xA576,0xEF},  //     ;    MOV      A,R7
-{0xA577,0x9D},  //     ;    SUBB     A,R5
-{0xA578,0xFE},  //     ;    MOV      R6,A
-{0xA579,0xE4},  //     ;    CLR      A
-{0xA57A,0x94},  //     ;    SUBB     A,#DeviceParameters(0x00)
-{0xA57B,0x00},  //     ;
-{0xA57C,0x90},  //     ;    MOV      DPTR,#0x0BCA
-{0xA57D,0x0B},  //     ;
-{0xA57E,0xCA},  //     ;
-{0xA57F,0xF0},  //     ;    MOVX     @DPTR,A
-{0xA580,0xA3},  //     ;    INC      DPTR
-{0xA581,0xCE},  //     ;    XCH      A,R6
-{0xA582,0xF0},  //     ;    MOVX     @DPTR,A
-{0xA583,0x80},  //     ;    SJMP     B01:998D
-{0xA584,0x30},  //     ;
-{0xA585,0x90},  //     ;    MOV      DPTR,#AutoFocusInstableFocusMeasureValues(0x0A9A)
-{0xA586,0x0A},  //     ;
-{0xA587,0x9A},  //     ;
-{0xA588,0xE0},  //     ;    MOVX     A,@DPTR
-{0xA589,0xFB},  //     ;    MOV      R3,A
-{0xA58A,0xA3},  //     ;    INC      DPTR
-{0xA58B,0xE0},  //     ;    MOVX     A,@DPTR
-{0xA58C,0xFA},  //     ;    MOV      R2,A
-{0xA58D,0xA3},  //     ;    INC      DPTR
-{0xA58E,0xE0},  //     ;    MOVX     A,@DPTR
-{0xA58F,0xF9},  //     ;    MOV      R1,A
-{0xA590,0x85},  //     ;    MOV      DPL(0x82),c_HeightScale(0x3B)
-{0xA591,0x3B},  //     ;
-{0xA592,0x82},  //     ;
-{0xA593,0x75},  //     ;    MOV      DPH(0x83),#DeviceParameters(0x00)
-{0xA594,0x83},  //     ;
-{0xA595,0x00},  //     ;
-{0xA596,0x12},  //     ;    LCALL    C?CLDOPTR(C:0AB8)
-{0xA597,0x0A},  //     ;
-{0xA598,0xB8},  //     ;
-{0xA599,0xFF},  //     ;    MOV      R7,A
-{0xA59A,0x74},  //     ;    MOV      A,#0xA4
-{0xA59B,0xA4},  //     ;
-{0xA59C,0x25},  //     ;    ADD      A,c_HeightScale(0x3B)
-{0xA59D,0x3B},  //     ;
-{0xA59E,0xF5},  //     ;    MOV      DPL(0x82),A
-{0xA59F,0x82},  //     ;
-{0xA5A0,0xE4},  //     ;    CLR      A
-{0xA5A1,0x34},  //     ;    ADDC     A,#bInt_Event_Status(0x0A)
-{0xA5A2,0x0A},  //     ;
-{0xA5A3,0xF5},  //     ;    MOV      DPH(0x83),A
-{0xA5A4,0x83},  //     ;
-{0xA5A5,0xE0},  //     ;    MOVX     A,@DPTR
-{0xA5A6,0xFD},  //     ;    MOV      R5,A
-{0xA5A7,0xC3},  //     ;    CLR      C
-{0xA5A8,0xEF},  //     ;    MOV      A,R7
-{0xA5A9,0x9D},  //     ;    SUBB     A,R5
-{0xA5AA,0xFE},  //     ;    MOV      R6,A
-{0xA5AB,0xE4},  //     ;    CLR      A
-{0xA5AC,0x94},  //     ;    SUBB     A,#DeviceParameters(0x00)
-{0xA5AD,0x00},  //     ;
-{0xA5AE,0x90},  //     ;    MOV      DPTR,#0x0BCA
-{0xA5AF,0x0B},  //     ;
-{0xA5B0,0xCA},  //     ;
-{0xA5B1,0xF0},  //     ;    MOVX     @DPTR,A
-{0xA5B2,0xA3},  //     ;    INC      DPTR
-{0xA5B3,0xCE},  //     ;    XCH      A,R6
-{0xA5B4,0xF0},  //     ;    MOVX     @DPTR,A
-{0xA5B5,0x90},  //     ;    MOV      DPTR,#0x0783
-{0xA5B6,0x07},  //     ;
-{0xA5B7,0x83},  //     ;
-{0xA5B8,0xE0},  //     ;    MOVX     A,@DPTR
-{0xA5B9,0xFF},  //     ;    MOV      R7,A
-{0xA5BA,0x7E},  //     ;    MOV      R6,#DeviceParameters(0x00)
-{0xA5BB,0x00},  //     ;
-{0xA5BC,0x90},  //     ;    MOV      DPTR,#patch_wLightGap(0x0DF6)
-{0xA5BD,0x0D},  //     ;
-{0xA5BE,0xF6},  //     ;
-{0xA5BF,0xEE},  //     ;    MOV      A,R6
-{0xA5C0,0xF0},  //     ;    MOVX     @DPTR,A
-{0xA5C1,0xA3},  //     ;    INC      DPTR
-{0xA5C2,0xEF},  //     ;    MOV      A,R7
-{0xA5C3,0xF0},  //     ;    MOVX     @DPTR,A
-{0xA5C4,0x90},  //     ;    MOV      DPTR,#0x0BCA
-{0xA5C5,0x0B},  //     ;
-{0xA5C6,0xCA},  //     ;
-{0xA5C7,0xE0},  //     ;    MOVX     A,@DPTR
-{0xA5C8,0xFC},  //     ;    MOV      R4,A
-{0xA5C9,0xA3},  //     ;    INC      DPTR
-{0xA5CA,0xE0},  //     ;    MOVX     A,@DPTR
-{0xA5CB,0xFD},  //     ;    MOV      R5,A
-{0xA5CC,0xD3},  //     ;    SETB     C
-{0xA5CD,0x9F},  //     ;    SUBB     A,R7
-{0xA5CE,0x74},  //     ;    MOV      A,#PipeSetupCommon(0x80)
-{0xA5CF,0x80},  //     ;
-{0xA5D0,0xF8},  //     ;    MOV      R0,A
-{0xA5D1,0xEC},  //     ;    MOV      A,R4
-{0xA5D2,0x64},  //     ;    XRL      A,#PipeSetupCommon(0x80)
-{0xA5D3,0x80},  //     ;
-{0xA5D4,0x98},  //     ;    SUBB     A,R0
-{0xA5D5,0x40},  //     ;    JC       B01:99BB
-{0xA5D6,0x0C},  //     ;
-{0xA5D7,0x90},  //     ;    MOV      DPTR,#0x0BC8
-{0xA5D8,0x0B},  //     ;
-{0xA5D9,0xC8},  //     ;
-{0xA5DA,0xE0},  //     ;    MOVX     A,@DPTR
-{0xA5DB,0x04},  //     ;    INC      A
-{0xA5DC,0xF0},  //     ;    MOVX     @DPTR,A
-{0xA5DD,0xA3},  //     ;    INC      DPTR
-{0xA5DE,0xE0},  //     ;    MOVX     A,@DPTR
-{0xA5DF,0x04},  //     ;    INC      A
-{0xA5E0,0xF0},  //     ;    MOVX     @DPTR,A
-{0xA5E1,0x80},  //     ;    SJMP     B01:99E1
-{0xA5E2,0x26},  //     ;
-{0xA5E3,0x90},  //     ;    MOV      DPTR,#patch_wLightGap(0x0DF6)
-{0xA5E4,0x0D},  //     ;
-{0xA5E5,0xF6},  //     ;
-{0xA5E6,0xE0},  //     ;    MOVX     A,@DPTR
-{0xA5E7,0xFE},  //     ;    MOV      R6,A
-{0xA5E8,0xA3},  //     ;    INC      DPTR
-{0xA5E9,0xE0},  //     ;    MOVX     A,@DPTR
-{0xA5EA,0xFF},  //     ;    MOV      R7,A
-{0xA5EB,0xC3},  //     ;    CLR      C
-{0xA5EC,0xE4},  //     ;    CLR      A
-{0xA5ED,0x9F},  //     ;    SUBB     A,R7
-{0xA5EE,0xFF},  //     ;    MOV      R7,A
-{0xA5EF,0xE4},  //     ;    CLR      A
-{0xA5F0,0x9E},  //     ;    SUBB     A,R6
-{0xA5F1,0xFE},  //     ;    MOV      R6,A
-{0xA5F2,0xC3},  //     ;    CLR      C
-{0xA5F3,0xED},  //     ;    MOV      A,R5
-{0xA5F4,0x9F},  //     ;    SUBB     A,R7
-{0xA5F5,0xEE},  //     ;    MOV      A,R6
-{0xA5F6,0x64},  //     ;    XRL      A,#PipeSetupCommon(0x80)
-{0xA5F7,0x80},  //     ;
-{0xA5F8,0xF8},  //     ;    MOV      R0,A
-{0xA5F9,0xEC},  //     ;    MOV      A,R4
-{0xA5FA,0x64},  //     ;    XRL      A,#PipeSetupCommon(0x80)
-{0xA5FB,0x80},  //     ;
-{0xA5FC,0x98},  //     ;    SUBB     A,R0
-{0xA5FD,0x50},  //     ;    JNC      B01:99E1
-{0xA5FE,0x0A},  //     ;
-{0xA5FF,0x90},  //     ;    MOV      DPTR,#0x0BC8
-{0xA600,0x0B},  //     ;
-{0xA601,0xC8},  //     ;
-{0xA602,0xE0},  //     ;    MOVX     A,@DPTR
-{0xA603,0x14},  //     ;    DEC      A
-{0xA604,0xF0},  //     ;    MOVX     @DPTR,A
-{0xA605,0xA3},  //     ;    INC      DPTR
-{0xA606,0xE0},  //     ;    MOVX     A,@DPTR
-{0xA607,0x04},  //     ;    INC      A
-{0xA608,0xF0},  //     ;    MOVX     @DPTR,A
-{0xA609,0x05},  //     ;    INC      c_HeightScale(0x3B)
-{0xA60A,0x3B},  //     ;
-{0xA60B,0x02},  //     ;    LJMP     B01:98DA
-{0xA60C,0xF5},  //     ;
-{0xA60D,0x02},  //     ;
-{0xA60E,0x90},  //     ;    MOV      DPTR,#AutoFocusInstableFocusMeasureStatus(0x0858)
-{0xA60F,0x08},  //     ;
-{0xA610,0x58},  //     ;
-{0xA611,0x02},  //     ;    LJMP
-{0xA612,0x9D},  //     ;
-{0xA613,0x50},  //     ;
+{0xA47A,0x5C},  //	;                                                               
+{0xA500,0xF5},  //     ;    MOV      c_HeightScale(0x3B),A                              
+{0xA501,0x3B},  //     ;                                                                
+{0xA502,0x90},  //     ;    MOV      DPTR,#0x066C                                       
+{0xA503,0x06},  //     ;                                                                
+{0xA504,0x6C},  //     ;                                                                
+{0xA505,0xE0},  //     ;    MOVX     A,@DPTR                                            
+{0xA506,0xFF},  //     ;    MOV      R7,A                                               
+{0xA507,0xE5},  //     ;    MOV      A,c_HeightScale(0x3B)                              
+{0xA508,0x3B},  //     ;                                                                
+{0xA509,0xC3},  //     ;    CLR      C                                                  
+{0xA50A,0x9F},  //     ;    SUBB     A,R7                                               
+{0xA50B,0x40},  //     ;    JC       B01:98E8                                           
+{0xA50C,0x03},  //     ;                                                                
+{0xA50D,0x02},  //     ;    LJMP     B01:99E6                                           
+{0xA50E,0xF6},  //     ;                                                                
+{0xA50F,0x0E},  //     ;                                                                
+{0xA510,0x90},  //     ;    MOV      DPTR,#0x0BC6                                       
+{0xA511,0x0B},  //     ;                                                                
+{0xA512,0xC6},  //     ;                                                                
+{0xA513,0xE0},  //     ;    MOVX     A,@DPTR                                            
+{0xA514,0x14},  //     ;    DEC      A                                                  
+{0xA515,0x60},  //     ;    JZ       B01:992B                                           
+{0xA516,0x3C},  //     ;                                                                
+{0xA517,0x14},  //     ;    DEC      A                                                  
+{0xA518,0x60},  //     ;    JZ       B01:995D                                           
+{0xA519,0x6B},  //     ;                                                                
+{0xA51A,0x24},  //     ;    ADD      A,#0x02                                            
+{0xA51B,0x02},  //     ;                                                                
+{0xA51C,0x60},  //     ;    JZ       B01:98F9                                           
+{0xA51D,0x03},  //     ;                                                                
+{0xA51E,0x02},  //     ;    LJMP     B01:998D                                           
+{0xA51F,0xF5},  //     ;                                                                
+{0xA520,0xB5},  //     ;                                                                
+{0xA521,0x90},  //     ;    MOV      DPTR,#AutoFocusInstableFocusMeasureValues(0x0A9A)  
+{0xA522,0x0A},  //     ;                                                                
+{0xA523,0x9A},  //     ;                                                                
+{0xA524,0xE0},  //     ;    MOVX     A,@DPTR                                            
+{0xA525,0xFB},  //     ;    MOV      R3,A                                               
+{0xA526,0xA3},  //     ;    INC      DPTR                                               
+{0xA527,0xE0},  //     ;    MOVX     A,@DPTR                                            
+{0xA528,0xFA},  //     ;    MOV      R2,A                                               
+{0xA529,0xA3},  //     ;    INC      DPTR                                               
+{0xA52A,0xE0},  //     ;    MOVX     A,@DPTR                                            
+{0xA52B,0xF9},  //     ;    MOV      R1,A                                               
+{0xA52C,0x85},  //     ;    MOV      DPL(0x82),c_HeightScale(0x3B)                      
+{0xA52D,0x3B},  //     ;                                                                
+{0xA52E,0x82},  //     ;                                                                
+{0xA52F,0x75},  //     ;    MOV      DPH(0x83),#DeviceParameters(0x00)                  
+{0xA530,0x83},  //     ;                                                                
+{0xA531,0x00},  //     ;                                                                
+{0xA532,0x12},  //     ;    LCALL    C?CLDOPTR(C:0AB8)                                  
+{0xA533,0x0A},  //     ;                                                                
+{0xA534,0xB8},  //     ;                                                                
+{0xA535,0xFF},  //     ;    MOV      R7,A                                               
+{0xA536,0x74},  //     ;    MOV      A,#0xAB                                            
+{0xA537,0xAB},  //     ;                                                                
+{0xA538,0x25},  //     ;    ADD      A,c_HeightScale(0x3B)                              
+{0xA539,0x3B},  //     ;                                                                
+{0xA53A,0xF5},  //     ;    MOV      DPL(0x82),A                                        
+{0xA53B,0x82},  //     ;                                                                
+{0xA53C,0xE4},  //     ;    CLR      A                                                  
+{0xA53D,0x34},  //     ;    ADDC     A,#bInt_Event_Status(0x0A)                         
+{0xA53E,0x0A},  //     ;                                                                
+{0xA53F,0xF5},  //     ;    MOV      DPH(0x83),A                                        
+{0xA540,0x83},  //     ;                                                                
+{0xA541,0xE0},  //     ;    MOVX     A,@DPTR                                            
+{0xA542,0xFD},  //     ;    MOV      R5,A                                               
+{0xA543,0xC3},  //     ;    CLR      C                                                  
+{0xA544,0xEF},  //     ;    MOV      A,R7                                               
+{0xA545,0x9D},  //     ;    SUBB     A,R5                                               
+{0xA546,0xFE},  //     ;    MOV      R6,A                                               
+{0xA547,0xE4},  //     ;    CLR      A                                                  
+{0xA548,0x94},  //     ;    SUBB     A,#DeviceParameters(0x00)                          
+{0xA549,0x00},  //     ;                                                                
+{0xA54A,0x90},  //     ;    MOV      DPTR,#0x0BCA                                       
+{0xA54B,0x0B},  //     ;                                                                
+{0xA54C,0xCA},  //     ;                                                                
+{0xA54D,0xF0},  //     ;    MOVX     @DPTR,A                                            
+{0xA54E,0xA3},  //     ;    INC      DPTR                                               
+{0xA54F,0xCE},  //     ;    XCH      A,R6                                               
+{0xA550,0xF0},  //     ;    MOVX     @DPTR,A                                            
+{0xA551,0x80},  //     ;    SJMP     B01:998D                                           
+{0xA552,0x62},  //     ;                                                                
+{0xA553,0x90},  //     ;    MOV      DPTR,#AutoFocusInstableFocusMeasureValues(0x0A9A)  
+{0xA554,0x0A},  //     ;                                                                
+{0xA555,0x9A},  //     ;                                                                
+{0xA556,0xE0},  //     ;    MOVX     A,@DPTR                                            
+{0xA557,0xFB},  //     ;    MOV      R3,A                                               
+{0xA558,0xA3},  //     ;    INC      DPTR                                               
+{0xA559,0xE0},  //     ;    MOVX     A,@DPTR                                            
+{0xA55A,0xFA},  //     ;    MOV      R2,A                                               
+{0xA55B,0xA3},  //     ;    INC      DPTR                                               
+{0xA55C,0xE0},  //     ;    MOVX     A,@DPTR                                            
+{0xA55D,0xF9},  //     ;    MOV      R1,A                                               
+{0xA55E,0x85},  //     ;    MOV      DPL(0x82),c_HeightScale(0x3B)                      
+{0xA55F,0x3B},  //     ;                                                                
+{0xA560,0x82},  //     ;                                                                
+{0xA561,0x75},  //     ;    MOV      DPH(0x83),#DeviceParameters(0x00)                  
+{0xA562,0x83},  //     ;                                                                
+{0xA563,0x00},  //     ;                                                                
+{0xA564,0x12},  //     ;    LCALL    C?CLDOPTR(C:0AB8)                                  
+{0xA565,0x0A},  //     ;                                                                
+{0xA566,0xB8},  //     ;                                                                
+{0xA567,0xFF},  //     ;    MOV      R7,A                                               
+{0xA568,0x74},  //     ;    MOV      A,#0x9D                                            
+{0xA569,0x9D},  //     ;                                                                
+{0xA56A,0x25},  //     ;    ADD      A,c_HeightScale(0x3B)                              
+{0xA56B,0x3B},  //     ;                                                                
+{0xA56C,0xF5},  //     ;    MOV      DPL(0x82),A                                        
+{0xA56D,0x82},  //     ;                                                                
+{0xA56E,0xE4},  //     ;    CLR      A                                                  
+{0xA56F,0x34},  //     ;    ADDC     A,#bInt_Event_Status(0x0A)                         
+{0xA570,0x0A},  //     ;                                                                
+{0xA571,0xF5},  //     ;    MOV      DPH(0x83),A                                        
+{0xA572,0x83},  //     ;                                                                
+{0xA573,0xE0},  //     ;    MOVX     A,@DPTR                                            
+{0xA574,0xFD},  //     ;    MOV      R5,A                                               
+{0xA575,0xC3},  //     ;    CLR      C                                                  
+{0xA576,0xEF},  //     ;    MOV      A,R7                                               
+{0xA577,0x9D},  //     ;    SUBB     A,R5                                               
+{0xA578,0xFE},  //     ;    MOV      R6,A                                               
+{0xA579,0xE4},  //     ;    CLR      A                                                  
+{0xA57A,0x94},  //     ;    SUBB     A,#DeviceParameters(0x00)                          
+{0xA57B,0x00},  //     ;                                                                
+{0xA57C,0x90},  //     ;    MOV      DPTR,#0x0BCA                                       
+{0xA57D,0x0B},  //     ;                                                                
+{0xA57E,0xCA},  //     ;                                                                
+{0xA57F,0xF0},  //     ;    MOVX     @DPTR,A                                            
+{0xA580,0xA3},  //     ;    INC      DPTR                                               
+{0xA581,0xCE},  //     ;    XCH      A,R6                                               
+{0xA582,0xF0},  //     ;    MOVX     @DPTR,A                                            
+{0xA583,0x80},  //     ;    SJMP     B01:998D                                           
+{0xA584,0x30},  //     ;                                                                
+{0xA585,0x90},  //     ;    MOV      DPTR,#AutoFocusInstableFocusMeasureValues(0x0A9A)  
+{0xA586,0x0A},  //     ;                                                                
+{0xA587,0x9A},  //     ;                                                                
+{0xA588,0xE0},  //     ;    MOVX     A,@DPTR                                            
+{0xA589,0xFB},  //     ;    MOV      R3,A                                               
+{0xA58A,0xA3},  //     ;    INC      DPTR                                               
+{0xA58B,0xE0},  //     ;    MOVX     A,@DPTR                                            
+{0xA58C,0xFA},  //     ;    MOV      R2,A                                               
+{0xA58D,0xA3},  //     ;    INC      DPTR                                               
+{0xA58E,0xE0},  //     ;    MOVX     A,@DPTR                                            
+{0xA58F,0xF9},  //     ;    MOV      R1,A                                               
+{0xA590,0x85},  //     ;    MOV      DPL(0x82),c_HeightScale(0x3B)                      
+{0xA591,0x3B},  //     ;                                                                
+{0xA592,0x82},  //     ;                                                                
+{0xA593,0x75},  //     ;    MOV      DPH(0x83),#DeviceParameters(0x00)                  
+{0xA594,0x83},  //     ;                                                                
+{0xA595,0x00},  //     ;                                                                
+{0xA596,0x12},  //     ;    LCALL    C?CLDOPTR(C:0AB8)                                  
+{0xA597,0x0A},  //     ;                                                                
+{0xA598,0xB8},  //     ;                                                                
+{0xA599,0xFF},  //     ;    MOV      R7,A                                               
+{0xA59A,0x74},  //     ;    MOV      A,#0xA4                                            
+{0xA59B,0xA4},  //     ;                                                                
+{0xA59C,0x25},  //     ;    ADD      A,c_HeightScale(0x3B)                              
+{0xA59D,0x3B},  //     ;                                                                
+{0xA59E,0xF5},  //     ;    MOV      DPL(0x82),A                                        
+{0xA59F,0x82},  //     ;                                                                
+{0xA5A0,0xE4},  //     ;    CLR      A                                                  
+{0xA5A1,0x34},  //     ;    ADDC     A,#bInt_Event_Status(0x0A)                         
+{0xA5A2,0x0A},  //     ;                                                                
+{0xA5A3,0xF5},  //     ;    MOV      DPH(0x83),A                                        
+{0xA5A4,0x83},  //     ;                                                                
+{0xA5A5,0xE0},  //     ;    MOVX     A,@DPTR                                            
+{0xA5A6,0xFD},  //     ;    MOV      R5,A                                               
+{0xA5A7,0xC3},  //     ;    CLR      C                                                  
+{0xA5A8,0xEF},  //     ;    MOV      A,R7                                               
+{0xA5A9,0x9D},  //     ;    SUBB     A,R5                                               
+{0xA5AA,0xFE},  //     ;    MOV      R6,A                                               
+{0xA5AB,0xE4},  //     ;    CLR      A                                                  
+{0xA5AC,0x94},  //     ;    SUBB     A,#DeviceParameters(0x00)                          
+{0xA5AD,0x00},  //     ;                                                                
+{0xA5AE,0x90},  //     ;    MOV      DPTR,#0x0BCA                                       
+{0xA5AF,0x0B},  //     ;                                                                
+{0xA5B0,0xCA},  //     ;                                                                
+{0xA5B1,0xF0},  //     ;    MOVX     @DPTR,A                                            
+{0xA5B2,0xA3},  //     ;    INC      DPTR                                               
+{0xA5B3,0xCE},  //     ;    XCH      A,R6                                               
+{0xA5B4,0xF0},  //     ;    MOVX     @DPTR,A                                            
+{0xA5B5,0x90},  //     ;    MOV      DPTR,#0x0783                                       
+{0xA5B6,0x07},  //     ;                                                                
+{0xA5B7,0x83},  //     ;                                                                
+{0xA5B8,0xE0},  //     ;    MOVX     A,@DPTR                                            
+{0xA5B9,0xFF},  //     ;    MOV      R7,A                                               
+{0xA5BA,0x7E},  //     ;    MOV      R6,#DeviceParameters(0x00)                         
+{0xA5BB,0x00},  //     ;                                                                
+{0xA5BC,0x90},  //     ;    MOV      DPTR,#patch_wLightGap(0x0DF6)                      
+{0xA5BD,0x0D},  //     ;                                                                
+{0xA5BE,0xF6},  //     ;                                                                
+{0xA5BF,0xEE},  //     ;    MOV      A,R6                                               
+{0xA5C0,0xF0},  //     ;    MOVX     @DPTR,A                                            
+{0xA5C1,0xA3},  //     ;    INC      DPTR                                               
+{0xA5C2,0xEF},  //     ;    MOV      A,R7                                               
+{0xA5C3,0xF0},  //     ;    MOVX     @DPTR,A                                            
+{0xA5C4,0x90},  //     ;    MOV      DPTR,#0x0BCA                                       
+{0xA5C5,0x0B},  //     ;                                                                
+{0xA5C6,0xCA},  //     ;                                                                
+{0xA5C7,0xE0},  //     ;    MOVX     A,@DPTR                                            
+{0xA5C8,0xFC},  //     ;    MOV      R4,A                                               
+{0xA5C9,0xA3},  //     ;    INC      DPTR                                               
+{0xA5CA,0xE0},  //     ;    MOVX     A,@DPTR                                            
+{0xA5CB,0xFD},  //     ;    MOV      R5,A                                               
+{0xA5CC,0xD3},  //     ;    SETB     C                                                  
+{0xA5CD,0x9F},  //     ;    SUBB     A,R7                                               
+{0xA5CE,0x74},  //     ;    MOV      A,#PipeSetupCommon(0x80)                           
+{0xA5CF,0x80},  //     ;                                                                
+{0xA5D0,0xF8},  //     ;    MOV      R0,A                                               
+{0xA5D1,0xEC},  //     ;    MOV      A,R4                                               
+{0xA5D2,0x64},  //     ;    XRL      A,#PipeSetupCommon(0x80)                           
+{0xA5D3,0x80},  //     ;                                                                
+{0xA5D4,0x98},  //     ;    SUBB     A,R0                                               
+{0xA5D5,0x40},  //     ;    JC       B01:99BB                                           
+{0xA5D6,0x0C},  //     ;                                                                
+{0xA5D7,0x90},  //     ;    MOV      DPTR,#0x0BC8                                       
+{0xA5D8,0x0B},  //     ;                                                                
+{0xA5D9,0xC8},  //     ;                                                                
+{0xA5DA,0xE0},  //     ;    MOVX     A,@DPTR                                            
+{0xA5DB,0x04},  //     ;    INC      A                                                  
+{0xA5DC,0xF0},  //     ;    MOVX     @DPTR,A                                            
+{0xA5DD,0xA3},  //     ;    INC      DPTR                                               
+{0xA5DE,0xE0},  //     ;    MOVX     A,@DPTR                                            
+{0xA5DF,0x04},  //     ;    INC      A                                                  
+{0xA5E0,0xF0},  //     ;    MOVX     @DPTR,A                                            
+{0xA5E1,0x80},  //     ;    SJMP     B01:99E1                                           
+{0xA5E2,0x26},  //     ;                                                                
+{0xA5E3,0x90},  //     ;    MOV      DPTR,#patch_wLightGap(0x0DF6)                      
+{0xA5E4,0x0D},  //     ;                                                                
+{0xA5E5,0xF6},  //     ;                                                                
+{0xA5E6,0xE0},  //     ;    MOVX     A,@DPTR                                            
+{0xA5E7,0xFE},  //     ;    MOV      R6,A                                               
+{0xA5E8,0xA3},  //     ;    INC      DPTR                                               
+{0xA5E9,0xE0},  //     ;    MOVX     A,@DPTR                                            
+{0xA5EA,0xFF},  //     ;    MOV      R7,A                                               
+{0xA5EB,0xC3},  //     ;    CLR      C                                                  
+{0xA5EC,0xE4},  //     ;    CLR      A                                                  
+{0xA5ED,0x9F},  //     ;    SUBB     A,R7                                               
+{0xA5EE,0xFF},  //     ;    MOV      R7,A                                               
+{0xA5EF,0xE4},  //     ;    CLR      A                                                  
+{0xA5F0,0x9E},  //     ;    SUBB     A,R6                                               
+{0xA5F1,0xFE},  //     ;    MOV      R6,A                                               
+{0xA5F2,0xC3},  //     ;    CLR      C                                                  
+{0xA5F3,0xED},  //     ;    MOV      A,R5                                               
+{0xA5F4,0x9F},  //     ;    SUBB     A,R7                                               
+{0xA5F5,0xEE},  //     ;    MOV      A,R6                                               
+{0xA5F6,0x64},  //     ;    XRL      A,#PipeSetupCommon(0x80)                           
+{0xA5F7,0x80},  //     ;                                                                
+{0xA5F8,0xF8},  //     ;    MOV      R0,A                                               
+{0xA5F9,0xEC},  //     ;    MOV      A,R4                                               
+{0xA5FA,0x64},  //     ;    XRL      A,#PipeSetupCommon(0x80)                           
+{0xA5FB,0x80},  //     ;                                                                
+{0xA5FC,0x98},  //     ;    SUBB     A,R0                                               
+{0xA5FD,0x50},  //     ;    JNC      B01:99E1                                           
+{0xA5FE,0x0A},  //     ;                                                                
+{0xA5FF,0x90},  //     ;    MOV      DPTR,#0x0BC8                                       
+{0xA600,0x0B},  //     ;                                                                
+{0xA601,0xC8},  //     ;                                                                
+{0xA602,0xE0},  //     ;    MOVX     A,@DPTR                                            
+{0xA603,0x14},  //     ;    DEC      A                                                  
+{0xA604,0xF0},  //     ;    MOVX     @DPTR,A                                            
+{0xA605,0xA3},  //     ;    INC      DPTR                                               
+{0xA606,0xE0},  //     ;    MOVX     A,@DPTR                                            
+{0xA607,0x04},  //     ;    INC      A                                                  
+{0xA608,0xF0},  //     ;    MOVX     @DPTR,A                                            
+{0xA609,0x05},  //     ;    INC      c_HeightScale(0x3B)                                
+{0xA60A,0x3B},  //     ;                                                                
+{0xA60B,0x02},  //     ;    LJMP     B01:98DA                                           
+{0xA60C,0xF5},  //     ;                                                                
+{0xA60D,0x02},  //     ;                                                                
+{0xA60E,0x90},  //     ;    MOV      DPTR,#AutoFocusInstableFocusMeasureStatus(0x0858)  
+{0xA60F,0x08},  //     ;                                                                
+{0xA610,0x58},  //     ;                                                                
+{0xA611,0x02},  //     ;    LJMP                                                        
+{0xA612,0x9D},  //     ;                                                                
+{0xA613,0x50},  //     ;                                                                
 {0x9006,0xBA},  //	; Patch break point address high byte;
 {0x9007,0x75},  //	; Patch break point address low byte;
 {0x9008,0x00},  //	; Offset High byte;
@@ -1396,7 +1396,7 @@ struct aml_camera_i2c_fig_s HM5065_script_step[] = {
 {0x9018,0x02},  //	; Offset High byte;
 {0x9019,0x6B},  //	; Offset Low byte;
 {0x901A,0x02},  //	; Enable BP 2;
-{0x901D,0x01},  //    ;
+{0x901D,0x01},  //    ;	
 {0x901E,0xAC},  //	; Patch break point address high byte;
 {0x901F,0x70},  //	; Patch break point address low byte;
 {0x9020,0x00},  //	; Offset High byte;
@@ -1519,10 +1519,10 @@ struct aml_camera_i2c_fig_s HM5065_script_step[] = {
 {0x90D1,0xA2},  //   ; Offset Low byte;
 {0x90D2,0x02},  //   ; Enable BP 25;
 {0x90D6,0x86},  //    ; Patch break point address high byte;
-{0x90D7,0x54},  //    ; Patch break point address low byte;
-{0x90D8,0x04},  //    ; Offset High byte;
-{0x90D9,0x47},  //    ; Offset Low byte;
-{0x90DA,0x02},  //    ; Enable BP 26;
+{0x90D7,0x54},  //    ; Patch break point address low byte; 
+{0x90D8,0x04},  //    ; Offset High byte;                   
+{0x90D9,0x47},  //    ; Offset Low byte;                    
+{0x90DA,0x02},  //    ; Enable BP 26;                       
 {0x9000,0x01},  //	; Enable patch;
 {0xffff,0x00},  //	; MCU release;delay200ms
 {0x0010,0x00},//delay 200ms
@@ -1535,9 +1535,9 @@ struct aml_camera_i2c_fig_s HM5065_script_step[] = {
 {0x0040,0x01},  // 	; AB2
 {0x0041,0x0a},  // 	; Image Size Manual
 {0x0042,0x05},  // 	; 1280
-{0x0043,0x00},  //
+{0x0043,0x00},  // 
 {0x0044,0x03},  // 	; 960
-{0x0045,0xC0},  //
+{0x0045,0xC0},  // 
 {0x0046,0x02},  // 	; DataFormat_YCbCr_Custom
 {0x0060,0x00},  //
 {0x0061,0x00},  //
@@ -1577,42 +1577,42 @@ struct aml_camera_i2c_fig_s HM5065_script_step[] = {
 {0x0390,0x01},  //	; ArcticControl fArcticEnable
 {0x0391,0x00},  //	; ArcticControl fArcticConfig DEFAULT CONFIG
 {0x0392,0x00},  //	; ArcticControl fGNFConfig    DEFAULT CONFIG
-{0x03A0,0x14},  //	; ArcticCCSigmaControl fMaximumCCSigma
+{0x03A0,0x14},  //	; ArcticCCSigmaControl fMaximumCCSigma 
 {0x03A1,0x00},  //	; ArcticCCSigmaControl fDisablePromotion {CompiledExposureTime}
 {0x03A2,0x5A},  //	; ArcticCCSigmaControl fDamperLowThreshold {MSB}   //2400
-{0x03A3,0xEE},  //	; ArcticCCSigmaControl fDamperLowThreshold {LSB}
+{0x03A3,0xEE},  //	; ArcticCCSigmaControl fDamperLowThreshold {LSB}   
 {0x03A4,0x69},  //	; ArcticCCSigmaControl fDamperHighThreshold {MSB}   //3444736
 {0x03A5,0x49},  //	; ArcticCCSigmaControl fDamperHighThreshold {LSB}
 {0x03A6,0x3E},  //	; ArcticCCSigmaControl fY1 {MSB}  // Low threshold
-{0x03A7,0x00},  //	; ArcticCCSigmaControl fY1 {LSB}
+{0x03A7,0x00},  //	; ArcticCCSigmaControl fY1 {LSB} 
 {0x03A8,0x39},  //	; ArcticCCSigmaControl fY2 {MSB}  // High threshold
-{0x03A9,0x33},  //	; ArcticCCSigmaControl fY2 {LSB}
-{0x03B0,0x60},  //	; ArcticCCSigmaControl fMaximumRing
+{0x03A9,0x33},  //	; ArcticCCSigmaControl fY2 {LSB} 
+{0x03B0,0x60},  //	; ArcticCCSigmaControl fMaximumRing 
 {0x03B1,0x00},  //	; ArcticCCSigmaControl fDisablePromotion {CompiledExposureTime}
 {0x03B2,0x5A},  //	; ArcticCCSigmaControl fDamperLowThreshold {MSB}    //24000
 {0x03B3,0xEE},  //	; ArcticCCSigmaControl fDamperLowThreshold {LSB}
 {0x03B4,0x69},  //	; ArcticCCSigmaControl DamperHighThreshold {MSB}    //3444736
 {0x03B5,0x49},  //	; ArcticCCSigmaControl DamperHighThreshold {LSB}
 {0x03B6,0x3E},  //	; ArcticCCSigmaControl fY1 {MSB}  //Low threshold
-{0x03B7,0x00},  //	; ArcticCCSigmaControl fY1 {LSB}
+{0x03B7,0x00},  //	; ArcticCCSigmaControl fY1 {LSB} 
 {0x03B8,0x3D},  //	; ArcticCCSigmaControl fY2 {MSB}  //High threshold
-{0x03B9,0x20},  //	; ArcticCCSigmaControl fY2 {LSB}
-{0x03C0,0x10},  //	; ArcticCCSigmaControl fMaximumScoring
+{0x03B9,0x20},  //	; ArcticCCSigmaControl fY2 {LSB}  
+{0x03C0,0x10},  //	; ArcticCCSigmaControl fMaximumScoring 
 {0x03C1,0x00},  //	; ArcticCCSigmaControl fDisablePromotion {CompiledExposureTime}
 {0x03C2,0x5A},  //	; ArcticCCSigmaControl fDamperLowThreshold {MSB}    //24000
 {0x03C3,0xEE},  //	; ArcticCCSigmaControl fDamperLowThreshold {LSB}
 {0x03C4,0x69},  //	; ArcticCCSigmaControl DamperHighThreshold {MSB}    //3444736
 {0x03C5,0x49},  //	; ArcticCCSigmaControl DamperHighThreshold {LSB}
 {0x03C6,0x3A},  //	; ArcticCCSigmaControl fMinimumDamperOutput {MSB}
-{0x03C7,0x80},  //	; ArcticCCSigmaControl fMinimumDamperOutput {LSB}
-{0x03D0,0x64},  //	; ArcticCCSigmaControl fMaximumScoring
+{0x03C7,0x80},  //	; ArcticCCSigmaControl fMinimumDamperOutput {LSB} 
+{0x03D0,0x64},  //	; ArcticCCSigmaControl fMaximumScoring 
 {0x03D1,0x00},  //	; ArcticCCSigmaControl fDisablePromotion {CompiledExposureTime}
 {0x03D2,0x5A},  //	; ArcticCCSigmaControl fDamperLowThreshold {MSB}   //24000
 {0x03D3,0xEE},  //	; ArcticCCSigmaControl fDamperLowThreshold {LSB}
 {0x03D4,0x69},  //	; ArcticCCSigmaControl DamperHighThreshold {MSB}   //3444736
 {0x03D5,0x49},  //	; ArcticCCSigmaControl DamperHighThreshold {LSB}
 {0x03D6,0x34},  //	; ArcticCCSigmaControl fMinimumDamperOutput {MSB}
-{0x03D7,0xD1},  //	; ArcticCCSigmaControl fMinimumDamperOutput {LSB}
+{0x03D7,0xD1},  //	; ArcticCCSigmaControl fMinimumDamperOutput {LSB} 
 {0x004C,0x08},  //	; PipeSetupBank0 fPeakingGain
 {0x006C,0x08},  //	; PipeSetupBank1 fPeakingGain
 {0x0350,0x00},  //	; PeakingControl fDisableGainDamping  {CompiledExposureTime}
@@ -1622,7 +1622,7 @@ struct aml_camera_i2c_fig_s HM5065_script_step[] = {
 {0x0354,0x49},  //	; PeakingControl fDamperHighThreshold_Gain  {LSB}
 {0x0355,0x39},  //	; PeakingControl fMinimumDamperOutput_Gain  {MSB}
 {0x0356,0x6D},  //	; PeakingControl fMinimumDamperOutput_Gain  {LSB}
-{0x0357,0x19},  //	; PeakingControl fUserPeakLoThresh
+{0x0357,0x19},  //	; PeakingControl fUserPeakLoThresh 
 {0x0358,0x00},  //	; PeakingControl fDisableCoringDamping  {CompiledExposureTime}
 {0x0359,0x3C},  //	; PeakingControl fUserPeakHiThresh
 {0x035A,0x5A},  //	; PeakingControl fDamperLowThreshold_Coring  {MSB}  //24000
@@ -1631,9 +1631,9 @@ struct aml_camera_i2c_fig_s HM5065_script_step[] = {
 {0x035D,0x49},  //	; PeakingControl fDamperHighThreshold_Coring  {LSB}
 {0x035E,0x39},  //	; PeakingControl fMinimumDamperOutput_Coring  {MSB}
 {0x035F,0x85},  //	; PeakingControl fMinimumDamperOutput_Coring  {LSB}
-{0x0049,0x14},  //	; PipeSetupBank0 bGammaGain
+{0x0049,0x14},  //	; PipeSetupBank0 bGammaGain 
 {0x004A,0x0D},  //	; PipeSetupBank0 bGammaInterpolationGain
-{0x0069,0x14},  //	; PipeSetupBank1 bGammaGain
+{0x0069,0x14},  //	; PipeSetupBank1 bGammaGain 
 {0x006A,0x0D},  //	; PipeSetupBank1 bGammaInterpolationGain
 {0x0090,0x5A},  //	; GammaGainDamperControl fpX1 {MSB}   //24000
 {0x0091,0xEE},  //	; GammaGainDamperControl fpX1 {LSB}
@@ -1644,15 +1644,15 @@ struct aml_camera_i2c_fig_s HM5065_script_step[] = {
 {0x0096,0x39},  //	; GammaGainDamperControl fpY2 {MSB}   //0.238
 {0x0097,0xCF},  //	; GammaGainDamperControl fpY2 {LSB}
 {0x0098,0x00},  //  ; GammaGainDamperControl fDisable {CompiledExposureTime}
-{0x00A0,0x5A},  //	; GammaInterpolationDamperControl fpX1 {MSB}   //24000
-{0x00A1,0xEE},  //	; GammaInterpolationDamperControl fpX1 {LSB}
-{0x00A2,0x3E},  //	; GammaInterpolationDamperControl fpY1 {MSB}   //1
-{0x00A3,0x00},  //	; GammaInterpolationDamperControl fpY1 {LSB}
-{0x00A4,0x69},  //	; GammaInterpolationDamperControl fpX2 {MSB}   //3444736
-{0x00A5,0x49},  //	; GammaInterpolationDamperControl fpX2 {LSB}
-{0x00A6,0x3B},  //	; GammaInterpolationDamperControl fpY2 {MSB}   //0.4375
-{0x00A7,0x80},  //	; GammaInterpolationDamperControl fpY2 {LSB}
-{0x00A8,0x00},  //	; GammaInterpolationDamperControl fDisable {CompiledExposureTime}
+{0x00A0,0x5A},  //	; GammaInterpolationDamperControl fpX1 {MSB}   //24000 
+{0x00A1,0xEE},  //	; GammaInterpolationDamperControl fpX1 {LSB} 
+{0x00A2,0x3E},  //	; GammaInterpolationDamperControl fpY1 {MSB}   //1 
+{0x00A3,0x00},  //	; GammaInterpolationDamperControl fpY1 {LSB} 
+{0x00A4,0x69},  //	; GammaInterpolationDamperControl fpX2 {MSB}   //3444736 
+{0x00A5,0x49},  //	; GammaInterpolationDamperControl fpX2 {LSB} 
+{0x00A6,0x3B},  //	; GammaInterpolationDamperControl fpY2 {MSB}   //0.4375 
+{0x00A7,0x80},  //	; GammaInterpolationDamperControl fpY2 {LSB} 
+{0x00A8,0x00},  //	; GammaInterpolationDamperControl fDisable {CompiledExposureTime} 
 {0x0420,0x00},  //    ; C0_GreenRed_X 145
 {0x0421,0x91},  //    ; C0_GreenRed_X LSB
 {0x0422,0xff},  //    ; C0_GreenRed_Y -108
@@ -1914,13 +1914,13 @@ struct aml_camera_i2c_fig_s HM5065_script_step[] = {
 {0x0563,0x06},  //    ;C2 Unity
 {0x0564,0x01},  //    ;C3 Unity
 {0x0324,0x39},  //    ; NormRedGain_Cast0 Hor
-{0x0325,0xAE},  //    ; NormRedGain_Cast0_LSB
+{0x0325,0xAE},  //    ; NormRedGain_Cast0_LSB 
 {0x0326,0x3A},  //    ; NormRedGain_Cast1 IncA
-{0x0327,0x29},  //    ; NormRedGain_Cast1_LSB
+{0x0327,0x29},  //    ; NormRedGain_Cast1_LSB 
 {0x0328,0x3B},  //    ; NormRedGain_Cast2 CWF
-{0x0329,0x0A},  //    ; NormRedGain_Cast2_LSB
+{0x0329,0x0A},  //    ; NormRedGain_Cast2_LSB 
 {0x032A,0x3B},  //    ; NormRedGain_Cast3 D65
-{0x032B,0x62},  //    ; NormRedGain_Cast3_LSB
+{0x032B,0x62},  //    ; NormRedGain_Cast3_LSB 
 {0x0320,0x01},  //    ; AntiVignetteControl - Enable
 {0x0321,0x04},  //    ; NbOfPresets
 {0x0322,0x01},  //    ; AdaptiveAntiVignetteControlEnable - Enable
@@ -2013,7 +2013,7 @@ struct aml_camera_i2c_fig_s HM5065_script_step[] = {
 {0x058E,0x3D},  //	; ColourSaturationDamper fpMinimumOutput {LSB}
 {0x0080,0x6C},  //	; PipeSetupCommon bContrast
 {0x0082,0x5A},  //	; PipeSetupCommon bBrightness
-{0x065A,0x00},  //    ; AFStatsControls->bWindowsSystem = 7 zone AF system
+{0x065A,0x00},  //    ; AFStatsControls->bWindowsSystem = 7 zone AF system 
 {0x06C9,0x01},  //    ; FLADriverLowLevelParameters->AutoSkipNextFrame = ENABLED
 {0x06CD,0x01},  //    ; FLADriverLowLevelParameters->AF_OTP_uwHostDefMacro MSB = 445
 {0x06CE,0xBD},  //    ; FLADriverLowLevelParameters->AF_OTP_uwHostDefMacro LSB
@@ -2023,7 +2023,7 @@ struct aml_camera_i2c_fig_s HM5065_script_step[] = {
 {0x06D2,0x30},  //    ; FLADriverLowLevelParameters->AF_OTP_uwMultiStepTimeDelay MSB = 12.5ms
 {0x06D3,0xD4},  //    ; FLADriverLowLevelParameters->AF_OTP_uwMultiStepTimeDelay LSB
 {0x06D4,0x01},  //    ; FLADriverLowLevelParameters->AF_OTP_fHostEnableOTPRead (1 = disabled)
-{0x06DB,0x59},  //    ; FLADriverLowLevelParameters->fpActuatorResponseTime MSB 12.5ms (FP900)
+{0x06DB,0x59},  //    ; FLADriverLowLevelParameters->fpActuatorResponseTime MSB 12.5ms (FP900) 
 {0x06DC,0x0d},  //    ; FLADriverLowLevelParameters->fpActuatorResponseTime LSB
 {0x0730,0x00},  //    ; FocusRangeConstants->wFullRange_LensMinPosition MSB = 0
 {0x0731,0x00},  //    ; FocusRangeConstants->wFullRange_LensMinPosition LSB
@@ -2044,15 +2044,15 @@ struct aml_camera_i2c_fig_s HM5065_script_step[] = {
 {0x0770,0x98},  //    ; AutoFocusConstants->bCoarseStep = 95
 {0x0771,0x19},  //    ; AutoFocusConstants->bFineStep = 16
 {0x0772,0x1B},  //    ; AutoFocusConstants->bFullSearchStep = 27
-{0x0774,0x01},  //    ; AutoFocusConstants->uwFineThreshold MSB = 330
-{0x0775,0x4a},  //    ; AutoFocusConstants->uwFineThreshold LSB
+{0x0774,0x01},  //    ; AutoFocusConstants->uwFineThreshold MSB = 330 
+{0x0775,0x4a},  //    ; AutoFocusConstants->uwFineThreshold LSB 
 {0x0777,0x00},  //    ; AutoFocusConstants->uwBacklightThreshold MSB = 69
-{0x0778,0x45},  //    ; AutoFocusConstants->uwBacklightThreshold LSB
+{0x0778,0x45},  //    ; AutoFocusConstants->uwBacklightThreshold LSB 
 {0x0779,0x00},  //    ; AutoFocusConstants->uwMotionBlurInRatio MSB = 2
 {0x077A,0x02},  //    ; AutoFocusConstants->uwMotionBlurInRatio LSB
 {0x077D,0x01},  //    ; AutoFocusConstants->bMaxNumberContinuouslyInstableTime = 1
 {0x077E,0x03},  //    ; AutoFocusConstants->bMaxNumberContinuouslyStableFrame = 3
-{0x0783,0x10},  //    ; AutoFocusConstants->bLightGap = 10
+{0x0783,0x10},  //    ; AutoFocusConstants->bLightGap = 10 
 {0x0785,0x14},  //    ; AutoFocusConstants->uwDeltaValue = 20
 {0x0788,0x04},  //    ; AutoFocusConstants->bMinNumberMacroRegion = 4 //mk add
 {0x0846,0x06},  //    ; AutoFocusHeuristicConstants->bHighToMaxFMShiftFactor = 6

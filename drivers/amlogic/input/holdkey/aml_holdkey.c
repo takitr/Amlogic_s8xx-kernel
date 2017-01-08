@@ -46,11 +46,11 @@
 #include <linux/aml_holdkey.h>
 
 
-static struct switch_dev sdev =
+static struct switch_dev sdev = 
 {
-    // android ics switch device
-    .name = "hold_key",
-};
+    // android ics switch device    
+    .name = "hold_key",	
+};  
 
 struct hold_key_workdata {
     struct hold_key_cfg *key_cfg;
@@ -69,18 +69,18 @@ static void holdkey_work(struct hold_key_workdata *hk_workdata)
 	io_status = gpio_in_get(hk_workdata->key_cfg->gpio_num);
 	if(io_status != hk_workdata->hold_status)
 	{
-		//printk("hold_status=%d,io_status=%d\n",hk_workdata->hold_status,io_status);
-		if(hk_workdata->key_cfg->swap)
-			io_status = !io_status;
-		if(hk_workdata->hold_status == -1 && io_status == 1)	//first get hold key status,
-		{
-			switch_set_state(&sdev, io_status);
-			//printk("hold_status=-1,status=%d\n",io_status);
-		}
-		switch_set_state(&sdev, io_status);
-		//printk("kp_work status=%d\n",io_status);
-
-		hk_workdata->hold_status = io_status;
+        	//printk("hold_status=%d,io_status=%d\n",hk_workdata->hold_status,io_status);
+        	if(hk_workdata->key_cfg->swap)
+        		io_status = !io_status;
+        	if(hk_workdata->hold_status == -1 && io_status == 1)	//first get hold key status,
+        	{
+                	switch_set_state(&sdev, io_status);
+                	//printk("hold_status=-1,status=%d\n",io_status);
+        	}
+        	switch_set_state(&sdev, io_status);
+        	//printk("kp_work status=%d\n",io_status);
+        		
+        	hk_workdata->hold_status = io_status;
 	}
 }
 
@@ -107,7 +107,7 @@ static int __devinit holdkey_probe(struct platform_device *pdev)
         dev_err(&pdev->dev, "platform data is required!\n");
         return -EINVAL;
     }
-
+   
     hk_workdata = kzalloc(sizeof(struct hold_key_workdata), GFP_KERNEL);
     if (!hk_workdata ) {
         return -ENOMEM;
@@ -118,16 +118,16 @@ static int __devinit holdkey_probe(struct platform_device *pdev)
     hk_workdata->key_cfg = &(pdata->hk_cfg) ;
 
     platform_set_drvdata(pdev, hk_workdata);
-
+     
     INIT_WORK(&(hk_workdata->work_update), update_work_func);
-
+     
     setup_timer(&hk_workdata->timer, holdkey_timer_sr, hk_workdata) ;
     mod_timer(&hk_workdata->timer, jiffies+msecs_to_jiffies(100));
     gpio_in_get(hk_workdata->key_cfg->gpio_num);
 
     switch_dev_register(&sdev);
-
-    printk("HoldKey register  completed.\n");
+    
+    printk("HoldKey register  completed.\r\n");
     return 0;
 }
 
@@ -171,3 +171,7 @@ module_exit(holdkey_exit);
 MODULE_AUTHOR("Alex Deng");
 MODULE_DESCRIPTION("HoldKey Driver");
 MODULE_LICENSE("GPL");
+
+
+
+

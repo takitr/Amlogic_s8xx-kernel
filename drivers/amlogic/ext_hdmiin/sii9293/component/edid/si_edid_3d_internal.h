@@ -21,7 +21,7 @@
 
 #define HDMI_3D_SVD_STRUCTURE_LENGTH 16                     // maximum by HDMI 1.4 spec
 
-typedef struct svd
+typedef struct svd 
 {
     bit_fld_t   Vic     : 7;
     bit_fld_t   Native  : 1;
@@ -33,7 +33,7 @@ typedef union VIC3DFormat
     struct{
         bit_fld_t FrameSequential:1;    //FS_SUPP
         bit_fld_t TopBottom:1;          //TB_SUPP
-        bit_fld_t LeftRight:1;          //LR_SUPP
+        bit_fld_t LeftRight:1;          //LR_SUPP      
     }Fields;
 
 }VIC3DFormat_t;
@@ -62,3 +62,4 @@ typedef struct Mandatory3dFmt
 #define LEFT_RIGHT        0x04
 
 #endif // __SI_EDID_3D_INTERNAL_H__
+

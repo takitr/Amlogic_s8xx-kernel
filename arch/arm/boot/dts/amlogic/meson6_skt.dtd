@@ -77,7 +77,7 @@
         status = "ok";
         reserve-memory = <0x02000000>;
     };
-
+    
 	mesonfb{
 		compatible = "amlogic,mesonfb";
 		dev_name = "mesonfb";
@@ -86,14 +86,14 @@
 	  vmode = <2>; /*0:VMODE_720P 1:VMODE_LCD  2:VMODE_LVDS_1080P*/
 	  display_size_default = <1920 1080 1920 2160 32>;
 	};
-
+				
 	mesonstream{
 		compatible = "amlogic,mesonstream";
 		dev_name = "mesonstream.0";
 		status = "okay";
 		reserve-memory = <0x04000000 0x00a00000>;
 	};
-
+	
 	vdin0{
 		compatible = "amlogic,vdin";
 		dev_name = "vdin";
@@ -109,15 +109,15 @@
 		status = "okay";
 		reserve-memory = <0x02300000>;
 	};
-
+	
 	ppmgr{
 		compatible = "amlogic,ppmgr";
 		dev_name = "ppmgr";
 		status = "okay";
-		reserve-memory = <0x02c00000>;
+		reserve-memory = <0x02c00000>;		
 	};
 	/*end*/
-
+	
 	early_init{
 		compatible = "amlogic,early_init";
 		dev_name = "early_init";
@@ -125,10 +125,10 @@
 		gpio-1 = "GPIOAO_3";
 		gpio-2 = "GPIOAO_2";
 	};
-
+	
 	usb_con {
 		lm-compatible = "logicmodule-bus";
-
+					
 		usb_b{
 			lm-compatible = "amlogic,usb";
 			lm-periph-id = <1>; /* lm name */
@@ -161,7 +161,7 @@
 	rtc{
 		compatible = "amlogic,aml_rtc";
 	};
-
+	
 	uart_ao{
 		compatible = "amlogic,aml_uart";
 		port_name = "uart_ao";
@@ -170,28 +170,28 @@
 		pinctrl-names = "default";
 		pinctrl-0 = <&ao_uart_pins>;
 	};
-
+	
 	uart_0{
 		compatible = "amlogic,aml_uart";
 		port_name = "uart_a";
 		status = "okay";
 		dev_name = "uart_0";
 	};
-
+	
 	uart_1{
 		compatible = "amlogic,aml_uart";
 		port_name = "uart_b";
 		status = "disabled";
 		dev_name = "uart_1";
 	};
-
+	
 	uart_2{
 		compatible = "amlogic,aml_uart";
 		port_name = "uart_c";
 		status = "disabled";
 		dev_name = "uart_2";
 	};
-
+	
 	uart_3{
 		compatible = "amlogic,aml_uart";
 		port_name = "uart_d";
@@ -209,29 +209,24 @@
         status = "okay";
     };
 
-    aml_tdes{
-       compatible = "amlogic,des,tdes";
-       dev_name = "aml_tdes";
-    };
-
     meson_vcck_dvfs_driver{
         compatible = "amlogic, meson_vcck_dvfs";
         pinctrl-names = "default";
         pinctrl-0 = <&aml_pwm_pins>;
-        use_pwm = <1>;
+        use_pwm = <1>; 
         table_count = <16>;
         cs_voltage_table = <
-        /*
+        /*   
          * Note: This table is hardware depended, If your hardware use PWM method,
          * then first line in this table is PWM register value, second line is
          * voltage of VCCK according this PWM register value. If your platform use
-         * constant-current source to adjust vcck voltage, then the first line should
+         * constant-current source to adjust vcck voltage, then the first line should 
          * set to 0, means not valid, member 'use_pwm' in this node should set to 0.
          *
          *  ---- This table must be in ascending order by voltage ----
-         *
-         *  PWM value       VCCK voltage
-         */
+         *    
+         *  PWM value       VCCK voltage 
+         */   
             0x190003         970000
             0x170005        1010000
             0x150007        1040000
@@ -248,8 +243,8 @@
             0x030019        1350000
             0x01001b        1380000
             0x00001c        1400000
-        >;
-    };
+        >;   
+    };   
 
     dvfs {
         compatible = "amlogic, amlogic-dvfs";                   /** fixed for driver, don't change       */
@@ -279,7 +274,7 @@
     };
 
 
-
+	
 	i2c@c8100500{ /*I2C-AO*/
 		compatible = "amlogic,aml_i2c";
 		dev_name = "i2c-AO";
@@ -288,7 +283,7 @@
 		pinctrl-names="default";
 		pinctrl-0=<&ao_i2c_master>;
 	};
-
+	
 	i2c@c1108500{ /*I2C-A*/
 		compatible = "amlogic,aml_i2c";
 		dev_name = "i2c-A";
@@ -297,9 +292,9 @@
 		pinctrl-names="default";
 		pinctrl-0=<&a_i2c_master>;
 		#address-cells = <1>;
-		#size-cells = <0>;
+		#size-cells = <0>;	
 	};
-
+	
 	i2c@c11087c0{ /*I2C-B*/
 		compatible = "amlogic,aml_i2c";
 		dev_name = "i2c-B";
@@ -309,13 +304,13 @@
 		pinctrl-0=<&b_i2c_master>;
 		#address-cells = <1>;
 		#size-cells = <0>;
-
+		
 		i2c@1A{
 			compatible = "asoc,rt5631";
 			reg = <0x1A>;
 		};
 	};
-
+	
 	amhdmitx{
 		compatible = "amlogic,amhdmitx";
 		dev_name = "amhdmitx";
@@ -341,13 +336,13 @@
             pwr_hpll_vdd_off = "";
         };
 	};
-
+	
 	mesonvout{
 		compatible = "amlogic,mesonvout";
 		dev_name = "mesonvout";
 		/*reg = <0 0>;*/
 	};
-
+	
 
     vdacswitch{
         compatible = "amlogic,vdacswitch";
@@ -359,7 +354,7 @@
             vout_vga  = "GPIOC_2", "H", "GPIOC_3", "L";
         };
     };
-
+		
 	card{
 		compatible = "amlogic,aml_card";
 		dev_name = "aml_sd_mmc.0";
@@ -402,7 +397,7 @@
             #irq_out_edge = "GPIO_IRQ_RISING";
             card_type = <5>; /* 0:unknown, 1:mmc card(include eMMC), 2:sd card(include tSD), 3:sdio device(ie:sdio-wifi), 4:SD combo (IO+mem) card, 5:NON sdio device(means sd/mmc card), other:reserved */
         };
-
+        	
         emmc{
             port = <2>;          /*0:sdio_a, 1:sdio_b, 2:sdio_c, 3:sdhc_a, 4:sdhc_b, 5:sdhc_c */
             pinname = "emmc";
@@ -418,7 +413,7 @@
             #power_level = <0>;
             card_type = <5>; /* 0:unknown, 1:mmc card(include eMMC), 2:sd card(include tSD), 3:sdio device(ie:sdio-wifi), 4:SD combo (IO+mem) card, 5:NON sdio device(means sd/mmc card), other:reserved */
         };
-
+        
         // sdio{
             // port = <0>;          /*0:sdio_a, 1:sdio_b, 2:sdio_c, 3:sdhc_a, 4:sdhc_b, 5:sdhc_c */
             // pinname = "sdio";
@@ -431,7 +426,7 @@
             // card_type = <3>; /* 0:unknown, 1:mmc card(include eMMC), 2:sd card(include tSD), 3:sdio device(ie:sdio-wifi), 4:SD combo (IO+mem) card, 5:NON sdio device(means sd/mmc card), other:reserved */
         // };
     };
-
+    
     // sdhc{
         // compatible = "amlogic,aml_sdhc";
         // dev_name = "aml_sdhc.0";
@@ -455,7 +450,7 @@
             // irq_out = <6>;
         // };
      // };
-
+	
 	meson-eth{
                 compatible = "amlogic,meson-eth";
                 dev_name = "meson-eth";
@@ -471,7 +466,7 @@
 		pinctrl-names="default";
 		pinctrl-0=<&remote_pins>;
 	};
-
+	
 	/// ***************************************************************************************
 /// -   Audio
 //$$ MODULE="Audio"
@@ -525,7 +520,7 @@ audio_spdif_codec{
         dev_name = "aml-pcm.0";
         status = "okay";
     };
-
+    
     wm8960_sound_card{
         compatible = "sound_card,wm8960";
         aml,sound_card = "AML-WM8960";
@@ -543,8 +538,8 @@ audio_spdif_codec{
             "LINPUT2","MICB",
             "RINPUT1","MICB",
             "RINPUT2","MICB";
-
-        capless = <1>;
+            
+        capless = <1>; 
         dres = <2>; /*WM8960_DRES_600R*/
         dis_hp_det = <0>;
         pinctrl-names = "wm8960_audio";
@@ -552,7 +547,7 @@ audio_spdif_codec{
         wm8960_gpio = "GPIOA_19";
         hp_det_inv;
         status = "disabled";
-
+        
     };
 
     rt5631_sound_card{
@@ -567,7 +562,7 @@ audio_spdif_codec{
             "HP","HPOR",
             "MIC1","MIC Bias1",
             "MIC Bias1","MAIN MIC";
-
+        
         /*dev_name = "aml_sound_card";*/
         /*reg = <0 0>;*/
         capless = <0>;
@@ -588,19 +583,19 @@ audio_spdif_codec{
         pinctrl-names = "dummy_codec_audio";
         pinctrl-0 = <&aml_dummy_codec_pins>;
     };
-
+    
     dummy_codec{
         status = "okay";
         compatible = "amlogic,aml_dummy_codec";
         dev_name = "dummy_codec.0";
     };
-
+ 
     wifi_power{
         compatible = "amlogic,wifi_power";
         dev_name = "wifi_power";
         power_gpio = "GPIOE_11";
     };
-
+    
 	saradc{
 		compatible = "amlogic,saradc";
 	};
@@ -624,11 +619,11 @@ audio_spdif_codec{
 		key_num = <1>;
 		config = <0>;
 	};
-
-    securitykey{
-        compatible = "amlogic,aml_keys";
-    };
-
+	
+    securitykey{ 
+        compatible = "amlogic,aml_keys"; 
+    }; 
+	
 	spi@cc000000{
 		compatible = "amlogic,apollo_spi_nor";
 		status = "ok";
@@ -658,13 +653,13 @@ audio_spdif_codec{
 		dev_name = "nand";
 		reg = <0xc1108600 0x24>;
 		pinctrl-names = "nand_rb_mod","nand_norb_mod";
-		pinctrl-0 = <&nand_input_state &conf_nand_state &nand_base
-									&nand_ce0 &nand_rb0
+		pinctrl-0 = <&nand_input_state &conf_nand_state &nand_base 
+									&nand_ce0 &nand_rb0 
 									&nand_rb1 &nand_ce1>;
-		pinctrl-1 = <&nand_input_state &conf_nand_state &nand_base
-									&nand_ce0 &nand_ce1
-									&nand_ce2 &nand_ce3>;
-		device_id = <0>;
+		pinctrl-1 = <&nand_input_state &conf_nand_state &nand_base 
+									&nand_ce0 &nand_ce1 
+									&nand_ce2 &nand_ce3>;							
+		device_id = <0>;			
 		plat-names = "nandnormal";
 		plat-num = <1>;
 		plat-part-0 = <&normal>;
@@ -682,7 +677,7 @@ audio_spdif_codec{
 			partition = <&nand_partitions>;
 			rb_detect = <1>;
 		};
-
+				
 		nand_partitions:nand_partition{
 			logo{
 				offset=<0x0 0x4800000>;
@@ -717,8 +712,8 @@ audio_spdif_codec{
 				size=<0x0 0x0>;
 			};
 		};
-	};
-
+	};	
+	
 	gpio:gpio{
 		compatible = "amlogic,m6-gpio";
 		dev_name = "gpio";
@@ -821,7 +816,7 @@ audio_spdif_codec{
 			amlogic,clrmask=<5 0x6c00 >;
 			amlogic,pins="GPIOX_0","GPIOX_1","GPIOX_2","GPIOX_3","GPIOX_8","GPIOX_9";
 		};
-
+        
         // sdhc_a_pins:sdhc_a_pin{
             // amlogic,setmask=<5 0x00006c00>; /*0x00007c00 adds "GPIOX_4","GPIOX_5","GPIOX_6","GPIOX_7"; At the same time we should clrmask reg3_bit[27-30]*/
             // amlogic,clrmask=<2 0x000000f0           /*sdhc b*/
@@ -900,7 +895,7 @@ audio_spdif_codec{
             amlogic,enable-output=<1>; /* 0:output, 1:input */
             amlogic,pullup=<0>;
         };
-
+        
 		remote_pins:remote_pin{
 			amlogic,setmask=<10 0x1>;
 			amlogic,pins="GPIOAO_7";
@@ -994,3 +989,4 @@ audio_spdif_codec{
 		};
 	};
 }; /* end of / */
+

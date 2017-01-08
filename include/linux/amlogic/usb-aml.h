@@ -16,3 +16,4 @@ struct aml_usb_platform{
 };
 
 #endif
+

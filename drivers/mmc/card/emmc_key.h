@@ -60,3 +60,4 @@ int emmc_key_read(void);
 int emmc_key_write(void);
 
 #endif
+

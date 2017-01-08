@@ -1036,3 +1036,4 @@
 		pinctrl-0 = <&dvb_fe_pins>;
 	};
 }; /* end of / */
+

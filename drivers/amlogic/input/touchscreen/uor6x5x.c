@@ -61,7 +61,7 @@ static struct early_suspend uor6x5x_early_suspend;
 #define R_Threshold 	       11000       //ting
 #define R_Threshold2 	450	//ting //	600
 
-#define ZERO_TOUCH	0
+#define ZERO_TOUCH	0	
 #define ONE_TOUCH	1
 #define TWO_TOUCH	2
 
@@ -83,7 +83,7 @@ static struct early_suspend uor6x5x_early_suspend;
 #define PERIOD_PER_FILTER	1
 
 #define	DROP_POINT_DELAY_J	  msecs_to_jiffies(1)
-#define	READ_DATA_DELAY_J	  msecs_to_jiffies(6)
+#define	READ_DATA_DELAY_J	  msecs_to_jiffies(6)  
 
 #define FILTER_FUNC
 #define NFilt NumberFilter
@@ -108,7 +108,7 @@ struct uor6x5x_touch_screen_struct {
 	int count;
 	int shift;
 	unsigned char n_touch;
-
+	
 	wait_queue_head_t wq;
 	spinlock_t lock;
 	struct timer_list	ts_timer;
@@ -179,7 +179,7 @@ static struct i2c_driver uor_i2c_driver = {
         .probe          = uor_probe,
         .remove         = __devexit_p(uor_remove),
         .suspend	= uor_suspend,
-        .resume 	= uor_resume,
+        .resume 	= uor_resume,	
 };
 
 VINT8 UOR_IICRead(VUINT8 Command, VUINT8 *readdata, VINT8 nread)
@@ -204,7 +204,7 @@ VINT8 UOR_IICRead(VUINT8 Command, VUINT8 *readdata, VINT8 nread)
 		printk(KERN_ERR "[IIC_Read]: i2c_transfer() return error !!!\n");
 		return -1;
 	}
-	return 0;
+	return 0; 
 }
 
 static int uor_get_pendown_state(void)
@@ -231,12 +231,12 @@ int  XYFilter(int *xFilter, int *yFilter, int Num,int Drop){
 
 	if( (Num <=2) && (Drop > (Num-1)) )
 		return FALSE; // not enough to sample
-
+		
 	for(i=0;i<Num;i++){
 		SumTempX += xFilter[i];
 		SumTempY += yFilter[i];
 	}
-
+	
 	Dp = Drop;
 
 	checkSmx = 0;
@@ -259,13 +259,13 @@ int  XYFilter(int *xFilter, int *yFilter, int Num,int Drop){
 				SmY = yFilter[i];
 				SmInY = i;
 			}
-
+			
 			if(checkBgx&(1<<i)){
 			}else if(LaX < xFilter[i]){
 				LaX = xFilter[i];
 				LaInX = i;
 			}
-
+			
 			if(checkBgy&(1<<i)){
 			}else if(LaY < yFilter[i]){
 				LaY = yFilter[i];
@@ -286,10 +286,10 @@ int  XYFilter(int *xFilter, int *yFilter, int Num,int Drop){
 		checkBgx |= 1<<LaInX;
 		checkBgy |= 1<<LaInY;
 	}
-
+	
 	xFilter[0] = SumTempX/(Num-Drop);
 	yFilter[0] = SumTempY/(Num-Drop);
-
+	
 	return TRUE;
 }
 
@@ -314,7 +314,7 @@ VINT8 Init_UOR_HW(void){
     Dy_REF = TempDy[0];
 	if(UOR6X5X_DEBUG)
 		printk(KERN_ERR "filter result:(x,y)=(%d,%d) !!!\n", Dx_REF, Dy_REF);
-
+	
 	i = 0;
 	do{
 
@@ -345,82 +345,82 @@ void SendGestureKey(VUINT8 Gesture ){
 		case Tap:
 			ts.GesNo = 'T';
 			if(UOR6X5X_DEBUG)
-				printk(KERN_INFO "Gesture is TAP\n");
+				printk(KERN_INFO "Gesture is TAP\r\n");
 			break;
 		case RHorizontal:
 			ts.GesNo = 'R';
 			if(UOR6X5X_DEBUG)
-				printk(KERN_INFO "Gesture is RHorizontal\n");
+				printk(KERN_INFO "Gesture is RHorizontal\r\n");
 			break;
 		case LHorizontal:
 			ts.GesNo = 'L';
 			if(UOR6X5X_DEBUG)
-				printk(KERN_INFO "Gesture is LHorizontal\n");
+				printk(KERN_INFO "Gesture is LHorizontal\r\n");
 			break;
 		case UVertical:
 			ts.GesNo = 'U';
 			if(UOR6X5X_DEBUG)
-				printk(KERN_INFO "Gesture is UVertical\n");
+				printk(KERN_INFO "Gesture is UVertical\r\n");
 			break;
 		case DVertical:
 			ts.GesNo = 'D';
 			if(UOR6X5X_DEBUG)
-				printk(KERN_INFO "Gesture is DVertical\n");
+				printk(KERN_INFO "Gesture is DVertical\r\n");
 			break;
 		case RArc:
 			ts.GesNo = 'A';
 			if(UOR6X5X_DEBUG)
-				printk(KERN_INFO "Gesture is RArc\n");
+				printk(KERN_INFO "Gesture is RArc\r\n");
 			break;
 		case LArc:
 			ts.GesNo = 'A';
 			if(UOR6X5X_DEBUG)
-				printk(KERN_INFO "Gesture is LArc\n");
+				printk(KERN_INFO "Gesture is LArc\r\n");
 			break;
 		case CWCircle:
 			ts.GesNo = 'C';
 			if(UOR6X5X_DEBUG
-				printk(KERN_INFO "Gesture is CWCircle\n");
+				printk(KERN_INFO "Gesture is CWCircle\r\n");
 			break;
 		case CCWCircle:
 			ts.GesNo = 'c';
 			if(UOR6X5X_DEBUG)
-				printk(KERN_INFO "Gesture is CCWCircle\n");
+				printk(KERN_INFO "Gesture is CCWCircle\r\n");
 			break;
 		case RPan:
 			ts.GesNo = 'r';
 			if(UOR6X5X_DEBUG)
-				printk(KERN_INFO "Gesture is RPan\n");
+				printk(KERN_INFO "Gesture is RPan\r\n");
 			break;
 		case LPan:
 			ts.GesNo = 'l';
 			if(UOR6X5X_DEBUG)
-				printk(KERN_INFO "Gesture is LPan\n");
+				printk(KERN_INFO "Gesture is LPan\r\n");
 			break;
 		case DPan:
-			ts.GesNo = 'd';
+			ts.GesNo = 'd';		
 			if(UOR6X5X_DEBUG)
-				printk(KERN_INFO "Gesture is DPan\n");
+				printk(KERN_INFO "Gesture is DPan\r\n");
 			break;
 		case UPan:
 			ts.GesNo = 'u';
 			if(UOR6X5X_DEBUG)
-				printk(KERN_INFO "Gesture is UPan\n");
+				printk(KERN_INFO "Gesture is UPan\r\n");
 			break;
 		case PressTap:
 			ts.GesNo = 'p';
 			if(UOR6X5X_DEBUG)
-				printk(KERN_INFO "Gesture is PressTap\n");
+				printk(KERN_INFO "Gesture is PressTap\r\n");
 			break;
 		case PinchIn:
 			ts.GesNo = 'I';
 			if(UOR6X5X_DEBUG)
-				printk(KERN_INFO "Gesture is PinchIn\n");
+				printk(KERN_INFO "Gesture is PinchIn\r\n");
 			break;
 		case PinchOut:
-			ts.GesNo = 'O';
+			ts.GesNo = 'O';	
 			if(UOR6X5X_DEBUG)
-				printk(KERN_INFO "Gesture is PinchOut\n");
+				printk(KERN_INFO "Gesture is PinchOut\r\n");
 			break;
 		default:
 			if(UOR6X5X_DEBUG)
@@ -431,11 +431,11 @@ void SendGestureKey(VUINT8 Gesture ){
 
 
 VUINT8 check_event(VUINT16 x1,VUINT16 x2,VUINT16 y1,VUINT16 y2,VUINT16 dis){
-
+	
 	VUINT8 direction = 0x00;
 	VUINT16 absX = 0, absY = 0;
-	//Decide what the direction is from (x1,y1) to (x2,y2)
-	absX = (x1>x2)?(x1-x2):(x2-x1);
+ 	//Decide what the direction is from (x1,y1) to (x2,y2)
+ 	absX = (x1>x2)?(x1-x2):(x2-x1);
 	absY = (y1>y2)?(y1-y2):(y2-y1);
 	if(absX>dis)
 		direction |= (x1 > x2 ? 0x02:0x01);		//0x01:Right	0x02:Left
@@ -456,7 +456,7 @@ VUINT8 gesture_decision(VUINT8 n_touch,VUINT16 x,VUINT16 y, VUINT16 Dx, VUINT16 
 	DIS_PAN = 800;
 //	DIS_1T = 500;
 	DIS_1T = 150;	//	350;
-
+	
 
 		if(n_touch == 2){
 		//Number of touch is 2,
@@ -464,7 +464,7 @@ VUINT8 gesture_decision(VUINT8 n_touch,VUINT16 x,VUINT16 y, VUINT16 Dx, VUINT16 
 		touch_flag[0] = 0;
 		memset(direction_flag1,0,4);
 
-		if(!touch_flag[1]){
+		if(!touch_flag[1]){ 
 			//start a new 2Touch gesture decision flow
 			touch_flag[1] = 1;
 			PressAndTap = 1;
@@ -478,7 +478,7 @@ VUINT8 gesture_decision(VUINT8 n_touch,VUINT16 x,VUINT16 y, VUINT16 Dx, VUINT16 
 			XX2 = x;
 			YY2 = y;
 
-			//If the variation in Dx or Dy is bigger than DIS_PINCH or the variation in
+			//If the variation in Dx or Dy is bigger than DIS_PINCH or the variation in 
 			//the coordinate of central point between the two touch is bigger than DIS_PAN,
 			//clear the flag PressAndTap.
 			if(check_event(XX1,XX2,YY1,YY2,50))
@@ -517,7 +517,7 @@ VUINT8 gesture_decision(VUINT8 n_touch,VUINT16 x,VUINT16 y, VUINT16 Dx, VUINT16 
 				}
 
 			}else if(flag_d = check_event(XX1,XX2,YY1,YY2,DIS_PAN)){
-				//If the variation in Dx or Dy is smaller than DIS_PINCH and the variation in
+				//If the variation in Dx or Dy is smaller than DIS_PINCH and the variation in 
 				//the coordinate of central point between the two touch is bigger than DIS_PAN,
 				//set the flag RightPan/LeftPan
 				PressAndTap = 0;
@@ -549,7 +549,7 @@ VUINT8 gesture_decision(VUINT8 n_touch,VUINT16 x,VUINT16 y, VUINT16 Dx, VUINT16 
 		}
 
 	}else if(PressAndTap){
-		//n_touch is changed from 2 to 1 or from 2 to 0,
+	  	//n_touch is changed from 2 to 1 or from 2 to 0, 
 		//and the flag PressAndTap is set.
 		gesture = PressTap;
 		PressAndTap = 0;
@@ -562,7 +562,7 @@ VUINT8 gesture_decision(VUINT8 n_touch,VUINT16 x,VUINT16 y, VUINT16 Dx, VUINT16 
 		//clear flags for 2-touch gesture decision.
 		touch_flag[1] = 0;
 
-		if(!touch_flag[0]){
+		if(!touch_flag[0]){ 
 			//start a new gesture decision flow
 			memset(direction_flag1,0,4);
 
@@ -577,11 +577,11 @@ VUINT8 gesture_decision(VUINT8 n_touch,VUINT16 x,VUINT16 y, VUINT16 Dx, VUINT16 
 			if(flag_d = check_event(X1,X2,Y1,Y2,DIS_1T)){
 				X1 = X2;
 				Y1 = Y2;
-
+				
 				direction_flag1[flag_count] = flag_d;
 
 				if(circle_flag){
-					//If the previous recognized gesture is circle.
+					//If the previous recognized gesture is circle.	
 					event_flag = circle_direction_flag<<4 | direction_flag1[0];
 					switch(event_flag){
 					case 0x14:
@@ -605,13 +605,13 @@ VUINT8 gesture_decision(VUINT8 n_touch,VUINT16 x,VUINT16 y, VUINT16 Dx, VUINT16 
 					circle_flag = 1;
 				}else if(flag_count == 0){
 					flag_count++;
-
+					
 				}else if(flag_count <3){
-
+				
 					if(direction_flag1[flag_count] != direction_flag1[flag_count-1]){
 						flag_count++;
 					}
-
+						
 				}else if(direction_flag1[flag_count] != direction_flag1[flag_count-1]){
 					event_flag = direction_flag1[3] | direction_flag1[2]<<4 | direction_flag1[1] << 8 | direction_flag1[0]<<12;
 					switch(event_flag){
@@ -646,22 +646,22 @@ VUINT8 gesture_decision(VUINT8 n_touch,VUINT16 x,VUINT16 y, VUINT16 Dx, VUINT16 
 					}//switch
 
 				}//if(direction_flag1[3]!=direction_flag1[2])
-
+				
 			}
 		}
 	}else if(n_touch == 0){
-
+		
 		if(circle_flag){
 			circle_flag=0;
 			touch_flag[0] = 0;
 			flag_count=0;
 			memset(direction_flag1,0,4);
 		}
-
+		
 		if(direction_flag1[2]){
-			event_flag = direction_flag1[2] | direction_flag1[1] << 4 | direction_flag1[0]<<8;
+   			event_flag = direction_flag1[2] | direction_flag1[1] << 4 | direction_flag1[0]<<8;
 			switch(event_flag){
-
+			
 			case 0x144:
 			case 0x142:
 			case 0x422:
@@ -672,7 +672,7 @@ VUINT8 gesture_decision(VUINT8 n_touch,VUINT16 x,VUINT16 y, VUINT16 Dx, VUINT16 
 			case 0x814:
 				gesture = RArc;
 			break;
-
+			
 			case 0x244:
 			case 0x241:
 			case 0x411:
@@ -698,34 +698,34 @@ VUINT8 gesture_decision(VUINT8 n_touch,VUINT16 x,VUINT16 y, VUINT16 Dx, VUINT16 
 			case 0x22:
 				gesture = LHorizontal;
 			break;
-
+						
 			case 0x88:
 				gesture = UVertical;
 			break;
-
+		
 			case 0x44:
 				gesture = DVertical;
 			break;
-
+		
 			case 0x14:
 			case 0x42:
 			case 0x28:
 			case 0x81:
 				gesture = RArc;
 			break;
-
+		
 			case 0x24:
 			case 0x41:
 			case 0x18:
 			case 0x82:
 				gesture = LArc;
 			break;
-
+			
 			default:
 				gesture = 0;
 			break;
 			}
-
+			
 		}else if(direction_flag1[0]){
 			switch(direction_flag1[0]){
 			case 1:
@@ -758,7 +758,7 @@ VUINT8 gesture_decision(VUINT8 n_touch,VUINT16 x,VUINT16 y, VUINT16 Dx, VUINT16 
 		}else if(touch_flag[0] && !check_event(X1,X2,Y1,Y2,50)){
 			gesture = Tap;
 		}
-
+	
 		flag_count=0;
 		touch_flag[0] = 0;
 		touch_flag[1] = 0;
@@ -779,14 +779,14 @@ static unsigned short uor_avg_XY(unsigned short *pData )
 {
 	int i,j,k=1;
 	unsigned int avg;
-
+	
 	for(i=WMT_FILTER_NUM-1; i>0;i--){
 		for(j=i-1;j>=0;j--){
 			if(pData[j] > pData[i]){
 				k =pData[j];
 				pData[j] = pData[i];
 				pData[i] = k;
-			}
+			}			
 		}
 	}
 	i = WMT_FILTER_NUM/2;
@@ -803,14 +803,14 @@ static unsigned short uor_avg_DXY(unsigned short *pData )
 {
 	int i,j,k,swap = 1;
 	unsigned int avg;
-
+	
 	for(i=WMT_FILTER_NUM-1; i>0;i--){
 		for(j=i-1;j>=0;j--){
 			if(pData[j] > pData[i]){
 				k =pData[j];
 				pData[j] = pData[i];
 				pData[i] = k;
-			}
+			}			
 		}
 	}
 	i = WMT_FILTER_NUM/2;
@@ -828,15 +828,15 @@ static void uor_read_XY(unsigned short *X, unsigned short *Y)
 	int i = 0;
 	VUINT8 EpBuf[2];
 	struct ST_UOR_BUF uor_point;
-
+	
 	for(i=0; i<WMT_FILTER_NUM;i++){
 		memset(EpBuf, 0, sizeof(EpBuf));
 		UOR_IICRead(MSRX_1T, EpBuf, 2);
 		uor_point.pXbuf[i] = (EpBuf[0]<<4)|(EpBuf[1]>>4);
-
+	
 		UOR_IICRead(MSRY_1T,  EpBuf, 2);
 		uor_point.pYbuf[i] = (EpBuf[0]<<4)|(EpBuf[1]>>4);
-	}
+	}	
 
 	*X = uor_avg_XY(uor_point.pXbuf);
 	*Y = uor_avg_XY(uor_point.pYbuf);
@@ -849,15 +849,15 @@ static void uor_read_DXY(unsigned short *DX, unsigned short *DY)
 	int i = 0;
 	VUINT8 EpBuf[4];
 	struct ST_UOR_BUF uor_point;
-
+	
 	for(i=0; i<WMT_FILTER_NUM;i++){
 		memset(EpBuf, 0, sizeof(EpBuf));
 		UOR_IICRead(MSRX_2T,  (EpBuf), 3);
 		uor_point.pDXbuf[i] = EpBuf[2];
-
+	
 		UOR_IICRead(MSRY_2T,  (EpBuf), 3);
 		uor_point.pDYbuf[i] = EpBuf[2];
-	}
+	}	
 
 	*DX = uor_avg_DXY(uor_point.pDXbuf);
 	*DY = uor_avg_DXY(uor_point.pDYbuf);
@@ -871,7 +871,7 @@ static int FirstTC = 0,OneTCountAfter2 = 0,TWOTouchFlag = 0;
 static int two_touch_count = 0, pre_dx = 0, pre_dy = 0;
 static int pre_outx1 = 0, pre_outy1 = 0, pre_outx2 = 0, pre_outy2 = 0;
 
-static void uor_read_data(unsigned short *X, unsigned short *Y,
+static void uor_read_data(unsigned short *X, unsigned short *Y, 
 	unsigned short *DX, unsigned short *DY)
 {
 
@@ -881,21 +881,21 @@ static void uor_read_data(unsigned short *X, unsigned short *Y,
 
 	memset(EpBuf, 0, sizeof(EpBuf));
 	UOR_IICRead(MSRX_1T, EpBuf, 2);
-	x= EpBuf[0];
+	x= EpBuf[0]; 
 	x <<=4;
 	x |= (EpBuf[1]>>4);
-
+	
 	UOR_IICRead(MSRY_1T,  EpBuf, 2);
-	y = EpBuf[0];
+	y = EpBuf[0]; 
 	y <<=4;
 	y |= (EpBuf[1]>>4);
-
+	
 	UOR_IICRead(MSRX_2T,  (EpBuf), 3);
 	Dx = EpBuf[2];
-
+	
 	UOR_IICRead(MSRY_2T,  (EpBuf), 3);
-	Dy = EpBuf[2];
-
+	Dy = EpBuf[2];	
+	
 
 	*X = x;
 	*Y = y;
@@ -929,7 +929,7 @@ static void uor_read_loop(struct work_struct *data)
 	unsigned int slid_indexs=0;
 	if(UOR6X5X_DEBUG)
 		printk(KERN_ERR "uor.c: uor_read_loop() !\n");
-
+	
 	while(1){
         if(!uor_get_pendown_state()) {
 			#ifdef FILTER_FUNC
@@ -941,30 +941,30 @@ static void uor_read_loop(struct work_struct *data)
 			//first point
 			uor_read_data(&x, &y, &Dx, &Dy);
 			xFilter[ts.count] = x;
-			yFilter[ts.count] = y;
+			yFilter[ts.count] = y;	
 			DxFilter[ts.count] = Dx;
 			DyFilter[ts.count] = Dy;
 			//printk(KERN_ERR "Data before filter:#%d (x,y)=(%d,%d) (dx,dy)=(%d,%d) !!!\n",ts.count , x, y, Dx, Dy);
 			ts.count ++;
 			//udelay(PERIOD_PER_FILTER);  //ting    //Per Read Point Delay
 
-			while(ts.count < NFilt)//collect other point
+			while(ts.count < NFilt)//collect other point 
 			{
 			    uor_read_data(&x, &y, &Dx, &Dy);
 				xFilter[ts.count] = x;
-				yFilter[ts.count] = y;
+				yFilter[ts.count] = y;	
 				DxFilter[ts.count] = Dx;
 				DyFilter[ts.count] = Dy;
 				//printk(KERN_ERR "Data before filter:#%d (x,y)=(%d,%d) (dx,dy)=(%d,%d) !!!\n",ts.count , x, y, Dx, Dy);
 				ts.count ++;
 			}
 
-			if(!XYFilter(xFilter, yFilter, NFilt,NDrop)){ // no correct point
+			if(!XYFilter(xFilter, yFilter, NFilt,NDrop)){ // no correct point	
 			    printk(KERN_ERR "%s: X Y filter error !!!\n",__FUNCTION__);
 			}
 
 			ts.xp =xFilter[0];
-			ts.yp =yFilter[0];
+			ts.yp =yFilter[0];					
 
 			if(!XYFilter(DxFilter, DyFilter, NFilt,NDrop)){ // no correct point
 			    printk(KERN_ERR "%s: DX DY filter error !!!\n",__FUNCTION__);
@@ -975,76 +975,76 @@ static void uor_read_loop(struct work_struct *data)
 			*/
 			#else // no filter
 			memset(EpBuf, 0, sizeof(EpBuf));
-
+			
 			UOR_IICRead(MSRX_1T, EpBuf, 2);
-			x= EpBuf[0];
+			x= EpBuf[0]; 
 			x<<=4;
 			x|= (EpBuf[1]>>4);
-
+			
 			UOR_IICRead(MSRX_1T, EpBuf, 2);
-			x2= EpBuf[0];
+			x2= EpBuf[0]; 
 			x2<<=4;
 			x2|= (EpBuf[1]>>4);
-
+			
 			UOR_IICRead(MSRY_1T,  EpBuf, 2);
-			y1= EpBuf[0];
+			y1= EpBuf[0]; 
 			y1<<=4;
 			y1 |= (EpBuf[1]>>4);
-
+			
 			UOR_IICRead(MSRY_1T,  EpBuf, 2);
-			y2= EpBuf[0];
+			y2= EpBuf[0]; 
 			y2<<=4;
 			y2 |= (EpBuf[1]>>4);
-
+			
 			if (abs(x-x2)>500)
 			    ts.xp = 4095;
 			else
 			    ts.xp = (x+x2)/2;
-
+				
 			if (abs(y1-y2)>500)
 			    ts.yp = 4095;
 			else
 			    ts.yp = (y1+y2)/2;
-
+			    
 			UOR_IICRead(MSRX_2T,  (EpBuf), 3);
 			Dx1 = EpBuf[2];
-
+			
 			UOR_IICRead(MSRX_2T,  (EpBuf), 3);
 			Dx2 = EpBuf[2];
-
+			
 			UOR_IICRead(MSRY_2T,  (EpBuf), 3);
-			Dy1 = EpBuf[2];
-
+			Dy1 = EpBuf[2];	
+			
 			UOR_IICRead(MSRY_2T,  (EpBuf), 3);
-			Dy2 = EpBuf[2];
-
+			Dy2 = EpBuf[2];	
+			
 			if ((Dx1-Dx2)>16||(Dx2-Dx1)>16)
 			    Dx = 256;
 			else
 			    Dx =( (Dx1+Dx2)>>1)-20;
-
+				
 			if ((Dy1-Dy2)>16 ||(Dy2-Dy1)>16)
 			    Dy = 256;
 			else
 			    Dy = ((Dy1+Dy2)>>1)-20;
 			#endif
-
+			
 
 			if(Dx>252 || Dx<16)
 				Dx=36;
-
+			
 			if(Dy>252 || Dy<16)
 				Dy=36;
-
+			
 
 			memset(EpBuf, 0, sizeof(EpBuf));
 			UOR_IICRead(MSRZ1_1T,  EpBuf, 2);
-			z1 = EpBuf[0];
+			z1 = EpBuf[0]; 
 			z1 <<=4;
 			z1 |= (EpBuf[1]>>4);
 
 			UOR_IICRead(MSRZ2_1T, EpBuf, 2);
-			z2 = EpBuf[0];
+			z2 = EpBuf[0]; 
 			z2 <<=4;
 			z2 |= (EpBuf[1]>>4);
 
@@ -1054,7 +1054,7 @@ static void uor_read_loop(struct work_struct *data)
 			R_touch =(abs(((z2*x)/z1-x)))/4; //(float)((((float) z2)/((float) z1) -1)*(float)x)/4096;
 			Rt =R_touch;
 
-
+			
 			if( ((256>Dx) && (256>Dy)) && ((Dx> DX_T) ||(Dy > DY_T)) && (Rt < R_Threshold2) ) {
 				nTouch =  TWO_TOUCH;
 			}
@@ -1064,8 +1064,8 @@ static void uor_read_loop(struct work_struct *data)
 			if(UOR6X5X_DEBUG)
 				printk(KERN_ERR "%s:after filter (x,y)=(%d,%d) (dx,dy)=(%d,%d) n_touch %d, R_touch %d, (z1,z2)=(%d,%d) !!!\n",__FUNCTION__, ts.xp , ts.yp , Dx, Dy, nTouch, R_touch, z1, z2);
 		}
-		else {//ting
-		    nTouch =  ZERO_TOUCH;
+		else {//ting 
+		    nTouch =  ZERO_TOUCH;	
 			if(UOR6X5X_DEBUG)
 				printk("there is no touch!\n");
 		}
@@ -1082,8 +1082,8 @@ static void uor_read_loop(struct work_struct *data)
 				else if(ts.xp>4000 || ts.yp>4000){
 				    queue_delayed_work(queue, &work, DROP_POINT_DELAY_J);
 					goto READ_LOOP_OUT;
-				}
-				else if( (pre_dx!=0) && (pre_dy!=0) && (abs(Dx - pre_dx) > JITTER_THRESHOLD_DXDY) ||(abs( Dy - pre_dy) > JITTER_THRESHOLD_DXDY)){//single touch point 前後差距JITTER_THRESHOLD 則濾點
+				}                                                        	
+				else if( (pre_dx!=0) && (pre_dy!=0) && (abs(Dx - pre_dx) > JITTER_THRESHOLD_DXDY) ||(abs( Dy - pre_dy) > JITTER_THRESHOLD_DXDY)){//single touch point 前後差距JITTER_THRESHOLD 則濾點 
 				    if(UOR6X5X_DEBUG)
 						printk(KERN_ERR "%s:filter for jitter(dual) --(pre_dx,pre_dy)=(%d,%d) ,(dx,dy)=(%d,%d) , JITTER_THRESHOLD_DXDY = %d !!!\n",__FUNCTION__, pre_dx, pre_dy , Dx, Dy, JITTER_THRESHOLD_DXDY);
 					pre_dx = Dx;
@@ -1099,21 +1099,21 @@ static void uor_read_loop(struct work_struct *data)
                         Dx=pre_dx;
                         Dy=pre_dy;
                         pre_dx =((7* pre_dx)+Dx)>>3;
-			    pre_dy =((7*pre_dy)+Dy)>>3;
-			}
-			 if((pre_dx!=0) && (pre_dy!=0) && (abs(Dx - pre_dx) <8) && (abs(Dy - pre_dy )<8)){
+                	    pre_dy =((7*pre_dy)+Dy)>>3;
+                	}
+                	 if((pre_dx!=0) && (pre_dy!=0) && (abs(Dx - pre_dx) <8) && (abs(Dy - pre_dy )<8)){
                         Dx=pre_dx;
                         Dy=pre_dy;
                         pre_dx =((7* pre_dx)+Dx)>>3;
-			    pre_dy =((7*pre_dy)+Dy)>>3;
-			}
-
+                	    pre_dy =((7*pre_dy)+Dy)>>3;
+                	}
+					
 					// if ( (ts.pX!=0) && (ts.pY!=0) && ((ts.xp - ts.pX) <100 && (ts.pX-ts.xp) <100 && (ts.yp - ts.pY )<100 && (ts.pY-ts.yp )<100)){
 					if ( (ts.pX!=0) && (ts.pY!=0) && (abs(ts.xp - ts.pX) <1500)  && (abs(ts.yp - ts.pY )<1500)){
 					     ts.xp = ts.pX;
 						 ts.yp = ts.pY;
 					 }
-
+					 
 					if(UOR6X5X_DEBUG) {
 						printk(KERN_ERR "%s:TWO_TOUCH (cx,cy)=(%d,%d)\n",__FUNCTION__, ts.xp, ts.yp);
 						printk(KERN_ERR "%s:TWO_TOUCH (pcx,pcy)=(%d,%d)\n",__FUNCTION__,  ts.pX,  ts.pY);
@@ -1125,9 +1125,9 @@ static void uor_read_loop(struct work_struct *data)
 					if(UOR6X5X_DEBUG)
 						printk(KERN_ERR "%s:TWO_TOUCH (dx_coord,dy_coord)=(%d,%d)\n",__FUNCTION__, dx_coord, dy_coord);
 
-			input_report_abs(ts.dev, ABS_MT_TOUCH_MAJOR, 600 + (Rt%400));
-			//input_report_abs(ts.dev, ABS_MT_WIDTH_MAJOR, 500+press);
-
+                	input_report_abs(ts.dev, ABS_MT_TOUCH_MAJOR, 600 + (Rt%400));
+                	//input_report_abs(ts.dev, ABS_MT_WIDTH_MAJOR, 500+press);
+         
 					if(slid_index == 2){
 						SBufx_0 = SBufx_1;
 						SBufx_1 = SBufx_2;
@@ -1152,103 +1152,103 @@ static void uor_read_loop(struct work_struct *data)
 						SBufy_2 = dy_coord;
 						slid_index ++;
 					}
-
-			xy = 0;
+                		        
+                	xy = 0;
 					out_x = ts.xp - dx_coord;
 					out_y = ts.yp - dy_coord;
-
-			if(ts.pdata->convert){
-				 xy = ts.pdata->convert(out_x, out_y);
-				 out_x = xy >> 16;
-				 out_y = xy & 0xffff;
-			}
-
-			if((pre_outx1!=0) && (pre_outy1!=0) && (abs(out_x - pre_outx1) <2) && (abs(out_y - pre_outy1 )<2)){
+					
+                	if(ts.pdata->convert){
+                		 xy = ts.pdata->convert(out_x, out_y);
+                		 out_x = xy >> 16;
+                		 out_y = xy & 0xffff;
+                	}
+                	
+                	if((pre_outx1!=0) && (pre_outy1!=0) && (abs(out_x - pre_outx1) <2) && (abs(out_y - pre_outy1 )<2)){
                         out_x = pre_outx1;
-				out_y = pre_outy1;
-			}
-					if(UOR6X5X_DEBUG)
+                		out_y = pre_outy1;
+                	}
+ 					if(UOR6X5X_DEBUG)
 						printk(KERN_ERR "%s:TWO_TOUCH (x1,y1)=(%d,%d)\n",__FUNCTION__, out_x, out_y);
-
-			input_report_abs(ts.dev, ABS_MT_POSITION_X, out_x);
-			input_report_abs(ts.dev, ABS_MT_POSITION_Y, out_y);
-			input_mt_sync(ts.dev);
-
-			input_report_abs(ts.dev, ABS_MT_TOUCH_MAJOR, 600 + (Rt%400));
+								
+                	input_report_abs(ts.dev, ABS_MT_POSITION_X, out_x);
+                	input_report_abs(ts.dev, ABS_MT_POSITION_Y, out_y);
+                	input_mt_sync(ts.dev);
+                		        
+                	input_report_abs(ts.dev, ABS_MT_TOUCH_MAJOR, 600 + (Rt%400));
 
 					pre_outx1 = out_x;
-			pre_outy1 = out_y;
-			//input_report_abs(ts.dev, ABS_MT_WIDTH_MAJOR, 600+press);
-
-			xy = 0;
+                	pre_outy1 = out_y;
+                	//input_report_abs(ts.dev, ABS_MT_WIDTH_MAJOR, 600+press);
+                		        
+                	xy = 0;
 					out_x = ts.xp + dx_coord;
 					out_y = ts.yp + dy_coord;
-			if(ts.pdata->convert){
-				 xy = ts.pdata->convert(out_x, out_y);
-				 out_x = xy >> 16;
-				 out_y = xy & 0xffff;
-			}
-
+                	if(ts.pdata->convert){
+                		 xy = ts.pdata->convert(out_x, out_y);
+                		 out_x = xy >> 16;
+                		 out_y = xy & 0xffff;
+                	}
+					
 					if((pre_outx2!=0) && (pre_outy2!=0) && (abs(out_x - pre_outx2) <2) && (abs(out_y - pre_outy2 )<2) ){
                         out_x = pre_outx2;
-				out_y = pre_outy2;
-			}
+                		out_y = pre_outy2;
+                	}   	        
                     if(UOR6X5X_DEBUG)
 						printk(KERN_ERR "%s:TWO_TOUCH (x2,y2)=(%d,%d)\n",__FUNCTION__, out_x, out_y);
-
+					
 					input_report_abs(ts.dev, ABS_MT_POSITION_X, out_x);
-			input_report_abs(ts.dev, ABS_MT_POSITION_Y, out_y);
-			input_mt_sync(ts.dev);
-
-			input_sync(ts.dev);
-
-			TWOTouchFlag = 1;
-			OneTCountAfter2 = 0;
-			pre_dx = Dx;
-			pre_dy = Dy;
-			ts.pX = ts.xp;
+                	input_report_abs(ts.dev, ABS_MT_POSITION_Y, out_y);
+                	input_mt_sync(ts.dev);
+                		        
+                	input_sync(ts.dev);
+                		        
+                	TWOTouchFlag = 1;
+                	OneTCountAfter2 = 0;
+                	pre_dx = Dx;
+                	pre_dy = Dy;
+                	ts.pX = ts.xp;
 					ts.pY = ts.yp;
 					pre_outx2 = out_x;
-			pre_outy2 = out_y;
-
+                	pre_outy2 = out_y;
+ 
 			if(two_touch_count<5)
 				two_touch_count++;
-
+					
 					queue_delayed_work(queue, &work, READ_DATA_DELAY_J);
 					goto READ_LOOP_OUT;
                 }
             }
             else if(nTouch == ONE_TOUCH){
                 if((TWOTouchFlag == 1) && (OneTCountAfter2 < ONETOUCHCountAfter2)){
-			if(UOR6X5X_DEBUG)
+                	if(UOR6X5X_DEBUG)
 						printk(KERN_ERR "%s:filter after two touch -- (x,y)=(%d,%d) ,OneTCountAfter2 = %d, ONETOUCHCountAfter2 = %d !!!\n",__FUNCTION__, x, y, OneTCountAfter2, ONETOUCHCountAfter2);
-			OneTCountAfter2++;
+                	OneTCountAfter2++;
 					queue_delayed_work(queue, &work, DROP_POINT_DELAY_J);
 					goto READ_LOOP_OUT;
-                }
+                }		
 				else if((ts.xp>4000||ts.yp>4000)||((TWOTouchFlag == 0) && (FirstTC < FIRSTTOUCHCOUNT)) || (Rt > R_Threshold)){  //ting
-			if(UOR6X5X_DEBUG)
+                	if(UOR6X5X_DEBUG)
 						printk(KERN_ERR "%s:filter before single touch -- (x,y)=(%d,%d) ,FirstTC = %d, FIRSTTOUCHCOUNT = %d !!!\n",__FUNCTION__, x, y, FirstTC, FIRSTTOUCHCOUNT);
-			FirstTC++;
+                	FirstTC++;
 					queue_delayed_work(queue, &work, DROP_POINT_DELAY_J);
 					goto READ_LOOP_OUT;
                 }
                 else if( (ts.pX!=0) && (ts.pY!=0) && (abs(ts.xp - ts.pX) > JITTER_THRESHOLD) || (abs(ts.yp - ts.pY) > JITTER_THRESHOLD)){
-			if(UOR6X5X_DEBUG)
+                	if(UOR6X5X_DEBUG)
 						printk(KERN_ERR "%s:filter for jitter -- (px,py)=(%d,%d) ,(x,y)=(%d,%d) , JITTER_THRESHOLD = %d !!!\n",__FUNCTION__, ts.pX, ts.pY ,x, y, JITTER_THRESHOLD);
-			ts.pX = ts.xp;
-			ts.pY = ts.yp;
+                	ts.pX = ts.xp; 
+                	ts.pY = ts.yp;
 					queue_delayed_work(queue, &work, DROP_POINT_DELAY_J);
 					goto READ_LOOP_OUT;
                 }
                 else{
-			if(UOR6X5X_DEBUG)
+                	if(UOR6X5X_DEBUG)
 						printk(KERN_ERR "%s: (Pen down)report single touch-- (x,y)=(%d,%d) !!!\n",__FUNCTION__, x, y);
-			//report x,y,pressure,size to Linux/Android
-			if((ts.pX!=0) && (ts.pY!=0) && (abs(ts.xp - ts.pX) <40) && (abs(ts.yp - ts.pY )<40)){
-			    ts.xp = ts.pX;
-			    ts.yp = ts.pY;
-			}
+                	//report x,y,pressure,size to Linux/Android
+                	if((ts.pX!=0) && (ts.pY!=0) && (abs(ts.xp - ts.pX) <40) && (abs(ts.yp - ts.pY )<40)){
+                	    ts.xp = ts.pX;
+                	    ts.yp = ts.pY;
+                	}
 
 					if(slid_indexs == 2){
 						SBufxs_0 = SBufxs_1;
@@ -1274,28 +1274,28 @@ static void uor_read_loop(struct work_struct *data)
 						SBufys_2 = ts.yp;
 						slid_indexs ++;
 					}
-			input_report_abs(ts.dev, ABS_MT_TOUCH_MAJOR, 600 + (Rt%400) );
-			//input_report_abs(ts.dev, ABS_MT_WIDTH_MAJOR, 300);
-
-			xy = 0;
-			out_x = ts.xp;
-			out_y = ts.yp;
-			if(ts.pdata->convert){
-				 xy = ts.pdata->convert(out_x, out_y);
-				 out_x = xy >> 16;
-				 out_y = xy & 0xffff;
-			}
-			if(UOR6X5X_DEBUG)
+                	input_report_abs(ts.dev, ABS_MT_TOUCH_MAJOR, 600 + (Rt%400) );
+                	//input_report_abs(ts.dev, ABS_MT_WIDTH_MAJOR, 300);
+                	                
+                	xy = 0;
+                	out_x = ts.xp;
+                	out_y = ts.yp;
+                	if(ts.pdata->convert){
+                		 xy = ts.pdata->convert(out_x, out_y);
+                		 out_x = xy >> 16;
+                		 out_y = xy & 0xffff;
+                	}
+                	if(UOR6X5X_DEBUG)
 						printk(KERN_ERR "%s:ONE_TOUCH (x1,y1)=(%d,%d)\n",__FUNCTION__, out_x, out_y);
-
-			input_report_abs(ts.dev, ABS_MT_POSITION_X, out_x);
-			input_report_abs(ts.dev, ABS_MT_POSITION_Y, out_y);
-			input_mt_sync(ts.dev);
-			input_sync(ts.dev);
-
-			//save previous single touch point
-			ts.pX = ts.xp;
-			ts.pY = ts.yp;
+                		        
+                	input_report_abs(ts.dev, ABS_MT_POSITION_X, out_x);
+                	input_report_abs(ts.dev, ABS_MT_POSITION_Y, out_y);
+                	input_mt_sync(ts.dev);
+                	input_sync(ts.dev);
+                	                
+                	//save previous single touch point
+                	ts.pX = ts.xp; 
+                	ts.pY = ts.yp;
 					queue_delayed_work(queue, &work, READ_DATA_DELAY_J);
 					goto READ_LOOP_OUT;
                 }
@@ -1314,7 +1314,7 @@ static void uor_read_loop(struct work_struct *data)
 	        //input_report_abs(ts.dev, ABS_MT_WIDTH_MAJOR, 0);
 	        input_mt_sync(ts.dev);
 	        input_sync(ts.dev);
-
+	        	
 	        //reset filter parameters
 	        FirstTC = 0;
 	        OneTCountAfter2 = 0;
@@ -1332,9 +1332,9 @@ static void uor_read_loop(struct work_struct *data)
 			pre_outy2 = 0;
 			slid_index = 0;
 			slid_indexs = 0;
-
+			
 			Init_UOR_HW();
-
+	                
 			enable_irq(ts.client->irq);
 			break;
 	    }
@@ -1342,22 +1342,22 @@ static void uor_read_loop(struct work_struct *data)
 			if(UOR6X5X_DEBUG)
 				printk(KERN_ERR "uor_read_loop(): n_touch state error !!!\n");
 	    }
-	}
-READ_LOOP_OUT:
+	}		
+READ_LOOP_OUT:	                 
     return;
 }
 
 static irqreturn_t uor_isr(int irq,void *dev_id)
 {
 	struct i2c_client *client = (struct i2c_client *)dev_id;
-
-	if(UOR6X5X_DEBUG)
+	
+ 	if(UOR6X5X_DEBUG)
 		printk(KERN_ERR "uor.c: uor_isr\n");
 	udelay(250);
 	if(uor_get_pendown_state()){//ting debounce
 	    return IRQ_HANDLED;
 	}
-
+        
 	disable_irq_nosync(client->irq);
 	//queue_work(queue, &work);
 	queue_delayed_work(queue, &work, DROP_POINT_DELAY_J);
@@ -1370,35 +1370,35 @@ static int uor_register_input(void)
 {
     int ret;
     struct input_dev *	input_device;
-
+    
     input_device = input_allocate_device();
     if (!input_device) {
 		if(UOR6X5X_DEBUG)
 			printk(KERN_ERR "Unable to allocate the input device !!\n");
-	return -ENOMEM;
+    	return -ENOMEM;
     }
-
+    
     input_device->name = "UOR-touch";
-
+    
     ts.dev = input_device;
     set_bit(EV_SYN, ts.dev->evbit);
     set_bit(EV_ABS, ts.dev->evbit);
-
+    
     input_set_abs_params(ts.dev, ABS_MT_TOUCH_MAJOR, 0, 1000, 0, 0);
     //input_set_abs_params(codec_ts_input, ABS_MT_WIDTH_MAJOR, 0, 1000, 0, 0);
-
+    
     int max_x = ts.pdata->abs_xmax ? ts.pdata->abs_xmax : 4096;
     input_set_abs_params(ts.dev, ABS_MT_POSITION_X, 0, max_x, 0, 0);
-
+    
     int max_y = ts.pdata->abs_ymax ? ts.pdata->abs_ymax : 4096;
     input_set_abs_params(ts.dev, ABS_MT_POSITION_Y, 0, max_y, 0, 0);
-
+    
     ret = input_register_device(ts.dev);
     if (ret) {
-	input_free_device(ts.dev);
+    	input_free_device(ts.dev);
 		if(UOR6X5X_DEBUG)
 			printk(KERN_ERR "%s: unabled to register input device, ret = %d\n", __FUNCTION__, ret);
-	return ret;
+    	return ret;
     }
     return 0;
 }
@@ -1416,7 +1416,7 @@ static int __init uor_init(void)
 		if(UOR6X5X_DEBUG)
 			printk(KERN_ERR "uor.c: i2c_add_driver() fail in uor_init()!\n");
 		return ret;
-	}
+	}	
 
 	ret = Init_UOR_HW();
 	if(ret < 0) {
@@ -1436,22 +1436,22 @@ static int __devinit uor_probe(struct i2c_client *client,
 
 	if(UOR6X5X_DEBUG)
 		printk(KERN_ERR "uor.c: uor_probe() !\n");
-
+	
 	if (!pdata) {
 		dev_err(&client->dev, "platform data is required!\n");
 		return -EINVAL;
 	}
-
+	
 	if (!i2c_check_functionality(client->adapter, I2C_FUNC_I2C))
 	        return -EIO;
-
+	        
 	queue = create_singlethread_workqueue("uor-touch-screen-read-loop");
 	//INIT_WORK(&work, uor_read_loop);
 	INIT_DELAYED_WORK(&work, uor_read_loop);
-
+	
 	if (pdata->init_irq)
 		pdata->init_irq();
-	ts.client = client; // save the client we get
+	ts.client = client; // save the client we get	
 	ts.pdata = pdata;
 
 	if (uor_register_input() < 0) {
@@ -1466,7 +1466,7 @@ static int __devinit uor_probe(struct i2c_client *client,
 			printk(KERN_ERR "uor.c: Could not allocate GPIO intrrupt for touch screen !!!\n");
 		free_irq(client->irq, client);
 		err = -ENOMEM;
-		return err;
+		return err;	
 	}
 	#ifdef CONFIG_HAS_EARLYSUSPEND
     uor6x5x_early_suspend.level = EARLY_SUSPEND_LEVEL_BLANK_SCREEN;

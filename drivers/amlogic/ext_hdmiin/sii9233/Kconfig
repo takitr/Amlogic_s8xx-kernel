@@ -3,7 +3,8 @@
 #
 
 config TVIN_SII9233A
-    tristate "Amlogic SII9233A device driver"
+    tristate "Amlogic SII9233A device driver" 
     default  y
     help
          Amlogic SII9233A device driver.
+

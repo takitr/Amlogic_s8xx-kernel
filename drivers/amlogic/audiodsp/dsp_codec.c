@@ -120,7 +120,7 @@ u32 dsp_codec_get_current_pts(struct audiodsp_priv *priv)
         if(!timestamp_apts_started()){
           offset = 0;
         }
-
+        
         if (priv->stream_fmt == MCODEC_FMT_COOK || priv->stream_fmt == MCODEC_FMT_RAAC) {
             pts = DSP_RD(DSP_AFIFO_RD_OFFSET1);
             res = 0;
@@ -180,3 +180,5 @@ u32 dsp_codec_get_current_pts(struct audiodsp_priv *priv)
 #endif
     return -1;
 }
+
+

@@ -90,14 +90,14 @@
 #define REMOTE_LOG_BUF_LEN		 8192
 #define REMOTE_LOG_BUF_ORDER		1
 extern unsigned int g_remote_base;
-#define AM_IR_DEC_LDR_ACTIVE 0x0
-#define AM_IR_DEC_LDR_IDLE 0x4
-#define AM_IR_DEC_LDR_REPEAT 0x8
-#define AM_IR_DEC_BIT_0     0xc
-#define AM_IR_DEC_REG0 0x10
-#define AM_IR_DEC_FRAME 0x14
-#define AM_IR_DEC_STATUS 0x18
-#define AM_IR_DEC_REG1 0x1c
+#define AM_IR_DEC_LDR_ACTIVE 0x0     
+#define AM_IR_DEC_LDR_IDLE 0x4        
+#define AM_IR_DEC_LDR_REPEAT 0x8	 
+#define AM_IR_DEC_BIT_0     0xc             
+#define AM_IR_DEC_REG0 0x10                  
+#define AM_IR_DEC_FRAME 0x14     
+#define AM_IR_DEC_STATUS 0x18          
+#define AM_IR_DEC_REG1 0x1c       
 #define am_remote_write_reg(x,val) aml_write_reg32(g_remote_base +x ,val)
 
 #define am_remote_read_reg(x) aml_read_reg32(g_remote_base +x)

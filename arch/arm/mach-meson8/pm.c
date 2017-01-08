@@ -1,4 +1,4 @@
- /*
+/*
  * Meson Power Management Routines
  *
  * Copyright (C) 2010 Amlogic, Inc. http://www.amlogic.com/
@@ -21,8 +21,6 @@
 #include <asm/delay.h>
 #include <asm/uaccess.h>
 
-#include <linux/gpio.h>
-
 #include <mach/pm.h>
 #include <mach/am_regs.h>
 #include <plat/sram.h>
@@ -37,7 +35,6 @@
 #include <mach/meson-secure.h>
 #endif
 
-#include <linux/amlogic/aml_gpio_consumer.h>
 #ifdef CONFIG_SUSPEND_WATCHDOG
 #include <mach/watchdog.h>
 #endif /* CONFIG_SUSPEND_WATCHDOG */
@@ -50,7 +47,6 @@ static struct early_suspend early_suspend;
 static int early_suspend_flag = 0;
 #endif
 
-static int poweroff_state = 0;
 #define ON  1
 #define OFF 0
 
@@ -81,7 +77,7 @@ static void wait_uart_empty(void)
 {
 	do{
 		udelay(100);
-	}while((aml_read_reg32(P_AO_UART_STATUS) & (1<<22)) == 0);
+	}while((aml_read_reg32(P_AO_UART_STATUS) & (1<<22)) == 0);	
 }
 struct clk* clk81;
 struct clk* clkxtal;
@@ -101,16 +97,15 @@ void clk_switch(int flag)
 					udelay(10);
 					aml_set_reg32_mask(clks[i].clk_addr,(1<<8));//switch to pll
 					udelay(10);
-					if(!((aml_read_reg32(P_AO_UART_REG5) & (1 << 24)) && IS_MESON_M8M2_CPU))//Not from crystal pad
-						uart_change_buad(P_AO_UART_REG5,uart_rate_clk);
+					uart_change_buad(P_AO_UART_REG5,uart_rate_clk);
 					clks[i].clk_flag = 0;
 				}
-			printk(KERN_INFO "clk %s(%x) on\n", clks[i].clk_name, ((clks[i].clk_addr)&0xffff)>>2);
+                	printk(KERN_INFO "clk %s(%x) on\n", clks[i].clk_name, ((clks[i].clk_addr)&0xffff)>>2);
 			}
 		}
 	} else {
 	        for (i = 0; i < clk_count; i++) {
-			if (clks[i].clk_addr == P_HHI_MPEG_CLK_CNTL) {
+	 		if (clks[i].clk_addr == P_HHI_MPEG_CLK_CNTL) {
 				if (aml_read_reg32(clks[i].clk_addr) & (1 << 8)) {
 					uart_rate_clk = clk_get_rate(clkxtal);
 					clks[i].clk_flag  = 1;
@@ -119,11 +114,10 @@ void clk_switch(int flag)
 					udelay(10);
 					aml_clr_reg32_mask(clks[i].clk_addr, (1 << 7)); // switch to 24M
 					udelay(10);
-					if(!((aml_read_reg32(P_AO_UART_REG5) & (1 << 24)) && IS_MESON_M8M2_CPU))//Not from crystal pad
-						uart_change_buad(P_AO_UART_REG5,uart_rate_clk);
+					uart_change_buad(P_AO_UART_REG5,uart_rate_clk);
 					clks[i].clk_flag=1;
 				}
-			}
+			} 
 			if (clks[i].clk_flag) {
 				printk(KERN_INFO "clk %s(%x) off\n", clks[i].clk_name, ((clks[i].clk_addr)&0xffff)>>2);
 			}
@@ -159,7 +153,7 @@ void analog_switch(int flag)
         for (i = 0; i < ANALOG_COUNT; i++) {
             if (analog_regs[i].enable && (analog_regs[i].set_bits || analog_regs[i].clear_bits)) {
                 if (analog_regs[i].enable == 1) {
-				aml_write_reg32(analog_regs[i].reg_addr, analog_regs[i].reg_value);
+                		aml_write_reg32(analog_regs[i].reg_addr, analog_regs[i].reg_value);
                 } else if (analog_regs[i].enable == 2) {
                     aml_write_reg32(analog_regs[i].reg_addr, analog_regs[i].reg_value);
                 } else if (analog_regs[i].enable == 3) {
@@ -188,11 +182,11 @@ void analog_switch(int flag)
                     analog_regs[i].reg_value = aml_read_reg32(analog_regs[i].reg_addr);
                     printk("%s(0x%x):0x%x", analog_regs[i].name, analog_regs[i].reg_addr, analog_regs[i].reg_value);
                     if (analog_regs[i].clear_bits) {
-				aml_clr_reg32_mask(analog_regs[i].reg_addr, analog_regs[i].clear_bits);
+                    		aml_clr_reg32_mask(analog_regs[i].reg_addr, analog_regs[i].clear_bits);
                         printk(" & ~0x%x", analog_regs[i].clear_bits);
                     }
                     if (analog_regs[i].set_bits) {
-				aml_set_reg32_mask(analog_regs[i].reg_addr, analog_regs[i].set_bits);
+                    		aml_set_reg32_mask(analog_regs[i].reg_addr, analog_regs[i].set_bits);
                         printk(" | 0x%x", analog_regs[i].set_bits);
                     }
                     reg_value = aml_read_reg32(analog_regs[i].reg_addr);
@@ -220,16 +214,8 @@ void analog_switch(int flag)
 #ifdef CONFIG_HAS_EARLYSUSPEND
 static void meson_system_early_suspend(struct early_suspend *h)
 {
-	int ret;
 	if (!early_suspend_flag) {
-	printk(KERN_INFO "2%s\n",__func__);
-
-	ret = amlogic_gpio_request_one(GPIO_TEST_N,0,"aml-sysled"); //for power LED
-	if(ret){
-		printk("---%s----can not set output pin \n",__func__);
-		amlogic_gpio_free(GPIO_TEST_N,"aml-sysled");
-	}
-
+	printk(KERN_INFO "%s\n",__func__);
 	if (pdata->set_exgpio_early_suspend) {
 		pdata->set_exgpio_early_suspend(OFF);
 	}
@@ -241,13 +227,11 @@ static void meson_system_early_suspend(struct early_suspend *h)
 
 static void meson_system_late_resume(struct early_suspend *h)
 {
-	int ret;
 	if (early_suspend_flag) {
 		//early_power_gate_switch(ON);
 		//early_clk_switch(ON);
 		early_suspend_flag = 0;
-		printk(KERN_INFO "1%s\n",__func__);
-		amlogic_set_value(GPIO_TEST_N,0,"aml-sysled");
+		printk(KERN_INFO "%s\n",__func__);
 	}
 }
 #endif
@@ -260,7 +244,7 @@ static void meson_pm_suspend(void)
 	printk(KERN_INFO "enter meson_pm_suspend!\n");
 #ifdef CONFIG_SUSPEND_WATCHDOG
 	ENABLE_SUSPEND_WATCHDOG;
-#endif
+#endif    
 
 	//analog_switch(OFF);
 	 if (pdata->set_vccx2) {
@@ -268,21 +252,18 @@ static void meson_pm_suspend(void)
 	}
 
 	clk_switch(OFF);
-	//power_gate_switch(OFF);
+	//power_gate_switch(OFF);	
 	//switch_mod_gate_by_type(MOD_MEDIA_CPU, 1);
 	printk(KERN_INFO "sleep ...\n");
 	//switch A9 clock to xtal 24MHz
 	aml_clr_reg32_mask(P_HHI_SYS_CPU_CLK_CNTL, 1 << 7);
 	aml_clr_reg32_mask(P_HHI_SYS_PLL_CNTL, 1 << 30);//disable sys pll
 
-#ifdef CONFIG_AML_GPIO_KEY  
 	if(det_pwr_key())//get pwr key and wakeup im
 	{
 		clr_pwr_key();
 		WRITE_AOBUS_REG(AO_RTI_STATUS_REG2, FLAG_WAKEUP_PWRKEY);
-	}else
-#endif  
-  {
+	}else{
 #ifdef CONFIG_MESON_SUSPEND
 #ifdef CONFIG_MESON_TRUSTZONE
 		meson_suspend_firmware();
@@ -328,16 +309,6 @@ static void meson_pm_suspend(void)
 	//analog_switch(ON);
 }
 
-void meson_pm_poweroff(void)
-{
-	amlogic_set_value(GPIO_TEST_N,1,"aml-sysled");
-	//close_hdmi();
-	aml_write_reg32(P_AO_RTI_STATUS_REG1, 0);
-
-	poweroff_state=1;
-	meson_pm_suspend();
-}
-
 static int meson_pm_prepare(void)
 {
 	  printk(KERN_INFO "enter meson_pm_prepare!\n");
@@ -372,7 +343,6 @@ static struct platform_suspend_ops meson_pm_ops = {
 
 static void m6ref_set_vccx2(int power_on)
 {
-	/*
     if(power_on == OFF) {
         printk("m6ref_set_vccx2: OFF");
         CLEAR_AOBUS_REG_MASK(AO_GPIO_O_EN_N, 1<<15);
@@ -382,7 +352,6 @@ static void m6ref_set_vccx2(int power_on)
         CLEAR_AOBUS_REG_MASK(AO_GPIO_O_EN_N, 1<<15);
         CLEAR_AOBUS_REG_MASK(AO_GPIO_O_EN_N, 1<<31);
     }
-	*/
     return;
 }
 
@@ -399,7 +368,6 @@ static struct meson_pm_config aml_pm_pdata = {
 
 static int __init meson_pm_probe(struct platform_device *pdev)
 {
-	int ret;
 	printk(KERN_INFO "enter meson_pm_probe!\n");
 #ifdef CONFIG_HAS_EARLYSUSPEND
 	early_suspend.level = EARLY_SUSPEND_LEVEL_DISABLE_FB;
@@ -407,14 +375,6 @@ static int __init meson_pm_probe(struct platform_device *pdev)
 	early_suspend.resume = meson_system_late_resume;
 	register_early_suspend(&early_suspend);
 #endif
-	ret = amlogic_gpio_request_one(GPIO_TEST_N,GPIOF_OUT_INIT_LOW,"aml-sysled"); //for power LED
-	if(ret){
-		printk("---%s----can not set output pin \n",__func__);
-		amlogic_gpio_free(GPIO_TEST_N,"aml-sysled");
-		}else{
-		printk("---%s----set output pin success\n",__func__);
-	}
-
 	pdev->dev.platform_data=&aml_pm_pdata;
 	pdata = pdev->dev.platform_data;
 	if (!pdata) {
@@ -422,7 +382,7 @@ static int __init meson_pm_probe(struct platform_device *pdev)
 		return -ENOENT;
 	}
 	suspend_set_ops(&meson_pm_ops);
-
+	
 	clk81 = clk_get_sys("clk81", NULL);
 	clkxtal = clk_get_sys("xtal", NULL);
 	printk(KERN_INFO "meson_pm_probe done !\n");
@@ -460,3 +420,4 @@ static int __init meson_pm_init(void)
 	return platform_driver_probe(&meson_pm_driver, meson_pm_probe);
 }
 late_initcall(meson_pm_init);
+

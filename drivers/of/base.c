@@ -20,7 +20,6 @@
 #include <linux/ctype.h>
 #include <linux/module.h>
 #include <linux/of.h>
-#include <linux/of_graph.h>
 #include <linux/spinlock.h>
 #include <linux/slab.h>
 #include <linux/proc_fs.h>
@@ -964,6 +963,52 @@ int of_property_read_string(struct device_node *np, const char *propname,
 EXPORT_SYMBOL_GPL(of_property_read_string);
 
 /**
+ * of_property_read_string_index - Find and read a string from a multiple
+ * strings property.
+ * @np:		device node from which the property value is to be read.
+ * @propname:	name of the property to be searched.
+ * @index:	index of the string in the list of strings
+ * @out_string:	pointer to null terminated return string, modified only if
+ *		return value is 0.
+ *
+ * Search for a property in a device tree node and retrieve a null
+ * terminated string value (pointer to data, not a copy) in the list of strings
+ * contained in that property.
+ * Returns 0 on success, -EINVAL if the property does not exist, -ENODATA if
+ * property does not have a value, and -EILSEQ if the string is not
+ * null-terminated within the length of the property data.
+ *
+ * The out_string pointer is modified only if a valid string can be decoded.
+ */
+int of_property_read_string_index(struct device_node *np, const char *propname,
+				  int index, const char **output)
+{
+	struct property *prop = of_find_property(np, propname, NULL);
+	int i = 0;
+	size_t l = 0, total = 0;
+	const char *p;
+
+	if (!prop)
+		return -EINVAL;
+	if (!prop->value)
+		return -ENODATA;
+	if (strnlen(prop->value, prop->length) >= prop->length)
+		return -EILSEQ;
+
+	p = prop->value;
+
+	for (i = 0; total < prop->length; total += l, p += l) {
+		l = strlen(p) + 1;
+		if (i++ == index) {
+			*output = p;
+			return 0;
+		}
+	}
+	return -ENODATA;
+}
+EXPORT_SYMBOL_GPL(of_property_read_string_index);
+
+/**
  * of_property_match_string() - Find string in a list and return index
  * @np: pointer to node containing string list property
  * @propname: string list property name
@@ -989,7 +1034,7 @@ int of_property_match_string(struct device_node *np, const char *propname,
 	end = p + prop->length;
 
 	for (i = 0; p < end; i++, p += l) {
-		l = strnlen(p, end - p) + 1;
+		l = strlen(p) + 1;
 		if (p + l > end)
 			return -EILSEQ;
 		pr_debug("comparing %s with %s\n", string, p);
@@ -1001,41 +1046,39 @@ int of_property_match_string(struct device_node *np, const char *propname,
 EXPORT_SYMBOL_GPL(of_property_match_string);
 
 /**
- * of_property_read_string_util() - Utility helper for parsing string properties
+ * of_property_count_strings - Find and return the number of strings from a
+ * multiple strings property.
  * @np:		device node from which the property value is to be read.
  * @propname:	name of the property to be searched.
- * @out_strs:	output array of string pointers.
- * @sz:		number of array elements to read.
- * @skip:	Number of strings to skip over at beginning of list.
  *
- * Don't call this function directly. It is a utility helper for the
- * of_property_read_string*() family of functions.
+ * Search for a property in a device tree node and retrieve the number of null
+ * terminated string contain in it. Returns the number of strings on
+ * success, -EINVAL if the property does not exist, -ENODATA if property
+ * does not have a value, and -EILSEQ if the string is not null-terminated
+ * within the length of the property data.
  */
-int of_property_read_string_helper(struct device_node *np, const char *propname,
-				   const char **out_strs, size_t sz, int skip)
+int of_property_count_strings(struct device_node *np, const char *propname)
 {
 	struct property *prop = of_find_property(np, propname, NULL);
-	int l = 0, i = 0;
-	const char *p, *end;
+	int i = 0;
+	size_t l = 0, total = 0;
+	const char *p;
 
 	if (!prop)
 		return -EINVAL;
 	if (!prop->value)
 		return -ENODATA;
-	p = prop->value;
-	end = p + prop->length;
+	if (strnlen(prop->value, prop->length) >= prop->length)
+		return -EILSEQ;
 
-	for (i = 0; p < end && (!out_strs || i < skip + sz); i++, p += l) {
-		l = strnlen(p, end - p) + 1;
-		if (p + l > end)
-			return -EILSEQ;
-		if (out_strs && i >= skip)
-			*out_strs++ = p;
-	}
-	i -= skip;
-	return i <= 0 ? -ENODATA : i;
+	p = prop->value;
+
+	for (i = 0; total < prop->length; total += l, p += l, i++)
+		l = strlen(p) + 1;
+
+	return i;
 }
-EXPORT_SYMBOL_GPL(of_property_read_string_helper);
+EXPORT_SYMBOL_GPL(of_property_count_strings);
 
 /**
  * of_parse_phandle - Resolve a phandle property to a device_node pointer
@@ -1661,154 +1704,3 @@ const char *of_prop_next_string(struct property *prop, const char *cur)
 	return curv;
 }
 EXPORT_SYMBOL_GPL(of_prop_next_string);
-
-/**
- * of_graph_parse_endpoint() - parse common endpoint node properties
- * @node: pointer to endpoint device_node
- * @endpoint: pointer to the OF endpoint data structure
- *
- * The caller should hold a reference to @node.
- */
-int of_graph_parse_endpoint(const struct device_node *node,
-			    struct of_endpoint *endpoint)
-{
-	struct device_node *port_node = of_get_parent(node);
-
-	WARN_ONCE(!port_node, "%s(): endpoint %s has no parent node\n",
-		  __func__, node->full_name);
-
-	memset(endpoint, 0, sizeof(*endpoint));
-
-	endpoint->local_node = node;
-	/*
-	 * It doesn't matter whether the two calls below succeed.
-	 * If they don't then the default value 0 is used.
-	 */
-	of_property_read_u32(port_node, "reg", &endpoint->port);
-	of_property_read_u32(node, "reg", &endpoint->id);
-
-	of_node_put(port_node);
-
-	return 0;
-}
-EXPORT_SYMBOL(of_graph_parse_endpoint);
-
-/**
- * of_graph_get_next_endpoint() - get next endpoint node
- * @parent: pointer to the parent device node
- * @prev: previous endpoint node, or NULL to get first
- *
- * Return: An 'endpoint' node pointer with refcount incremented. Refcount
- * of the passed @prev node is not decremented, the caller have to use
- * of_node_put() on it when done.
- */
-struct device_node *of_graph_get_next_endpoint(const struct device_node *parent,
-					struct device_node *prev)
-{
-	struct device_node *endpoint;
-	struct device_node *port;
-
-	if (!parent)
-		return NULL;
-
-	/*
-	 * Start by locating the port node. If no previous endpoint is specified
-	 * search for the first port node, otherwise get the previous endpoint
-	 * parent port node.
-	 */
-	if (!prev) {
-		struct device_node *node;
-
-		node = of_get_child_by_name(parent, "ports");
-		if (node)
-			parent = node;
-
-		port = of_get_child_by_name(parent, "port");
-		of_node_put(node);
-
-		if (!port) {
-			pr_err("%s(): no port node found in %s\n",
-			       __func__, parent->full_name);
-			return NULL;
-		}
-	} else {
-		port = of_get_parent(prev);
-		if (WARN_ONCE(!port, "%s(): endpoint %s has no parent node\n",
-			      __func__, prev->full_name))
-			return NULL;
-
-		/*
-		 * Avoid dropping prev node refcount to 0 when getting the next
-		 * child below.
-		 */
-		of_node_get(prev);
-	}
-
-	while (1) {
-		/*
-		 * Now that we have a port node, get the next endpoint by
-		 * getting the next child. If the previous endpoint is NULL this
-		 * will return the first child.
-		 */
-		endpoint = of_get_next_child(port, prev);
-		if (endpoint) {
-			of_node_put(port);
-			return endpoint;
-		}
-
-		/* No more endpoints under this port, try the next one. */
-		prev = NULL;
-
-		do {
-			port = of_get_next_child(parent, port);
-			if (!port)
-				return NULL;
-		} while (of_node_cmp(port->name, "port"));
-	}
-}
-EXPORT_SYMBOL(of_graph_get_next_endpoint);
-
-/**
- * of_graph_get_remote_port_parent() - get remote port's parent node
- * @node: pointer to a local endpoint device_node
- *
- * Return: Remote device node associated with remote endpoint node linked
- *	   to @node. Use of_node_put() on it when done.
- */
-struct device_node *of_graph_get_remote_port_parent(
-			       const struct device_node *node)
-{
-	struct device_node *np;
-	unsigned int depth;
-
-	/* Get remote endpoint node. */
-	np = of_parse_phandle(node, "remote-endpoint", 0);
-
-	/* Walk 3 levels up only if there is 'ports' node. */
-	for (depth = 3; depth && np; depth--) {
-		np = of_get_next_parent(np);
-		if (depth == 2 && of_node_cmp(np->name, "ports"))
-			break;
-	}
-	return np;
-}
-EXPORT_SYMBOL(of_graph_get_remote_port_parent);
-
-/**
- * of_graph_get_remote_port() - get remote port node
- * @node: pointer to a local endpoint device_node
- *
- * Return: Remote port node associated with remote endpoint node linked
- *	   to @node. Use of_node_put() on it when done.
- */
-struct device_node *of_graph_get_remote_port(const struct device_node *node)
-{
-	struct device_node *np;
-
-	/* Get remote endpoint node. */
-	np = of_parse_phandle(node, "remote-endpoint", 0);
-	if (!np)
-		return NULL;
-	return of_get_next_parent(np);
-}
-EXPORT_SYMBOL(of_graph_get_remote_port);

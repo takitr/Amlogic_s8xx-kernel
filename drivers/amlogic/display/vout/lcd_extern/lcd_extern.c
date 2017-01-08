@@ -53,19 +53,27 @@ int lcd_extern_driver_check(void)
 	return 0;
 }
 
+#define BL_EXT_NAME_LEN_MAX		50
 int get_lcd_extern_dt_data(struct device_node* of_node, struct lcd_extern_config_t *pdata)
 {
 	int err;
 	int val;
 	const char *str;
 	
-	err = of_property_read_string(of_node, "dev_name", (const char **)&pdata->name);
+	err = of_property_read_string(of_node, "dev_name", &str);
 	if (err) {
-		pdata->name = "aml_lcd_extern";
+		str = "aml_lcd_extern";
 		printk("warning: get dev_name failed\n");
 	}
-	printk("load lcd_extern in dtb: %s\n", pdata->name);
-
+	pdata->name = (char *)kmalloc(sizeof(char)*BL_EXT_NAME_LEN_MAX, GFP_KERNEL);
+	if (pdata->name == NULL) {
+		printk("[get_lcd_extern_dt_data]: Not enough memory\n");
+	}
+	else {
+		memset(pdata->name, 0, BL_EXT_NAME_LEN_MAX);
+		strcpy(pdata->name, str);
+		printk("load bl_extern in dtb: %s\n", pdata->name);
+	}
 	err = of_property_read_u32(of_node, "type", &pdata->type);
 	if (err) {
 		pdata->type = LCD_EXTERN_MAX;
@@ -109,7 +117,7 @@ int get_lcd_extern_dt_data(struct device_node* of_node, struct lcd_extern_config
 				pdata->spi_cs = -1;
 			}
 			else {
-				val = amlogic_gpio_name_map_num(str);
+			    val = amlogic_gpio_name_map_num(str);
 				if (val > 0) {
 					err = lcd_extern_gpio_request(val);
 					if (err) {
@@ -128,7 +136,7 @@ int get_lcd_extern_dt_data(struct device_node* of_node, struct lcd_extern_config
 				pdata->spi_clk = -1;
 			}
 			else {
-				val = amlogic_gpio_name_map_num(str);
+			    val = amlogic_gpio_name_map_num(str);
 				if (val > 0) {
 					err = lcd_extern_gpio_request(val);
 					if (err) {
@@ -147,7 +155,7 @@ int get_lcd_extern_dt_data(struct device_node* of_node, struct lcd_extern_config
 				pdata->spi_data = -1;
 			}
 			else {
-				val = amlogic_gpio_name_map_num(str);
+			    val = amlogic_gpio_name_map_num(str);
 				if (val > 0) {
 					err = lcd_extern_gpio_request(val);
 					if (err) {
@@ -167,6 +175,14 @@ int get_lcd_extern_dt_data(struct device_node* of_node, struct lcd_extern_config
 			break;
 	}
 	
+	return 0;
+}
+
+int remove_lcd_extern(struct lcd_extern_config_t *pdata)
+{
+	if (pdata->name)
+		kfree(pdata->name);
+		
 	return 0;
 }
 

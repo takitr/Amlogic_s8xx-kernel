@@ -34,14 +34,14 @@
 #define ALSA_DEBUG(fmt,args...) 	printk(KERN_INFO "[aml-pcm-dai]" fmt,##args)
 #define ALSA_TRACE()     			printk("[aml-pcm-dai] enter func %s,line %d\n",__FUNCTION__,__LINE__)
 #else
-#define ALSA_DEBUG(fmt,args...)
-#define ALSA_TRACE()
+#define ALSA_DEBUG(fmt,args...) 
+#define ALSA_TRACE()   
 #endif
 
 
 static int aml_dai_pcm_startup(struct snd_pcm_substream *substream,
 					struct snd_soc_dai *dai)
-{
+{	  	
 #ifdef AML_DAI_DEBUG
 	printk("***Entered %s:%s\n", __FILE__,__func__);
 #endif
@@ -96,7 +96,7 @@ static int aml_dai_pcm_trigger(struct snd_pcm_substream *substream, int cmd,
 			if(substream->stream == SNDRV_PCM_STREAM_PLAYBACK){
 				printk("aiu pcm playback enable\n\n");
 				pcm_out_enable(1);
-			}else{
+			}else{        
                 pcm_in_enable(1);
 			}
 			break;
@@ -106,9 +106,9 @@ static int aml_dai_pcm_trigger(struct snd_pcm_substream *substream, int cmd,
 			if(substream->stream == SNDRV_PCM_STREAM_PLAYBACK){
 				printk("aiu pcm playback disable\n\n");
 				pcm_out_enable(0);
-			}else{
+			}else{		
                 pcm_in_enable(0);
-
+				
 			}
 			break;
 		default:
@@ -116,7 +116,7 @@ static int aml_dai_pcm_trigger(struct snd_pcm_substream *substream, int cmd,
 	}
 
 	return 0;
-}
+}	
 
 
 static int aml_dai_pcm_hw_params(struct snd_pcm_substream *substream,
@@ -136,7 +136,7 @@ static int aml_dai_set_pcm_fmt(struct snd_soc_dai *dai,
 	printk("***Entered %s:%s\n", __FILE__,__func__);
 #endif
 	if(fmt&SND_SOC_DAIFMT_CBS_CFS)
-	snd_soc_dai_get_drvdata(dai);
+	snd_soc_dai_get_drvdata(dai);		
 	return 0;
 }
 
@@ -152,7 +152,7 @@ static int aml_dai_set_pcm_sysclk(struct snd_soc_dai *dai,
 #ifdef CONFIG_PM
 static int aml_dai_pcm_suspend(struct snd_soc_dai *dai)
 {
-
+		
   printk("***Entered %s:%s\n", __FILE__,__func__);
   return 0;
 }

@@ -1,6 +1,6 @@
 unsigned int gsl1680e_config_data_id[] =
 {
-	0x76c767,
+	0x76c767,  
 	0x200,
 	0,0,
 	0,

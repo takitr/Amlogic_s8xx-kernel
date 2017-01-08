@@ -43,9 +43,6 @@
 #include <linux/amlogic/amports/vfp.h>
 
 #define AVMLVIDEO_MODULE_NAME "amlvideo"
-#define CREATE_TRACE_POINTS
-#include "trace/amlvideo.h"
-
 
 /* Wake up at about 30 fps */
 #define WAKE_NUMERATOR 30
@@ -321,13 +318,6 @@ static int video_receiver_event_fun(int type, void* data, void* private_data) {
             vfq_init(&q_ready, AMLVIDEO_POOL_SIZE+1, &amlvideo_pool_ready[0]);
         }
     }
-    else if (type == VFRAME_EVENT_PROVIDER_FR_HINT) {
-        vf_notify_receiver(PROVIDER_NAME,VFRAME_EVENT_PROVIDER_FR_HINT,data);
-    }
-    else if (type == VFRAME_EVENT_PROVIDER_FR_END_HINT) {
-        vf_notify_receiver(PROVIDER_NAME,VFRAME_EVENT_PROVIDER_FR_END_HINT,data);
-    }
-
     return 0;
 }
 
@@ -526,7 +516,6 @@ static int vidioc_querybuf(struct file *file, void *priv, struct v4l2_buffer *p)
 static int vidioc_qbuf(struct file *file, void *priv, struct v4l2_buffer *p) {
     int ret = 0;
     if (omx_secret_mode == true) {
-        trace_qbuf(p->index);
         return ret;
     }
     if (ppmgrvf) {
@@ -575,21 +564,16 @@ static int freerun_cleancache_dqbuf(struct v4l2_buffer *p) {
     return ret;
 }
 
-static int my_wf_debug = 0;
-static int my_wb_debug = 0;
-
 static int freerun_dqbuf(struct v4l2_buffer *p) {
     int ret = 0;
-    int omx_ready = 0;
     if (omx_secret_mode == true) {
-        omx_ready = vfq_level(&q_ready);
-        if (omx_ready > AMLVIDEO_POOL_SIZE-1) {
-            my_wb_debug++;
+        if (vfq_level(&q_ready)>AMLVIDEO_POOL_SIZE-1) {
+            msleep(10);
             return -EAGAIN;
         }
     }
     if (!vf_peek(RECEIVER_NAME)) {
-        my_wf_debug++;
+        msleep(10);
         return -EAGAIN;
     }
     if (omx_secret_mode != true) {
@@ -615,11 +599,9 @@ static int freerun_dqbuf(struct v4l2_buffer *p) {
             p->timestamp.tv_usec = vpts_last + (DUR2PTS(ppmgrvf->duration));
         }
         vpts_last = p->timestamp.tv_usec;
-        trace_dqbuf(p->index, my_wf_debug, my_wb_debug, omx_ready);
-        my_wf_debug = 0;
-        my_wb_debug = 0;
+        //printk("p->timestamp.tv_usec=%d\n",p->timestamp.tv_usec);
         return ret;
-    }
+    }   
     if (ppmgrvf->pts != 0) {
         timestamp_vpts_set(ppmgrvf->pts);
     } else{
@@ -629,7 +611,7 @@ static int freerun_dqbuf(struct v4l2_buffer *p) {
 
 	if(!ppmgrvf->pts)
         ppmgrvf->pts_us64=ppmgrvf->pts*100/9;
-
+	
     if (unregFlag || startFlag) {
         if (ppmgrvf->pts == 0)
             timestamp_vpts_set(timestamp_pcrscr_get());
@@ -748,7 +730,6 @@ static int vidioc_streamon(struct file *file, void *priv, enum v4l2_buf_type i) 
     ret = videobuf_streamon(&fh->vb_vidq);
     if (ret == 0)
         fh->is_streamed_on = 1;
-    trace_onoff(1);
     return ret;
 }
 
@@ -760,7 +741,6 @@ static int vidioc_streamoff(struct file *file, void *priv, enum v4l2_buf_type i)
     ret = videobuf_streamoff(&fh->vb_vidq);
     if (ret == 0)
         fh->is_streamed_on = 0;
-    trace_onoff(0);
     return ret;
 }
 
@@ -928,7 +908,7 @@ static int amlvideo_mmap(struct file *file, struct vm_area_struct *vma) {
     return ret;
 }
 
-static const struct v4l2_file_operations amlvideo_fops = { .owner = THIS_MODULE, .open = amlvideo_open, .release = amlvideo_close, .read = amlvideo_read, .poll = amlvideo_poll, .unlocked_ioctl = video_ioctl2, /* V4L2 ioctl handler */
+static const struct v4l2_file_operations amlvideo_fops = { .owner = THIS_MODULE, .open = amlvideo_open, .release = amlvideo_close, .read = amlvideo_read, .poll = amlvideo_poll, .ioctl = video_ioctl2, /* V4L2 ioctl handler */
 .mmap = amlvideo_mmap, };
 
 static const struct v4l2_ioctl_ops amlvideo_ioctl_ops = {
@@ -954,7 +934,7 @@ static const struct v4l2_ioctl_ops amlvideo_ioctl_ops = {
 
 static struct video_device amlvideo_template = { .name = "amlvideo", .fops = &amlvideo_fops, .ioctl_ops = &amlvideo_ioctl_ops, .release = video_device_release,
 
-.tvnorms = V4L2_STD_525_60, /* .current_norm = V4L2_STD_NTSC_M , */ };
+.tvnorms = V4L2_STD_525_60, .current_norm = V4L2_STD_NTSC_M , };
 
 /* -----------------------------------------------------------------
  Initialization and module stuff
@@ -1005,7 +985,7 @@ static int __init amlvideo_create_instance(int inst) {
         goto unreg_dev;
 
     *vfd = amlvideo_template;
-    // vfd->debug = debug;
+    vfd->debug = debug;
     ret = video_register_device(vfd, VFL_TYPE_GRABBER, video_nr);
     if (ret < 0)
         goto rel_vdev;

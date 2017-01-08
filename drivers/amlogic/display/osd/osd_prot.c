@@ -73,7 +73,7 @@ int osd_set_prot(unsigned char   x_rev,
 			VSYNCOSD_WR_MPEG_REG_BITS (VIU_OSD2_BLK0_CFG_W0, 1, 15, 1);//switch back to little endian
 			VSYNCOSD_WR_MPEG_REG(VIU_OSD2_PROT_CTRL,0);
 		}
-
+		
 		return 0;
 	}
 	if(osd_index==OSD1){
@@ -125,4 +125,5 @@ int osd_set_prot(unsigned char   x_rev,
     VSYNCOSD_WR_MPEG_REG(VPU_PROT1_REQ_ONOFF,    data32);
     VSYNCOSD_WR_MPEG_REG(VPU_PROT1_CLK_GATE, 1); // Enable clock
     return 0;
-}
+}   
+

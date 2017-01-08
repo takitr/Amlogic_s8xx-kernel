@@ -194,3 +194,4 @@ void run_deinterlace(unsigned zoom_start_x_lines, unsigned zoom_end_x_lines, uns
 void deinterlace_init(void);
 
 #endif
+

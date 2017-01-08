@@ -22,7 +22,7 @@
 #define BLENDOP_LOGIC_XOR         (BLENDOP_LOGIC+12)
 #define BLENDOP_LOGIC_EQUIV       (BLENDOP_LOGIC+13)
 #define BLENDOP_LOGIC_AND_INVERT  (BLENDOP_LOGIC+14)
-#define BLENDOP_LOGIC_OR_INVERT   (BLENDOP_LOGIC+15)
+#define BLENDOP_LOGIC_OR_INVERT   (BLENDOP_LOGIC+15) 
 
 static inline unsigned blendop(unsigned color_blending_mode,
                                unsigned color_blending_src_factor,
@@ -85,13 +85,13 @@ unsigned blendop(unsigned color_blending_mode,
                  unsigned alpha_blending_dst_factor);
 
 void blend(ge2d_context_t *wq,
-           int src_x, int src_y, int src_w, int src_h,
+           int src_x, int src_y, int src_w, int src_h, 
            int src2_x, int src2_y, int src2_w, int src2_h,
            int dst_x, int dst_y, int dst_w, int dst_h,
            int op);
 
 void blend_noblk(ge2d_context_t *wq,
-           int src_x, int src_y, int src_w, int src_h,
+           int src_x, int src_y, int src_w, int src_h, 
            int src2_x, int src2_y, int src2_w, int src2_h,
            int dst_x, int dst_y, int dst_w, int dst_h,
            int op);

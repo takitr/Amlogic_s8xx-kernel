@@ -102,13 +102,7 @@ else
 endif
 
 %_defconfig: $(obj)/conf
-	@echo "*** Default configuration is based on '$@'"
-	$(Q)$< --defconfig=$(strip \
-	$(if $(strip $(firstword $(wildcard $(srctree)/arch/$(SRCARCH)/configs/$@ \
-		$(srctree)/$(CUSTOMER_DIR_NAME)/meson/configs/$@))), \
-	$(firstword $(wildcard $(srctree)/arch/$(SRCARCH)/configs/$@ \
-		$(srctree)/$(CUSTOMER_DIR_NAME)/meson/configs/$@)), \
-	$(srctree)/arch/$(SRCARCH)/configs/$@)) $(Kconfig)
+	$(Q)$< --defconfig=arch/$(SRCARCH)/configs/$@ $(Kconfig)
 
 # Help text used by make help
 help:

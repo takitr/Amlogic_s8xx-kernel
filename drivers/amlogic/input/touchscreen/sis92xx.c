@@ -90,7 +90,7 @@ unsigned short crc16_ccitt(const unsigned char *buf, int len)
 {
     int counter;
     unsigned short crc = 0;
-
+    
     for( counter = 0; counter < len; counter++)
         crc = (crc<<8) ^ crc16tab[((crc>>8) ^ buf[counter]) & 0x00FF];
     return crc;
@@ -98,7 +98,7 @@ unsigned short crc16_ccitt(const unsigned char *buf, int len)
 
 
 static int sis92xx_write_block(struct i2c_client *client, u8 addr, u8 *buf, int len)
-{
+{ 
     struct i2c_msg msg[2] = {
         [0] = {
             .addr = client->addr,
@@ -119,7 +119,7 @@ static int sis92xx_write_block(struct i2c_client *client, u8 addr, u8 *buf, int 
 
 
 static int sis92xx_read_block(struct i2c_client *client, u8 addr, u8 *buf, int len)
-{
+{ 
     struct i2c_msg msg[2] = {
         [0] = {
             .addr = client->addr,
@@ -134,19 +134,19 @@ static int sis92xx_read_block(struct i2c_client *client, u8 addr, u8 *buf, int l
             .buf = buf
         },
     };
-
+    
     return i2c_transfer(client->adapter, msg, ARRAY_SIZE(msg));
 }
 
-
+	
 int sis92xx_reset(struct device *dev)
 {
     int ret = -1;
     struct i2c_client *client = container_of(dev, struct i2c_client, dev);
     u8 buf[6];
     int retry = 100;
-
-    return 0;
+    
+    return 0;   
     while(retry && (sis92xx_read_block(client, SIS92XX_CMD_RESET, buf, 6) > 0)) {
         if ((buf[0] == 4) && (buf[1] == 0) && (buf[2] == 0x40)) {
             retry--;
@@ -159,10 +159,10 @@ int sis92xx_reset(struct device *dev)
             break;
         }
     }
-
+    
     return ret;
 }
-
+    
 
 int sis92xx_calibration(struct device *dev)
 {
@@ -170,7 +170,7 @@ int sis92xx_calibration(struct device *dev)
     struct i2c_client *client = container_of(dev, struct i2c_client, dev);
     u8 buf[6];
     int retry = 100;
-
+    
     while(retry && (sis92xx_read_block(client,SIS92XX_CMD_RECALIBRATE, buf, 6) > 0)) {
         if ((buf[0] == 4) && (buf[1] == 0) && (buf[2] == 0x40)) {
             retry--;
@@ -183,7 +183,7 @@ int sis92xx_calibration(struct device *dev)
             break;
         }
     }
-
+    
     return ret;
 }
 
@@ -194,18 +194,18 @@ int sis92xx_get_event (struct device *dev, struct ts_event *event)
     u8 packet_size;
     u8 event_num = 0;
      int i;
-
-    memset(buf, 0, SIS92XX_PACKET_SIZE);
+	 
+    memset(buf, 0, SIS92XX_PACKET_SIZE);   
     if (sis92xx_read_block(client, SIS92XX_CMD_NORMAL,
             buf, SIS92XX_PACKET_SIZE) < 0) {
         /* i2c read failed */
         return 0;
     }
-
+    
     packet_size = buf[0];
     event_num = get_bits(buf[2], 0, 4);
     event_num %= EVENT_MAX;
-
+    
 //    /* check crc */
 //    if (get_bits(buf[2], 4, 1)) {
 //        u16 crc;
@@ -238,7 +238,7 @@ int sis92xx_get_event (struct device *dev, struct ts_event *event)
         if (info->y_pol) {
             event->y = info->ymax + info->ymin - event->y;
         }
-
+        
         ba += 5;
         event++;
     }
@@ -291,7 +291,7 @@ static int sis92xx_suspend(struct early_suspend *handler)
 
 static int sis92xx_resume(struct early_suspend *handler)
 {
-	int ret = -1;
+ 	int ret = -1;
 	if(handler && handler->param) {
 		struct i2c_client *client = (struct i2c_client *)handler->param;
 		ret = capts_resume(&client->dev);

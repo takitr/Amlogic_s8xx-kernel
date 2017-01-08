@@ -143,3 +143,4 @@ struct aml_sw_i2c_platform {
 };
 
 #endif
+

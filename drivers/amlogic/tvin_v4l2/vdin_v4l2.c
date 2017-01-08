@@ -87,7 +87,7 @@ const char *cam_cmd_to_str(cam_command_t cmd)
 			return "CAM_COMMAND_AF";
 			break;
                 case CAM_COMMAND_FULLSCAN:
-			return "CAM_COMMAND_FULLSCAN";
+		       	return "CAM_COMMAND_FULLSCAN";
 			break;
 		case CAM_COMMAND_TOUCH_FOCUS:
 			return "CAM_COMMAND_TOUCH_FOCUS";
@@ -105,7 +105,7 @@ const char *cam_cmd_to_str(cam_command_t cmd)
 			return "CAM_COMMAND_BACKGROUND_FOCUS_OFF";
 			break;
 		case CAM_COMMAND_SET_FLASH_MODE:
-		        return "CAM_COMMAND_SET_FLASH_MODE";
+        	        return "CAM_COMMAND_SET_FLASH_MODE";
 			break;
                 case CAM_COMMAND_TORCH:
 			return "CAM_COMMAND_TORCH";

@@ -31,6 +31,14 @@
 
 #include "cpufreq_governor.h"
 
+static struct kobject *get_governor_parent_kobj(struct cpufreq_policy *policy)
+{
+	if (have_governor_per_policy())
+		return &policy->kobj;
+	else
+		return cpufreq_global_kobject;
+}
+
 static struct attribute_group *get_sysfs_attr(struct dbs_data *dbs_data)
 {
 	if (have_governor_per_policy())
@@ -186,9 +194,6 @@ void gov_queue_work(struct dbs_data *dbs_data, struct cpufreq_policy *policy,
 {
 	int i;
 
-	if (!policy->governor_enabled)
-		return;
-
 	if (!all_cpus) {
 		__gov_queue_work(policy->cpu, dbs_data, delay);
 	} else {
@@ -330,8 +335,6 @@ int cpufreq_governor_dbs(struct cpufreq_policy *policy,
 			hg_dbs_info = dbs_data->cdata->get_cpu_dbs_info_s(policy->cpu);
 			mutex_init(&hg_dbs_info->hotplug_thread_mutex);
 		}
-		if((dbs_data->cdata->governor != GOV_HOTPLUG) && (num_online_cpus() < NR_CPUS))
-			schedule_work(&policy->up_cpu);
 		return 0;
 	case CPUFREQ_GOV_POLICY_EXIT:
 		if (!--dbs_data->usage_count) {
@@ -469,6 +472,8 @@ int cpufreq_governor_dbs(struct cpufreq_policy *policy,
 			gov_queue_work(dbs_data, policy,
 					delay_for_sampling_rate(sampling_rate), true);
 
+		if((dbs_data->cdata->governor != GOV_HOTPLUG) && (num_online_cpus() < NR_CPUS))
+			schedule_work(&policy->up_cpu);
 		break;
 
 	case CPUFREQ_GOV_STOP:

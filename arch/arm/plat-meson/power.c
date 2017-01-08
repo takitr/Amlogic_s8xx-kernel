@@ -1,4 +1,4 @@
-/*
+/* 
  *Copyright (c) AMLOGIC CORPORATION.  All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify it
@@ -24,22 +24,19 @@
 #include <linux/delay.h>
 #include <asm/proc-fns.h>
 #include <mach/system.h>
-#include <linux/slab.h>
-#include "../mach-meson8/include/mach/pm.h"
 /*
  * These are system power hooks to implement power down policy
- * pls add rule and policy notes
+ * pls add rule and policy notes 
  *
  * pm_power_off_prepare will be called before system actually power off
  * pm_power_off will be called after system power off
  *
- *
+ * 
  * now the policy is:
  *     1 poweroff, reboot system go into uboot, and shutdown, this is typical requirement for tablet production
  *
  *
  */
-static int reboot_flag=0;
 void meson_common_restart(char mode,const char *cmd)
 {
     u32 reboot_reason = MESON_NORMAL_BOOT;
@@ -62,8 +59,6 @@ void meson_common_restart(char mode,const char *cmd)
             reboot_reason = MESON_LOCK_REBOOT;
         else if (strcmp(cmd, "usb_burner_reboot") == 0)
             reboot_reason = MESON_USB_BURNER_REBOOT;
-        else if (strcmp(cmd, "uboot_suspend") == 0)
-            reboot_reason = MESON_UBOOT_SUSPEND;
 	}
     aml_write_reg32(P_AO_RTI_STATUS_REG1, reboot_reason);
     printk("reboot_reason(0x%x) = 0x%x\n", P_AO_RTI_STATUS_REG1, aml_read_reg32(P_AO_RTI_STATUS_REG1));
@@ -77,11 +72,7 @@ void meson_power_off_prepare(void)
 void meson_power_off(void)
 {
 	printk("meson power off \n");
-	if(reboot_flag)
-		meson_common_restart('h',"uboot_suspend");
-	else
-//		meson_common_restart('h',"charging_reboot");
-                meson_pm_poweroff();
+	meson_common_restart('h',"charging_reboot");
 }
 
 void meson_power_idle(void)
@@ -97,13 +88,3 @@ static int __init meson_reboot_setup(void)
 	return 0;
 }
 arch_initcall(meson_reboot_setup);
-static int __init do_parse_args(char *line)
-{
-	if(strcmp(line,"uboot_suspend")==0)
-		reboot_flag=1;
-	printk("reboot_flag=%x\n",reboot_flag);
-	return 1;
-}
-
-__setup("reboot_args=", do_parse_args);
-

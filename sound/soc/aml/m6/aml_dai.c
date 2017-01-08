@@ -24,7 +24,7 @@ static aml_dai_info_t dai_info[3] = {{0}};
 
 static int aml_dai_i2s_startup(struct snd_pcm_substream *substream,
 					struct snd_soc_dai *dai)
-{
+{	  	
 #ifdef AML_DAI_DEBUG
 	printk("***Entered %s:%s\n", __FILE__,__func__);
 #endif
@@ -72,7 +72,7 @@ static int aml_dai_set_i2s_fmt(struct snd_soc_dai *dai,
 #ifdef AML_DAI_DEBUG
 	printk("***Entered %s:%s\n", __FILE__,__func__);
 #endif
-	if(fmt&SND_SOC_DAIFMT_CBS_CFS)//slave mode
+	if(fmt&SND_SOC_DAIFMT_CBS_CFS)//slave mode 
 		dai_info[dai->id].i2s_mode = I2S_SLAVE_MODE;
 	return 0;
 }
@@ -89,7 +89,7 @@ static int aml_dai_set_i2s_sysclk(struct snd_soc_dai *dai,
 #ifdef CONFIG_PM
 static int aml_dai_i2s_suspend(struct snd_soc_dai *dai)
 {
-
+		
   printk("***Entered %s:%s\n", __FILE__,__func__);
   return 0;
 }
@@ -109,7 +109,7 @@ static int aml_dai_i2s_resume(struct snd_soc_dai *dai)
 
 static int aml_dai_pcm_startup(struct snd_pcm_substream *substream,
 					struct snd_soc_dai *dai)
-{
+{	  	
 #ifdef AML_DAI_DEBUG
 	printk("***Entered %s:%s\n", __FILE__,__func__);
 #endif
@@ -150,7 +150,7 @@ static int aml_dai_set_pcm_fmt(struct snd_soc_dai *dai,
 	printk("***Entered %s:%s\n", __FILE__,__func__);
 #endif
 	if(fmt&SND_SOC_DAIFMT_CBS_CFS)
-	snd_soc_dai_get_drvdata(dai);
+	snd_soc_dai_get_drvdata(dai);		
 	return 0;
 }
 
@@ -166,7 +166,7 @@ static int aml_dai_set_pcm_sysclk(struct snd_soc_dai *dai,
 #ifdef CONFIG_PM
 static int aml_dai_pcm_suspend(struct snd_soc_dai *dai)
 {
-
+		
   printk("***Entered %s:%s\n", __FILE__,__func__);
   return 0;
 }
@@ -184,7 +184,7 @@ static int aml_dai_pcm_resume(struct snd_soc_dai *dai)
 
 #endif
 
-#define AML_DAI_I2S_RATES		(SNDRV_PCM_RATE_8000_192000)
+#define AML_DAI_I2S_RATES		(SNDRV_PCM_RATE_8000_96000)
 #define AML_DAI_I2S_FORMATS		(SNDRV_PCM_FMTBIT_S16_LE | SNDRV_PCM_FMTBIT_S24_LE | SNDRV_PCM_FMTBIT_S32_LE)
 
 #ifdef AML_DAI_PCM_SUPPORT

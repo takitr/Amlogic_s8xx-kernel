@@ -1,9 +1,7 @@
 
 #include <mach/am_regs.h>
-#include <mach/power_gate.h>
-
 #include "sii9233_drv.h"
-#include "../../tvin/tvin_frontend.h"
+#include "../../../../hardware/tvin/tvin_frontend.h"
 #include "sii9233_interface.h"
 
 extern int start_tvin_service(int no ,vdin_parm_t *para);
@@ -14,7 +12,7 @@ static void enable_vdin_pinmux(void)
 {
 
 	// disable LCD pinmux
-	WRITE_CBUS_REG(PERIPHS_PIN_MUX_0, READ_CBUS_REG(PERIPHS_PIN_MUX_0) &
+	WRITE_CBUS_REG(PERIPHS_PIN_MUX_0, READ_CBUS_REG(PERIPHS_PIN_MUX_0) & 
 	 ( ~(1       | // LCD_R 2/3/4/5/6/7
 		(1 << 1)  | // LCD_R 0/1
 		(1 << 2)  | // LCD_G 2/3/4/5/6/7
@@ -26,7 +24,7 @@ static void enable_vdin_pinmux(void)
 		);
 
 	// disable TCON pinmux
-	WRITE_CBUS_REG(PERIPHS_PIN_MUX_8, READ_CBUS_REG(PERIPHS_PIN_MUX_8) &
+	WRITE_CBUS_REG(PERIPHS_PIN_MUX_8, READ_CBUS_REG(PERIPHS_PIN_MUX_8) & 
 	 ( ~((1 << 19) | // TCON_VCOM
 		(1 << 20) | // TCON_CPH3
 		(1 << 21) | // TCON_CPH2
@@ -40,7 +38,7 @@ static void enable_vdin_pinmux(void)
 		);
 
 	// disable ENC pinmux
-	WRITE_CBUS_REG(PERIPHS_PIN_MUX_7, READ_CBUS_REG(PERIPHS_PIN_MUX_7) &
+	WRITE_CBUS_REG(PERIPHS_PIN_MUX_7, READ_CBUS_REG(PERIPHS_PIN_MUX_7) & 
 	 ( ~(1     | // ENC_0
 		(1 << 1)  | // ENC_1
 		(1 << 2)  | // ENC_2
@@ -62,25 +60,25 @@ static void enable_vdin_pinmux(void)
 		);
 
 	// disable PWM pinmux
-	WRITE_CBUS_REG(PERIPHS_PIN_MUX_3, READ_CBUS_REG(PERIPHS_PIN_MUX_3) &
+	WRITE_CBUS_REG(PERIPHS_PIN_MUX_3, READ_CBUS_REG(PERIPHS_PIN_MUX_3) & 
 	 ( ~((1 << 24) | // PWM_C
 		(1 << 25) | // PWM_C
 		(1 << 26)))    // PWM_D
 		);
-	WRITE_CBUS_REG(PERIPHS_PIN_MUX_7, READ_CBUS_REG(PERIPHS_PIN_MUX_7) &
+	WRITE_CBUS_REG(PERIPHS_PIN_MUX_7, READ_CBUS_REG(PERIPHS_PIN_MUX_7) & 
 	 ( ~((1 << 26) | // PWM_VS
 		(1 << 27) | // PWM_VS
 		(1 << 28)))    // PWM_VS
 		);
 
 	// disable VGA pinmux
-	WRITE_CBUS_REG(PERIPHS_PIN_MUX_0, READ_CBUS_REG(PERIPHS_PIN_MUX_0) &
+	WRITE_CBUS_REG(PERIPHS_PIN_MUX_0, READ_CBUS_REG(PERIPHS_PIN_MUX_0) & 
 	 ( ~((1 << 20) | // VGA_HS
 		(1 << 21)))    // VGA_VS
 		);
 
 	// enable DVIN pinmux
-	WRITE_CBUS_REG(PERIPHS_PIN_MUX_0, READ_CBUS_REG(PERIPHS_PIN_MUX_0) |
+	WRITE_CBUS_REG(PERIPHS_PIN_MUX_0, READ_CBUS_REG(PERIPHS_PIN_MUX_0) | 
 	 ( (1 << 6)  | // DVIN R/G/B 0/1/2/3/4/5/6/7
 		(1 << 7)  | // DVIN_CLK
 		(1 << 8)  | // DVIN_HS
@@ -108,14 +106,14 @@ static int sii9233a_tvin_open(tvin_frontend_t *fe, enum tvin_port_e port)
 
 	enable_vdin_pinmux();
 
-	WRITE_MPEG_REG_BITS(VDIN_ASFIFO_CTRL2, 0x39, 2, 6);
+	WRITE_MPEG_REG_BITS(VDIN_ASFIFO_CTRL2, 0x39, 2, 6); 
 
 	return 0;
 }
 
 static void sii9233a_tvin_close(struct tvin_frontend_s *fe)
 {
-	return ;
+	return ;          
 }
 static void sii9233a_tvin_start(struct tvin_frontend_s *fe, enum tvin_sig_fmt_e fmt)
 {
@@ -123,7 +121,7 @@ static void sii9233a_tvin_start(struct tvin_frontend_s *fe, enum tvin_sig_fmt_e 
 }
 static void sii9233a_tvin_stop(struct tvin_frontend_s *fe, enum tvin_port_e port)
 {
-	return ;
+	return ;      
 }
 static int sii9233a_tvin_isr(struct tvin_frontend_s *fe, unsigned int hcnt64)
 {
@@ -136,7 +134,7 @@ static struct tvin_decoder_ops_s sii9233a_tvin_dec_ops = {
 				.close 			= sii9233a_tvin_close,
 				.start  		= sii9233a_tvin_start,
 				.stop  			= sii9233a_tvin_stop,
-				.decode_isr 	= sii9233a_tvin_isr,
+				.decode_isr 	= sii9233a_tvin_isr, 
 };
 
 static void sii9233a_tvin_get_sig_propery(struct tvin_frontend_s *fe, struct tvin_sig_property_s *prop)
@@ -145,10 +143,10 @@ static void sii9233a_tvin_get_sig_propery(struct tvin_frontend_s *fe, struct tvi
 
 	prop->color_format = TVIN_RGB444;
 	prop->dest_cfmt = TVIN_YUV422;
-	if( (devp->vdin_parm.h_active==1440) &&
+	if( (devp->vdin_parm.h_active==1440) && 
 	  ((devp->vdin_parm.v_active==576)||(devp->vdin_parm.v_active==480)) )
 	  prop->decimation_ratio = 1;
-	else
+	else 
 	  prop->decimation_ratio = 0;
 
 	return ;
@@ -225,7 +223,7 @@ void sii9233a_config_dvin (unsigned long hs_pol_inv,             // Invert HS po
 	unsigned long data32;
 
 //	printk("[%s] config pol_inv: hs = %d, vs = %d, de = %d, field = %d, clk = %d\n",__FUNCTION__, hs_pol_inv,vs_pol_inv,de_pol_inv,field_pol_inv,dvin_clk_inv);
-//	printk("[%s]: %lu %lu %lu %lu.\n",  __FUNCTION__, active_start_pix_fe, active_start_line_fe,  line_width, field_height);
+//	printk("[%s]: %lu %lu %lu %lu.\n",  __FUNCTION__, active_start_pix_fe, active_start_line_fe,  line_width, field_height);  
 	// Program reg DVIN_CTRL_STAT: disable DVIN
 	WRITE_MPEG_REG(DVIN_CTRL_STAT, 0);
 
@@ -281,7 +279,6 @@ void sii9233a_stop_vdin(sii9233a_info_t *info)
 
 	stop_tvin_service(0);
 	set_invert_top_bot(false);
-	CLK_GATE_OFF(MISC_DVIN);
 	info->vdin_started = 0;
 	printk("%s: stop vdin\n", __FUNCTION__);
 	return ;
@@ -302,13 +299,10 @@ void sii9233a_start_vdin(sii9233a_info_t *info, int width, int height, int frame
 											(info->vdin_info.cur_frame_rate != frame_rate) )
 		{
 			stop_tvin_service(0);
-			CLK_GATE_OFF(MISC_DVIN);
 			info->vdin_started=0;
 			printk("%s: stop vdin\n", __func__);
 		}
 	}
-
-	CLK_GATE_ON(MISC_DVIN);
 
 	if( (info->vdin_started==0) && (width>0) && (height>0) && (frame_rate>0) )
 	{
@@ -338,48 +332,48 @@ void sii9233a_start_vdin(sii9233a_info_t *info, int width, int height, int frame
 				h_total = 1716;
 				v_total = 525;
 			}
-			sii9233a_config_dvin(1, //hs_pol_inv,
-						1, //vs_pol_inv,
-						0, //de_pol_inv,
-						0, //field_pol_inv,
-						0, //ext_field_sel,
-						3, //de_mode,
-						0, //data_comp_map,
-						0, //mode_422to444,
-						0, //dvin_clk_inv,
-						0, //vs_hs_tim_ctrl,
-						400, //hs_lead_vs_odd_min,
-						1200, //hs_lead_vs_odd_max,
-						start_pix,//sii_get_hs_backporch()*2,//0xdc, //active_start_pix_fe,
-						start_pix,//sii_get_hs_backporch()*2,//0xdc, //active_start_pix_fo,
+			sii9233a_config_dvin(1, //hs_pol_inv,          
+						1, //vs_pol_inv,          
+						0, //de_pol_inv,          
+						0, //field_pol_inv,       
+						0, //ext_field_sel,       
+						3, //de_mode,             
+						0, //data_comp_map,       
+						0, //mode_422to444,       
+						0, //dvin_clk_inv,        
+						0, //vs_hs_tim_ctrl,      
+						400, //hs_lead_vs_odd_min,  
+						1200, //hs_lead_vs_odd_max,  
+						start_pix,//sii_get_hs_backporch()*2,//0xdc, //active_start_pix_fe, 
+						start_pix,//sii_get_hs_backporch()*2,//0xdc, //active_start_pix_fo, 
 						start_line_e,//sii_get_vs_backporch(), //0x19, //active_start_line_fe,
 						start_line_o,//sii_get_vs_backporch(),//0x19, //active_start_line_fo,
-						h_total,//sii_get_h_total(), //0x672, //line_width,
+						h_total,//sii_get_h_total(), //0x672, //line_width,          
 						v_total//sii_get_v_total()*2 //0x2ee //field_height
 						);
 		}
 		else
 		{
-			sii9233a_config_dvin(height>576?0:1, //hs_pol_inv,
-						height>576?0:1, //vs_pol_inv,
-						0, //de_pol_inv,
+			sii9233a_config_dvin(height>576?0:1, //hs_pol_inv,          
+						height>576?0:1, //vs_pol_inv,          
+						0, //de_pol_inv,          
 						(field_flag && height>=540)?1:0, //field_pol_inv, set to 1 for 1080i
-						0, //ext_field_sel,
-						3, //de_mode,
-						0, //data_comp_map,
-						0, //mode_422to444,
-						0, //dvin_clk_inv,
-						0, //vs_hs_tim_ctrl,
-						0, //hs_lead_vs_odd_min,
-						0, //hs_lead_vs_odd_max,
-						sii_get_hs_backporch(),//0xdc, //active_start_pix_fe,
-						sii_get_hs_backporch(),//0xdc, //active_start_pix_fo,
+						0, //ext_field_sel,       
+						3, //de_mode,             
+						0, //data_comp_map,       
+						0, //mode_422to444,       
+						0, //dvin_clk_inv,        
+						0, //vs_hs_tim_ctrl,      
+						0, //hs_lead_vs_odd_min,  
+						0, //hs_lead_vs_odd_max,  
+						sii_get_hs_backporch(),//0xdc, //active_start_pix_fe, 
+						sii_get_hs_backporch(),//0xdc, //active_start_pix_fo, 
 						sii_get_vs_backporch(), //0x19, //active_start_line_fe,
 						sii_get_vs_backporch(),//0x19, //active_start_line_fo,
-						sii_get_h_total(), //0x672, //line_width,
+						sii_get_h_total(), //0x672, //line_width,          
 						sii_get_v_total() //0x2ee //field_height
-						);
-		}
+						);       
+		}        
 
 		memset( &para, 0, sizeof(para));
 		para.port  = TVIN_PORT_DVIN0;
@@ -387,7 +381,7 @@ void sii9233a_start_vdin(sii9233a_info_t *info, int width, int height, int frame
 		para.h_active = info->vdin_info.cur_width;
 		para.v_active = info->vdin_info.cur_height;
 		if(field_flag){
-			if(info->vdin_info.cur_width == 1920 &&
+			if(info->vdin_info.cur_width == 1920 &&  
 			  (info->vdin_info.cur_height == 1080 || info->vdin_info.cur_height == 540)){
 				if( frame_rate == 60 )
 					para.fmt = TVIN_SIG_FMT_HDMI_1920X1080I_60HZ;
@@ -402,7 +396,7 @@ void sii9233a_start_vdin(sii9233a_info_t *info, int width, int height, int frame
 				 set_invert_top_bot(true);
 			}
 		*/
-			else if(info->vdin_info.cur_width == 1440 &&
+			else if(info->vdin_info.cur_width == 1440 &&  
 			  (info->vdin_info.cur_height == 576 || info->vdin_info.cur_height == 288)){
 				para.fmt = TVIN_SIG_FMT_HDMI_1440X576I_50HZ;
 				para.v_active = 576;
@@ -415,7 +409,7 @@ void sii9233a_start_vdin(sii9233a_info_t *info, int width, int height, int frame
 				 set_invert_top_bot(true);
 			}
 		*/
-			else if(info->vdin_info.cur_width == 1440  &&
+			else if(info->vdin_info.cur_width == 1440  &&  
 			  (info->vdin_info.cur_height == 480 || info->vdin_info.cur_height == 240)){
 				para.fmt = TVIN_SIG_FMT_HDMI_1440X480I_60HZ;
 				para.v_active = 480;
@@ -425,7 +419,7 @@ void sii9233a_start_vdin(sii9233a_info_t *info, int width, int height, int frame
 				para.fmt = TVIN_SIG_FMT_MAX+1;
 				set_invert_top_bot(true);
 			}
-			para.scan_mode = TVIN_SCAN_MODE_INTERLACED;
+			para.scan_mode = TVIN_SCAN_MODE_INTERLACED;	
 		}
 		else{
 			if(info->vdin_info.cur_width == 1920 &&  info->vdin_info.cur_height == 1080){
@@ -443,7 +437,7 @@ void sii9233a_start_vdin(sii9233a_info_t *info, int width, int height, int frame
 			else{
 				para.fmt = TVIN_SIG_FMT_MAX+1;
 			}
-			para.scan_mode = TVIN_SCAN_MODE_PROGRESSIVE;
+			para.scan_mode = TVIN_SCAN_MODE_PROGRESSIVE;	
 		}
 		para.hsync_phase = 1;
 		para.vsync_phase = 0;

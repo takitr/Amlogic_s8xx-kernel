@@ -158,17 +158,17 @@ static 	struct input_dev * powerkeydev;
 
 #define AXP19_NOTIFIER_ON   		        (AXP19_IRQ_USBOV | \
 										     AXP19_IRQ_USBIN | \
-									     AXP19_IRQ_USBRE | \
-									     AXP19_IRQ_USBLO | \
-									     AXP19_IRQ_ACOV  | \
-									     AXP19_IRQ_ACIN  | \
-									     AXP19_IRQ_ACRE  | \
-									     AXP19_IRQ_TEMOV | \
-									     AXP19_IRQ_TEMLO | \
-									     AXP19_IRQ_BATIN | \
-									     AXP19_IRQ_BATRE | \
-									     AXP19_IRQ_PEKLO | \
-									     AXP19_IRQ_PEKSH)
+				        				     AXP19_IRQ_USBRE | \
+				       					     AXP19_IRQ_USBLO | \
+				       					     AXP19_IRQ_ACOV  | \
+				       					     AXP19_IRQ_ACIN  | \
+				       					     AXP19_IRQ_ACRE  | \
+				       					     AXP19_IRQ_TEMOV | \
+				       					     AXP19_IRQ_TEMLO | \
+				       					     AXP19_IRQ_BATIN | \
+				       					     AXP19_IRQ_BATRE | \
+				       					     AXP19_IRQ_PEKLO | \
+				       					     AXP19_IRQ_PEKSH) 
 
 
 /*      AXP20      */
@@ -287,13 +287,13 @@ static 	struct input_dev * powerkeydev;
 #define AXP20_INTTEMP							(0x5E)
 
 #define  AXP20_NOTIFIER_ON				   (AXP20_IRQ_USBIN | \
-										AXP20_IRQ_USBRE | \
-										AXP20_IRQ_ACIN  | \
-										AXP20_IRQ_ACRE  | \
-										AXP20_IRQ_BATIN | \
-										AXP20_IRQ_BATRE | \
-										AXP20_IRQ_CHAST	| \
-										AXP20_IRQ_CHAOV)
+				        					AXP20_IRQ_USBRE | \
+				       						AXP20_IRQ_ACIN  | \
+				       						AXP20_IRQ_ACRE  | \
+				       						AXP20_IRQ_BATIN | \
+				       						AXP20_IRQ_BATRE | \
+				       						AXP20_IRQ_CHAST	| \
+				       						AXP20_IRQ_CHAOV)
 
 
 
@@ -372,3 +372,4 @@ extern int axp_get_battery_percent(void);                               // retur
 extern int axp_get_battery_voltage(void);                               // return battery voltage, in mV not OCV
 extern int axp_get_battery_current(void);                               // return battery current, in mA
 #endif      /* _LINUX_AXP_SPLY_H_ */
+

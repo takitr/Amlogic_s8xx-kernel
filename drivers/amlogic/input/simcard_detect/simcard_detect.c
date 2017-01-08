@@ -77,27 +77,27 @@ static int simcard_search(struct sim_detect *p_sd)
 			continue;
 		}
 		p_sim_status = p_sd->sim_status;
-		for (j=0; j<p_sd->sim_status_num; j++) {
+	 	for (j=0; j<p_sd->sim_status_num; j++) {
 			if ((p_sim_status->chan == p_sd->chan[i])
 			&& (value >= p_sim_status->value - p_sim_status->tolerance)
 			&& (value <= p_sim_status->value + p_sim_status->tolerance)) {
 				return p_sim_status->code;
 			}
-
+                    
 			p_sim_status++;
 		}
 	}
 	*/
     if (p_sd->get_sim_status)
         return p_sd->get_sim_status();
-
+    
 	return SIM_OUT;
 }
 
 static void simcard_detect_work(struct work_struct *work)
 {
 
-
+   
 	int code = simcard_search(gp_sim_detect);
 	if(SIM_IN == gp_sim_detect->cur_simcard_status){
         if (SIM_OUT == code) {
@@ -152,14 +152,14 @@ static int register_simdetect_dev(struct sim_detect  *p_sd, int dev_id)
     ret=register_chrdev(0, p_sd->config_name, &simdetect_fops);
     if(ret<=0)
     {
-        printk("register char device error\n");
+        printk("register char device error\r\n");
         return  ret ;
     }
     p_sd->config_major=ret;
-    printk("simdetect major:%d\n",ret);
+    printk("simdetect major:%d\r\n",ret);
     p_sd->config_class=class_create(THIS_MODULE,p_sd->config_name);
     p_sd->config_dev=device_create(p_sd->config_class,	NULL,
-		MKDEV(p_sd->config_major,0),NULL,p_sd->config_name);
+    		MKDEV(p_sd->config_major,0),NULL,p_sd->config_name);
     return ret;
 }
 
@@ -169,7 +169,7 @@ static ssize_t simstatus_show(struct class *cla, struct class_attribute *attr, c
 }
 
 static struct class_attribute simstatus_class_attrs[] = {
-    __ATTR_RO(simstatus),
+    __ATTR_RO(simstatus),                   
     __ATTR_NULL
 };
 static struct class simstatus_class = {
@@ -187,7 +187,7 @@ static int __init simdetect_probe(struct platform_device *pdev)
         dev_err(&pdev->dev, "platform data is required!\n");
         return -EINVAL;
     }
-
+   
     p_sim_detect = kzalloc(sizeof(struct sim_detect), GFP_KERNEL);
     if (!p_sim_detect ) {
         return -ENOMEM;
@@ -196,27 +196,27 @@ static int __init simdetect_probe(struct platform_device *pdev)
 
     platform_set_drvdata(pdev, p_sim_detect);
     p_sim_detect->cur_simcard_status = SIM_OUT;
-
+     
     setup_timer(&p_sim_detect->timer, simdetect_timer_sr, p_sim_detect) ;
     mod_timer(&p_sim_detect->timer, jiffies+msecs_to_jiffies(100));
-
+    
 	INIT_WORK(&(p_sim_detect->work_update), simcard_detect_work);
-
+	
     if (pdata->modem_control){
         p_sim_detect->modem_control = pdata->modem_control;
     }
-
+    
     if (pdata->get_sim_status) {
         p_sim_detect->get_sim_status = pdata->get_sim_status;
     }
-
+    
     sdev.name = "simcard_status";//for report headphone to android
     int ret = switch_dev_register(&sdev);
     if (ret < 0){
         printk(KERN_ERR "simcard_detect: register switch dev failed\n");
         goto err;
     }
-
+    
 /*
     p_sim_detect->sim_status = pdata->sim_status;
     p_sim_detect->sim_status_num = pdata->sim_status_num;
@@ -225,7 +225,7 @@ static int __init simdetect_probe(struct platform_device *pdev)
     int new_chan_flag;
     p_sim_detect->chan_num = 0;
     for (i=0; i<p_sim_detect->sim_status_num; i++) {
-        // search the chan
+        // search the chan 
         new_chan_flag = 1;
         for (j=0; j<p_sim_detect->chan_num; j++) {
             if (sc_s->chan == p_sim_detect->chan[j]) {
@@ -237,7 +237,7 @@ static int __init simdetect_probe(struct platform_device *pdev)
             p_sim_detect->chan[p_sim_detect->chan_num] = sc_s->chan;
             printk(KERN_INFO "chan #%d used for ADC simcard detect\n", sc_s->chan);
             p_sim_detect->chan_num++;
-        }
+        }    
         printk(KERN_INFO "%s code(%d) registed.\n", sc_s->name, sc_s->code);
         sc_s++;
     }
@@ -300,3 +300,7 @@ module_exit(simdetect_exit);
 MODULE_AUTHOR("Alex Deng");
 MODULE_DESCRIPTION("Simdetec Driver");
 MODULE_LICENSE("GPL");
+
+
+
+

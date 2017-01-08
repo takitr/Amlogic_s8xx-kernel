@@ -3,7 +3,7 @@
  *
  *		Copyright (C) 2013 Victor Wan,  Amlogic,inc.
  *				<victor.wan@amlogic.com>
- *
+ *		
  *		ported from:
  *    Copyright (C) 2006 Benjamin Herrenschmidt, IBM Corp.
  *			 <benh@kernel.crashing.org>
@@ -150,7 +150,7 @@ static struct lm_device *of_lm_device_create(struct device_node *node,
 		irq = 0;
 	}
 	printk(KERN_ERR "  --- irq: %d\n",irq);
-*/
+*/	
 	/* setup generic device info */
 	dev->id = id;
 //	dev->irq = irq;
@@ -251,8 +251,8 @@ static int of_lm_bus_create(struct device_node *bus,
 		return 0;
 
 	if(dev->id != -1)
-		parent = &dev->dev;
-
+		parent = &dev->dev; 
+	
 	for_each_child_of_node(bus, child) {
 		pr_debug("   create child: %s\n", child->full_name);
 		rc = of_lm_bus_create(child, matches, lookup, parent, strict);

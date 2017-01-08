@@ -43,7 +43,7 @@ static int axp_set_voltage(struct regulator_dev *rdev,
 	struct axp_regulator_info *info = rdev_get_drvdata(rdev);
 	struct device *axp_dev = to_axp_dev(rdev);
 	uint8_t val, mask;
-
+	
 
 	if (check_range(info, min_uV, max_uV)) {
 		pr_err("invalid voltage range (%d, %d) uV\n", min_uV, max_uV);
@@ -60,8 +60,8 @@ static int axp_set_voltage(struct regulator_dev *rdev,
 			val = 2;
 		else
 			val = 3;
-		val <<= info->vol_shift;
-		mask = ((1 << info->vol_nbits) - 1)  << info->vol_shift;
+		val <<= info->vol_shift;	
+		mask = ((1 << info->vol_nbits) - 1)  << info->vol_shift;	
 		return axp_update(axp_dev, info->vol_reg, val, mask);
 	}
 
@@ -82,16 +82,16 @@ static int axp_get_voltage(struct regulator_dev *rdev)
 	ret = axp_read(axp_dev, info->vol_reg, &val);
 	if (ret)
 		return ret;
-
+  
 	mask = ((1 << info->vol_nbits) - 1)  << info->vol_shift;
 	val = (val & mask) >> info->vol_shift;
 	//AXP18 LDO5
 	if (AXP18_ID_LDO5 == info->desc.id) {
 		return axp18_ldo5_data[val];
 	}
-
+	
 	return info->min_uV + info->step_uV * val;
-
+	
 }
 
 static int axp_enable(struct regulator_dev *rdev)
@@ -145,7 +145,7 @@ static int axp_set_suspend_voltage(struct regulator_dev *rdev, int uV)
 	int ldo = rdev_get_id(rdev);
 
 	switch (ldo) {
-
+	
 	case AXP18_ID_LDO1 ... AXP18_ID_SW2:
 		return axp_set_voltage(rdev, uV, uV);
 	default:
@@ -162,27 +162,27 @@ static struct regulator_ops axp18_ops = {
 	.is_enabled	= axp_is_enabled,
 	.set_suspend_enable		= axp_enable,
 	.set_suspend_disable	= axp_disable,
-	.set_suspend_voltage	= axp_set_suspend_voltage,
+	.set_suspend_voltage	= axp_set_suspend_voltage,	
 };
 
 #define AXP18_LDO(_id, min, max, step, vreg, shift, nbits, ereg, ebit)	\
 	AXP_LDO(AXP18,_id, min, max, step, vreg, shift, nbits, ereg, ebit)
 
 #define AXP18_BUCK(_id, min, max, step, vreg, shift, nbits, ereg, ebit)	\
-	AXP_BUCK(AXP18,_id, min, max, step, vreg, shift, nbits, ereg, ebit)
+	AXP_BUCK(AXP18,_id, min, max, step, vreg, shift, nbits, ereg, ebit)	
 
 #define AXP18_SW(_id, min, max, step, vreg, shift, nbits, ereg, ebit)	\
-	AXP_SW(AXP18,_id, min, max, step, vreg, shift, nbits, ereg, ebit)
+	AXP_SW(AXP18,_id, min, max, step, vreg, shift, nbits, ereg, ebit)	
 
 
 static struct axp_regulator_info axp_regulator_info[] = {
-	/* AXP */
+	/* AXP */ 
 	AXP18_LDO(	1,		LDO1MIN,	LDO1MAX,	0,		RTC,		0,	0,	LDO1EN,		0),//ldo1 for rtc
 	AXP18_LDO(	2,		2800,			3100,			100,	ANALOG,	5,	2,	LDO2EN,		3),//ldo2 for analog or fm
 	AXP18_LDO(	3,		LDO3MIN,	LDO3MAX,	100,  MOMERY,	0,	2,	LDO3EN,		7),//ldo3 for momery
 	AXP18_LDO(	4,		2700,			3300,			200,	SPDIF,	2,	2,	LDO4EN,		5),//ldo4 for spdif
 	AXP18_LDO(	5,		2500,			3300,			300,	SPDIF,	0,	2,	LDO5EN,		4),//lod5 for other use
-	AXP18_BUCK(	1,		2800,			3500,			100,	IO,			4,	3,	DCDC1EN,	0),//dcdc1 for io
+	AXP18_BUCK(	1,		2800,			3500,			100,	IO,			4,	3,	DCDC1EN,	0),//dcdc1 for io 
 	AXP18_BUCK(	2,		DCDC2MIN,	DCDC2MAX,	40,  	CORE,		0,	4,	DCDC2EN,	0),//dcdc2 for core
 	AXP18_BUCK(	3,		DCDC3MIN,	DCDC3MAX,	100, 	MOMERY,	2,	3,	DCDC3EN,	4),//dcdc3 for momery
 	AXP18_SW(  	1,		2800,			3500,			100,	IO,			4,	3,	SW1EN,		7),//sw1 for sdram
@@ -200,7 +200,7 @@ static ssize_t workmode_show(struct device *dev,
 	ret = axp_read(axp_dev, AXP18_BUCKMODE, &val);
 	if (ret)
 		return sprintf(buf, "IO ERROR\n");
-
+	
 	if(info->desc.id == AXP18_ID_BUCK1){
 		switch (val & 0x084) {
 			case 0x00:
@@ -234,7 +234,7 @@ static ssize_t workmode_show(struct device *dev,
 
 static ssize_t workmode_store(struct device *dev,
 				struct device_attribute *attr, const char *buf, size_t count)
-{
+{	
 	struct regulator_dev *rdev = dev_get_drvdata(dev);
 	struct axp_regulator_info *info = rdev_get_drvdata(rdev);
 	struct device *axp_dev = to_axp_dev(rdev);
@@ -244,7 +244,7 @@ static ssize_t workmode_store(struct device *dev,
 		mode = buf[0];
 	else
 		mode = buf[1];
-
+	
 	switch(mode){
 	 case 'U':
 	 case 'u':
@@ -253,15 +253,15 @@ static ssize_t workmode_store(struct device *dev,
 	 case 'W':
 	 case 'w':
 	 case '2':
-		val = 1;break;
+	 	val = 1;break;
 	 case 'F':
 	 case 'f':
 	 case '4':
-		val = 2;break;
+	 	val = 2;break;
 	 default:
 	    val = 3;break;
 	}
-
+	
 	if(info->desc.id == AXP18_ID_BUCK1){
 		if(val == 0)
 			axp_clr_bits(axp_dev, AXP18_BUCKMODE,0x80);
@@ -289,7 +289,7 @@ static ssize_t workmode_store(struct device *dev,
 			axp_update(axp_dev, AXP19_BUCKMODE,0x20,0x21);
 		else if(val == 2)
 			axp_update(axp_dev, AXP19_BUCKMODE,0x21,0x21);
-		else
+		else 
 			return -EINVAL;
 	}
 	else
@@ -313,7 +313,7 @@ static ssize_t frequency_show(struct device *dev,
 
 static ssize_t frequency_store(struct device *dev,
 				struct device_attribute *attr, const char *buf, size_t count)
-{
+{	
 	struct regulator_dev *rdev = dev_get_drvdata(dev);
 	struct device *axp_dev = to_axp_dev(rdev);
 	uint8_t val,tmp;
@@ -323,10 +323,10 @@ static ssize_t frequency_store(struct device *dev,
 		var = 750;
 	if(var > 1875)
 		var = 1875;
-
+		
 	val = (var -750)/75;
 	val &= 0x0F;
-
+	
 	axp_read(axp_dev, AXP18_BUCKFREQ, &tmp);
 	tmp &= 0xF0;
 	val |= tmp;
@@ -349,7 +349,7 @@ int axp_regu_create_attrs(struct platform_device *pdev)
 			goto sysfs_failed;
 	}
     goto succeed;
-
+	
 sysfs_failed:
 	while (j--)
 		device_remove_file(&pdev->dev,&axp_regu_attrs[j]);
@@ -391,7 +391,7 @@ static int __devinit axp_regulator_probe(struct platform_device *pdev)
 
 	if(ri->desc.id == AXP18_ID_LDO5)
 		ri->desc.n_voltages = ARRAY_SIZE(axp18_ldo5_data);
-
+	
 	rdev = regulator_register(&ri->desc, &pdev->dev,
 				  pdev->dev.platform_data, ri);
 	if (IS_ERR(rdev)) {
@@ -401,7 +401,7 @@ static int __devinit axp_regulator_probe(struct platform_device *pdev)
 	}
 
 	platform_set_drvdata(pdev, rdev);
-
+		
 	if(ri->desc.id == AXP18_ID_BUCK1 || ri->desc.id == AXP18_ID_BUCK2 \
 		||ri->desc.id == AXP18_ID_BUCK3){
 		ret = axp_regu_create_attrs(pdev);
@@ -409,7 +409,7 @@ static int __devinit axp_regulator_probe(struct platform_device *pdev)
 			return ret;
 		}
 	}
-
+	
 	return 0;
 }
 

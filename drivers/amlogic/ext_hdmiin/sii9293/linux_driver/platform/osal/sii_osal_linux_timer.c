@@ -9,7 +9,7 @@
  *
  * This program is distributed .as is. WITHOUT ANY WARRANTY of any
  * kind, whether express or implied; without even the implied warranty
- * of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
  * PURPOSE.  See the GNU General Public License for more details.
 */
 /**
@@ -206,7 +206,7 @@ bool_t SiiOsTimerValidCheck(SiiOsTimer_t timerId)
             break;
         }
     }
-
+    
     if(timer != timerId)
     {
         SII_DEBUG_PRINT(MSG_ERR,"Invalid timerId %p received\n",
@@ -342,3 +342,4 @@ SiiOsStatus_t  SiiOsTimerStop(SiiOsTimer_t timerId)
 
     return SII_OS_STATUS_SUCCESS;
 }
+

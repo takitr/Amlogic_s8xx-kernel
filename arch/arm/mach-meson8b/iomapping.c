@@ -78,7 +78,7 @@
 #define IO_AXI_BUS_BASE		(IO_REGS_BASE + 0x200000) // 2M
 #define IO_APB_BUS_BASE	(IO_REGS_BASE + 0x400000) // 2M
 #define IO_AOBUS_BASE		(IO_REGS_BASE + 0x600000) // 1M
-#define IO_REGS_END			(IO_REGS_BASE + 0xF00000 - 1) // Total 15M
+#define IO_REGS_END			(IO_REGS_BASE + 0xF00000 - 1) // Total 15M 
 
 #define IO_SPI_BASE			(0xFB000000)
 #define IO_SPIMEM_BASE		(IO_SPI_BASE + 0x0000000)
@@ -157,7 +157,7 @@ static __initdata struct map_desc meson_default_io_desc[] = {
         .pfn        = __phys_to_pfn(IO_SPIMEM_PHY_BASE),
         .length     = SZ_64M,
         .type       = MT_ROM,
-     } ,
+     } , 
 #endif
 #ifdef CONFIG_MESON_SUSPEND
         {

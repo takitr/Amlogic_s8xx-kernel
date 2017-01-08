@@ -18,3 +18,4 @@ obj-$(CONFIG_XD) += xd/
 obj-$(CONFIG_AML_CARD_KEY)	+=	card_key.o
 
 #include $(TOPDIR)/Rules.make
+

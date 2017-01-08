@@ -54,10 +54,21 @@
 
 #define PANEL_NAME		"panel"
 
-typedef struct {
-	Lcd_Config_t *pConf;
-	vinfo_t lcd_info;
-} lcd_dev_t;
+#ifdef LCD_DEBUG_INFO
+unsigned int lcd_print_flag = 1;
+#else
+unsigned int lcd_print_flag = 0;
+#endif
+void lcd_print(const char *fmt, ...)
+{
+	va_list args;
+
+	if (lcd_print_flag == 0)
+		return;
+	va_start(args, fmt);
+	vprintk(fmt, args);
+	va_end(args);
+}
 
 static const char* lcd_power_type_table[]={
 	"cpu",
@@ -74,30 +85,17 @@ static const char* lcd_power_pmu_gpio_table[]={
 	"GPIO3",
 	"GPIO4",
 	"null",
-};
+}; 
 
-#ifdef LCD_DEBUG_INFO
-unsigned int lcd_print_flag = 1;
-#else
-unsigned int lcd_print_flag = 0;
-#endif
+typedef struct {
+	Lcd_Config_t *pConf;
+	vinfo_t lcd_info;
+} lcd_dev_t;
 
 static lcd_dev_t *pDev = NULL;
-#ifdef CONFIG_AML_GAMMA_DEBUG
 static struct class *gamma_debug_class = NULL;
-#endif
 static Bool_t data_status = ON;
-
-void lcd_print(const char *fmt, ...)
-{
-	va_list args;
-
-	if (lcd_print_flag == 0)
-		return;
-	va_start(args, fmt);
-	vprintk(fmt, args);
-	va_end(args);
-}
+static int bl_status = ON;
 
 static inline void lcd_mdelay(int n)
 {
@@ -108,7 +106,7 @@ static inline void lcd_mdelay(int n)
 static void lcd_setup_gamma_table(Lcd_Config_t *pConf, unsigned int rgb_flag)
 {
 	int i;
-
+	
 	const unsigned short gamma_adjust[256] = {
 		0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,
 		32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,
@@ -147,14 +145,17 @@ static void lcd_setup_gamma_table(Lcd_Config_t *pConf, unsigned int rgb_flag)
 static void backlight_power_ctrl(Bool_t status)
 {
 	if( status == ON ){
-		if (data_status == OFF)
+		if ((data_status == OFF) || (bl_status == ON))
 			return;
 		bl_power_on(LCD_BL_FLAG);
 	}
 	else{
+		if (bl_status == OFF)
+			return;
 		bl_power_off(LCD_BL_FLAG);
 	}
 	lcd_print("%s(%s): data_status=%s\n", __FUNCTION__, (status ? "ON" : "OFF"), (data_status ? "ON" : "OFF"));
+	bl_status = status;
 }
 
 static int lcd_power_ctrl(Bool_t status)
@@ -200,7 +201,7 @@ static int lcd_power_ctrl(Bool_t status)
 					break;
 				case LCD_POWER_TYPE_SIGNAL:
 					if (pDev->pConf->lcd_power_ctrl.ports_ctrl == NULL)
-						lcd_print("no lcd_ports_ctrl\n");
+						printk("no lcd_ports_ctrl\n");
 					else
 						pDev->pConf->lcd_power_ctrl.ports_ctrl(ON);
 					break;
@@ -264,7 +265,7 @@ static int lcd_power_ctrl(Bool_t status)
 					break;
 				case LCD_POWER_TYPE_SIGNAL:
 					if (pDev->pConf->lcd_power_ctrl.ports_ctrl == NULL)
-						lcd_print("no lcd_ports_ctrl\n");
+						printk("no lcd_ports_ctrl\n");
 					else
 						pDev->pConf->lcd_power_ctrl.ports_ctrl(OFF);
 					break;
@@ -319,7 +320,7 @@ static const vinfo_t *lcd_get_current_info(void)
         printk("[error] no lcd device exist!\n");
         return NULL;
     }
-    else
+    else 
         return &pDev->lcd_info;
 }
 
@@ -342,7 +343,7 @@ static int lcd_set_current_vmode(vmode_t mode)
     }
     if (VMODE_INIT_NULL == pDev->lcd_info.mode)
         pDev->lcd_info.mode = VMODE_LCD;
-
+    
     mutex_unlock(&lcd_vout_mutex);
     return 0;
 }
@@ -371,12 +372,9 @@ static int lcd_set_current_vmode2(vmode_t mode)
 
 static vmode_t lcd_validate_vmode(char *mode)
 {
-    if (mode == NULL)
-        return VMODE_MAX;
-
     if ((strncmp(mode, PANEL_NAME, strlen(PANEL_NAME))) == 0)
         return VMODE_LCD;
-
+    
     return VMODE_MAX;
 }
 static int lcd_vmode_is_supported(vmode_t mode)
@@ -397,11 +395,8 @@ static int lcd_vout_disable(vmode_t cur_vmod)
 }
 
 #ifdef  CONFIG_PM
-static int lcd_suspend(int pm_event)
+static int lcd_suspend(void)
 {
-    /* in freeze process do not turn off the display devices */
-    if (pm_event == PM_EVENT_FREEZE)
-        return 0;
     mutex_lock(&lcd_vout_mutex);
     BUG_ON(pDev==NULL);
     printk("lcd_suspend\n");
@@ -410,12 +405,8 @@ static int lcd_suspend(int pm_event)
     mutex_unlock(&lcd_vout_mutex);
     return 0;
 }
-static int lcd_resume(int pm_event)
+static int lcd_resume(void)
 {
-    /* in thaw/restore process do not open the display */
-    if (pm_event == PM_EVENT_THAW
-            || pm_event == PM_EVENT_RESTORE)
-        return 0;
     mutex_lock(&lcd_vout_mutex);
     printk("lcd_resume\n");
     _lcd_module_enable();
@@ -448,7 +439,7 @@ static vout_server_t lcd_vout2_server={
         .validate_vmode = lcd_validate_vmode,
         .vmode_is_supported=lcd_vmode_is_supported,
         .disable=lcd_vout_disable,
-#ifdef  CONFIG_PM
+#ifdef  CONFIG_PM  
         .vout_suspend=lcd_suspend,
         .vout_resume=lcd_resume,
 #endif
@@ -470,7 +461,7 @@ static void _init_vout(void)
     pDev->lcd_info.sync_duration_num = pDev->pConf->lcd_timing.sync_duration_num;
     pDev->lcd_info.sync_duration_den = pDev->pConf->lcd_timing.sync_duration_den;
     pDev->lcd_info.video_clk = pDev->pConf->lcd_timing.lcd_clk;
-
+       
     //add lcd actual active area size
     printk("lcd actual active area size: %d %d (mm).\n", pDev->pConf->lcd_basic.h_active_area, pDev->pConf->lcd_basic.v_active_area);
     vout_register_server(&lcd_vout_server);
@@ -508,7 +499,7 @@ static void read_original_gamma_table(void)
 {
     unsigned i;
 
-    printk("original gamma: enable=%d, reverse=%d, r_coeff=%u%%, g_coeff=%u%%, b_coeff=%u%%\n",
+    printk("original gamma: enable=%d, reverse=%d, r_coeff=%u%%, g_coeff=%u%%, b_coeff=%u%%\n", 
           ((gamma_ctrl >> GAMMA_CTRL_EN) & 1), ((gamma_ctrl >> GAMMA_CTRL_REVERSE) & 1), gamma_r_coeff, gamma_g_coeff, gamma_b_coeff);
     printk("read original gamma table R:\n");
     for (i=0; i<256; i++) {
@@ -529,8 +520,8 @@ static void read_current_gamma_table(Lcd_Config_t *pConf)
 {
     unsigned i;
 
-    printk("current gamma: enable=%d, reverse=%d, r_coeff=%u%%, g_coeff=%u%%, b_coeff=%u%%\n",
-          ((pConf->lcd_effect.gamma_ctrl >> GAMMA_CTRL_EN) & 1), ((pConf->lcd_effect.gamma_ctrl >> GAMMA_CTRL_REVERSE) & 1),
+    printk("current gamma: enable=%d, reverse=%d, r_coeff=%u%%, g_coeff=%u%%, b_coeff=%u%%\n", 
+          ((pConf->lcd_effect.gamma_ctrl >> GAMMA_CTRL_EN) & 1), ((pConf->lcd_effect.gamma_ctrl >> GAMMA_CTRL_REVERSE) & 1), 
           pConf->lcd_effect.gamma_r_coeff, pConf->lcd_effect.gamma_g_coeff, pConf->lcd_effect.gamma_b_coeff);
     printk("read current gamma table R:\n");
     for (i=0; i<256; i++) {
@@ -547,7 +538,7 @@ static void read_current_gamma_table(Lcd_Config_t *pConf)
     printk("\n");
 }
 
-static int write_gamma_table(Lcd_Config_t *pConf, unsigned int en)
+static int write_gamma_table(Lcd_Config_t *pConf)
 {
     int ret = 0;
 
@@ -556,7 +547,8 @@ static int write_gamma_table(Lcd_Config_t *pConf, unsigned int en)
         ret = -1;
     }
     else {
-        pConf->lcd_effect.set_gamma_table(en);
+        pConf->lcd_effect.set_gamma_table(1); //force enable gamma table
+        printk("write gamma table ");
     }
     return ret;
 }
@@ -566,25 +558,8 @@ static void set_gamma_coeff(Lcd_Config_t *pConf, unsigned r_coeff, unsigned g_co
     pConf->lcd_effect.gamma_r_coeff = (unsigned short)(r_coeff);
     pConf->lcd_effect.gamma_g_coeff = (unsigned short)(g_coeff);
     pConf->lcd_effect.gamma_b_coeff = (unsigned short)(b_coeff);
-    if (write_gamma_table(pConf, 1) == 0)
-        printk("write gamma table with scale factor R:%u%%, G:%u%%, B:%u%%.\n", r_coeff, g_coeff, b_coeff);
-}
-
-static void reset_gamma_table(Lcd_Config_t *pConf)
-{
-    int i;
-
-    for (i=0; i<256; i++) {
-        pConf->lcd_effect.GammaTableR[i] = gamma_adjust_r[i];
-        pConf->lcd_effect.GammaTableG[i] = gamma_adjust_g[i];
-        pConf->lcd_effect.GammaTableB[i] = gamma_adjust_b[i];
-    }
-    pConf->lcd_effect.gamma_ctrl = gamma_ctrl;
-    pConf->lcd_effect.gamma_r_coeff = gamma_r_coeff;
-    pConf->lcd_effect.gamma_g_coeff = gamma_g_coeff;
-    pConf->lcd_effect.gamma_b_coeff = gamma_b_coeff;
-    if (write_gamma_table(pConf, ((pConf->lcd_effect.gamma_ctrl >> GAMMA_CTRL_EN) & 1)) == 0)
-        printk("write gamma table to original.\n");
+    if (write_gamma_table(pConf) == 0)
+        printk("with scale factor R:%u%%, G:%u%%, B:%u%%.\n", r_coeff, g_coeff, b_coeff);
 }
 
 static const char * usage_str =
@@ -603,15 +578,8 @@ static const char * usage_str =
 "    <value> : 0xXXXXXXXX, 32bit in Hex, 2 or 4 gamma table values (8 or 10bit gamma) combia in one <value>\n"
 "\n"
 "    echo f[r | g | b | w] <level_value> > write ; write R/G/B/white gamma level with fixed level_value\n"
-"    echo reset > write ; reset the gamma table to original\n"
 "data format:\n"
 "    <level_value>  : a number in Dec(0~255)\n"
-"\n"
-"    echo test <num> > write ; gamma curve test, you should control gamma table and video adjust enable manually by other command\n"
-"    echo auto [enable] > write ; gamma curve auto test, auto disable video adjust and run test pattern\n"
-"data format:\n"
-"    <num>   : a number in Dec(1~18), num=0 will disable gamma test pattern\n"
-"    <enable>: 0=disable gamma table(default), 1=enable gamma table."
 "\n"
 "    echo [0 | 1] > read ; readback original/current gamma table\n"
 };
@@ -653,28 +621,20 @@ static ssize_t aml_lcd_gamma_debug(struct class *class, struct class_attribute *
             t[0] = 1;
             t[1] = 0;
             ret = sscanf(buf, "ctrl %u %u", &t[0], &t[1]);
-            t[0] = (t[0] > 0) ? 1 : 0;
-            t[1] = (t[1] > 0) ? 1 : 0;
             pDev->pConf->lcd_effect.gamma_ctrl = ((t[0] << GAMMA_CTRL_EN) | (t[1] << GAMMA_CTRL_REVERSE));
-            printk("set gamma table enable=%d, reverse=%d.\n", t[0], t[1]);
-            if (write_gamma_table(pDev->pConf, t[0]) == 0)
-                printk("write gamma table finished.\n");
+            if (write_gamma_table(pDev->pConf) == 0)
+                printk(" finished.\n");
         }
         break;
     case 'r':
-        if (buf[1] == 'e') {
-			reset_gamma_table(pDev->pConf);
-		}
-		else {
-			ret = sscanf(buf, "r %x %x %x %x %x %x %x %x %x", &i, &t[0], &t[1], &t[2], &t[3], &t[4], &t[5], &t[6], &t[7]);
-			if (i<16) {
-				i =  i * 8;
-				for (j=0; j<8; j++) {
-					gamma_adjust_r_temp[i+j] = t[j];
-				}
-				printk("write R table: step %u.\n", i/8);
-			}
-		}
+        ret = sscanf(buf, "r %x %x %x %x %x %x %x %x %x", &i, &t[0], &t[1], &t[2], &t[3], &t[4], &t[5], &t[6], &t[7]);
+        if (i<16) {
+            i =  i * 8;
+            for (j=0; j<8; j++) {
+                gamma_adjust_r_temp[i+j] = t[j];
+            }
+            printk("write R table: step %u.\n", i/8);
+        }
         break;
     case 'g':
         ret = sscanf(buf, "g %x %x %x %x %x %x %x %x %x", &i, &t[0], &t[1], &t[2], &t[3], &t[4], &t[5], &t[6], &t[7]);
@@ -707,8 +667,8 @@ static ssize_t aml_lcd_gamma_debug(struct class *class, struct class_attribute *
                     pDev->pConf->lcd_effect.GammaTableB[i*4+j] = (unsigned short)(((gamma_adjust_b_temp[i] >> (24-j*8)) & 0xff) << 2);
                 }
             }
-            if (write_gamma_table(pDev->pConf, 1) == 0)
-                printk("write gamma table 8bit finished.\n");
+            if (write_gamma_table(pDev->pConf) == 0)
+                printk("8bit finished.\n");
         }
         else if (i == 10) {
             for (i=0; i<128; i++) {
@@ -718,11 +678,17 @@ static ssize_t aml_lcd_gamma_debug(struct class *class, struct class_attribute *
                     pDev->pConf->lcd_effect.GammaTableB[i*2+j] = (unsigned short)((gamma_adjust_b_temp[i] >> (16-j*16)) & 0xffff);
                 }
             }
-            if (write_gamma_table(pDev->pConf, 1) == 0)
-                printk("write gamma table 10bit finished.\n");
+            if (write_gamma_table(pDev->pConf) == 0)
+                printk("10bit finished.\n");
         }
         else {
-            reset_gamma_table(pDev->pConf);
+            for (i=0; i<256; i++) {
+                pDev->pConf->lcd_effect.GammaTableR[i] = gamma_adjust_r[i];
+                pDev->pConf->lcd_effect.GammaTableG[i] = gamma_adjust_g[i];
+                pDev->pConf->lcd_effect.GammaTableB[i] = gamma_adjust_b[i];
+            }
+            if (write_gamma_table(pDev->pConf) == 0)
+                printk("to original.\n");
         }
         break;
     case 'f':
@@ -734,16 +700,16 @@ static ssize_t aml_lcd_gamma_debug(struct class *class, struct class_attribute *
                 pDev->pConf->lcd_effect.GammaTableR[j] = i<<2;
             }
             set_gamma_coeff(pDev->pConf, 100, 0, 0);
-            printk("R fixed value: %u.\n", i);
+            printk("with R fixed value %u finished.\n", i);
         }
         else if (buf[1] == 'g') {
             ret = sscanf(buf, "fg %u", &i);
-            i &= 0xff;
+            i &= 0xff; 
             for (j=0; j<256; j++) {
                 pDev->pConf->lcd_effect.GammaTableG[j] = i<<2;
             }
             set_gamma_coeff(pDev->pConf, 0, 100, 0);
-            printk("G fixed value: %u.\n", i);
+            printk("with G fixed value %u finished.\n", i);
         }
         else if (buf[1] == 'b') {
             ret = sscanf(buf, "fb %u", &i);
@@ -752,7 +718,7 @@ static ssize_t aml_lcd_gamma_debug(struct class *class, struct class_attribute *
                 pDev->pConf->lcd_effect.GammaTableB[j] = i<<2;
             }
             set_gamma_coeff(pDev->pConf, 0, 0, 100);
-            printk("B fixed value: %u.\n", i);
+            printk("with B fixed value %u finished.\n", i);
         }
         else {
             ret = sscanf(buf, "fw %u", &i);
@@ -763,41 +729,11 @@ static ssize_t aml_lcd_gamma_debug(struct class *class, struct class_attribute *
                 pDev->pConf->lcd_effect.GammaTableB[j] = i<<2;
             }
             set_gamma_coeff(pDev->pConf, 100, 100, 100);
-            printk("RGB fixed value: %u.\n", i);
+            printk("with fixed value %u finished.\n", i);
         }
-        break;
-    case 't':
-        ret = sscanf(buf, "test %u", &i);
-        if (pDev->pConf->lcd_effect.gamma_test)
-            pDev->pConf->lcd_effect.gamma_test(i);
-        else
-            printk("gamma test function is null\n");
-        break;
-    case 'a':
-        i = 0;
-        ret = sscanf(buf, "auto %u", &i);
-        i = (i > 0) ? 1 : 0;
-        if (write_gamma_table(pDev->pConf, i) == 0)
-            printk("%s gamma table.\n", i ? "enable" : "disable");
-
-        WRITE_LCD_REG(VPP_VADJ_CTRL, 0);
-        printk("disable video adjust.\n");
-
-        if (pDev->pConf->lcd_effect.gamma_test) {
-            for (i=1; i<=18; i++) {
-                pDev->pConf->lcd_effect.gamma_test(i);
-                for (j=0; j<10; j++) {
-                    printk("%d\n", (10-j));
-                    msleep(2000);
-                }
-            }
-            pDev->pConf->lcd_effect.gamma_test(0);
-        }
-        else
-            printk("gamma test function is null\n");
         break;
     default:
-        printk("wrong format of gamma table writing.\n");
+            printk("wrong format of gamma table writing.\n");
     }
 
     if (ret != 1 || ret !=2)
@@ -861,8 +797,7 @@ static int temp_ttl_rb_swap, temp_ttl_bit_swap;
 static int temp_lvds_repack, temp_pn_swap, temp_lvds_vswing;
 static unsigned char temp_dsi_lane_num;
 static unsigned temp_dsi_bit_rate_min, temp_dsi_bit_rate_max, temp_factor_denominator, temp_factor_numerator;
-static unsigned char temp_edp_link_rate, temp_edp_lane_count, temp_edp_vswing, temp_edp_preemphasis, temp_edp_edid_timing_used;
-static unsigned int temp_edp_sync_clock_mode;
+static unsigned char temp_edp_link_rate, temp_edp_lane_count, temp_edp_vswing, temp_edp_preemphasis;
 
 static const char * lcd_common_usage_str =
 {"Usage:\n"
@@ -915,12 +850,11 @@ static const char * lcd_usage_str =
 "    echo mctl <init_mode> <disp_mode> <lp_clk_auto_stop> <transfer_switch> > debug ; write mipi-dsi control config\n"
 #endif
 #ifdef CONFIG_LCD_IF_EDP_VALID
-"    echo edp <link_rate> <lane_count> <vswing_level> > debug ; write edp lane config\n"
-"    echo ectl <edid_timing_used> <sync_clock_mode> > debug; write edp control config"
+"    echo edp <link_rate> <lane_count> <vswing_level> > debug ; write edp config\n"
 #endif
 "data format:\n"
 "    <xx_swap>      : 0=normal, 1=swap\n"
-"    <vswing_level> : lvds support level 0~4 (Default=1),"
+"    <vswing_level> : lvds support level 0~4 (Default=1);"
 #ifdef CONFIG_LCD_IF_EDP_VALID
 " edp support level 0~3 (default=0)"
 #endif
@@ -935,9 +869,7 @@ static const char * lcd_usage_str =
 "    <transfer_switch>  : 0=auto, 1=standard, 2=slow\n"
 #endif
 #ifdef CONFIG_LCD_IF_EDP_VALID
-"    <link_rate>        : 0=1.62G, 1=2.7G\n"
-"    <edid_timing_used> : 0=no use, 1=use, default=0\n"
-"    <sync_clock_mode>  : 0=asyncronous, 1=synchronous, default=1\n"
+"    <link_rate>    : 0=1.62G, 1=2.7G\n"
 #endif
 "\n"
 "    echo offset <h_sign> <h_offset> <v_sign> <v_offset> > debug ; write ttl display offset\n"
@@ -1032,11 +964,10 @@ static void read_current_lcd_config(Lcd_Config_t *pConf)
                    "link_adaptive     %u\n"
                    "vswing            %u\n"
                    "max_lane_count    %u\n"
-                   "sync_clock_mode   %u\n"
-                   "EDID timing used  %u\n\n",
+                   "sync_clock_mode   %u\n\n",
                    ((pConf->lcd_control.edp_config->link_rate == 0) ? "1.62G":"2.7G"), pConf->lcd_control.edp_config->lane_count,
                    pConf->lcd_control.edp_config->link_adaptive, pConf->lcd_control.edp_config->vswing,
-                   pConf->lcd_control.edp_config->max_lane_count, pConf->lcd_control.edp_config->sync_clock_mode, pConf->lcd_control.edp_config->edid_timing_used);
+                   pConf->lcd_control.edp_config->max_lane_count, pConf->lcd_control.edp_config->sync_clock_mode);
             break;
         default:
             break;
@@ -1049,7 +980,7 @@ static void read_current_lcd_config(Lcd_Config_t *pConf)
            "div_ctrl          0x%08x\n"
            "clk_ctrl          0x%08x\n"
            "video_on_pixel    %d\n"
-           "video_on_line     %d\n\n",
+           "video_on_line     %d\n\n", 
            pConf->lcd_timing.pll_ctrl, pConf->lcd_timing.div_ctrl, pConf->lcd_timing.clk_ctrl,
            pConf->lcd_timing.video_on_pixel, pConf->lcd_timing.video_on_line);
 }
@@ -1078,7 +1009,7 @@ static void save_lcd_config(Lcd_Config_t *pConf)
 	temp_lcd_timing.h_offset = pConf->lcd_timing.h_offset;
 	temp_lcd_timing.v_offset = pConf->lcd_timing.v_offset;
 	temp_lcd_timing.pol_ctrl = pConf->lcd_timing.pol_ctrl;
-
+	
 	switch (pConf->lcd_basic.lcd_type) {
 		case LCD_DIGITAL_MIPI:
 			temp_dsi_lane_num = pConf->lcd_control.mipi_config->lane_num;
@@ -1092,8 +1023,6 @@ static void save_lcd_config(Lcd_Config_t *pConf)
 			temp_edp_lane_count = pConf->lcd_control.edp_config->lane_count;
 			temp_edp_vswing = pConf->lcd_control.edp_config->vswing;
 			temp_edp_preemphasis = pConf->lcd_control.edp_config->preemphasis;
-			temp_edp_sync_clock_mode = pConf->lcd_control.edp_config->sync_clock_mode;
-			temp_edp_edid_timing_used = pConf->lcd_control.edp_config->edid_timing_used;
 			break;
 		case LCD_DIGITAL_LVDS:
 			temp_lvds_repack = pConf->lcd_control.lvds_config->lvds_repack;
@@ -1107,7 +1036,7 @@ static void save_lcd_config(Lcd_Config_t *pConf)
 		default:
 			break;
 	}
-
+	
 	temp_dith_user = pConf->lcd_effect.dith_user;
 	temp_dith_ctrl = pConf->lcd_effect.dith_cntl_addr;
 	temp_vadj_brightness = pConf->lcd_effect.vadj_brightness;
@@ -1118,11 +1047,11 @@ static void save_lcd_config(Lcd_Config_t *pConf)
 static void reset_lcd_config(Lcd_Config_t *pConf)
 {
 	printk("reset lcd config.\n");
-
+	
 	_disable_backlight();
 	_lcd_module_disable();
 	mdelay(200);
-
+	
 	pConf->lcd_basic.h_active = temp_lcd_basic.h_active;
 	pConf->lcd_basic.v_active = temp_lcd_basic.v_active;
 	pConf->lcd_basic.h_period = temp_lcd_basic.h_period;
@@ -1145,13 +1074,13 @@ static void reset_lcd_config(Lcd_Config_t *pConf)
 	pConf->lcd_timing.h_offset = temp_lcd_timing.h_offset;
 	pConf->lcd_timing.v_offset = temp_lcd_timing.v_offset;
 	pConf->lcd_timing.pol_ctrl = temp_lcd_timing.pol_ctrl;
-
+	
 	pConf->lcd_effect.dith_user = temp_dith_user;
 	pConf->lcd_effect.dith_cntl_addr = temp_dith_ctrl;
 	pConf->lcd_effect.vadj_brightness = temp_vadj_brightness;
 	pConf->lcd_effect.vadj_contrast = temp_vadj_contrast;
 	pConf->lcd_effect.vadj_saturation = temp_vadj_saturation;
-
+	
 	switch (pConf->lcd_basic.lcd_type) {
 		case LCD_DIGITAL_MIPI:
 			pConf->lcd_control.mipi_config->lane_num = temp_dsi_lane_num;
@@ -1165,8 +1094,6 @@ static void reset_lcd_config(Lcd_Config_t *pConf)
 			pConf->lcd_control.edp_config->lane_count = temp_edp_lane_count;
 			pConf->lcd_control.edp_config->vswing = temp_edp_vswing;
 			pConf->lcd_control.edp_config->preemphasis = temp_edp_preemphasis;
-			pConf->lcd_control.edp_config->sync_clock_mode = temp_edp_sync_clock_mode;
-			pConf->lcd_control.edp_config->edid_timing_used = temp_edp_edid_timing_used;
 			break;
 		case LCD_DIGITAL_LVDS:
 			pConf->lcd_control.lvds_config->lvds_repack = temp_lvds_repack;
@@ -1180,7 +1107,7 @@ static void reset_lcd_config(Lcd_Config_t *pConf)
 		default:
 			break;
 	}
-
+	
 	lcd_config_init(pConf);
 	_init_vout();
 	_lcd_module_enable();
@@ -1191,7 +1118,7 @@ static ssize_t lcd_debug(struct class *class, struct class_attribute *attr, cons
 {
 	unsigned int ret;
 	unsigned t[6];
-
+	
 	switch (buf[0]) {
 		case 'b':	//write basic config
 			t[0] = 1024;
@@ -1350,7 +1277,7 @@ static ssize_t lcd_debug(struct class *class, struct class_attribute *attr, cons
 				_lcd_module_enable();
 			}
 			break;
-		case 'r':
+		case 'r':	
 			if (buf[2] == 'a') { //read lcd config
 				read_current_lcd_config(pDev->pConf);
 			}
@@ -1372,7 +1299,10 @@ static ssize_t lcd_debug(struct class *class, struct class_attribute *attr, cons
 				t[1] = 4;
 				t[2] = 0;
 				ret = sscanf(buf, "edp %u %u %u", &t[0], &t[1], &t[2]);
-				pDev->pConf->lcd_control.edp_config->link_rate = ((t[0] == 0) ? 0 : 1);
+				if (t[0] == 0)
+					pDev->pConf->lcd_control.edp_config->link_rate = 0;
+				else
+					pDev->pConf->lcd_control.edp_config->link_rate = 1;
 				switch (t[1]) {
 					case 1:
 					case 2:
@@ -1385,15 +1315,6 @@ static ssize_t lcd_debug(struct class *class, struct class_attribute *attr, cons
 				pDev->pConf->lcd_control.edp_config->vswing = t[2];
 				printk("set edp link_rate = %s, lane_count = %u, vswing_level = %u\n", ((pDev->pConf->lcd_control.edp_config->link_rate == 0) ? "1.62G":"2.7G"), pDev->pConf->lcd_control.edp_config->lane_count, pDev->pConf->lcd_control.edp_config->vswing);
 			}
-			else if (buf[1] == 'c') {
-				t[0] = 0;
-				t[1] = 1;
-				ret = sscanf(buf, "ectl %u %u", &t[0], &t[1]);
-				pDev->pConf->lcd_control.edp_config->edid_timing_used = ((t[0] == 0) ? 0 : 1);
-				pDev->pConf->lcd_control.edp_config->sync_clock_mode = ((t[1] == 0) ? 0 : 1);
-				printk("set edp edid_timing_used = %u, sync_clock_mode = %u\n", pDev->pConf->lcd_control.edp_config->edid_timing_used, pDev->pConf->lcd_control.edp_config->sync_clock_mode);
-				pDev->pConf->lcd_misc_ctrl.edp_edid_load();
-			}
 #endif
 			else {
 				printk("wrong format of lcd debug command.\n");
@@ -1401,11 +1322,11 @@ static ssize_t lcd_debug(struct class *class, struct class_attribute *attr, cons
 			break;
 		default:
 			printk("wrong format of lcd debug command.\n");
-	}
-
+	}	
+	
 	if (ret != 1 || ret !=2)
 		return -EINVAL;
-
+	
 	return count;
 	//return 0;
 }
@@ -1536,7 +1457,7 @@ static int lcd_reboot_notifier(struct notifier_block *nb, unsigned long state, v
 	lcd_print("[%s]: %lu\n", __FUNCTION__, state);
 	if (pDev->pConf->lcd_misc_ctrl.lcd_status == 0)
 		return NOTIFY_DONE;
-
+	
 	_disable_backlight();
 	_lcd_module_disable();
 
@@ -1546,7 +1467,7 @@ static int lcd_reboot_notifier(struct notifier_block *nb, unsigned long state, v
 static int amlogic_pmu_gpio_name_map_num(const char *name)
 {
 	int index;
-
+	
 	for(index = 0; index < LCD_POWER_PMU_GPIO_MAX; index++) {
 		if(!strcasecmp(name, lcd_power_pmu_gpio_table[index]))
 			break;
@@ -1566,7 +1487,7 @@ static int _get_lcd_model_timing(Lcd_Config_t *pConf, struct platform_device *pd
 	int i, j;
 	struct device_node *lcd_model_node;
 	phandle fhandle;
-
+	
 	if (lcd_para == NULL) {
 		printk("[_get_lcd_model_timing]: Not enough memory\n");
 		return -1;
@@ -1588,16 +1509,16 @@ static int _get_lcd_model_timing(Lcd_Config_t *pConf, struct platform_device *pd
 			strcpy(pConf->lcd_basic.model_name, str);
 			printk("load lcd model in dtb: %s\n", pConf->lcd_basic.model_name);
 		}
-
+		
 		ret = of_property_read_string(lcd_model_node, "interface", &str);
 		if (ret) {
 			printk("faild to get lcd_type!\n");
 			str = "invalid";
-		}
+		}	
 		for(val = 0; val < LCD_TYPE_MAX; val++) {
 			if(!strcasecmp(str, lcd_type_table[val]))
 				break;
-		}
+		}		
 		pConf->lcd_basic.lcd_type = val;
 		lcd_print("lcd_type= %s(%u)\n", lcd_type_table[pConf->lcd_basic.lcd_type], pConf->lcd_basic.lcd_type);
 		ret = of_property_read_u32_array(lcd_model_node,"active_area",&lcd_para[0],2);
@@ -1627,7 +1548,7 @@ static int _get_lcd_model_timing(Lcd_Config_t *pConf, struct platform_device *pd
 		else {
 			pConf->lcd_basic.h_active = (unsigned short)(lcd_para[0]);
 			pConf->lcd_basic.v_active = (unsigned short)(lcd_para[1]);
-		}
+		}		
 		ret = of_property_read_u32_array(lcd_model_node,"period",&lcd_para[0],2);
 		if(ret){
 			printk("faild to get period\n");
@@ -1674,7 +1595,7 @@ static int _get_lcd_model_timing(Lcd_Config_t *pConf, struct platform_device *pd
 		lcd_print("pol hsync = %u, vsync = %u\n", (pConf->lcd_timing.pol_ctrl >> POL_CTRL_HS) & 1, (pConf->lcd_timing.pol_ctrl >> POL_CTRL_VS) & 1);
 		ret = of_property_read_u32_array(lcd_model_node,"vsync_horizontal_phase",&lcd_para[0], 2);
 		if(ret){
-			lcd_print("faild to get vsync_horizontal_phase\n");
+			printk("faild to get vsync_horizontal_phase\n");
 			pConf->lcd_timing.vsync_h_phase = 0;
 		} else {
 			pConf->lcd_timing.vsync_h_phase = ((lcd_para[0] << 31) | ((lcd_para[1] & 0xffff) << 0));
@@ -1747,19 +1668,11 @@ static int _get_lcd_model_timing(Lcd_Config_t *pConf, struct platform_device *pd
                             if (val == 0xff)
                                 break;
                         }
-                        else if ((val & 0xf) == 0x0) {
-                            printk("get dsi_init_on wrong data_type: 0x%02x\n", val);
-                            break;
-                        }
                         else {
-                            ret = of_property_read_u32_index(lcd_model_node,"dsi_init_on", (i+DSI_CMD_CNT_INDEX), &val);
-                            if (val > 0xffff)
-                                break;
-                            else
-                                i = i + (DSI_CMD_CNT_INDEX + 1) + (val & 0xff);
+                            ret = of_property_read_u32_index(lcd_model_node,"dsi_init_on", (i+2), &val);
+                            i = i + 3 + val;
                         }
                     }
-                    i = (i > DSI_INIT_ON_MAX) ? DSI_INIT_ON_MAX : i;
                     ret = of_property_read_u32_array(lcd_model_node,"dsi_init_on", &lcd_para[0], i);
                     if(ret){
                         printk("faild to get dsi_init_on\n");
@@ -1790,19 +1703,11 @@ static int _get_lcd_model_timing(Lcd_Config_t *pConf, struct platform_device *pd
                             if (val == 0xff)
                                 break;
                         }
-                        else if ((val & 0xf) == 0x0) {
-                            printk("get dsi_init_off wrong data_type: 0x%02x\n", val);
-                            break;
-                        }
                         else {
-                            ret = of_property_read_u32_index(lcd_model_node,"dsi_init_off", (i+DSI_CMD_CNT_INDEX), &val);
-                            if (val > 0xffff)
-                                break;
-                            else
-                                i = i + (DSI_CMD_CNT_INDEX + 1) + (val & 0xff);
+                            ret = of_property_read_u32_index(lcd_model_node,"dsi_init_off", (i+2), &val);
+                            i = i + 3 + val;
                         }
                     }
-                    i = (i > DSI_INIT_OFF_MAX) ? DSI_INIT_OFF_MAX : i;
                     ret = of_property_read_u32_array(lcd_model_node,"dsi_init_off", &lcd_para[0], i);
                     if(ret){
                         printk("faild to get dsi_init_off\n");
@@ -1850,7 +1755,7 @@ static int _get_lcd_default_config(Lcd_Config_t *pConf, struct platform_device *
 	unsigned int *gamma_temp = (unsigned int *)kmalloc(sizeof(unsigned int)*256, GFP_KERNEL);
 	int i;
 	unsigned int lcd_gamma_multi = 0;
-
+	
 	if (gamma_temp == NULL) {
 		printk("[_get_lcd_default_config]: Not enough memory\n");
 		return -1;
@@ -2001,7 +1906,7 @@ static int _get_lcd_default_config(Lcd_Config_t *pConf, struct platform_device *
 				lcd_print("load gamma_table.\n");
 			}
 		}
-
+		
 		//default setting
 		ret = of_property_read_u32(pdev->dev.of_node,"clock_spread_spectrum",&val);
 		if(ret){
@@ -2103,15 +2008,6 @@ static int _get_lcd_default_config(Lcd_Config_t *pConf, struct platform_device *
 				pConf->lcd_control.edp_config->sync_clock_mode = (val & 1);
 				printk("edp sync_clock_mode = %u\n", pConf->lcd_control.edp_config->sync_clock_mode);
 			}
-			ret = of_property_read_u32(pdev->dev.of_node,"edp_edid_timing_used",&val);
-			if(ret){
-				printk("don't find to match edp_edid_timing_used, use default setting.\n");
-				pConf->lcd_control.edp_config->edid_timing_used = 0;
-			}
-			else {
-				pConf->lcd_control.edp_config->edid_timing_used = (unsigned char)(val & 1);
-				printk("edp edid_timing_used = %u\n", pConf->lcd_control.edp_config->edid_timing_used);
-			}
 		}
 		ret = of_property_read_u32_array(pdev->dev.of_node,"rgb_base_coeff",&lcd_para[0], 2);
 		if(ret){
@@ -2145,7 +2041,7 @@ static int _get_lcd_power_config(Lcd_Config_t *pConf, struct platform_device *pd
 	unsigned int lcd_para[LCD_POWER_CTRL_STEP_MAX];
 	int i;
 	int index;
-
+	
 	if (pdev->dev.of_node) {
 		//lcd power on
 		for (i=0; i < LCD_POWER_CTRL_STEP_MAX; i++) {
@@ -2166,7 +2062,7 @@ static int _get_lcd_power_config(Lcd_Config_t *pConf, struct platform_device *pd
 						break;
 				}
 				pConf->lcd_power_ctrl.power_on_config[i].type = index;
-
+				
 				if (pConf->lcd_power_ctrl.power_on_config[i].type < LCD_POWER_TYPE_SIGNAL) {
 					ret = of_property_read_string_index(pdev->dev.of_node, propname, 1, &str);
 					if (ret) {
@@ -2205,7 +2101,7 @@ static int _get_lcd_power_config(Lcd_Config_t *pConf, struct platform_device *pd
 		}
 		pConf->lcd_power_ctrl.power_on_step = i;
 		lcd_print("lcd_power_on_step = %d\n", pConf->lcd_power_ctrl.power_on_step);
-
+		
 		ret = of_property_read_u32_array(pdev->dev.of_node,"power_on_delay",&lcd_para[0],pConf->lcd_power_ctrl.power_on_step);
 		if (ret) {
 			printk("faild to get power_on_delay\n");
@@ -2234,7 +2130,7 @@ static int _get_lcd_power_config(Lcd_Config_t *pConf, struct platform_device *pd
 						break;
 				}
 				pConf->lcd_power_ctrl.power_off_config[i].type = index;
-
+			
 				if (pConf->lcd_power_ctrl.power_off_config[i].type < LCD_POWER_TYPE_SIGNAL) {
 					ret = of_property_read_string_index(pdev->dev.of_node, propname, 1, &str);
 					if (ret) {
@@ -2269,7 +2165,7 @@ static int _get_lcd_power_config(Lcd_Config_t *pConf, struct platform_device *pd
 		}
 		pConf->lcd_power_ctrl.power_off_step = i;
 		lcd_print("lcd_power_off_step = %d\n", pConf->lcd_power_ctrl.power_off_step);
-
+		
 		ret = of_property_read_u32_array(pdev->dev.of_node,"power_off_delay",&lcd_para[0],pConf->lcd_power_ctrl.power_off_step);
 		if (ret) {
 			printk("faild to get power_off_delay\n");
@@ -2279,14 +2175,14 @@ static int _get_lcd_power_config(Lcd_Config_t *pConf, struct platform_device *pd
 				pConf->lcd_power_ctrl.power_off_config[i].delay = (unsigned short)(lcd_para[i]);
 			}
 		}
-
+		
 		for (i=0; i<pConf->lcd_power_ctrl.power_on_step; i++) {
 			lcd_print("power on step %d: type = %s(%d)\n", i+1, lcd_power_type_table[pConf->lcd_power_ctrl.power_on_config[i].type], pConf->lcd_power_ctrl.power_on_config[i].type);
 			lcd_print("power on step %d: gpio = %d\n", i+1, pConf->lcd_power_ctrl.power_on_config[i].gpio);
 			lcd_print("power on step %d: value = %d\n", i+1, pConf->lcd_power_ctrl.power_on_config[i].value);
 			lcd_print("power on step %d: delay = %d\n", i+1, pConf->lcd_power_ctrl.power_on_config[i].delay);
 		}
-
+		
 		for (i=0; i<pConf->lcd_power_ctrl.power_off_step; i++) {
 			lcd_print("power off step %d: type = %s(%d)\n", i+1, lcd_power_type_table[pConf->lcd_power_ctrl.power_off_config[i].type], pConf->lcd_power_ctrl.power_off_config[i].type);
 			lcd_print("power off step %d: gpio = %d\n", i+1, pConf->lcd_power_ctrl.power_off_config[i].gpio);
@@ -2325,13 +2221,13 @@ static int lcd_probe(struct platform_device *pdev)
 	struct aml_lcd_platform *pdata;
 #endif
 	int ret = 0;
-
+	
 	pDev = (lcd_dev_t *)kmalloc(sizeof(lcd_dev_t), GFP_KERNEL);
 	if (!pDev) {
 		printk("[lcd probe]: Not enough memory.\n");
 		return -ENOMEM;
 	}
-
+	
 #ifdef CONFIG_USE_OF
 	//pdata = lcd_get_driver_data(pdev);
 	pDev->pConf = get_lcd_config();
@@ -2342,28 +2238,28 @@ static int lcd_probe(struct platform_device *pdev)
 	pdata = pdev->dev.platform_data;
 	pDev->pConf = (Lcd_Config_t *)(pdata->lcd_conf);
 #endif
-
+	
 	creat_lcd_class();
 	lcd_config_assign(pDev->pConf);
 	lcd_config_probe(pDev->pConf);
 	save_lcd_config(pDev->pConf);
-
+	
 	pDev->pConf->lcd_misc_ctrl.print_version();
 	lcd_config_init(pDev->pConf);
 	_init_vout();
-
+	
 	lcd_reboot_nb.notifier_call = lcd_reboot_notifier;
 	ret = register_reboot_notifier(&lcd_reboot_nb);
 	if (ret) {
 		printk("notifier register lcd_reboot_notifier fail!\n");
 	}
-
+	
 	ret = creat_lcd_attr();
 #ifdef CONFIG_AML_GAMMA_DEBUG
 	save_original_gamma(pDev->pConf);
 	ret = creat_lcd_gamma_attr();
 #endif
-
+	
 	printk("LCD probe ok\n");
 	return 0;
 }
@@ -2371,14 +2267,14 @@ static int lcd_probe(struct platform_device *pdev)
 static int lcd_remove(struct platform_device *pdev)
 {
 	unregister_reboot_notifier(&lcd_reboot_nb);
-
+	
 	lcd_config_remove(pDev->pConf);
 	remove_lcd_attr();
 	remove_lcd_class();
 #ifdef CONFIG_AML_GAMMA_DEBUG
 	remove_lcd_gamma_attr();
 #endif
-
+	
 	if (pDev->pConf->lcd_basic.model_name)
 		kfree(pDev->pConf->lcd_basic.model_name);
 	if (pDev)

@@ -22,10 +22,9 @@ static int cpufreq_governor_performance(struct cpufreq_policy *policy,
 					unsigned int event)
 {
 	switch (event) {
-	case CPUFREQ_GOV_POLICY_INIT:
+	case CPUFREQ_GOV_START:
 		if(num_online_cpus() < NR_CPUS)
 			schedule_work(&policy->up_cpu);
-		break;
 	case CPUFREQ_GOV_LIMITS:
 		pr_debug("setting to %u kHz because of event %u\n",
 						policy->max, event);

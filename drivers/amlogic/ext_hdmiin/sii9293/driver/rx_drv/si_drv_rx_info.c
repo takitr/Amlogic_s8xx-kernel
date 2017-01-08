@@ -80,6 +80,7 @@ void RxInfo_InterruptHandler(uint8_t info_type)
             break;
         default:
             break;
-
+            
     }
 }
+

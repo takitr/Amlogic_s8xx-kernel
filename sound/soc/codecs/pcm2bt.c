@@ -22,7 +22,7 @@
 
 #include "pcm2bt.h"
 
-struct pcm2bt_priv {
+struct pcm2bt_priv {	
     struct snd_soc_codec codec;
 };
 
@@ -32,7 +32,7 @@ struct pcm2bt_priv {
 #define PCM2BT_FORMATS \
 	(SNDRV_PCM_FMTBIT_S16_LE | SNDRV_PCM_FMTBIT_S24_LE | \
 	SNDRV_PCM_FMTBIT_S8)
-
+	
 static int pcm2bt_hw_params(struct snd_pcm_substream *substream,
 		struct snd_pcm_hw_params *params, struct snd_soc_dai *dai)
 {
@@ -44,9 +44,9 @@ static int pcm2bt_set_fmt(struct snd_soc_dai *dai, unsigned int fmt)
     return 0;
 }
 
-static int pcm2bt_set_sysclk(struct snd_soc_dai *dai,   int clk_id,
+static int pcm2bt_set_sysclk(struct snd_soc_dai *dai,   int clk_id, 
         unsigned int freq, int dir)
-{
+{    
     return 0;
 }
 
@@ -56,9 +56,9 @@ static int pcm2bt_shutdown(struct snd_pcm_substream *substream,
     return 0;
 }
 
-static int pcm2bt_set_bias_level(struct snd_soc_codec *codec,
+static int pcm2bt_set_bias_level(struct snd_soc_codec *codec,	
         enum snd_soc_bias_level level)
-{
+{  
    return 0;
 }
 
@@ -98,7 +98,7 @@ static int pcm2bt_probe(struct snd_soc_codec *codec)
 }
 
 static int pcm2bt_remove(struct snd_soc_codec *codec)
-{
+{   
     return 0;
 }
 
@@ -127,20 +127,20 @@ static int pcm2bt_platform_probe(struct platform_device *pdev)
     int ret;
     struct pcm2bt_priv *pcm2bt = NULL;
    printk("*****enter pcm2bt_codec_probe\n");
-    ret = snd_soc_register_codec(&pdev->dev,
-        &soc_codec_dev_pcm2bt, pcm2bt_dai, ARRAY_SIZE(pcm2bt_dai));
-
+    ret = snd_soc_register_codec(&pdev->dev, 
+        &soc_codec_dev_pcm2bt, pcm2bt_dai, ARRAY_SIZE(pcm2bt_dai));    
+   
 
     printk("pcm2bt_codec_probe ok!\n");
-
+    
     return ret;
-
+    
 }
 
 static int pcm2bt_platform_remove(struct platform_device *pdev)
-{
+{   
     snd_soc_unregister_codec(&pdev->dev);
-    return 0;
+    return 0;   
 }
 
 #ifdef CONFIG_USE_OF

@@ -1,7 +1,7 @@
-/*
+/* 
  * drivers/input/touchscreen/ct36x_ts.c
  *
- * VTL ct36x TouchScreen driver.
+ * VTL ct36x TouchScreen driver. 
  *
  * Copyright (c) 2010  VTL tech Ltd.
  *
@@ -58,12 +58,12 @@ static struct ct36x_platform_data	*plat_data;
 // ****************************************************************************
 // Function declaration
 // ****************************************************************************
-int ct36x_cmd_list_ind[] = {
-	CT36X_TS_CHIP_ID,
-	CT36X_TS_CHIP_RESET,
-	CT36X_TS_FW_VER,
+int ct36x_cmd_list_ind[] = { 
+	CT36X_TS_CHIP_ID, 
+	CT36X_TS_CHIP_RESET, 
+	CT36X_TS_FW_VER, 
 	CT36X_TS_FW_CHKSUM,
-	CT36X_TS_FW_UPDATE,
+	CT36X_TS_FW_UPDATE, 
 	CT36X_TS_BIN_VER,
 	CT36X_TS_BIN_CHKSUM,
 };
@@ -76,7 +76,7 @@ static int ct36x_ts_cmd(char *cmdlist, const char cmd)
 
 	// search cmd
 	while ( cmdlist[i] ) {
-		if ( cmd == cmdlist[i] )
+		if ( cmd == cmdlist[i] ) 
 			return ct36x_cmd_list_ind[i];
 		i++;
 	}
@@ -88,7 +88,7 @@ static int ct36x_ts_open(struct inode *inode, struct file *file)
 {
 	if ( CT36X_TS_CORE_DEBUG )
 	printk(">>>>> %s() called <<<<< \n", __FUNCTION__);
-
+	
 	return 0;
 }
 
@@ -96,7 +96,7 @@ static int ct36x_ts_close(struct inode *inode, struct file *file)
 {
 	if ( CT36X_TS_CORE_DEBUG )
 	printk(">>>>> %s() called <<<<< \n", __FUNCTION__);
-
+	
 	return 0;
 }
 
@@ -104,7 +104,7 @@ static ssize_t ct36x_ts_write(struct file *file, const char __user *buffer, size
 {
 	int cmd = 0;
 	int rslt = 0;
-
+	
 	if ( CT36X_TS_CORE_DEBUG ) {
 	printk(">>>>> %s() called <<<<< \n", __FUNCTION__);
 	}
@@ -162,7 +162,7 @@ static ssize_t ct36x_ts_write(struct file *file, const char __user *buffer, size
 static ssize_t ct36x_ts_read(struct file *file, char __user *buf, size_t count, loff_t *offset)
 {
 //	int err = -1;
-
+	
 	if ( CT36X_TS_CORE_DEBUG ) {
 	printk(">>>>> %s() called <<<<< \n", __FUNCTION__);
 	printk("%s(): count=0x%x \n", __FUNCTION__, count);
@@ -231,7 +231,7 @@ static void ct36x_ts_workfunc(struct work_struct *work)
 			y = (ts->data.pts[iter].xhi<<4)|(ts->data.pts[iter].xlo&0xF);
 		#else
 			x = (ts->data.pts[iter].xhi<<4)|(ts->data.pts[iter].xlo&0xF);
-			y = (ts->data.pts[iter].yhi<<4)|(ts->data.pts[iter].ylo&0xF);
+		 	y = (ts->data.pts[iter].yhi<<4)|(ts->data.pts[iter].ylo&0xF);
 		#endif
 		#ifdef CONFIG_TOUCHSCREEN_CT36X_MISC_X_REVERSE
 			x = CT36X_TS_ABS_X_MAX - x;
@@ -239,7 +239,7 @@ static void ct36x_ts_workfunc(struct work_struct *work)
 		#ifdef CONFIG_TOUCHSCREEN_CT36X_MISC_Y_REVERSE
 			y = CT36X_TS_ABS_Y_MAX - y;
 		#endif
-
+		
 			if ( CT36X_TS_EVENT_DEBUG ) {
 				printk("ID:       %d\n", ts->data.pts[iter].id);
 				printk("status:   %d\n", ts->data.pts[iter].status);
@@ -327,7 +327,7 @@ static void ct36x_early_suspend(struct early_suspend *handler)
 
 	//if (CT36X_TS_CORE_DEBUG)
 	printk(">>>>> %s() called <<<<< \n", __FUNCTION__);
-
+	
 	ts = container_of(handler, struct ct36x_ts_info, early_suspend);
 
 	ct36x_ts_suspend(ts->client, PMSG_SUSPEND);
@@ -339,9 +339,9 @@ static void ct36x_early_resume(struct early_suspend *handler)
 
 	//if (CT36X_TS_CORE_DEBUG)
 	printk(">>>>> %s() called <<<<< \n", __FUNCTION__);
-
+	
 	ts = container_of(handler, struct ct36x_ts_info, early_suspend);
-
+	
 	ct36x_ts_resume(ts->client);
 }
 #endif
@@ -385,7 +385,7 @@ int ct36x_ts_probe(struct i2c_client *client, const struct i2c_device_id *id)
 	} else {
 		printk("No platform data for device %s.\n", DRIVER_NAME);
 	}
-
+	
 	plat_data = dev->platform_data;
 #endif
 	ts = (struct ct36x_ts_info *)i2c_get_clientdata(client);
@@ -431,7 +431,7 @@ int ct36x_ts_probe(struct i2c_client *client, const struct i2c_device_id *id)
 
 	updcnt = 5;
 	while (updcnt--) {
-		if (ct36x_test_read(client, client->addr, (char *)&binchksum, 1) == 1)
+		if (ct36x_test_read(client, client->addr, (char *)&binchksum, 1) == 1) 
 			break;
 	}
 	if (updcnt <= 0) {
@@ -536,7 +536,7 @@ int ct36x_ts_probe(struct i2c_client *client, const struct i2c_device_id *id)
 	//err = request_irq(ts->irq, ct36x_ts_irq, IRQF_TRIGGER_FALLING | IRQF_ONESHOT, DRIVER_NAME, ts);
 	#ifndef CONFIG_OF
 	if (pdata->init_gpio) {
-	pdata->init_gpio();
+  	pdata->init_gpio();
 	}
 	#endif
 	err = request_irq(ts->irq, ct36x_ts_irq, IRQF_DISABLED,  DRIVER_NAME, ts);
@@ -691,3 +691,5 @@ module_exit(ct36x_ts_exit);
 MODULE_AUTHOR("<george.chen@vtl.com>");
 MODULE_DESCRIPTION("VTL ct36x TouchScreen driver");
 MODULE_LICENSE("GPL");
+
+

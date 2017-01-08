@@ -156,7 +156,7 @@ static int cpucore_set_cur_state(struct thermal_cooling_device *cdev,
 	set_max_num=cpucore_device->max_cpu_core_num-state;
 	pr_debug( "need set max cpu num=%d,state=%ld\n",set_max_num,state);
 	cpufreq_set_max_cpu_num(set_max_num);
-
+	
 	return 0;
 }
 

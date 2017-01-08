@@ -142,7 +142,7 @@ typedef enum {
 	GPIO_TEST_N=138,
 	GPIO_MAX=139,
 }gpio_t;
-
+	
 enum {
 	GPIO_IRQ0=0,
 	GPIO_IRQ1,

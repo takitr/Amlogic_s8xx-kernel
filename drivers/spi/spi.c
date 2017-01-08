@@ -1030,7 +1030,8 @@ static struct class spi_master_class = {
  *
  * The caller is responsible for assigning the bus number and initializing
  * the master's methods before calling spi_register_master(); and (after errors
- * adding the device) calling spi_master_put() to prevent a memory leak.
+ * adding the device) calling spi_master_put() and kfree() to prevent a memory
+ * leak.
  */
 struct spi_master *spi_alloc_master(struct device *dev, unsigned size)
 {
@@ -1047,7 +1048,7 @@ struct spi_master *spi_alloc_master(struct device *dev, unsigned size)
 	master->bus_num = -1;
 	master->num_chipselect = 1;
 	master->dev.class = &spi_master_class;
-	master->dev.parent = dev;
+	master->dev.parent = get_device(dev);
 	spi_master_set_devdata(master, &master[1]);
 
 	return master;
@@ -1394,7 +1395,7 @@ static int __spi_async(struct spi_device *spi, struct spi_message *message)
 
 	message->spi = spi;
 	message->status = -EINPROGRESS;
-
+	
 #if !defined(CONFIG_ARCH_MESON6) && !defined(CONFIG_ARCH_MESON8) && !defined(CONFIG_ARCH_MESON8B)
 	spin_unlock_irqrestore(&master->bus_lock_spinlock, flags);
 #endif
