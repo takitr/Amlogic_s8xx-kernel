@@ -38,3 +38,4 @@ config AML_RTL8211F
 	  Currently supports the RTL8211F
 
 endif # PHYLIB
+

@@ -8,11 +8,6 @@ config AM_WIFI_SD_MMC
 	depends on AM_WIFI
 	default n
 
-config AM_WIFI_DUMMY
-	tristate "Amlogic SDIO WiFi turn on and rescan module"
-	depends on AM_WIFI_SD_MMC
-	default m
-
 config DHD_USE_STATIC_BUF
     bool "broadcom wifi static buff support"
     default n
@@ -22,16 +17,5 @@ config AM_WIFI_USB
 	depends on AM_WIFI
 	default n
 
-source "drivers/amlogic/wifi/rtl8189ES/Kconfig"
-source "drivers/amlogic/wifi/rtl8192EU/Kconfig"
-source "drivers/amlogic/wifi/rtl8723AU/Kconfig"
-source "drivers/amlogic/wifi/rtl8723BS/Kconfig"
-source "drivers/amlogic/wifi/rtl8811AU/Kconfig"
-source "drivers/amlogic/wifi/rtl8812AU/Kconfig"
-source "drivers/amlogic/wifi/rtl8xxx_CU/Kconfig"
-source "drivers/amlogic/wifi/rtl8xxx_DU/Kconfig"
-source "drivers/amlogic/wifi/rtl8xxx_EU/Kconfig"
-source "drivers/amlogic/wifi/bcmdhd/Kconfig"
-source "drivers/amlogic/wifi/ssv6xxx/Kconfig"
 
 endif # AM_WIFI

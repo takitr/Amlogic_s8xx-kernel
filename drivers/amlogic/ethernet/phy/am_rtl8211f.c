@@ -40,21 +40,6 @@ static int rtl8211e_config_intr(struct phy_device *phydev)
 static int rtl8211e_config_init(struct phy_device *phydev)
 {
 	int val;
-	int bmcr;
-	/* pr_info("aml_init_rtl8211f phy\n"); */
-	bmcr = phy_read(phydev, MII_BMCR);
-	if (bmcr < 0)
-		return bmcr;
-	bmcr |= BMCR_RESET;
-	bmcr = phy_write(phydev, MII_BMCR, bmcr);
-	if (bmcr < 0)
-		return bmcr;
-
-	do {
-		bmcr = phy_read(phydev, MII_BMCR);
-		if (bmcr < 0)
-			return bmcr;
-	} while (bmcr & BMCR_RESET);
 /* we want to disable eee */
         phy_write(phydev, RTL8211F_MMD_CTRL, 0x7);
 
@@ -63,18 +48,18 @@ static int rtl8211e_config_init(struct phy_device *phydev)
         phy_write(phydev, RTL8211F_MMD_CTRL, 0x4007);
 
         phy_write(phydev, RTL8211F_MMD_DATA, 0x0);
-
+        
 /* disable 1000m adv*/
 	val = phy_read(phydev, 0x9);
 	phy_write(phydev, 0x9, val&(~(1<<9)));
-  /* rx reg 21 bit 3 tx reg 17 bit 8*/
+  /* rx reg 21 bit 3 tx reg 17 bit 8*/  
     /*    phy_write(phydev, 0x1f, 0xd08);
         val =  phy_read(phydev, 0x15);
         phy_write(phydev, 0x15,val| 1<<21);
 */
 	return 0;
 	/* Enable Auto Power Saving mode */
-
+	
 }
 /* RTL8211F */
 static struct phy_driver rtl8211e_driver = {
