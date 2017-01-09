@@ -1,2 +1,2 @@
 
-obj-y += aml_dvfs.o 
+obj-y += aml_dvfs.o

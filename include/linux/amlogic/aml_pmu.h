@@ -110,7 +110,7 @@ struct aml1212_supply {
 	struct power_supply	usb;
 	struct power_supply_info *battery_info;
 	struct delayed_work work;                                           // work struct
-    struct work_struct  irq_work;                                       // work for IRQ 
+    struct work_struct  irq_work;                                       // work for IRQ
 
 	struct device *master;
 };
@@ -143,7 +143,7 @@ int aml_pmu_set_charge_end_rate(int rate);                              // set c
 int aml_pmu_set_adc_freq(int freq);                                     // SAR ADC auto-sample frequent, for coulomb
 int aml_pmu_set_precharge_time(int minute);                             // set pre-charge time when battery voltage is very low
 int aml_pmu_set_fastcharge_time(int minute);                            // set fast charge time when in CC period
-int aml_pmu_set_charge_enable(int en);                                  // enable or disable charge 
+int aml_pmu_set_charge_enable(int en);                                  // enable or disable charge
 
 void aml_pmu_set_voltage(int dcdc, int voltage);                        // set dcdc voltage, in mV
 void aml_pmu_poweroff(void);                                            // power off PMU
@@ -221,7 +221,7 @@ extern int aml1212_otg_change(struct notifier_block *nb, unsigned long value, vo
 
 #define AML1216_CHARGER_CHARGING            1
 #define AML1216_CHARGER_DISCHARGING         2
-#define AML1216_CHARGER_NONE                3 
+#define AML1216_CHARGER_NONE                3
 
 #define AML1216_DBG(format,args...)                 \
     if (1) printk(KERN_DEBUG "[AML1216]"format,##args)
@@ -251,7 +251,7 @@ struct aml1216_supply {
     struct power_supply	usb;
     struct power_supply_info *battery_info;
     struct delayed_work work;                                           // work struct
-    struct work_struct  irq_work;                                       // work for IRQ 
+    struct work_struct  irq_work;                                       // work for IRQ
     struct notifier_block nb;
     struct device *master;
 };
@@ -357,7 +357,7 @@ extern int aml1216_usb_charger(struct notifier_block *nb, unsigned long value, v
 
 #define AML1218_CHARGER_CHARGING            1
 #define AML1218_CHARGER_DISCHARGING         2
-#define AML1218_CHARGER_NONE                3 
+#define AML1218_CHARGER_NONE                3
 
 #define AML1218_DBG(format,args...)                 \
     if (1) printk(KERN_DEBUG "[AML1218]"format,##args)
@@ -387,7 +387,7 @@ struct aml1218_supply {
     struct power_supply	usb;
     struct power_supply_info *battery_info;
     struct delayed_work work;                                           // work struct
-    struct work_struct  irq_work;                                       // work for IRQ 
+    struct work_struct  irq_work;                                       // work for IRQ
     struct notifier_block nb;
     struct device *master;
 };
@@ -427,5 +427,18 @@ extern int aml1218_otg_change(struct notifier_block *nb, unsigned long value, vo
 extern int aml1218_usb_charger(struct notifier_block *nb, unsigned long value, void *pdata);
 #endif      /* CONFIG_AML1218 */
 
-#endif /* __AML_PMU_H__ */
+#ifdef CONFIG_AML1220
 
+//add aml1220 pmu4 power register
+
+#define AML1220_PMU_CTR_04    0x05
+
+extern int  aml1220_write(int32_t add, uint8_t val);
+extern int  aml1220_write16(int32_t add, uint16_t val);
+extern int  aml1220_read    (int add, uint8_t *val);
+extern int  aml1220_read16(int add, uint16_t *val);
+
+//#define AML1220
+#endif
+
+#endif /* __AML_PMU_H__ */

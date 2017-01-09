@@ -760,52 +760,52 @@ static int axp_main_task(void *arg)
 		else{
 			axp_cal_rest(charger, this_rdc);
 			if(battime_index == AXP18_TIME_MAX){
-            	battime_index = 0;
+		battime_index = 0;
 			}
 			if(battime_count < AXP18_TIME_MAX){
-            	battime[battime_index ++ ] = charger->rest_time;
-            	total_time += charger->rest_time;
-            	battime_count ++;
+		battime[battime_index ++ ] = charger->rest_time;
+		total_time += charger->rest_time;
+		battime_count ++;
 			}
 			else{
-            	total_time -= battime[battime_index];
-            	total_time += charger->rest_time;
-            	battime[battime_index ++ ] = charger->rest_time;
-        	}
+		total_time -= battime[battime_index];
+		total_time += charger->rest_time;
+		battime[battime_index ++ ] = charger->rest_time;
+		}
 			charger->rest_time = total_time / battime_count;
 			if(batcap_index == AXP18_VOL_MAX){
-            	batcap_index = 0;
+		batcap_index = 0;
 			}
 			if(batcap_count < AXP18_VOL_MAX){
-              	batcap[batcap_index ++ ] = charger->rest_vol;
-              	total_vol += charger->rest_vol;
-              	batcap_count ++;
-        	}
-        	else{
-              	total_vol -= batcap[batcap_index];
-              	total_vol += charger->rest_vol;
-              	batcap[batcap_index ++ ] = charger->rest_vol;
-        	}
+		batcap[batcap_index ++ ] = charger->rest_vol;
+		total_vol += charger->rest_vol;
+		batcap_count ++;
+		}
+		else{
+		total_vol -= batcap[batcap_index];
+		total_vol += charger->rest_vol;
+		batcap[batcap_index ++ ] = charger->rest_vol;
+		}
 			charger->rest_vol = total_vol / batcap_count;
 
 			//printk("charger->rest_vol = %d\n",charger->rest_vol);
 			if((charger->is_on) && (charger->rest_vol == 100)){
-            	charger->rest_vol = 99;
+		charger->rest_vol = 99;
 			}
 
 			if((charger->is_on) && (batcap_count == AXP18_VOL_MAX)){
-           		if(charger->rest_vol < pre_batcap){
-              		charger->rest_vol = pre_batcap;
-           		}
+			if(charger->rest_vol < pre_batcap){
+			charger->rest_vol = pre_batcap;
+			}
 			}
 			if((!charger->is_on) && (batcap_count == AXP18_VOL_MAX)){
-           		if(charger->rest_vol > pre_batcap){
-              		charger->rest_vol = pre_batcap;
-           		}
+			if(charger->rest_vol > pre_batcap){
+			charger->rest_vol = pre_batcap;
+			}
 			}
 
 			if((pre_charge_status == 1) && (!charger->is_on) && (charger->bat_det) && (charger->ext_valid)){//充电结束时刷新为100
-            	charger->rest_vol = total_vol / batcap_count;
+		charger->rest_vol = total_vol / batcap_count;
 			}
 
 			pre_charge_status = charger->is_on;
@@ -980,7 +980,7 @@ static ssize_t chgpretimemin_show(struct device *dev,
 	struct axp_charger *charger = dev_get_drvdata(dev);
 	uint8_t val;
 	axp_read(charger->master,AXP18_CHARGE_CONTROL2, &val);
- 	charger->chgpretime = (val >> 6) * 10 +30;
+	charger->chgpretime = (val >> 6) * 10 +30;
 	return sprintf(buf, "%d\n",charger->chgpretime);
 }
 
@@ -1262,7 +1262,7 @@ static int axp_battery_probe(struct platform_device *pdev)
 
 	platform_set_drvdata(pdev, charger);
 
-  	main_task = kthread_run(axp_main_task,charger,"kaxp18");
+	main_task = kthread_run(axp_main_task,charger,"kaxp18");
 	if(IS_ERR(main_task)){
 
       printk("Unable to start main task.\n");

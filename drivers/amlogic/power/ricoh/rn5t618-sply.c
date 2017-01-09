@@ -203,7 +203,7 @@ EXPORT_SYMBOL_GPL(rn5t618_get_gpio);
 void rn5t618_power_off()
 {
     if (g_rn5t618_init->reset_to_system) {
-        rn5t618_set_bits(0x0007, 0x00, 0x01);    
+        rn5t618_set_bits(0x0007, 0x00, 0x01);
     }
     rn5t618_set_gpio(0, 1);
     rn5t618_set_gpio(1, 1);
@@ -229,7 +229,7 @@ int rn5t618_set_usb_current_limit(int limit)
         return -1;
     }
     if (limit == -1) {                                          // -1 means not limit
-        val   = 0x0E;                                           // RN5T618 max usb vbus current is 1.5A 
+        val   = 0x0E;                                           // RN5T618 max usb vbus current is 1.5A
         limit = 1500;
     } else {
         val = (limit / 100) - 1;
@@ -269,7 +269,7 @@ int rn5t618_set_charge_enable(int enable)
 {
     int bits = enable ? 0x03 : 0x00;
 
-    return rn5t618_set_bits(0x00B3, bits, 0x03); 
+    return rn5t618_set_bits(0x00B3, bits, 0x03);
 }
 EXPORT_SYMBOL_GPL(rn5t618_set_charge_enable);
 
@@ -284,11 +284,11 @@ int rn5t618_set_charge_current(int curr)
     if (curr > 100) {                           // input is uA
         curr = curr / 1000;
     } else {                                    // input is charge ratio
-        curr = (curr * rn5t618_battery->pmu_battery_cap) / 100 + 100; 
-    }    
+        curr = (curr * rn5t618_battery->pmu_battery_cap) / 100 + 100;
+    }
     if (curr > 1600) {
         // for safety, do not let charge current large than 90% of max charge current
-        curr = 1600;    
+        curr = 1600;
     }
     bits = (curr - 100) / 100;
     return rn5t618_set_bits(0x00B8, bits, 0x1f);
@@ -324,7 +324,7 @@ int rn5t618_set_long_press_time(int ms)
     case 10000: bits = 0x60; break;
     case 12000: bits = 0x70; break;
     default : return -EINVAL;
-    } 
+    }
     return rn5t618_set_bits(0x0010, bits, 0x70);
 }
 
@@ -333,7 +333,7 @@ int rn5t618_set_rapid_time(int minutes)
     int bits;
 
     if (minutes > 300 || minutes < 120) {
-        RICOH_ERR("%s, invalid rapid charge time:%d\n", __func__, minutes);    
+        RICOH_ERR("%s, invalid rapid charge time:%d\n", __func__, minutes);
         return -EINVAL;
     }
     bits = (minutes - 120) / 60;
@@ -349,7 +349,7 @@ int rn5t618_set_full_charge_voltage(int voltage)
         return -EINVAL;
     }
     if (voltage == 4350000) {
-        bits = 0x40;    
+        bits = 0x40;
     } else {
         bits = ((voltage - 4050000) / 50000) << 4;
     }
@@ -376,7 +376,7 @@ int rn5t618_set_recharge_voltage(int voltage)
         return -EINVAL;
     }
     if (voltage == 4100) {
-        bits = 0x04;    
+        bits = 0x04;
     } else {
         bits = ((voltage - 3850) / 50);
     }
@@ -413,7 +413,7 @@ int rn5t618_get_saved_coulomb(void)
     rn5t618_read(0x01, &val[0]);
     if (val[0] <= 0x06) {
         RICOH_DBG("Chip version is RN5T618F, nothing todo\n");
-        rn5t618_coulomb_flag = REBOOT_FLAG; 
+        rn5t618_coulomb_flag = REBOOT_FLAG;
         return -1;
     }
     rn5t618_read(0x07, &val[0]);
@@ -431,7 +431,7 @@ int rn5t618_get_saved_coulomb(void)
         rn5t618_write(0x00ff, 0x00);                                // register bank set to 0
         rn5t618_set_bits(0x0007, 0x00, 0x60);                       // clear flag
     } else {
-        RICOH_DBG("no saved coulomb counter\n");    
+        RICOH_DBG("no saved coulomb counter\n");
         return -1;
     }
     return 0;
@@ -459,7 +459,7 @@ static int rn5t618_get_coulomber(struct aml_charger *charger)
                  (rn5t618_save_coulomb >> 16) & 0xff,
                  (rn5t618_save_coulomb >>  8) & 0xff,
                  (rn5t618_save_coulomb >>  0) & 0xff,
-                  rn5t618_save_coulomb / 3600);    
+                  rn5t618_save_coulomb / 3600);
         RICOH_DBG("current coulomb:%02x %02x %02x %02x, %dmah\n",
                   val[0], val[1], val[2], val[3],
                   result);
@@ -475,13 +475,13 @@ static int rn5t618_get_coulomber(struct aml_charger *charger)
 
 static int rn5t618_clear_coulomber(struct aml_charger *charger)
 {
-    return rn5t618_set_bits(0x00EF, 0x08, 0x08);    
+    return rn5t618_set_bits(0x00EF, 0x08, 0x08);
 }
 
 int rn5t618_get_battery_percent(void)
 {
     CHECK_DRIVER();
-    return g_rn5t618_supply->aml_charger.rest_vol;    
+    return g_rn5t618_supply->aml_charger.rest_vol;
 }
 EXPORT_SYMBOL_GPL(rn5t618_get_battery_percent);
 
@@ -510,7 +510,7 @@ int rn5t618_first_init(struct rn5t618_supply *supply)
         rn5t618_set_recharge_voltage   (4100);
 
         if (rn5t618_battery->pmu_usbvol_limit) {
-            rn5t618_set_usb_voltage_limit(rn5t618_battery->pmu_usbvol); 
+            rn5t618_set_usb_voltage_limit(rn5t618_battery->pmu_usbvol);
         }
       //if (rn5t618_battery->pmu_usbcur_limit) {                            // should add it ?
       //    rn5t618_set_usb_current_limit(rn5t618_battery->pmu_usbcur);
@@ -564,7 +564,7 @@ static void rn5t618_battery_check_status(struct rn5t618_supply       *supply,
             if (charger->ext_valid) {
                 if (charger->rest_vol == 100) {
                     val->intval = POWER_SUPPLY_STATUS_FULL;
-                } else if (charger->rest_vol == 0 && 
+                } else if (charger->rest_vol == 0 &&
                            charger->charge_status == CHARGER_DISCHARGING) {   // protect for over-discharging
                     val->intval = POWER_SUPPLY_STATUS_DISCHARGING;
                 } else {
@@ -584,15 +584,15 @@ static void rn5t618_battery_check_health(struct rn5t618_supply       *supply,
 {
     int status = supply->aml_charger.fault & 0x1f;
 
-    if ((status == RN5T618_DIE_ERROR) || 
+    if ((status == RN5T618_DIE_ERROR) ||
         (status == RN5T618_DIE_SHUTDOWN)) {
         RICOH_ERR("%s, BATTERY DEAD, fault:0x%x\n", __func__, status);
         val->intval = POWER_SUPPLY_HEALTH_DEAD;
     } else if (status == RN5T618_BATTERY_TEMPERATURE_ERROR) {
-        RICOH_ERR("%s, BATTERY OVERHEAT, fault:0x%x, temperature:%d\n", 
+        RICOH_ERR("%s, BATTERY OVERHEAT, fault:0x%x, temperature:%d\n",
                   __func__, status, rn5t618_get_battery_temperature());
         val->intval = POWER_SUPPLY_HEALTH_OVERHEAT;
-    } else if ((status == RN5T618_CHARGE_OVER_VOLTAGE) || 
+    } else if ((status == RN5T618_CHARGE_OVER_VOLTAGE) ||
                (status == RN5T618_BATTERY_OVER_VOLTAGE)) {
         RICOH_ERR("%s, BATTERY OVERVOLTAGE, fault:0x%x, voltage:%d\n",
                   __func__, status, rn5t618_get_battery_voltage());
@@ -601,7 +601,7 @@ static void rn5t618_battery_check_health(struct rn5t618_supply       *supply,
                (status == RN5T618_NO_BATTERY   ) ||
                (status == RN5T618_NO_BATTERY2  )) {
         RICOH_ERR("%s, BATTERY UNSPEC FAILURE, fault:0x%x\n", __func__, status);
-        val->intval = POWER_SUPPLY_HEALTH_UNSPEC_FAILURE;    
+        val->intval = POWER_SUPPLY_HEALTH_UNSPEC_FAILURE;
     } else {
         val->intval = POWER_SUPPLY_HEALTH_GOOD;
     }
@@ -617,7 +617,7 @@ static int rn5t618_battery_get_property(struct power_supply *psy,
     int sign_bit = 1;
     supply  = container_of(psy, struct rn5t618_supply, batt);
     charger = &supply->aml_charger;
-    
+
     switch (psp) {
     case POWER_SUPPLY_PROP_STATUS:
         rn5t618_battery_check_status(supply, val);
@@ -640,17 +640,17 @@ static int rn5t618_battery_get_property(struct power_supply *psy,
         break;
 
     case POWER_SUPPLY_PROP_VOLTAGE_NOW:
-        val->intval = charger->vbat * 1000; 
+        val->intval = charger->vbat * 1000;
         break;
 
     case POWER_SUPPLY_PROP_CURRENT_NOW:             // charging : +, discharging -;
         if (ABS(charger->ibat) > 20 && charger->charge_status != CHARGER_NONE) {
             if (charger->charge_status == CHARGER_CHARGING) {
-                sign_bit = 1;    
+                sign_bit = 1;
             } else if (charger->charge_status == CHARGER_DISCHARGING) {
                 sign_bit = -1;
             }
-            val->intval = charger->ibat * 1000 * sign_bit; 
+            val->intval = charger->ibat * 1000 * sign_bit;
         } else {
             val->intval = 0;                        // when charge time out, report 0
         }
@@ -668,35 +668,35 @@ static int rn5t618_battery_get_property(struct power_supply *psy,
         if (rn5t618_battery) {
             val->intval = charger->rest_vol;
         } else {
-            val->intval = 100;    
+            val->intval = 100;
         }
         break;
 
     case POWER_SUPPLY_PROP_ONLINE:
         if (rn5t618_battery) {
-            val->intval = charger->bat_det; 
+            val->intval = charger->bat_det;
         } else {
-            val->intval = 0;    
+            val->intval = 0;
         }
         break;
 
     case POWER_SUPPLY_PROP_PRESENT:
         if (rn5t618_battery) {
-            val->intval = charger->bat_det; 
+            val->intval = charger->bat_det;
         } else {
-            val->intval = 0;    
+            val->intval = 0;
         }
         break;
 
     case POWER_SUPPLY_PROP_TEMP:
       //val->intval = rn5t618_get_battery_temperature();
-        val->intval = 300; 
+        val->intval = 300;
         break;
     default:
         ret = -EINVAL;
         break;
     }
-    
+
     return ret;
 }
 
@@ -755,7 +755,7 @@ static int rn5t618_usb_get_property(struct power_supply *psy,
     int ret = 0;
     supply  = container_of(psy, struct rn5t618_supply, usb);
     charger = &supply->aml_charger;
-    
+
     switch(psp){
     case POWER_SUPPLY_PROP_MODEL_NAME:
         val->strval = supply->usb.name;
@@ -802,14 +802,14 @@ static void rn5t618_battery_setup_psy(struct rn5t618_supply *supply)
     struct power_supply      *ac   = &supply->ac;
     struct power_supply      *usb  = &supply->usb;
     struct power_supply_info *info =  supply->battery_info;
-    
+
     batt->name           = "battery";
     batt->use_for_apm    = info->use_for_apm;
     batt->type           = POWER_SUPPLY_TYPE_BATTERY;
     batt->get_property   = rn5t618_battery_get_property;
     batt->properties     = rn5t618_battery_props;
     batt->num_properties = ARRAY_SIZE(rn5t618_battery_props);
-    
+
     ac->name             = "ac";
     ac->type             = POWER_SUPPLY_TYPE_MAINS;
     ac->get_property     = rn5t618_ac_get_property;
@@ -817,7 +817,7 @@ static void rn5t618_battery_setup_psy(struct rn5t618_supply *supply)
     ac->num_supplicants  = ARRAY_SIZE(supply_list);
     ac->properties       = rn5t618_ac_props;
     ac->num_properties   = ARRAY_SIZE(rn5t618_ac_props);
-    
+
     usb->name            = "usb";
     usb->type            = POWER_SUPPLY_TYPE_USB;
     usb->get_property    = rn5t618_usb_get_property;
@@ -837,17 +837,21 @@ int rn5t618_otg_change(struct notifier_block *nb, unsigned long value, void *pda
         rn5t618_otg_job.value = value;
         return 0;
     }
+    if (!rn5t618_battery) {
+        RICOH_INFO("no battery, exit\n");    
+        return 0;
+    }
     rn5t618_otg_value = value;
     RICOH_INFO("%s, value:%d, is_short:%d\n", __func__, rn5t618_otg_value, g_rn5t618_init->vbus_dcin_short_connect);
     if (rn5t618_otg_value) {
         rn5t618_read(0xB3, &val);
         if (g_rn5t618_init->vbus_dcin_short_connect) {
             otg_mask = 1;
-            val |= 0x08; 
+            val |= 0x08;
             rn5t618_set_charge_enable(0);
             rn5t618_set_dcin_current_limit(100);
         } else {
-            val |= 0x10; 
+            val |= 0x10;
         }
         RICOH_DBG("set boost en bit, val:%x\n", val);
         rn5t618_write(0xB3, val);
@@ -855,11 +859,11 @@ int rn5t618_otg_change(struct notifier_block *nb, unsigned long value, void *pda
         rn5t618_read(0xB3, &val);
         if (g_rn5t618_init->vbus_dcin_short_connect) {
             otg_mask = 0;
-            val &= ~0x08; 
+            val &= ~0x08;
             rn5t618_set_charge_enable(1);
-            rn5t618_set_dcin_current_limit(2500); 
+            rn5t618_set_dcin_current_limit(2500);
         } else {
-            val &= ~0x10; 
+            val &= ~0x10;
         }
         printk("[RN5T618] clear boost en bit, val:%x\n", val);
         rn5t618_write(0xB3, val);
@@ -884,7 +888,7 @@ int rn5t618_usb_charger(struct notifier_block *nb, unsigned long value, void *pd
     case USB_BC_MODE_DISCONNECT:                                        // disconnect
     case USB_BC_MODE_SDP:                                               // pc
         if (rn5t618_battery && rn5t618_battery->pmu_usbcur_limit) {     // limit usb current
-            rn5t618_set_usb_current_limit(rn5t618_battery->pmu_usbcur); 
+            rn5t618_set_usb_current_limit(rn5t618_battery->pmu_usbcur);
         }
         break;
 
@@ -894,7 +898,7 @@ int rn5t618_usb_charger(struct notifier_block *nb, unsigned long value, void *pd
             rn5t618_set_usb_current_limit(-1);                          // not limit usb current
         }
         break;
-        
+
     default:
         break;
     }
@@ -903,7 +907,7 @@ int rn5t618_usb_charger(struct notifier_block *nb, unsigned long value, void *pd
 #endif
 
 /*
- * add for debug 
+ * add for debug
  */
 int printf_usage(void)
 {
@@ -920,7 +924,7 @@ int printf_usage(void)
 
 static ssize_t pmu_reg_show(struct device *dev, struct device_attribute *attr, char *buf)
 {
-    return printf_usage(); 
+    return printf_usage();
 }
 
 static ssize_t pmu_reg_store(struct device *dev, struct device_attribute *attr, const char *buf, size_t count)
@@ -998,18 +1002,18 @@ static ssize_t aml_pmu_vddao_store(struct device *dev, struct device_attribute *
     RICOH_DBG("Set VDD_AO to %4d mV\n", data);
     rn5t618_set_dcdc_voltage(2, data);
 #endif
-    return count; 
+    return count;
 }
 
 static ssize_t driver_version_show(struct device *dev, struct device_attribute *attr, char *buf)
 {
-    return sprintf(buf, "RICOH PMU RN5T618 driver version is %s, build time:%s\n", 
+    return sprintf(buf, "RICOH PMU RN5T618 driver version is %s, build time:%s\n",
                    RN5T618_DRIVER_VERSION, init_uts_ns.name.version);
 }
 
 static ssize_t driver_version_store(struct device *dev, struct device_attribute *attr, const char *buf, size_t count)
 {
-    return count; 
+    return count;
 }
 
 static ssize_t clear_rtc_mem_show(struct device *dev, struct device_attribute *attr, char *buf)
@@ -1018,10 +1022,10 @@ static ssize_t clear_rtc_mem_show(struct device *dev, struct device_attribute *a
 }
 
 static ssize_t clear_rtc_mem_store(struct device *dev, struct device_attribute *attr, const char *buf, size_t count)
-{ 
+{
     aml_write_rtc_mem_reg(0, 0);
     rn5t618_power_off();
-    return count; 
+    return count;
 }
 
 static ssize_t charge_timeout_show(struct device *dev, struct device_attribute *attr, char *buf)
@@ -1030,19 +1034,19 @@ static ssize_t charge_timeout_show(struct device *dev, struct device_attribute *
 
     rn5t618_read(0x00B9, &val);
     val &=0x03;
-    return sprintf(buf, "charge timeout is %d minutes\n", val * 60 + 120);   
+    return sprintf(buf, "charge timeout is %d minutes\n", val * 60 + 120);
 }
 
 static ssize_t charge_timeout_store(struct device *dev, struct device_attribute *attr, const char *buf, size_t count)
-{ 
+{
     uint32_t data = simple_strtoul(buf, NULL, 10);
     if (data > 300 || data < 120) {
         RICOH_ERR("Invalid input value = %d\n", data);
         return -1;
     }
     RICOH_DBG("Set charge timeout to %4d minutes\n", data);
-    rn5t618_set_rapid_time(data); 
-    return count; 
+    rn5t618_set_rapid_time(data);
+    return count;
 }
 
 int rn5t618_dump_all_register(char *buf)
@@ -1079,7 +1083,7 @@ static ssize_t dump_pmu_regs_show(struct device *dev, struct device_attribute *a
 {
     int size;
     size = rn5t618_dump_all_register(buf);
-    size += sprintf(buf + size, "%s", "[RN5T618] DUMP ALL REGISTERS OVER!\n"); 
+    size += sprintf(buf + size, "%s", "[RN5T618] DUMP ALL REGISTERS OVER!\n");
     return size;
 }
 static ssize_t dump_pmu_regs_store(struct device *dev, struct device_attribute *attr, const char *buf, size_t count)
@@ -1090,7 +1094,7 @@ static ssize_t dump_pmu_regs_store(struct device *dev, struct device_attribute *
 static ssize_t dbg_info_show(struct device *dev, struct device_attribute *attr, char *buf)
 {
     struct power_supply   *battery = dev_get_drvdata(dev);
-    struct rn5t618_supply *supply = container_of(battery, struct rn5t618_supply, batt); 
+    struct rn5t618_supply *supply = container_of(battery, struct rn5t618_supply, batt);
     struct aml_pmu_api  *api;
 
     api = aml_pmu_get_api();
@@ -1109,9 +1113,9 @@ static ssize_t dbg_info_store(struct device *dev, struct device_attribute *attr,
 static ssize_t battery_para_show(struct device *dev, struct device_attribute *attr, char *buf)
 {
     struct power_supply   *battery = dev_get_drvdata(dev);
-    struct rn5t618_supply *supply  = container_of(battery, struct rn5t618_supply, batt); 
+    struct rn5t618_supply *supply  = container_of(battery, struct rn5t618_supply, batt);
     struct aml_charger    *charger = &supply->aml_charger;
-    int i = 0; 
+    int i = 0;
     int size;
 
     if (!rn5t618_battery) {
@@ -1120,26 +1124,26 @@ static ssize_t battery_para_show(struct device *dev, struct device_attribute *at
     size = sprintf(buf, "\n i,      ocv,    charge,  discharge,\n");
     for (i = 0; i < 16; i++) {
         size += sprintf(buf + size, "%2d,     %4d,       %3d,        %3d,\n",
-                        i, 
+                        i,
                         rn5t618_battery->pmu_bat_curve[i].ocv,
                         rn5t618_battery->pmu_bat_curve[i].charge_percent,
                         rn5t618_battery->pmu_bat_curve[i].discharge_percent);
     }
-    size += sprintf(buf + size, "\nBattery capability:%4d@3700mAh, RDC:%3d mohm\n", 
-                                rn5t618_battery->pmu_battery_cap, 
+    size += sprintf(buf + size, "\nBattery capability:%4d@3700mAh, RDC:%3d mohm\n",
+                                rn5t618_battery->pmu_battery_cap,
                                 rn5t618_battery->pmu_battery_rdc);
-    size += sprintf(buf + size, "Charging efficiency:%3d%%, capability now:%3d%%\n", 
+    size += sprintf(buf + size, "Charging efficiency:%3d%%, capability now:%3d%%\n",
                                 rn5t618_battery->pmu_charge_efficiency,
                                 charger->rest_vol);
     size += sprintf(buf + size, "ocv_empty:%4d, ocv_full:%4d\n\n",
-                                charger->ocv_empty, 
+                                charger->ocv_empty,
                                 charger->ocv_full);
     return size;
 }
 
 static ssize_t battery_para_store(struct device *dev, struct device_attribute *attr, const char *buf, size_t count)
 {
-    return count;                                           /* nothing to do        */    
+    return count;                                           /* nothing to do        */
 }
 
 static ssize_t report_delay_show(struct device *dev, struct device_attribute *attr, char *buf)
@@ -1155,17 +1159,17 @@ static ssize_t report_delay_show(struct device *dev, struct device_attribute *at
 static ssize_t report_delay_store(struct device *dev, struct device_attribute *attr, const char *buf, size_t count)
 {
     struct aml_pmu_api *api = aml_pmu_get_api();
-    uint32_t tmp = simple_strtoul(buf, NULL, 10); 
+    uint32_t tmp = simple_strtoul(buf, NULL, 10);
 
     if (tmp > 200) {
         RICOH_ERR("input too large, failed to set report_delay\n");
         return count;
-    }    
+    }
     if (api && api->pmu_set_report_delay) {
         api->pmu_set_report_delay(tmp);
     } else {
         RICOH_ERR("API not found\n");
-    }    
+    }
     return count;
 }
 
@@ -1206,9 +1210,9 @@ int rn5t618_cal_ocv(int ibat, int vbat, int dir)
     if (dir == RN5T618_CHARGER_CHARGING && rn5t618_battery) {           // charging
         result = vbat - (ibat * rn5t618_battery->pmu_battery_rdc) / 1000;
     } else if (dir == RN5T618_CHARGER_DISCHARGING && rn5t618_battery) { // discharging
-        result = vbat + (ibat * rn5t618_battery->pmu_battery_rdc) / 1000;    
+        result = vbat + (ibat * rn5t618_battery->pmu_battery_rdc) / 1000;
     } else {
-        result = vbat;    
+        result = vbat;
     }
     return result;
 }
@@ -1228,28 +1232,28 @@ static int rn5t618_update_state(struct aml_charger *charger)
         charger->fault |= 0x80000000;
     }
     if ((buff[0] & 0xc0) && (rn5t618_curr_dir == 1)) {
-        if ((status == RN5T618_CHARGE_TRICKLE) || 
+        if ((status == RN5T618_CHARGE_TRICKLE) ||
             (status == RN5T618_CHARGE_RAPID)) {
             charger->charge_status = CHARGER_CHARGING;
         } else {
-            charger->charge_status = CHARGER_NONE;    
+            charger->charge_status = CHARGER_NONE;
         }
     } else {
         charger->charge_status = CHARGER_DISCHARGING;
     }
 
     charger->ocv  = rn5t618_cal_ocv(charger->ibat, charger->vbat, charger->charge_status);
-    if ((status != RN5T618_NO_BATTERY) && 
+    if ((status != RN5T618_NO_BATTERY) &&
         (status != RN5T618_NO_BATTERY2)) {
         charger->bat_det = 1;
     } else {
-        charger->bat_det = 0;    
+        charger->bat_det = 0;
     }
-    if (status != RN5T618_BATTERY_TEMPERATURE_ERROR && 
+    if (status != RN5T618_BATTERY_TEMPERATURE_ERROR &&
         status != RN5T618_CHARGE_SUSPEND) {                             // charger is not suspended
         charger->dcin_valid = buff[0] & 0x40 ? 1 : 0;
         charger->usb_valid  = buff[0] & 0x80 ? 1 : 0;
-        charger->ext_valid  = buff[0] & 0xc0;                           // to differ USB / AC status update 
+        charger->ext_valid  = buff[0] & 0xc0;                           // to differ USB / AC status update
     } else {
         charger->dcin_valid = 0;
         charger->usb_valid  = 0;
@@ -1268,7 +1272,7 @@ static int rn5t618_update_state(struct aml_charger *charger)
     if (buff[0] & 0x01) {
         RICOH_DBG("cc is paused, reopen it\n");
         buff[0] &= ~0x01;
-        rn5t618_write(0x00ef, buff[0]); 
+        rn5t618_write(0x00ef, buff[0]);
     }
     rn5t618_read(0x00C5, buff);
     if (buff[0] & 0x20) {
@@ -1290,7 +1294,7 @@ static void check_chip_temperature(void)
     static uint8_t set_flag = 0;
 
     if (!g_rn5t618_init) {
-        return ;    
+        return ;
     }
     stop = g_rn5t618_init->temp_to_stop_charger;
     off  = g_rn5t618_init->temp_to_power_off;
@@ -1306,7 +1310,7 @@ static void check_chip_temperature(void)
 
     if (off && temp >= off) {
         RICOH_DBG("temperature is %d, higher than %d, power off system\n", temp, off);
-        rn5t618_power_off();    
+        rn5t618_power_off();
     }
 }
 
@@ -1403,12 +1407,12 @@ static void rn5t618_charging_monitor(struct work_struct *work)
 #ifdef CONFIG_RESET_TO_SYSTEM
     rn5t618_feed_watchdog();
 #endif
-    
+
     /*
      * protection for over-discharge with large loading usage
      */
-    if (charger->rest_vol <= 0 && 
-        charger->ext_valid     && 
+    if (charger->rest_vol <= 0 &&
+        charger->ext_valid     &&
         charger->charge_status == CHARGER_DISCHARGING) {
         over_discharge_cnt++;
         if (over_discharge_cnt >= 5) {
@@ -1416,11 +1420,11 @@ static void rn5t618_charging_monitor(struct work_struct *work)
             power_protection = 1;
         }
     } else {
-        over_discharge_cnt = 0; 
+        over_discharge_cnt = 0;
         power_protection   = 0;
     }
-    if ((charger->rest_vol - pre_rest_cap)         || 
-        (pre_pwr_status != charger->ext_valid)     || 
+    if ((charger->rest_vol - pre_rest_cap)         ||
+        (pre_pwr_status != charger->ext_valid)     ||
         (pre_chg_status != charger->charge_status) ||
         charger->resume                            ||
         power_protection) {
@@ -1433,23 +1437,23 @@ static void rn5t618_charging_monitor(struct work_struct *work)
         if (in_early_suspend && (pre_pwr_status != charger->ext_valid)) {
             wake_lock(&rn5t618_lock);
             RICOH_DBG("%s, usb power status changed in early suspend, wake up now\n", __func__);
-            input_report_key(rn5t618_power_key, KEY_POWER, 1);              // assume power key pressed 
+            input_report_key(rn5t618_power_key, KEY_POWER, 1);              // assume power key pressed
             input_sync(rn5t618_power_key);
         }
     #endif
-    } 
+    }
     /* reschedule for the next time */
     schedule_delayed_work(&supply->work, supply->interval);
 }
 
 #if defined CONFIG_HAS_EARLYSUSPEND
-static int early_power_status = 0;
+static int early_power_status = -1;
 static void rn5t618_earlysuspend(struct early_suspend *h)
 {
     struct rn5t618_supply *supply = (struct rn5t618_supply *)h->param;
     if (rn5t618_battery) {
         rn5t618_set_charge_current(rn5t618_battery->pmu_suspend_chgcur);
-        early_power_status = supply->aml_charger.ext_valid; 
+        early_power_status = supply->aml_charger.ext_valid;
     }
     in_early_suspend = 1;
 }
@@ -1458,11 +1462,11 @@ static void rn5t618_lateresume(struct early_suspend *h)
 {
     struct  rn5t618_supply *supply = (struct rn5t618_supply *)h->param;
 
-    schedule_work(&supply->work.work);                                      // update for upper layer 
+    schedule_work(&supply->work.work);                                      // update for upper layer
     if (rn5t618_battery) {
         rn5t618_set_charge_current(rn5t618_battery->pmu_resume_chgcur);
-        early_power_status = supply->aml_charger.ext_valid; 
-        input_report_key(rn5t618_power_key, KEY_POWER, 0);                  // cancel power key 
+        early_power_status = -1;
+        input_report_key(rn5t618_power_key, KEY_POWER, 0);                  // cancel power key
         input_sync(rn5t618_power_key);
     }
     in_early_suspend = 0;
@@ -1502,7 +1506,7 @@ static int rn5t618_reboot_work(struct notifier_block *nb, unsigned long state, v
 
 struct aml_pmu_driver rn5t618_pmu_driver = {
     .name                           = "rn5t618",
-    .pmu_get_coulomb                = rn5t618_get_coulomber, 
+    .pmu_get_coulomb                = rn5t618_get_coulomber,
     .pmu_clear_coulomb              = rn5t618_clear_coulomber,
     .pmu_update_status              = rn5t618_update_state,
     .pmu_set_rdc                    = NULL,
@@ -1539,7 +1543,7 @@ static int rn5t618_battery_probe(struct platform_device *pdev)
 
     if (!(rn5t618_coulomb_flag & (POWER_OFF_FLAG | REBOOT_FLAG))) {
         RICOH_DBG("no special flag, clear RTC mem, force using ocv\n");
-        aml_write_rtc_mem_reg(0, 0); 
+        aml_write_rtc_mem_reg(0, 0);
     }
     rn5t618_power_key->name       = pdev->name;
     rn5t618_power_key->phys       = "m1kbd/input2";
@@ -1557,21 +1561,21 @@ static int rn5t618_battery_probe(struct platform_device *pdev)
 
     ret = input_register_device(rn5t618_power_key);
 
-#ifdef CONFIG_UBOOT_BATTERY_PARAMETERS 
+#ifdef CONFIG_UBOOT_BATTERY_PARAMETERS
     if (get_uboot_battery_para_status() == UBOOT_BATTERY_PARA_SUCCESS) {
         rn5t618_battery = get_uboot_battery_para();
         RICOH_DBG("use uboot passed battery parameters\n");
     } else {
-        rn5t618_battery = g_rn5t618_init->board_battery; 
+        rn5t618_battery = g_rn5t618_init->board_battery;
         RICOH_DBG("uboot battery parameter not get, use BSP configed battery parameters\n");
     }
 #else
-    rn5t618_battery = g_rn5t618_init->board_battery; 
+    rn5t618_battery = g_rn5t618_init->board_battery;
     RICOH_DBG("use BSP configed battery parameters\n");
 #endif
 
     /*
-     * initialize parameters for supply 
+     * initialize parameters for supply
      */
     supply = kzalloc(sizeof(*supply), GFP_KERNEL);
     if (supply == NULL) {
@@ -1580,7 +1584,7 @@ static int rn5t618_battery_probe(struct platform_device *pdev)
     supply->battery_info = kzalloc(sizeof(struct power_supply_info), GFP_KERNEL);
     if (supply->battery_info == NULL) {
         kfree(supply);
-        return -ENOMEM;    
+        return -ENOMEM;
     }
     supply->master = pdev->dev.parent;
 
@@ -1592,7 +1596,7 @@ static int rn5t618_battery_probe(struct platform_device *pdev)
                 charger->ocv_empty = rn5t618_battery->pmu_bat_curve[tmp2-1].ocv;
             }
             if (!charger->ocv_full && rn5t618_battery->pmu_bat_curve[tmp2].discharge_percent == 100) {
-                charger->ocv_full = rn5t618_battery->pmu_bat_curve[tmp2].ocv;    
+                charger->ocv_full = rn5t618_battery->pmu_bat_curve[tmp2].ocv;
             }
         }
 
@@ -1608,29 +1612,29 @@ static int rn5t618_battery_probe(struct platform_device *pdev)
     }
 
     charger->soft_limit_to99     = g_rn5t618_init->soft_limit_to99;
-    charger->coulomb_type        = COULOMB_SINGLE_CHG_INC; 
+    charger->coulomb_type        = COULOMB_SINGLE_CHG_INC;
     supply->charge_timeout_retry = g_rn5t618_init->charge_timeout_retry;
 #ifdef CONFIG_AMLOGIC_USB
     if (rn5t618_charger_job.flag) {     // do later job for usb charger detect
-        rn5t618_usb_charger(NULL, rn5t618_charger_job.value, NULL);    
+        rn5t618_usb_charger(NULL, rn5t618_charger_job.value, NULL);
         rn5t618_charger_job.flag = 0;
     }
     if (rn5t618_otg_job.flag) {
-        rn5t618_otg_change(NULL, rn5t618_otg_job.value, NULL);    
+        rn5t618_otg_change(NULL, rn5t618_otg_job.value, NULL);
         rn5t618_otg_job.flag = 0;
     }
 #endif
     rn5t618_reboot_nb.notifier_call = rn5t618_reboot_work;
     register_reboot_notifier(&rn5t618_reboot_nb);
     if (supply->irq == RN5T618_IRQ_NUM) {
-        INIT_WORK(&supply->irq_work, rn5t618_irq_work_func); 
-        ret = request_irq(supply->irq, 
-                          rn5t618_irq_handler, 
+        INIT_WORK(&supply->irq_work, rn5t618_irq_work_func);
+        ret = request_irq(supply->irq,
+                          rn5t618_irq_handler,
                           IRQF_DISABLED | IRQF_SHARED,
                           RN5T618_IRQ_NAME,
-                          supply); 
+                          supply);
         if (ret) {
-            RICOH_ERR("request irq failed, ret:%d, irq:%d\n", ret, supply->irq);    
+            RICOH_ERR("request irq failed, ret:%d, irq:%d\n", ret, supply->irq);
         }
     }
 
@@ -1679,9 +1683,9 @@ static int rn5t618_battery_probe(struct platform_device *pdev)
     if (rn5t618_battery) {
         power_supply_changed(&supply->batt);                    // update battery status
     }
-    
+
 #ifdef CONFIG_RESET_TO_SYSTEM
-    rn5t618_set_bits(0x000b, 0x01, 0x0f);                       // disable watchdog 
+    rn5t618_set_bits(0x000b, 0x01, 0x0f);                       // disable watchdog
     rn5t618_set_bits(0x0012, 0x00, 0x40);                       // disable watchdog
     rn5t618_set_bits(0x000b, 0x0d, 0x0f);                       // time out to 8s
     rn5t618_set_bits(0x0012, 0x40, 0x40);                       // enable watchdog
@@ -1713,7 +1717,7 @@ static int rn5t618_battery_remove(struct platform_device *dev)
     power_supply_unregister( &supply->usb);
     power_supply_unregister( &supply->ac);
     power_supply_unregister( &supply->batt);
-    
+
     free_irq(supply->irq, supply);
     kfree(supply->battery_info);
     kfree(supply);
@@ -1737,13 +1741,13 @@ static int rn5t618_suspend(struct platform_device *dev, pm_message_t state)
         api = aml_pmu_get_api();
         if (api && api->pmu_suspend_process) {
             api->pmu_suspend_process(&supply->aml_charger);
-        } 
+        }
     }
 #ifdef CONFIG_HAS_EARLYSUSPEND
-    if (early_power_status != supply->aml_charger.ext_valid) {
-        RICOH_DBG("%s, power status changed, prev:%x, now:%x, exit suspend process\n", 
+    if ((early_power_status != supply->aml_charger.ext_valid) && (early_power_status != -1)) {
+        RICOH_DBG("%s, power status changed, prev:%x, now:%x, exit suspend process\n",
                   __func__, early_power_status, supply->aml_charger.ext_valid);
-        input_report_key(rn5t618_power_key, KEY_POWER, 1);              // assume power key pressed 
+        input_report_key(rn5t618_power_key, KEY_POWER, 1);              // assume power key pressed
         input_sync(rn5t618_power_key);
         return -1;
     }
@@ -1776,7 +1780,7 @@ static void rn5t618_shutdown(struct platform_device *dev)
 
 static struct platform_driver rn5t618_battery_driver = {
     .driver = {
-        .name  = RN5T618_DRIVER_NAME, 
+        .name  = RN5T618_DRIVER_NAME,
         .owner = THIS_MODULE,
     },
     .probe    = rn5t618_battery_probe,
